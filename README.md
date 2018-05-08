@@ -1,2 +1,2 @@
 # V4Hero
-Client for PatafourV4
+An official client for PatafourV4.
