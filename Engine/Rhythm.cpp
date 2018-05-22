@@ -109,18 +109,13 @@ void Rhythm::Draw(sf::RenderWindow& window)
 {
     bool broke = false;
 
-    //cout << cclock.getElapsedTime().asSeconds() << " : " << tclock.getElapsedTime().asSeconds() << endl;
-
     if(cclock.getElapsedTime().asSeconds() >= 2)
     {
-
-
         cclock.restart();
     }
 
     if(tclock.getElapsedTime().asSeconds() >= 4)
     {
-        cout << test << endl;
         if(test >= 1)
         {
             cout << "command.size(): " << command.size() << endl;
@@ -132,67 +127,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
                 if(std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end())
                 {
-                    int num;
-                    for(int i=0; i<av_commands.size(); i++)
-                    {
-                        if(av_commands[i] == fullcom)
-                        num = i;
-                    }
-
-                    cout << "command no. " << num << endl;
-                    song = av_songs[num];
-                    cout << "song: " << song << endl;
-
-                    if(test < 5)
-                    {
-                        string s = song+"_1";
-                        s_chant.setBuffer(b_chant[s]);
-
-                        cout << "play: " << s << endl;
-                        song = "";
-
-                        s_chant.stop();
-                        s_chant.play();
-                    }
-
-                    if(test >= 5)
-                    if(test < 11)
-                    {
-                        string s = song+"_2";
-                        s_chant.setBuffer(b_chant[s]);
-
-                        cout << "play: " << s << endl;
-                        song = "";
-
-                        s_chant.stop();
-                        s_chant.play();
-                    }
-
-                    if(test >= 12)
-                    {
-                        string s = song+"_"+to_string(2+ans);
-                        s_chant.setBuffer(b_chant[s]);
-
-                        cout << "play: " << s << endl;
-                        song = "";
-
-                        s_chant.stop();
-                        s_chant.play();
-                    }
-
-                    cout << "beng" << endl;
-                    if(test >= 12)
-                    {
-                        if(ans == 3)
-                        ans = 1;
-
-                        if(ans == 2)
-                        ans = 3;
-
-                        if(ans == 1)
-                        ans = 2;
-                    }
-
                     command.clear();
                     test++;
                 }
@@ -253,13 +187,8 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             if(test >= 2)
             {
-                if(command.size() >= com-1)
+                if(command.size() < com-1)
                 {
-                    cout << "goode!" << endl;
-                }
-                else
-                {
-                    cout << "you fucked up sir" << endl;
                     broke = true;
                 }
             }
