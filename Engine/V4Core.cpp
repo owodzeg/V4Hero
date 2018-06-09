@@ -45,7 +45,7 @@ void V4Core::Init()
         fps = float(1000000) / fpsclock.getElapsedTime().asMicroseconds();
         fpsclock.restart();
 
-        //cout << fps << endl;
+        cout << fps << endl;
 
         window.clear();
         rhythm.fps = fps;
