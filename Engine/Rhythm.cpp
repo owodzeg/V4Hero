@@ -616,16 +616,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
         }
     }
 
-    if(broke)
+
+if(broke)
     {
-        if(test >= 12)
-        {
-            ///dying fever sound
 
-            s_theme1.setBuffer(b_theme[28]);
-            s_theme1.play();
-
-        }
 
         tclock.restart();
         com = 1;
