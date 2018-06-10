@@ -622,8 +622,8 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             ///dying fever sound
 
-            s_theme1.setBuffer(b_theme[28]);
-            s_theme1.play();
+            s_theme3.setBuffer(b_theme[28]);
+            s_theme3.play();
 
         }
 

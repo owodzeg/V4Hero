@@ -15,7 +15,7 @@ class Rhythm
 
     std::map<int,sf::SoundBuffer> b_theme;
     std::map<std::string,sf::SoundBuffer> b_chant;
-    sf::Sound s_theme1,s_theme2;
+    sf::Sound s_theme1,s_theme2,s_theme3;
     sf::Sound s_chant;
 
     sf::SoundBuffer b_pata[3],b_pon[3],b_chaka[3],b_don[3];
