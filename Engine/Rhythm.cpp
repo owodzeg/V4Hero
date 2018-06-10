@@ -41,6 +41,8 @@ Rhythm::Rhythm()
     b_chdon[1].loadFromFile("resources/sfx/drums/ch_don_2.ogg");
     b_chdon[2].loadFromFile("resources/sfx/drums/ch_don_3.ogg");
 
+
+
    /// change it to vector{elems}
     av_commands.push_back("PATAPATAPATAPON");
     av_commands.push_back("PONPONPATAPON");
@@ -91,6 +93,8 @@ void Rhythm::LoadTheme(string theme)
     b_theme[25].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever14.ogg");
     b_theme[26].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever15.ogg");
     b_theme[27].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever16.ogg");
+
+    b_theme[28].loadFromFile("resources/sfx/bgm/fever_fail.ogg");
 
     b_chant["patapata_1"].loadFromFile("resources/sfx/bgm/"+theme+"/s_patapata1.ogg");
     b_chant["patapata_2"].loadFromFile("resources/sfx/bgm/"+theme+"/s_patapata2.ogg");
@@ -617,6 +621,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
         if(test >= 12)
         {
             ///dying fever sound
+
+            s_theme1.setBuffer(b_theme[28]);
+            s_theme1.play();
+
         }
 
         tclock.restart();
