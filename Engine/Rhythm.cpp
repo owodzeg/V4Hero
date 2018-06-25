@@ -132,6 +132,48 @@ void Rhythm::Draw(sf::RenderWindow& window)
                 if(std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end())
                 {
                     command.clear();
+
+                    cout << "Command is being inputted - play the chant here." << endl;
+                    int chant_id = 0;
+
+                    if(test < 6)
+                    {
+                        chant_id = 1;
+                    }
+
+                    if(test >= 6)
+                    if(test <= 10)
+                    {
+                        chant_id = 2;
+                    }
+
+                    if(test >= 12)
+                    {
+                        if(test % 2) ///if it's odd
+                        {
+                            chant_id = 3;
+                        }
+                        else
+                        {
+                            chant_id = 4;
+                        }
+                    }
+
+                    int song_ID = -1;
+
+                    for(int i=0; i<av_commands.size(); i++)
+                    {
+                        if(av_commands[i] == fullcom)
+                        {
+                            song_ID = i;
+                        }
+                    }
+
+                    string chant_name = av_songs[song_ID]+"_"+to_string(chant_id);
+                    s_chant.stop();
+                    s_chant.setBuffer(b_chant[chant_name]);
+                    s_chant.play();
+
                     test++;
                 }
                 else
