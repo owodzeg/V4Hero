@@ -66,7 +66,7 @@ Rhythm::Rhythm()
     av_songs.push_back("donchaka");
     av_songs.push_back("ponpata");
     av_songs.push_back("dondon");
-    av_songs.push_back("chakapata");
+    av_songs.push_back("patapata");
 }
 
 void Rhythm::LoadTheme(string theme)
