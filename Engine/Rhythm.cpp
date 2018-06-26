@@ -566,8 +566,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
             s_drums[s_drums.size()-1].play();
 
             cycle = true;
-
-            command.push_back("CHAKA");
         }
 
         if(command.size() >= 5)
