@@ -49,8 +49,6 @@ Rhythm::Rhythm()
     b_chdon[1].loadFromFile("resources/sfx/drums/ch_don_2.ogg");
     b_chdon[2].loadFromFile("resources/sfx/drums/ch_don_3.ogg");
 
-
-
    /// change it to vector{elems}
     av_commands.push_back("PATAPATAPATAPON");
     av_commands.push_back("PONPONPATAPON");
@@ -122,7 +120,7 @@ void Rhythm::LoadTheme(string theme)
     b_chant["ponchaka_1"].loadFromFile("resources/sfx/bgm/"+theme+"/s_ponchaka1.ogg");
     b_chant["ponchaka_2"].loadFromFile("resources/sfx/bgm/"+theme+"/s_ponchaka2.ogg");
     b_chant["ponchaka_3"].loadFromFile("resources/sfx/bgm/"+theme+"/s_ponchaka3.ogg");
-    b_chant["donchaka_1"].loadFromFile("resources/sfx/bgm/"+theme+"/s_donchaka.ogg");
+    b_chant["donchaka_1"].loadFromFile("resources/sfx/bgm/"+theme+"/s_donchaka1.ogg");
     b_chant["donchaka_2"].loadFromFile("resources/sfx/bgm/"+theme+"/s_donchaka2.ogg");
     b_chant["donchaka_3"].loadFromFile("resources/sfx/bgm/"+theme+"/s_donchaka3.ogg");
     b_chant["dondon_1"].loadFromFile("resources/sfx/bgm/"+theme+"/s_dondon1.ogg");
@@ -146,6 +144,8 @@ void Rhythm::Draw(sf::RenderWindow& window)
     {
         cclock.restart();
     }
+
+    //cout << "tclock time elapsed: " << tclock.getElapsedTime().asSeconds() << endl;
 
     if(tclock.getElapsedTime().asSeconds() >= 4)
     {
@@ -178,13 +178,25 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
                     if(test >= 11)
                     {
+                        /// bool = true/false
+                        /// bool = 1/0
+                        /// if(0) 0 = false
+                        /// if(1) 1 = true
+
                         if(test % 2) ///if it's odd
                         {
                             chant_id = 3;
                         }
                         else
                         {
-                            chant_id = 4;
+                            if(fullcom == "PATAPATAPATAPON" or fullcom == "PONPONPATAPON" or fullcom == "CHAKACHAKAPATAPON")
+                            {
+                                chant_id = 4;
+                            }
+                            else
+                            {
+                                chant_id = 3;
+                            }
                         }
                     }
 
@@ -682,6 +694,23 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
                     s_theme1.setBuffer(b_theme[test]);
                     s_theme1.play();
+
+
+
+                    int song_ID = -1;
+
+                    for(int i=0; i<av_commands.size(); i++)
+                    {
+                        if(av_commands[i] == fullcom)
+                        {
+                            song_ID = i;
+                        }
+                    }
+
+                    string chant_name = av_songs[song_ID]+"_1";
+                    s_chant.stop();
+                    s_chant.setBuffer(b_chant[chant_name]);
+                    s_chant.play();
                 }
             }
         }
