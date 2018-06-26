@@ -149,7 +149,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
     if(tclock.getElapsedTime().asSeconds() >= 4)
     {
-        if(test >= 1)
+        if(test >= 2)
         {
             cout << "command.size(): " << command.size() << endl;
 
@@ -547,6 +547,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         if((timer >= 300) && (timer < 425))
         {
             cout << "CHAKA (GOOD), " << timer << " ms, " << far << endl;
+            command.push_back("CHAKA");
             sf::Sound drum;
             drum.setBuffer(b_chaka[1]);
             s_drums.push_back(drum);
@@ -555,18 +556,19 @@ void Rhythm::Draw(sf::RenderWindow& window)
             cycle = true;
         }
 
-        if((timer >= 425) && (timer < 500))
+        if(timer >= 425)
         {
             cout << "CHAKA (BEST), " << timer << " ms, " << far << endl;
+            command.push_back("CHAKA");
             sf::Sound drum;
             drum.setBuffer(b_chaka[0]);
             s_drums.push_back(drum);
             s_drums[s_drums.size()-1].play();
 
             cycle = true;
-        }
 
-        command.push_back("CHAKA");
+            command.push_back("CHAKA");
+        }
 
         if(command.size() >= 5)
         command.erase(command.begin());
@@ -625,6 +627,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         if((timer >= 300) && (timer < 425))
         {
             cout << "DON (GOOD), " << timer << " ms, " << far << endl;
+            command.push_back("DON");
             sf::Sound drum;
             drum.setBuffer(b_don[1]);
             s_drums.push_back(drum);
@@ -633,9 +636,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
             cycle = true;
         }
 
-        if((timer >= 425) && (timer < 500))
+        if(timer >= 425)
         {
             cout << "DON (BEST), " << timer << " ms, " << far << endl;
+            command.push_back("DON");
             sf::Sound drum;
             drum.setBuffer(b_don[0]);
             s_drums.push_back(drum);
@@ -643,8 +647,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
             cycle = true;
         }
-
-        command.push_back("DON");
 
         if(command.size() >= 5)
         command.erase(command.begin());
