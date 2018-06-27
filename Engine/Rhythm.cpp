@@ -186,111 +186,114 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     accuracy = total_perfects / total_commands;
                     cout << "Total accuracy: " << accuracy*100 << "%" << endl;
 
-                    if(test == 10)
+                    if(test < 11)
                     {
-                        if(accuracy >= 0.80)
+                        if(test == 10)
                         {
-                            test = 11;
+                            if(accuracy >= 0.80)
+                            {
+                                test = 11;
+                            }
+                            else
+                            {
+                                test++;
+                            }
                         }
-                        else
-                        {
-                            test++;
-                        }
-                    }
 
-                    if(test == 9)
-                    {
-                        if(accuracy >= 0.825)
+                        if(test == 9)
                         {
-                            test = 11;
+                            if(accuracy >= 0.825)
+                            {
+                                test = 11;
+                            }
+                            else
+                            {
+                                test++;
+                            }
                         }
-                        else
-                        {
-                            test++;
-                        }
-                    }
 
-                    if(test == 8)
-                    {
-                        if(accuracy >= 0.85)
+                        if(test == 8)
                         {
-                            test = 11;
+                            if(accuracy >= 0.85)
+                            {
+                                test = 11;
+                            }
+                            else
+                            {
+                                test++;
+                            }
                         }
-                        else
-                        {
-                            test++;
-                        }
-                    }
 
-                    if(test == 7)
-                    {
-                        if(accuracy >= 0.875)
+                        if(test == 7)
                         {
-                            test = 11;
+                            if(accuracy >= 0.875)
+                            {
+                                test = 11;
+                            }
+                            else
+                            {
+                                test++;
+                            }
                         }
-                        else
-                        {
-                            test++;
-                        }
-                    }
 
-                    if(test == 6)
-                    {
-                        if(accuracy >= 0.9)
+                        if(test == 6)
                         {
-                            test = 11;
+                            if(accuracy >= 0.9)
+                            {
+                                test = 11;
+                            }
+                            else
+                            {
+                                test++;
+                            }
                         }
-                        else
-                        {
-                            test++;
-                        }
-                    }
 
-                    if(test == 5)
-                    {
-                        if(accuracy >= 0.75)
+                        if(test == 5)
                         {
-                            test = 6;
+                            if(accuracy >= 0.75)
+                            {
+                                test = 6;
+                            }
+                            else
+                            {
+                                test++;
+                            }
                         }
-                        else
-                        {
-                            test++;
-                        }
-                    }
 
-                    if(test == 4)
-                    {
-                        if(accuracy >= 0.8)
+                        if(test == 4)
                         {
-                            test = 6;
+                            if(accuracy >= 0.8)
+                            {
+                                test = 6;
+                            }
+                            else
+                            {
+                                test++;
+                            }
                         }
-                        else
-                        {
-                            test++;
-                        }
-                    }
 
-                    if(test == 3)
-                    {
-                        if(accuracy >= 0.85)
+                        if(test == 3)
                         {
-                            test = 6;
+                            if(accuracy >= 0.85)
+                            {
+                                test = 6;
+                            }
+                            else
+                            {
+                                test++;
+                            }
                         }
-                        else
-                        {
-                            test++;
-                        }
-                    }
 
-                    if(test == 2)
-                    {
-                        if(accuracy >= 0.875)
+                        if(test == 2)
                         {
-                            test = 6;
-                        }
-                        else
-                        {
-                            test++;
+                            if(accuracy >= 0.875)
+                            {
+                                test = 6;
+                            }
+                            else
+                            {
+                                test++;
+                            }
                         }
                     }
 
@@ -346,6 +349,9 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     s_chant.stop();
                     s_chant.setBuffer(b_chant[chant_name]);
                     s_chant.play();
+
+                    if(test >= 11)
+                    test++;
                 }
                 else
                 {
