@@ -190,6 +190,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
                     if(test < 11)
                     {
+                        test++;
                         dont_skip_fever = true;
 
                         if(test == 10)
@@ -197,10 +198,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
                             if(accuracy >= 0.80)
                             {
                                 test = 11;
-                            }
-                            else
-                            {
-                                test++;
                             }
                         }
 
@@ -210,10 +207,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
                             {
                                 test = 11;
                             }
-                            else
-                            {
-                                test++;
-                            }
                         }
 
                         if(test == 8)
@@ -221,10 +214,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
                             if(accuracy >= 0.85)
                             {
                                 test = 11;
-                            }
-                            else
-                            {
-                                test++;
                             }
                         }
 
@@ -234,10 +223,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
                             {
                                 test = 11;
                             }
-                            else
-                            {
-                                test++;
-                            }
                         }
 
                         if(test == 6)
@@ -245,10 +230,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
                             if(accuracy >= 0.9)
                             {
                                 test = 11;
-                            }
-                            else
-                            {
-                                test++;
                             }
                         }
 
@@ -258,10 +239,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
                             {
                                 test = 6;
                             }
-                            else
-                            {
-                                test++;
-                            }
                         }
 
                         if(test == 4)
@@ -269,10 +246,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
                             if(accuracy >= 0.8)
                             {
                                 test = 6;
-                            }
-                            else
-                            {
-                                test++;
                             }
                         }
 
@@ -282,10 +255,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
                             {
                                 test = 6;
                             }
-                            else
-                            {
-                                test++;
-                            }
                         }
 
                         if(test == 2)
@@ -294,23 +263,19 @@ void Rhythm::Draw(sf::RenderWindow& window)
                             {
                                 test = 6;
                             }
-                            else
-                            {
-                                test++;
-                            }
                         }
                     }
 
                     cout << "Command is being inputted - play the chant here." << endl;
                     int chant_id = 0;
 
-                    if(test < 5)
+                    if(test < 6)
                     {
                         chant_id = 1;
                     }
 
-                    if(test >= 5)
-                    if(test <= 9)
+                    if(test >= 6)
+                    if(test <= 10)
                     {
                         chant_id = 2;
                     }
@@ -348,6 +313,8 @@ void Rhythm::Draw(sf::RenderWindow& window)
                             song_ID = i;
                         }
                     }
+
+                    cout << "test is equal to: " << test << endl;
 
                     if(test != 11)
                     {
