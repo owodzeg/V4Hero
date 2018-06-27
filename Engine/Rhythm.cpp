@@ -162,6 +162,43 @@ void Rhythm::Draw(sf::RenderWindow& window)
                 {
                     command.clear();
 
+                    perfects.push_back(perfect);
+                    cout << "Perfect drums: " << perfect << endl;
+                    perfect = 0;
+
+                    float total_perfects = 0;
+                    float total_commands = 0;
+
+                    for(int i=0; i<=acc_count; i++)
+                    {
+                        if(perfects.size() > i)
+                        {
+                            total_perfects += perfects[i];
+                            total_commands += 4;
+                        }
+                    }
+
+                    accuracy = total_perfects / total_commands;
+                    cout << "Total accuracy: " << accuracy*100 << "%" << endl;
+
+                    if(test >= 2)
+                    if(test < 6)
+                    {
+                        if(accuracy >= 0.9)
+                        {
+                            test = 6;
+                        }
+                    }
+
+                    if(test >= 6)
+                    if(test <= 10)
+                    {
+                        if(accuracy >= 0.9)
+                        {
+                            test = 11;
+                        }
+                    }
+
                     cout << "Command is being inputted - play the chant here." << endl;
                     int chant_id = 0;
 
@@ -215,26 +252,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     s_chant.setBuffer(b_chant[chant_name]);
                     s_chant.play();
 
-                    perfects.push_back(perfect);
-                    cout << "Perfect drums: " << perfect << endl;
-                    perfect = 0;
-
-                    float total_perfects = 0;
-                    float total_commands = 0;
-
-                    for(int i=0; i<=acc_count; i++)
+                    if(accuracy < 0.9)
                     {
-                        if(perfects.size() > i)
-                        {
-                            total_perfects += perfects[i];
-                            total_commands += 4;
-                        }
+                        test++;
                     }
-
-                    accuracy = total_perfects / total_commands;
-                    cout << "Total accuracy: " << accuracy*100 << "%" << endl;
-
-                    test++;
                 }
                 else
                 {
@@ -825,7 +846,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
     if(broke)
     {
-        if(test >= 12)
+        if(test >= 11)
         {
             ///dying fever sound
 
