@@ -219,6 +219,21 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     cout << "Perfect drums: " << perfect << endl;
                     perfect = 0;
 
+                    float total_perfects = 0;
+                    float total_commands = 0;
+
+                    for(int i=0; i<=acc_count; i++)
+                    {
+                        if(perfects.size() > i)
+                        {
+                            total_perfects += perfects[i];
+                            total_commands += 4;
+                        }
+                    }
+
+                    accuracy = total_perfects / total_commands;
+                    cout << "Total accuracy: " << accuracy*100 << "%" << endl;
+
                     test++;
                 }
                 else

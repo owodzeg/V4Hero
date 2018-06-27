@@ -40,6 +40,8 @@ class Rhythm
     int perfect = 0;
     std::vector<int> command_perfects;
     std::vector<int> perfects;
+    float accuracy = 0;
+    int acc_count = 3;
 
     std::vector<std::string> command;
     std::vector<std::string> av_commands;
