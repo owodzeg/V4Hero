@@ -169,6 +169,11 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     float total_perfects = 0;
                     float total_commands = 0;
 
+                    if(perfects.size() > acc_count)
+                    {
+                        perfects.erase(perfects.begin());
+                    }
+
                     for(int i=0; i<=acc_count; i++)
                     {
                         if(perfects.size() > i)
@@ -181,21 +186,75 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     accuracy = total_perfects / total_commands;
                     cout << "Total accuracy: " << accuracy*100 << "%" << endl;
 
-                    if(test >= 2)
-                    if(test < 6)
+                    if(test == 6)
                     {
                         if(accuracy >= 0.9)
+                        {
+                            test = 11;
+                        }
+                    }
+
+                    if(test == 7)
+                    {
+                        if(accuracy >= 0.875)
+                        {
+                            test = 11;
+                        }
+                    }
+
+                    if(test == 8)
+                    {
+                        if(accuracy >= 0.85)
+                        {
+                            test = 11;
+                        }
+                    }
+
+                    if(test == 9)
+                    {
+                        if(accuracy >= 0.825)
+                        {
+                            test = 11;
+                        }
+                    }
+
+                    if(test == 10)
+                    {
+                        if(accuracy >= 0.80)
+                        {
+                            test = 11;
+                        }
+                    }
+
+                    if(test == 2)
+                    {
+                        if(accuracy >= 0.875)
                         {
                             test = 6;
                         }
                     }
 
-                    if(test >= 6)
-                    if(test <= 10)
+                    if(test == 3)
                     {
-                        if(accuracy >= 0.9)
+                        if(accuracy >= 0.85)
                         {
-                            test = 11;
+                            test = 6;
+                        }
+                    }
+
+                    if(test == 4)
+                    {
+                        if(accuracy >= 0.8)
+                        {
+                            test = 6;
+                        }
+                    }
+
+                    if(test == 5)
+                    {
+                        if(accuracy >= 0.75)
+                        {
+                            test = 6;
                         }
                     }
 
