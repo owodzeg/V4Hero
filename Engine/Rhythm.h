@@ -36,6 +36,11 @@ class Rhythm
     int comcycle = 1;
     int ans = 1;
     bool cycle = false;
+
+    int perfect = 0;
+    std::vector<int> command_perfects;
+    std::vector<int> perfects;
+
     std::vector<std::string> command;
     std::vector<std::string> av_commands;
     std::vector<std::string> av_songs;
