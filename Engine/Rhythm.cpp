@@ -186,27 +186,15 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     accuracy = total_perfects / total_commands;
                     cout << "Total accuracy: " << accuracy*100 << "%" << endl;
 
-                    if(test == 6)
+                    if(test == 10)
                     {
-                        if(accuracy >= 0.9)
+                        if(accuracy >= 0.80)
                         {
                             test = 11;
                         }
-                    }
-
-                    if(test == 7)
-                    {
-                        if(accuracy >= 0.875)
+                        else
                         {
-                            test = 11;
-                        }
-                    }
-
-                    if(test == 8)
-                    {
-                        if(accuracy >= 0.85)
-                        {
-                            test = 11;
+                            test++;
                         }
                     }
 
@@ -216,29 +204,57 @@ void Rhythm::Draw(sf::RenderWindow& window)
                         {
                             test = 11;
                         }
-                    }
-
-                    if(test == 10)
-                    {
-                        if(accuracy >= 0.80)
+                        else
                         {
-                            test = 11;
+                            test++;
                         }
                     }
 
-                    if(test == 2)
-                    {
-                        if(accuracy >= 0.875)
-                        {
-                            test = 6;
-                        }
-                    }
-
-                    if(test == 3)
+                    if(test == 8)
                     {
                         if(accuracy >= 0.85)
                         {
+                            test = 11;
+                        }
+                        else
+                        {
+                            test++;
+                        }
+                    }
+
+                    if(test == 7)
+                    {
+                        if(accuracy >= 0.875)
+                        {
+                            test = 11;
+                        }
+                        else
+                        {
+                            test++;
+                        }
+                    }
+
+                    if(test == 6)
+                    {
+                        if(accuracy >= 0.9)
+                        {
+                            test = 11;
+                        }
+                        else
+                        {
+                            test++;
+                        }
+                    }
+
+                    if(test == 5)
+                    {
+                        if(accuracy >= 0.75)
+                        {
                             test = 6;
+                        }
+                        else
+                        {
+                            test++;
                         }
                     }
 
@@ -248,13 +264,33 @@ void Rhythm::Draw(sf::RenderWindow& window)
                         {
                             test = 6;
                         }
+                        else
+                        {
+                            test++;
+                        }
                     }
 
-                    if(test == 5)
+                    if(test == 3)
                     {
-                        if(accuracy >= 0.75)
+                        if(accuracy >= 0.85)
                         {
                             test = 6;
+                        }
+                        else
+                        {
+                            test++;
+                        }
+                    }
+
+                    if(test == 2)
+                    {
+                        if(accuracy >= 0.875)
+                        {
+                            test = 6;
+                        }
+                        else
+                        {
+                            test++;
                         }
                     }
 
@@ -310,11 +346,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     s_chant.stop();
                     s_chant.setBuffer(b_chant[chant_name]);
                     s_chant.play();
-
-                    if(accuracy < 0.9)
-                    {
-                        test++;
-                    }
                 }
                 else
                 {
