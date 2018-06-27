@@ -186,8 +186,12 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     accuracy = total_perfects / total_commands;
                     cout << "Total accuracy: " << accuracy*100 << "%" << endl;
 
+                    bool dont_skip_fever = false;
+
                     if(test < 11)
                     {
+                        dont_skip_fever = true;
+
                         if(test == 10)
                         {
                             if(accuracy >= 0.80)
@@ -351,7 +355,12 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     s_chant.play();
 
                     if(test >= 11)
-                    test++;
+                    {
+                        if(dont_skip_fever == false)
+                        {
+                            test++;
+                        }
+                    }
                 }
                 else
                 {
