@@ -449,8 +449,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
         }
 
         perfect = temp_perfect;
-
-        cout << "Amount of PATA perfects: " << perfect << endl;
     }
 
     if(keyMap[config.GetInt("keybindPon")])
@@ -477,7 +475,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cout << "PON (BAD), " << timer << " ms, " << far << endl;
 
-            perfect = 0;
+            command_perfects.clear();
             perfects.clear();
 
             sf::Sound drum;
@@ -497,6 +495,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cout << "PON (GOOD), " << timer << " ms, " << far << endl;
             command.push_back("PON");
+            command_perfects.push_back(0);
 
             sf::Sound drum;
             drum.setBuffer(b_pon[1]);
@@ -510,7 +509,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cout << "PON (BEST), " << timer << " ms, " << far << endl;
             command.push_back("PON");
-            perfect++;
+            command_perfects.push_back(1);
 
             sf::Sound drum;
             drum.setBuffer(b_pon[0]);
@@ -535,6 +534,21 @@ void Rhythm::Draw(sf::RenderWindow& window)
         }
 
         keyMap[config.GetInt("keybindPon")] = false;
+
+        if(command_perfects.size() > 4)
+        command_perfects.erase(command_perfects.begin());
+
+        int temp_perfect = 0;
+
+        for(int i=0; i<=4; i++)
+        {
+            if(command_perfects.size() > i)
+            {
+                 temp_perfect += command_perfects[i];
+            }
+        }
+
+        perfect = temp_perfect;
     }
 
     if(keyMap[config.GetInt("keybindChaka")])
@@ -561,7 +575,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cout << "CHAKA (BAD), " << timer << " ms, " << far << endl;
 
-            perfect = 0;
+            command_perfects.clear();
             perfects.clear();
 
             sf::Sound drum;
@@ -581,6 +595,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cout << "CHAKA (GOOD), " << timer << " ms, " << far << endl;
             command.push_back("CHAKA");
+            command_perfects.push_back(0);
 
             sf::Sound drum;
             drum.setBuffer(b_chaka[1]);
@@ -594,7 +609,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cout << "CHAKA (BEST), " << timer << " ms, " << far << endl;
             command.push_back("CHAKA");
-            perfect++;
+            command_perfects.push_back(1);
 
             sf::Sound drum;
             drum.setBuffer(b_chaka[0]);
@@ -619,6 +634,21 @@ void Rhythm::Draw(sf::RenderWindow& window)
         }
 
         keyMap[config.GetInt("keybindChaka")] = false;
+
+        if(command_perfects.size() > 4)
+        command_perfects.erase(command_perfects.begin());
+
+        int temp_perfect = 0;
+
+        for(int i=0; i<=4; i++)
+        {
+            if(command_perfects.size() > i)
+            {
+                 temp_perfect += command_perfects[i];
+            }
+        }
+
+        perfect = temp_perfect;
     }
 
     if(keyMap[config.GetInt("keybindDon")])
@@ -645,7 +675,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cout << "DON (BAD), " << timer << " ms, " << far << endl;
 
-            perfect = 0;
+            command_perfects.clear();
             perfects.clear();
 
             sf::Sound drum;
@@ -665,6 +695,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cout << "DON (GOOD), " << timer << " ms, " << far << endl;
             command.push_back("DON");
+            command_perfects.push_back(0);
 
             sf::Sound drum;
             drum.setBuffer(b_don[1]);
@@ -678,7 +709,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cout << "DON (BEST), " << timer << " ms, " << far << endl;
             command.push_back("DON");
-            perfect++;
+            command_perfects.push_back(1);
 
             sf::Sound drum;
             drum.setBuffer(b_don[0]);
@@ -703,6 +734,21 @@ void Rhythm::Draw(sf::RenderWindow& window)
         }
 
         keyMap[config.GetInt("keybindDon")] = false;
+
+        if(command_perfects.size() > 4)
+        command_perfects.erase(command_perfects.begin());
+
+        int temp_perfect = 0;
+
+        for(int i=0; i<=4; i++)
+        {
+            if(command_perfects.size() > i)
+            {
+                 temp_perfect += command_perfects[i];
+            }
+        }
+
+        perfect = temp_perfect;
     }
 
     if(erasecommand.getElapsedTime().asSeconds() >= 1)
