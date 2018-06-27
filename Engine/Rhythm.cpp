@@ -186,13 +186,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     accuracy = total_perfects / total_commands;
                     cout << "Total accuracy: " << accuracy*100 << "%" << endl;
 
-                    bool dont_skip_fever = false;
+                    test++;
 
                     if(test < 11)
                     {
-                        test++;
-                        dont_skip_fever = true;
-
                         if(test == 10)
                         {
                             if(accuracy >= 0.80)
@@ -289,10 +286,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
                         if(test % 2) ///if it's odd
                         {
-                            chant_id = 3;
-                        }
-                        else
-                        {
                             if(fullcom == "PATAPATAPATAPON" or fullcom == "PONPONPATAPON" or fullcom == "CHAKACHAKAPATAPON")
                             {
                                 chant_id = 4;
@@ -301,6 +294,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
                             {
                                 chant_id = 3;
                             }
+                        }
+                        else
+                        {
+                            chant_id = 3;
                         }
                     }
 
@@ -322,14 +319,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
                         s_chant.stop();
                         s_chant.setBuffer(b_chant[chant_name]);
                         s_chant.play();
-                    }
-
-                    if(test >= 11)
-                    {
-                        if(dont_skip_fever == false)
-                        {
-                            test++;
-                        }
                     }
                 }
                 else
