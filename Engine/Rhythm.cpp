@@ -315,7 +315,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
                         chant_id = 2;
                     }
 
-                    if(test >= 11)
+                    if(test > 11)
                     {
                         /// bool = true/false
                         /// bool = 1/0
