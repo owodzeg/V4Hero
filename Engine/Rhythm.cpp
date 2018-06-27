@@ -315,7 +315,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
                         chant_id = 2;
                     }
 
-                    if(test > 11)
+                    if(test >= 11)
                     {
                         /// bool = true/false
                         /// bool = 1/0
@@ -349,10 +349,13 @@ void Rhythm::Draw(sf::RenderWindow& window)
                         }
                     }
 
-                    string chant_name = av_songs[song_ID]+"_"+to_string(chant_id);
-                    s_chant.stop();
-                    s_chant.setBuffer(b_chant[chant_name]);
-                    s_chant.play();
+                    if(test != 11)
+                    {
+                        string chant_name = av_songs[song_ID]+"_"+to_string(chant_id);
+                        s_chant.stop();
+                        s_chant.setBuffer(b_chant[chant_name]);
+                        s_chant.play();
+                    }
 
                     if(test >= 11)
                     {
