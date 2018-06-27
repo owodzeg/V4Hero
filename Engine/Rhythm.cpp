@@ -215,6 +215,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     s_chant.setBuffer(b_chant[chant_name]);
                     s_chant.play();
 
+                    perfects.push_back(perfect);
+                    cout << "Perfect drums: " << perfect << endl;
+                    perfect = 0;
+
                     test++;
                 }
                 else
@@ -338,6 +342,9 @@ void Rhythm::Draw(sf::RenderWindow& window)
             cout << "PATA (BAD), " << timer << " ms, " << far << endl;
             command.push_back("PATA");
 
+            command_perfects.clear();
+            perfects.clear();
+
             if(config.GetInt("enableDrums"))
             {
                 sf::Sound drum;
@@ -366,6 +373,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cout << "PATA (GOOD), " << timer << " ms, " << far << endl;
             command.push_back("PATA");
+            command_perfects.push_back(0);
 
             if(config.GetInt("enableDrums"))
             {
@@ -390,6 +398,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cout << "PATA (BEST), " << timer << " ms, " << far << endl;
             command.push_back("PATA");
+            command_perfects.push_back(1);
 
             if(config.GetInt("enableDrums"))
             {
@@ -425,6 +434,23 @@ void Rhythm::Draw(sf::RenderWindow& window)
         }
 
         keyMap[config.GetInt("keybindPata")] = false;
+
+        if(command_perfects.size() > 4)
+        command_perfects.erase(command_perfects.begin());
+
+        int temp_perfect = 0;
+
+        for(int i=0; i<=4; i++)
+        {
+            if(command_perfects.size() > i)
+            {
+                 temp_perfect += command_perfects[i];
+            }
+        }
+
+        perfect = temp_perfect;
+
+        cout << "Amount of PATA perfects: " << perfect << endl;
     }
 
     if(keyMap[config.GetInt("keybindPon")])
@@ -450,6 +476,9 @@ void Rhythm::Draw(sf::RenderWindow& window)
         if(timer < 300)
         {
             cout << "PON (BAD), " << timer << " ms, " << far << endl;
+
+            perfect = 0;
+            perfects.clear();
 
             sf::Sound drum;
             drum.setBuffer(b_pon[2]);
@@ -481,6 +510,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cout << "PON (BEST), " << timer << " ms, " << far << endl;
             command.push_back("PON");
+            perfect++;
 
             sf::Sound drum;
             drum.setBuffer(b_pon[0]);
@@ -531,6 +561,9 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cout << "CHAKA (BAD), " << timer << " ms, " << far << endl;
 
+            perfect = 0;
+            perfects.clear();
+
             sf::Sound drum;
             drum.setBuffer(b_chaka[2]);
             s_drums.push_back(drum);
@@ -548,6 +581,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cout << "CHAKA (GOOD), " << timer << " ms, " << far << endl;
             command.push_back("CHAKA");
+
             sf::Sound drum;
             drum.setBuffer(b_chaka[1]);
             s_drums.push_back(drum);
@@ -560,6 +594,8 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cout << "CHAKA (BEST), " << timer << " ms, " << far << endl;
             command.push_back("CHAKA");
+            perfect++;
+
             sf::Sound drum;
             drum.setBuffer(b_chaka[0]);
             s_drums.push_back(drum);
@@ -609,6 +645,9 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cout << "DON (BAD), " << timer << " ms, " << far << endl;
 
+            perfect = 0;
+            perfects.clear();
+
             sf::Sound drum;
             drum.setBuffer(b_don[2]);
             s_drums.push_back(drum);
@@ -626,6 +665,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cout << "DON (GOOD), " << timer << " ms, " << far << endl;
             command.push_back("DON");
+
             sf::Sound drum;
             drum.setBuffer(b_don[1]);
             s_drums.push_back(drum);
@@ -638,6 +678,8 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cout << "DON (BEST), " << timer << " ms, " << far << endl;
             command.push_back("DON");
+            perfect++;
+
             sf::Sound drum;
             drum.setBuffer(b_don[0]);
             s_drums.push_back(drum);
@@ -688,6 +730,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     test = 2;
                     test2 = 0;
 
+                    perfects.push_back(perfect);
+                    cout << "Perfect drums: " << perfect << endl;
+                    perfect = 0;
+
                     command.clear();
                     s_theme1.stop();
                     s_theme2.stop();
@@ -734,6 +780,9 @@ void Rhythm::Draw(sf::RenderWindow& window)
         timermode = 0;
         test = 1;
         test2 = 0;
+
+        perfect = 0;
+        perfects.clear();
 
         command.clear();
         s_theme1.stop();
