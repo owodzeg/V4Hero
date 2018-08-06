@@ -48,25 +48,6 @@ Rhythm::Rhythm()
     b_chdon[0].loadFromFile("resources/sfx/drums/ch_don.ogg");
     b_chdon[1].loadFromFile("resources/sfx/drums/ch_don_2.ogg");
     b_chdon[2].loadFromFile("resources/sfx/drums/ch_don_3.ogg");
-
-   /// change it to vector{elems}
-    av_commands.push_back("PATAPATAPATAPON");
-    av_commands.push_back("PONPONPATAPON");
-    av_commands.push_back("CHAKACHAKAPATAPON");
-    av_commands.push_back("PONPONCHAKACHAKA");
-    av_commands.push_back("PATAPONDONCHAKA");
-    av_commands.push_back("PONPATAPONPATA");
-    av_commands.push_back("DONDONCHAKACHAKA");
-    av_commands.push_back("CHAKAPATACHAKAPATA");
-
-    av_songs.push_back("patapata");
-    av_songs.push_back("ponpon");
-    av_songs.push_back("chakachaka");
-    av_songs.push_back("ponchaka");
-    av_songs.push_back("donchaka");
-    av_songs.push_back("ponpata");
-    av_songs.push_back("dondon");
-    av_songs.push_back("patapata");
 }
 
 void Rhythm::LoadTheme(string theme)
@@ -132,20 +113,12 @@ void Rhythm::LoadTheme(string theme)
     s_theme1.play();
 
     tclock.restart();
-    cclock.restart();
     timer = 500;
 }
 
 void Rhythm::Draw(sf::RenderWindow& window)
 {
     bool broke = false;
-
-    if(cclock.getElapsedTime().asSeconds() >= 2)
-    {
-        cclock.restart();
-    }
-
-    //cout << "tclock time elapsed: " << tclock.getElapsedTime().asSeconds() << endl;
 
     if(tclock.getElapsedTime().asSeconds() >= 4)
     {
@@ -417,371 +390,89 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
     //cout << test << endl;
 
+    int drum_quality = 2;
+    bool add_to_commandtable = false;
+
+    ///Determine the quality of given drum input
+    if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")] || keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")] || keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")] || keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
+    {
+        if(timer < low_range) ///BAD hit
+        {
+            ///Apply BAD drum sound effect
+            drum_quality = 2;
+        }
+        else if((timer >= low_range) && (timer < high_range)) ///GOOD hit
+        {
+            ///Add drum to command table
+            add_to_commandtable = true;
+
+            ///Apply GOOD drum sound effect
+            drum_quality = 1;
+        }
+        else if(timer >= high_range)
+        {
+            ///Add drum to command table
+            add_to_commandtable = true;
+
+            ///Apply BEST drum sound effect
+            drum_quality = 0;
+        }
+    }
+
     if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")])
     {
-        if(test >= 2)
-        {
-            if(cycle == true)
-            broke = true;
-        }
+        drum_nc.setBuffer(b_pata[drum_quality]);
+        drum_c.setBuffer(b_chpata[drum_quality]);
 
-        if(test <= 1)
-        {
-            if(cycle == true)
-            command.clear();
-        }
-
-        string far;
-        if(timermode == 1)
-        far = "too far";
-        else
-        far = "too early";
-
-        if(timer < 300)
-        {
-            cout << "PATA (BAD), " << timer << " ms, " << far << endl;
-            command.push_back("PATA");
-
-            command_perfects.clear();
-            perfects.clear();
-
-            if(config.GetInt("enableDrums"))
-            {
-                sf::Sound drum;
-                drum.setBuffer(b_pata[2]);
-                s_drums.push_back(drum);
-                s_drums[s_drums.size()-1].play();
-            }
-
-            if(config.GetInt("enableDrumChants"))
-            {
-                sf::Sound drum;
-                drum.setBuffer(b_chpata[2]);
-                s_drums.push_back(drum);
-                s_drums[s_drums.size()-1].play();
-            }
-
-            if(test >= 2)
-            {
-                broke = true;
-            }
-
-            command.clear();
-        }
-
-        if((timer >= 300) && (timer < 425))
-        {
-            cout << "PATA (GOOD), " << timer << " ms, " << far << endl;
-            command.push_back("PATA");
-            command_perfects.push_back(0);
-
-            if(config.GetInt("enableDrums"))
-            {
-                sf::Sound drum;
-                drum.setBuffer(b_pata[1]);
-                s_drums.push_back(drum);
-                s_drums[s_drums.size()-1].play();
-            }
-
-            if(config.GetInt("enableDrumChants"))
-            {
-                sf::Sound drum;
-                drum.setBuffer(b_chpata[1]);
-                s_drums.push_back(drum);
-                s_drums[s_drums.size()-1].play();
-            }
-
-            cycle = true;
-        }
-
-        if(timer >= 425)
-        {
-            cout << "PATA (BEST), " << timer << " ms, " << far << endl;
-            command.push_back("PATA");
-            command_perfects.push_back(1);
-
-            if(config.GetInt("enableDrums"))
-            {
-                sf::Sound drum;
-                drum.setBuffer(b_pata[0]);
-                s_drums.push_back(drum);
-                s_drums[s_drums.size()-1].play();
-            }
-
-            if(config.GetInt("enableDrumChants"))
-            {
-                sf::Sound drum;
-                drum.setBuffer(b_chpata[0]);
-                s_drums.push_back(drum);
-                s_drums[s_drums.size()-1].play();
-            }
-
-            cycle = true;
-        }
-
-        if(command.size() >= 5)
-        command.erase(command.begin());
-
-        erasecommand.restart();
-        beforefever.restart();
-
-        if(comcycle == 1)
-        {
-            if(test >= 2)
-            {
-                broke = true;
-            }
-        }
-
-        keyMap[config.GetInt("keybindPata")] = false;
-        keyMap[config.GetInt("secondaryKeybindPata")] = false;
-        if(command_perfects.size() > 4)
-        command_perfects.erase(command_perfects.begin());
-
-        int temp_perfect = 0;
-
-        for(int i=0; i<=4; i++)
-        {
-            if(command_perfects.size() > i)
-            {
-                 temp_perfect += command_perfects[i];
-            }
-        }
-
-        perfect = temp_perfect;
+        if(add_to_commandtable)
+        command.push_back("PATA");
     }
 
     if(keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")])
     {
-        if(test >= 2)
-        {
-            if(cycle == true)
-            broke = true;
-        }
+        drum_nc.setBuffer(b_pon[drum_quality]);
+        drum_c.setBuffer(b_chpon[drum_quality]);
 
-        if(test <= 1)
-        {
-            if(cycle == true)
-            command.clear();
-        }
-
-        string far;
-        if(timermode == 1)
-        far = "too far";
-        else
-        far = "too early";
-
-        if(timer < 300)
-        {
-            cout << "PON (BAD), " << timer << " ms, " << far << endl;
-
-            command_perfects.clear();
-            perfects.clear();
-
-            sf::Sound drum;
-            drum.setBuffer(b_pon[2]);
-            s_drums.push_back(drum);
-            s_drums[s_drums.size()-1].play();
-
-            if(test >= 2)
-            {
-                broke = true;
-            }
-
-            command.clear();
-        }
-
-        if((timer >= 300) && (timer < 425))
-        {
-            cout << "PON (GOOD), " << timer << " ms, " << far << endl;
-            command.push_back("PON");
-            command_perfects.push_back(0);
-
-            sf::Sound drum;
-            drum.setBuffer(b_pon[1]);
-            s_drums.push_back(drum);
-            s_drums[s_drums.size()-1].play();
-
-            cycle = true;
-        }
-
-        if(timer >= 425)
-        {
-            cout << "PON (BEST), " << timer << " ms, " << far << endl;
-            command.push_back("PON");
-            command_perfects.push_back(1);
-
-            sf::Sound drum;
-            drum.setBuffer(b_pon[0]);
-            s_drums.push_back(drum);
-            s_drums[s_drums.size()-1].play();
-
-            cycle = true;
-        }
-
-        if(command.size() >= 5)
-        command.erase(command.begin());
-
-        erasecommand.restart();
-        beforefever.restart();
-
-        if(comcycle == 1)
-        {
-            if(test >= 2)
-            {
-                broke = true;
-            }
-        }
-
-        keyMap[config.GetInt("keybindPon")] = false;
-        keyMap[config.GetInt("secondaryKeybindPon")] = false;
-        if(command_perfects.size() > 4)
-        command_perfects.erase(command_perfects.begin());
-
-        int temp_perfect = 0;
-
-        for(int i=0; i<=4; i++)
-        {
-            if(command_perfects.size() > i)
-            {
-                 temp_perfect += command_perfects[i];
-            }
-        }
-
-        perfect = temp_perfect;
+        if(add_to_commandtable)
+        command.push_back("PON");
     }
 
     if(keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
     {
-        if(test >= 2)
-        {
-            if(cycle == true)
-            broke = true;
-        }
+        drum_nc.setBuffer(b_chaka[drum_quality]);
+        drum_c.setBuffer(b_chchaka[drum_quality]);
 
-        if(test <= 1)
-        {
-            if(cycle == true)
-            command.clear();
-        }
-
-        string far;
-        if(timermode == 1)
-        far = "too far";
-        else
-        far = "too early";
-
-        if((timer >= 0) && (timer < 300))
-        {
-            cout << "CHAKA (BAD), " << timer << " ms, " << far << endl;
-
-            command_perfects.clear();
-            perfects.clear();
-
-            sf::Sound drum;
-            drum.setBuffer(b_chaka[2]);
-            s_drums.push_back(drum);
-            s_drums[s_drums.size()-1].play();
-
-            if(test >= 2)
-            {
-                broke = true;
-            }
-
-            command.clear();
-        }
-
-        if((timer >= 300) && (timer < 425))
-        {
-            cout << "CHAKA (GOOD), " << timer << " ms, " << far << endl;
-            command.push_back("CHAKA");
-            command_perfects.push_back(0);
-
-            sf::Sound drum;
-            drum.setBuffer(b_chaka[1]);
-            s_drums.push_back(drum);
-            s_drums[s_drums.size()-1].play();
-
-            cycle = true;
-        }
-
-        if(timer >= 425)
-        {
-            cout << "CHAKA (BEST), " << timer << " ms, " << far << endl;
-            command.push_back("CHAKA");
-            command_perfects.push_back(1);
-
-            sf::Sound drum;
-            drum.setBuffer(b_chaka[0]);
-            s_drums.push_back(drum);
-            s_drums[s_drums.size()-1].play();
-
-            cycle = true;
-        }
-
-        if(command.size() >= 5)
-        command.erase(command.begin());
-
-        erasecommand.restart();
-        beforefever.restart();
-
-        if(comcycle == 1)
-        {
-            if(test >= 2)
-            {
-                broke = true;
-            }
-        }
-
-        keyMap[config.GetInt("keybindChaka")] = false;
-        keyMap[config.GetInt("secondaryKeybindChaka")] = false;
-        if(command_perfects.size() > 4)
-        command_perfects.erase(command_perfects.begin());
-
-        int temp_perfect = 0;
-
-        for(int i=0; i<=4; i++)
-        {
-            if(command_perfects.size() > i)
-            {
-                 temp_perfect += command_perfects[i];
-            }
-        }
-
-        perfect = temp_perfect;
+        if(add_to_commandtable)
+        command.push_back("CHAKA");
     }
 
     if(keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")])
     {
-        if(test >= 2)
-        {
-            if(cycle == true)
-            broke = true;
-        }
+        drum_nc.setBuffer(b_don[drum_quality]);
+        drum_c.setBuffer(b_chdon[drum_quality]);
 
+        if(add_to_commandtable)
+        command.push_back("DON");
+    }
+
+    ///IF statement that applies to all drum keybinds (to not repeat the same code over and over)
+    if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")] || keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")] || keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")] || keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
+    {
         if(test <= 1)
         {
             if(cycle == true)
             command.clear();
         }
-
-        string far;
-        if(timermode == 1)
-        far = "too far";
         else
-        far = "too early";
-
-        if((timer >= 0) && (timer < 300))
         {
-            cout << "DON (BAD), " << timer << " ms, " << far << endl;
+            if(cycle == true)
+            broke = true;
+        }
 
+        if(timer < low_range)
+        {
             command_perfects.clear();
             perfects.clear();
-
-            sf::Sound drum;
-            drum.setBuffer(b_don[2]);
-            s_drums.push_back(drum);
-            s_drums[s_drums.size()-1].play();
 
             if(test >= 2)
             {
@@ -791,32 +482,30 @@ void Rhythm::Draw(sf::RenderWindow& window)
             command.clear();
         }
 
-        if((timer >= 300) && (timer < 425))
+        if(timer >= low_range)
         {
-            cout << "DON (GOOD), " << timer << " ms, " << far << endl;
-            command.push_back("DON");
-            command_perfects.push_back(0);
-
-            sf::Sound drum;
-            drum.setBuffer(b_don[1]);
-            s_drums.push_back(drum);
-            s_drums[s_drums.size()-1].play();
+            if(timer < high_range)
+            {
+                command_perfects.push_back(false);
+            }
+            else
+            {
+                command_perfects.push_back(true);
+            }
 
             cycle = true;
         }
 
-        if(timer >= 425)
+        if(config.GetInt("enableDrums"))
         {
-            cout << "DON (BEST), " << timer << " ms, " << far << endl;
-            command.push_back("DON");
-            command_perfects.push_back(1);
-
-            sf::Sound drum;
-            drum.setBuffer(b_don[0]);
-            s_drums.push_back(drum);
+            s_drums.push_back(drum_nc);
             s_drums[s_drums.size()-1].play();
+        }
 
-            cycle = true;
+        if(config.GetInt("enableDrumChants"))
+        {
+            s_drums.push_back(drum_c);
+            s_drums[s_drums.size()-1].play();
         }
 
         if(command.size() >= 5)
@@ -833,8 +522,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
             }
         }
 
-        keyMap[config.GetInt("keybindDon")] = false;
-        keyMap[config.GetInt("secondaryKeybindDon")] = false;
         if(command_perfects.size() > 4)
         command_perfects.erase(command_perfects.begin());
 
@@ -849,6 +536,15 @@ void Rhythm::Draw(sf::RenderWindow& window)
         }
 
         perfect = temp_perfect;
+
+        keyMap[config.GetInt("keybindPata")] = false;
+        keyMap[config.GetInt("secondaryKeybindPata")] = false;
+        keyMap[config.GetInt("keybindPon")] = false;
+        keyMap[config.GetInt("secondaryKeybindPon")] = false;
+        keyMap[config.GetInt("keybindChaka")] = false;
+        keyMap[config.GetInt("secondaryKeybindChaka")] = false;
+        keyMap[config.GetInt("keybindDon")] = false;
+        keyMap[config.GetInt("secondaryKeybindDon")] = false;
     }
 
     if(erasecommand.getElapsedTime().asSeconds() >= 1)
