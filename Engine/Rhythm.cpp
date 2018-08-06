@@ -417,7 +417,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
     //cout << test << endl;
 
-    if(keyMap[config.GetInt("keybindPata")])
+    if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")])
     {
         if(test >= 2)
         {
@@ -534,7 +534,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         }
 
         keyMap[config.GetInt("keybindPata")] = false;
-
+        keyMap[config.GetInt("secondaryKeybindPata")] = false;
         if(command_perfects.size() > 4)
         command_perfects.erase(command_perfects.begin());
 
@@ -551,7 +551,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         perfect = temp_perfect;
     }
 
-    if(keyMap[config.GetInt("keybindPon")])
+    if(keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")])
     {
         if(test >= 2)
         {
@@ -634,7 +634,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         }
 
         keyMap[config.GetInt("keybindPon")] = false;
-
+        keyMap[config.GetInt("secondaryKeybindPon")] = false;
         if(command_perfects.size() > 4)
         command_perfects.erase(command_perfects.begin());
 
@@ -651,7 +651,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         perfect = temp_perfect;
     }
 
-    if(keyMap[config.GetInt("keybindChaka")])
+    if(keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
     {
         if(test >= 2)
         {
@@ -734,7 +734,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         }
 
         keyMap[config.GetInt("keybindChaka")] = false;
-
+        keyMap[config.GetInt("secondaryKeybindChaka")] = false;
         if(command_perfects.size() > 4)
         command_perfects.erase(command_perfects.begin());
 
@@ -751,7 +751,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         perfect = temp_perfect;
     }
 
-    if(keyMap[config.GetInt("keybindDon")])
+    if(keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")])
     {
         if(test >= 2)
         {
@@ -834,7 +834,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         }
 
         keyMap[config.GetInt("keybindDon")] = false;
-
+        keyMap[config.GetInt("secondaryKeybindDon")] = false;
         if(command_perfects.size() > 4)
         command_perfects.erase(command_perfects.begin());
 
