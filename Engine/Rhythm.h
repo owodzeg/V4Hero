@@ -32,26 +32,26 @@ class Rhythm
     /// Initialize sounds ///
     sf::Sound drum_nc; ///Drum with no chant
     sf::Sound drum_c; ///Drum with chant
-    sf::Sound s_theme1,s_theme2,s_theme3; ///For playing BGM
+    sf::Sound s_theme[2]; ///For playing BGM
+    sf::Sound s_fever_fail; ///Dying fever sound
     sf::Sound s_chant; ///For playing chants
 
 
 
     /// Initialize clocks ///
-    sf::Clock tclock;
-    sf::Clock erasecommand;
-    sf::Clock beforefever;
+    sf::Clock rhythmClock;
+    sf::Clock commandTimeout;
+    sf::Clock beforeFeverClock;
 
 
 
     /// Initialize Rhythm System values ///
-    int test = 1;
-    int test2 = 0;
-    float timer = 500;
-    int timermode = 0;
-    int com = 1;
-    int comcycle = 1;
-    bool cycle = false;
+    int combo = 1;
+    float masterTimer = 500;
+    int masterTimerMode = 0;
+    int beatValue = 1;
+    int commandValue = 1;
+    bool drumAlreadyHit = false;
 
     std::vector<std::string> command;
     std::vector<std::string> av_commands = {"PATAPATAPATAPON","PONPONPATAPON","CHAKACHAKAPATAPON","PONPONCHAKACHAKA","PATAPONDONCHAKA","PONPATAPONPATA","DONDONCHAKACHAKA","CHAKAPATACHAKAPATA"};

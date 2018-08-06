@@ -109,38 +109,33 @@ void Rhythm::LoadTheme(string theme)
     b_chant["dondon_3"].loadFromFile("resources/sfx/bgm/"+theme+"/s_dondon3.ogg");
 
 
-    s_theme1.setBuffer(b_theme[0]);
-    s_theme1.play();
+    s_theme[0].setBuffer(b_theme[0]);
+    s_theme[0].play();
 
-    tclock.restart();
-    timer = 500;
+    rhythmClock.restart();
+    masterTimer = 500;
 }
 
 void Rhythm::Draw(sf::RenderWindow& window)
 {
     bool broke = false;
 
-    if(tclock.getElapsedTime().asSeconds() >= 4)
+    if(rhythmClock.getElapsedTime().asSeconds() >= 4)
     {
-        if(test >= 2)
+        if(combo >= 2)
         {
-            cout << "command.size(): " << command.size() << endl;
-
             if(command.size() == 4)
             {
                 string fullcom = command[0]+command[1]+command[2]+command[3];
-                cout << fullcom << endl;
 
                 if(std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end())
                 {
                     command.clear();
 
                     perfects.push_back(perfect);
-                    cout << "Perfect drums: " << perfect << endl;
                     perfect = 0;
 
                     float total_perfects = 0;
-                    float total_commands = 0;
 
                     if(perfects.size() > acc_count)
                     {
@@ -152,121 +147,45 @@ void Rhythm::Draw(sf::RenderWindow& window)
                         if(perfects.size() > i)
                         {
                             total_perfects += perfects[i];
-                            total_commands += 4;
                         }
                     }
 
-                    accuracy = total_perfects / total_commands;
+                    accuracy = total_perfects / (4 * perfects.size());
                     cout << "Total accuracy: " << accuracy*100 << "%" << endl;
 
-                    test++;
+                    combo++;
 
-                    if(test < 11)
+                    if((combo <= 10) && (combo >= 6))
                     {
-                        if(test == 10)
+                        if(accuracy >= 0.875 - (0.025 * (combo - 7)))
                         {
-                            if(accuracy >= 0.80)
-                            {
-                                test = 11;
-                            }
+                            combo = 11;
                         }
-
-                        if(test == 9)
+                    }
+                    else if((combo <= 5) && (combo >= 2))
+                    {
+                        if(accuracy >= 0.9 - (0.05 * (combo - 2)))
                         {
-                            if(accuracy >= 0.825)
-                            {
-                                test = 11;
-                            }
-                        }
-
-                        if(test == 8)
-                        {
-                            if(accuracy >= 0.85)
-                            {
-                                test = 11;
-                            }
-                        }
-
-                        if(test == 7)
-                        {
-                            if(accuracy >= 0.875)
-                            {
-                                test = 11;
-                            }
-                        }
-
-                        if(test == 6)
-                        {
-                            if(accuracy >= 0.9)
-                            {
-                                test = 11;
-                            }
-                        }
-
-                        if(test == 5)
-                        {
-                            if(accuracy >= 0.75)
-                            {
-                                test = 6;
-                            }
-                        }
-
-                        if(test == 4)
-                        {
-                            if(accuracy >= 0.8)
-                            {
-                                test = 6;
-                            }
-                        }
-
-                        if(test == 3)
-                        {
-                            if(accuracy >= 0.85)
-                            {
-                                test = 6;
-                            }
-                        }
-
-                        if(test == 2)
-                        {
-                            if(accuracy >= 0.875)
-                            {
-                                test = 6;
-                            }
+                            combo = 6;
                         }
                     }
 
                     cout << "Command is being inputted - play the chant here." << endl;
                     int chant_id = 0;
 
-                    if(test < 6)
+                    if(combo < 6)
                     {
                         chant_id = 1;
                     }
-
-                    if(test >= 6)
-                    if(test <= 10)
+                    else if((combo >= 6) && (combo <= 10))
                     {
                         chant_id = 2;
                     }
-
-                    if(test >= 11)
+                    else if(combo >= 11)
                     {
-                        /// bool = true/false
-                        /// bool = 1/0
-                        /// if(0) 0 = false
-                        /// if(1) 1 = true
-
-                        if(test % 2) ///if it's odd
+                        if(fullcom == "PATAPATAPATAPON" or fullcom == "PONPONPATAPON" or fullcom == "CHAKACHAKAPATAPON")
                         {
-                            if(fullcom == "PATAPATAPATAPON" or fullcom == "PONPONPATAPON" or fullcom == "CHAKACHAKAPATAPON")
-                            {
-                                chant_id = 4;
-                            }
-                            else
-                            {
-                                chant_id = 3;
-                            }
+                            chant_id = 3 + combo % 2;
                         }
                         else
                         {
@@ -284,9 +203,9 @@ void Rhythm::Draw(sf::RenderWindow& window)
                         }
                     }
 
-                    cout << "test is equal to: " << test << endl;
+                    cout << "combo is equal to: " << combo << endl;
 
-                    if(test != 11)
+                    if(combo != 11)
                     {
                         string chant_name = av_songs[song_ID]+"_"+to_string(chant_id);
                         s_chant.stop();
@@ -305,90 +224,63 @@ void Rhythm::Draw(sf::RenderWindow& window)
             }
         }
 
-        if(test == 0)
-        test = 1;
+        if(combo == 0)
+        combo = 1;
 
-        if(test >= 28)
-        test = 12;
+        if(combo >= 28)
+        combo = 12;
 
-        timer = 450;
-        timermode = 0;
+        masterTimer = 450;
+        masterTimerMode = 0;
 
-        if(test2 == 1)
-        {
-            s_theme2.setBuffer(b_theme[test]);
+        s_theme[combo%2].setBuffer(b_theme[combo]);
 
-            s_theme2.stop();
-            s_theme2.play();
+        s_theme[combo%2].stop();
+        s_theme[combo%2].play();
 
-            test2 = 2;
-        }
+        commandValue = 1;
+        beatValue = 1;
 
-        if(test2 == 0)
-        {
-            s_theme1.setBuffer(b_theme[test]);
-
-            s_theme1.stop();
-            s_theme1.play();
-
-            test2 = 1;
-        }
-
-        if(test2 == 2)
-        {
-            test2 = 0;
-        }
-
-        comcycle = 1;
-        com = 1;
-        tclock.restart();
+        rhythmClock.restart();
     }
 
-    if(timer >= 500)
+    if(masterTimer >= 500)
     {
-        cout << comcycle << ": " << com << endl;
-        if(comcycle == 2)
+        if((commandValue == 2) && (combo >= 2) && (command.size() < beatValue-1))
         {
-            if(test >= 2)
-            {
-                if(command.size() < com-1)
-                {
-                    broke = true;
-                }
-            }
+            broke = true;
         }
 
-        com++;
+        beatValue++;
 
-        if(com > 4)
+        if(beatValue > 4)
         {
-            com = 1;
-            comcycle++;
+            beatValue = 1;
+            commandValue++;
         }
 
-        timermode = 1;
-        timer = 500;
+        masterTimerMode = 1;
+        masterTimer = 500;
     }
-
-    if(timer <= 0)
+    else if(masterTimer <= 0)
     {
-        timermode = 0;
-        timer = 0;
+        masterTimerMode = 0;
+        masterTimer = 0;
 
-        cycle = false;
+        drumAlreadyHit = false;
     }
 
-    if(timermode == 1)
-    r_rhythm.setFillColor(sf::Color(255,255,255,timer/float(2)));
+    if(masterTimerMode == 1)
+    r_rhythm.setFillColor(sf::Color(255,255,255,masterTimer/float(2)));
     window.draw(r_rhythm);
 
-    if(timermode == 1)
-    timer -= float(2000) / fps;
+    if(masterTimerMode == 1)
+    masterTimer -= float(2000) / fps;
 
-    if(timermode == 0)
-    timer += float(2000) / fps;
+    if(masterTimerMode == 0)
+    masterTimer += float(2000) / fps;
 
-    //cout << test << endl;
+    //cout << combo << endl;
 
     int drum_quality = 2;
     bool add_to_commandtable = false;
@@ -396,12 +288,12 @@ void Rhythm::Draw(sf::RenderWindow& window)
     ///Determine the quality of given drum input
     if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")] || keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")] || keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")] || keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
     {
-        if(timer < low_range) ///BAD hit
+        if(masterTimer < low_range) ///BAD hit
         {
             ///Apply BAD drum sound effect
             drum_quality = 2;
         }
-        else if((timer >= low_range) && (timer < high_range)) ///GOOD hit
+        else if((masterTimer >= low_range) && (masterTimer < high_range)) ///GOOD hit
         {
             ///Add drum to command table
             add_to_commandtable = true;
@@ -409,7 +301,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
             ///Apply GOOD drum sound effect
             drum_quality = 1;
         }
-        else if(timer >= high_range)
+        else if(masterTimer >= high_range)
         {
             ///Add drum to command table
             add_to_commandtable = true;
@@ -458,42 +350,41 @@ void Rhythm::Draw(sf::RenderWindow& window)
     ///IF statement that applies to all drum keybinds (to not repeat the same code over and over)
     if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")] || keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")] || keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")] || keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
     {
-        if(test <= 1)
+        ///If combo is less than 1,
+        if(combo <= 1)
         {
-            if(cycle == true)
+            if(drumAlreadyHit == true)
             command.clear();
         }
         else
         {
-            if(cycle == true)
+            if(drumAlreadyHit == true)
             broke = true;
         }
 
-        if(timer < low_range)
+        if(masterTimer < low_range)
         {
             command_perfects.clear();
             perfects.clear();
+            command.clear();
 
-            if(test >= 2)
+            if(combo >= 2)
             {
                 broke = true;
             }
-
-            command.clear();
         }
 
-        if(timer >= low_range)
+        if(masterTimer >= low_range)
         {
-            if(timer < high_range)
+            bool perfect_command = false;
+
+            if(masterTimer > high_range)
             {
-                command_perfects.push_back(false);
-            }
-            else
-            {
-                command_perfects.push_back(true);
+                perfect_command = true;
             }
 
-            cycle = true;
+            command_perfects.push_back(perfect_command);
+            drumAlreadyHit = true;
         }
 
         if(config.GetInt("enableDrums"))
@@ -511,31 +402,26 @@ void Rhythm::Draw(sf::RenderWindow& window)
         if(command.size() >= 5)
         command.erase(command.begin());
 
-        erasecommand.restart();
-        beforefever.restart();
+        commandTimeout.restart();
+        beforeFeverClock.restart();
 
-        if(comcycle == 1)
+        if(commandValue == 1)
         {
-            if(test >= 2)
+            if(combo >= 2)
             {
                 broke = true;
             }
         }
 
-        if(command_perfects.size() > 4)
+        while(command_perfects.size() > 4)
         command_perfects.erase(command_perfects.begin());
 
-        int temp_perfect = 0;
+        perfect = 0;
 
-        for(int i=0; i<=4; i++)
+        for(int i=0; i<=command_perfects.size(); i++)
         {
-            if(command_perfects.size() > i)
-            {
-                 temp_perfect += command_perfects[i];
-            }
+            perfect += command_perfects[i];
         }
-
-        perfect = temp_perfect;
 
         keyMap[config.GetInt("keybindPata")] = false;
         keyMap[config.GetInt("secondaryKeybindPata")] = false;
@@ -547,41 +433,39 @@ void Rhythm::Draw(sf::RenderWindow& window)
         keyMap[config.GetInt("secondaryKeybindDon")] = false;
     }
 
-    if(erasecommand.getElapsedTime().asSeconds() >= 1)
+    if(commandTimeout.getElapsedTime().asSeconds() >= 1)
     {
         command.clear();
     }
 
-    if(beforefever.getElapsedTime().asMilliseconds() >= 505)
+    if(beforeFeverClock.getElapsedTime().asMilliseconds() >= 505)
     {
         if(command.size() == 4)
         {
-            if(test <= 1)
+            if(combo <= 1)
             {
                 string fullcom = command[0]+command[1]+command[2]+command[3];
 
                 if(std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end())
                 {
-                    cout << "beng" << endl;
+                    rhythmClock.restart();
 
-                    tclock.restart();
-                    com = 1;
-                    comcycle = 1;
-                    timer = 450;
-                    timermode = 0;
-                    test = 2;
-                    test2 = 0;
+                    beatValue = 1;
+                    commandValue = 1;
+                    masterTimer = 450;
+                    masterTimerMode = 0;
+                    combo = 2;
 
                     perfects.push_back(perfect);
                     cout << "Perfect drums: " << perfect << endl;
                     perfect = 0;
 
                     command.clear();
-                    s_theme1.stop();
-                    s_theme2.stop();
+                    s_theme[0].stop();
+                    s_theme[1].stop();
 
-                    s_theme1.setBuffer(b_theme[test]);
-                    s_theme1.play();
+                    s_theme[0].setBuffer(b_theme[combo]);
+                    s_theme[0].play();
 
 
 
@@ -606,31 +490,30 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
     if(broke)
     {
-        if(test >= 11)
+        if(combo >= 11)
         {
-            ///dying fever sound
-
-            s_theme3.setBuffer(b_theme[28]);
-            s_theme3.play();
+            ///Dying fever sound
+            s_fever_fail.setBuffer(b_theme[28]);
+            s_fever_fail.play();
 
         }
 
-        tclock.restart();
-        com = 1;
-        comcycle = 1;
-        timer = 450;
-        timermode = 0;
-        test = 1;
-        test2 = 0;
+        rhythmClock.restart();
+
+        beatValue = 1;
+        commandValue = 1;
+        masterTimer = 450;
+        masterTimerMode = 0;
+        combo = 1;
 
         perfect = 0;
         perfects.clear();
 
         command.clear();
-        s_theme1.stop();
-        s_theme2.stop();
+        s_theme[0].stop();
+        s_theme[1].stop();
 
-        s_theme1.setBuffer(b_theme[test]);
-        s_theme1.play();
+        s_theme[0].setBuffer(b_theme[combo]);
+        s_theme[1].play();
     }
 }
