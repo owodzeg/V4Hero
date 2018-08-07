@@ -268,6 +268,8 @@ void Rhythm::Draw(sf::RenderWindow& window)
             breakCombo = true;
         }
 
+        cout << commandValue << " : " << beatValue << endl;
+
         ///Increment the beat value
         beatValue++;
 
@@ -294,7 +296,17 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
     ///Visuals
     if(masterTimerMode == 1)
-    r_rhythm.setFillColor(sf::Color(255,255,255,masterTimer/float(2)));
+    {
+        float ratio_X = window.getSize().x / float(1280);
+        float ratio_Y = window.getSize().y / float(720);
+        float ratio_universal = (window.getSize().x * window.getSize().y) / (float(1280) * float(720));
+
+        r_rhythm.setFillColor(sf::Color(0,0,0,0));
+        r_rhythm.setOutlineThickness(-ceil(3 * ratio_universal));
+        r_rhythm.setOutlineColor(sf::Color(255,255,255,masterTimer/float(2)));
+        r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (24 * ratio_X), (720 * ratio_Y) - (24 * ratio_Y)));
+        r_rhythm.setPosition(12*ratio_X,12*ratio_Y);
+    }
     window.draw(r_rhythm);
 
     ///Master Timer speed (Higher value = Faster Rhythm system)
