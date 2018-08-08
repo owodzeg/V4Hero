@@ -304,10 +304,12 @@ void Rhythm::Draw(sf::RenderWindow& window)
     ///Visuals
     if(masterTimerMode == 1)
     {
+        ///Calculate the ratio for other window sizes (default is 1280x720)
         float ratio_X = window.getSize().x / float(1280);
         float ratio_Y = window.getSize().y / float(720);
         float ratio_universal = (window.getSize().x * window.getSize().y) / (float(1280) * float(720));
 
+        /// Beat frame
         r_rhythm.setFillColor(sf::Color(0,0,0,0));
         r_rhythm.setOutlineThickness(-ceil(3 * ratio_universal));
         r_rhythm.setOutlineColor(sf::Color(255,255,255,masterTimer/float(2)));
@@ -326,11 +328,15 @@ void Rhythm::Draw(sf::RenderWindow& window)
         r_fever.setPosition(50*ratio_X-sizeMod,50*ratio_Y-sizeMod);
         r_fever_meter.setPosition(50*ratio_X-sizeMod,50*ratio_Y-sizeMod);
     }
+
     window.draw(r_rhythm);
     window.draw(r_fever);
-    if(combo>12){
+
+    if(combo>12)
+    {
         window.draw(r_fever_meter);
     }
+
     ///Master Timer speed (Higher value = Faster Rhythm system)
     if(masterTimerMode == 1)
     masterTimer -= float(2000) / fps;
