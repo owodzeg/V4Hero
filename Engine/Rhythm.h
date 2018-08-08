@@ -88,6 +88,7 @@ class Rhythm
 
 
 
+
     /// Config and Keybindings ///
     Config config;
     std::map<int,bool> keyMap;
@@ -96,7 +97,8 @@ class Rhythm
 
     /// Visuals ///
     sf::RectangleShape r_rhythm;
-
+    sf::RectangleShape r_fever;
+    sf::RectangleShape r_fever_meter;
 
 
     Rhythm();
