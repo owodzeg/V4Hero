@@ -1,7 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include "Rhythm.h"
-
+#include <cmath>
 using namespace std;
 
 template < class T >
@@ -16,6 +16,12 @@ Rhythm::Rhythm()
 {
     r_rhythm.setSize(sf::Vector2f(100,100));
     r_rhythm.setFillColor(sf::Color::White);
+
+    r_fever.setSize(sf::Vector2f(100,10));
+    r_fever.setFillColor(sf::Color::Red);
+
+    r_fever_meter.setSize(sf::Vector2f(100,10));
+    r_fever_meter.setFillColor(sf::Color::Yellow);
 
     b_pata[0].loadFromFile("resources/sfx/drums/pata.ogg");
     b_pata[1].loadFromFile("resources/sfx/drums/pata_2.ogg");
@@ -268,6 +274,8 @@ void Rhythm::Draw(sf::RenderWindow& window)
             breakCombo = true;
         }
 
+        cout << commandValue << " : " << beatValue << endl;
+
         ///Increment the beat value
         beatValue++;
 
@@ -292,10 +300,42 @@ void Rhythm::Draw(sf::RenderWindow& window)
         drumAlreadyHit = false;
     }
 
+
     ///Visuals
     if(masterTimerMode == 1)
-    r_rhythm.setFillColor(sf::Color(255,255,255,masterTimer/float(2)));
+    {
+        ///Calculate the ratio for other window sizes (default is 1280x720)
+        float ratio_X = window.getSize().x / float(1280);
+        float ratio_Y = window.getSize().y / float(720);
+        float ratio_universal = (window.getSize().x * window.getSize().y) / (float(1280) * float(720));
+
+        /// Beat frame
+        r_rhythm.setFillColor(sf::Color(0,0,0,0));
+        r_rhythm.setOutlineThickness(-ceil(3 * ratio_universal));
+        r_rhythm.setOutlineColor(sf::Color(255,255,255,masterTimer/float(2)));
+        r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (24 * ratio_X), (720 * ratio_Y) - (24 * ratio_Y)));
+        r_rhythm.setPosition(12*ratio_X,12*ratio_Y);
+
+        /// Fever meter
+        int feverMeterWidth = 10*(combo-12);
+        if (feverMeterWidth>100){
+            feverMeterWidth=100;
+        }
+        int sizeMod = masterTimer/float(100);
+        r_fever.setSize(sf::Vector2f(100+sizeMod*2,10+sizeMod*2));
+        r_fever_meter.setSize(sf::Vector2f(feverMeterWidth+sizeMod*2,10+sizeMod*2));
+
+        r_fever.setPosition(50*ratio_X-sizeMod,50*ratio_Y-sizeMod);
+        r_fever_meter.setPosition(50*ratio_X-sizeMod,50*ratio_Y-sizeMod);
+    }
+
     window.draw(r_rhythm);
+    window.draw(r_fever);
+
+    if(combo>12)
+    {
+        window.draw(r_fever_meter);
+    }
 
     ///Master Timer speed (Higher value = Faster Rhythm system)
     if(masterTimerMode == 1)
