@@ -130,106 +130,96 @@ void Rhythm::Draw(sf::RenderWindow& window)
 {
     bool breakCombo = false; ///Initialize a temporary value used for breaking the combo
 
-    if(rhythmClock.getElapsedTime().asSeconds() >= 4) ///2 Commands elapsed (1 - Patapons singing, 2 - User input)
+    if(rhythmClock.getElapsedTime().asSeconds() >= 4) ///If the 2 commands will pass
     {
-        if(combo >= 2) ///If combo is bigger than 2 (The rhythm started)
+        if((combo >= 2) && (commandInput.size() == 4)) /// Combo and user input meets criteria
         {
-            if(commandInput.size() == 4) ///The size of user input must be exactly 4 hits (to be changed later for DON DODON DODON support)
+            string fullcom = commandInput[0]+commandInput[1]+commandInput[2]+commandInput[3]; ///Create a full command using 4 individual hits
+
+            if(std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end()) ///Check if the command exists in available commands
             {
-                string fullcom = commandInput[0]+commandInput[1]+commandInput[2]+commandInput[3]; ///Create a full command using 4 individual hits
+                ///Clear user input
+                commandInput.clear();
 
-                if(std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end()) ///Check if the command exists in available commands
+                ///Push the amount of perfect hits to the table and reset them
+                perfects.push_back(perfect);
+                perfect = 0;
+
+                ///Remove unnecessary perfects
+                while(perfects.size() > acc_count)
+                perfects.erase(perfects.begin());
+
+                ///Calculate total perfect value
+                float total_perfects = 0;
+
+                for(int i=0; i<acc_count; i++)
                 {
-                    ///Clear user input
-                    commandInput.clear();
+                    total_perfects += perfects[i];
+                }
 
-                    ///Push the amount of perfect hits to the table and reset them
-                    perfects.push_back(perfect);
-                    perfect = 0;
+                ///Calculate beat accuracy
+                accuracy = total_perfects / (4 * perfects.size());
 
-                    ///Remove unnecessary perfects
-                    while(perfects.size() > acc_count)
+                ///Increment combo
+                combo++;
+
+                ///Check for prefever accuracy to determine combo skip
+                if((combo <= 10) && (combo >= 6))
+                {
+                    if(accuracy >= 0.875 - (0.025 * (combo - 7)))
                     {
-                        perfects.erase(perfects.begin());
-                    }
-
-                    ///Calculate total perfect value
-                    float total_perfects = 0;
-
-                    for(int i=0; i<acc_count; i++)
-                    {
-                        total_perfects += perfects[i];
-                    }
-
-                    ///Calculate beat accuracy
-                    accuracy = total_perfects / (4 * perfects.size());
-
-                    ///Increment combo
-                    combo++;
-
-                    ///Check for prefever accuracy to determine combo skip
-                    if((combo <= 10) && (combo >= 6))
-                    {
-                        if(accuracy >= 0.875 - (0.025 * (combo - 7)))
-                        {
-                            combo = 11;
-                        }
-                    }
-                    else if((combo <= 5) && (combo >= 2))
-                    {
-                        if(accuracy >= 0.9 - (0.05 * (combo - 2)))
-                        {
-                            combo = 6;
-                        }
-                    }
-
-                    ///Calculate which chant should be used
-                    int chant_id = 0;
-
-                    if(combo < 6)
-                    {
-                        chant_id = 1;
-                    }
-                    else if((combo >= 6) && (combo <= 10))
-                    {
-                        chant_id = 2;
-                    }
-                    else if(combo >= 11)
-                    {
-                        if(fullcom == "PATAPATAPATAPON" or fullcom == "PONPONPATAPON" or fullcom == "CHAKACHAKAPATAPON")
-                        {
-                            chant_id = 3 + combo % 2;
-                        }
-                        else
-                        {
-                            chant_id = 3;
-                        }
-                    }
-
-                    ///Determine which song should be played
-                    int song_ID = -1;
-
-                    for(int i=0; i<av_commands.size(); i++)
-                    {
-                        if(av_commands[i] == fullcom)
-                        {
-                            song_ID = i;
-                        }
-                    }
-
-                    ///Prevent chants from playing at FEVER combo
-                    if(combo != 11)
-                    {
-                        string chant_name = av_songs[song_ID]+"_"+to_string(chant_id);
-                        s_chant.stop();
-                        s_chant.setBuffer(b_chant[chant_name]);
-                        s_chant.play();
+                        combo = 11;
                     }
                 }
-                else
+                else if((combo <= 5) && (combo >= 2))
                 {
-                    ///Break the combo if command is not found
-                    breakCombo = true;
+                    if(accuracy >= 0.9 - (0.05 * (combo - 2)))
+                    {
+                        combo = 6;
+                    }
+                }
+
+                ///Calculate which chant should be used
+                int chant_id = 0;
+
+                if(combo < 6)
+                {
+                    chant_id = 1;
+                }
+                else if((combo >= 6) && (combo <= 10))
+                {
+                    chant_id = 2;
+                }
+                else if(combo >= 11)
+                {
+                    if(fullcom == "PATAPATAPATAPON" or fullcom == "PONPONPATAPON" or fullcom == "CHAKACHAKAPATAPON")
+                    {
+                        chant_id = 3 + combo % 2;
+                    }
+                    else
+                    {
+                        chant_id = 3;
+                    }
+                }
+
+                ///Determine which song should be played
+                int song_ID = -1;
+
+                for(int i=0; i<av_commands.size(); i++)
+                {
+                    if(av_commands[i] == fullcom)
+                    {
+                        song_ID = i;
+                    }
+                }
+
+                ///Prevent chants from playing at FEVER combo
+                if(combo != 11)
+                {
+                    string chant_name = av_songs[song_ID]+"_"+to_string(chant_id);
+                    s_chant.stop();
+                    s_chant.setBuffer(b_chant[chant_name]);
+                    s_chant.play();
                 }
             }
             else
@@ -265,41 +255,11 @@ void Rhythm::Draw(sf::RenderWindow& window)
         rhythmClock.restart();
     }
 
-    ///When Master timer has reached max value (PERFECT 500 ms, one beat)
-    if(masterTimer >= 500)
-    {
-        ///Check if command value is set at 2 (User input), if combo is equal or above 2, check if user input is correct
-        if((commandValue == 2) && (combo >= 2) && (commandInput.size() < beatValue-1))
-        {
-            breakCombo = true;
-        }
-
-        cout << commandValue << " : " << beatValue << endl;
-
-        ///Increment the beat value
-        beatValue++;
-
-        ///If 4 beats has passed, increment the command value
-        if(beatValue > 4)
-        {
-            beatValue = 1;
-            commandValue++;
-        }
-
-        ///Reset master timer and change the mode
-        masterTimerMode = 1;
-        masterTimer = 500;
-    }
-    else if(masterTimer <= 0)
-    {
-        ///Reset master timer and change the mode
-        masterTimerMode = 0;
-        masterTimer = 0;
-
-        ///Disable drum block
-        drumAlreadyHit = false;
-    }
-
+    ///Patch for unusable command and beat values
+    int totalComValue = ((commandValue - 1) * 4) + beatValue - 1;
+    int usableCommandValue = floor(totalComValue / float(5));
+    int usableBeatValue = floor(totalComValue - (usableCommandValue * 4));
+    usableCommandValue += 1;
 
     ///Visuals
     if(masterTimerMode == 1)
@@ -310,11 +270,18 @@ void Rhythm::Draw(sf::RenderWindow& window)
         float ratio_universal = (window.getSize().x * window.getSize().y) / (float(1280) * float(720));
 
         /// Beat frame
-        r_rhythm.setFillColor(sf::Color(0,0,0,0));
-        r_rhythm.setOutlineThickness(-ceil(3 * ratio_universal));
-        r_rhythm.setOutlineColor(sf::Color(255,255,255,masterTimer/float(2)));
-        r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (24 * ratio_X), (720 * ratio_Y) - (24 * ratio_Y)));
-        r_rhythm.setPosition(12*ratio_X,12*ratio_Y);
+        if((combo <= 1) or ((combo > 1) and (combo < 11) and (usableCommandValue == 2)))
+        {
+            r_rhythm.setFillColor(sf::Color(0,0,0,0));
+            r_rhythm.setOutlineThickness(-ceil(3 * ratio_universal));
+            r_rhythm.setOutlineColor(sf::Color(255,255,255,masterTimer/float(2)));
+            r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (24 * ratio_X), (720 * ratio_Y) - (24 * ratio_Y)));
+            r_rhythm.setPosition(12*ratio_X,12*ratio_Y);
+        }
+        else
+        {
+            r_rhythm.setOutlineColor(sf::Color(255,255,255,0));
+        }
 
         /// Fever meter
         int feverMeterWidth = 10*(combo-12);
@@ -335,7 +302,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
     window.draw(r_rhythm);
     window.draw(r_fever);
 
-    if(combo>12)
+    if(combo > 12)
     {
         window.draw(r_fever_meter);
     }
@@ -605,5 +572,38 @@ void Rhythm::Draw(sf::RenderWindow& window)
         ///Play BGM from the combo of idle point
         s_theme[0].setBuffer(b_theme[combo]);
         s_theme[1].play();
+    }
+
+    ///When Master timer has reached max value (PERFECT 500 ms, one beat)
+    if(masterTimer >= 500)
+    {
+        ///Check if command value is set at 2 (User input), if combo is equal or above 2, check if user input is correct
+        if((commandValue == 2) && (combo >= 2) && (commandInput.size() < beatValue-1))
+        {
+            breakCombo = true;
+        }
+
+        ///Increment the beat value
+        beatValue++;
+
+        ///If 4 beats has passed, increment the command value
+        if(beatValue > 4)
+        {
+            beatValue = 1;
+            commandValue++;
+        }
+
+        ///Reset master timer and change the mode
+        masterTimerMode = 1;
+        masterTimer = 500;
+    }
+    else if(masterTimer <= 0)
+    {
+        ///Reset master timer and change the mode
+        masterTimerMode = 0;
+        masterTimer = 0;
+
+        ///Disable drum block
+        drumAlreadyHit = false;
     }
 }
