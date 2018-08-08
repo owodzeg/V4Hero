@@ -96,8 +96,7 @@ class Rhythm
 
 
     /// Visuals ///
-    sf::RectangleShape r_rhythm; ///beat frame 1
-    sf::RectangleShape r_rhythm2; ///beat frame 2
+    sf::RectangleShape r_rhythm;
     sf::RectangleShape r_fever;
     sf::RectangleShape r_fever_meter;
 
