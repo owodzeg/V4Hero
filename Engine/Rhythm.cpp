@@ -54,6 +54,9 @@ Rhythm::Rhythm()
     b_chdon[0].loadFromFile("resources/sfx/drums/ch_don.ogg");
     b_chdon[1].loadFromFile("resources/sfx/drums/ch_don_2.ogg");
     b_chdon[2].loadFromFile("resources/sfx/drums/ch_don_3.ogg");
+
+    b_fever_start.loadFromFile("resources/sfx/bgm/fever_start.ogg");
+    b_fever_fail.loadFromFile("resources/sfx/bgm/fever_fail.ogg");
 }
 
 void Rhythm::LoadTheme(string theme)
@@ -87,9 +90,6 @@ void Rhythm::LoadTheme(string theme)
     b_theme[25].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever14.ogg");
     b_theme[26].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever15.ogg");
     b_theme[27].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever16.ogg");
-
-    ///Fever die sound
-    b_theme[28].loadFromFile("resources/sfx/bgm/fever_fail.ogg");
 
     ///All chants
     b_chant["patapata_1"].loadFromFile("resources/sfx/bgm/"+theme+"/s_patapata1.ogg");
@@ -222,6 +222,14 @@ void Rhythm::Draw(sf::RenderWindow& window)
                         s_chant.stop();
                         s_chant.setBuffer(b_chant[chant_name]);
                         s_chant.play();
+                    }
+
+                    ///Make FEVER! sound playing at FEVER combo
+                    if(combo == 11)
+                    {
+                        ///FEVER! sound
+                        s_fever_start.setBuffer(b_fever_start);
+                        s_fever_start.play();
                     }
                 }
                 else
@@ -653,7 +661,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         if(combo >= 11) ///Play dying fever sound when BGM is in fever state
         {
             ///Dying fever sound
-            s_fever_fail.setBuffer(b_theme[28]);
+            s_fever_fail.setBuffer(b_fever_fail);
             s_fever_fail.play();
         }
 

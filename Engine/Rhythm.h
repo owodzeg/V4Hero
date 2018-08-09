@@ -30,10 +30,14 @@ class Rhythm
 
 
     /// Initialize sounds ///
+    sf::SoundBuffer b_fever_fail;
+    sf::SoundBuffer b_fever_start;
+
     sf::Sound drum_nc; ///Drum with no chant
     sf::Sound drum_c; ///Drum with chant
     sf::Sound s_theme[2]; ///For playing BGM
     sf::Sound s_fever_fail; ///Dying fever sound
+    sf::Sound s_fever_start; ///FEVER!
     sf::Sound s_chant; ///For playing chants
 
 
