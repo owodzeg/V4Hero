@@ -47,7 +47,7 @@ void V4Core::Init()
 
         //cout << fps << endl;
 
-        window.clear();
+        window.clear(sf::Color(255,200,200,255));
         rhythm.fps = fps;
         ///ugh this is a BAD solution i need to do it differently
         rhythm.keyMap = keyMap;
