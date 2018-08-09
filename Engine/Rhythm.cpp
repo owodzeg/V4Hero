@@ -360,7 +360,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
                 r_rhythm.setOutlineColor(sf::Color(0,255,0,masterTimer/float(2)));
             }
 
-            cout << "flicker: " << flicker << endl;
             flicker += float(1) / fps * 30;
 
             if(flicker >= 4)
@@ -390,6 +389,17 @@ void Rhythm::Draw(sf::RenderWindow& window)
     if(combo > 12)
     {
         window.draw(r_fever_meter);
+    }
+
+    for(int i=0; i<drums.size(); i++)
+    {
+        drums[i].fps = fps;
+        drums[i].Draw(window);
+
+        if(drums[i].alpha <= 0)
+        {
+            drums.erase(drums.begin() + i);
+        }
     }
 
     ///Master Timer speed (Higher value = Faster Rhythm system)
@@ -439,6 +449,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
         ///Add PATA drum to user input table
         if(add_to_commandtable)
         commandInput.push_back("PATA");
+
+        Drum temp;
+        temp.Load("pata",window);
+        drums.push_back(temp);
     }
 
     ///Keybind for PON drum
@@ -451,6 +465,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
         ///Add PON drum to user input table
         if(add_to_commandtable)
         commandInput.push_back("PON");
+
+        Drum temp;
+        temp.Load("pon",window);
+        drums.push_back(temp);
     }
 
     ///Keybind for CHAKA drum
@@ -463,6 +481,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
         ///Add CHAKA drum to user input table
         if(add_to_commandtable)
         commandInput.push_back("CHAKA");
+
+        Drum temp;
+        temp.Load("chaka",window);
+        drums.push_back(temp);
     }
 
     ///Keybind for DON drum
@@ -475,6 +497,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
         ///Add DON drum to user input table
         if(add_to_commandtable)
         commandInput.push_back("DON");
+
+        Drum temp;
+        temp.Load("don",window);
+        drums.push_back(temp);
     }
 
     ///IF statement that applies to all drum keybinds (to not repeat the same code over and over)

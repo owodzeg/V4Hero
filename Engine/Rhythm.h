@@ -6,6 +6,7 @@
 
 #include "Config.h"
 #include "Func.h"
+#include "Drum.h"
 
 class Rhythm
 {
@@ -86,6 +87,9 @@ class Rhythm
     int acc_count = 3; ///value for determining on how far back should the accuracy calculation system go in commands
 
 
+
+    /// Drums in-game ///
+    std::vector<Drum> drums;
 
     public:
     /// Default FPS value ///
