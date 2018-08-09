@@ -56,7 +56,7 @@ class Rhythm
     int beatValue = 1; ///Value for beats (drums) in a command (1, 2, 3, 4)
     int commandValue = 1; ///Value for current command (1 - Patapons sing, 2 - Player input)
     bool drumAlreadyHit = false; ///Made to check if drum has already been hit in 1 beat (to prevent from hitting multiple drums at a time)
-    int flicker = 0; ///For beat frame flickering
+    float flicker = 0; ///For beat frame flickering
 
     std::vector<std::string> commandInput; ///Drum input
     std::vector<std::string> av_commands = {"PATAPATAPATAPON",
