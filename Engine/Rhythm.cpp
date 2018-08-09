@@ -231,6 +231,8 @@ void Rhythm::Draw(sf::RenderWindow& window)
                         s_fever_start.setBuffer(b_fever_start);
                         s_fever_start.play();
                     }
+
+                    flicker = 0;
                 }
                 else
                 {
@@ -341,32 +343,28 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
             r_rhythm2.setOutlineColor(sf::Color(0,0,0,0));
 
-            if(flicker == 0)
+            if(floor(flicker) == 0)
             {
                 r_rhythm.setOutlineColor(sf::Color(255,255,0,masterTimer/float(2)));
             }
-
-            if(flicker == 1)
+            else if(floor(flicker) == 1)
             {
                 r_rhythm.setOutlineColor(sf::Color(255,255,255,masterTimer/float(2)));
             }
-
-            if(flicker == 2)
+            else if(floor(flicker) == 2)
             {
                 r_rhythm.setOutlineColor(sf::Color(0,255,255,masterTimer/float(2)));
             }
-
-            if(flicker == 3)
+            else if(floor(flicker) == 3)
             {
                 r_rhythm.setOutlineColor(sf::Color(0,255,0,masterTimer/float(2)));
             }
 
-            flicker++;
+            cout << "flicker: " << flicker << endl;
+            flicker += float(1) / fps * 30;
 
             if(flicker >= 4)
-            {
-                flicker = 0;
-            }
+            flicker = 0;
         }
 
         /// Fever meter
@@ -644,6 +642,8 @@ void Rhythm::Draw(sf::RenderWindow& window)
         ///Reset master timer and change the mode
         masterTimerMode = 1;
         masterTimer = 500;
+
+        flicker = 0;
     }
     else if(masterTimer <= 0)
     {
