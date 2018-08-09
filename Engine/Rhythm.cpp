@@ -323,6 +323,43 @@ void Rhythm::Draw(sf::RenderWindow& window)
                 }
             }
         }
+        else if((combo >= 11) and (usableCommandValue == 2))
+        {
+            r_rhythm.setFillColor(sf::Color(0,0,0,0));
+            r_rhythm.setOutlineThickness(-ceil(7 * ratio_universal));
+
+            r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (20 * ratio_X), (720 * ratio_Y) - (20 * ratio_Y)));
+            r_rhythm.setPosition(10*ratio_X,10*ratio_Y);
+
+            r_rhythm2.setOutlineColor(sf::Color(0,0,0,0));
+
+            if(flicker == 0)
+            {
+                r_rhythm.setOutlineColor(sf::Color(255,255,0,masterTimer/float(2)));
+            }
+
+            if(flicker == 1)
+            {
+                r_rhythm.setOutlineColor(sf::Color(255,255,255,masterTimer/float(2)));
+            }
+
+            if(flicker == 2)
+            {
+                r_rhythm.setOutlineColor(sf::Color(0,255,255,masterTimer/float(2)));
+            }
+
+            if(flicker == 3)
+            {
+                r_rhythm.setOutlineColor(sf::Color(0,255,0,masterTimer/float(2)));
+            }
+
+            flicker++;
+
+            if(flicker >= 4)
+            {
+                flicker = 0;
+            }
+        }
 
         /// Fever meter
         int feverMeterWidth = 10*(combo-12);
