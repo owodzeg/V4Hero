@@ -83,37 +83,61 @@ void Drum::Load(string drum, int perfection, sf::RenderWindow& window)
         pattern_X.push_back(1140); ///Drum 2
         pattern_Y.push_back(290);
         pattern_Angle.push_back(0);
+        pattern_Xspeed.push_back(-40);
+        pattern_Yspeed.push_back(-10);
+        pattern_rotateSpeed.push_back(-60);
 
         pattern_X.push_back(1165); ///Drum 4
         pattern_Y.push_back(410);
         pattern_Angle.push_back(20);
+        pattern_Xspeed.push_back(-40);
+        pattern_Yspeed.push_back(-40);
+        pattern_rotateSpeed.push_back(30);
 
 
         pattern_X.push_back(1110); ///Drum 3
         pattern_Y.push_back(340);
         pattern_Angle.push_back(10);
+        pattern_Xspeed.push_back(20);
+        pattern_Yspeed.push_back(20);
+        pattern_rotateSpeed.push_back(-30);
 
         pattern_X.push_back(1135); ///Drum 1
         pattern_Y.push_back(220);
         pattern_Angle.push_back(10);
+        pattern_Xspeed.push_back(10);
+        pattern_Yspeed.push_back(100);
+        pattern_rotateSpeed.push_back(50);
 
 
         pattern_X.push_back(1165); ///Drum 4
         pattern_Y.push_back(410);
         pattern_Angle.push_back(20);
+        pattern_Xspeed.push_back(-40);
+        pattern_Yspeed.push_back(-40);
+        pattern_rotateSpeed.push_back(30);
 
         pattern_X.push_back(1140); ///Drum 2
         pattern_Y.push_back(290);
         pattern_Angle.push_back(0);
+        pattern_Xspeed.push_back(-40);
+        pattern_Yspeed.push_back(-10);
+        pattern_rotateSpeed.push_back(-60);
 
 
         pattern_X.push_back(1110); ///Drum 3
         pattern_Y.push_back(340);
         pattern_Angle.push_back(10);
+        pattern_Xspeed.push_back(20);
+        pattern_Yspeed.push_back(20);
+        pattern_rotateSpeed.push_back(-30);
 
         pattern_X.push_back(1135); ///Drum 1
         pattern_Y.push_back(220);
         pattern_Angle.push_back(10);
+        pattern_Xspeed.push_back(10);
+        pattern_Yspeed.push_back(100);
+        pattern_rotateSpeed.push_back(50);
     }
 
     if(drum == "don")
@@ -124,37 +148,63 @@ void Drum::Load(string drum, int perfection, sf::RenderWindow& window)
         pattern_X.push_back(690); ///Drum 3
         pattern_Y.push_back(650);
         pattern_Angle.push_back(0);
+        pattern_Xspeed.push_back(-30);
+        pattern_Yspeed.push_back(-30);
+        pattern_rotateSpeed.push_back(40);
 
         pattern_X.push_back(515); ///Drum 1
         pattern_Y.push_back(660);
         pattern_Angle.push_back(10);
+        pattern_Xspeed.push_back(-50);
+        pattern_Yspeed.push_back(-50);
+        pattern_rotateSpeed.push_back(60);
 
 
         pattern_X.push_back(605); ///Drum 2
         pattern_Y.push_back(665);
         pattern_Angle.push_back(-10);
+        pattern_Xspeed.push_back(-50);
+        pattern_Yspeed.push_back(-50);
+        pattern_rotateSpeed.push_back(-60);
 
         pattern_X.push_back(780); ///Drum 4
         pattern_Y.push_back(670);
         pattern_Angle.push_back(-10);
+        pattern_Xspeed.push_back(90);
+        pattern_Yspeed.push_back(-30);
+        pattern_rotateSpeed.push_back(-60);
 
 
         pattern_X.push_back(515); ///Drum 1
         pattern_Y.push_back(660);
         pattern_Angle.push_back(10);
+        pattern_Xspeed.push_back(-50);
+        pattern_Yspeed.push_back(-50);
+        pattern_rotateSpeed.push_back(60);
 
         pattern_X.push_back(690); ///Drum 3
         pattern_Y.push_back(650);
         pattern_Angle.push_back(0);
+        pattern_Xspeed.push_back(-30);
+        pattern_Yspeed.push_back(-30);
+        pattern_rotateSpeed.push_back(40);
 
 
         pattern_X.push_back(605); ///Drum 2
         pattern_Y.push_back(665);
         pattern_Angle.push_back(-10);
+        pattern_Xspeed.push_back(-50);
+        pattern_Yspeed.push_back(-50);
+        pattern_rotateSpeed.push_back(-60);
 
         pattern_X.push_back(780); ///Drum 4
         pattern_Y.push_back(670);
         pattern_Angle.push_back(-10);
+        pattern_Xspeed.push_back(90);
+        pattern_Yspeed.push_back(-30);
+        pattern_rotateSpeed.push_back(-60);
+
+        isDon = true;
     }
 
     if(drum == "chaka")
@@ -165,43 +215,70 @@ void Drum::Load(string drum, int perfection, sf::RenderWindow& window)
         pattern_X.push_back(635); ///Drum 3
         pattern_Y.push_back(105);
         pattern_Angle.push_back(0);
+        pattern_Xspeed.push_back(10);
+        pattern_Yspeed.push_back(20);
+        pattern_rotateSpeed.push_back(40);
 
         pattern_X.push_back(460); ///Drum 1
         pattern_Y.push_back(70);
         pattern_Angle.push_back(10);
+        pattern_Xspeed.push_back(-70);
+        pattern_Yspeed.push_back(30);
+        pattern_rotateSpeed.push_back(-60);
 
 
         pattern_X.push_back(550); ///Drum 2
         pattern_Y.push_back(75);
         pattern_Angle.push_back(-10);
+        pattern_Xspeed.push_back(-40);
+        pattern_Yspeed.push_back(40);
+        pattern_rotateSpeed.push_back(20);
 
         pattern_X.push_back(715); ///Drum 4
         pattern_Y.push_back(85);
         pattern_Angle.push_back(-10);
+        pattern_Xspeed.push_back(40);
+        pattern_Yspeed.push_back(-60);
+        pattern_rotateSpeed.push_back(60);
 
 
         pattern_X.push_back(460); ///Drum 1
         pattern_Y.push_back(70);
         pattern_Angle.push_back(10);
+        pattern_Xspeed.push_back(-70);
+        pattern_Yspeed.push_back(30);
+        pattern_rotateSpeed.push_back(-60);
 
         pattern_X.push_back(635); ///Drum 3
         pattern_Y.push_back(105);
         pattern_Angle.push_back(0);
+        pattern_Xspeed.push_back(10);
+        pattern_Yspeed.push_back(20);
+        pattern_rotateSpeed.push_back(40);
 
 
         pattern_X.push_back(550); ///Drum 2
         pattern_Y.push_back(75);
         pattern_Angle.push_back(-10);
+        pattern_Xspeed.push_back(-40);
+        pattern_Yspeed.push_back(40);
+        pattern_rotateSpeed.push_back(20);
 
         pattern_X.push_back(715); ///Drum 4
         pattern_Y.push_back(85);
         pattern_Angle.push_back(-10);
+        pattern_Xspeed.push_back(40);
+        pattern_Yspeed.push_back(-60);
+        pattern_rotateSpeed.push_back(60);
     }
 
     if(perfection == 0) ///BEST beat
     {
-        x_scale = 1.2;
-        y_scale = 1.2;
+        if(!isDon)
+        {
+            x_scale = 1.2;
+            y_scale = 1.2;
+        }
 
         isBest = true;
     }
@@ -216,7 +293,7 @@ void Drum::Draw(sf::RenderWindow& window)
     float ratio_X = window.getSize().x / float(1280);
     float ratio_Y = window.getSize().y / float(720);
 
-    if(drumClock.getElapsedTime().asSeconds() > 0.5)
+    if(isDon)
     {
         if(isBest)
         {
@@ -225,34 +302,63 @@ void Drum::Draw(sf::RenderWindow& window)
             rotation += pattern_rotateSpeed[pattern] / fps;
             x += pattern_Xspeed[pattern] / fps;
             y += pattern_Yspeed[pattern] / fps;
-        }
 
-        alpha -= float(510) / fps;
+            alpha -= float(510) / fps;
 
-        if(alpha <= 0)
-        alpha = 0;
-    }
-    else
-    {
-        if(drumClock.getElapsedTime().asMilliseconds() <= 25)
-        {
-            if((x_scale >= 1.2) && (y_scale >= 1.2))
-            {
-                x_scale += 1 / fps;
-                y_scale += 1 / fps;
-            }
+            if(alpha <= 0)
+            alpha = 0;
         }
         else
         {
-            if((x_scale > 1) && (y_scale > 1))
+            if(drumClock.getElapsedTime().asSeconds() > 0.5)
             {
-                x_scale -= 3 / fps;
-                y_scale -= 3 / fps;
+                alpha -= float(510) / fps;
+
+                if(alpha <= 0)
+                alpha = 0;
+            }
+        }
+    }
+    else
+    {
+        if(drumClock.getElapsedTime().asSeconds() > 0.5)
+        {
+            if(isBest)
+            {
+                x_scale += 1 / fps;
+                y_scale += 1 / fps;
+                rotation += pattern_rotateSpeed[pattern] / fps;
+                x += pattern_Xspeed[pattern] / fps;
+                y += pattern_Yspeed[pattern] / fps;
+            }
+
+            alpha -= float(510) / fps;
+
+            if(alpha <= 0)
+            alpha = 0;
+        }
+        else
+        {
+            if(drumClock.getElapsedTime().asMilliseconds() <= 25)
+            {
+                if((x_scale >= 1.2) && (y_scale >= 1.2))
+                {
+                    x_scale += 1 / fps;
+                    y_scale += 1 / fps;
+                }
             }
             else
             {
-                x_scale = 1;
-                y_scale = 1;
+                if((x_scale > 1) && (y_scale > 1))
+                {
+                    x_scale -= 3 / fps;
+                    y_scale -= 3 / fps;
+                }
+                else
+                {
+                    x_scale = 1;
+                    y_scale = 1;
+                }
             }
         }
     }

@@ -313,24 +313,21 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
             if(usableBeatValue == 4)
             {
-                if(flicker == 0)
+                if(floor(flicker) == 0)
                 {
                     r_rhythm.setOutlineColor(sf::Color(64,64,64,masterTimer/float(2)));
                     r_rhythm2.setOutlineColor(sf::Color(64,64,64,masterTimer/float(2)));
                 }
-
-                if(flicker == 1)
+                else if(floor(flicker) == 1)
                 {
                     r_rhythm.setOutlineColor(sf::Color(220,220,220,masterTimer/float(2)));
                     r_rhythm2.setOutlineColor(sf::Color(220,220,220,masterTimer/float(2)));
                 }
 
-                flicker++;
+                flicker += float(1) / fps * 30;
 
                 if(flicker >= 2)
-                {
-                    flicker = 0;
-                }
+                flicker = 0;
             }
         }
         else if((combo >= 11) and (usableCommandValue == 2))
