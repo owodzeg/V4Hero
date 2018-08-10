@@ -737,7 +737,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
         ///Play BGM from the combo of idle point
         s_theme[0].setBuffer(b_theme[combo]);
-        s_theme[1].play();
+        s_theme[0].play();
     }
 
 }
