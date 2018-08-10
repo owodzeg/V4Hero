@@ -13,7 +13,9 @@ class Drum
     float alpha = 255;
 
     float x,y;
-    float fps;
+    float x_scale=1,y_scale=1;
+    float fps=60;
+    bool isBest = false;
 
     std::vector<float> pattern_X;
     std::vector<float> pattern_Y;
@@ -22,7 +24,7 @@ class Drum
     int pattern = 0;
 
     Drum();
-    void Load(std::string drum, sf::RenderWindow& window);
+    void Load(std::string drum, int perfection, sf::RenderWindow& window);
     void Draw(sf::RenderWindow& window);
 };
 

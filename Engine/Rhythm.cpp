@@ -451,7 +451,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         commandInput.push_back("PATA");
 
         Drum temp;
-        temp.Load("pata",window);
+        temp.Load("pata",drum_quality,window);
         temp.pattern = pata_pattern;
         drums.push_back(temp);
 
@@ -470,7 +470,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         commandInput.push_back("PON");
 
         Drum temp;
-        temp.Load("pon",window);
+        temp.Load("pon",drum_quality,window);
         temp.pattern = pon_pattern;
         drums.push_back(temp);
 
@@ -489,7 +489,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         commandInput.push_back("CHAKA");
 
         Drum temp;
-        temp.Load("chaka",window);
+        temp.Load("chaka",drum_quality,window);
         temp.pattern = chaka_pattern;
         drums.push_back(temp);
 
@@ -508,7 +508,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         commandInput.push_back("DON");
 
         Drum temp;
-        temp.Load("don",window);
+        temp.Load("don",drum_quality,window);
         temp.pattern = don_pattern;
         drums.push_back(temp);
 
