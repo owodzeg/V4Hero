@@ -339,25 +339,28 @@ void Drum::Draw(sf::RenderWindow& window)
         }
         else
         {
-            if(drumClock.getElapsedTime().asMilliseconds() <= 25)
+            if(isBest)
             {
-                if((x_scale >= 1.2) && (y_scale >= 1.2))
+                if(drumClock.getElapsedTime().asMilliseconds() <= 25)
                 {
-                    x_scale += 1 / fps;
-                    y_scale += 1 / fps;
-                }
-            }
-            else
-            {
-                if((x_scale > 1) && (y_scale > 1))
-                {
-                    x_scale -= 3 / fps;
-                    y_scale -= 3 / fps;
+                    if((x_scale >= 1.2) && (y_scale >= 1.2))
+                    {
+                        x_scale += 1 / fps;
+                        y_scale += 1 / fps;
+                    }
                 }
                 else
                 {
-                    x_scale = 1;
-                    y_scale = 1;
+                    if((x_scale > 1) && (y_scale > 1))
+                    {
+                        x_scale -= 3 / fps;
+                        y_scale -= 3 / fps;
+                    }
+                    else
+                    {
+                        x_scale = 1;
+                        y_scale = 1;
+                    }
                 }
             }
         }

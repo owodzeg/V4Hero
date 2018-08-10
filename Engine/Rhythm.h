@@ -7,6 +7,7 @@
 #include "Config.h"
 #include "Func.h"
 #include "Drum.h"
+#include "RhythmController.h"
 
 class Rhythm
 {
@@ -18,9 +19,7 @@ class Rhythm
 
 
     /// Drums ///
-    sf::SoundBuffer b_pata[3],b_pon[3],b_chaka[3],b_don[3]; ///Drums without chants
-    sf::SoundBuffer b_chpata[3],b_chpon[3],b_chchaka[3],b_chdon[3]; ///Drums with chants
-    std::vector<sf::Sound> s_drums; ///Table for storing all the drums being hit
+
 
 
 
@@ -34,8 +33,6 @@ class Rhythm
     sf::SoundBuffer b_fever_fail;
     sf::SoundBuffer b_fever_start;
 
-    sf::Sound drum_nc; ///Drum with no chant
-    sf::Sound drum_c; ///Drum with chant
     sf::Sound s_theme[2]; ///For playing BGM
     sf::Sound s_fever_fail; ///Dying fever sound
     sf::Sound s_fever_start; ///FEVER!
@@ -59,7 +56,6 @@ class Rhythm
     bool drumAlreadyHit = false; ///Made to check if drum has already been hit in 1 beat (to prevent from hitting multiple drums at a time)
     float flicker = 0; ///For beat frame flickering
 
-    std::vector<std::string> commandInput; ///Drum input
     std::vector<std::string> av_commands = {"PATAPATAPATAPON",
                                             "PONPONPATAPON",
                                             "CHAKACHAKAPATAPON",
@@ -80,9 +76,6 @@ class Rhythm
 
 
     /// Perfction calculator ///
-    int perfect = 0; ///value used for calculating perfect drums in a command
-    std::vector<int> command_perfects; ///vector used for storing perfection of each drum
-    std::vector<int> perfects = {4,4,4,4,4}; ///vector of perfections of inputted commands (with default data)
     float accuracy = 0; ///value for calculating the accuracy
     int acc_count = 3; ///value for determining on how far back should the accuracy calculation system go in commands
 
@@ -90,10 +83,6 @@ class Rhythm
 
     /// Drums in-game ///
     std::vector<Drum> drums;
-    int pata_pattern = 0;
-    int pon_pattern = 0;
-    int chaka_pattern = 0;
-    int don_pattern = 0;
 
     public:
     /// Default FPS value ///
@@ -105,6 +94,7 @@ class Rhythm
     /// Config and Keybindings ///
     Config config;
     std::map<int,bool> keyMap;
+    RhythmController rhythmController;
 
 
 
@@ -118,6 +108,9 @@ class Rhythm
 
     Rhythm();
     void LoadTheme(std::string theme);
+    void BreakCombo();
+    void checkRhythmController(sf::RenderWindow& window);
+    void doVisuals(sf::RenderWindow& window);
     void Draw(sf::RenderWindow& window);
 };
 
