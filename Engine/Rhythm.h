@@ -90,6 +90,10 @@ class Rhythm
 
     /// Drums in-game ///
     std::vector<Drum> drums;
+    int pata_pattern = 0;
+    int pon_pattern = 0;
+    int chaka_pattern = 0;
+    int don_pattern = 0;
 
     public:
     /// Default FPS value ///

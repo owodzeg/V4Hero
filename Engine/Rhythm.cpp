@@ -452,7 +452,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
         Drum temp;
         temp.Load("pata",window);
+        temp.pattern = pata_pattern;
         drums.push_back(temp);
+
+        pata_pattern++;
     }
 
     ///Keybind for PON drum
@@ -468,7 +471,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
         Drum temp;
         temp.Load("pon",window);
+        temp.pattern = pon_pattern;
         drums.push_back(temp);
+
+        pon_pattern++;
     }
 
     ///Keybind for CHAKA drum
@@ -484,7 +490,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
         Drum temp;
         temp.Load("chaka",window);
+        temp.pattern = chaka_pattern;
         drums.push_back(temp);
+
+        chaka_pattern++;
     }
 
     ///Keybind for DON drum
@@ -500,7 +509,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
         Drum temp;
         temp.Load("don",window);
+        temp.pattern = don_pattern;
         drums.push_back(temp);
+
+        don_pattern++;
     }
 
     ///IF statement that applies to all drum keybinds (to not repeat the same code over and over)
@@ -569,6 +581,18 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
             perfect = command_perfects[0]+command_perfects[1]+command_perfects[2]+command_perfects[3];
         }
+
+        if(pata_pattern >= 8)
+        pata_pattern = 0;
+
+        if(pon_pattern >= 8)
+        pon_pattern = 0;
+
+        if(chaka_pattern >= 8)
+        chaka_pattern = 0;
+
+        if(don_pattern >= 8)
+        don_pattern = 0;
 
         ///Reset all keybindings
         keyMap[config.GetInt("keybindPata")] = false;
