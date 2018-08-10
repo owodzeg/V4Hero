@@ -15,6 +15,12 @@ class Drum
     float x,y;
     float fps;
 
+    std::vector<float> pattern_X;
+    std::vector<float> pattern_Y;
+    std::vector<float> pattern_Angle;
+
+    int pattern = 0;
+
     Drum();
     void Load(std::string drum, sf::RenderWindow& window);
     void Draw(sf::RenderWindow& window);
