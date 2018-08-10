@@ -8,7 +8,7 @@ Drum::Drum()
 
 }
 
-void Drum::Load(string drum, sf::RenderWindow& window)
+void Drum::Load(string drum, int perfection, sf::RenderWindow& window)
 {
     if(drum == "pata")
     {
@@ -174,6 +174,14 @@ void Drum::Load(string drum, sf::RenderWindow& window)
         pattern_Angle.push_back(-10);
     }
 
+    if(perfection == 0) ///BEST beat
+    {
+        x_scale = 1.2;
+        y_scale = 1.2;
+
+        isBest = true;
+    }
+
     t_drum.setSmooth(true);
 
     drumClock.restart();
@@ -191,9 +199,33 @@ void Drum::Draw(sf::RenderWindow& window)
         if(alpha <= 0)
         alpha = 0;
     }
+    else
+    {
+        if(drumClock.getElapsedTime().asMilliseconds() <= 25)
+        {
+            if((x_scale >= 1.2) && (y_scale >= 1.2))
+            {
+                x_scale += 1 / fps;
+                y_scale += 1 / fps;
+            }
+        }
+        else
+        {
+            if((x_scale > 1) && (y_scale > 1))
+            {
+                x_scale -= 3 / fps;
+                y_scale -= 3 / fps;
+            }
+            else
+            {
+                x_scale = 1;
+                y_scale = 1;
+            }
+        }
+    }
 
     s_drum.setTexture(t_drum);
-    s_drum.setScale(ratio_X,ratio_Y);
+    s_drum.setScale(x_scale*ratio_X,y_scale*ratio_Y);
     s_drum.setColor(sf::Color(255,255,255,alpha));
     s_drum.setRotation(pattern_Angle[pattern]);
 
