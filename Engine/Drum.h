@@ -12,6 +12,8 @@ class Drum
     sf::Sprite s_drum;
     sf::Sprite s_flash;
 
+    sf::CircleShape c_shockwave;
+
     sf::Clock drumClock;
     float alpha = 255;
 
@@ -20,6 +22,9 @@ class Drum
 
     float x_flashscale=0.01,y_flashscale=0.01;
     float flashalpha = 125;
+
+    float shockwaveSize = 50;
+    float shockwaveAlpha = 50;
 
     float rotation = 0;
     float fps=60;
