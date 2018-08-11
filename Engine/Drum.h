@@ -7,13 +7,20 @@ class Drum
 {
     public:
     sf::Texture t_drum;
+    sf::Texture t_flash;
+
     sf::Sprite s_drum;
+    sf::Sprite s_flash;
 
     sf::Clock drumClock;
     float alpha = 255;
 
     float x=0,y=0;
     float x_scale=1,y_scale=1;
+
+    float x_flashscale=0.01,y_flashscale=0.01;
+    float flashalpha = 125;
+
     float rotation = 0;
     float fps=60;
     bool isBest = false;
