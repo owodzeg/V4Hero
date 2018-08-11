@@ -5,7 +5,8 @@ using namespace std;
 
 Drum::Drum()
 {
-
+    t_flash.loadFromFile("resources/graphics/rhythm/drums/flash.png");
+    s_flash.setTexture(t_flash);
 }
 
 void Drum::Load(string drum, int perfection, sf::RenderWindow& window)
@@ -375,5 +376,26 @@ void Drum::Draw(sf::RenderWindow& window)
 
     s_drum.setPosition(x+pattern_X[pattern]*ratio_X,y+pattern_Y[pattern]*ratio_Y);
 
+    if(drumClock.getElapsedTime().asMilliseconds() < 200)
+    {
+        x_flashscale += float(15) / fps;
+        y_flashscale += float(15) / fps;
+        flashalpha -= float(800) / fps;
+    }
+    else
+    {
+        flashalpha = 0;
+    }
+
+    if(flashalpha <= 0)
+    flashalpha = 0;
+
+    s_flash.setTexture(t_flash);
+    s_flash.setColor(sf::Color(255,255,255,flashalpha));
+    s_flash.setScale(x_flashscale*ratio_X,y_flashscale*ratio_Y);
+    s_flash.setOrigin(s_flash.getLocalBounds().width/2,s_flash.getLocalBounds().height/2);
+    s_flash.setPosition(x+pattern_X[pattern]*ratio_X,y+pattern_Y[pattern]*ratio_Y);
+
     window.draw(s_drum);
+    window.draw(s_flash);
 }
