@@ -6,6 +6,8 @@
 
 #include "Config.h"
 #include "Func.h"
+#include "Drum.h"
+#include "RhythmController.h"
 
 class Rhythm
 {
@@ -17,9 +19,7 @@ class Rhythm
 
 
     /// Drums ///
-    sf::SoundBuffer b_pata[3],b_pon[3],b_chaka[3],b_don[3]; ///Drums without chants
-    sf::SoundBuffer b_chpata[3],b_chpon[3],b_chchaka[3],b_chdon[3]; ///Drums with chants
-    std::vector<sf::Sound> s_drums; ///Table for storing all the drums being hit
+
 
 
 
@@ -30,10 +30,12 @@ class Rhythm
 
 
     /// Initialize sounds ///
-    sf::Sound drum_nc; ///Drum with no chant
-    sf::Sound drum_c; ///Drum with chant
+    sf::SoundBuffer b_fever_fail;
+    sf::SoundBuffer b_fever_start;
+
     sf::Sound s_theme[2]; ///For playing BGM
     sf::Sound s_fever_fail; ///Dying fever sound
+    sf::Sound s_fever_start; ///FEVER!
     sf::Sound s_chant; ///For playing chants
 
 
@@ -52,8 +54,8 @@ class Rhythm
     int beatValue = 1; ///Value for beats (drums) in a command (1, 2, 3, 4)
     int commandValue = 1; ///Value for current command (1 - Patapons sing, 2 - Player input)
     bool drumAlreadyHit = false; ///Made to check if drum has already been hit in 1 beat (to prevent from hitting multiple drums at a time)
+    float flicker = 0; ///For beat frame flickering
 
-    std::vector<std::string> commandInput; ///Drum input
     std::vector<std::string> av_commands = {"PATAPATAPATAPON",
                                             "PONPONPATAPON",
                                             "CHAKACHAKAPATAPON",
@@ -74,13 +76,13 @@ class Rhythm
 
 
     /// Perfction calculator ///
-    int perfect = 0; ///value used for calculating perfect drums in a command
-    std::vector<int> command_perfects; ///vector used for storing perfection of each drum
-    std::vector<int> perfects = {4,4,4,4,4}; ///vector of perfections of inputted commands (with default data)
     float accuracy = 0; ///value for calculating the accuracy
     int acc_count = 3; ///value for determining on how far back should the accuracy calculation system go in commands
 
 
+
+    /// Drums in-game ///
+    std::vector<Drum> drums;
 
     public:
     /// Default FPS value ///
@@ -92,17 +94,23 @@ class Rhythm
     /// Config and Keybindings ///
     Config config;
     std::map<int,bool> keyMap;
+    RhythmController rhythmController;
 
 
 
     /// Visuals ///
     sf::RectangleShape r_rhythm;
+    sf::RectangleShape r_rhythm2;
+
     sf::RectangleShape r_fever;
     sf::RectangleShape r_fever_meter;
 
 
     Rhythm();
     void LoadTheme(std::string theme);
+    void BreakCombo();
+    void checkRhythmController(sf::RenderWindow& window);
+    void doVisuals(sf::RenderWindow& window);
     void Draw(sf::RenderWindow& window);
 };
 
