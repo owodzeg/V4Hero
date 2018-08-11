@@ -397,18 +397,31 @@ void Drum::Draw(sf::RenderWindow& window)
     s_flash.setOrigin(s_flash.getLocalBounds().width/2,s_flash.getLocalBounds().height/2);
     s_flash.setPosition(x+pattern_X[pattern]*ratio_X,y+pattern_Y[pattern]*ratio_Y);
 
-    shockwaveSize += float(750) / fps;
-    shockwaveAlpha -= float(200) / fps;
+    shockwaveSize += float(1000) / fps;
+    shockwaveAlpha -= float(100) / fps;
 
     if(shockwaveAlpha <= 0)
     shockwaveAlpha = 0;
+
+
+    shockwave2Size += float(1000) / fps;
+    shockwave2Alpha -= float(200) / fps;
+
+    if(shockwave2Alpha <= 0)
+    shockwave2Alpha = 0;
 
     c_shockwave.setRadius(shockwaveSize);
     c_shockwave.setFillColor(sf::Color(255,255,255,shockwaveAlpha));
     c_shockwave.setOrigin(c_shockwave.getLocalBounds().width/2,c_shockwave.getLocalBounds().height/2);
     c_shockwave.setPosition(x+pattern_X[pattern]*ratio_X,y+pattern_Y[pattern]*ratio_Y);
 
+    c_shockwave2.setRadius(shockwave2Size);
+    c_shockwave2.setFillColor(sf::Color(255,255,255,shockwave2Alpha));
+    c_shockwave2.setOrigin(c_shockwave2.getLocalBounds().width/2,c_shockwave2.getLocalBounds().height/2);
+    c_shockwave2.setPosition(x+pattern_X[pattern]*ratio_X,y+pattern_Y[pattern]*ratio_Y);
+
     window.draw(s_drum);
     window.draw(s_flash);
     window.draw(c_shockwave);
+    window.draw(c_shockwave2);
 }
