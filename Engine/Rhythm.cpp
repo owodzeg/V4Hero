@@ -23,38 +23,6 @@ Rhythm::Rhythm()
     r_fever_meter.setSize(sf::Vector2f(100,10));
     r_fever_meter.setFillColor(sf::Color::Yellow);
 
-    b_pata[0].loadFromFile("resources/sfx/drums/pata.ogg");
-    b_pata[1].loadFromFile("resources/sfx/drums/pata_2.ogg");
-    b_pata[2].loadFromFile("resources/sfx/drums/pata_3.ogg");
-
-    b_pon[0].loadFromFile("resources/sfx/drums/pon.ogg");
-    b_pon[1].loadFromFile("resources/sfx/drums/pon_2.ogg");
-    b_pon[2].loadFromFile("resources/sfx/drums/pon_3.ogg");
-
-    b_chaka[0].loadFromFile("resources/sfx/drums/chaka.ogg");
-    b_chaka[1].loadFromFile("resources/sfx/drums/chaka_2.ogg");
-    b_chaka[2].loadFromFile("resources/sfx/drums/chaka_3.ogg");
-
-    b_don[0].loadFromFile("resources/sfx/drums/don.ogg");
-    b_don[1].loadFromFile("resources/sfx/drums/don_2.ogg");
-    b_don[2].loadFromFile("resources/sfx/drums/don_3.ogg");
-
-    b_chpata[0].loadFromFile("resources/sfx/drums/ch_pata.ogg");
-    b_chpata[1].loadFromFile("resources/sfx/drums/ch_pata_2.ogg");
-    b_chpata[2].loadFromFile("resources/sfx/drums/ch_pata_3.ogg");
-
-    b_chpon[0].loadFromFile("resources/sfx/drums/ch_pon.ogg");
-    b_chpon[1].loadFromFile("resources/sfx/drums/ch_pon_2.ogg");
-    b_chpon[2].loadFromFile("resources/sfx/drums/ch_pon_3.ogg");
-
-    b_chchaka[0].loadFromFile("resources/sfx/drums/ch_chaka.ogg");
-    b_chchaka[1].loadFromFile("resources/sfx/drums/ch_chaka_2.ogg");
-    b_chchaka[2].loadFromFile("resources/sfx/drums/ch_chaka_3.ogg");
-
-    b_chdon[0].loadFromFile("resources/sfx/drums/ch_don.ogg");
-    b_chdon[1].loadFromFile("resources/sfx/drums/ch_don_2.ogg");
-    b_chdon[2].loadFromFile("resources/sfx/drums/ch_don_3.ogg");
-
     b_fever_start.loadFromFile("resources/sfx/bgm/fever_start.ogg");
     b_fever_fail.loadFromFile("resources/sfx/bgm/fever_fail.ogg");
 }
@@ -126,41 +94,232 @@ void Rhythm::LoadTheme(string theme)
     masterTimer = 500;
 }
 
+void Rhythm::BreakCombo()
+{
+    if(combo >= 11) ///Play dying fever sound when BGM is in fever state
+    {
+        ///Dying fever sound
+        s_fever_fail.setBuffer(b_fever_fail);
+        s_fever_fail.play();
+    }
+
+    ///Reset Rhythm Clock
+    rhythmClock.restart();
+
+    ///Reset initial values
+    beatValue = 1;
+    commandValue = 1;
+    masterTimer = 450;
+    masterTimerMode = 0;
+
+    ///Reset combo to idle BGM point
+    combo = 1;
+
+    ///Reset Perfects table
+    rhythmController.perfect = 0;
+    rhythmController.perfects.clear();
+
+    ///Reset command input
+    rhythmController.commandInput.clear();
+
+    ///Reset BGM
+    s_theme[0].stop();
+    s_theme[1].stop();
+
+    ///Play BGM from the combo of idle point
+    s_theme[0].setBuffer(b_theme[combo]);
+    s_theme[0].play();
+}
+
+void Rhythm::checkRhythmController(sf::RenderWindow& window)
+{
+    ///RHYTHM CONTROLLER SETUP
+    rhythmController.combo = combo;
+    rhythmController.commandValue = commandValue;
+    rhythmController.masterTimer = masterTimer;
+
+    if(rhythmController.checkForInput())
+    {
+        Drum temp;
+        temp.Load(rhythmController.drumToLoad,rhythmController.drum_perfection,window);
+        temp.pattern = rhythmController.currentPattern;
+        drums.push_back(temp);
+
+        ///Restart the Timeout and Before Fever clocks every time a drum is being hit
+        commandTimeout.restart();
+        beforeFeverClock.restart();
+
+        if(rhythmController.breakCombo)
+        BreakCombo();
+    }
+
+    rhythmController.resetValues();
+}
+
+///TO BE PORTED TO AN EXTERNAL CLASS
+void Rhythm::doVisuals(sf::RenderWindow& window)
+{
+    ///Patch for unusable command and beat values
+    int totalComValue = ((commandValue - 1) * 4) + beatValue - 1;
+    int usableCommandValue = floor(totalComValue / float(5));
+    int usableBeatValue = floor(totalComValue - (usableCommandValue * 4));
+    usableCommandValue += 1;
+
+    ///Visuals
+    if(masterTimerMode == 1)
+    {
+        ///Calculate the ratio for other window sizes (default is 1280x720)
+        float ratio_X = window.getSize().x / float(1280);
+        float ratio_Y = window.getSize().y / float(720);
+        float ratio_universal = (window.getSize().x * window.getSize().y) / (float(1280) * float(720));
+
+        /// Beat frame
+        if((combo <= 1) or ((combo > 1) and (combo < 11) and (usableCommandValue == 2)))
+        {
+            r_rhythm.setFillColor(sf::Color(0,0,0,0));
+            r_rhythm.setOutlineThickness(-ceil(3 * ratio_universal));
+            r_rhythm.setOutlineColor(sf::Color(255,255,255,masterTimer/float(2)));
+            r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (24 * ratio_X), (720 * ratio_Y) - (24 * ratio_Y)));
+            r_rhythm.setPosition(12*ratio_X,12*ratio_Y);
+
+            r_rhythm2.setOutlineColor(sf::Color(0,0,0,0));
+        }
+        else if((combo > 1) and (usableCommandValue == 1))
+        {
+            r_rhythm.setFillColor(sf::Color(0,0,0,0));
+            r_rhythm.setOutlineThickness(-ceil(2 * ratio_universal));
+            r_rhythm.setOutlineColor(sf::Color(64,64,64,masterTimer/float(2)));
+            r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (20 * ratio_X), (720 * ratio_Y) - (20 * ratio_Y)));
+            r_rhythm.setPosition(10*ratio_X,10*ratio_Y);
+
+            r_rhythm2.setFillColor(sf::Color(0,0,0,0));
+            r_rhythm2.setOutlineThickness(-ceil(2 * ratio_universal));
+            r_rhythm2.setOutlineColor(sf::Color(64,64,64,masterTimer/float(2)));
+            r_rhythm2.setSize(sf::Vector2f((1280 * ratio_X) - (30 * ratio_X), (720 * ratio_Y) - (30 * ratio_Y)));
+            r_rhythm2.setPosition(15*ratio_X,15*ratio_Y);
+
+            if(usableBeatValue == 4)
+            {
+                if(floor(flicker) == 0)
+                {
+                    r_rhythm.setOutlineColor(sf::Color(64,64,64,masterTimer/float(2)));
+                    r_rhythm2.setOutlineColor(sf::Color(64,64,64,masterTimer/float(2)));
+                }
+                else if(floor(flicker) == 1)
+                {
+                    r_rhythm.setOutlineColor(sf::Color(220,220,220,masterTimer/float(2)));
+                    r_rhythm2.setOutlineColor(sf::Color(220,220,220,masterTimer/float(2)));
+                }
+
+                flicker += float(1) / fps * 30;
+
+                if(flicker >= 2)
+                flicker = 0;
+            }
+        }
+        else if((combo >= 11) and (usableCommandValue == 2))
+        {
+            r_rhythm.setFillColor(sf::Color(0,0,0,0));
+            r_rhythm.setOutlineThickness(-ceil(7 * ratio_universal));
+
+            r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (20 * ratio_X), (720 * ratio_Y) - (20 * ratio_Y)));
+            r_rhythm.setPosition(10*ratio_X,10*ratio_Y);
+
+            r_rhythm2.setOutlineColor(sf::Color(0,0,0,0));
+
+            if(floor(flicker) == 0)
+            {
+                r_rhythm.setOutlineColor(sf::Color(255,255,0,masterTimer/float(2)));
+            }
+            else if(floor(flicker) == 1)
+            {
+                r_rhythm.setOutlineColor(sf::Color(255,255,255,masterTimer/float(2)));
+            }
+            else if(floor(flicker) == 2)
+            {
+                r_rhythm.setOutlineColor(sf::Color(0,255,255,masterTimer/float(2)));
+            }
+            else if(floor(flicker) == 3)
+            {
+                r_rhythm.setOutlineColor(sf::Color(0,255,0,masterTimer/float(2)));
+            }
+
+            flicker += float(1) / fps * 30;
+
+            if(flicker >= 4)
+            flicker = 0;
+        }
+
+        /// Fever meter
+        int feverMeterWidth = 10*(combo-12);
+        if(feverMeterWidth > 100)
+        {
+            feverMeterWidth = 100;
+        }
+
+        int sizeMod = masterTimer/float(100);
+
+        r_fever.setSize(sf::Vector2f(100+sizeMod*2,10+sizeMod*2));
+        r_fever_meter.setSize(sf::Vector2f(feverMeterWidth+sizeMod*2,10+sizeMod*2));
+
+        r_fever.setPosition(50*ratio_X-sizeMod,50*ratio_Y-sizeMod);
+        r_fever_meter.setPosition(50*ratio_X-sizeMod,50*ratio_Y-sizeMod);
+    }
+
+    window.draw(r_rhythm);
+    window.draw(r_rhythm2);
+    window.draw(r_fever);
+
+    if(combo > 12)
+    {
+        window.draw(r_fever_meter);
+    }
+
+    for(int i=0; i<drums.size(); i++)
+    {
+        drums[i].fps = fps;
+        drums[i].Draw(window);
+
+        if(drums[i].alpha <= 0)
+        {
+            drums.erase(drums.begin() + i);
+        }
+    }
+}
+
 void Rhythm::Draw(sf::RenderWindow& window)
 {
-    bool breakCombo = false; ///Initialize a temporary value used for breaking the combo
-
     if(rhythmClock.getElapsedTime().asSeconds() >= 4) ///If the 2 commands will pass
     {
         if(combo >= 2) /// If combo is not idle bgm
         {
-            if(commandInput.size() == 4) ///If user input is 4 drums
+            if(rhythmController.commandInput.size() == 4) ///If user input is 4 drums
             {
-                string fullcom = commandInput[0]+commandInput[1]+commandInput[2]+commandInput[3]; ///Create a full command using 4 individual hits
+                string fullcom = rhythmController.commandInput[0]+rhythmController.commandInput[1]+rhythmController.commandInput[2]+rhythmController.commandInput[3]; ///Create a full command using 4 individual hits
 
                 if(std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end()) ///Check if the command exists in available commands
                 {
                     ///Clear user input
-                    commandInput.clear();
+                    rhythmController.commandInput.clear();
 
                     ///Push the amount of perfect hits to the table and reset them
-                    perfects.push_back(perfect);
-                    perfect = 0;
+                    rhythmController.perfects.push_back(rhythmController.perfect);
+                    rhythmController.perfect = 0;
 
                     ///Remove unnecessary perfects
-                    while(perfects.size() > acc_count)
-                    perfects.erase(perfects.begin());
+                    while(rhythmController.perfects.size() > acc_count)
+                    rhythmController.perfects.erase(rhythmController.perfects.begin());
 
                     ///Calculate total perfect value
                     float total_perfects = 0;
 
                     for(int i=0; i<acc_count; i++)
                     {
-                        total_perfects += perfects[i];
+                        total_perfects += rhythmController.perfects[i];
                     }
 
                     ///Calculate beat accuracy
-                    accuracy = total_perfects / (4 * perfects.size());
+                    accuracy = total_perfects / (4 * rhythmController.perfects.size());
 
                     ///Increment combo
                     combo++;
@@ -237,12 +396,12 @@ void Rhythm::Draw(sf::RenderWindow& window)
                 else
                 {
                     ///Break the combo if user input was less than 4 drums
-                    breakCombo = true;
+                    BreakCombo();
                 }
             }
             else
             {
-                breakCombo = true;
+                BreakCombo();
             }
         }
 
@@ -272,135 +431,8 @@ void Rhythm::Draw(sf::RenderWindow& window)
         rhythmClock.restart();
     }
 
-    ///Patch for unusable command and beat values
-    int totalComValue = ((commandValue - 1) * 4) + beatValue - 1;
-    int usableCommandValue = floor(totalComValue / float(5));
-    int usableBeatValue = floor(totalComValue - (usableCommandValue * 4));
-    usableCommandValue += 1;
-
-    ///Visuals
-    if(masterTimerMode == 1)
-    {
-        ///Calculate the ratio for other window sizes (default is 1280x720)
-        float ratio_X = window.getSize().x / float(1280);
-        float ratio_Y = window.getSize().y / float(720);
-        float ratio_universal = (window.getSize().x * window.getSize().y) / (float(1280) * float(720));
-
-        /// Beat frame
-        if((combo <= 1) or ((combo > 1) and (combo < 11) and (usableCommandValue == 2)))
-        {
-            r_rhythm.setFillColor(sf::Color(0,0,0,0));
-            r_rhythm.setOutlineThickness(-ceil(3 * ratio_universal));
-            r_rhythm.setOutlineColor(sf::Color(255,255,255,masterTimer/float(2)));
-            r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (24 * ratio_X), (720 * ratio_Y) - (24 * ratio_Y)));
-            r_rhythm.setPosition(12*ratio_X,12*ratio_Y);
-
-            r_rhythm2.setOutlineColor(sf::Color(0,0,0,0));
-        }
-        else if((combo > 1) and (usableCommandValue == 1))
-        {
-            r_rhythm.setFillColor(sf::Color(0,0,0,0));
-            r_rhythm.setOutlineThickness(-ceil(2 * ratio_universal));
-            r_rhythm.setOutlineColor(sf::Color(64,64,64,masterTimer/float(2)));
-            r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (20 * ratio_X), (720 * ratio_Y) - (20 * ratio_Y)));
-            r_rhythm.setPosition(10*ratio_X,10*ratio_Y);
-
-            r_rhythm2.setFillColor(sf::Color(0,0,0,0));
-            r_rhythm2.setOutlineThickness(-ceil(2 * ratio_universal));
-            r_rhythm2.setOutlineColor(sf::Color(64,64,64,masterTimer/float(2)));
-            r_rhythm2.setSize(sf::Vector2f((1280 * ratio_X) - (30 * ratio_X), (720 * ratio_Y) - (30 * ratio_Y)));
-            r_rhythm2.setPosition(15*ratio_X,15*ratio_Y);
-
-            if(usableBeatValue == 4)
-            {
-                if(flicker == 0)
-                {
-                    r_rhythm.setOutlineColor(sf::Color(64,64,64,masterTimer/float(2)));
-                    r_rhythm2.setOutlineColor(sf::Color(64,64,64,masterTimer/float(2)));
-                }
-
-                if(flicker == 1)
-                {
-                    r_rhythm.setOutlineColor(sf::Color(220,220,220,masterTimer/float(2)));
-                    r_rhythm2.setOutlineColor(sf::Color(220,220,220,masterTimer/float(2)));
-                }
-
-                flicker++;
-
-                if(flicker >= 2)
-                {
-                    flicker = 0;
-                }
-            }
-        }
-        else if((combo >= 11) and (usableCommandValue == 2))
-        {
-            r_rhythm.setFillColor(sf::Color(0,0,0,0));
-            r_rhythm.setOutlineThickness(-ceil(7 * ratio_universal));
-
-            r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (20 * ratio_X), (720 * ratio_Y) - (20 * ratio_Y)));
-            r_rhythm.setPosition(10*ratio_X,10*ratio_Y);
-
-            r_rhythm2.setOutlineColor(sf::Color(0,0,0,0));
-
-            if(floor(flicker) == 0)
-            {
-                r_rhythm.setOutlineColor(sf::Color(255,255,0,masterTimer/float(2)));
-            }
-            else if(floor(flicker) == 1)
-            {
-                r_rhythm.setOutlineColor(sf::Color(255,255,255,masterTimer/float(2)));
-            }
-            else if(floor(flicker) == 2)
-            {
-                r_rhythm.setOutlineColor(sf::Color(0,255,255,masterTimer/float(2)));
-            }
-            else if(floor(flicker) == 3)
-            {
-                r_rhythm.setOutlineColor(sf::Color(0,255,0,masterTimer/float(2)));
-            }
-
-            flicker += float(1) / fps * 30;
-
-            if(flicker >= 4)
-            flicker = 0;
-        }
-
-        /// Fever meter
-        int feverMeterWidth = 10*(combo-12);
-        if(feverMeterWidth > 100)
-        {
-            feverMeterWidth = 100;
-        }
-
-        int sizeMod = masterTimer/float(100);
-
-        r_fever.setSize(sf::Vector2f(100+sizeMod*2,10+sizeMod*2));
-        r_fever_meter.setSize(sf::Vector2f(feverMeterWidth+sizeMod*2,10+sizeMod*2));
-
-        r_fever.setPosition(50*ratio_X-sizeMod,50*ratio_Y-sizeMod);
-        r_fever_meter.setPosition(50*ratio_X-sizeMod,50*ratio_Y-sizeMod);
-    }
-
-    window.draw(r_rhythm);
-    window.draw(r_rhythm2);
-    window.draw(r_fever);
-
-    if(combo > 12)
-    {
-        window.draw(r_fever_meter);
-    }
-
-    for(int i=0; i<drums.size(); i++)
-    {
-        drums[i].fps = fps;
-        drums[i].Draw(window);
-
-        if(drums[i].alpha <= 0)
-        {
-            drums.erase(drums.begin() + i);
-        }
-    }
+    checkRhythmController(window);
+    doVisuals(window);
 
     ///Master Timer speed (Higher value = Faster Rhythm system)
     if(masterTimerMode == 1)
@@ -409,216 +441,20 @@ void Rhythm::Draw(sf::RenderWindow& window)
     if(masterTimerMode == 0)
     masterTimer += float(2000) / fps;
 
-    ///Set initial values for Drum quality check
-    int drum_quality = 2;
-    bool add_to_commandtable = false;
-
-    ///Determine the quality of given drum input
-    if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")] || keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")] || keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")] || keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
-    {
-        if(masterTimer < low_range) ///BAD hit
-        {
-            ///Apply BAD drum sound effect
-            drum_quality = 2;
-        }
-        else if((masterTimer >= low_range) && (masterTimer < high_range)) ///GOOD hit
-        {
-            ///Add drum to commandInput table
-            add_to_commandtable = true;
-
-            ///Apply GOOD drum sound effect
-            drum_quality = 1;
-        }
-        else if(masterTimer >= high_range)
-        {
-            ///Add drum to commandInput table
-            add_to_commandtable = true;
-
-            ///Apply BEST drum sound effect
-            drum_quality = 0;
-        }
-    }
-
-    ///Keybind for PATA drum
-    if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")])
-    {
-        ///Add PATA drum sound effect to the buffer
-        drum_nc.setBuffer(b_pata[drum_quality]);
-        drum_c.setBuffer(b_chpata[drum_quality]);
-
-        ///Add PATA drum to user input table
-        if(add_to_commandtable)
-        commandInput.push_back("PATA");
-
-        Drum temp;
-        temp.Load("pata",drum_quality,window);
-        temp.pattern = pata_pattern;
-        drums.push_back(temp);
-
-        pata_pattern++;
-    }
-
-    ///Keybind for PON drum
-    if(keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")])
-    {
-        ///Add PON drum sound effect to the buffer
-        drum_nc.setBuffer(b_pon[drum_quality]);
-        drum_c.setBuffer(b_chpon[drum_quality]);
-
-        ///Add PON drum to user input table
-        if(add_to_commandtable)
-        commandInput.push_back("PON");
-
-        Drum temp;
-        temp.Load("pon",drum_quality,window);
-        temp.pattern = pon_pattern;
-        drums.push_back(temp);
-
-        pon_pattern++;
-    }
-
-    ///Keybind for CHAKA drum
-    if(keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
-    {
-        ///Add CHAKA drum sound effect to the buffer
-        drum_nc.setBuffer(b_chaka[drum_quality]);
-        drum_c.setBuffer(b_chchaka[drum_quality]);
-
-        ///Add CHAKA drum to user input table
-        if(add_to_commandtable)
-        commandInput.push_back("CHAKA");
-
-        Drum temp;
-        temp.Load("chaka",drum_quality,window);
-        temp.pattern = chaka_pattern;
-        drums.push_back(temp);
-
-        chaka_pattern++;
-    }
-
-    ///Keybind for DON drum
-    if(keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")])
-    {
-        ///Add DON drum sound effect to the buffer
-        drum_nc.setBuffer(b_don[drum_quality]);
-        drum_c.setBuffer(b_chdon[drum_quality]);
-
-        ///Add DON drum to user input table
-        if(add_to_commandtable)
-        commandInput.push_back("DON");
-
-        Drum temp;
-        temp.Load("don",drum_quality,window);
-        temp.pattern = don_pattern;
-        drums.push_back(temp);
-
-        don_pattern++;
-    }
-
-    ///IF statement that applies to all drum keybinds (to not repeat the same code over and over)
-    if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")] || keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")] || keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")] || keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
-    {
-        ///If drum was already hit and you hit once again, or you hit BAD, reset user input and break combo
-        if((drumAlreadyHit == true) || (masterTimer < low_range))
-        {
-            command_perfects.clear();
-            perfects.clear();
-            commandInput.clear();
-
-            if(combo >= 2)
-            breakCombo = true;
-        }
-
-        ///If drum was hit above the minimum range, determine it's quality and mark as being already hit
-        if(masterTimer >= low_range)
-        {
-            bool perfect_command = false;
-
-            if(masterTimer > high_range)
-            {
-                perfect_command = true;
-            }
-
-            command_perfects.push_back(perfect_command);
-            drumAlreadyHit = true;
-        }
-
-        ///Check config if drum sound effect should be played
-        if(config.GetInt("enableDrums"))
-        {
-            ///And play it
-            s_drums.push_back(drum_nc);
-            s_drums[s_drums.size()-1].play();
-        }
-
-        ///Check config if drum chant sound effect should be played
-        if(config.GetInt("enableDrumChants"))
-        {
-            ///And play it
-            s_drums.push_back(drum_c);
-            s_drums[s_drums.size()-1].play();
-        }
-
-        ///Remove drums from user input if user has hit more than 4 drums
-        if(commandInput.size() > 4)
-        commandInput.erase(commandInput.begin());
-
-        ///Restart the Timeout and Before Fever clocks every time a drum is being hit
-        commandTimeout.restart();
-        beforeFeverClock.restart();
-
-        ///If you start drumming when commandValue is at 1 (Patapon singing), break the combo
-        if((commandValue == 1) && (combo >= 2))
-        {
-            breakCombo = true;
-        }
-
-        ///Calculate how many perfect beats were in the command
-        if(command_perfects.size() >= 4)
-        {
-            while(command_perfects.size() > 4)
-            command_perfects.erase(command_perfects.begin());
-
-            perfect = command_perfects[0]+command_perfects[1]+command_perfects[2]+command_perfects[3];
-        }
-
-        if(pata_pattern >= 8)
-        pata_pattern = 0;
-
-        if(pon_pattern >= 8)
-        pon_pattern = 0;
-
-        if(chaka_pattern >= 8)
-        chaka_pattern = 0;
-
-        if(don_pattern >= 8)
-        don_pattern = 0;
-
-        ///Reset all keybindings
-        keyMap[config.GetInt("keybindPata")] = false;
-        keyMap[config.GetInt("secondaryKeybindPata")] = false;
-        keyMap[config.GetInt("keybindPon")] = false;
-        keyMap[config.GetInt("secondaryKeybindPon")] = false;
-        keyMap[config.GetInt("keybindChaka")] = false;
-        keyMap[config.GetInt("secondaryKeybindChaka")] = false;
-        keyMap[config.GetInt("keybindDon")] = false;
-        keyMap[config.GetInt("secondaryKeybindDon")] = false;
-    }
-
     ///Timeout for inputting drums, clear all user input when user didn't took action for longer than a second
     if(commandTimeout.getElapsedTime().asSeconds() >= 1)
     {
-        commandInput.clear();
+        rhythmController.commandInput.clear();
     }
 
     ///Before Fever Clock function, made specifically to be able to start drumming from any point in music (when idle)
     if(beforeFeverClock.getElapsedTime().asMilliseconds() >= 505)
     {
-        if(commandInput.size() == 4) ///Check if there are exactly 4 drums in user input
+        if(rhythmController.commandInput.size() == 4) ///Check if there are exactly 4 drums in user input
         {
             if(combo <= 1) ///If combo is less or equal to 1 (because it's the idle loop, aka the start)
             {
-                string fullcom = commandInput[0]+commandInput[1]+commandInput[2]+commandInput[3]; ///Compose one big command string
+                string fullcom = rhythmController.commandInput[0]+rhythmController.commandInput[1]+rhythmController.commandInput[2]+rhythmController.commandInput[3]; ///Compose one big command string
 
                 if(std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end()) ///Check if the command exists
                 {
@@ -635,11 +471,11 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     combo = 2;
 
                     ///Push the amount of perfect drums to the Perfects table
-                    perfects.push_back(perfect);
-                    perfect = 0;
+                    rhythmController.perfects.push_back(rhythmController.perfect);
+                    rhythmController.perfect = 0;
 
                     ///Clear user input
-                    commandInput.clear();
+                    rhythmController.commandInput.clear();
 
                     ///Reset BGM
                     s_theme[0].stop();
@@ -674,9 +510,9 @@ void Rhythm::Draw(sf::RenderWindow& window)
     if(masterTimer >= 500)
     {
         ///Check if command value is set at 2 (User input), if combo is equal or above 2, check if user input is correct
-        if((commandValue == 2) && (combo >= 2) && (commandInput.size() < beatValue-1))
+        if((commandValue == 2) && (combo >= 2) && (rhythmController.commandInput.size() < beatValue-1))
         {
-            breakCombo = true;
+            BreakCombo();
         }
 
         ///Increment the beat value
@@ -702,45 +538,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
         masterTimer = 0;
 
         ///Disable drum block
-        drumAlreadyHit = false;
+        rhythmController.drumAlreadyHit = false;
     }
-
-    ///Break Combo function (NOTE: can be ported to a function in class later)
-    if(breakCombo)
-    {
-        if(combo >= 11) ///Play dying fever sound when BGM is in fever state
-        {
-            ///Dying fever sound
-            s_fever_fail.setBuffer(b_fever_fail);
-            s_fever_fail.play();
-        }
-
-        ///Reset Rhythm Clock
-        rhythmClock.restart();
-
-        ///Reset initial values
-        beatValue = 1;
-        commandValue = 1;
-        masterTimer = 450;
-        masterTimerMode = 0;
-
-        ///Reset combo to idle BGM point
-        combo = 1;
-
-        ///Reset Perfects table
-        perfect = 0;
-        perfects.clear();
-
-        ///Reset command input
-        commandInput.clear();
-
-        ///Reset BGM
-        s_theme[0].stop();
-        s_theme[1].stop();
-
-        ///Play BGM from the combo of idle point
-        s_theme[0].setBuffer(b_theme[combo]);
-        s_theme[1].play();
-    }
-
 }

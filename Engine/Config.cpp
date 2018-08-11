@@ -47,6 +47,9 @@ void Config::LoadConfig()
 {
     ifstream conf("config.ini");
 
+    vector<string> keysCheckList = configKeys;
+    vector<string> keysCheckDefaults = configDefaults;
+
     if(conf.good())
     {
         string line;
@@ -60,6 +63,17 @@ void Config::LoadConfig()
                 configMap[key[0]] = key[1];
 
                 cout << "Loaded key '" << key[0] << "' with value '" << key[1] << "'" << endl;
+
+                for(int i=0; i<keysCheckList.size(); i++)
+                {
+                    if(keysCheckList[i] == key[0])
+                    {
+                        ///Already exists in the config, remove from check
+                        keysCheckList.erase(keysCheckList.begin()+i);
+                        keysCheckDefaults.erase(keysCheckDefaults.begin()+i);
+                        break;
+                    }
+                }
             }
         }
     }
@@ -69,6 +83,29 @@ void Config::LoadConfig()
     }
 
     conf.close();
+
+    ofstream conf2("config.ini", ios::app);
+
+    if(conf2.is_open())
+    {
+        for(int i=0; i<keysCheckList.size(); i++)
+        {
+            if(i == 0)
+            conf2 << '\n';
+
+            ///save all keys and defaults
+            conf2 << keysCheckList[i] << ":" << keysCheckDefaults[i];
+            configMap[keysCheckList[i]] = keysCheckDefaults[i];
+
+            cout << "Adding missing config entry: " << keysCheckList[i] << " = " << keysCheckDefaults[i] << endl;
+
+            ///remember to newline
+            if(i != keysCheckList.size()-1)
+            conf2 << '\n';
+        }
+    }
+
+    conf2.close();
 }
 
 void Config::SaveConfig()

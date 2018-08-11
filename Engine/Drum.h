@@ -17,6 +17,7 @@ class Drum
     float rotation = 0;
     float fps=60;
     bool isBest = false;
+    bool isDon = false;
 
     std::vector<float> pattern_X;
     std::vector<float> pattern_Y;
