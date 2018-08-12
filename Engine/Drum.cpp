@@ -1,5 +1,6 @@
 #include "Drum.h"
 #include <iostream>
+#include <cstdlib>
 
 using namespace std;
 
@@ -287,6 +288,36 @@ void Drum::Load(string drum, int perfection, sf::RenderWindow& window)
 
     t_drum.setSmooth(true);
 
+    int particle_amount = 14;
+
+    for(int i=0; i<particle_amount; i++)
+    {
+        sf::CircleShape temp;
+        int radius = (rand() % max_radius) + 1;
+        int angle = rand() % 360;
+
+        float c = floor(float(255) / max_radius);
+        float cc = c * radius;
+        float green = 255 - cc;
+
+        temp.setFillColor(sf::Color(255,green,0,200));
+        temp.setRadius(radius);
+        temp.setPosition(-1000,-1000);
+
+        int distance = (rand() % 200) + 50;
+
+        c_particle.push_back(temp);
+
+        particle_x.push_back(0);
+        particle_y.push_back(0);
+        particle_angle.push_back(angle);
+        particle_didStart.push_back(false);
+        particle_radius.push_back(radius);
+        particle_maxDistance.push_back(distance);
+        particle_curDistance.push_back(0);
+        particle_speed.push_back(600);
+    }
+
     drumClock.restart();
 }
 
@@ -294,6 +325,7 @@ void Drum::Draw(sf::RenderWindow& window)
 {
     float ratio_X = window.getSize().x / float(1280);
     float ratio_Y = window.getSize().y / float(720);
+    float ratio_universal = (window.getSize().x * window.getSize().y) / (float(1280) * float(720));
 
     if(isDon)
     {
@@ -379,8 +411,8 @@ void Drum::Draw(sf::RenderWindow& window)
 
     if(drumClock.getElapsedTime().asMilliseconds() < 200)
     {
-        x_flashscale += float(15) / fps;
-        y_flashscale += float(15) / fps;
+        x_flashscale += float(12) / fps;
+        y_flashscale += float(12) / fps;
         flashalpha -= float(800) / fps;
     }
     else
@@ -397,14 +429,14 @@ void Drum::Draw(sf::RenderWindow& window)
     s_flash.setOrigin(s_flash.getLocalBounds().width/2,s_flash.getLocalBounds().height/2);
     s_flash.setPosition(x+pattern_X[pattern]*ratio_X,y+pattern_Y[pattern]*ratio_Y);
 
-    shockwaveSize += float(1000) / fps;
+    shockwaveSize += float(1300) / fps;
     shockwaveAlpha -= float(100) / fps;
 
     if(shockwaveAlpha <= 0)
     shockwaveAlpha = 0;
 
 
-    shockwave2Size += float(1000) / fps;
+    shockwave2Size += float(1300) / fps;
     shockwave2Alpha -= float(200) / fps;
 
     if(shockwave2Alpha <= 0)
@@ -424,4 +456,49 @@ void Drum::Draw(sf::RenderWindow& window)
     window.draw(s_flash);
     window.draw(c_shockwave);
     window.draw(c_shockwave2);
+
+    for(int i=0; i<c_particle.size(); i++)
+    {
+        ///Initialize first position
+        if(particle_didStart[i] == false)
+        {
+            particle_x[i] = x+pattern_X[pattern]*ratio_X;
+            particle_y[i] = y+pattern_Y[pattern]*ratio_Y;
+            particle_didStart[i] = true;
+        }
+
+
+        particle_x[i] += particle_speed[i] * cos(particle_angle[i]) / fps;
+        particle_y[i] += particle_speed[i] * sin(particle_angle[i]) / fps;
+
+        float distance = sqrt(2 * pow(particle_speed[i],2)) / fps;
+        //cout << "i: " << i << " Distance speed: " << distance << " Cur distance: " << particle_curDistance[i] << " Max: " << particle_maxDistance[i] << endl;
+        particle_curDistance[i] += distance;
+
+        if(particle_curDistance[i] > particle_maxDistance[i])
+        {
+            particle_speed[i] -= float(3000) / fps;
+
+            if(particle_speed[i] <= 0)
+            particle_speed[i] = 0;
+
+
+            float c_alpha = c_particle[i].getFillColor().a;
+            float c = floor(float(255) / max_radius);
+            float cc = c * particle_radius[i];
+            float green = 255 - cc;
+
+            c_alpha -= float(500) / fps;
+
+            if(c_alpha <= 0)
+            c_alpha = 0;
+
+            c_particle[i].setFillColor(sf::Color(255,green,0,c_alpha));
+        }
+
+        c_particle[i].setRadius(particle_radius[i] * ratio_universal);
+
+        c_particle[i].setPosition(particle_x[i],particle_y[i]);
+        window.draw(c_particle[i]);
+    }
 }

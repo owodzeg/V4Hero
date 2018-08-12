@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cstdlib>
+#include <time.h>
 
 #include "V4Core.h"
 
@@ -12,6 +14,8 @@ V4Core::V4Core()
 
 void V4Core::Init()
 {
+    srand(time(NULL));
+
     sf::RenderWindow window;
 
     if(config.GetInt("enableFullscreen"))
