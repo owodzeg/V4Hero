@@ -4,8 +4,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-#include "Config.h"
-#include "Func.h"
+#include "../Config.h"
+#include "../Func.h"
+
 #include "Drum.h"
 #include "RhythmController.h"
 

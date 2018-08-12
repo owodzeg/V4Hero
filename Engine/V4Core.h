@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Rhythm.h"
+#include "Rhythm/Rhythm.h"
 #include "Config.h"
 
 class V4Core
