@@ -353,6 +353,7 @@ void Drum::Draw(sf::RenderWindow& window)
             }
         }
     }
+
     else
     {
         if(drumClock.getElapsedTime().asSeconds() > 0.5)
