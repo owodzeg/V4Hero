@@ -32,7 +32,7 @@ void Rhythm::LoadTheme(string theme)
 {
     ///Load the BGM
     songController = new SongController();
-    songController->LoadSongFromName("donjalalin","donjalalinChant");
+    songController->LoadSongFromName(theme,theme+"Chant");
 
 
     ///Play the BGM beginning after loading
