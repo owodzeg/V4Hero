@@ -32,8 +32,8 @@ void Rhythm::LoadTheme(string theme)
 {
     ///Load the BGM
     songController = new SongController();
-    songController->LoadSongFromName(theme,theme+"Chant");
-
+    songController->LoadSongByName(theme);
+    this->currentThemeName = theme;
 
     ///Play the BGM beginning after loading
     s_theme[0].setBuffer(songController->GetSongByNumber(0,0));
