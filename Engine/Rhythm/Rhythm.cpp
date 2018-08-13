@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include "Rhythm.h"
+#include "SongController.h"
 #include <cmath>
 using namespace std;
 
@@ -30,63 +31,12 @@ Rhythm::Rhythm()
 void Rhythm::LoadTheme(string theme)
 {
     ///Load the BGM
-    b_theme[0].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_start.ogg");
-    b_theme[1].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_1.ogg");
-    b_theme[2].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_2.ogg");
-    b_theme[3].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_3.ogg");
-    b_theme[4].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_4.ogg");
-    b_theme[5].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_5.ogg");
-    b_theme[6].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_6.ogg");
-    b_theme[7].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_7.ogg");
-    b_theme[8].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_8.ogg");
-    b_theme[9].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_9.ogg");
-    b_theme[10].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_10.ogg");
-    b_theme[11].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_feverstart.ogg");
-    b_theme[12].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever1.ogg");
-    b_theme[13].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever2.ogg");
-    b_theme[14].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever3.ogg");
-    b_theme[15].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever4.ogg");
-    b_theme[16].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever5.ogg");
-    b_theme[17].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever6.ogg");
-    b_theme[18].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever7.ogg");
-    b_theme[19].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever8.ogg");
-    b_theme[20].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever9.ogg");
-    b_theme[21].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever10.ogg");
-    b_theme[22].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever11.ogg");
-    b_theme[23].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever12.ogg");
-    b_theme[24].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever13.ogg");
-    b_theme[25].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever14.ogg");
-    b_theme[26].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever15.ogg");
-    b_theme[27].loadFromFile("resources/sfx/bgm/"+theme+"/bgm_fever16.ogg");
+    songController = new SongController();
+    songController->LoadSongFromName("donjalalin","donjalalinChant");
 
-    ///All chants
-    b_chant["patapata_1"].loadFromFile("resources/sfx/bgm/"+theme+"/s_patapata1.ogg");
-    b_chant["patapata_2"].loadFromFile("resources/sfx/bgm/"+theme+"/s_patapata2.ogg");
-    b_chant["patapata_3"].loadFromFile("resources/sfx/bgm/"+theme+"/s_patapata3.ogg");
-    b_chant["patapata_4"].loadFromFile("resources/sfx/bgm/"+theme+"/s_patapata4.ogg");
-    b_chant["chakachaka_1"].loadFromFile("resources/sfx/bgm/"+theme+"/s_chakachaka1.ogg");
-    b_chant["chakachaka_2"].loadFromFile("resources/sfx/bgm/"+theme+"/s_chakachaka2.ogg");
-    b_chant["chakachaka_3"].loadFromFile("resources/sfx/bgm/"+theme+"/s_chakachaka3.ogg");
-    b_chant["chakachaka_4"].loadFromFile("resources/sfx/bgm/"+theme+"/s_chakachaka4.ogg");
-    b_chant["ponpon_1"].loadFromFile("resources/sfx/bgm/"+theme+"/s_ponpon1.ogg");
-    b_chant["ponpon_2"].loadFromFile("resources/sfx/bgm/"+theme+"/s_ponpon2.ogg");
-    b_chant["ponpon_3"].loadFromFile("resources/sfx/bgm/"+theme+"/s_ponpon3.ogg");
-    b_chant["ponpon_4"].loadFromFile("resources/sfx/bgm/"+theme+"/s_ponpon4.ogg");
-    b_chant["ponpata_1"].loadFromFile("resources/sfx/bgm/"+theme+"/s_ponpata1.ogg");
-    b_chant["ponpata_2"].loadFromFile("resources/sfx/bgm/"+theme+"/s_ponpata2.ogg");
-    b_chant["ponpata_3"].loadFromFile("resources/sfx/bgm/"+theme+"/s_ponpata3.ogg");
-    b_chant["ponchaka_1"].loadFromFile("resources/sfx/bgm/"+theme+"/s_ponchaka1.ogg");
-    b_chant["ponchaka_2"].loadFromFile("resources/sfx/bgm/"+theme+"/s_ponchaka2.ogg");
-    b_chant["ponchaka_3"].loadFromFile("resources/sfx/bgm/"+theme+"/s_ponchaka3.ogg");
-    b_chant["donchaka_1"].loadFromFile("resources/sfx/bgm/"+theme+"/s_donchaka1.ogg");
-    b_chant["donchaka_2"].loadFromFile("resources/sfx/bgm/"+theme+"/s_donchaka2.ogg");
-    b_chant["donchaka_3"].loadFromFile("resources/sfx/bgm/"+theme+"/s_donchaka3.ogg");
-    b_chant["dondon_1"].loadFromFile("resources/sfx/bgm/"+theme+"/s_dondon1.ogg");
-    b_chant["dondon_2"].loadFromFile("resources/sfx/bgm/"+theme+"/s_dondon2.ogg");
-    b_chant["dondon_3"].loadFromFile("resources/sfx/bgm/"+theme+"/s_dondon3.ogg");
 
     ///Play the BGM beginning after loading
-    s_theme[0].setBuffer(b_theme[0]);
+    s_theme[0].setBuffer(songController->GetSongByNumber(0,0));
     s_theme[0].play();
 
     ///Restart the Rhythm clocks
@@ -127,7 +77,7 @@ void Rhythm::BreakCombo()
     s_theme[1].stop();
 
     ///Play BGM from the combo of idle point
-    s_theme[0].setBuffer(b_theme[combo]);
+    s_theme[0].setBuffer(songController->GetSongByNumber(0,combo));
     s_theme[0].play();
 }
 
@@ -250,16 +200,16 @@ void Rhythm::doVisuals(sf::RenderWindow& window)
             flicker = 0;
         }
 
-        /// Fever meter
+        /// Fever meter - now with 16 segments!
         int feverMeterWidth = 10*(combo-12);
-        if(feverMeterWidth > 100)
+        if(feverMeterWidth > 160)
         {
-            feverMeterWidth = 100;
+            feverMeterWidth = 160;
         }
 
-        int sizeMod = masterTimer/float(100);
+        int sizeMod = masterTimer/float(160);
 
-        r_fever.setSize(sf::Vector2f(100+sizeMod*2,10+sizeMod*2));
+        r_fever.setSize(sf::Vector2f(160+sizeMod*2,10+sizeMod*2));
         r_fever_meter.setSize(sf::Vector2f(feverMeterWidth+sizeMod*2,10+sizeMod*2));
 
         r_fever.setPosition(50*ratio_X-sizeMod,50*ratio_Y-sizeMod);
@@ -379,7 +329,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     {
                         string chant_name = av_songs[song_ID]+"_"+to_string(chant_id);
                         s_chant.stop();
-                        s_chant.setBuffer(b_chant[chant_name]);
+                        s_chant.setBuffer(songController->GetChantByNumber(0,chant_name));
                         s_chant.play();
                     }
 
@@ -418,7 +368,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         masterTimerMode = 0;
 
         ///Play the BGM
-        s_theme[combo%2].setBuffer(b_theme[combo]);
+        s_theme[combo%2].setBuffer(songController->GetSongByNumber(0,combo));
 
         s_theme[combo%2].stop();
         s_theme[combo%2].play();
@@ -482,7 +432,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     s_theme[1].stop();
 
                     ///Start playing BGM from the starting point
-                    s_theme[0].setBuffer(b_theme[combo]);
+                    s_theme[0].setBuffer(songController->GetSongByNumber(0,combo));
                     s_theme[0].play();
 
                     ///Determine the song ID
@@ -499,7 +449,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     ///Determine the chant ID
                     string chant_name = av_songs[song_ID]+"_1";
                     s_chant.stop();
-                    s_chant.setBuffer(b_chant[chant_name]);
+                    s_chant.setBuffer(songController->GetChantByNumber(0,chant_name));
                     s_chant.play();
                 }
             }
