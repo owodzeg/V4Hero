@@ -72,7 +72,7 @@ Song::Song(std::string songName, std::string chantName)
     b_chant["dondon_1"].loadFromFile("resources/sfx/bgm/"+chantName+"/s_dondon1.ogg");
     b_chant["dondon_2"].loadFromFile("resources/sfx/bgm/"+chantName+"/s_dondon2.ogg");
     b_chant["dondon_3"].loadFromFile("resources/sfx/bgm/"+chantName+"/s_dondon3.ogg");
-    this.name = songName;
+
 }
 
 
