@@ -26,10 +26,16 @@ void SongController::LoadSongFromName(std::string songName, std::string chantNam
     Song* currentSong = new Song(songName,chantName);
     songs.push_back(*currentSong);
 }
-sf::SoundBuffer SongController::GetSongByNumber(int songIndex, int songNumber){
+const sf::SoundBuffer& SongController::GetSongByNumber(int songIndex, int songNumber){
     return songs[songIndex].GetThemeByNumber(songNumber);
 }
-sf::SoundBuffer SongController::GetChantByNumber(int songIndex, string chantName){
+const sf::SoundBuffer& SongController::GetChantByNumber(int songIndex, string chantName){
     return songs[songIndex].GetChantByName(chantName);
 }
 
+const sf::SoundBuffer& SongController::GetSongByName(string songName, int songNumber){
+    return songs[songIndex].GetThemeByNumber(songNumber);
+}
+const sf::SoundBuffer& SongController::GetChantByName(string songName, string chantName){
+    return songs[songIndex].GetChantByName(chantName);
+}

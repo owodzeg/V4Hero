@@ -13,8 +13,8 @@ class SongController
     SongController();
     void LoadSongController();
     void LoadSongFromName(std::string songName,std::string chantName);
-    sf::SoundBuffer GetSongByNumber(int songIndex, int songNumber);
-    sf::SoundBuffer GetChantByNumber(int songIndex, std::string chantName);
+    const sf::SoundBuffer& GetSongByNumber(int songIndex, int songNumber);
+    const sf::SoundBuffer& GetChantByNumber(int songIndex, std::string chantName);
 };
 
 #endif // SONGCONTROLLER_H

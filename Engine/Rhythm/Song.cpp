@@ -46,7 +46,9 @@ Song::Song(std::string songName, std::string chantName)
     b_theme[27].loadFromFile("resources/sfx/bgm/"+songName+"/bgm_fever16.ogg");
 
     ///All chants
-    b_chant["patapata_1"].loadFromFile("resources/sfx/bgm/"+chantName+"/s_patapata1.ogg");
+    if(!b_chant["patapata_1"].loadFromFile("resources/sfx/bgm/"+chantName+"/s_patapata1.ogg")){
+        throw "Error while loading chant files - chant file name may be wrong";
+    }
     b_chant["patapata_2"].loadFromFile("resources/sfx/bgm/"+chantName+"/s_patapata2.ogg");
     b_chant["patapata_3"].loadFromFile("resources/sfx/bgm/"+chantName+"/s_patapata3.ogg");
     b_chant["patapata_4"].loadFromFile("resources/sfx/bgm/"+chantName+"/s_patapata4.ogg");
@@ -70,25 +72,24 @@ Song::Song(std::string songName, std::string chantName)
     b_chant["dondon_1"].loadFromFile("resources/sfx/bgm/"+chantName+"/s_dondon1.ogg");
     b_chant["dondon_2"].loadFromFile("resources/sfx/bgm/"+chantName+"/s_dondon2.ogg");
     b_chant["dondon_3"].loadFromFile("resources/sfx/bgm/"+chantName+"/s_dondon3.ogg");
+    this.name = songName;
 }
 
 
-sf::SoundBuffer Song::GetThemeByNumber(int number){
+const sf::SoundBuffer& Song::GetThemeByNumber(int number){
     std::map<int,sf::SoundBuffer>::const_iterator pos = b_theme.find(number);
     if (pos == b_theme.end()) {
     //handle the error
         throw "Invalid theme value requested";
     } else {
-        sf::SoundBuffer value = pos->second;
-        return value;
+        return pos->second;
     }
 }
-sf::SoundBuffer Song::GetChantByName(std::string chantName){
+const sf::SoundBuffer& Song::GetChantByName(std::string chantName){
     std::map<string,sf::SoundBuffer>::const_iterator pos = b_chant.find(chantName);
     if (pos == b_chant.end()) {
         throw "Invalid theme value requested";
     } else {
-        sf::SoundBuffer value = pos->second;
-        return value;
+        return pos->second;
     }
 }
