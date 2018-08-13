@@ -33,9 +33,4 @@ const sf::SoundBuffer& SongController::GetChantByNumber(int songIndex, string ch
     return songs[songIndex].GetChantByName(chantName);
 }
 
-const sf::SoundBuffer& SongController::GetSongByName(string songName, int songNumber){
-    return songs[songIndex].GetThemeByNumber(songNumber);
-}
-const sf::SoundBuffer& SongController::GetChantByName(string songName, string chantName){
-    return songs[songIndex].GetChantByName(chantName);
-}
+
