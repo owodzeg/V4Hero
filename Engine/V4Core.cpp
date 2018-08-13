@@ -8,8 +8,9 @@ using namespace std;
 
 V4Core::V4Core()
 {
-    rhythm.LoadTheme("donjalalin");
+    rhythm.LoadTheme("Donjalin Theme");
     config.LoadConfig();
+    test_bg.Load("nanjarohills");
 }
 
 void V4Core::Init()
@@ -51,7 +52,9 @@ void V4Core::Init()
 
         //cout << fps << endl;
 
-        window.clear(sf::Color(255,200,200,255));
+        window.clear();
+        camera.Work(window);
+        test_bg.Draw(window);
         rhythm.fps = fps;
         ///ugh this is a BAD solution i need to do it differently
         rhythm.rhythmController.keyMap = keyMap;

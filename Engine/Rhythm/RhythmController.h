@@ -4,7 +4,8 @@
 #include <vector>
 #include <string>
 #include <map>
-#include "Config.h"
+
+#include "../Config.h"
 
 #include <SFML/Audio.hpp>
 
