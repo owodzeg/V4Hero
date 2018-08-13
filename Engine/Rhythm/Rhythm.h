@@ -17,7 +17,7 @@ class Rhythm
     /// Theme and chant buffers ///
     std::map<std::string,sf::SoundBuffer> b_chant; ///Sound buffer for Patapon chants
     SongController *songController;
-
+    std::string currentThemeName;
 
     /// Drums ///
 

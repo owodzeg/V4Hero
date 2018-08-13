@@ -8,7 +8,7 @@ using namespace std;
 
 V4Core::V4Core()
 {
-    rhythm.LoadTheme("donjalalin");
+    rhythm.LoadTheme("Donjalin Theme");
     config.LoadConfig();
     test_bg.Load("nanjarohills");
 }
