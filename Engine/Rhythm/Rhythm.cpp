@@ -109,6 +109,10 @@ void Rhythm::checkRhythmController(sf::RenderWindow& window)
 ///TO BE PORTED TO AN EXTERNAL CLASS
 void Rhythm::doVisuals(sf::RenderWindow& window)
 {
+    auto lastView = window.getView();
+
+    window.setView(window.getDefaultView());
+
     ///Patch for unusable command and beat values
     int totalComValue = ((commandValue - 1) * 4) + beatValue - 1;
     int usableCommandValue = floor(totalComValue / float(5));
@@ -235,6 +239,8 @@ void Rhythm::doVisuals(sf::RenderWindow& window)
             drums.erase(drums.begin() + i);
         }
     }
+
+    window.setView(lastView);
 }
 
 void Rhythm::Draw(sf::RenderWindow& window)

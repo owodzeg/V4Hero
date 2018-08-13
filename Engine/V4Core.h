@@ -5,6 +5,7 @@
 
 #include "Rhythm/Rhythm.h"
 #include "Mission/Background.h"
+#include "Mission/Camera.h"
 #include "Config.h"
 
 class V4Core
@@ -13,6 +14,7 @@ class V4Core
     Rhythm rhythm;
     Config config;
     Background test_bg;
+    Camera camera;
 
     std::vector<float> tot_fps;
     std::map<int,bool> keyMap;
