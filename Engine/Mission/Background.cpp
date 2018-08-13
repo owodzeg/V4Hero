@@ -75,7 +75,7 @@ void Background::Load(string bg_name)
 
             sf::Texture t_temp;
             t_temp.loadFromFile("resources/graphics/bg/"+bg_name+"/"+v_params[0]);
-            t_temp.setSmooth(true);
+            //t_temp.setSmooth(true);
             t_temp.setRepeated(true);
 
             sf::Sprite s_temp;
