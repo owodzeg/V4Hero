@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Rhythm/Rhythm.h"
+#include "Mission/Background.h"
 #include "Config.h"
 
 class V4Core
@@ -11,6 +12,7 @@ class V4Core
     private:
     Rhythm rhythm;
     Config config;
+    Background test_bg;
 
     std::vector<float> tot_fps;
     std::map<int,bool> keyMap;
