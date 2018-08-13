@@ -53,6 +53,7 @@ void V4Core::Init()
         //cout << fps << endl;
 
         window.clear();
+        camera.Work(window);
         test_bg.Draw(window);
         rhythm.fps = fps;
         ///ugh this is a BAD solution i need to do it differently

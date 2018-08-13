@@ -111,7 +111,13 @@ void Background::Draw(sf::RenderWindow& window)
         temp_camerax += 1;
     }
 
+    auto lastView = window.getView();
+
+    window.setView(window.getDefaultView());
+
     window.draw(v_background);
+
+    window.setView(lastView);
 
     for(int i=0; i<t_background.size(); i++)
     {

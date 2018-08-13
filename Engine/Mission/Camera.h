@@ -6,6 +6,9 @@
 class Camera
 {
     public:
+    float zoom = 1;
+    sf::View cameraView;
+
     Camera();
     void Work(sf::RenderWindow& window);
 };
