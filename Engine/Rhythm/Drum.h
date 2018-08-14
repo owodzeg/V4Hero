@@ -43,6 +43,17 @@ class Drum
     std::vector<float> pattern_Yspeed;
     std::vector<float> pattern_rotateSpeed;
 
+    std::vector<sf::CircleShape> c_particle;
+    int max_radius = 12;
+    std::vector<bool> particle_didStart;
+    std::vector<float> particle_x;
+    std::vector<float> particle_y;
+    std::vector<float> particle_angle;
+    std::vector<float> particle_radius;
+    std::vector<float> particle_curDistance;
+    std::vector<float> particle_maxDistance;
+    std::vector<float> particle_speed;
+
     int pattern = 0;
 
     Drum();

@@ -4,19 +4,20 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-#include "Config.h"
-#include "Func.h"
+#include "../Config.h"
+#include "../Func.h"
+
 #include "Drum.h"
+#include "SongController.h"
 #include "RhythmController.h"
 
 class Rhythm
 {
     private:
     /// Theme and chant buffers ///
-    std::map<int,sf::SoundBuffer> b_theme; ///Sound buffer for main theme
     std::map<std::string,sf::SoundBuffer> b_chant; ///Sound buffer for Patapon chants
-
-
+    SongController *songController;
+    std::string currentThemeName;
 
     /// Drums ///
 
