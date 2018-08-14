@@ -46,6 +46,7 @@ void Rhythm::LoadTheme(string theme)
 
 void Rhythm::BreakCombo()
 {
+    s_chant.stop();
     if(combo >= 11) ///Play dying fever sound when BGM is in fever state
     {
         ///Dying fever sound
