@@ -8,7 +8,13 @@ using namespace std;
 
 Background::Background()
 {
+    shape.setRadius(30);
+    shape.setFillColor(sf::Color::Black);
+}
 
+void Background::setCamera(Camera newCamera)
+{
+    camera = newCamera;
 }
 
 void Background::Load(string bg_name)
@@ -102,15 +108,6 @@ void Background::Draw(sf::RenderWindow& window)
         v_background[i].color = vx_color[i];
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-    {
-        temp_camerax -= 1;
-    }
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-    {
-        temp_camerax += 1;
-    }
-
     auto lastView = window.getView();
 
     window.setView(window.getDefaultView());
@@ -122,7 +119,12 @@ void Background::Draw(sf::RenderWindow& window)
     for(int i=0; i<t_background.size(); i++)
     {
         s_background[i].setTexture(t_background[i]);
-        s_background[i].setPosition((temp_camerax*background_xspeed[i]) / 25,610);
+        //cout << "Bg " << i << " position: " << camera.camera_x*background_xspeed[i] / 25 << " camera_x: " << camera.camera_x << endl;
+        s_background[i].setPosition(-(camera.camera_x*background_xspeed[i]) / 25,610);
         window.draw(s_background[i]);
     }
+
+    cout << camera.camera_x+camera.followobject_x << endl;
+    shape.setPosition((camera.followobject_x),550);
+    window.draw(shape);
 }

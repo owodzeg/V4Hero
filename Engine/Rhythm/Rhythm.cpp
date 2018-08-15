@@ -80,6 +80,8 @@ void Rhythm::BreakCombo()
     ///Play BGM from the combo of idle point
     s_theme[0].setBuffer(songController->GetSongByNumber(0,combo));
     s_theme[0].play();
+
+    current_song = "";
 }
 
 void Rhythm::checkRhythmController(sf::RenderWindow& window)
@@ -349,6 +351,8 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     }
 
                     flicker = 0;
+
+                    current_song = av_songs[song_ID];
                 }
                 else
                 {
@@ -458,6 +462,8 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     s_chant.stop();
                     s_chant.setBuffer(songController->GetChantByNumber(0,chant_name));
                     s_chant.play();
+
+                    current_song = av_songs[song_ID];
                 }
             }
         }
@@ -472,6 +478,11 @@ void Rhythm::Draw(sf::RenderWindow& window)
             BreakCombo();
         }
 
+        if(commandValue == 2)
+        {
+            current_song = "";
+        }
+
         ///Increment the beat value
         beatValue++;
 
@@ -481,7 +492,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
             beatValue = 1;
             commandValue++;
         }
-
         ///Reset master timer and change the mode
         masterTimerMode = 1;
         masterTimer = 500;

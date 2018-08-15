@@ -96,6 +96,7 @@ class Rhythm
     Config config;
     std::map<int,bool> keyMap;
     RhythmController rhythmController;
+    std::string current_song = "";
 
 
 

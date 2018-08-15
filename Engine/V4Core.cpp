@@ -53,7 +53,16 @@ void V4Core::Init()
         //cout << fps << endl;
 
         window.clear();
+        if(rhythm.current_song == "patapata")
+        {
+            camera.walk = true;
+        }
+        else
+        {
+            camera.walk = false;
+        }
         camera.Work(window);
+        test_bg.setCamera(camera);
         test_bg.Draw(window);
         rhythm.fps = fps;
         ///ugh this is a BAD solution i need to do it differently
