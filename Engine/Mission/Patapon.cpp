@@ -50,6 +50,11 @@ void Patapon::Draw(sf::RenderWindow& window)
     if(current_frame >= animation_textures[current_animation].size())
     {
         current_frame = 0;
+
+        if((current_animation == "pata") or (current_animation == "pon") or (current_animation == "don") or (current_animation == "chaka"))
+        {
+            current_animation = "idle";
+        }
     }
 
     s_patapon.setScale(0.6,0.6);
@@ -58,5 +63,6 @@ void Patapon::Draw(sf::RenderWindow& window)
 
     window.draw(s_patapon);
 
+    if(!((current_animation == "pata") or (current_animation == "pon") or (current_animation == "don") or (current_animation == "chaka")))
     current_animation = "idle";
 }

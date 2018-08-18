@@ -89,6 +89,8 @@ bool RhythmController::checkForInput()
         drumToLoad = "pata";
         currentPattern = patterns[drumToLoad];
 
+        current_drum = "pata";
+
         patterns[drumToLoad]++;
     }
 
@@ -105,6 +107,8 @@ bool RhythmController::checkForInput()
 
         drumToLoad = "pon";
         currentPattern = patterns[drumToLoad];
+
+        current_drum = "pon";
 
         patterns[drumToLoad]++;
     }
@@ -123,6 +127,8 @@ bool RhythmController::checkForInput()
         drumToLoad = "chaka";
         currentPattern = patterns[drumToLoad];
 
+        current_drum = "chaka";
+
         patterns[drumToLoad]++;
     }
 
@@ -139,6 +145,8 @@ bool RhythmController::checkForInput()
 
         drumToLoad = "don";
         currentPattern = patterns[drumToLoad];
+
+        current_drum = "don";
 
         patterns[drumToLoad]++;
     }

@@ -71,7 +71,7 @@ void Background::Load(string bg_name)
             sf::Sprite s_temp;
             s_temp.setTextureRect(sf::IntRect(0,0,500000,t_temp.getSize().y)); ///affect later with ratio
             s_temp.setTexture(t_temp);
-            s_temp.setOrigin(0,s_temp.getLocalBounds().height);
+            s_temp.setOrigin(10000,s_temp.getLocalBounds().height);
             s_temp.setColor(sf::Color(atoi(v_params[3].c_str()),atoi(v_params[4].c_str()),atoi(v_params[5].c_str()),255));
             s_temp.setPosition(-1000,610);
 

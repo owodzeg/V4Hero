@@ -25,14 +25,16 @@ void Camera::zoomViewAt(sf::Vector2i pixel, sf::RenderWindow& window, float zoom
 
 void Camera::Work(sf::RenderWindow& window)
 {
+    zoom = 1;
+
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::O))
     {
-        zoom += 0.00001;
+        zoom = 1.002;
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::P))
     {
-        zoom -= 0.00001;
+        zoom = 0.998;
     }
 
 

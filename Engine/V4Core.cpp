@@ -66,10 +66,19 @@ void V4Core::Init()
         test_bg.Draw(window);
         patapon.x = camera.followobject_x;
         patapon.fps = fps;
+
         if(rhythm.current_song == "patapata")
         {
             patapon.current_animation = "walk";
         }
+
+        if((rhythm.rhythmController.current_drum == "pata") or (rhythm.rhythmController.current_drum == "pon") or (rhythm.rhythmController.current_drum == "chaka") or (rhythm.rhythmController.current_drum == "don"))
+        {
+            patapon.current_animation = rhythm.rhythmController.current_drum;
+            patapon.current_frame = 0;
+            rhythm.rhythmController.current_drum = "";
+        }
+
         patapon.Draw(window);
         rhythm.fps = fps;
         ///ugh this is a BAD solution i need to do it differently
