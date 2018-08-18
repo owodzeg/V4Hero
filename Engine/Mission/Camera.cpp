@@ -70,7 +70,7 @@ void Camera::Work(sf::RenderWindow& window)
 
     camera_x += camera_xspeed;
 
-    zoomViewAt(sf::Vector2i(640,610),window,zoom);
+    zoomViewAt(sf::Vector2i(420,610),window,zoom);
 
     //cameraView.move(0, (cameraView.getSize().x / float(1280)));
     //cameraView.setCenter(640,cameraView.getSize().y/2);

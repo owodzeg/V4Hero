@@ -8,7 +8,7 @@ using namespace std;
 
 Background::Background()
 {
-    shape.setRadius(30);
+    shape.setRadius(20);
     shape.setFillColor(sf::Color::Black);
 }
 
@@ -125,6 +125,6 @@ void Background::Draw(sf::RenderWindow& window)
     }
 
     cout << camera.camera_x+camera.followobject_x << endl;
-    shape.setPosition((camera.followobject_x),550);
+    shape.setPosition((camera.followobject_x),570);
     window.draw(shape);
 }
