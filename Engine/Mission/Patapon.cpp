@@ -38,7 +38,14 @@ void Patapon::Draw(sf::RenderWindow& window)
 {
     s_patapon.setTexture(animation_textures[current_animation][floor(current_frame)]);
 
-    current_frame += float(30) / fps;
+    if(current_animation == "walk")
+    {
+        current_frame += float(24) / fps;
+    }
+    else
+    {
+        current_frame += float(30) / fps;
+    }
 
     if(current_frame >= animation_textures[current_animation].size())
     {
