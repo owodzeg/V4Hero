@@ -77,6 +77,7 @@ void V4Core::Init()
             patapon.current_animation = rhythm.rhythmController.current_drum;
             patapon.current_frame = 0;
             rhythm.rhythmController.current_drum = "";
+            rhythm.current_song = "";
         }
 
         patapon.Draw(window);
