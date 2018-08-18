@@ -35,21 +35,10 @@ void Camera::Work(sf::RenderWindow& window)
         zoom -= 0.00001;
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-    {
-        cameraView.setCenter(0,cameraView.getCenter().y+1);
-    }
-
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-    {
-        cameraView.setCenter(0,cameraView.getCenter().y-1);
-    }
 
     if(walk)
     followobject_x += 0.25;
 
-
-    cout << followobject_x - 10 - 400 << " " << followobject_x + 10 - 300 << endl;
     if(camera_x < followobject_x - 10 - 400)
     {
         camera_xspeed += (followobject_x - camera_x) / 10000;
@@ -63,7 +52,6 @@ void Camera::Work(sf::RenderWindow& window)
         camera_xspeed = 0;
     }
 
-    cout << camera_xspeed << endl;
 
     if(camera_xspeed >= 1)
     camera_xspeed = 1;

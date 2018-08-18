@@ -64,6 +64,13 @@ void V4Core::Init()
         camera.Work(window);
         test_bg.setCamera(camera);
         test_bg.Draw(window);
+        patapon.x = camera.followobject_x;
+        patapon.fps = fps;
+        if(rhythm.current_song == "patapata")
+        {
+            patapon.current_animation = "walk";
+        }
+        patapon.Draw(window);
         rhythm.fps = fps;
         ///ugh this is a BAD solution i need to do it differently
         rhythm.rhythmController.keyMap = keyMap;

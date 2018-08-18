@@ -9,8 +9,6 @@ class Background
     public:
     Camera camera;
 
-    sf::CircleShape shape;
-
     sf::VertexArray v_background;
     std::vector<sf::Vector2f> vx_pos;
     std::vector<sf::Color> vx_color;

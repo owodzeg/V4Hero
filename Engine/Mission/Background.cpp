@@ -8,8 +8,7 @@ using namespace std;
 
 Background::Background()
 {
-    shape.setRadius(20);
-    shape.setFillColor(sf::Color::Black);
+
 }
 
 void Background::setCamera(Camera newCamera)
@@ -55,21 +54,6 @@ void Background::Load(string bg_name)
                 vx_color.push_back(tmp_color);
             }
 
-            /*int tmp_size = vx_pos.size();
-            cout << "TMP_SIZE: " << tmp_size << " " << vx_color.size() << endl;
-
-            for(int i=tmp_size-1; i>=0; i--)
-            {
-                cout << "i: " << i << endl;
-
-                sf::Vector2f tmp_vector2;
-                tmp_vector2.x = 1280;
-                tmp_vector2.y = vx_pos[i].y;
-
-                vx_pos.push_back(tmp_vector2);
-                vx_color.push_back(vx_color[i]);
-            }*/
-
             sf::VertexArray tmp(sf::TrianglesStrip,vx_pos.size());
             v_background = tmp;
         }
@@ -102,8 +86,6 @@ void Background::Draw(sf::RenderWindow& window)
 {
     for(int i=0; i<vx_pos.size(); i++)
     {
-        //cout << "Setting point at " << vx_pos[i].x << " x " << vx_pos[i].y << endl;
-
         v_background[i].position = vx_pos[i];
         v_background[i].color = vx_color[i];
     }
@@ -119,12 +101,8 @@ void Background::Draw(sf::RenderWindow& window)
     for(int i=0; i<t_background.size(); i++)
     {
         s_background[i].setTexture(t_background[i]);
-        //cout << "Bg " << i << " position: " << camera.camera_x*background_xspeed[i] / 25 << " camera_x: " << camera.camera_x << endl;
+
         s_background[i].setPosition(-(camera.camera_x*background_xspeed[i]) / 25,610);
         window.draw(s_background[i]);
     }
-
-    cout << camera.camera_x+camera.followobject_x << endl;
-    shape.setPosition((camera.followobject_x),570);
-    window.draw(shape);
 }
