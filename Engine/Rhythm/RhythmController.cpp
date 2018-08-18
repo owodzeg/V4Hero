@@ -37,6 +37,8 @@ RhythmController::RhythmController()
     b_chdon[1].loadFromFile("resources/sfx/drums/ch_don_2.ogg");
     b_chdon[2].loadFromFile("resources/sfx/drums/ch_don_3.ogg");
 
+    b_perfect.loadFromFile("resources/sfx/drums/perfect.ogg");
+
     patterns["pata"] = 0;
     patterns["pon"] = 0;
     patterns["don"] = 0;
@@ -212,6 +214,16 @@ bool RhythmController::checkForInput()
             command_perfects.erase(command_perfects.begin());
 
             perfect = command_perfects[0]+command_perfects[1]+command_perfects[2]+command_perfects[3];
+        }
+
+        if(commandInput.size() == 4)
+        {
+            if(perfect == 4)
+            {
+                s_perfect.stop();
+                s_perfect.setBuffer(b_perfect);
+                s_perfect.play();
+            }
         }
 
         if(patterns["pata"] >= 8)

@@ -89,6 +89,7 @@ void Rhythm::checkRhythmController(sf::RenderWindow& window)
     ///RHYTHM CONTROLLER SETUP
     rhythmController.combo = combo;
     rhythmController.commandValue = commandValue;
+    rhythmController.beatValue = beatValue;
     rhythmController.masterTimer = masterTimer;
 
     if(rhythmController.checkForInput())

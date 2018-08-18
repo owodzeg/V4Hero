@@ -19,6 +19,7 @@ class RhythmController
     float masterTimer = 0;
     int combo = 0;
     int commandValue = 0;
+    int beatValue = 0;
 
     sf::SoundBuffer b_pata[3],b_pon[3],b_chaka[3],b_don[3]; ///Drums without chants
     sf::SoundBuffer b_chpata[3],b_chpon[3],b_chchaka[3],b_chdon[3]; ///Drums with chants
@@ -26,6 +27,9 @@ class RhythmController
 
     sf::Sound drum_c;
     sf::Sound drum_nc;
+
+    sf::SoundBuffer b_perfect;
+    sf::Sound s_perfect;
 
     map<int, bool> keyMap;
     Config config;
