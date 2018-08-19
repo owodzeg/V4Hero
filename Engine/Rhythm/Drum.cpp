@@ -288,8 +288,6 @@ void Drum::Load(string drum, int perfection, sf::RenderWindow& window)
 
     t_drum.setSmooth(true);
 
-    cout << "Generating particles..." << endl;
-
     int particle_amount = 14;
 
     for(int i=0; i<particle_amount; i++)
@@ -302,22 +300,11 @@ void Drum::Load(string drum, int perfection, sf::RenderWindow& window)
 
         float cur_affection = 300;
 
-        ///
 
         float power = log(300) / log(max_radius);
 
         if(radius <= max_radius)
         {
-            ///radius = 3
-            ///radius = 2
-            ///radius = 1
-            ///equation = (4 - radius) ^ 2
-            /// (4 - 3) ^ 2 = 1 ^ 2 = 1
-            /// (4 - 2) ^ 2 = 2 ^ 2 = 4
-            /// (4 - 1) ^ 2 = 3 ^ 2 = 9
-
-
-            /// 11 ^ x = 300
             cur_affection = pow(radius, power);
         }
 
@@ -338,14 +325,6 @@ void Drum::Load(string drum, int perfection, sf::RenderWindow& window)
             red = 255;
             green = color_value - 255;
         }
-
-        /// 100 color affection
-        /// 410 color value
-        /// bigger than 255
-        /// red = 255
-        /// green = 155
-
-        cout << "Size: " << radius << " Affection: " << cur_affection << " Color: " << red << " " << green << endl;
 
         temp.setFillColor(sf::Color(red,green,0,170));
         temp.setRadius(radius);
