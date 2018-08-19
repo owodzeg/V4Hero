@@ -50,6 +50,7 @@ class RhythmController
     int perfect = 0; ///value used for calculating perfect drums in a command
     std::vector<int> command_perfects; ///vector used for storing perfection of each drum
     std::vector<int> perfects = {4,4,4,4,4}; ///vector of perfections of inputted commands (with default data)
+    std::vector<string> av_commands;
 
     RhythmController();
     bool checkForInput();

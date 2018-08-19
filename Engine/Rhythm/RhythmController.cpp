@@ -218,11 +218,16 @@ bool RhythmController::checkForInput()
 
         if(commandInput.size() == 4)
         {
-            if(perfect == 4)
+            string fullcom = commandInput[0]+commandInput[1]+commandInput[2]+commandInput[3]; ///Create a full command using 4 individual hits
+
+            if(std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end()) ///Check if the command exists in available commands
             {
-                s_perfect.stop();
-                s_perfect.setBuffer(b_perfect);
-                s_perfect.play();
+                if(perfect == 4)
+                {
+                    s_perfect.stop();
+                    s_perfect.setBuffer(b_perfect);
+                    s_perfect.play();
+                }
             }
         }
 
