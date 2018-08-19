@@ -288,6 +288,8 @@ void Drum::Load(string drum, int perfection, sf::RenderWindow& window)
 
     t_drum.setSmooth(true);
 
+    cout << "Generating particles..." << endl;
+
     int particle_amount = 14;
 
     for(int i=0; i<particle_amount; i++)
@@ -296,11 +298,56 @@ void Drum::Load(string drum, int perfection, sf::RenderWindow& window)
         int radius = (rand() % max_radius) + 1;
         int angle = rand() % 360;
 
-        float c = floor(float(255) / max_radius);
-        float cc = c * radius;
-        float green = 255 - cc;
+        float size_affection = floor(float(255) / max_radius);
 
-        temp.setFillColor(sf::Color(255,green,0,200));
+        float cur_affection = 300;
+
+        ///
+
+        float power = log(300) / log(max_radius);
+
+        if(radius <= max_radius)
+        {
+            ///radius = 3
+            ///radius = 2
+            ///radius = 1
+            ///equation = (4 - radius) ^ 2
+            /// (4 - 3) ^ 2 = 1 ^ 2 = 1
+            /// (4 - 2) ^ 2 = 2 ^ 2 = 4
+            /// (4 - 1) ^ 2 = 3 ^ 2 = 9
+
+
+            /// 11 ^ x = 300
+            cur_affection = pow(radius, power);
+        }
+
+        float total_color = 510;
+        float color_value = total_color - cur_affection;
+
+        int red = 0;
+        int green = 0;
+
+        if(color_value <= 255)
+        {
+            red = color_value;
+            green = 0;
+        }
+
+        if(color_value > 255)
+        {
+            red = 255;
+            green = color_value - 255;
+        }
+
+        /// 100 color affection
+        /// 410 color value
+        /// bigger than 255
+        /// red = 255
+        /// green = 155
+
+        cout << "Size: " << radius << " Affection: " << cur_affection << " Color: " << red << " " << green << endl;
+
+        temp.setFillColor(sf::Color(red,green,0,170));
         temp.setRadius(radius);
         temp.setPosition(-1000,-1000);
 
@@ -484,16 +531,12 @@ void Drum::Draw(sf::RenderWindow& window)
 
 
             float c_alpha = c_particle[i].getFillColor().a;
-            float c = floor(float(255) / max_radius);
-            float cc = c * particle_radius[i];
-            float green = 255 - cc;
-
             c_alpha -= float(500) / fps;
 
             if(c_alpha <= 0)
             c_alpha = 0;
 
-            c_particle[i].setFillColor(sf::Color(255,green,0,c_alpha));
+            c_particle[i].setFillColor(sf::Color(c_particle[i].getFillColor().r,c_particle[i].getFillColor().g,0,c_alpha));
         }
 
         c_particle[i].setRadius(particle_radius[i] * ratio_universal);
