@@ -57,7 +57,7 @@ void Rhythm::BreakCombo()
     }
 
     ///Reset Rhythm Clock
-    rhythmClock.restart();
+    rhythmClock = breakClock;
 
     ///Reset combo to idle BGM point
     combo = 1;
@@ -81,6 +81,8 @@ void Rhythm::BreakCombo()
 
     cycle = 0;
     cycle_mode = 0;
+
+    combobreak = false;
 }
 
 void Rhythm::checkRhythmController(sf::RenderWindow& window)
@@ -106,7 +108,10 @@ void Rhythm::checkRhythmController(sf::RenderWindow& window)
         //beforeFeverClock.restart();
 
         if(rhythmController.breakCombo)
-        BreakCombo();
+        {
+            combobreak = true;
+            breakClock.restart();
+        }
     }
 
     rhythmController.resetValues();
@@ -268,6 +273,14 @@ void Rhythm::Draw(sf::RenderWindow& window)
     checkRhythmController(window);
     doVisuals(window);
 
+    if(combobreak)
+    {
+        if(breakClock.getElapsedTime().asMilliseconds() >= 245)
+        {
+            BreakCombo();
+        }
+    }
+
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::P))
     {
         LoadTheme("Freakout Rock Theme");
@@ -293,16 +306,28 @@ void Rhythm::Draw(sf::RenderWindow& window)
         if(rhythmController.hit)
         {
             cout << "good" << endl;
+
+            if(combo >= 2)
+            {
+                if(cycle_mode == 1)
+                {
+                    combobreak = true;
+                    breakClock.restart();
+                }
+            }
+
             rhythmController.hit = false;
         }
         else
         {
-            ///Reset Perfects table
-            rhythmController.perfect = 0;
-            rhythmController.perfects.clear();
-
-            ///Reset command input
-            rhythmController.commandInput.clear();
+            if(combo >= 2)
+            {
+                if(cycle_mode == 0)
+                {
+                    combobreak = true;
+                    breakClock.restart();
+                }
+            }
         }
 
         rhythmController.drumAlreadyHit = false;
@@ -405,6 +430,9 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
                                 s_theme[combo%2].stop();
                                 s_theme[combo%2].play();
+
+                                cycle_mode = 1;
+                                cycle = 0;
                             }
                         }
                     }

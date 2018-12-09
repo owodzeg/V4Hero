@@ -25,6 +25,7 @@ class Rhythm
     int cycle = 0;
     int cycle_mode = 0;
     bool start = false;
+    bool combobreak = false;
 
     /// Initialize sounds ///
     sf::SoundBuffer b_fever_fail;
@@ -40,6 +41,7 @@ class Rhythm
     /// Initialize clocks ///
     sf::Clock rhythmClock; ///Main clock for Rhythm purposes
     sf::Clock startClock; ///For start synchronization
+    sf::Clock breakClock; ///For correct combo break sync
 
 
     /// Initialize Rhythm System values ///
