@@ -24,7 +24,7 @@ class Rhythm
     int high_range = 215; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
     int cycle = 0;
     int cycle_mode = 0;
-    bool canPlay = false;
+    bool start = false;
 
     /// Initialize sounds ///
     sf::SoundBuffer b_fever_fail;
@@ -39,9 +39,7 @@ class Rhythm
 
     /// Initialize clocks ///
     sf::Clock rhythmClock; ///Main clock for Rhythm purposes
-    sf::Clock commandTimeout; ///Timeout clock to break the combo after not inputting any drum for a while
-    sf::Clock beforeFeverClock; ///Clock used while inputting first commands, later it is useless
-
+    sf::Clock startClock; ///For start synchronization
 
 
     /// Initialize Rhythm System values ///
