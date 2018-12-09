@@ -54,26 +54,28 @@ bool RhythmController::checkForInput()
     ///Determine the quality of given drum input
     if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")] || keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")] || keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")] || keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
     {
-        if(masterTimer < low_range) ///BAD hit
+        if((masterTimer < low_range) || (masterTimer > 500-low_range)) ///BAD hit
         {
             ///Apply BAD drum sound effect
             drum_quality = 2;
         }
-        else if((masterTimer >= low_range) && (masterTimer < high_range)) ///GOOD hit
+        else
         {
-            ///Add drum to commandInput table
-            add_to_commandtable = true;
-
             ///Apply GOOD drum sound effect
-            drum_quality = 1;
-        }
-        else if(masterTimer >= high_range)
-        {
+            if(((masterTimer >= low_range) && (masterTimer < high_range)) || ((masterTimer <= 500-low_range) && (masterTimer > 500-high_range))) ///GOOD hit
+            {
+                drum_quality = 1;
+            }
+            else if((masterTimer >= high_range) && (masterTimer <= 500-high_range))
+            {
+                drum_quality = 0;
+            }
+
             ///Add drum to commandInput table
             add_to_commandtable = true;
 
-            ///Apply BEST drum sound effect
-            drum_quality = 0;
+            ///Mark as hit
+            hit = true;
         }
     }
 
@@ -156,6 +158,10 @@ bool RhythmController::checkForInput()
     ///IF statement that applies to all drum keybinds (to not repeat the same code over and over)
     if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")] || keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")] || keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")] || keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
     {
+        cout << current_drum << " " << masterTimer << " ms " << endl;
+
+        cout << "drum quality was " << drum_quality << endl;
+
         ///If drum was already hit and you hit once again, or you hit BAD, reset user input and break combo
         if((drumAlreadyHit == true) || (masterTimer < low_range))
         {
@@ -165,19 +171,18 @@ bool RhythmController::checkForInput()
 
             if(combo >= 2)
             breakCombo = true;
+
+            cout << "break combo #1" << endl;
         }
 
         ///If drum was hit above the minimum range, determine it's quality and mark as being already hit
-        if(masterTimer >= low_range)
+        if(drum_quality <= 1)
         {
-            bool perfect_command = false;
-
-            if(masterTimer > high_range)
+            if(drum_quality == 0)
             {
-                perfect_command = true;
+                command_perfects.push_back(true);
             }
 
-            command_perfects.push_back(perfect_command);
             drumAlreadyHit = true;
         }
 
@@ -201,12 +206,6 @@ bool RhythmController::checkForInput()
         if(commandInput.size() > 4)
         commandInput.erase(commandInput.begin());
 
-        ///If you start drumming when commandValue is at 1 (Patapon singing), break the combo
-        if((commandValue == 1) && (combo >= 2))
-        {
-            breakCombo = true;
-        }
-
         ///Calculate how many perfect beats were in the command
         if(command_perfects.size() >= 4)
         {
@@ -219,6 +218,8 @@ bool RhythmController::checkForInput()
         if(commandInput.size() == 4)
         {
             string fullcom = commandInput[0]+commandInput[1]+commandInput[2]+commandInput[3]; ///Create a full command using 4 individual hits
+
+            cout << "fullcom: " << fullcom << endl;
 
             if(std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end()) ///Check if the command exists in available commands
             {

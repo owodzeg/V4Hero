@@ -19,16 +19,12 @@ class Rhythm
     SongController *songController;
     std::string currentThemeName;
 
-    /// Drums ///
-
-
-
-
-    /// Low and high range for BAD, GOOD and BEST hits (in milliseconds) ///
-    int low_range = 300; ///Anything below that range will be treated as BAD hit
-    int high_range = 425; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
-
-
+    /// Low and high range for BAD, GOOD and BEST hits (in milliseconds, 250 is the center point, 250-range = ms gap) ///
+    int low_range = 150; ///Anything below that range will be treated as BAD hit
+    int high_range = 215; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
+    int cycle = 0;
+    int cycle_mode = 0;
+    bool canPlay = false;
 
     /// Initialize sounds ///
     sf::SoundBuffer b_fever_fail;
@@ -56,6 +52,13 @@ class Rhythm
     int commandValue = 1; ///Value for current command (1 - Patapons sing, 2 - Player input)
     bool drumAlreadyHit = false; ///Made to check if drum has already been hit in 1 beat (to prevent from hitting multiple drums at a time)
     float flicker = 0; ///For beat frame flickering
+
+    float masterTimerPerfect = 500; ///determines the amount of milliseconds for each beat
+    float masterTimerInit = 450; ///Initial value for master timer
+    float masterTimerResetMode = 1; ///0 - start in early beat, 1 - start in late beat, useful with masterTimerInit
+    float masterTimerPrefever = 505; ///Value in ms determining the first command
+    float masterTimerSpeed = 2000; ///Value in ms determining the millisecond speed in one second
+    float masterTimerTimeout = 1; ///amount in seconds after which rhythm is cancelled
 
     std::vector<std::string> av_commands = {"PATAPATAPATAPON",
                                             "PONPONPATAPON",
@@ -110,6 +113,7 @@ class Rhythm
 
     Rhythm();
     void LoadTheme(std::string theme);
+    void RestartTheme();
     void BreakCombo();
     void checkRhythmController(sf::RenderWindow& window);
     void doVisuals(sf::RenderWindow& window);

@@ -14,13 +14,15 @@ using namespace std;
 class RhythmController
 {
     public:
-    int low_range = 300;
-    int high_range = 425;
+    int low_range;
+    int high_range;
     float masterTimer = 0;
-    int combo = 0;
-    int commandValue = 0;
-    int beatValue = 0;
 
+    bool hit = false;
+
+    int combo = 0;
+
+    ///REPLACE WITH b_drum["pata"][0] and b_drum["ch_pata"][0];
     sf::SoundBuffer b_pata[3],b_pon[3],b_chaka[3],b_don[3]; ///Drums without chants
     sf::SoundBuffer b_chpata[3],b_chpon[3],b_chchaka[3],b_chdon[3]; ///Drums with chants
     std::vector<sf::Sound> s_drums; ///Table for storing all the drums being hit
