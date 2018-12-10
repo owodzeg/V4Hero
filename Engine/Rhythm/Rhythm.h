@@ -47,18 +47,8 @@ class Rhythm
     /// Initialize Rhythm System values ///
     int combo = 1; ///Rhythm combo, main navigator through BGM
     float masterTimer = 500; ///Master Timer, determines the quality of hit drums
-    int masterTimerMode = 0; ///Mode of Master Timer, for synchronizing the time ranges properly
-    int beatValue = 1; ///Value for beats (drums) in a command (1, 2, 3, 4)
-    int commandValue = 1; ///Value for current command (1 - Patapons sing, 2 - Player input)
     bool drumAlreadyHit = false; ///Made to check if drum has already been hit in 1 beat (to prevent from hitting multiple drums at a time)
     float flicker = 0; ///For beat frame flickering
-
-    float masterTimerPerfect = 500; ///determines the amount of milliseconds for each beat
-    float masterTimerInit = 450; ///Initial value for master timer
-    float masterTimerResetMode = 1; ///0 - start in early beat, 1 - start in late beat, useful with masterTimerInit
-    float masterTimerPrefever = 505; ///Value in ms determining the first command
-    float masterTimerSpeed = 2000; ///Value in ms determining the millisecond speed in one second
-    float masterTimerTimeout = 1; ///amount in seconds after which rhythm is cancelled
 
     std::vector<std::string> av_commands = {"PATAPATAPATAPON",
                                             "PONPONPATAPON",
@@ -79,10 +69,9 @@ class Rhythm
 
 
 
-    /// Perfction calculator ///
+    /// Perfection calculator ///
     float accuracy = 0; ///value for calculating the accuracy
     int acc_count = 3; ///value for determining on how far back should the accuracy calculation system go in commands
-
 
 
     /// Drums in-game ///
@@ -93,14 +82,11 @@ class Rhythm
     float fps = 60;
 
 
-
-
     /// Config and Keybindings ///
     Config config;
     std::map<int,bool> keyMap;
     RhythmController rhythmController;
     std::string current_song = "";
-
 
 
     /// Visuals ///
@@ -113,7 +99,6 @@ class Rhythm
 
     Rhythm();
     void LoadTheme(std::string theme);
-    void RestartTheme();
     void BreakCombo();
     void checkRhythmController(sf::RenderWindow& window);
     void doVisuals(sf::RenderWindow& window);
