@@ -45,6 +45,8 @@ void Rhythm::BreakCombo()
 {
     cout << "Oops! You broke your combo!" << endl;
 
+    rhythmClock.restart();
+
     s_chant.stop();
     if(combo >= 11) ///Play dying fever sound when BGM is in fever state
     {
@@ -256,7 +258,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
     checkRhythmController(window);
     doVisuals(window);
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::P))
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::R))
     {
         LoadTheme("Freakout Rock Theme");
     }
