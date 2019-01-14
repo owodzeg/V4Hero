@@ -20,12 +20,14 @@ class Rhythm
     std::string currentThemeName;
 
     /// Low and high range for BAD, GOOD and BEST hits (in milliseconds, 250 is the center point, 250-range = ms gap) ///
-    int low_range = 150; ///Anything below that range will be treated as BAD hit
-    int high_range = 215; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
+    int low_range = 125; ///Anything below that range will be treated as BAD hit
+    int high_range = 175; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
+    /// Check if it's possible to replace cycles with one (max 2) values based on a clock, would make things more reliable
     int cycle = 0;
     int cycle_mode = 0;
-    bool start = false;
+    int bgm_cycle = 0;
     bool combobreak = false;
+    bool count_cycle = false;
 
     /// Initialize sounds ///
     sf::SoundBuffer b_fever_fail;
@@ -40,14 +42,9 @@ class Rhythm
 
     /// Initialize clocks ///
     sf::Clock rhythmClock; ///Main clock for Rhythm purposes
-    sf::Clock startClock; ///For start synchronization
-    sf::Clock breakClock; ///For correct combo break sync
-
 
     /// Initialize Rhythm System values ///
     int combo = 1; ///Rhythm combo, main navigator through BGM
-    float masterTimer = 500; ///Master Timer, determines the quality of hit drums
-    bool drumAlreadyHit = false; ///Made to check if drum has already been hit in 1 beat (to prevent from hitting multiple drums at a time)
     float flicker = 0; ///For beat frame flickering
 
     std::vector<std::string> av_commands = {"PATAPATAPATAPON",

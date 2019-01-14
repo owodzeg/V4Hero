@@ -5,14 +5,6 @@
 #include <cmath>
 using namespace std;
 
-template < class T >
-string to_string( T t )
-{
-    stringstream ss;
-    ss << t;
-    return ss.str();
-}
-
 Rhythm::Rhythm()
 {
     r_rhythm.setSize(sf::Vector2f(100,100));
@@ -38,16 +30,21 @@ void Rhythm::LoadTheme(string theme)
     cycle = 0;
     cycle_mode = 0;
 
+    bgm_cycle = 0;
+
     combo = 0;
-    start = false;
-    startClock.restart();
 
     ///Restart the Rhythm clocks
     rhythmClock.restart();
+
+    s_theme[0].setBuffer(songController->GetSongByNumber(0,0));
+    s_theme[0].play();
 }
 
 void Rhythm::BreakCombo()
 {
+    cout << "Oops! You broke your combo!" << endl;
+
     s_chant.stop();
     if(combo >= 11) ///Play dying fever sound when BGM is in fever state
     {
@@ -55,9 +52,6 @@ void Rhythm::BreakCombo()
         s_fever_fail.setBuffer(b_fever_fail);
         s_fever_fail.play();
     }
-
-    ///Reset Rhythm Clock
-    rhythmClock = breakClock;
 
     ///Reset combo to idle BGM point
     combo = 1;
@@ -69,20 +63,22 @@ void Rhythm::BreakCombo()
     ///Reset command input
     rhythmController.commandInput.clear();
 
-    ///Reset BGM
+    ///Stop the theme
     s_theme[0].stop();
     s_theme[1].stop();
 
-    ///Play BGM from the combo of idle point
-    s_theme[0].setBuffer(songController->GetSongByNumber(0,combo));
+    ///Play the idle loop
+    s_theme[0].setBuffer(songController->GetSongByNumber(0,1));
     s_theme[0].play();
 
+    ///Stop any current action
     current_song = "";
 
-    cycle = 0;
-    cycle_mode = 0;
+    ///Beat cycles
+    cycle = 4;
+    cycle_mode = 1;
 
-    combobreak = false;
+    bgm_cycle = 0;
 }
 
 void Rhythm::checkRhythmController(sf::RenderWindow& window)
@@ -90,7 +86,7 @@ void Rhythm::checkRhythmController(sf::RenderWindow& window)
     ///RHYTHM CONTROLLER SETUP
     rhythmController.combo = combo;
 
-    rhythmController.masterTimer = rhythmClock.getElapsedTime().asMilliseconds();
+    rhythmController.masterTimer = abs(rhythmClock.getElapsedTime().asMilliseconds() - 250);
     rhythmController.av_commands = av_commands;
 
     rhythmController.low_range = low_range;
@@ -103,14 +99,9 @@ void Rhythm::checkRhythmController(sf::RenderWindow& window)
         temp.pattern = rhythmController.currentPattern;
         drums.push_back(temp);
 
-        ///Restart the Timeout and Before Fever clocks every time a drum is being hit
-        //commandTimeout.restart();
-        //beforeFeverClock.restart();
-
         if(rhythmController.breakCombo)
         {
-            combobreak = true;
-            breakClock.restart();
+            BreakCombo();
         }
     }
 
@@ -130,15 +121,7 @@ void Rhythm::doVisuals(sf::RenderWindow& window)
     clock
     */
 
-    int rhythmAlpha = 0;
-
-    if(rhythmClock.getElapsedTime().asMilliseconds() < 250)
-    rhythmAlpha = 125 - (rhythmClock.getElapsedTime().asMilliseconds() / 2);
-
-    if(rhythmClock.getElapsedTime().asMilliseconds() >= 250)
-    rhythmAlpha = 250 - ((rhythmClock.getElapsedTime().asMilliseconds() - 250) / 2);
-
-    cout << "rhythmAlpha: " << rhythmAlpha << endl;
+    int rhythmAlpha = 250 - (rhythmClock.getElapsedTime().asMilliseconds() / 2);
 
     ///Visuals
     if(true)
@@ -202,21 +185,25 @@ void Rhythm::doVisuals(sf::RenderWindow& window)
 
             r_rhythm2.setOutlineColor(sf::Color(0,0,0,0));
 
-            if(floor(flicker) == 0)
+            int flick = floor(flicker);
+
+            switch(flick)
             {
+                case 0:
                 r_rhythm.setOutlineColor(sf::Color(255,255,0,rhythmAlpha));
-            }
-            else if(floor(flicker) == 1)
-            {
+                break;
+
+                case 1:
                 r_rhythm.setOutlineColor(sf::Color(255,255,255,rhythmAlpha));
-            }
-            else if(floor(flicker) == 2)
-            {
+                break;
+
+                case 2:
                 r_rhythm.setOutlineColor(sf::Color(0,255,255,rhythmAlpha));
-            }
-            else if(floor(flicker) == 3)
-            {
+                break;
+
+                case 3:
                 r_rhythm.setOutlineColor(sf::Color(0,255,0,rhythmAlpha));
+                break;
             }
 
             flicker += float(1) / fps * 30;
@@ -269,70 +256,53 @@ void Rhythm::Draw(sf::RenderWindow& window)
     checkRhythmController(window);
     doVisuals(window);
 
-    if(combobreak)
-    {
-        if(breakClock.getElapsedTime().asMilliseconds() >= 245)
-        {
-            BreakCombo();
-        }
-    }
-
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::P))
     {
         LoadTheme("Freakout Rock Theme");
     }
 
-    if(startClock.getElapsedTime().asMilliseconds() > 245)
+    if(rhythmClock.getElapsedTime().asMilliseconds() > 245)
     {
-        if(!start)
+        if(!count_cycle)
         {
-            ///Play the BGM beginning after loading
-            s_theme[0].setBuffer(songController->GetSongByNumber(0,0));
-            s_theme[0].play();
+            cycle++;
 
-            start = true;
+            if(rhythmController.hit)
+            {
+                if(combo >= 2)
+                {
+                    if(cycle_mode == 1)
+                    {
+                        BreakCombo();
+                    }
+                }
+
+            }
+            else
+            {
+                if(combo >= 2)
+                {
+                    if(cycle_mode == 0)
+                    {
+                        BreakCombo();
+                    }
+                }
+            }
+
+            rhythmController.hit = false;
+            count_cycle = true;
         }
     }
 
     if(rhythmClock.getElapsedTime().asMilliseconds() > 495)
     {
-        cycle++;
-        cout << "cycle: " << cycle << " mode: " << cycle_mode << endl;
+        count_cycle = false;
+        bgm_cycle++;
 
-        if(rhythmController.hit)
-        {
-            cout << "good" << endl;
-
-            if(combo >= 2)
-            {
-                if(cycle_mode == 1)
-                {
-                    combobreak = true;
-                    breakClock.restart();
-                }
-            }
-
-            rhythmController.hit = false;
-        }
-        else
-        {
-            if(combo >= 2)
-            {
-                if(cycle_mode == 0)
-                {
-                    combobreak = true;
-                    breakClock.restart();
-                }
-            }
-        }
-
-        rhythmController.drumAlreadyHit = false;
+        cout << "bgm_cycle: " << bgm_cycle << endl;
 
         rhythmClock.restart();
-    }
 
-    if(rhythmClock.getElapsedTime().asMilliseconds() > 245)
-    {
         if(combo <= 1) ///start anytime function
         {
             if(rhythmController.hit == false)
@@ -364,6 +334,8 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
                         cycle_mode = 1;
                         cycle = 0;
+
+                        bgm_cycle = 0;
                     }
                 }
             }
@@ -373,28 +345,30 @@ void Rhythm::Draw(sf::RenderWindow& window)
         {
             cycle = 0;
 
-            if(cycle_mode == 1)
-            {
-                cout << cycle_mode << " " << combo << endl;
-
-                if(combo == 0)
-                combo = 1;
-
-                if(combo == 1)
-                {
-                    cout << "this?" << endl;
-
-                    s_theme[0].setBuffer(songController->GetSongByNumber(0,combo));
-
-                    s_theme[0].stop();
-                    s_theme[1].stop();
-
-                    s_theme[0].play();
-                }
-            }
-
             cycle_mode += 1;
             cycle_mode = cycle_mode%2;
+        }
+
+        if(bgm_cycle >= 8)
+        {
+            cout << cycle_mode << " " << combo << endl;
+
+            bgm_cycle = 0;
+
+            if(combo == 0)
+            combo = 1;
+
+            if(combo == 1)
+            {
+                cout << "this?" << endl;
+
+                s_theme[0].setBuffer(songController->GetSongByNumber(0,combo));
+
+                s_theme[0].stop();
+                s_theme[1].stop();
+
+                s_theme[0].play();
+            }
 
             if(combo >= 2) /// If combo is not idle bgm
             {
@@ -429,6 +403,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
                                 cycle_mode = 1;
                                 cycle = 0;
+                            }
+                            else
+                            {
+                                BreakCombo();
                             }
                         }
                     }

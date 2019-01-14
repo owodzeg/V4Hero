@@ -54,7 +54,7 @@ bool RhythmController::checkForInput()
     ///Determine the quality of given drum input
     if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")] || keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")] || keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")] || keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
     {
-        if((masterTimer < low_range) || (masterTimer > 500-low_range)) ///BAD hit
+        if(masterTimer < low_range) ///BAD hit
         {
             ///Apply BAD drum sound effect
             drum_quality = 2;
@@ -62,20 +62,17 @@ bool RhythmController::checkForInput()
         else
         {
             ///Apply GOOD drum sound effect
-            if(((masterTimer >= low_range) && (masterTimer < high_range)) || ((masterTimer <= 500-low_range) && (masterTimer > 500-high_range))) ///GOOD hit
+            if((masterTimer >= low_range) && (masterTimer < high_range)) ///GOOD hit
             {
                 drum_quality = 1;
             }
-            else if((masterTimer >= high_range) && (masterTimer <= 500-high_range))
+            else if(masterTimer >= high_range)
             {
                 drum_quality = 0;
             }
 
             ///Add drum to commandInput table
             add_to_commandtable = true;
-
-            ///Mark as hit
-            hit = true;
         }
     }
 
@@ -163,7 +160,7 @@ bool RhythmController::checkForInput()
         cout << "drum quality was " << drum_quality << endl;
 
         ///If drum was already hit and you hit once again, or you hit BAD, reset user input and break combo
-        if((drumAlreadyHit == true) || (masterTimer < low_range))
+        if((hit) || (drum_quality == 2))
         {
             command_perfects.clear();
             perfects.clear();
@@ -183,7 +180,7 @@ bool RhythmController::checkForInput()
                 command_perfects.push_back(true);
             }
 
-            drumAlreadyHit = true;
+            hit = true;
         }
 
         ///Check config if drum sound effect should be played
