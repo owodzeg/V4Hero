@@ -333,6 +333,8 @@ void Rhythm::Draw(sf::RenderWindow& window)
                         rhythmController.perfects.push_back(rhythmController.perfect);
                         rhythmController.perfect = 0;
 
+                        rhythmController.command_perfects.clear();
+
                         combo = 2;
 
                         ///To not overlap with the music
@@ -349,6 +351,8 @@ void Rhythm::Draw(sf::RenderWindow& window)
                             s_chant.setBuffer(songController->GetChantByNumber(0,av_songs[index]+"_1"));
                             s_chant.play();
                         }
+
+                        combo++;
 
                         beatCycleClock.restart();
 
@@ -391,6 +395,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     rhythmController.perfects.push_back(rhythmController.perfect);
                     rhythmController.perfect = 0;
 
+                    rhythmController.command_perfects.clear();
 
                     s_theme[combo%2].setBuffer(songController->GetSongByNumber(0,combo));
 

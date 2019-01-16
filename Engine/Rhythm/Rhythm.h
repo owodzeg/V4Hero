@@ -40,6 +40,7 @@ class Rhythm
 
 
 
+
     /// Initialize clocks ///
     sf::Clock rhythmClock; ///Main clock for Rhythm purposes
     sf::Clock beatCycleClock; ///Clock for proper command inputs and requirements
