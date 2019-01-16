@@ -428,6 +428,12 @@ void Rhythm::Draw(sf::RenderWindow& window)
                         s_chant.play();
                     }
 
+                    if(combo == 11)
+                    {
+                        s_fever_start.setBuffer(b_fever_start);
+                        s_fever_start.play();
+                    }
+
                     combo += 1;
 
                     if(combo >= 28)
