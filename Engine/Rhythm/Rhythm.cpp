@@ -267,8 +267,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
     {
         if(!count_cycle)
         {
-            ///cycle mode = clock dependant, restart cycle clock when floor(milliseconds/500) >= 8
-            int tmp_cycle = floor(beatCycleClock.getElapsedTime().asMilliseconds()/float(495));
+            int tmp_cycle = floor(beatCycleClock.getElapsedTime().asMilliseconds() / float(495));
 
             if(tmp_cycle >= 8)
             {
@@ -314,8 +313,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
         count_cycle = false;
         bgm_cycle++;
 
-        cout << "bgm_cycle: " << bgm_cycle << endl;
-
         rhythmClock.restart();
 
         if(combo <= 1) ///start anytime function
@@ -325,8 +322,9 @@ void Rhythm::Draw(sf::RenderWindow& window)
                 if(rhythmController.commandInput.size() == 4) ///If user input is 4 drums
                 {
                     string fullcom = rhythmController.commandInput[0]+rhythmController.commandInput[1]+rhythmController.commandInput[2]+rhythmController.commandInput[3]; ///Create a full command using 4 individual hits
+                    int index = distance(av_commands.begin(), find(av_commands.begin(), av_commands.end(), fullcom));
 
-                    if(std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end()) ///Check if the command exists in available commands
+                    if(index < av_commands.size()) ///Check if the command exists in available commands
                     {
                         ///Clear user input
                         rhythmController.commandInput.clear();
@@ -334,8 +332,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
                         ///Push the amount of perfect hits to the table and reset them
                         rhythmController.perfects.push_back(rhythmController.perfect);
                         rhythmController.perfect = 0;
-
-                        cout << "start command found!" << endl;
 
                         combo = 2;
 
@@ -347,6 +343,12 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
                         s_theme[combo%2].stop();
                         s_theme[combo%2].play();
+
+                        if(config.GetInt("enablePataponChants"))
+                        {
+                            s_chant.setBuffer(songController->GetChantByNumber(0,av_songs[index]+"_1"));
+                            s_chant.play();
+                        }
 
                         beatCycleClock.restart();
 
@@ -374,9 +376,13 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
             if(combo >= 2) /// If combo is not idle bgm
             {
+                cout << "Combo: " << combo << endl;
+
                 string fullcom = rhythmController.commandInput[0]+rhythmController.commandInput[1]+rhythmController.commandInput[2]+rhythmController.commandInput[3]; ///Create a full command using 4 individual hits
 
-                if(std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end()) ///Check if the command exists in available commands
+                int index = distance(av_commands.begin(), find(av_commands.begin(), av_commands.end(), fullcom));
+
+                if(index < av_commands.size()) ///Check if the command exists in available commands
                 {
                     ///Clear user input
                     rhythmController.commandInput.clear();
@@ -385,17 +391,42 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     rhythmController.perfects.push_back(rhythmController.perfect);
                     rhythmController.perfect = 0;
 
-                    cout << "command found!" << endl;
-
-                    combo += 1;
-
-                    if(combo >= 28)
-                    combo = 12;
 
                     s_theme[combo%2].setBuffer(songController->GetSongByNumber(0,combo));
 
                     s_theme[combo%2].stop();
                     s_theme[combo%2].play();
+
+                    if(config.GetInt("enablePataponChants"))
+                    {
+                        int song_id = 1;
+
+                        if((combo >= 6) && (combo <= 11))
+                        {
+                            song_id = 2;
+                        }
+                        else if(combo > 11)
+                        {
+                            song_id = 3;
+
+                            if((av_songs[index] == "patapata") || (av_songs[index] == "ponpon") || (av_songs[index] == "chakachaka"))
+                            {
+                                song_id = 3 + combo%2;
+                            }
+                        }
+
+
+                        string song = av_songs[index]+"_"+to_string(song_id);
+                        s_chant.setBuffer(songController->GetChantByNumber(0,song));
+
+                        if(combo != 11)
+                        s_chant.play();
+                    }
+
+                    combo += 1;
+
+                    if(combo >= 28)
+                    combo = 12;
 
                     beatCycleClock.restart();
                 }
