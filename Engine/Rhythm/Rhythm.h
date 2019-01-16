@@ -20,8 +20,8 @@ class Rhythm
     std::string currentThemeName;
 
     /// Low and high range for BAD, GOOD and BEST hits (in milliseconds, 250 is the center point, 250-range = ms gap) ///
-    int low_range = 125; ///Anything below that range will be treated as BAD hit
-    int high_range = 175; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
+    int low_range = 135; ///Anything below that range will be treated as BAD hit
+    int high_range = 225; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
     /// Check if it's possible to replace cycles with one (max 2) values based on a clock, would make things more reliable
     int cycle = 0;
     int cycle_mode = 0;
@@ -42,6 +42,7 @@ class Rhythm
 
     /// Initialize clocks ///
     sf::Clock rhythmClock; ///Main clock for Rhythm purposes
+    sf::Clock beatCycleClock; ///Clock for proper command inputs and requirements
 
     /// Initialize Rhythm System values ///
     int combo = 1; ///Rhythm combo, main navigator through BGM

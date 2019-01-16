@@ -267,27 +267,40 @@ void Rhythm::Draw(sf::RenderWindow& window)
     {
         if(!count_cycle)
         {
-            cycle++;
+            ///cycle mode = clock dependant, restart cycle clock when floor(milliseconds/500) >= 8
+            int tmp_cycle = floor(beatCycleClock.getElapsedTime().asMilliseconds()/float(495));
 
-            if(rhythmController.hit)
+            if(tmp_cycle >= 8)
             {
-                if(combo >= 2)
+                beatCycleClock.restart();
+            }
+
+            cycle_mode = abs(floor((tmp_cycle)/4) - 1);
+            cycle = (tmp_cycle)%4 + 1;
+
+            if(combo >= 2)
+            {
+                if(rhythmController.hit)
                 {
                     if(cycle_mode == 1)
                     {
                         BreakCombo();
                     }
                 }
-
-            }
-            else
-            {
-                if(combo >= 2)
+                else
                 {
                     if(cycle_mode == 0)
                     {
                         BreakCombo();
                     }
+                }
+            }
+            else
+            {
+                if(!rhythmController.hit)
+                {
+                    ///Clear user input
+                    rhythmController.commandInput.clear();
                 }
             }
 
@@ -322,20 +335,20 @@ void Rhythm::Draw(sf::RenderWindow& window)
                         rhythmController.perfects.push_back(rhythmController.perfect);
                         rhythmController.perfect = 0;
 
-                        cout << "command found!" << endl;
+                        cout << "start command found!" << endl;
 
-                        combo += 1;
+                        combo = 2;
 
-                        if(combo >= 28)
-                        combo = 12;
+                        ///To not overlap with the music
+                        s_theme[0].stop();
+                        s_theme[1].stop();
 
                         s_theme[combo%2].setBuffer(songController->GetSongByNumber(0,combo));
 
                         s_theme[combo%2].stop();
                         s_theme[combo%2].play();
 
-                        cycle_mode = 1;
-                        cycle = 0;
+                        beatCycleClock.restart();
 
                         bgm_cycle = 0;
                     }
@@ -343,26 +356,13 @@ void Rhythm::Draw(sf::RenderWindow& window)
             }
         }
 
-        if(cycle >= 4)
-        {
-            cycle = 0;
-
-            cycle_mode += 1;
-            cycle_mode = cycle_mode%2;
-        }
-
         if(bgm_cycle >= 8)
         {
-            cout << cycle_mode << " " << combo << endl;
-
             bgm_cycle = 0;
 
-            if(combo == 0)
-            combo = 1;
-
-            if(combo == 1)
+            if(combo < 2)
             {
-                cout << "this?" << endl;
+                combo = 1;
 
                 s_theme[0].setBuffer(songController->GetSongByNumber(0,combo));
 
@@ -374,44 +374,34 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
             if(combo >= 2) /// If combo is not idle bgm
             {
-                if(cycle_mode == 1)
+                string fullcom = rhythmController.commandInput[0]+rhythmController.commandInput[1]+rhythmController.commandInput[2]+rhythmController.commandInput[3]; ///Create a full command using 4 individual hits
+
+                if(std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end()) ///Check if the command exists in available commands
                 {
-                    if(rhythmController.hit == false)
-                    {
-                        if(rhythmController.commandInput.size() == 4) ///If user input is 4 drums
-                        {
-                            string fullcom = rhythmController.commandInput[0]+rhythmController.commandInput[1]+rhythmController.commandInput[2]+rhythmController.commandInput[3]; ///Create a full command using 4 individual hits
+                    ///Clear user input
+                    rhythmController.commandInput.clear();
 
-                            if(std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end()) ///Check if the command exists in available commands
-                            {
-                                ///Clear user input
-                                rhythmController.commandInput.clear();
+                    ///Push the amount of perfect hits to the table and reset them
+                    rhythmController.perfects.push_back(rhythmController.perfect);
+                    rhythmController.perfect = 0;
 
-                                ///Push the amount of perfect hits to the table and reset them
-                                rhythmController.perfects.push_back(rhythmController.perfect);
-                                rhythmController.perfect = 0;
+                    cout << "command found!" << endl;
 
-                                cout << "command found!" << endl;
+                    combo += 1;
 
-                                combo += 1;
+                    if(combo >= 28)
+                    combo = 12;
 
-                                if(combo >= 28)
-                                combo = 12;
+                    s_theme[combo%2].setBuffer(songController->GetSongByNumber(0,combo));
 
-                                s_theme[combo%2].setBuffer(songController->GetSongByNumber(0,combo));
+                    s_theme[combo%2].stop();
+                    s_theme[combo%2].play();
 
-                                s_theme[combo%2].stop();
-                                s_theme[combo%2].play();
-
-                                cycle_mode = 1;
-                                cycle = 0;
-                            }
-                            else
-                            {
-                                BreakCombo();
-                            }
-                        }
-                    }
+                    beatCycleClock.restart();
+                }
+                else
+                {
+                    BreakCombo();
                 }
             }
         }
