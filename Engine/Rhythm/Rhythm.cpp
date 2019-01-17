@@ -64,6 +64,7 @@ void Rhythm::BreakCombo()
 
     ///Reset command input
     rhythmController.commandInput.clear();
+    rhythmController.command_perfects.clear();
 
     ///Stop the theme
     s_theme[0].stop();
@@ -352,8 +353,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
                             s_chant.play();
                         }
 
-                        combo++;
-
                         beatCycleClock.restart();
 
                         bgm_cycle = 0;
@@ -388,6 +387,11 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
                 if(index < av_commands.size()) ///Check if the command exists in available commands
                 {
+                    combo += 1;
+
+                    if(combo >= 28)
+                    combo = 12;
+
                     ///Clear user input
                     rhythmController.commandInput.clear();
 
@@ -396,6 +400,27 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     rhythmController.perfect = 0;
 
                     rhythmController.command_perfects.clear();
+
+                    while(rhythmController.perfects.size() > 4)
+                    rhythmController.perfects.erase(rhythmController.perfects.begin());
+
+                    float acc = (rhythmController.perfects[0]+rhythmController.perfects[1]+rhythmController.perfects[2]+rhythmController.perfects[3]) / float(16);
+                    cout << "Accuracy: " << acc*100 << "%" << endl;
+
+                    if(combo < 11)
+                    {
+                        if(acc > acc_req[combo])
+                        {
+                            if(combo < 6)
+                            {
+                                combo = 6;
+                            }
+                            else
+                            {
+                                combo = 11;
+                            }
+                        }
+                    }
 
                     s_theme[combo%2].setBuffer(songController->GetSongByNumber(0,combo));
 
@@ -433,11 +458,6 @@ void Rhythm::Draw(sf::RenderWindow& window)
                         s_fever_start.setBuffer(b_fever_start);
                         s_fever_start.play();
                     }
-
-                    combo += 1;
-
-                    if(combo >= 28)
-                    combo = 12;
 
                     beatCycleClock.restart();
                 }

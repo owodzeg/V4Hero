@@ -40,7 +40,6 @@ class Rhythm
 
 
 
-
     /// Initialize clocks ///
     sf::Clock rhythmClock; ///Main clock for Rhythm purposes
     sf::Clock beatCycleClock; ///Clock for proper command inputs and requirements
@@ -65,7 +64,7 @@ class Rhythm
                                         "ponpata",
                                         "dondon",
                                         "patapata"}; ///Available songs
-
+    std::vector<float> acc_req = {0,1,1,0.9325,0.875,0.8125,0.75,0.75,0.75,0.6875,0.625};
 
 
     /// Perfection calculator ///

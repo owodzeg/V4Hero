@@ -180,6 +180,11 @@ bool RhythmController::checkForInput()
                 command_perfects.push_back(true);
             }
 
+            if(drum_quality == 1)
+            {
+                command_perfects.push_back(false);
+            }
+
             hit = true;
         }
 
