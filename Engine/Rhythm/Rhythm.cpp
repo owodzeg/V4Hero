@@ -261,7 +261,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::R))
     {
-        LoadTheme("Freakout Rock Theme");
+        LoadTheme(config.GetString("debugTheme"));
     }
 
     if(rhythmClock.getElapsedTime().asMilliseconds() > 245)
