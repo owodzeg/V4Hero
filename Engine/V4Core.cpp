@@ -12,6 +12,14 @@ V4Core::V4Core()
 
     test_bg.Load(config.GetString("debugBackground"));
     rhythm.LoadTheme(config.GetString("debugTheme"));
+
+    f_font.loadFromFile("resources/fonts/patapon.ttf");
+
+    t_debug.setFont(f_font);
+    t_debug.setCharacterSize(24);
+    t_debug.setColor(sf::Color::White);
+    t_debug.setString("This is an Alpha release. Game is not finished yet. Test debug build from 20th January 2019.");
+    t_debug.setOrigin(t_debug.getGlobalBounds().width/2,t_debug.getGlobalBounds().height/2);
 }
 
 void V4Core::Init()
@@ -88,6 +96,15 @@ void V4Core::Init()
         rhythm.rhythmController.config = config;
         rhythm.config = config;
         rhythm.Draw(window);
+
+        auto lastView = window.getView();
+        window.setView(window.getDefaultView());
+
+        t_debug.setPosition(window.getSize().x/2,window.getSize().y-20);
+        window.draw(t_debug);
+
+        window.setView(lastView);
+
         window.display();
 
         keyMap.clear();

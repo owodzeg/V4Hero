@@ -21,6 +21,9 @@ class V4Core
     std::vector<float> tot_fps;
     std::map<int,bool> keyMap;
 
+    sf::Font f_font;
+    sf::Text t_debug;
+
     float fps = 60;
     sf::Clock fpsclock;
 

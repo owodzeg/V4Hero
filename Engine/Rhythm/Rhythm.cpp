@@ -338,6 +338,8 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
                         combo = 2;
 
+                        current_song = av_songs[index];
+
                         ///To not overlap with the music
                         s_theme[0].stop();
                         s_theme[1].stop();
@@ -391,6 +393,8 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
                     if(combo >= 28)
                     combo = 12;
+
+                    current_song = av_songs[index];
 
                     ///Clear user input
                     rhythmController.commandInput.clear();
