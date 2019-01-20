@@ -34,6 +34,9 @@ void Rhythm::LoadTheme(string theme)
 
     combo = 0;
 
+    ///Stop any current action
+    current_song = "";
+
     ///Restart the Rhythm clocks
     rhythmClock.restart();
 
