@@ -18,7 +18,7 @@ V4Core::V4Core()
     t_debug.setFont(f_font);
     t_debug.setCharacterSize(24);
     t_debug.setColor(sf::Color::White);
-    t_debug.setString("This is an Alpha release. Game is not finished yet. Test debug build from 20th January 2019.");
+    t_debug.setString("This is an Alpha release. Game is not finished yet. Test debug build from 31st January 2019.");
     t_debug.setOrigin(t_debug.getGlobalBounds().width/2,t_debug.getGlobalBounds().height/2);
 }
 
@@ -70,7 +70,7 @@ void V4Core::Init()
         {
             camera.walk = false;
         }
-        camera.Work(window);
+        camera.Work(window,fps);
         test_bg.setCamera(camera);
         test_bg.Draw(window);
         patapon.x = camera.followobject_x;

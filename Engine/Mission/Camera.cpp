@@ -23,7 +23,7 @@ void Camera::zoomViewAt(sf::Vector2i pixel, sf::RenderWindow& window, float zoom
 	window.setView(view);
 }
 
-void Camera::Work(sf::RenderWindow& window)
+void Camera::Work(sf::RenderWindow& window,float fps)
 {
     zoom = 1;
 
@@ -39,7 +39,7 @@ void Camera::Work(sf::RenderWindow& window)
 
 
     if(walk)
-    followobject_x += 0.25;
+        followobject_x += 0.25*60/fps;
 
     if(camera_x < followobject_x - 10 - 400)
     {
