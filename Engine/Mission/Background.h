@@ -2,10 +2,13 @@
 #define BACKGROUND_H
 
 #include <SFML/Graphics.hpp>
+#include "Camera.h"
 
 class Background
 {
     public:
+    Camera camera;
+
     sf::VertexArray v_background;
     std::vector<sf::Vector2f> vx_pos;
     std::vector<sf::Color> vx_color;
@@ -18,6 +21,7 @@ class Background
     float temp_camerax = 0;
 
     Background();
+    void setCamera(Camera camera);
     void Load(std::string bg_name);
     void Draw(sf::RenderWindow& window);
 };

@@ -37,6 +37,8 @@ RhythmController::RhythmController()
     b_chdon[1].loadFromFile("resources/sfx/drums/ch_don_2.ogg");
     b_chdon[2].loadFromFile("resources/sfx/drums/ch_don_3.ogg");
 
+    b_perfect.loadFromFile("resources/sfx/drums/perfect.ogg");
+
     patterns["pata"] = 0;
     patterns["pon"] = 0;
     patterns["don"] = 0;
@@ -57,21 +59,20 @@ bool RhythmController::checkForInput()
             ///Apply BAD drum sound effect
             drum_quality = 2;
         }
-        else if((masterTimer >= low_range) && (masterTimer < high_range)) ///GOOD hit
+        else
         {
-            ///Add drum to commandInput table
-            add_to_commandtable = true;
-
             ///Apply GOOD drum sound effect
-            drum_quality = 1;
-        }
-        else if(masterTimer >= high_range)
-        {
+            if((masterTimer >= low_range) && (masterTimer < high_range)) ///GOOD hit
+            {
+                drum_quality = 1;
+            }
+            else if(masterTimer >= high_range)
+            {
+                drum_quality = 0;
+            }
+
             ///Add drum to commandInput table
             add_to_commandtable = true;
-
-            ///Apply BEST drum sound effect
-            drum_quality = 0;
         }
     }
 
@@ -88,6 +89,8 @@ bool RhythmController::checkForInput()
 
         drumToLoad = "pata";
         currentPattern = patterns[drumToLoad];
+
+        current_drum = "pata";
 
         patterns[drumToLoad]++;
     }
@@ -106,6 +109,8 @@ bool RhythmController::checkForInput()
         drumToLoad = "pon";
         currentPattern = patterns[drumToLoad];
 
+        current_drum = "pon";
+
         patterns[drumToLoad]++;
     }
 
@@ -122,6 +127,8 @@ bool RhythmController::checkForInput()
 
         drumToLoad = "chaka";
         currentPattern = patterns[drumToLoad];
+
+        current_drum = "chaka";
 
         patterns[drumToLoad]++;
     }
@@ -140,14 +147,20 @@ bool RhythmController::checkForInput()
         drumToLoad = "don";
         currentPattern = patterns[drumToLoad];
 
+        current_drum = "don";
+
         patterns[drumToLoad]++;
     }
 
     ///IF statement that applies to all drum keybinds (to not repeat the same code over and over)
     if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")] || keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")] || keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")] || keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
     {
+        cout << current_drum << " " << masterTimer << " ms " << endl;
+
+        cout << "drum quality was " << drum_quality << endl;
+
         ///If drum was already hit and you hit once again, or you hit BAD, reset user input and break combo
-        if((drumAlreadyHit == true) || (masterTimer < low_range))
+        if((hit) || (drum_quality == 2))
         {
             command_perfects.clear();
             perfects.clear();
@@ -155,20 +168,24 @@ bool RhythmController::checkForInput()
 
             if(combo >= 2)
             breakCombo = true;
+
+            cout << "break combo #1" << endl;
         }
 
         ///If drum was hit above the minimum range, determine it's quality and mark as being already hit
-        if(masterTimer >= low_range)
+        if(drum_quality <= 1)
         {
-            bool perfect_command = false;
-
-            if(masterTimer > high_range)
+            if(drum_quality == 0)
             {
-                perfect_command = true;
+                command_perfects.push_back(true);
             }
 
-            command_perfects.push_back(perfect_command);
-            drumAlreadyHit = true;
+            if(drum_quality == 1)
+            {
+                command_perfects.push_back(false);
+            }
+
+            hit = true;
         }
 
         ///Check config if drum sound effect should be played
@@ -191,12 +208,6 @@ bool RhythmController::checkForInput()
         if(commandInput.size() > 4)
         commandInput.erase(commandInput.begin());
 
-        ///If you start drumming when commandValue is at 1 (Patapon singing), break the combo
-        if((commandValue == 1) && (combo >= 2))
-        {
-            breakCombo = true;
-        }
-
         ///Calculate how many perfect beats were in the command
         if(command_perfects.size() >= 4)
         {
@@ -204,6 +215,23 @@ bool RhythmController::checkForInput()
             command_perfects.erase(command_perfects.begin());
 
             perfect = command_perfects[0]+command_perfects[1]+command_perfects[2]+command_perfects[3];
+        }
+
+        if(commandInput.size() == 4)
+        {
+            string fullcom = commandInput[0]+commandInput[1]+commandInput[2]+commandInput[3]; ///Create a full command using 4 individual hits
+
+            cout << "fullcom: " << fullcom << endl;
+
+            if(std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end()) ///Check if the command exists in available commands
+            {
+                if(perfect == 4)
+                {
+                    s_perfect.stop();
+                    s_perfect.setBuffer(b_perfect);
+                    s_perfect.play();
+                }
+            }
         }
 
         if(patterns["pata"] >= 8)
