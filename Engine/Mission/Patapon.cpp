@@ -1,5 +1,5 @@
 #include "Patapon.h"
-
+#include "math.h"
 #include <fstream>
 #include <iostream>
 
@@ -56,6 +56,7 @@ void Patapon::Draw(sf::RenderWindow& window)
             current_animation = "idle";
         }
     }
+
 
     s_patapon.setScale(0.6,0.6);
 
