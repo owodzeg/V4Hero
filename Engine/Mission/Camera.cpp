@@ -39,8 +39,9 @@ void Camera::Work(sf::RenderWindow& window,float fps)
 
 
     if(walk)
-        followobject_x += 0.25*60/fps;
-
+    {
+        followobject_x += (0.25 * 60)/fps;
+    }
     if(camera_x < followobject_x - 10 - 400)
     {
         camera_xspeed += (followobject_x - camera_x) / 200000;
@@ -56,7 +57,9 @@ void Camera::Work(sf::RenderWindow& window,float fps)
 
 
     if(camera_xspeed >= 0.25)
-    camera_xspeed = 0.25;
+    {
+        camera_xspeed = 0.25;
+    }
 
     camera_x += camera_xspeed;
 
