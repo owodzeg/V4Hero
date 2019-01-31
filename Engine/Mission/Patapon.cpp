@@ -1,5 +1,5 @@
 #include "Patapon.h"
-#include "math.h"
+
 #include <fstream>
 #include <iostream>
 
