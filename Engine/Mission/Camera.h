@@ -14,7 +14,7 @@ class Camera
     sf::View cameraView;
 
     Camera();
-    void zoomViewAt(sf::Vector2i pixel, sf::RenderWindow& window, float zoom);
+    void zoomViewAt(sf::Vector2i pixel, sf::RenderWindow& window, float zoom,float fps);
     void Work(sf::RenderWindow& window,float fps);
 };
 

@@ -8,15 +8,17 @@
 #include "Mission/Camera.h"
 #include "Config.h"
 #include "Mission/Patapon.h"
-
+#include "Mission/MissionController.h"
+#include "Menu/MainMenu.h"
 class V4Core
 {
     private:
-    Rhythm rhythm;
+
     Config config;
-    Background test_bg;
-    Camera camera;
-    Patapon patapon;
+    MissionController currentController;
+    MainMenu mainMenu;
+    bool inMission;
+
 
     std::vector<float> tot_fps;
     std::map<int,bool> keyMap;
