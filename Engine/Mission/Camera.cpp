@@ -41,15 +41,16 @@ void Camera::Work(sf::RenderWindow& window,float fps)
 
     if(walk)
     {
-        followobject_x += (0.25 * 60)/fps;
+        followobject_x += (2 * 60) / fps;
     }
+
     if(camera_x < followobject_x - 10 - 400)
     {
-        camera_xspeed += (followobject_x - camera_x) / 200000;
+        camera_xspeed += (followobject_x - camera_x) / 2000;
     }
     else if(camera_x > followobject_x + 10 + 400)
     {
-        camera_xspeed -= (camera_x - followobject_x) / 200000;
+        camera_xspeed -= (camera_x - followobject_x) / 2000;
     }
     else
     {
@@ -57,12 +58,14 @@ void Camera::Work(sf::RenderWindow& window,float fps)
     }
 
 
-    if(camera_xspeed >= 0.25)
+    if(camera_xspeed >= 2)
     {
-        camera_xspeed = 0.25;
+        camera_xspeed = 2;
     }
 
-    camera_x += camera_xspeed;
+    cout << "Move camera by " << (camera_xspeed * 60) / fps << " vs " << camera_xspeed << endl;
+
+    camera_x += (camera_xspeed * 60) / fps;
 
     zoomViewAt(sf::Vector2i(420,610),window,zoom);
 
