@@ -3,7 +3,6 @@
 
 #include <SFML/Graphics.hpp>
 #include "Camera.h"
-
 class Background
 {
     public:
