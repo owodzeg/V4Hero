@@ -15,9 +15,9 @@ class V4Core
     private:
 
     Config config;
-    MissionController currentController;
+    //MissionController currentController;
     MainMenu mainMenu;
-    bool inMission;
+
 
 
     std::vector<float> tot_fps;

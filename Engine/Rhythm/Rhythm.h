@@ -96,6 +96,7 @@ class Rhythm
 
 
     Rhythm();
+    void Stop();
     void LoadTheme(std::string theme);
     void BreakCombo();
     void checkRhythmController(sf::RenderWindow& window);

@@ -2,21 +2,24 @@
 #include <iostream>
 #include <cstdlib>
 #include <time.h>
-
+#include <string>
 MissionController::MissionController()
 {
     //ctor
 
 }
-void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap){
-    test_bg.Load(config.GetString("debugBackground"));
+void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,std::string backgroundString){
+    test_bg.Load(backgroundString);//config.GetString("debugBackground"));
 
     missionKeyMap = &keyMap;
     missionConfig = &config;
 
 }
-void MissionController::StartMission(){
-    rhythm.LoadTheme(missionConfig->GetString("debugTheme"));
+void MissionController::StartMission(std::string songName){
+    rhythm.LoadTheme(songName); // missionConfig->GetString("debugTheme")
+}
+void MissionController::StopMission(){
+    rhythm.Stop();
 }
 void MissionController::Update(sf::RenderWindow &window, float fps){
         if(rhythm.current_song == "patapata")
@@ -62,4 +65,5 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
 MissionController::~MissionController()
 {
     //dtor
+
 }

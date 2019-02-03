@@ -12,6 +12,7 @@ using namespace std;
 
 Config::Config()
 {
+    configDebugID=0;
     ///check if config file already exists
     ifstream check("config.ini");
     bool exists = check.good();
