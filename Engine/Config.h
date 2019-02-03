@@ -11,7 +11,7 @@ class Config
     std::vector<std::string> configKeys = {"resX", "resY", "framerateLimit", "enableFullscreen", "enableBorderlessWindow", "enableDrumChants", "enableDrums", "enablePataponChants", "keybindPata", "keybindPon", "keybindDon", "keybindChaka", "secondaryKeybindPata", "secondaryKeybindPon", "secondaryKeybindDon", "secondaryKeybindChaka","debugTheme","debugBackground"};
     std::vector<std::string> configDefaults = {"1280", "720", "240", "0", "0", "0", "1", "1", "71", "72", "74", "73",std::to_string(sf::Keyboard::A), std::to_string(sf::Keyboard::D), std::to_string(sf::Keyboard::S), std::to_string(sf::Keyboard::W),"Freakout Rock Theme","nanjarohills"};
     std::map<std::string,std::string> configMap;
-
+    int configDebugID=0;
     Config();
     void LoadConfig();
     ///I wanted to overload these two in a single function, but somehow it just doesnt want to work...

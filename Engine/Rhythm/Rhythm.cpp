@@ -19,9 +19,19 @@ Rhythm::Rhythm()
     b_fever_start.loadFromFile("resources/sfx/bgm/fever_start.ogg");
     b_fever_fail.loadFromFile("resources/sfx/bgm/fever_fail.ogg");
 }
-
+void Rhythm::Stop()
+{
+    s_theme[0].stop();
+    s_theme[1].stop();
+    s_fever_fail.stop(); ///Dying fever sound
+    s_fever_start.stop(); ///FEVER!
+    s_chant.stop();
+}
 void Rhythm::LoadTheme(string theme)
 {
+    cout<<"theme:"<<theme<<endl;
+    b_chant.clear();
+    Stop();
     ///Load the BGM
     songController = new SongController();
     songController->LoadSongByName(theme);

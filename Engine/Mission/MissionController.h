@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "../Config.h"
 #include "Patapon.h"
+#include <string>
 class MissionController
 {
     public:
@@ -18,8 +19,9 @@ class MissionController
     std::map<int,bool>* missionKeyMap;
     Config* missionConfig;
 
-    void Initialise(Config &config, std::map<int,bool> &keymap);
-    void StartMission();
+    void StopMission();
+    void Initialise(Config &config, std::map<int,bool> &keymap,std::string backgroundName);
+    void StartMission(std::string songName);
     void Update(sf::RenderWindow &window, float fps);
     MissionController();
     ~MissionController();

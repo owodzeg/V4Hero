@@ -1,7 +1,9 @@
 #ifndef MAINMENU_H
 #define MAINMENU_H
-
 #include <SFML/Graphics.hpp>
+#include "ButtonList.h"
+#include "../Config.h"
+#include "../Mission/MissionController.h"
 
 class MainMenu
 {
@@ -15,9 +17,16 @@ class MainMenu
         sf::Text t_title;
         sf::Text t_pressToContinue;
 
+        Config *thisConfig;
+        std::map<int,bool> *keyMap;
+        MissionController currentController;
 
-        Update(sf::RenderWindow &window, float fps);
-        KeyPressedEvent(sf::Event event);
+        bool inMission;
+
+        ButtonList buttonList;
+        void Initialise(Config &thisConfig, std::map<int,bool> *keymap);
+        void Update(sf::RenderWindow &window, float fps);
+        void KeyPressedEvent(sf::Event event);
         MainMenu();
         ~MainMenu();
 
