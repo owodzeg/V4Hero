@@ -19,7 +19,7 @@ V4Core::V4Core()
     t_debug.setString("This is an Alpha release. Game is not finished yet. Test debug build from 3rd February 2019.");
     t_debug.setOrigin(t_debug.getGlobalBounds().width/2,t_debug.getGlobalBounds().height/2);
     //inMission=false;
-    mainMenu.Initialise(config,&keyMap);
+    mainMenu.Initialise(config,&keyMap,this);
     config.configDebugID = 10;
 }
 

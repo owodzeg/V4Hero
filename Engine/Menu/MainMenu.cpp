@@ -1,6 +1,7 @@
 #include "MainMenu.h"
 #include "ButtonList.h"
 #include "iostream"
+#include "../V4Core.h"
 MainMenu::MainMenu()
 {
     //ctor
@@ -30,9 +31,10 @@ MainMenu::MainMenu()
     mm_titleBox.setFillColor(sf::Color::Red);
     inMission=false;
 }
-void MainMenu::Initialise(Config &thisConfig,std::map<int,bool> *keymap){
+void MainMenu::Initialise(Config &thisConfig,std::map<int,bool> *keymap,V4Core *parent){
     thisConfig.GetInt("keybindDon");
-    buttonList.Initialise(&f_font,thisConfig,keymap,&currentController,this);
+    v4core = parent;
+    buttonList.Initialise(&f_font,thisConfig,keymap,&(v4core->currentController),this);
 }
 void MainMenu::KeyPressedEvent(sf::Event event){
 
@@ -40,7 +42,7 @@ void MainMenu::KeyPressedEvent(sf::Event event){
     buttonList.KeyPressedEvent(event);
     if(event.key.code==59) {
         cout<<"Returning to main menu...";
-        currentController.StopMission();
+        v4core->currentController.StopMission();
         inMission=false;
     }
 }
@@ -69,7 +71,7 @@ void MainMenu::Update(sf::RenderWindow &window, float fps)
         buttonList.Update(window, fps);
         window.setView(window.getDefaultView());
     } else {
-        currentController.Update(window, fps);
+        v4core->currentController.Update(window, fps);
     }
 
 }
