@@ -20,6 +20,7 @@ class V4Core
 
 
 
+
     std::vector<float> tot_fps;
     std::map<int,bool> keyMap;
 
@@ -32,6 +33,7 @@ class V4Core
     bool leftkey=false,rightkey=false,upkey=false,downkey=false;
 
     public:
+        MissionController currentController;
     V4Core();
     void Init();
 };

@@ -10,10 +10,11 @@
 #include "Drum.h"
 #include "SongController.h"
 #include "RhythmController.h"
-
+#include "RhythmGUI.h"
 class Rhythm
 {
     private:
+    RhythmGUI r_gui;
     /// Theme and chant buffers ///
     std::map<std::string,sf::SoundBuffer> b_chant; ///Sound buffer for Patapon chants
     SongController *songController;
@@ -87,12 +88,7 @@ class Rhythm
     std::string current_song = "";
 
 
-    /// Visuals ///
-    sf::RectangleShape r_rhythm;
-    sf::RectangleShape r_rhythm2;
 
-    sf::RectangleShape r_fever;
-    sf::RectangleShape r_fever_meter;
 
 
     Rhythm();
@@ -100,8 +96,8 @@ class Rhythm
     void LoadTheme(std::string theme);
     void BreakCombo();
     void checkRhythmController(sf::RenderWindow& window);
-    void doVisuals(sf::RenderWindow& window);
     void Draw(sf::RenderWindow& window);
+
 };
 
 #endif // RHYTHM_H
