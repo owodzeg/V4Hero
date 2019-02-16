@@ -82,7 +82,9 @@ void V4Core::Init()
 
             window.setView(lastView);
         //}
-        t_debug.setPosition(window.getSize().x/2,window.getSize().y-20);
+        sf::Vector2i pixelPos = sf::Vector2i(window.getSize().x/2,window.getSize().y-20);//sf::Mouse::getPosition(window);
+        sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos,lastView);
+        t_debug.setPosition(worldPos);
         window.draw(t_debug);
         window.display();
 
