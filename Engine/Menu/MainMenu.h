@@ -25,7 +25,7 @@ class MainMenu
         ButtonList buttonList;
         void Initialise(Config &thisConfig, std::map<int,bool> *keymap,V4Core *parent);
         void Update(sf::RenderWindow &window, float fps);
-        void KeyPressedEvent(sf::Event event);
+        void EventFired(sf::Event event);
         MainMenu();
         ~MainMenu();
 

@@ -49,7 +49,7 @@ void V4Core::Init()
 			{
 			    ///keyMap[event.key.code] = true/false??? would that do the trick?
 			    keyMap[event.key.code] = true;
-			    mainMenu.KeyPressedEvent(event);
+
 			    //if (!inMission){
                     //inMission=true;
                     //currentController.StartMission();
@@ -64,6 +64,7 @@ void V4Core::Init()
                 keyMap[event.key.code] = false;
             }
         }
+        mainMenu.EventFired(event);
 
         fps = float(1000000) / fpsclock.getElapsedTime().asMicroseconds();
         fpsclock.restart();
@@ -82,7 +83,9 @@ void V4Core::Init()
 
             window.setView(lastView);
         //}
-        t_debug.setPosition(window.getSize().x/2,window.getSize().y-20);
+        sf::Vector2i pixelPos = sf::Vector2i(window.getSize().x/2,window.getSize().y-20);//sf::Mouse::getPosition(window);
+        sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos,lastView);
+        t_debug.setPosition(worldPos);
         window.draw(t_debug);
         window.display();
 

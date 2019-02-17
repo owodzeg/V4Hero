@@ -12,9 +12,9 @@ ButtonList::ButtonList()
 void ButtonList::Initialise(sf::Font *font,Config &newConfig,  std::map<int,bool> *thisKeymap,MissionController *controller,MainMenu *mainMenu)
 {
     config = &newConfig;
-    MenuButton* level1Button = new MenuButton("Level 1",font,42,300);
-    MenuButton* level2Button = new MenuButton("Level 2",font,42,350);
-    MenuButton* optionsButton = new MenuButton("Options",font,42,400);
+    MenuButton* level1Button = new MenuButton("Level 1",font,42,300,this,0);
+    MenuButton* level2Button = new MenuButton("Level 2",font,42,350,this,1);
+    MenuButton* optionsButton = new MenuButton("Options",font,42,400,this,2);
     buttons.push_back(*level1Button);
     buttons.push_back(*level2Button);
     buttons.push_back(*optionsButton);
@@ -24,13 +24,44 @@ void ButtonList::Initialise(sf::Font *font,Config &newConfig,  std::map<int,bool
     keyMap = thisKeymap;
     currentIndex = 0;
 }
-void ButtonList::Update(sf::RenderWindow &window, float fps)
+void ButtonList::Update(sf::RenderWindow &window, float fps, sf::Vector2f *mousePos)
 {
     for (std::vector<MenuButton>::iterator it = buttons.begin(); it != buttons.end(); ++it)
-        (*it).Update(window,fps);
+        (*it).Update(window,fps,mousePos);
+
+
 
 }
-
+void ButtonList::MouseReleasedEvent(sf::Event event){
+    for (std::vector<MenuButton>::iterator it = buttons.begin(); it != buttons.end(); ++it)
+        (*it).MouseUp(event.mouseButton.x,event.mouseButton.y);
+}
+void ButtonList::HighlightButton(MenuButton *button,int index){
+    currentIndex = index;
+    for (std::vector<MenuButton>::iterator it = buttons.begin(); it != buttons.end(); ++it)
+        (*it).SetSelected(false);
+    buttons[index].SetSelected(true);
+}
+void ButtonList::SelectButton(int index){
+    currentIndex = index;
+    switch (currentIndex){
+            case 0:
+                // start level 1
+                currentController->Initialise(*config,*keyMap,config->GetString("mission1Background"));
+                currentController->StartMission(config->GetString("mission1Theme"));
+                parentMenu->inMission = true;
+                break;
+            case 1:
+                // start level 2
+                currentController->Initialise(*config,*keyMap,config->GetString("mission2Background"));
+                currentController->StartMission(config->GetString("mission2Theme"));
+                parentMenu->inMission = true;
+                break;
+            case 2:
+                // start options
+                break;
+        }
+}
 void ButtonList::KeyPressedEvent(sf::Event event)
 {
     int keyCode = event.key.code;
@@ -50,23 +81,7 @@ void ButtonList::KeyPressedEvent(sf::Event event)
         }
     }
     if(keyCode == config->GetInt("keybindMenuEnter")){ // enter
-        switch (currentIndex){
-            case 0:
-                // start level 1
-                currentController->Initialise(*config,*keyMap,config->GetString("mission1Background"));
-                currentController->StartMission(config->GetString("mission1Theme"));
-                parentMenu->inMission = true;
-                break;
-            case 1:
-                // start level 2
-                currentController->Initialise(*config,*keyMap,config->GetString("mission2Background"));
-                currentController->StartMission(config->GetString("mission2Theme"));
-                parentMenu->inMission = true;
-                break;
-            case 2:
-                // start options
-                break;
-        }
+        SelectButton(currentIndex);
     }
     for (std::vector<MenuButton>::iterator it = buttons.begin(); it != buttons.end(); ++it)
         (*it).SetSelected(false);
