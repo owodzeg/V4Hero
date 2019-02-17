@@ -36,14 +36,19 @@ void MainMenu::Initialise(Config &thisConfig,std::map<int,bool> *keymap,V4Core *
     v4core = parent;
     buttonList.Initialise(&f_font,thisConfig,keymap,&(v4core->currentController),this);
 }
-void MainMenu::KeyPressedEvent(sf::Event event){
-
-    // do something here;
-    buttonList.KeyPressedEvent(event);
-    if(event.key.code==59) {
-        cout<<"Returning to main menu...";
-        v4core->currentController.StopMission();
-        inMission=false;
+void MainMenu::EventFired(sf::Event event){
+    if(event.type == sf::Event::KeyPressed)
+    {
+        // do something here;
+        buttonList.KeyPressedEvent(event);
+        if(event.key.code==59) {
+            cout<<"Returning to main menu...";
+            v4core->currentController.StopMission();
+            inMission=false;
+        }
+    } else if (event.type == sf::Event::MouseButtonReleased){
+        // We use mouse released so a user can change their mind by keeping the mouse held and moving away.
+        buttonList.MouseReleasedEvent(event);
     }
 }
 void MainMenu::Update(sf::RenderWindow &window, float fps)
@@ -65,10 +70,15 @@ void MainMenu::Update(sf::RenderWindow &window, float fps)
         t_title.setPosition(window.getSize().x/2,200);
         window.draw(t_title);
 
+
+        sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+        auto lastView = window.getView();
+        sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos,lastView);
+
         //t_pressToContinue.setPosition(window.getSize().x/2,300);
         //window.draw(t_pressToContinue);
 
-        buttonList.Update(window, fps);
+        buttonList.Update(window, fps, &worldPos);
         window.setView(window.getDefaultView());
     } else {
         v4core->currentController.Update(window, fps);

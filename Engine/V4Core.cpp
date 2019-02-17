@@ -49,7 +49,7 @@ void V4Core::Init()
 			{
 			    ///keyMap[event.key.code] = true/false??? would that do the trick?
 			    keyMap[event.key.code] = true;
-			    mainMenu.KeyPressedEvent(event);
+
 			    //if (!inMission){
                     //inMission=true;
                     //currentController.StartMission();
@@ -64,6 +64,7 @@ void V4Core::Init()
                 keyMap[event.key.code] = false;
             }
         }
+        mainMenu.EventFired(event);
 
         fps = float(1000000) / fpsclock.getElapsedTime().asMicroseconds();
         fpsclock.restart();

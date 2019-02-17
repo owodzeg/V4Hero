@@ -3,7 +3,7 @@
 
 #include <string>
 #include <SFML/Graphics.hpp>
-
+class ButtonList;
 class MenuButton
 {
     public:
@@ -12,11 +12,13 @@ class MenuButton
         bool selected=false;
         float originX;
         float originY;
-
-        void Update(sf::RenderWindow &window, float fps);
+        sf::RectangleShape debug_text_bounding_box;
+        ButtonList *parentList;
+        int buttonListIndex;
+        void Update(sf::RenderWindow &window, float fps, sf::Vector2f *mousePos);
         void SetSelected(bool isSelected);
-
-        MenuButton(std::string text,sf::Font *font,int fontSize, float y);
+        void MouseUp(int xPos,int yPos);
+        MenuButton(std::string text,sf::Font *font,int fontSize, float y, ButtonList *p_list,int index);
         ~MenuButton();
 
 };

@@ -20,9 +20,11 @@ class ButtonList
         MainMenu *parentMenu;
 
         void Initialise(sf::Font *font,Config &newConfig, std::map<int,bool> *keymap,MissionController *controller,MainMenu *parentMenu);
-        void Update(sf::RenderWindow &window, float fps);
+        void Update(sf::RenderWindow &window, float fps, sf::Vector2f *mousePos);
         void KeyPressedEvent(sf::Event event);
-
+        void MouseReleasedEvent(sf::Event event);
+        void HighlightButton(MenuButton *button,int index);
+        void SelectButton(int index);
 
         ButtonList();
         ~ButtonList();
