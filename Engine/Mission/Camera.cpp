@@ -98,11 +98,11 @@ void Camera::Work(sf::RenderWindow& window,float fps)
 
     if(camera_x > followobject_x + 500)
     {
-        camera_xspeed = (-(camera_x - followobject_x - 400) / 20) / fps * float(60);
+        camera_xspeed = (-(camera_x - followobject_x - 400) / 20);
     }
     else if(camera_x < followobject_x + 400)
     {
-        camera_xspeed = (-(camera_x - followobject_x - 400) / 20) / fps * float(60);
+        camera_xspeed = (-(camera_x - followobject_x - 400) / 20);
     }
     else
     {
