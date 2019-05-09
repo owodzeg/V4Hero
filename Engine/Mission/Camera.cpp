@@ -16,26 +16,26 @@ void Camera::zoomViewAt(sf::Vector2i pixel, sf::RenderWindow& window, float zoom
 	window.setView(view);
 	sf::Vector2f afterCoord{window.mapPixelToCoords(pixel)};
 	sf::Vector2f offsetCoords{beforeCoord - afterCoord};
-	offsetCoords.x = (camera_xspeed*60/fps);
-	view.move(offsetCoords);
-	window.setView(view);
+
+	zoom_x += offsetCoords.x;
+	zoom_y += offsetCoords.y;
 }
 
 
 void Camera::Work(sf::RenderWindow& window,float fps)
 {
-    zoom = 1;
+    dest_zoom = 1;
 
     /** Debug controls **/
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::O))
     {
-        zoom = 1.002;
+        dest_zoom = 1.01;
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::P))
     {
-        zoom = 0.998;
+        dest_zoom = 0.99;
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::K))
@@ -59,11 +59,11 @@ void Camera::Work(sf::RenderWindow& window,float fps)
 
     if(camera_x > followobject_x + 500)
     {
-        camera_xspeed += (followobject_x - camera_x) / 2000;
+        camera_xspeed = -(camera_x - followobject_x - 400) / 50;
     }
     else if(camera_x < followobject_x + 400)
     {
-        camera_xspeed -= (followobject_x - camera_x) / 2000;
+        camera_xspeed = -(camera_x - followobject_x - 400) / 50;
     }
     else
     {
@@ -75,15 +75,28 @@ void Camera::Work(sf::RenderWindow& window,float fps)
         camera_xspeed = 2;
     }
 
+    if(abs(camera_xspeed) <= 0.05)
+    {
+        camera_xspeed = 0;
+    }
+
+    /** Move camera **/
+
     camera_x += (camera_xspeed * 60) / fps;
 
     /** Apply zoom **/
 
-    zoomViewAt(sf::Vector2i(camera_x,610),window,zoom,fps);
+    zoom += ((dest_zoom - zoom) / 20);
+    if((zoom > 0.9999) && (zoom < 1.0001))
+    zoom = 1;
+    cout << "zoom: " << zoom << endl;
+    cout << "dest_zoom: " << dest_zoom << endl;
 
-    /** Move camera **/
+    zoomViewAt(sf::Vector2i(window.mapCoordsToPixel(sf::Vector2f(followobject_x,610)).x,610),window,zoom,fps);
+
+    /** Apply camera position **/
 
     sf::View view{window.getView()};
-    view.setCenter(camera_x,view.getCenter().y);
+    view.setCenter(camera_x+zoom_x,camera_y+zoom_y);
     window.setView(view);
 }
