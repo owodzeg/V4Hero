@@ -115,16 +115,16 @@ void V4Core::Init()
 
         //} else {
             mainMenu.Update(window,fps);
-            auto lastView = window.getView();
-            window.setView(window.getDefaultView());
-
-            window.setView(lastView);
         //}
-        sf::Vector2i pixelPos = sf::Vector2i(window.getSize().x/2,window.getSize().y-20);//sf::Mouse::getPosition(window);
-        sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos,lastView);
-        t_debug.setPosition(worldPos);
+
+        auto lastView = window.getView();
+        window.setView(window.getDefaultView());
+
+        t_debug.setPosition(window.getSize().x/2,window.getSize().y-20);
         window.draw(t_debug);
         window.display();
+
+        window.setView(lastView);
 
         keyMap.clear();
     }
