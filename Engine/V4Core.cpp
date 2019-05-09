@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cstdlib>
 #include <time.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include "V4Core.h"
 
@@ -8,17 +10,52 @@ using namespace std;
 
 V4Core::V4Core()
 {
+    /** Detect when the build was compiled **/
+
+    time_t t;
+
+    struct stat result;
+    if(stat("Patafour.exe", &result) == 0)
+    {
+        t = result.st_mtime;
+    }
+
+    struct tm *st = localtime(&t);
+
+    int day = st->tm_mday;
+    int month = st->tm_mon;
+    int year = st->tm_year + 1900;
+
+    vector<string> months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    string strDay = to_string(day);
+
+    if(day%10 == 1)
+    strDay += "st";
+    else if(day%10 == 2)
+    strDay += "nd";
+    else if(day%10 == 3)
+    strDay += "rd";
+    else
+    strDay += "th";
+
+    string dbgString = "This is an Alpha release. Game is not finished yet. Test debug build from "+strDay+" "+months[month]+" "+to_string(year)+".";
+
+    /** Load config from config.cfg **/
+
     config.LoadConfig();
 
+    /** "Alpha release" text **/
 
     f_font.loadFromFile("resources/fonts/patapon.ttf");
 
     t_debug.setFont(f_font);
     t_debug.setCharacterSize(24);
     t_debug.setFillColor(sf::Color::White);
-    t_debug.setString("This is an Alpha release. Game is not finished yet. Test debug build from 3rd February 2019.");
+    t_debug.setString(dbgString);
     t_debug.setOrigin(t_debug.getGlobalBounds().width/2,t_debug.getGlobalBounds().height/2);
-    //inMission=false;
+
+    /** Initialize main menu **/
+
     mainMenu.Initialise(config,&keyMap,this);
     config.configDebugID = 10;
 }
