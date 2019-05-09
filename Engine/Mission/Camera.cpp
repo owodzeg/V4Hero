@@ -114,7 +114,7 @@ void Camera::Work(sf::RenderWindow& window,float fps)
         camera_xspeed = 2;
     }
 
-    if(abs(camera_xspeed) <= 0.05)
+    if(fabs(camera_xspeed) <= 0.05)
     {
         camera_xspeed = 0;
     }
