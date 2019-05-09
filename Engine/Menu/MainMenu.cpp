@@ -31,10 +31,11 @@ MainMenu::MainMenu()
     mm_titleBox.setFillColor(sf::Color::Red);
     inMission=false;
 }
-void MainMenu::Initialise(Config &thisConfig,std::map<int,bool> *keymap,V4Core *parent){
-    thisConfig.GetInt("keybindDon");
+void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent){
+    thisConfig = thisConfigs;
+    thisConfig->GetInt("keybindDon");
     v4core = parent;
-    buttonList.Initialise(&f_font,thisConfig,keymap,&(v4core->currentController),this);
+    buttonList.Initialise(&f_font,*thisConfig,keymap,&(v4core->currentController),this);
 }
 void MainMenu::EventFired(sf::Event event){
     if(event.type == sf::Event::KeyPressed)
@@ -42,7 +43,7 @@ void MainMenu::EventFired(sf::Event event){
         // do something here;
         buttonList.KeyPressedEvent(event);
         if(event.key.code==59) {
-            cout<<"Returning to main menu...";
+            thisConfig->debugOut->DebugMessage("Returning to main menu...");
             v4core->currentController.StopMission();
             inMission=false;
         }

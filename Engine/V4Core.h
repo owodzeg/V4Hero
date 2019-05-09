@@ -15,6 +15,7 @@ class V4Core
     private:
 
     Config config;
+    DebugOut debugOut;
     //MissionController currentController;
     MainMenu mainMenu;
 

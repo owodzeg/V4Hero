@@ -23,7 +23,7 @@ class MainMenu
         bool inMission;
 
         ButtonList buttonList;
-        void Initialise(Config &thisConfig, std::map<int,bool> *keymap,V4Core *parent);
+        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent);
         void Update(sf::RenderWindow &window, float fps);
         void EventFired(sf::Event event);
         MainMenu();

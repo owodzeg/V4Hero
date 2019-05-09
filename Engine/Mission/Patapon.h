@@ -2,6 +2,7 @@
 #define PATAPON_H
 
 #include <SFML/Graphics.hpp>
+#include "../Config.h"
 
 using namespace std;
 
@@ -21,7 +22,9 @@ class Patapon
 
     map<string,vector<sf::Texture>> animation_textures;
 
+    Config *thisConfig;
     Patapon();
+    void LoadConfig(Config *thisConfigs);
     void Draw(sf::RenderWindow& window);
 };
 

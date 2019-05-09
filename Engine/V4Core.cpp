@@ -41,9 +41,7 @@ V4Core::V4Core()
     string dbgString = "This is an Alpha release. Game is not finished yet. Test debug build from "+strDay+" "+months[month]+" "+to_string(year)+".";
 
     /** Load config from config.cfg **/
-
     config.LoadConfig();
-
     /** "Alpha release" text **/
 
     f_font.loadFromFile("resources/fonts/patapon.ttf");
@@ -56,7 +54,7 @@ V4Core::V4Core()
 
     /** Initialize main menu **/
 
-    mainMenu.Initialise(config,&keyMap,this);
+    mainMenu.Initialise(&config,&keyMap,this);
     config.configDebugID = 10;
 }
 

@@ -16,8 +16,10 @@ SongController::SongController()
     configPath = "resources/sfx/bgm/songList.ini";
     this->SaveControllerIniSettings();
 }
-void SongController::SaveSongsConfig(){
-    cout<< "INFO: Missing ini file. Attempting to recover" << '\n';
+void SongController::SaveSongsConfig()
+{
+
+    cout<< "[!! IMPORTANT !!] Missing ini file. Attempting to recover" << '\n';
     // They don't have the song controller ini file!
     // We create a song controller and give it some initial songs
     SimpleSong song;
@@ -49,7 +51,7 @@ void SongController::SaveSongsConfig(){
     conf.close();
 }
 void SongController::LoadSongsConfig(){
-    cout<< "INFO: Found song config file - loading songs into database" << '\n';
+    cout<< "[RHYTHM] Found song config file - loading songs into database" << '\n';
     ifstream conf(configPath);
     if(conf.good())
     {

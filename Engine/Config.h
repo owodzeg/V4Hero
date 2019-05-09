@@ -4,16 +4,63 @@
 #include <vector>
 #include <map>
 #include <string>
-
+#include "DebugOut.h"
 class Config
 {
     public:
-    std::vector<std::string> configKeys = {"resX", "resY", "framerateLimit", "enableFullscreen", "enableBorderlessWindow", "enableDrumChants", "enableDrums", "enablePataponChants", "keybindPata", "keybindPon", "keybindDon", "keybindChaka", "secondaryKeybindPata", "secondaryKeybindPon", "secondaryKeybindDon", "secondaryKeybindChaka","keybindMenuEnter","mission1Theme","mission1Background","mission2Theme","mission2Background"};
-    std::vector<std::string> configDefaults = {"1280", "720", "240", "0", "0", "0", "1", "1", "71", "72", "74", "73",std::to_string(sf::Keyboard::A), std::to_string(sf::Keyboard::D), std::to_string(sf::Keyboard::S), std::to_string(sf::Keyboard::W),std::to_string(sf::Keyboard::Space),"Donja Lalin Theme","nanjarohills","Freakout Rock Theme","patapineforest"};
+    std::vector<std::string> configKeys = {"resX",
+    "resY",
+    "framerateLimit",
+    "enableFullscreen",
+    "enableBorderlessWindow",
+    "enableDrumChants",
+    "enableDrums",
+    "enablePataponChants",
+    "keybindPata",
+    "keybindPon",
+    "keybindDon",
+    "keybindChaka",
+    "secondaryKeybindPata",
+    "secondaryKeybindPon",
+    "secondaryKeybindDon",
+    "secondaryKeybindChaka",
+    "keybindMenuEnter",
+    "mission1Theme",
+    "mission1Background",
+    "mission2Theme",
+    "mission2Background",
+    "showDebugMsg",
+    "showRhythmDebugMsg",
+    "showImportantDebugMsg"};
+    std::vector<std::string> configDefaults = {"1280",
+    "720",
+    "240",
+    "0",
+    "0",
+    "0",
+    "1",
+    "1",
+    "71",
+    "72",
+    "74",
+    "73",
+    std::to_string(sf::Keyboard::A),
+    std::to_string(sf::Keyboard::D),
+    std::to_string(sf::Keyboard::S),
+    std::to_string(sf::Keyboard::W),
+    std::to_string(sf::Keyboard::Space),
+    "Donja Lalin Theme",
+    "nanjarohills",
+    "Freakout Rock Theme",
+    "patapineforest",
+    "0",
+    "0",
+    "1"};
     std::map<std::string,std::string> configMap;
     int configDebugID=0;
     Config();
     void LoadConfig();
+    DebugOut* debugOut;
     ///I wanted to overload these two in a single function, but somehow it just doesnt want to work...
     ///Will change it into one someday
     int GetInt(std::string key);

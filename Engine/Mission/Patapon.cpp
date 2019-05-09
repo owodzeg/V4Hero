@@ -5,7 +5,12 @@
 
 Patapon::Patapon()
 {
-    ifstream param("resources/graphics/units/patapon/param.dat");
+
+}
+void Patapon::LoadConfig(Config *thisConfigs)
+{
+ thisConfig = thisConfigs;
+ ifstream param("resources/graphics/units/patapon/param.dat");
 
     string buff;
     while(getline(param,buff))
@@ -21,7 +26,7 @@ Patapon::Patapon()
 
     for(int i=0; i<animation_name.size(); i++)
     {
-        cout << "Loading animation '" << animation_name[i] << "'..." << endl;
+        thisConfig->debugOut->DebugMessage("Loading animation '" + animation_name[i] + "'...\n");
 
         for(int a=1; a<=animation_frames[i]; a++)
         {
@@ -33,7 +38,6 @@ Patapon::Patapon()
         }
     }
 }
-
 void Patapon::Draw(sf::RenderWindow& window)
 {
     s_patapon.setTexture(animation_textures[current_animation][floor(current_frame)]);

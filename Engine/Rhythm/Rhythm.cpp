@@ -22,7 +22,7 @@ void Rhythm::Stop()
 }
 void Rhythm::LoadTheme(string theme)
 {
-    cout<<"theme:"<<theme<<endl;
+    config.debugOut->DebugMessage("theme:"+theme+"\n");
     b_chant.clear();
     Stop();
     ///Load the BGM
@@ -49,7 +49,7 @@ void Rhythm::LoadTheme(string theme)
 
 void Rhythm::BreakCombo()
 {
-    cout << "Oops! You broke your combo!" << endl;
+    config.debugOut->RhythmnDebugMessage("Oops! You broke your combo!\n");
 
     rhythmClock.restart();
 
@@ -243,7 +243,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
             if(combo >= 2) /// If combo is not idle bgm
             {
-                cout << "Combo: " << combo << endl;
+                config.debugOut->RhythmnDebugMessage("Combo: " + std::to_string(combo) +"\n");
 
                 string fullcom = rhythmController.commandInput[0]+rhythmController.commandInput[1]+rhythmController.commandInput[2]+rhythmController.commandInput[3]; ///Create a full command using 4 individual hits
 
@@ -271,7 +271,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     rhythmController.perfects.erase(rhythmController.perfects.begin());
 
                     float acc = (rhythmController.perfects[0]+rhythmController.perfects[1]+rhythmController.perfects[2]+rhythmController.perfects[3]) / float(16);
-                    cout << "Accuracy: " << acc*100 << "%" << endl;
+                    config.debugOut->RhythmnDebugMessage("Accuracy: " + std::to_string(acc*100) + "%\n" );
 
                     if(combo < 11)
                     {
