@@ -98,11 +98,11 @@ void Camera::Work(sf::RenderWindow& window,float fps)
 
     if(camera_x > followobject_x + 500)
     {
-        camera_xspeed = -(camera_x - followobject_x - 400) / 20;
+        camera_xspeed = (-(camera_x - followobject_x - 400) / 20) / fps * float(60);
     }
     else if(camera_x < followobject_x + 400)
     {
-        camera_xspeed = -(camera_x - followobject_x - 400) / 20;
+        camera_xspeed = (-(camera_x - followobject_x - 400) / 20) / fps * float(60);
     }
     else
     {
@@ -121,17 +121,17 @@ void Camera::Work(sf::RenderWindow& window,float fps)
 
     /** Move camera **/
 
-    camera_x += (camera_xspeed * 60) / fps;
+    camera_x += camera_xspeed / fps * float(60);
 
     /** Manual camera movement (L/R in Patapon) **/
-    manual_x += ((manual_x_dest - manual_x) / 20);
+    manual_x += ((manual_x_dest - manual_x) / 20) / fps * float(60);
 
     /** Debug camera movement **/
-    debug_x += ((debug_x_dest - debug_x) / 20);
+    debug_x += ((debug_x_dest - debug_x) / 20) / fps * float(60);
 
     /** Apply zoom **/
 
-    zoom += ((dest_zoom - zoom) / 20);
+    zoom += ((dest_zoom - zoom) / 20) / fps * float(60);
 
     if(dest_zoom == 1)
     {
