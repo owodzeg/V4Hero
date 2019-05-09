@@ -121,10 +121,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
     checkRhythmController(window);
     r_gui.doVisuals(window,bgm_cycle,&rhythmClock,combo,&flicker,fps,&drums);
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::R))
+    /*if(sf::Keyboard::isKeyPressed(sf::Keyboard::R))
     {
         LoadTheme(config.GetString("debugTheme"));
-    }
+    }*/
 
     if(rhythmClock.getElapsedTime().asMilliseconds() > 245)
     {
