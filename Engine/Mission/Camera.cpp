@@ -139,10 +139,10 @@ void Camera::Work(sf::RenderWindow& window,float fps)
         zoom = 1;
     }
 
-    cout << "zoom: " << zoom << endl;
-    cout << "dest_zoom: " << dest_zoom << endl;
+    //cout << "zoom: " << zoom << endl;
+    //cout << "dest_zoom: " << dest_zoom << endl;
 
-    zoomViewAt(sf::Vector2i(window.mapCoordsToPixel(sf::Vector2f(followobject_x,610)).x,610),window,zoom,fps);
+    zoomViewAt(sf::Vector2i(250,610),window,zoom,fps);
 
     /** Apply camera position **/
 
