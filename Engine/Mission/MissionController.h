@@ -23,6 +23,8 @@ class MissionController
     void Initialise(Config &config, std::map<int,bool> &keymap,std::string backgroundName);
     void StartMission(std::string songName);
     void Update(sf::RenderWindow &window, float fps);
+
+
     MissionController();
     ~MissionController();
 };

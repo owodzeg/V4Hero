@@ -1,6 +1,6 @@
 #include "Config.h"
 #include "Func.h"
-
+#include "DebugOut.h"
 #include <fstream>
 #include <iostream>
 #include <algorithm>
@@ -13,6 +13,7 @@ using namespace std;
 Config::Config()
 {
     configDebugID=0;
+    debugOut = new DebugOut(this);
     ///check if config file already exists
     ifstream check("config.ini");
     bool exists = check.good();
@@ -62,7 +63,6 @@ void Config::LoadConfig()
                 ///Split the Key and Value
                 vector<string> key = Func::Split(line,':');
                 configMap[key[0]] = key[1];
-
                 cout << "Loaded key '" << key[0] << "' with value '" << key[1] << "'" << endl;
 
                 for(int i=0; i<keysCheckList.size(); i++)

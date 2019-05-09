@@ -155,9 +155,8 @@ bool RhythmController::checkForInput()
     ///IF statement that applies to all drum keybinds (to not repeat the same code over and over)
     if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")] || keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")] || keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")] || keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
     {
-        cout << current_drum << " " << masterTimer << " ms " << endl;
-
-        cout << "drum quality was " << drum_quality << endl;
+        config.debugOut->RhythmnDebugMessage(current_drum + " " + std::to_string(masterTimer) + " ms \n");
+        config.debugOut->RhythmnDebugMessage("drum quality was " + std::to_string(drum_quality) +"\n");
 
         ///If drum was already hit and you hit once again, or you hit BAD, reset user input and break combo
         if((hit) || (drum_quality == 2))
@@ -168,8 +167,7 @@ bool RhythmController::checkForInput()
 
             if(combo >= 2)
             breakCombo = true;
-
-            cout << "break combo #1" << endl;
+            config.debugOut->RhythmnDebugMessage("break combo #1\n");
         }
 
         ///If drum was hit above the minimum range, determine it's quality and mark as being already hit
@@ -220,8 +218,7 @@ bool RhythmController::checkForInput()
         if(commandInput.size() == 4)
         {
             string fullcom = commandInput[0]+commandInput[1]+commandInput[2]+commandInput[3]; ///Create a full command using 4 individual hits
-
-            cout << "fullcom: " << fullcom << endl;
+            config.debugOut->RhythmnDebugMessage("fullcom: " + fullcom+"\n");
 
             if(std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end()) ///Check if the command exists in available commands
             {

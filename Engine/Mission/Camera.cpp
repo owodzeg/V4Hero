@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include <iostream>
+#include <math.h>       /* fabs */
 
 using namespace std;
 

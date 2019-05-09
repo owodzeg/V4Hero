@@ -16,9 +16,10 @@ void Background::setCamera(Camera newCamera)
     camera = newCamera;
 }
 
-void Background::Load(string bg_name)
+void Background::Load(string bg_name,Config &thisConfigs)
 {
-    cout<<"Background loaded: "<<bg_name;
+    thisConfig = &thisConfigs;
+    thisConfig->debugOut->DebugMessage("Background loaded: "+bg_name);
     v_background.clear();
     vx_pos.clear();
     vx_pos.clear();
@@ -71,7 +72,7 @@ void Background::Load(string bg_name)
         }
         else
         {
-            cout << "Loading texture..." << endl;
+            thisConfig->debugOut->DebugMessage("Loading texture...\n");
 
             vector<string> v_params = Func::Split(buff,',');
 

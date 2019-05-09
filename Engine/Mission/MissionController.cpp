@@ -9,11 +9,11 @@ MissionController::MissionController()
 
 }
 void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,std::string backgroundString){
-    test_bg.Load(backgroundString);//config.GetString("debugBackground"));
+    test_bg.Load(backgroundString, config);//config.GetString("debugBackground"));
 
     missionKeyMap = &keyMap;
     missionConfig = &config;
-
+    patapon.LoadConfig(&config);
 }
 void MissionController::StartMission(std::string songName){
     rhythm.LoadTheme(songName); // missionConfig->GetString("debugTheme")
