@@ -11,7 +11,6 @@ class Camera
     float camera_xspeed = 0;
     float followobject_x = 400; ///Point at which camera should follow
     bool walk = false;
-    sf::View cameraView;
 
     Camera();
     void zoomViewAt(sf::Vector2i pixel, sf::RenderWindow& window, float zoom,float fps);

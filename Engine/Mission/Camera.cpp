@@ -8,6 +8,7 @@ Camera::Camera()
 {
     //cameraView.setSize(1280, 720);
     //cameraView.setCenter(0, 610);
+    camera_x = 480;
 }
 void Camera::zoomViewAt(sf::Vector2i pixel, sf::RenderWindow& window, float zoom,float fps)
 {
@@ -27,6 +28,8 @@ void Camera::Work(sf::RenderWindow& window,float fps)
 {
     zoom = 1;
 
+    /** Debug controls **/
+
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::O))
     {
         zoom = 1.002;
@@ -37,38 +40,24 @@ void Camera::Work(sf::RenderWindow& window,float fps)
         zoom = 0.998;
     }
 
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::K))
+    {
+        camera_x -= 5;
+    }
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+    {
+        camera_x += 5;
+    }
 
     if(walk)
     {
         followobject_x += (2 * 60) / fps;
     }
 
-    if(camera_x < followobject_x - 10 - 400)
-    {
-        camera_xspeed += (followobject_x - camera_x) / 2000;
-    }
-    else if(camera_x > followobject_x + 10 + 400)
-    {
-        camera_xspeed -= (camera_x - followobject_x) / 2000;
-    }
-    else
-    {
-        camera_xspeed = 0;
-    }
+    /** Move camera **/
 
-
-    if(camera_xspeed >= 2)
-    {
-        camera_xspeed = 2;
-    }
-
-    //cout << "Move camera by " << (camera_xspeed * 60) / fps << " vs " << camera_xspeed << endl;
-
-    camera_x += (camera_xspeed * 60) / fps;
-
-    zoomViewAt(sf::Vector2i(420,610),window,zoom,fps);
-
-    //cameraView.move(0, (cameraView.getSize().x / float(1280)));
-    //cameraView.setCenter(640,cameraView.getSize().y/2);
-    //window.setView(cameraView);
+    sf::View view{window.getView()};
+    view.setCenter(camera_x,view.getCenter().y);
+    window.setView(view);
 }
