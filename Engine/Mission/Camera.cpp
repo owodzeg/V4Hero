@@ -25,6 +25,8 @@ void Camera::zoomViewAt(sf::Vector2i pixel, sf::RenderWindow& window, float zoom
 
 void Camera::Work(sf::RenderWindow& window,float fps)
 {
+    camera_y = window.getSize().y/2;
+
     dest_zoom = 1;
     manual_x_dest = 0;
 
@@ -143,7 +145,7 @@ void Camera::Work(sf::RenderWindow& window,float fps)
     //cout << "zoom: " << zoom << endl;
     //cout << "dest_zoom: " << dest_zoom << endl;
 
-    zoomViewAt(sf::Vector2i(250,610),window,zoom,fps);
+    zoomViewAt(sf::Vector2i(250,window.getSize().y-110),window,zoom,fps);
 
     /** Apply camera position **/
 

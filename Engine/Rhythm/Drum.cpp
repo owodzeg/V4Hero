@@ -427,7 +427,7 @@ void Drum::Draw(sf::RenderWindow& window)
     }
 
     s_drum.setTexture(t_drum);
-    s_drum.setScale(x_scale*ratio_X,y_scale*ratio_Y);
+    s_drum.setScale(x_scale,y_scale);
     s_drum.setColor(sf::Color(255,255,255,alpha));
     s_drum.setRotation(rotation+pattern_Angle[pattern]);
 
@@ -451,7 +451,7 @@ void Drum::Draw(sf::RenderWindow& window)
 
     s_flash.setTexture(t_flash);
     s_flash.setColor(sf::Color(255,255,255,flashalpha));
-    s_flash.setScale(x_flashscale*ratio_X,y_flashscale*ratio_Y);
+    s_flash.setScale(x_flashscale,y_flashscale);
     s_flash.setOrigin(s_flash.getLocalBounds().width/2,s_flash.getLocalBounds().height/2);
     s_flash.setPosition(x+pattern_X[pattern]*ratio_X,y+pattern_Y[pattern]*ratio_Y);
 
@@ -518,7 +518,7 @@ void Drum::Draw(sf::RenderWindow& window)
             c_particle[i].setFillColor(sf::Color(c_particle[i].getFillColor().r,c_particle[i].getFillColor().g,0,c_alpha));
         }
 
-        c_particle[i].setRadius(particle_radius[i] * ratio_universal);
+        c_particle[i].setRadius(particle_radius[i]);
 
         c_particle[i].setPosition(particle_x[i],particle_y[i]);
         window.draw(c_particle[i]);
