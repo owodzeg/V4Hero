@@ -114,7 +114,7 @@ void Background::Draw(sf::RenderWindow& window)
     {
         s_background[i].setTexture(t_background[i]);
 
-        s_background[i].setPosition(-(background_xspeed[i]*camera.camera_x),610);
+        s_background[i].setPosition(-(background_xspeed[i]*camera.camera_x)-(background_xspeed[i]*camera.manual_x)-(background_xspeed[i]*camera.debug_x),610);
         window.draw(s_background[i]);
     }
 }
