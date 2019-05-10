@@ -35,7 +35,6 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         test_bg.setCamera(camera);
         test_bg.Draw(window);
         patapon.x = camera.followobject_x;
-        cout << window.getSize().y-200 << endl;
         patapon.y = window.getSize().y-200;
         patapon.fps = fps;
 
