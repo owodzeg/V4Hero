@@ -126,11 +126,11 @@ void Rhythm::Draw(sf::RenderWindow& window)
         LoadTheme(config.GetString("debugTheme"));
     }*/
 
-    if(rhythmClock.getElapsedTime().asMilliseconds() > 243)
+    if(rhythmClock.getElapsedTime().asMilliseconds() > 245)
     {
         if(!count_cycle)
         {
-            int tmp_cycle = floor(beatCycleClock.getElapsedTime().asMilliseconds() / float(493));
+            int tmp_cycle = floor(beatCycleClock.getElapsedTime().asMilliseconds() / float(495));
 
             if(tmp_cycle >= 8)
             {
@@ -171,7 +171,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
         }
     }
 
-    if(rhythmClock.getElapsedTime().asMilliseconds() > 493)
+    if(rhythmClock.getElapsedTime().asMilliseconds() > 495)
     {
         count_cycle = false;
         bgm_cycle++;
