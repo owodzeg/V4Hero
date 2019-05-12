@@ -36,7 +36,7 @@ void RhythmGUI::doVisuals(sf::RenderWindow& window,int bgm_cycle,sf::Clock *rhyt
     int v_cycle_mode = abs(floor((bgm_cycle)/4) - 1);
     int v_cycle = (bgm_cycle)%4 + 1;
 
-    int rhythmAlpha = 250 - (rhythmClock->getElapsedTime().asMilliseconds() / 2);
+    int rhythmAlpha = 243 - (rhythmClock->getElapsedTime().asMilliseconds() / 2);
 
     ///Visuals
     if(true)
