@@ -25,6 +25,8 @@ void Camera::zoomViewAt(sf::Vector2i pixel, sf::RenderWindow& window, float zoom
 
 void Camera::Work(sf::RenderWindow& window,float fps)
 {
+    camera_y = window.getSize().y/2;
+
     dest_zoom = 1;
     manual_x_dest = 0;
 
@@ -32,11 +34,17 @@ void Camera::Work(sf::RenderWindow& window,float fps)
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::O))
     {
+        if(fps >= 120)
+        dest_zoom = 1.01 - (0.01 / (fps / float(60)));
+        else
         dest_zoom = 1.01;
     }
 
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::P))
     {
+        if(fps >= 120)
+        dest_zoom = 0.99 + (0.01 / (fps / float(60)));
+        else
         dest_zoom = 0.99;
     }
 
@@ -131,19 +139,38 @@ void Camera::Work(sf::RenderWindow& window,float fps)
     debug_x += ((debug_x_dest - debug_x) / 20) / fps * float(60);
 
     /** Apply zoom **/
-
     zoom += ((dest_zoom - zoom) / 20) / fps * float(60);
 
     if(dest_zoom == 1)
     {
-        if((zoom > 0.9995) && (zoom < 1.0005))
+        float zoomLower, zoomUpper;
+
+        if(fps >= 120)
+        zoomLower = 0.9995 + (0.0005 / (fps / float(60)));
+        else
+        zoomLower = 0.9995;
+
+        if(fps >= 120)
+        zoomUpper = 1.0005 - (0.0005 / (fps / float(60)));
+        else
+        zoomUpper = 1.0005;
+
+        if((zoom > zoomLower) && (zoom < zoomUpper))
         zoom = 1;
     }
 
-    //cout << "zoom: " << zoom << endl;
-    //cout << "dest_zoom: " << dest_zoom << endl;
+    if(dest_zoom > 1)
+    {
+        if(zoom >= dest_zoom)
+        zoom = dest_zoom;
+    }
+    else if(dest_zoom < 1)
+    {
+        if(zoom <= dest_zoom)
+        zoom = dest_zoom;
+    }
 
-    zoomViewAt(sf::Vector2i(250,610),window,zoom,fps);
+    zoomViewAt(sf::Vector2i(250,window.getSize().y-110),window,zoom,fps);
 
     /** Apply camera position **/
 
