@@ -16,6 +16,7 @@ class Background
     Config *thisConfig;
     std::vector<sf::Texture> t_background;
     std::vector<sf::Sprite> s_background;
+    std::vector<sf::Vector2f> p_background;
     std::vector<float> background_xspeed;
     std::vector<float> background_y;
 

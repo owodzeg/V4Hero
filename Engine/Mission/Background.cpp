@@ -98,10 +98,16 @@ void Background::Load(string bg_name,Config &thisConfigs)
             s_temp.setTexture(t_temp);
             s_temp.setOrigin(10000,s_temp.getLocalBounds().height);
             s_temp.setColor(sf::Color(atoi(v_params[3].c_str()),atoi(v_params[4].c_str()),atoi(v_params[5].c_str()),255));
-            s_temp.setPosition(-1000,thisConfig->GetInt("resY")-110);
+            s_temp.setPosition(-1000,atoi(v_params[1].c_str()));
+
+            sf::Vector2f tmpp;
+
+            tmpp.x = -1000;
+            tmpp.y = atoi(v_params[1].c_str());
 
             t_background.push_back(t_temp);
             s_background.push_back(s_temp);
+            p_background.push_back(tmpp);
             background_xspeed.push_back(atof(v_params[2].c_str()));
         }
     }
@@ -127,7 +133,7 @@ void Background::Draw(sf::RenderWindow& window)
     {
         s_background[i].setTexture(t_background[i]);
 
-        s_background[i].setPosition(-(background_xspeed[i]*camera.camera_x)-(background_xspeed[i]*camera.manual_x)-(background_xspeed[i]*camera.debug_x),window.getSize().y-110);
+        s_background[i].setPosition(-(background_xspeed[i]*camera.camera_x)-(background_xspeed[i]*camera.manual_x)-(background_xspeed[i]*camera.debug_x),p_background[i].y);
         window.draw(s_background[i]);
     }
 }
