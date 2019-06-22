@@ -49,12 +49,13 @@ void PSprite::setRepeated(bool r)
 
 void PSprite::setTextureRect(sf::IntRect rect)
 {
+    rect.height = rect.height * ratioY;
     s.setTextureRect(rect);
 }
 
 void PSprite::setOrigin(float x, float y)
 {
-    s.setOrigin(x,y);
+    s.setOrigin(x*ratioX,y*ratioY);
 }
 
 void PSprite::setColor(sf::Color color)
@@ -75,7 +76,11 @@ void PSprite::setSprite(sf::Sprite& sprite)
 
 void PSprite::setPosition(float x, float y)
 {
-    s.setPosition(x,y);
+    s.setPosition(x*ratioX,y*ratioY);
+    lx = x*ratioX;
+    ly = y*ratioY;
+
+    std::cout << x << " " << y << "  " << lx << " " << ly << std::endl;
 }
 
 sf::FloatRect PSprite::getLocalBounds()
@@ -85,8 +90,6 @@ sf::FloatRect PSprite::getLocalBounds()
 
 void PSprite::draw(sf::RenderWindow& window)
 {
-    float ratioX=1,ratioY=1;
-
     switch(quality)
     {
         case 0: ///low
@@ -117,6 +120,8 @@ void PSprite::draw(sf::RenderWindow& window)
             break;
         }
     }
+
+    std::cout << "[PSPRITE] " << ratioX << " " << ratioY << std::endl;
 
     s.setTexture(t);
     s.setScale(ratioX, ratioY);

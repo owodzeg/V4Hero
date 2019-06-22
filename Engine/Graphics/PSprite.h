@@ -11,6 +11,8 @@ class PSprite
     sf::Texture t;
     sf::Sprite s;
     int quality;
+    float ratioX=1,ratioY=1;
+    float lx,ly;
 
     PSprite();
     void loadFromFile(std::string file, int q);

@@ -62,7 +62,7 @@ void Patapon::Draw(sf::RenderWindow& window)
     }
 
 
-    s_patapon.setScale(0.6,0.6);
+    s_patapon.setScale(0.6*scaleX,0.6*scaleY);
 
     s_patapon.setPosition(x,y);
 

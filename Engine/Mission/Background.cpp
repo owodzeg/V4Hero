@@ -23,6 +23,38 @@ void Background::Load(string bg_name,Config &thisConfigs)
 
     quality = thisConfig->GetInt("textureQuality");
 
+    float ratioX, ratioY;
+    switch(quality)
+    {
+        case 0: ///low
+        {
+            ratioX = thisConfig->GetInt("resX") / float(640);
+            ratioY = thisConfig->GetInt("resY") / float(360);
+            break;
+        }
+
+        case 1: ///med
+        {
+            ratioX = thisConfig->GetInt("resX") / float(1280);
+            ratioY = thisConfig->GetInt("resY") / float(720);
+            break;
+        }
+
+        case 2: ///high
+        {
+            ratioX = thisConfig->GetInt("resX") / float(1920);
+            ratioY = thisConfig->GetInt("resY") / float(1080);
+            break;
+        }
+
+        case 3: ///ultra
+        {
+            ratioX = thisConfig->GetInt("resX") / float(3840);
+            ratioY = thisConfig->GetInt("resY") / float(2160);
+            break;
+        }
+    }
+
     v_background.clear();
     vx_pos.clear();
     vx_pos.clear();
@@ -44,7 +76,7 @@ void Background::Load(string bg_name,Config &thisConfigs)
             string vx_params = buff.substr(buff.find_first_of(":")+1);
             vector<string> v_vxparams = Func::Split(vx_params,';');
 
-            float ratioY = thisConfig->GetInt("resY") / float(720);
+            //float ratioY = thisConfig->GetInt("resY") / float(720);
 
             for(int i=0; i<v_vxparams.size(); i++)
             {
@@ -58,7 +90,7 @@ void Background::Load(string bg_name,Config &thisConfigs)
 
                 if(tmp[0] == "-1")
                 {
-                    tmp_vector.y = thisConfig->GetInt("resY")-110;
+                    tmp_vector.y = thisConfig->GetInt("resY") - (110 * ratioY);
                 }
 
                 tmp_color.r = atoi(tmp[1].c_str());
@@ -72,7 +104,7 @@ void Background::Load(string bg_name,Config &thisConfigs)
 
                 if(tmp[0] == "-1")
                 {
-                    tmp_vector2.y = thisConfig->GetInt("resY")-110;
+                    tmp_vector2.y = thisConfig->GetInt("resY") - (110 * ratioY);
                 }
 
                 vx_pos.push_back(tmp_vector);
@@ -132,6 +164,7 @@ void Background::Draw(sf::RenderWindow& window)
         //s_background[i].setTexture(t_background[i]);
 
         s_background[i].setPosition(-(background_xspeed[i]*camera.camera_x)-(background_xspeed[i]*camera.manual_x)-(background_xspeed[i]*camera.debug_x),p_background[i].y);
+        //cout << s_background[i].y << endl;
         s_background[i].draw(window);
     }
 }

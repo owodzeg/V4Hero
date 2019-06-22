@@ -14,6 +14,44 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     missionKeyMap = &keyMap;
     missionConfig = &config;
     patapon.LoadConfig(&config);
+
+    int quality = config.GetInt("textureQuality");
+
+    float ratioX, ratioY;
+    switch(quality)
+    {
+        case 0: ///low
+        {
+            ratioX = config.GetInt("resX") / float(640);
+            ratioY = config.GetInt("resY") / float(360);
+            break;
+        }
+
+        case 1: ///med
+        {
+            ratioX = config.GetInt("resX") / float(1280);
+            ratioY = config.GetInt("resY") / float(720);
+            break;
+        }
+
+        case 2: ///high
+        {
+            ratioX = config.GetInt("resX") / float(1920);
+            ratioY = config.GetInt("resY") / float(1080);
+            break;
+        }
+
+        case 3: ///ultra
+        {
+            ratioX = config.GetInt("resX") / float(3840);
+            ratioY = config.GetInt("resY") / float(2160);
+            break;
+        }
+    }
+
+    pataponY = config.GetInt("resY") - (200 * ratioY);
+    patapon.scaleX = ratioX;
+    patapon.scaleY = ratioY;
 }
 void MissionController::StartMission(std::string songName){
     rhythm.LoadTheme(songName); // missionConfig->GetString("debugTheme")
@@ -35,7 +73,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         test_bg.setCamera(camera);
         test_bg.Draw(window);
         patapon.x = camera.followobject_x;
-        patapon.y = window.getSize().y-200;
+        patapon.y = pataponY;
         patapon.fps = fps;
 
         // TODO: at some point some pointer shenanigans is required to make these be a reference to v4core's ones too.
