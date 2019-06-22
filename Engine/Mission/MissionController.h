@@ -9,6 +9,8 @@
 #include "../Config.h"
 #include "Patapon.h"
 #include <string>
+#include <thread>
+
 class MissionController
 {
     public:
@@ -18,6 +20,8 @@ class MissionController
     Camera camera;
     std::map<int,bool>* missionKeyMap;
     Config* missionConfig;
+
+    float pataponY = 200; ///temp
 
     void StopMission();
     void Initialise(Config &config, std::map<int,bool> &keymap,std::string backgroundName);
