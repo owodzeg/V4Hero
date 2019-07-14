@@ -17,6 +17,8 @@ class Patapon
     float y = 520;
     float fps = 60;
 
+    float scaleX = 1, scaleY = 1; ///TEMPORARY
+
     vector<string> animation_name;
     vector<int> animation_frames;
 

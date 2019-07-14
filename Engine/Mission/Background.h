@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "Camera.h"
 #include "../Config.h"
+#include "../Graphics/PSprite.h"
 class Background
 {
     public:
@@ -15,11 +16,13 @@ class Background
 
     Config *thisConfig;
     std::vector<sf::Texture> t_background;
-    std::vector<sf::Sprite> s_background;
+    std::vector<PSprite> s_background;
+    std::vector<sf::Vector2f> p_background;
     std::vector<float> background_xspeed;
     std::vector<float> background_y;
 
     float temp_camerax = 0;
+    int quality = 0;
 
     Background();
     void setCamera(Camera camera);

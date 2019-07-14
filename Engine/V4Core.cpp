@@ -29,14 +29,21 @@ V4Core::V4Core()
     vector<string> months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     string strDay = to_string(day);
 
-    if(day%10 == 1)
-    strDay += "st";
-    else if(day%10 == 2)
-    strDay += "nd";
-    else if(day%10 == 3)
-    strDay += "rd";
+    if((day > 9) && (day < 20))
+    {
+        strDay += "th";
+    }
     else
-    strDay += "th";
+    {
+        if(day%10 == 1)
+        strDay += "st";
+        else if(day%10 == 2)
+        strDay += "nd";
+        else if(day%10 == 3)
+        strDay += "rd";
+        else
+        strDay += "th";
+    }
 
     string dbgString = "This is an Alpha release. Game is not finished yet. Test debug build from "+strDay+" "+months[month]+" "+to_string(year)+".";
 

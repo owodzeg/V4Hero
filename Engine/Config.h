@@ -10,6 +10,7 @@ class Config
     public:
     std::vector<std::string> configKeys = {"resX",
     "resY",
+    "textureQuality",
     "framerateLimit",
     "enableFullscreen",
     "enableBorderlessWindow",
@@ -34,6 +35,7 @@ class Config
     "showImportantDebugMsg"};
     std::vector<std::string> configDefaults = {"1280",
     "720",
+    "1",
     "240",
     "0",
     "0",

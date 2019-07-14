@@ -20,6 +20,41 @@ void Background::Load(string bg_name,Config &thisConfigs)
 {
     thisConfig = &thisConfigs;
     thisConfig->debugOut->DebugMessage("Background loaded: "+bg_name);
+
+    quality = thisConfig->GetInt("textureQuality");
+
+    float ratioX, ratioY;
+    switch(quality)
+    {
+        case 0: ///low
+        {
+            ratioX = thisConfig->GetInt("resX") / float(640);
+            ratioY = thisConfig->GetInt("resY") / float(360);
+            break;
+        }
+
+        case 1: ///med
+        {
+            ratioX = thisConfig->GetInt("resX") / float(1280);
+            ratioY = thisConfig->GetInt("resY") / float(720);
+            break;
+        }
+
+        case 2: ///high
+        {
+            ratioX = thisConfig->GetInt("resX") / float(1920);
+            ratioY = thisConfig->GetInt("resY") / float(1080);
+            break;
+        }
+
+        case 3: ///ultra
+        {
+            ratioX = thisConfig->GetInt("resX") / float(3840);
+            ratioY = thisConfig->GetInt("resY") / float(2160);
+            break;
+        }
+    }
+
     v_background.clear();
     vx_pos.clear();
     vx_pos.clear();
@@ -41,7 +76,7 @@ void Background::Load(string bg_name,Config &thisConfigs)
             string vx_params = buff.substr(buff.find_first_of(":")+1);
             vector<string> v_vxparams = Func::Split(vx_params,';');
 
-            float ratioY = thisConfig->GetInt("resY") / float(720);
+            //float ratioY = thisConfig->GetInt("resY") / float(720);
 
             for(int i=0; i<v_vxparams.size(); i++)
             {
@@ -55,7 +90,7 @@ void Background::Load(string bg_name,Config &thisConfigs)
 
                 if(tmp[0] == "-1")
                 {
-                    tmp_vector.y = thisConfig->GetInt("resY")-110;
+                    tmp_vector.y = thisConfig->GetInt("resY") - (110 * ratioY);
                 }
 
                 tmp_color.r = atoi(tmp[1].c_str());
@@ -69,7 +104,7 @@ void Background::Load(string bg_name,Config &thisConfigs)
 
                 if(tmp[0] == "-1")
                 {
-                    tmp_vector2.y = thisConfig->GetInt("resY")-110;
+                    tmp_vector2.y = thisConfig->GetInt("resY") - (110 * ratioY);
                 }
 
                 vx_pos.push_back(tmp_vector);
@@ -88,20 +123,21 @@ void Background::Load(string bg_name,Config &thisConfigs)
 
             vector<string> v_params = Func::Split(buff,',');
 
-            sf::Texture t_temp;
-            t_temp.loadFromFile("resources/graphics/bg/"+bg_name+"/"+v_params[0]);
-            //t_temp.setSmooth(true);
-            t_temp.setRepeated(true);
+            PSprite ps_temp;
+            ps_temp.loadFromFile("resources/graphics/bg/"+bg_name+"/"+v_params[0],quality);
+            ps_temp.setRepeated(true);
+            ps_temp.setTextureRect(sf::IntRect(0,0,500000,ps_temp.t.getSize().y)); ///affect later with ratio
+            ps_temp.setOrigin(10000,ps_temp.getLocalBounds().height);
+            ps_temp.setColor(sf::Color(atoi(v_params[3].c_str()),atoi(v_params[4].c_str()),atoi(v_params[5].c_str()),255));
+            ps_temp.setPosition(-1000,atoi(v_params[1].c_str()));
 
-            sf::Sprite s_temp;
-            s_temp.setTextureRect(sf::IntRect(0,0,500000,t_temp.getSize().y)); ///affect later with ratio
-            s_temp.setTexture(t_temp);
-            s_temp.setOrigin(10000,s_temp.getLocalBounds().height);
-            s_temp.setColor(sf::Color(atoi(v_params[3].c_str()),atoi(v_params[4].c_str()),atoi(v_params[5].c_str()),255));
-            s_temp.setPosition(-1000,thisConfig->GetInt("resY")-110);
+            sf::Vector2f tmpp;
 
-            t_background.push_back(t_temp);
-            s_background.push_back(s_temp);
+            tmpp.x = -1000;
+            tmpp.y = atoi(v_params[1].c_str());
+
+            s_background.push_back(ps_temp);
+            p_background.push_back(tmpp);
             background_xspeed.push_back(atof(v_params[2].c_str()));
         }
     }
@@ -123,11 +159,12 @@ void Background::Draw(sf::RenderWindow& window)
 
     window.setView(lastView);
 
-    for(int i=0; i<t_background.size(); i++)
+    for(int i=0; i<s_background.size(); i++)
     {
-        s_background[i].setTexture(t_background[i]);
+        //s_background[i].setTexture(t_background[i]);
 
-        s_background[i].setPosition(-(background_xspeed[i]*camera.camera_x)-(background_xspeed[i]*camera.manual_x)-(background_xspeed[i]*camera.debug_x),window.getSize().y-110);
-        window.draw(s_background[i]);
+        s_background[i].setPosition(-(background_xspeed[i]*camera.camera_x)-(background_xspeed[i]*camera.manual_x)-(background_xspeed[i]*camera.debug_x),p_background[i].y);
+        //cout << s_background[i].y << endl;
+        s_background[i].draw(window);
     }
 }
