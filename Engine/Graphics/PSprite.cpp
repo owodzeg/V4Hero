@@ -80,7 +80,7 @@ void PSprite::setPosition(float x, float y)
     lx = x*ratioX;
     ly = y*ratioY;
 
-    std::cout << x << " " << y << "  " << lx << " " << ly << std::endl;
+    //std::cout << x << " " << y << "  " << lx << " " << ly << std::endl;
 }
 
 sf::FloatRect PSprite::getLocalBounds()
@@ -121,7 +121,7 @@ void PSprite::draw(sf::RenderWindow& window)
         }
     }
 
-    std::cout << "[PSPRITE] " << ratioX << " " << ratioY << std::endl;
+    ///std::cout << "[PSPRITE] " << ratioX << " " << ratioY << std::endl;
 
     s.setTexture(t);
     s.setScale(ratioX, ratioY);

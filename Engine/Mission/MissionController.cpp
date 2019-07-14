@@ -15,6 +15,8 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     missionConfig = &config;
     patapon.LoadConfig(&config);
 
+    wall.LoadConfig(&config);
+    tangibleLevelObjects.push_back(&wall);
     int quality = config.GetInt("textureQuality");
 
     float ratioX, ratioY;
@@ -52,6 +54,8 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     pataponY = config.GetInt("resY") - (200 * ratioY);
     patapon.scaleX = ratioX;
     patapon.scaleY = ratioY;
+    wall.scaleX = ratioX;
+    wall.scaleY = ratioY;
 }
 void MissionController::StartMission(std::string songName){
     rhythm.LoadTheme(songName); // missionConfig->GetString("debugTheme")
@@ -72,9 +76,58 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         camera.Work(window,fps);
         test_bg.setCamera(camera);
         test_bg.Draw(window);
+
+
+        wall.x = 1000;
+        wall.y = pataponY;
+        wall.fps = fps;
+
+        /// here we show the hitbox
+        bool showHitboxes = true;
+        if(showHitboxes){
+            sf::RectangleShape hitboxRect(sf::Vector2f(patapon.s_patapon.getGlobalBounds().width, patapon.s_patapon.getGlobalBounds().height));
+            hitboxRect.setPosition(patapon.x,patapon.y);
+            window.draw(hitboxRect);
+
+            sf::RectangleShape wallHitboxRect(sf::Vector2f(wall.s_wall.getGlobalBounds().width, wall.s_wall.getGlobalBounds().height));
+            wallHitboxRect.setPosition(wall.x,wall.y);
+            window.draw(wallHitboxRect);
+        }
+
+
+        /** Make Patapon walk (temporary) **/
+        if(camera.walk)
+        {
+            float proposedXPos = camera.followobject_x + (2 * 60) / fps;
+            /// use the right hand side of the patapon sprite to check for collisions. This should be changed if the patapon walks to the left
+            float proposedXPosRight = proposedXPos + patapon.s_patapon.getGlobalBounds().width;
+            /// need to have it check for collision and stop if blocked by wall here.
+
+            /// right now it is very basic checking only in X axis. Jumping over a
+            /// wall will not be possible.
+
+            bool foundCollision = false;
+
+            for(int i=0;i<tangibleLevelObjects.size();i++){
+                Wall currentCollisionRect = *tangibleLevelObjects[i];
+                /// if the new x position after moving will be between left side of wall and right side of wall
+                if (proposedXPosRight>currentCollisionRect.x && proposedXPosRight<currentCollisionRect.x+currentCollisionRect.width){
+                    /// then we have found a collision
+                    foundCollision = true;
+                    std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
+                }
+            }
+
+            /// if the new position is inside a wall, don't move. If we found anything,
+            if (!foundCollision){
+                camera.followobject_x = proposedXPos;
+            }
+        }
+
         patapon.x = camera.followobject_x;
         patapon.y = pataponY;
         patapon.fps = fps;
+
 
         // TODO: at some point some pointer shenanigans is required to make these be a reference to v4core's ones too.
         rhythm.rhythmController.keyMap = *missionKeyMap;
@@ -94,6 +147,9 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
             rhythm.current_song = "";
         }
 
+
+        wall.Draw(window);
+        /// patapons (and other enemies) are drawn after level objects like wall so they are always on top
         patapon.Draw(window);
         rhythm.fps = fps;
         ///ugh this is a BAD solution i need to do it differently
