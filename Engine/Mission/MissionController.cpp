@@ -85,12 +85,12 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         /// here we show the hitbox
         bool showHitboxes = true;
         if(showHitboxes){
-            sf::RectangleShape hitboxRect(sf::Vector2f(patapon.s_patapon.getGlobalBounds().width, patapon.s_patapon.getGlobalBounds().height));
-            hitboxRect.setPosition(patapon.x,patapon.y);
+            sf::RectangleShape hitboxRect(sf::Vector2f(patapon.hitBox.width, patapon.hitBox.height));
+            hitboxRect.setPosition(patapon.x+patapon.hitBox.left,patapon.y+patapon.hitBox.top);
             window.draw(hitboxRect);
 
-            sf::RectangleShape wallHitboxRect(sf::Vector2f(wall.s_wall.getGlobalBounds().width, wall.s_wall.getGlobalBounds().height));
-            wallHitboxRect.setPosition(wall.x,wall.y);
+            sf::RectangleShape wallHitboxRect(sf::Vector2f(wall.hitBox.width, wall.hitBox.height));
+            wallHitboxRect.setPosition(wall.x+wall.hitBox.left,wall.y+wall.hitBox.top);
             window.draw(wallHitboxRect);
         }
 
@@ -100,7 +100,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         {
             float proposedXPos = camera.followobject_x + (2 * 60) / fps;
             /// use the right hand side of the patapon sprite to check for collisions. This should be changed if the patapon walks to the left
-            float proposedXPosRight = proposedXPos + patapon.s_patapon.getGlobalBounds().width;
+            float proposedXPosRight = proposedXPos + patapon.hitBox.left + patapon.hitBox.width;
             /// need to have it check for collision and stop if blocked by wall here.
 
             /// right now it is very basic checking only in X axis. Jumping over a
@@ -111,7 +111,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
             for(int i=0;i<tangibleLevelObjects.size();i++){
                 Wall currentCollisionRect = *tangibleLevelObjects[i];
                 /// if the new x position after moving will be between left side of wall and right side of wall
-                if (proposedXPosRight>currentCollisionRect.x && proposedXPosRight<currentCollisionRect.x+currentCollisionRect.width){
+                if (proposedXPosRight>currentCollisionRect.x+wall.hitBox.left && proposedXPosRight<currentCollisionRect.x+wall.hitBox.left+currentCollisionRect.width){
                     /// then we have found a collision
                     foundCollision = true;
                     std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;

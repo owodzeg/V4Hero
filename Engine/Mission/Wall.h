@@ -13,7 +13,6 @@ class Wall
     sf::Sprite s_wall;
     string current_animation = "idle";
     float current_frame = 0;
-
     float x = 0;
     float y = 520;
     float fps = 60;

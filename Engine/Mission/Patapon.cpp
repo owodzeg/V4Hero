@@ -3,9 +3,21 @@
 #include <fstream>
 #include <iostream>
 
+#include <sstream>
 Patapon::Patapon()
 {
 
+}
+std::vector<std::string> split(const std::string& s, char delimiter)
+{
+   std::vector<std::string> tokens;
+   std::string token;
+   std::istringstream tokenStream(s);
+   while (std::getline(tokenStream, token, delimiter))
+   {
+      tokens.push_back(token);
+   }
+   return tokens;
 }
 void Patapon::LoadConfig(Config *thisConfigs)
 {
@@ -13,6 +25,13 @@ void Patapon::LoadConfig(Config *thisConfigs)
  ifstream param("resources/graphics/units/patapon/param.dat");
 
     string buff;
+    getline(param,buff);
+    string name = buff.substr(0,buff.find_first_of(":"));
+    string coords = buff.substr(buff.find_first_of(":")+1);
+
+    std::vector<std::string> results = split(coords,',');
+    hitBox =  sf::Rect<float>(atof(results[0].c_str()),atof(results[1].c_str()),atof(results[2].c_str()),atof(results[3].c_str()));
+
     while(getline(param,buff))
     {
         string name = buff.substr(0,buff.find_first_of(","));

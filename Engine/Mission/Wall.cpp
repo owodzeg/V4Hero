@@ -3,9 +3,21 @@
 #include <fstream>
 #include <iostream>
 
+#include <sstream>
 Wall::Wall()
 {
 
+}
+std::vector<std::string> splitp(const std::string& s, char delimiter)
+{
+   std::vector<std::string> tokens;
+   std::string token;
+   std::istringstream tokenStream(s);
+   while (std::getline(tokenStream, token, delimiter))
+   {
+      tokens.push_back(token);
+   }
+   return tokens;
 }
 void Wall::LoadConfig(Config *thisConfigs)
 {
@@ -13,6 +25,14 @@ void Wall::LoadConfig(Config *thisConfigs)
  ifstream param("resources/graphics/units/wall/param.dat");
 
     string buff;
+    getline(param,buff);
+    string name = buff.substr(0,buff.find_first_of(":"));
+    string coords = buff.substr(buff.find_first_of(":")+1);
+
+    std::vector<std::string> results = splitp(coords,',');
+
+
+    hitBox =  sf::Rect<float>(atof(results[0].c_str()),atof(results[1].c_str()),atof(results[2].c_str()),atof(results[3].c_str()));
     while(getline(param,buff))
     {
         string name = buff.substr(0,buff.find_first_of(","));
@@ -69,7 +89,9 @@ void Wall::Draw(sf::RenderWindow& window)
     s_wall.setPosition(x,y);
     width = s_wall.getGlobalBounds().width;
     sf::Rect<float> spriteSize = s_wall.getGlobalBounds();
-    hitBox = sf::Rect<float>(x,y,spriteSize.width,spriteSize.height);
+    //cout<< spriteSize.left<<" "<<spriteSize.top<<" "<<spriteSize.width<<" "<<spriteSize.height<<endl;
+    //cout<< hitBox.left<<" "<<hitBox.top<<" "<<hitBox.width<<" "<<hitBox.height<<endl;
+    //hitBox = sf::Rect<float>(x,y,spriteSize.width,spriteSize.height);
 
     window.draw(s_wall);
 

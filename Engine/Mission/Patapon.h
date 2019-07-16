@@ -16,7 +16,7 @@ class Patapon
     float x = 0;
     float y = 520;
     float fps = 60;
-
+    sf::Rect<float> hitBox;
     float scaleX = 1, scaleY = 1; ///TEMPORARY
 
     vector<string> animation_name;
