@@ -96,12 +96,7 @@ void Camera::Work(sf::RenderWindow& window,float fps)
     if(debug_x_speed < 10)
     debug_x_speed = 10;
 
-    /** Make Patapon walk (temporary) **/
 
-    if(walk)
-    {
-        followobject_x += (2 * 60) / fps;
-    }
 
     /** Temporary movement code **/
 

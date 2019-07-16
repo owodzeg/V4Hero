@@ -3,7 +3,6 @@
 #include <fstream>
 #include "../Func.h"
 #include <iostream>
-
 using namespace std;
 
 Background::Background()

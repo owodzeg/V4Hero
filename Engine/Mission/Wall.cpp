@@ -1,14 +1,14 @@
-#include "Patapon.h"
+#include "Wall.h"
 #include "math.h"
 #include <fstream>
 #include <iostream>
 
 #include <sstream>
-Patapon::Patapon()
+Wall::Wall()
 {
 
 }
-std::vector<std::string> split(const std::string& s, char delimiter)
+std::vector<std::string> splitp(const std::string& s, char delimiter)
 {
    std::vector<std::string> tokens;
    std::string token;
@@ -19,19 +19,20 @@ std::vector<std::string> split(const std::string& s, char delimiter)
    }
    return tokens;
 }
-void Patapon::LoadConfig(Config *thisConfigs)
+void Wall::LoadConfig(Config *thisConfigs)
 {
  thisConfig = thisConfigs;
- ifstream param("resources/graphics/units/patapon/param.dat");
+ ifstream param("resources/graphics/units/wall/param.dat");
 
     string buff;
     getline(param,buff);
     string name = buff.substr(0,buff.find_first_of(":"));
     string coords = buff.substr(buff.find_first_of(":")+1);
 
-    std::vector<std::string> results = split(coords,',');
-    hitBox =  sf::Rect<float>(atof(results[0].c_str()),atof(results[1].c_str()),atof(results[2].c_str()),atof(results[3].c_str()));
+    std::vector<std::string> results = splitp(coords,',');
 
+
+    hitBox =  sf::Rect<float>(atof(results[0].c_str()),atof(results[1].c_str()),atof(results[2].c_str()),atof(results[3].c_str()));
     while(getline(param,buff))
     {
         string name = buff.substr(0,buff.find_first_of(","));
@@ -50,17 +51,18 @@ void Patapon::LoadConfig(Config *thisConfigs)
         for(int a=1; a<=animation_frames[i]; a++)
         {
             sf::Texture temp;
-            temp.loadFromFile("resources/graphics/units/patapon/"+animation_name[i]+"/"+to_string(a)+".png");
+            temp.loadFromFile("resources/graphics/units/wall/"+animation_name[i]+"/"+to_string(a)+".png");
             temp.setSmooth(true);
 
             animation_textures[animation_name[i]].push_back(temp);
         }
     }
 }
-void Patapon::Draw(sf::RenderWindow& window)
+void Wall::Draw(sf::RenderWindow& window)
 {
-    s_patapon.setTexture(animation_textures[current_animation][floor(current_frame)]);
+    s_wall.setTexture(animation_textures[current_animation][floor(current_frame)]);
 
+    /// walls won't be making walking animations but ill leave this here for now
     if(current_animation == "walk")
     {
         current_frame += float(24) / fps;
@@ -74,6 +76,7 @@ void Patapon::Draw(sf::RenderWindow& window)
     {
         current_frame = 0;
 
+    /// walls won't be making pata animations but ill leave this here for now
         if((current_animation == "pata") or (current_animation == "pon") or (current_animation == "don") or (current_animation == "chaka"))
         {
             current_animation = "idle";
@@ -81,12 +84,18 @@ void Patapon::Draw(sf::RenderWindow& window)
     }
 
 
-    s_patapon.setScale(0.6*scaleX,0.6*scaleY);
+    s_wall.setScale(0.6*scaleX,0.6*scaleY);
 
-    s_patapon.setPosition(x,y);
+    s_wall.setPosition(x,y);
+    width = s_wall.getGlobalBounds().width;
+    sf::Rect<float> spriteSize = s_wall.getGlobalBounds();
+    //cout<< spriteSize.left<<" "<<spriteSize.top<<" "<<spriteSize.width<<" "<<spriteSize.height<<endl;
+    //cout<< hitBox.left<<" "<<hitBox.top<<" "<<hitBox.width<<" "<<hitBox.height<<endl;
+    //hitBox = sf::Rect<float>(x,y,spriteSize.width,spriteSize.height);
 
-    window.draw(s_patapon);
+    window.draw(s_wall);
 
+    /// walls won't be making pata animations but ill leave this here for now
     if(!((current_animation == "pata") or (current_animation == "pon") or (current_animation == "don") or (current_animation == "chaka")))
     current_animation = "idle";
 }
