@@ -54,6 +54,8 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     pataponY = config.GetInt("resY") - (200 * ratioY);
     patapon.scaleX = ratioX;
     patapon.scaleY = ratioY;
+
+    wallY = config.GetInt("resY") - (278 * ratioY);
     wall.scaleX = ratioX;
     wall.scaleY = ratioY;
 }
@@ -79,11 +81,11 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
 
 
         wall.x = 1000;
-        wall.y = pataponY;
+        wall.y = wallY;
         wall.fps = fps;
 
         /// here we show the hitbox
-        bool showHitboxes = true;
+        bool showHitboxes = false;
         if(showHitboxes){
             sf::RectangleShape hitboxRect(sf::Vector2f(patapon.hitBox.width, patapon.hitBox.height));
             hitboxRect.setPosition(patapon.x+patapon.hitBox.left,patapon.y+patapon.hitBox.top);
@@ -93,7 +95,6 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
             wallHitboxRect.setPosition(wall.x+wall.hitBox.left,wall.y+wall.hitBox.top);
             window.draw(wallHitboxRect);
         }
-
 
         /** Make Patapon walk (temporary) **/
         if(camera.walk)
@@ -151,6 +152,8 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         wall.Draw(window);
         /// patapons (and other enemies) are drawn after level objects like wall so they are always on top
         patapon.Draw(window);
+
+
         rhythm.fps = fps;
         ///ugh this is a BAD solution i need to do it differently
 

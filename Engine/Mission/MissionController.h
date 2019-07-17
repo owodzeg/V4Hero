@@ -31,7 +31,7 @@ class MissionController
     std::vector<Wall*> tangibleLevelObjects;
 
     float pataponY = 200; ///temp
-
+    float wallY = 200; ///temp
 
     void StopMission();
     void Initialise(Config &config, std::map<int,bool> &keymap,std::string backgroundName);
