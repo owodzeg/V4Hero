@@ -84,7 +84,7 @@ void Wall::Draw(sf::RenderWindow& window)
     }
 
 
-    s_wall.setScale(0.6*scaleX,0.6*scaleY);
+    s_wall.setScale(0.06*scaleX,0.06*scaleY);
 
     s_wall.setPosition(x,y);
     width = s_wall.getGlobalBounds().width;
