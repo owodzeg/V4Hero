@@ -32,7 +32,39 @@ void Wall::LoadConfig(Config *thisConfigs)
     std::vector<std::string> results = splitp(coords,',');
 
 
-    hitBox =  sf::Rect<float>(atof(results[0].c_str()),atof(results[1].c_str()),atof(results[2].c_str()),atof(results[3].c_str()));
+ float ratioX, ratioY;
+    switch(thisConfigs->GetInt("textureQuality"))
+    {
+        case 0: ///low
+        {
+            ratioX = thisConfig->GetInt("resX") / float(640);
+            ratioY = thisConfig->GetInt("resY") / float(360);
+            break;
+        }
+
+        case 1: ///med
+        {
+            ratioX = thisConfig->GetInt("resX") / float(1280);
+            ratioY = thisConfig->GetInt("resY") / float(720);
+            break;
+        }
+
+        case 2: ///high
+        {
+            ratioX = thisConfig->GetInt("resX") / float(1920);
+            ratioY = thisConfig->GetInt("resY") / float(1080);
+            break;
+        }
+
+        case 3: ///ultra
+        {
+            ratioX = thisConfig->GetInt("resX") / float(3840);
+            ratioY = thisConfig->GetInt("resY") / float(2160);
+            break;
+        }
+    }
+
+    hitBox =  sf::Rect<float>(atof(results[0].c_str())*ratioX,atof(results[1].c_str())*ratioY,atof(results[2].c_str())*ratioX,atof(results[3].c_str())*ratioY);
     while(getline(param,buff))
     {
         string name = buff.substr(0,buff.find_first_of(","));
@@ -69,7 +101,7 @@ void Wall::Draw(sf::RenderWindow& window)
     }
     else
     {
-        current_frame += float(30) / fps;
+        current_frame += float(60) / fps;
     }
 
     if(current_frame >= animation_textures[current_animation].size())
@@ -84,7 +116,7 @@ void Wall::Draw(sf::RenderWindow& window)
     }
 
 
-    s_wall.setScale(0.06*scaleX,0.06*scaleY);
+    s_wall.setScale(scaleX,scaleY);
 
     s_wall.setPosition(x,y);
     width = s_wall.getGlobalBounds().width;

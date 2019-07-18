@@ -55,7 +55,7 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     patapon.scaleX = ratioX;
     patapon.scaleY = ratioY;
 
-    wallY = config.GetInt("resY") - (278 * ratioY);
+    wallY = config.GetInt("resY") - (250 * ratioY);
     wall.scaleX = ratioX;
     wall.scaleY = ratioY;
 }
@@ -110,9 +110,9 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
             bool foundCollision = false;
 
             for(int i=0;i<tangibleLevelObjects.size();i++){
-                Wall currentCollisionRect = *tangibleLevelObjects[i];
+                //Wall currentCollisionRect = *tangibleLevelObjects[i];
                 /// if the new x position after moving will be between left side of wall and right side of wall
-                if (proposedXPosRight>currentCollisionRect.x+wall.hitBox.left && proposedXPosRight<currentCollisionRect.x+wall.hitBox.left+currentCollisionRect.width){
+                if (proposedXPosRight>tangibleLevelObjects[i]->x+wall.hitBox.left && proposedXPosRight<tangibleLevelObjects[i]->x+wall.hitBox.left+tangibleLevelObjects[i]->width){
                     /// then we have found a collision
                     foundCollision = true;
                     std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
