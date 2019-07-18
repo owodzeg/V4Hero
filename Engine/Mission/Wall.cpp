@@ -93,26 +93,21 @@ void Wall::LoadConfig(Config *thisConfigs)
 void Wall::Draw(sf::RenderWindow& window)
 {
     s_wall.setTexture(animation_textures[current_animation][floor(current_frame)]);
+    current_frame += float(60) / fps;
 
-    /// walls won't be making walking animations but ill leave this here for now
     if(current_animation == "walk")
     {
-        current_frame += float(24) / fps;
-    }
-    else
-    {
-        current_frame += float(60) / fps;
+        x += float(140) / fps;
+
+        if(walk_timer.getElapsedTime().asSeconds() >= 2)
+        {
+            current_animation = "idle";
+        }
     }
 
     if(current_frame >= animation_textures[current_animation].size())
     {
         current_frame = 0;
-
-    /// walls won't be making pata animations but ill leave this here for now
-        if((current_animation == "pata") or (current_animation == "pon") or (current_animation == "don") or (current_animation == "chaka"))
-        {
-            current_animation = "idle";
-        }
     }
 
 
@@ -126,8 +121,4 @@ void Wall::Draw(sf::RenderWindow& window)
     //hitBox = sf::Rect<float>(x,y,spriteSize.width,spriteSize.height);
 
     window.draw(s_wall);
-
-    /// walls won't be making pata animations but ill leave this here for now
-    if(!((current_animation == "pata") or (current_animation == "pon") or (current_animation == "don") or (current_animation == "chaka")))
-    current_animation = "idle";
 }
