@@ -24,13 +24,45 @@ void Patapon::LoadConfig(Config *thisConfigs)
  thisConfig = thisConfigs;
  ifstream param("resources/graphics/units/patapon/param.dat");
 
+ float ratioX, ratioY;
+    switch(thisConfigs->GetInt("textureQuality"))
+    {
+        case 0: ///low
+        {
+            ratioX = thisConfig->GetInt("resX") / float(640);
+            ratioY = thisConfig->GetInt("resY") / float(360);
+            break;
+        }
+
+        case 1: ///med
+        {
+            ratioX = thisConfig->GetInt("resX") / float(1280);
+            ratioY = thisConfig->GetInt("resY") / float(720);
+            break;
+        }
+
+        case 2: ///high
+        {
+            ratioX = thisConfig->GetInt("resX") / float(1920);
+            ratioY = thisConfig->GetInt("resY") / float(1080);
+            break;
+        }
+
+        case 3: ///ultra
+        {
+            ratioX = thisConfig->GetInt("resX") / float(3840);
+            ratioY = thisConfig->GetInt("resY") / float(2160);
+            break;
+        }
+    }
+
     string buff;
     getline(param,buff);
     string name = buff.substr(0,buff.find_first_of(":"));
     string coords = buff.substr(buff.find_first_of(":")+1);
 
     std::vector<std::string> results = split(coords,',');
-    hitBox =  sf::Rect<float>(atof(results[0].c_str()),atof(results[1].c_str()),atof(results[2].c_str()),atof(results[3].c_str()));
+    hitBox =  sf::Rect<float>(atof(results[0].c_str())*ratioX,atof(results[1].c_str())*ratioY,atof(results[2].c_str())*ratioX,atof(results[3].c_str())*ratioY);
 
     while(getline(param,buff))
     {
