@@ -16,7 +16,11 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     patapon.LoadConfig(&config);
 
     wall.LoadConfig(&config);
+    wall2.LoadConfig(&config);
+    wall3.LoadConfig(&config);
     tangibleLevelObjects.push_back(&wall);
+    tangibleLevelObjects.push_back(&wall2);
+    tangibleLevelObjects.push_back(&wall3);
     int quality = config.GetInt("textureQuality");
 
     float ratioX, ratioY;
@@ -55,9 +59,19 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     patapon.scaleX = ratioX;
     patapon.scaleY = ratioY;
 
-    wallY = config.GetInt("resY") - (250 * ratioY);
     wall.scaleX = ratioX;
     wall.scaleY = ratioY;
+    wall2.scaleX = ratioX;
+    wall2.scaleY = ratioY;
+    wall3.scaleX = ratioX;
+    wall3.scaleY = ratioY;
+
+    wall.x = 1000;
+    wall.y = config.GetInt("resY") - (250 * ratioY);
+    wall2.x = 1500;
+    wall2.y = config.GetInt("resY") - (250 * ratioY);
+    wall3.x = 2000;
+    wall3.y = config.GetInt("resY") - (250 * ratioY);
 }
 void MissionController::StartMission(std::string songName){
     rhythm.LoadTheme(songName); // missionConfig->GetString("debugTheme")
@@ -79,10 +93,9 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         test_bg.setCamera(camera);
         test_bg.Draw(window);
 
-
-        wall.x = 1000;
-        wall.y = wallY;
         wall.fps = fps;
+        wall2.fps = fps;
+        wall3.fps = fps;
 
         /// here we show the hitbox
         bool showHitboxes = false;
@@ -116,6 +129,15 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
                     /// then we have found a collision
                     foundCollision = true;
                     std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
+
+                    ///HARDCODED FOR KACHEEK SHOWCASE PURPOSES
+                    tangibleLevelObjects[i]->walk_timer.restart();
+
+                    if(tangibleLevelObjects[i]->current_animation != "walk")
+                    {
+                        tangibleLevelObjects[i]->current_animation = "walk";
+                        tangibleLevelObjects[i]->current_frame = 0;
+                    }
                 }
             }
 
@@ -150,6 +172,8 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
 
 
         wall.Draw(window);
+        wall2.Draw(window);
+        wall3.Draw(window);
         /// patapons (and other enemies) are drawn after level objects like wall so they are always on top
         patapon.Draw(window);
 

@@ -19,6 +19,8 @@ class MissionController
     Rhythm rhythm;
     Patapon patapon;
     Wall wall;
+    Wall wall2;
+    Wall wall3;
 
     Camera camera;
     std::map<int,bool>* missionKeyMap;

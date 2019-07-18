@@ -19,6 +19,7 @@ class Wall
     sf::Rect<float> hitBox;
     float width = 0;
     float scaleX = 1, scaleY = 1; ///TEMPORARY
+    sf::Clock walk_timer; ///TEMPORARY FOR SHOWCASE ONLY
 
     map<string,vector<sf::Texture>> animation_textures;
 
