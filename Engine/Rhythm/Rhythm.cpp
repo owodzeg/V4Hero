@@ -45,6 +45,9 @@ void Rhythm::LoadTheme(string theme)
 
     s_theme[0].setBuffer(songController->GetSongByNumber(0,0));
     s_theme[0].play();
+
+    beat_timer = floor(songController->GetSongByNumber(0,0).getDuration().asMilliseconds() / float(8.08));
+    cout << "Beat timer set to: " << beat_timer << endl;
 }
 
 void Rhythm::BreakCombo()
@@ -126,11 +129,13 @@ void Rhythm::Draw(sf::RenderWindow& window)
         LoadTheme(config.GetString("debugTheme"));
     }*/
 
-    if(rhythmClock.getElapsedTime().asMilliseconds() > 245)
+    if(rhythmClock.getElapsedTime().asMilliseconds() > (beat_timer/float(2)))
     {
+        ///cout << "Small: " << (beat_timer/float(2)) << endl;
+
         if(!count_cycle)
         {
-            int tmp_cycle = floor(beatCycleClock.getElapsedTime().asMilliseconds() / float(495));
+            int tmp_cycle = floor(beatCycleClock.getElapsedTime().asMilliseconds() / (beat_timer));
 
             if(tmp_cycle >= 8)
             {
@@ -171,8 +176,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
         }
     }
 
-    if(rhythmClock.getElapsedTime().asMilliseconds() > 495)
+    if(rhythmClock.getElapsedTime().asMilliseconds() > beat_timer)
     {
+        ///cout << "Big: " << beat_timer << endl;
+
         count_cycle = false;
         bgm_cycle++;
 
