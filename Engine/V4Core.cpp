@@ -51,7 +51,7 @@ V4Core::V4Core()
     config.LoadConfig();
     /** "Alpha release" text **/
 
-    f_font.loadFromFile("resources/fonts/patapon.ttf");
+    f_font.loadFromFile("resources/fonts/dfgkaku.ttf");
 
     t_debug.setFont(f_font);
     t_debug.setCharacterSize(24);
