@@ -43,6 +43,9 @@ void StringRepository::LoadLanguageFile(wifstream* conf)
                 if (key.size()==2){
                     stringMap[key[0]] = key[1];
                     wcout << "Loaded string repo entry '" << key[0] << "' with value '" << key[1] << "'" << endl;
+
+                    /// below code shows raw unicode bytes
+                    /*
                     const size_t length = key[1].length();
                     for (size_t i = 0; i < length; ++i)
                     {
@@ -50,11 +53,13 @@ void StringRepository::LoadLanguageFile(wifstream* conf)
                     std::cout << std::setw(2) << std::setfill('0') << std::hex << value << ' ' ;
                     }
                     cout<< "\n";
+                    */
+
                     for(int i=0; i<keysCheckList.size(); i++)
                     {
                         if(keysCheckList[i] == key[0])
                         {
-                            ///Already exists in the lang file, remove from check
+                            ///Already exists in the strRepo file, remove from check
                             keysCheckList.erase(keysCheckList.begin()+i);
                             break;
                         }

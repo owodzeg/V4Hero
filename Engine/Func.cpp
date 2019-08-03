@@ -31,6 +31,18 @@ std::vector<std::wstring> Func::Split(const std::wstring &s, wchar_t delim)
     }
     return ResultVec;
 }
+sf::String Func::ConvertToUtf8String(const std::wstring &s)
+{
+    std::basic_string<sf::Uint32> tmp;
+    sf::Utf8::toUtf32(s.begin(),s.end(),std::back_inserter(tmp));
+    return sf::String(tmp);
+}
+sf::String Func::ConvertToUtf8String(const std::string &s)
+{
+    std::basic_string<sf::Uint32> tmp;
+    sf::Utf8::toUtf32(s.begin(),s.end(),std::back_inserter(tmp));
+    return sf::String(tmp);
+}
 template<typename T> std::string Func::to_str(const T& t)
 {
 	ostringstream ss;
