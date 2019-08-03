@@ -45,8 +45,9 @@ Config::Config()
     }
 }
 
-void Config::LoadConfig()
+void Config::LoadConfig(StringRepository* strRep)
 {
+    strRepo = strRep;
     ifstream conf("config.ini");
 
     vector<string> keysCheckList = configKeys;

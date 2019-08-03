@@ -7,6 +7,7 @@
 #include "Mission/Background.h"
 #include "Mission/Camera.h"
 #include "Config.h"
+#include "StringRepository.h"
 #include "Mission/Patapon.h"
 #include "Mission/MissionController.h"
 #include "Menu/MainMenu.h"
@@ -15,7 +16,7 @@ class V4Core
     private:
 
     Config config;
-    DebugOut debugOut;
+    StringRepository strRepo;
     //MissionController currentController;
     MainMenu mainMenu;
 

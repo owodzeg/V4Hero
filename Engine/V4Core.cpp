@@ -45,10 +45,11 @@ V4Core::V4Core()
         strDay += "th";
     }
 
-    string dbgString = "This is an Alpha release. Game is not finished yet. Test debug build from "+strDay+" "+months[month]+" "+to_string(year)+".";
-
+    /** Load lang from resources/lang/str_ENG.cfg **/
+    strRepo.LoadLanguageFiles();
     /** Load config from config.cfg **/
-    config.LoadConfig();
+    config.LoadConfig(&strRepo);
+
     /** "Alpha release" text **/
 
     f_font.loadFromFile("resources/fonts/dfgkaku.ttf");
@@ -56,13 +57,14 @@ V4Core::V4Core()
     t_debug.setFont(f_font);
     t_debug.setCharacterSize(24);
     t_debug.setFillColor(sf::Color::White);
-    t_debug.setString(dbgString);
+    t_debug.setString(strRepo.GetString("alpha_string")+strDay+" "+months[month]+" "+to_string(year)+".");
     t_debug.setOrigin(t_debug.getGlobalBounds().width/2,t_debug.getGlobalBounds().height/2);
 
     /** Initialize main menu **/
 
     mainMenu.Initialise(&config,&keyMap,this);
     config.configDebugID = 10;
+    config.debugOut->ImportantDebugMessage(strRepo.GetString("test_string")+"\n");
 }
 
 void V4Core::Init()
