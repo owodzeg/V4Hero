@@ -47,6 +47,7 @@ Config::Config()
 
 void Config::LoadConfig()
 {
+
     ifstream conf("config.ini");
 
     vector<string> keysCheckList = configKeys;
@@ -107,6 +108,10 @@ void Config::LoadConfig()
     }
 
     conf2.close();
+
+    /** Load lang from resources/lang/str_ENG.cfg **/
+    strRepo.LoadLanguageFiles(GetInt("lang"));
+    cout<<strRepo.GetString(L"language_file_loaded")<<endl;
 }
 
 void Config::SaveConfig()

@@ -7,7 +7,7 @@ class ButtonList;
 class MenuButton
 {
     public:
-        std::string buttonText;
+        std::wstring buttonText;
         sf::Text t_buttonText;
         bool selected=false;
         float originX;
@@ -18,7 +18,7 @@ class MenuButton
         void Update(sf::RenderWindow &window, float fps, sf::Vector2f *mousePos);
         void SetSelected(bool isSelected);
         void MouseUp(int xPos,int yPos);
-        MenuButton(std::string text,sf::Font *font,int fontSize, float y, ButtonList *p_list,int index);
+        MenuButton(std::wstring text,sf::Font *font,int fontSize, float y, ButtonList *p_list,int index);
         ~MenuButton();
 
 };

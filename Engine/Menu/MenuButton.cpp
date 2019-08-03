@@ -1,7 +1,8 @@
 #include "MenuButton.h"
 #include "string"
 #include "ButtonList.h"
-MenuButton::MenuButton(std::string text,sf::Font *font,int fontSize, float y , ButtonList *p_Menu,int menuListIndex)
+#include "../Func.h"
+MenuButton::MenuButton(std::wstring text,sf::Font *font,int fontSize, float y , ButtonList *p_Menu,int menuListIndex)
 {
     buttonListIndex = menuListIndex;
     buttonText = text;
@@ -9,7 +10,7 @@ MenuButton::MenuButton(std::string text,sf::Font *font,int fontSize, float y , B
     t_buttonText.setFont(*font);
     t_buttonText.setCharacterSize(fontSize);
     t_buttonText.setFillColor(sf::Color(100,100,100));
-    t_buttonText.setString(text);
+    t_buttonText.setString(Func::ConvertToUtf8String(text));
     t_buttonText.setOrigin(t_buttonText.getGlobalBounds().width/2,t_buttonText.getGlobalBounds().height/2);
     debug_text_bounding_box.setFillColor(sf::Color::Red);
     //originX = x;

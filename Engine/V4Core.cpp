@@ -22,12 +22,12 @@ V4Core::V4Core()
 
     struct tm *st = localtime(&t);
 
-    int day = st->tm_mday;
-    int month = st->tm_mon;
-    int year = st->tm_year + 1900;
+    /*//int day = st->tm_mday;
+    //int month = st->tm_mon;
+    //int year = st->tm_year + 1900;
 
-    vector<string> months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-    string strDay = to_string(day);
+    //vector<string> months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    //string strDay = to_string(day);
 
     if((day > 9) && (day < 20))
     {
@@ -44,11 +44,11 @@ V4Core::V4Core()
         else
         strDay += "th";
     }
-
-    string dbgString = "This is an Alpha release. Game is not finished yet. Test debug build from "+strDay+" "+months[month]+" "+to_string(year)+".";
+*/
 
     /** Load config from config.cfg **/
     config.LoadConfig();
+
     /** "Alpha release" text **/
 
     f_font.loadFromFile("resources/fonts/dfgkaku.ttf");
@@ -56,7 +56,7 @@ V4Core::V4Core()
     t_debug.setFont(f_font);
     t_debug.setCharacterSize(24);
     t_debug.setFillColor(sf::Color::White);
-    t_debug.setString(dbgString);
+    t_debug.setString(config.strRepo.GetString(L"alpha_string"));//+strDay+" "+months[month]+" "+to_string(year)+".");
     t_debug.setOrigin(t_debug.getGlobalBounds().width/2,t_debug.getGlobalBounds().height/2);
 
     /** Initialize main menu **/

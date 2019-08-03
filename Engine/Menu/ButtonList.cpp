@@ -12,9 +12,9 @@ ButtonList::ButtonList()
 void ButtonList::Initialise(sf::Font *font,Config &newConfig,  std::map<int,bool> *thisKeymap,MissionController *controller,MainMenu *mainMenu)
 {
     config = &newConfig;
-    MenuButton* level1Button = new MenuButton("Level 1",font,42,300,this,0);
-    MenuButton* level2Button = new MenuButton("Level 2",font,42,350,this,1);
-    MenuButton* optionsButton = new MenuButton("Options",font,42,400,this,2);
+    MenuButton* level1Button = new MenuButton(config->strRepo.GetUnicodeString(L"menu_button_1"),font,42,300,this,0);
+    MenuButton* level2Button = new MenuButton(config->strRepo.GetUnicodeString(L"menu_button_2"),font,42,350,this,1);
+    MenuButton* optionsButton = new MenuButton(config->strRepo.GetUnicodeString(L"menu_button_3"),font,42,400,this,2);
     buttons.push_back(*level1Button);
     buttons.push_back(*level2Button);
     buttons.push_back(*optionsButton);

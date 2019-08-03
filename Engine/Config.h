@@ -1,6 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 #include <SFML/Graphics.hpp>
+#include "StringRepository.h"
 #include <vector>
 #include <map>
 #include <string>
@@ -63,6 +64,8 @@ class Config
     Config();
     void LoadConfig();
     DebugOut* debugOut;
+
+    StringRepository strRepo;
     ///I wanted to overload these two in a single function, but somehow it just doesnt want to work...
     ///Will change it into one someday
     int GetInt(std::string key);
