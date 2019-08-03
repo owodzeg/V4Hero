@@ -62,10 +62,10 @@ class Config
     std::map<std::string,std::string> configMap;
     int configDebugID=0;
     Config();
-    void LoadConfig(StringRepository* strRep);
+    void LoadConfig();
     DebugOut* debugOut;
 
-    StringRepository* strRepo;
+    StringRepository strRepo;
     ///I wanted to overload these two in a single function, but somehow it just doesnt want to work...
     ///Will change it into one someday
     int GetInt(std::string key);

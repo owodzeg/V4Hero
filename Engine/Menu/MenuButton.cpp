@@ -1,7 +1,7 @@
 #include "MenuButton.h"
 #include "string"
 #include "ButtonList.h"
-MenuButton::MenuButton(std::string text,sf::Font *font,int fontSize, float y , ButtonList *p_Menu,int menuListIndex)
+MenuButton::MenuButton(std::wstring text,sf::Font *font,int fontSize, float y , ButtonList *p_Menu,int menuListIndex)
 {
     buttonListIndex = menuListIndex;
     buttonText = text;

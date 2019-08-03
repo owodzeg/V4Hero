@@ -9,6 +9,7 @@ class Func
     public:
     Func();
     static std::vector<std::string> Split(const std::string &s, char delim);
+    static std::vector<std::wstring> Split(const std::wstring &s, wchar_t delim);
     template<typename T> static std::string to_str(const T& t);
 };
 

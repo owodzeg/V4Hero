@@ -5,7 +5,8 @@
 MainMenu::MainMenu()
 {
     //ctor
-    f_font.loadFromFile("resources/fonts/patapon.ttf");
+    //f_font.loadFromFile("resources/fonts/patapon.ttf");
+    f_font.loadFromFile("resources/fonts/arial.ttf");
     t_title.setFont(f_font);
 
     t_title.setCharacterSize(112);

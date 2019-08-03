@@ -45,9 +45,9 @@ Config::Config()
     }
 }
 
-void Config::LoadConfig(StringRepository* strRep)
+void Config::LoadConfig()
 {
-    strRepo = strRep;
+
     ifstream conf("config.ini");
 
     vector<string> keysCheckList = configKeys;
@@ -108,6 +108,10 @@ void Config::LoadConfig(StringRepository* strRep)
     }
 
     conf2.close();
+
+    /** Load lang from resources/lang/str_ENG.cfg **/
+    strRepo.LoadLanguageFiles(GetInt("lang"));
+    cout<<strRepo.GetString(L"language_file_loaded")<<endl;
 }
 
 void Config::SaveConfig()

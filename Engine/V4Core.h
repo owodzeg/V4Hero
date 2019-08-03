@@ -16,7 +16,6 @@ class V4Core
     private:
 
     Config config;
-    StringRepository strRepo;
     //MissionController currentController;
     MainMenu mainMenu;
 
