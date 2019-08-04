@@ -33,7 +33,8 @@ class Config
     "mission2Background",
     "showDebugMsg",
     "showRhythmDebugMsg",
-    "showImportantDebugMsg"};
+    "showImportantDebugMsg",
+    "lang"};
     std::vector<std::string> configDefaults = {"1280",
     "720",
     "1",
@@ -58,6 +59,7 @@ class Config
     "patapineforest",
     "0",
     "0",
+    "1",
     "1"};
     std::map<std::string,std::string> configMap;
     int configDebugID=0;
