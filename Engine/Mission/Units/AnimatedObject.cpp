@@ -1,35 +1,26 @@
-#include "Wall.h"
+#include "AnimatedObject.h"
 #include "math.h"
 #include <fstream>
 #include <iostream>
+#include "../../Func.h"
 
 #include <sstream>
-Wall::Wall()
+AnimatedObject::AnimatedObject()
 {
 
 }
-std::vector<std::string> splitp(const std::string& s, char delimiter)
-{
-   std::vector<std::string> tokens;
-   std::string token;
-   std::istringstream tokenStream(s);
-   while (std::getline(tokenStream, token, delimiter))
-   {
-      tokens.push_back(token);
-   }
-   return tokens;
-}
-void Wall::LoadConfig(Config *thisConfigs)
+
+void AnimatedObject::LoadConfig(Config *thisConfigs,std::string unitParamPath)
 {
  thisConfig = thisConfigs;
- ifstream param("resources/graphics/units/wall/param.dat");
+ ifstream param(unitParamPath+"param.dat");//"resources/graphics/units/wall/param.dat");
 
     string buff;
     getline(param,buff);
     string name = buff.substr(0,buff.find_first_of(":"));
     string coords = buff.substr(buff.find_first_of(":")+1);
 
-    std::vector<std::string> results = splitp(coords,',');
+    std::vector<std::string> results = Func::Split(coords,',');
 
 
  float ratioX, ratioY;
@@ -83,27 +74,17 @@ void Wall::LoadConfig(Config *thisConfigs)
         for(int a=1; a<=animation_frames[i]; a++)
         {
             sf::Texture temp;
-            temp.loadFromFile("resources/graphics/units/wall/"+animation_name[i]+"/"+to_string(a)+".png");
+            temp.loadFromFile(unitParamPath+animation_name[i]+"/"+to_string(a)+".png");
             temp.setSmooth(true);
 
             animation_textures[animation_name[i]].push_back(temp);
         }
     }
 }
-void Wall::Draw(sf::RenderWindow& window)
+void AnimatedObject::Draw(sf::RenderWindow& window)
 {
     s_wall.setTexture(animation_textures[current_animation][floor(current_frame)]);
     current_frame += float(60) / fps;
-
-    if(current_animation == "walk")
-    {
-        x += float(140) / fps;
-
-        if(walk_timer.getElapsedTime().asSeconds() >= 2)
-        {
-            current_animation = "idle";
-        }
-    }
 
     if(current_frame >= animation_textures[current_animation].size())
     {

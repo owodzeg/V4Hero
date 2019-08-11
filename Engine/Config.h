@@ -33,7 +33,8 @@ class Config
     "mission2Background",
     "showDebugMsg",
     "showRhythmDebugMsg",
-    "showImportantDebugMsg"};
+    "showImportantDebugMsg",
+    "lang"};
     std::vector<std::string> configDefaults = {"1280",
     "720",
     "1",
@@ -58,11 +59,14 @@ class Config
     "patapineforest",
     "0",
     "0",
+    "1",
     "1"};
     std::map<std::string,std::string> configMap;
     int configDebugID=0;
+    bool changedLang = false;
     Config();
     void LoadConfig();
+    void ReloadLanguages();
     DebugOut* debugOut;
 
     StringRepository strRepo;
@@ -70,6 +74,8 @@ class Config
     ///Will change it into one someday
     int GetInt(std::string key);
     std::string GetString(std::string key);
+    void SetString(std::string key,std::string val);
+    std::wstring GetLanguageName();
     void SaveConfig();
 };
 

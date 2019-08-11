@@ -116,16 +116,73 @@ void Config::LoadConfig()
 
 void Config::SaveConfig()
 {
+    ofstream conf2("config.ini", ios::ate);
+    cout<<"Config Size: "<<configMap.size()<<"Config Keys: "<<configKeys.size()<<endl;
+    conf2.seekp(0);
+    if(conf2.is_open())
+    {
+        for(int i=0; i<configMap.size(); i++)
+        {
+            if(i == 0){
+                conf2 << "# Take caution! Changing some of the settings below may cause your game to crash or become unstable! Don't edit this file unless you know what you're doing! #" <<'\n';
+            }
+            ///save all keys and defaults
+            conf2 << configKeys[i] << ":" << configMap[configKeys[i]];
+
+            cout << "Saving config entry: " << configKeys[i] << " = " << configMap[configKeys[i]] << endl;
+
+            ///remember to newline
+            if(i != configMap.size()-1)
+            conf2 << '\n';
+        }
+    }
+
+    conf2.close();
 
 }
-
+void Config::ReloadLanguages(){
+     /** Load lang from resources/lang/str_ENG.cfg **/
+     if (changedLang){
+        strRepo.LoadLanguageFiles(GetInt("lang"));
+        cout<<strRepo.GetString(L"language_file_loaded")<<endl;
+        changedLang=false;
+     }
+}
 int Config::GetInt(std::string key)
 {
-    return atoi(configMap[key].c_str());
+    int num = atoi(configMap[key].c_str());
+    return num;
 }
 
 std::string Config::GetString(std::string key)
 {
     return configMap[key];
+}
+void Config::SetString(std::string key,std::string val)
+{
+    configMap[key] = val;
+}
+std::wstring Config::GetLanguageName(){
+    switch (atoi(configMap["lang"].c_str())){
+        case 1:
+            return strRepo.GetUnicodeString(L"language_english");
+            break;
+        case 2:
+            return strRepo.GetUnicodeString(L"language_french");
+            break;
+        case 3:
+            return strRepo.GetUnicodeString(L"language_spanish");
+            break;
+        case 4:
+            return strRepo.GetUnicodeString(L"language_danish");
+            break;
+        case 5:
+            return strRepo.GetUnicodeString(L"language_polish");
+            break;
+        case 6:
+        default:
+            return strRepo.GetUnicodeString(L"language_english");
+            break;
+    }
 }
 

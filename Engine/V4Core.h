@@ -8,9 +8,10 @@
 #include "Mission/Camera.h"
 #include "Config.h"
 #include "StringRepository.h"
-#include "Mission/Patapon.h"
+#include "Mission/Units/Patapon.h"
 #include "Mission/MissionController.h"
 #include "Menu/MainMenu.h"
+#include "Graphics/Menu.h"
 class V4Core
 {
     private:
@@ -18,7 +19,6 @@ class V4Core
     Config config;
     //MissionController currentController;
     MainMenu mainMenu;
-
 
 
 
@@ -36,6 +36,7 @@ class V4Core
     public:
         MissionController currentController;
     V4Core();
+    std::vector<Menu*> menus;
     void Init();
 };
 

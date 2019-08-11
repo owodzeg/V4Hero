@@ -15,12 +15,12 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     missionConfig = &config;
     patapon.LoadConfig(&config);
 
-    wall.LoadConfig(&config);
-    wall2.LoadConfig(&config);
-    wall3.LoadConfig(&config);
-    tangibleLevelObjects.push_back(&wall);
-    tangibleLevelObjects.push_back(&wall2);
-    tangibleLevelObjects.push_back(&wall3);
+    kacheek.LoadConfig(&config);
+    kacheek2.LoadConfig(&config);
+    kacheek3.LoadConfig(&config);
+    tangibleLevelObjects.push_back(&kacheek);
+    tangibleLevelObjects.push_back(&kacheek2);
+    tangibleLevelObjects.push_back(&kacheek3);
     int quality = config.GetInt("textureQuality");
 
     float ratioX, ratioY;
@@ -59,19 +59,20 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     patapon.scaleX = ratioX;
     patapon.scaleY = ratioY;
 
-    wall.scaleX = ratioX;
-    wall.scaleY = ratioY;
-    wall2.scaleX = ratioX;
-    wall2.scaleY = ratioY;
-    wall3.scaleX = ratioX;
-    wall3.scaleY = ratioY;
+    kacheek.scaleX = ratioX;
+    kacheek.scaleY = ratioY;
+    kacheek2.scaleX = ratioX;
+    kacheek2.scaleY = ratioY;
+    kacheek3.scaleX = ratioX;
+    kacheek3.scaleY = ratioY;
 
-    wall.x = 1000;
-    wall.y = config.GetInt("resY") - (250 * ratioY);
-    wall2.x = 1500;
-    wall2.y = config.GetInt("resY") - (250 * ratioY);
-    wall3.x = 2000;
-    wall3.y = config.GetInt("resY") - (250 * ratioY);
+    kacheek.x = 1000;
+    kacheek.y = config.GetInt("resY") - (250 * ratioY);
+    kacheek2.x = 1500;
+    kacheek2.y = config.GetInt("resY") - (250 * ratioY);
+    kacheek3.x = 2000;
+    kacheek3.y = config.GetInt("resY") - (250 * ratioY);
+    isInitialized = true;
 }
 void MissionController::StartMission(std::string songName){
     rhythm.LoadTheme(songName); // missionConfig->GetString("debugTheme")
@@ -93,9 +94,9 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         test_bg.setCamera(camera);
         test_bg.Draw(window);
 
-        wall.fps = fps;
-        wall2.fps = fps;
-        wall3.fps = fps;
+        kacheek.fps = fps;
+        kacheek2.fps = fps;
+        kacheek3.fps = fps;
 
         /// here we show the hitbox
         bool showHitboxes = false;
@@ -104,9 +105,9 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
             hitboxRect.setPosition(patapon.x+patapon.hitBox.left,patapon.y+patapon.hitBox.top);
             window.draw(hitboxRect);
 
-            sf::RectangleShape wallHitboxRect(sf::Vector2f(wall.hitBox.width, wall.hitBox.height));
-            wallHitboxRect.setPosition(wall.x+wall.hitBox.left,wall.y+wall.hitBox.top);
-            window.draw(wallHitboxRect);
+            sf::RectangleShape kacheekHitboxRect(sf::Vector2f(kacheek.hitBox.width, kacheek.hitBox.height));
+            kacheekHitboxRect.setPosition(kacheek.x+kacheek.hitBox.left,kacheek.y+kacheek.hitBox.top);
+            window.draw(kacheekHitboxRect);
         }
 
         /** Make Patapon walk (temporary) **/
@@ -115,33 +116,33 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
             float proposedXPos = camera.followobject_x + (2 * 60) / fps;
             /// use the right hand side of the patapon sprite to check for collisions. This should be changed if the patapon walks to the left
             float proposedXPosRight = proposedXPos + patapon.hitBox.left + patapon.hitBox.width;
-            /// need to have it check for collision and stop if blocked by wall here.
+            /// need to have it check for collision and stop if blocked by kacheek here.
 
             /// right now it is very basic checking only in X axis. Jumping over a
-            /// wall will not be possible.
+            /// kacheek will not be possible.
 
             bool foundCollision = false;
 
             for(int i=0;i<tangibleLevelObjects.size();i++){
-                //Wall currentCollisionRect = *tangibleLevelObjects[i];
-                /// if the new x position after moving will be between left side of wall and right side of wall
-                if (proposedXPosRight>tangibleLevelObjects[i]->x+wall.hitBox.left && proposedXPosRight<tangibleLevelObjects[i]->x+wall.hitBox.left+tangibleLevelObjects[i]->width){
+                //kacheek currentCollisionRect = *tangibleLevelObjects[i];
+                /// if the new x position after moving will be between left side of kacheek and right side of kacheek
+                if (proposedXPosRight>tangibleLevelObjects[i]->x+kacheek.hitBox.left && proposedXPosRight<tangibleLevelObjects[i]->x+kacheek.hitBox.left+tangibleLevelObjects[i]->width){
                     /// then we have found a collision
                     foundCollision = true;
+                    tangibleLevelObjects[i]->OnCollide(*tangibleLevelObjects[i]);
                     std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
-
-                    ///HARDCODED FOR KACHEEK SHOWCASE PURPOSES
+                    /*///HARDCODED FOR KACHEEK SHOWCASE PURPOSES
                     tangibleLevelObjects[i]->walk_timer.restart();
 
                     if(tangibleLevelObjects[i]->current_animation != "walk")
                     {
                         tangibleLevelObjects[i]->current_animation = "walk";
                         tangibleLevelObjects[i]->current_frame = 0;
-                    }
+                    }*/
                 }
             }
 
-            /// if the new position is inside a wall, don't move. If we found anything,
+            /// if the new position is inside a kacheek, don't move. If we found anything,
             if (!foundCollision){
                 camera.followobject_x = proposedXPos;
             }
@@ -171,10 +172,10 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         }
 
 
-        wall.Draw(window);
-        wall2.Draw(window);
-        wall3.Draw(window);
-        /// patapons (and other enemies) are drawn after level objects like wall so they are always on top
+        kacheek.Draw(window);
+        kacheek2.Draw(window);
+        kacheek3.Draw(window);
+        /// patapons (and other enemies) are drawn after level objects like kacheek so they are always on top
         patapon.Draw(window);
 
 
