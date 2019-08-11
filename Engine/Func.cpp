@@ -43,6 +43,17 @@ sf::String Func::ConvertToUtf8String(const std::string &s)
     sf::Utf8::toUtf32(s.begin(),s.end(),std::back_inserter(tmp));
     return sf::String(tmp);
 }
+std::wstring ConvertToWString(const std::string &s){
+    std::wstring resws;
+    resws.assign(s.begin(), s.end());
+    return resws;
+}
+
+std::string ConvertToString(const std::wstring &ws){
+    std::string s( ws.begin(), ws.end() );
+    return s;
+}
+
 template<typename T> std::string Func::to_str(const T& t)
 {
 	ostringstream ss;

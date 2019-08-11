@@ -2,7 +2,7 @@
 #define PATAPON_H
 
 #include <SFML/Graphics.hpp>
-#include "../Config.h"
+#include "../../Config.h"
 
 using namespace std;
 

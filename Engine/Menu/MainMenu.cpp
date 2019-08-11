@@ -30,32 +30,36 @@ MainMenu::MainMenu()
 
     mm_titleBox.setSize(sf::Vector2f(100,10));
     mm_titleBox.setFillColor(sf::Color::Red);
-    inMission=false;
+    isActive=true;
 }
 void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent){
-    thisConfig = thisConfigs;
-    thisConfig->GetInt("keybindDon");
-    v4core = parent;
-    buttonList.Initialise(&f_font,*thisConfig,keymap,&(v4core->currentController),this);
+    Scene::Initialise(thisConfigs,keymap,parent);
+    optionsMenu.Initialise(thisConfigs,keymap,parent,this);
+    v4core->menus.push_back(&optionsMenu);
+    buttonList.Initialise(&f_font,*thisConfig,keymap,&(v4core->currentController),this,&optionsMenu);
 }
 void MainMenu::EventFired(sf::Event event){
-    if(event.type == sf::Event::KeyPressed)
-    {
-        // do something here;
-        buttonList.KeyPressedEvent(event);
-        if(event.key.code==59) {
-            thisConfig->debugOut->DebugMessage("Returning to main menu...");
-            v4core->currentController.StopMission();
-            inMission=false;
+    if(isActive){
+        if(event.type == sf::Event::KeyPressed)
+        {
+            // do something here;
+            buttonList.KeyPressedEvent(event);
+            if(event.key.code==sf::Keyboard::Escape) {
+                thisConfig->debugOut->DebugMessage("Returning to main menu...");
+                v4core->currentController.StopMission();
+                isActive=true;
+            }
+        } else if (event.type == sf::Event::MouseButtonReleased){
+            // We use mouse released so a user can change their mind by keeping the mouse held and moving away.
+            buttonList.MouseReleasedEvent(event);
         }
-    } else if (event.type == sf::Event::MouseButtonReleased){
-        // We use mouse released so a user can change their mind by keeping the mouse held and moving away.
-        buttonList.MouseReleasedEvent(event);
+    } else if (optionsMenu.isActive){
+        optionsMenu.EventFired(event);
     }
 }
 void MainMenu::Update(sf::RenderWindow &window, float fps)
 {
-    if(!inMission){
+    if(isActive){
         mm_bigBox.setSize(sf::Vector2f(window.getSize().x,window.getSize().y-200));
         //mm_smallerBox.setSize(sf::Vector2f(100,10));
         //mm_titleBox.setSize(sf::Vector2f(100,10));
@@ -83,11 +87,22 @@ void MainMenu::Update(sf::RenderWindow &window, float fps)
         buttonList.Update(window, fps, &worldPos);
         window.setView(window.getDefaultView());
     } else {
-        v4core->currentController.Update(window, fps);
+        if (v4core->currentController.isInitialized){
+            v4core->currentController.Update(window, fps);
+        } else {
+            optionsMenu.Update(window,fps);
+        }
     }
 
 }
-
+void MainMenu::UpdateButtons(){
+    /// this should update the text on all the buttons
+    buttonList.UpdateButtons();
+}
+void MainMenu::OnExit(){
+    /// when we exit the main menu, we do nothing for now.
+    /// perhaps we would want to unload sprites or songs etc
+}
 MainMenu::~MainMenu()
 {
     //dtor

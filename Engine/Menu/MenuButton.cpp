@@ -2,6 +2,12 @@
 #include "string"
 #include "ButtonList.h"
 #include "../Func.h"
+
+
+
+/// PLEASE NOTE: The functionality of actually pressing a button is held in the ButtonList. This class just deals with display and mouse events.
+
+
 MenuButton::MenuButton(std::wstring text,sf::Font *font,int fontSize, float y , ButtonList *p_Menu,int menuListIndex)
 {
     buttonListIndex = menuListIndex;
@@ -10,11 +16,20 @@ MenuButton::MenuButton(std::wstring text,sf::Font *font,int fontSize, float y , 
     t_buttonText.setFont(*font);
     t_buttonText.setCharacterSize(fontSize);
     t_buttonText.setFillColor(sf::Color(100,100,100));
-    t_buttonText.setString(Func::ConvertToUtf8String(text));
+    t_buttonText.setString(Func::ConvertToUtf8String(parentList->config->strRepo.GetUnicodeString(text)));
     t_buttonText.setOrigin(t_buttonText.getGlobalBounds().width/2,t_buttonText.getGlobalBounds().height/2);
     debug_text_bounding_box.setFillColor(sf::Color::Red);
     //originX = x;
     originY = y;
+}
+void MenuButton::AddEndString(std::wstring text){
+    endString = text;
+    ///t_buttonText.setString(Func::ConvertToUtf8String(text)+"EGG");
+    t_buttonText.setString(Func::ConvertToUtf8String(parentList->config->strRepo.GetUnicodeString(buttonText))+" "+Func::ConvertToUtf8String(endString));
+    t_buttonText.setOrigin(t_buttonText.getGlobalBounds().width/2,t_buttonText.getGlobalBounds().height/2);
+}
+std::wstring MenuButton::GetEndString(std::wstring text){
+    return endString;
 }
 void MenuButton::Update(sf::RenderWindow &window, float fps, sf::Vector2f *mousePos)
 {
@@ -29,7 +44,9 @@ void MenuButton::Update(sf::RenderWindow &window, float fps, sf::Vector2f *mouse
 
 
     t_buttonText.setPosition(window.getSize().x/2,originY);
-    //window.draw(debug_text_bounding_box);   Don't draw the bounding boxes for now. Later we can make a debug keybind for it - something like ctrl + f10
+
+    ///Don't draw the bounding boxes for now. Later we can make a debug keybind for it - something like ctrl + f10
+    //window.draw(debug_text_bounding_box);
     window.draw(t_buttonText);
 }
 void MenuButton::MouseUp(int xPos,int yPos){
@@ -52,7 +69,17 @@ void MenuButton::SetSelected(bool isSelected)
         t_buttonText.setFillColor(sf::Color(100,100,100));
     }
 }
+void MenuButton::UpdateText(){
+    if (endString.size()){
+        t_buttonText.setString(Func::ConvertToUtf8String(parentList->config->strRepo.GetUnicodeString(buttonText))+" "+Func::ConvertToUtf8String(endString));
+    } else {
+        t_buttonText.setString(Func::ConvertToUtf8String(parentList->config->strRepo.GetUnicodeString(buttonText)));
+    }
+    t_buttonText.setOrigin(t_buttonText.getGlobalBounds().width/2,t_buttonText.getGlobalBounds().height/2);
+}
+void MenuButton(){
 
+}
 MenuButton::~MenuButton()
 {
 

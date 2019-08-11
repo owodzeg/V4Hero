@@ -6,8 +6,8 @@
 #include "MenuButton.h"
 #include "../Config.h"
 #include "../Mission/MissionController.h"
-
-class MainMenu;
+#include "../Graphics/Menu.h"
+class Menu;
 class ButtonList
 {
     public:
@@ -17,14 +17,14 @@ class ButtonList
         Config *config;
         std::map<int,bool> *keyMap;
         MissionController *currentController;
-        MainMenu *parentMenu;
-
-        void Initialise(sf::Font *font,Config &newConfig, std::map<int,bool> *keymap,MissionController *controller,MainMenu *parentMenu);
-        void Update(sf::RenderWindow &window, float fps, sf::Vector2f *mousePos);
-        void KeyPressedEvent(sf::Event event);
-        void MouseReleasedEvent(sf::Event event);
-        void HighlightButton(MenuButton *button,int index);
-        void SelectButton(int index);
+        Menu *parentMenu;
+        void UpdateButtons();
+        virtual void Initialise(sf::Font *font,Config &newConfig, std::map<int,bool> *keymap,MissionController *controller,Menu *parentMenu);
+        virtual void Update(sf::RenderWindow &window, float fps, sf::Vector2f *mousePos);
+        virtual void KeyPressedEvent(sf::Event event);
+        virtual void MouseReleasedEvent(sf::Event event);
+        virtual void HighlightButton(MenuButton *button,int index);
+        virtual void SelectButton(int index);
 
         ButtonList();
         ~ButtonList();

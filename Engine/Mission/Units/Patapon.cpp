@@ -2,22 +2,11 @@
 #include "math.h"
 #include <fstream>
 #include <iostream>
-
+#include "../../Func.h"
 #include <sstream>
 Patapon::Patapon()
 {
 
-}
-std::vector<std::string> split(const std::string& s, char delimiter)
-{
-   std::vector<std::string> tokens;
-   std::string token;
-   std::istringstream tokenStream(s);
-   while (std::getline(tokenStream, token, delimiter))
-   {
-      tokens.push_back(token);
-   }
-   return tokens;
 }
 void Patapon::LoadConfig(Config *thisConfigs)
 {
@@ -61,7 +50,7 @@ void Patapon::LoadConfig(Config *thisConfigs)
     string name = buff.substr(0,buff.find_first_of(":"));
     string coords = buff.substr(buff.find_first_of(":")+1);
 
-    std::vector<std::string> results = split(coords,',');
+    std::vector<std::string> results = Func::Split(coords,',');
     hitBox =  sf::Rect<float>(atof(results[0].c_str())*ratioX,atof(results[1].c_str())*ratioY,atof(results[2].c_str())*ratioX,atof(results[3].c_str())*ratioY);
 
     while(getline(param,buff))

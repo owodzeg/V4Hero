@@ -125,7 +125,7 @@ std::wstring StringRepository::GetUnicodeString(std::wstring key)
 std::string StringRepository::GetString(std::wstring key)
 {
     std::wstring ws = stringMap[key];
-    std::string s( ws.begin(), ws.end() );
+                        std::string s( ws.begin(), ws.end() );
     return s;
 }
 

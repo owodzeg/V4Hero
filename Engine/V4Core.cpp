@@ -51,7 +51,7 @@ V4Core::V4Core()
 
     /** "Alpha release" text **/
 
-    f_font.loadFromFile("resources/fonts/dfgkaku.ttf");
+    f_font.loadFromFile("resources/fonts/p4kakupop-gothic.ttf");
 
     t_debug.setFont(f_font);
     t_debug.setCharacterSize(24);
@@ -62,6 +62,7 @@ V4Core::V4Core()
     /** Initialize main menu **/
 
     mainMenu.Initialise(&config,&keyMap,this);
+    menus.push_back(&mainMenu);
     config.configDebugID = 10;
 }
 
@@ -105,8 +106,9 @@ void V4Core::Init()
             {
                 keyMap[event.key.code] = false;
             }
+
+            mainMenu.EventFired(event);
         }
-        mainMenu.EventFired(event);
 
         fps = float(1000000) / fpsclock.getElapsedTime().asMicroseconds();
         fpsclock.restart();

@@ -13,6 +13,9 @@ class Func
     static std::vector<std::wstring> Split(const std::wstring &s, wchar_t delim);
     static sf::String ConvertToUtf8String(const std::wstring &s);
     static sf::String ConvertToUtf8String(const std::string &s);
+
+    static std::wstring ConvertToWString(const std::string &s);
+    static std::string ConvertToString(const std::wstring &ws);
     template<typename T> static std::string to_str(const T& t);
 };
 
