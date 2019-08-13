@@ -25,9 +25,6 @@ MainMenu::MainMenu()
     mm_bigBox.setSize(sf::Vector2f(100,10));
     mm_bigBox.setFillColor(sf::Color(4,0,90));
 
-    mm_smallerBox.setSize(sf::Vector2f(100,10));
-    mm_smallerBox.setFillColor(sf::Color::Red);
-
     mm_titleBox.setSize(sf::Vector2f(100,10));
     mm_titleBox.setFillColor(sf::Color::Red);
     isActive=true;
@@ -35,8 +32,9 @@ MainMenu::MainMenu()
 void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent){
     Scene::Initialise(thisConfigs,keymap,parent);
     optionsMenu.Initialise(thisConfigs,keymap,parent,this);
+    patapolisMenu.Initialise(thisConfigs,keymap,parent,this);
     v4core->menus.push_back(&optionsMenu);
-    buttonList.Initialise(&f_font,*thisConfig,keymap,&(v4core->currentController),this,&optionsMenu);
+    buttonList.Initialise(&f_font,*thisConfig,keymap,&(v4core->currentController),this,&optionsMenu,&patapolisMenu);
 }
 void MainMenu::EventFired(sf::Event event){
     if(isActive){
@@ -55,6 +53,8 @@ void MainMenu::EventFired(sf::Event event){
         }
     } else if (optionsMenu.isActive){
         optionsMenu.EventFired(event);
+    } else if (patapolisMenu.isActive){
+        patapolisMenu.EventFired(event);
     }
 }
 void MainMenu::Update(sf::RenderWindow &window, float fps)
@@ -89,6 +89,8 @@ void MainMenu::Update(sf::RenderWindow &window, float fps)
     } else {
         if (v4core->currentController.isInitialized){
             v4core->currentController.Update(window, fps);
+        } else if (patapolisMenu.isActive){
+            patapolisMenu.Update(window,fps);
         } else {
             optionsMenu.Update(window,fps);
         }

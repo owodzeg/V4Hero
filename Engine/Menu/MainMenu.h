@@ -6,12 +6,12 @@
 #include "../Graphics/Menu.h"
 #include "../Mission/MissionController.h"
 #include "OptionsMenu.h"
+#include "Patapolis.h"
 class V4Core;
 class MainMenu : public Menu
 {
     public:
         sf::RectangleShape mm_bigBox;
-        sf::RectangleShape mm_smallerBox;
         sf::RectangleShape mm_titleBox;
 
         sf::Font f_font;
@@ -21,7 +21,9 @@ class MainMenu : public Menu
         MainMenuButtonList buttonList;
 
         OptionsMenu optionsMenu;
+        PatapolisMenu patapolisMenu;
         void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent);
+
         void Update(sf::RenderWindow &window, float fps);
         void EventFired(sf::Event event);
         void OnExit();
