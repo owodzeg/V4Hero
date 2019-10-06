@@ -3,13 +3,18 @@
 
 #include <SFML/Graphics.hpp>
 #include "../../Config.h"
-
+#include "../../P4A.h"
+#include "Object.h"
 
 using namespace std;
 
 class AnimatedObject
 {
     public:
+    vector<Object> objects;
+    float max_time;
+
+    ///OLD
     sf::Sprite s_wall;
     string current_animation = "idle";
     float current_frame = 0;
@@ -26,6 +31,7 @@ class AnimatedObject
     vector<int> animation_frames;
     Config *thisConfig;
     AnimatedObject();
+    void loadAnim(std::string data, P4A handle);
     virtual void LoadConfig(Config *thisConfigs,std::string unitParamPath);
     virtual void Draw(sf::RenderWindow& window);
 };
