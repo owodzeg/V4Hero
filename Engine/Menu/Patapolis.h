@@ -6,6 +6,7 @@
 #include "../Graphics/Menu.h"
 #include "../Mission/MissionController.h"
 #include "OptionsMenu.h"
+#include "Altar.h"
 class V4Core;
 class PatapolisMenu : public Menu
 {
@@ -15,7 +16,6 @@ class PatapolisMenu : public Menu
 
         sf::Font f_font;
         sf::Text t_title;
-        sf::Text t_pressToContinue;
 
         std::vector<sf::Texture> t_background;
         std::vector<PSprite> s_background;
@@ -30,12 +30,15 @@ class PatapolisMenu : public Menu
         float totalTime;
         bool isAnim = false;
 
+        AltarMenu altar_menu;
         OptionsMenu optionsMenu;
         Menu *parentMenu;
-
+        int currentMenuPosition;
+        std::vector<float> possibleMenuPositions;
         void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent,Menu *curParentMenu);
         void Update(sf::RenderWindow &window, float fps);
         void EventFired(sf::Event event);
+        void SetTitle(int menuPosition);
         void OnExit();
         void UpdateButtons();
         PatapolisMenu();

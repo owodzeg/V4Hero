@@ -3,7 +3,7 @@
 
 PSprite::PSprite()
 {
-
+DoAutoScale=true;
 }
 
 void PSprite::loadFromFile(std::string file, int q)
@@ -82,6 +82,10 @@ void PSprite::setPosition(float x, float y)
 
     //std::cout << x << " " << y << "  " << lx << " " << ly << std::endl;
 }
+void PSprite::setScale(float s){
+    scaleX = s;
+    scaleY = s;
+}
 
 sf::FloatRect PSprite::getLocalBounds()
 {
@@ -90,40 +94,45 @@ sf::FloatRect PSprite::getLocalBounds()
 
 void PSprite::draw(sf::RenderWindow& window)
 {
-    switch(quality)
-    {
-        case 0: ///low
+    if(DoAutoScale){
+        switch(quality)
         {
-            ratioX = window.getSize().x / float(640);
-            ratioY = window.getSize().y / float(360);
-            break;
-        }
+            case 0: ///low
+            {
+                ratioX = window.getSize().x / float(640);
+                ratioY = window.getSize().y / float(360);
+                break;
+            }
 
-        case 1: ///med
-        {
-            ratioX = window.getSize().x / float(1280);
-            ratioY = window.getSize().y / float(720);
-            break;
-        }
+            case 1: ///med
+            {
+                ratioX = window.getSize().x / float(1280);
+                ratioY = window.getSize().y / float(720);
+                break;
+            }
 
-        case 2: ///high
-        {
-            ratioX = window.getSize().x / float(1920);
-            ratioY = window.getSize().y / float(1080);
-            break;
-        }
+            case 2: ///high
+            {
+                ratioX = window.getSize().x / float(1920);
+                ratioY = window.getSize().y / float(1080);
+                break;
+            }
 
-        case 3: ///ultra
-        {
-            ratioX = window.getSize().x / float(3840);
-            ratioY = window.getSize().y / float(2160);
-            break;
+            case 3: ///ultra
+            {
+                ratioX = window.getSize().x / float(3840);
+                ratioY = window.getSize().y / float(2160);
+                break;
+            }
         }
+        s.setTexture(t);
+        s.setScale(ratioX*scaleX, ratioY*scaleY);
+    } else {
+        s.setTexture(t);
+        s.setScale(scaleX, scaleY);
     }
-
     ///std::cout << "[PSPRITE] " << ratioX << " " << ratioY << std::endl;
 
-    s.setTexture(t);
-    s.setScale(ratioX, ratioY);
+
     window.draw(s);
 }
