@@ -3,7 +3,8 @@
 #include <fstream>
 #include <iostream>
 #include "../../Func.h"
-
+#include "../../P4A.h"
+#include "Object.h"
 #include <sstream>
 AnimatedObject::AnimatedObject()
 {

@@ -12,8 +12,9 @@ class PSprite
     sf::Sprite s;
     int quality;
     float ratioX=1,ratioY=1;
+    float scaleX=1,scaleY=1;
     float lx,ly;
-
+    bool DoAutoScale;
     PSprite();
     void loadFromFile(std::string file, int q);
     void setRepeated(bool r);
@@ -24,6 +25,7 @@ class PSprite
     void setSprite(sf::Sprite& sprite);
     void setPosition(float x, float y);
     sf::FloatRect getLocalBounds();
+    void setScale(float s);
     void draw(sf::RenderWindow& window);
 };
 
