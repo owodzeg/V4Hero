@@ -11,6 +11,16 @@ MissionController::MissionController()
 void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,std::string backgroundString){
     test_bg.Load(backgroundString, config);//config.GetString("debugBackground"));
 
+    //ctor
+    f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
+    //f_font.loadFromFile("resources/fonts/arial.ttf");
+    //t_cutscene_text.setFont(f_font);
+
+    //t_cutscene_text.setCharacterSize(35);
+    //t_cutscene_text.setFillColor(sf::Color::White);
+    //t_cutscene_text.setString(Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"intro_cutscene_1")));
+    //t_cutscene_text.setOrigin(t_cutscene_text.getGlobalBounds().width/2,t_cutscene_text.getGlobalBounds().height/2);
+
     missionKeyMap = &keyMap;
     missionConfig = &config;
     patapon.LoadConfig(&config);
@@ -18,9 +28,11 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     kacheek.LoadConfig(&config);
     kacheek2.LoadConfig(&config);
     kacheek3.LoadConfig(&config);
+    endFlag1.LoadConfig(&config);
     tangibleLevelObjects.push_back(&kacheek);
     tangibleLevelObjects.push_back(&kacheek2);
     tangibleLevelObjects.push_back(&kacheek3);
+    tangibleLevelObjects.push_back(&endFlag1);
     int quality = config.GetInt("textureQuality");
 
     float ratioX, ratioY;
@@ -65,6 +77,8 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     kacheek2.scaleY = ratioY;
     kacheek3.scaleX = ratioX;
     kacheek3.scaleY = ratioY;
+    endFlag1.scaleX = ratioX;
+    endFlag1.scaleY = ratioY;
 
     kacheek.x = 1000;
     kacheek.y = config.GetInt("resY") - (250 * ratioY);
@@ -72,10 +86,39 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     kacheek2.y = config.GetInt("resY") - (250 * ratioY);
     kacheek3.x = 2000;
     kacheek3.y = config.GetInt("resY") - (250 * ratioY);
+    endFlag1.x = 2500;
+    endFlag1.y = config.GetInt("resY") - (250 * ratioY);
     isInitialized = true;
+    // this is outside the loop
+    startAlpha = 255;
+    endAlpha = 0;
+    targetTime = sf::seconds(10);
+
+
+    fade.setPosition(sf::Vector2f(0,0));
+    fade.setFillColor(sf::Color(0,0,0,0));
+    fade.setSize(sf::Vector2f(800,600));
+    currentCutsceneId=0;
 }
 void MissionController::StartMission(std::string songName){
     rhythm.LoadTheme(songName); // missionConfig->GetString("debugTheme")
+    cutscene_text_identifiers.push_back(L"intro_cutscene_1");
+    cutscene_text_identifiers.push_back(L"intro_cutscene_2");
+    cutscene_text_identifiers.push_back(L"intro_cutscene_3");
+    cutscene_text_identifiers.push_back(L"intro_cutscene_4");
+    cutscene_text_identifiers.push_back(L"intro_cutscene_5");
+    cutscene_lengths.push_back(4);
+    cutscene_lengths.push_back(4);
+    cutscene_lengths.push_back(3);
+    cutscene_lengths.push_back(3);
+    cutscene_lengths.push_back(2);
+    cutscene_blackscreens.push_back(true);
+    cutscene_blackscreens.push_back(true);
+    cutscene_blackscreens.push_back(true);
+    cutscene_blackscreens.push_back(true);
+    cutscene_blackscreens.push_back(true);
+    currentCutsceneId=0;
+    cutscenesLeft=true;
 }
 void MissionController::StopMission(){
     rhythm.Stop();
@@ -97,6 +140,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         kacheek.fps = fps;
         kacheek2.fps = fps;
         kacheek3.fps = fps;
+        endFlag1.fps = fps;
 
         /// here we show the hitbox
         bool showHitboxes = false;
@@ -175,8 +219,79 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         kacheek.Draw(window);
         kacheek2.Draw(window);
         kacheek3.Draw(window);
+        endFlag1.Draw(window);
+
         /// patapons (and other enemies) are drawn after level objects like kacheek so they are always on top
         patapon.Draw(window);
+
+        /// draw static UI elements
+        auto lastView = window.getView();
+
+        window.setView(window.getDefaultView());
+
+
+        if(cutscenesLeft && !inCutscene && isMoreCutscenes()){
+            StartCutscene(cutscene_text_identifiers[currentCutsceneId],cutscene_blackscreens[currentCutsceneId],cutscene_lengths[currentCutsceneId]);
+        }
+
+        sf::Time currentTime = timer.getElapsedTime();
+        int currentAlpha = startAlpha;
+        if (currentTime >= targetTime && inCutscene)
+        {
+            // oops: currentAlpha = endAlpha; // make certain that the alpha is at its final destination
+            //you are done
+            if(!isMoreCutscenes()){
+                currentAlpha = startAlpha;
+                inCutscene = false;
+                if(isBlackScreenCutscene){
+                    inFadeTransition = true;
+                    timer.restart();
+                    targetTime = sf::seconds(2);
+                } else {
+                    FinishLastCutscene();
+                }
+                cutscenesLeft=false;
+            } else {
+                /// next cutscene
+                currentCutsceneId++;
+                StartCutscene(cutscene_text_identifiers[currentCutsceneId],cutscene_blackscreens[currentCutsceneId],cutscene_lengths[currentCutsceneId]);
+            }
+        }
+        else if (currentTime >= targetTime && !inCutscene && inFadeTransition)
+        {
+            currentAlpha = endAlpha;
+            inFadeTransition = false;
+            FinishLastCutscene();
+        }
+        else if (!inCutscene && inFadeTransition)
+        {
+            currentAlpha = startAlpha + (endAlpha - startAlpha) * (currentTime.asMilliseconds() / (targetTime.asMilliseconds()+0.0));
+        } else if (inCutscene && isBlackScreenCutscene){
+            currentAlpha = startAlpha;
+        } else if (inCutscene){
+            currentAlpha = startAlpha;
+        }
+        // apply alpha to whatever colour is previously set
+        if((inFadeTransition || inCutscene) && isBlackScreenCutscene){
+            sf::Color fadeColor = fade.getFillColor();
+            fadeColor.a = currentAlpha;
+            fade.setFillColor(fadeColor);
+            fade.setSize(sf::Vector2f(window.getSize().x,window.getSize().y));
+
+            fade.setPosition(0,0);
+            window.draw(fade);
+        }
+        if (inCutscene){
+            for (int i=0;i<t_cutscene_text.size();i++){
+                sf::Text currentLine = t_cutscene_text[i];
+
+                currentLine.setPosition(window.getSize().x/2,300 + 39*i);
+                sf::Time currentTime = timer.getElapsedTime();
+
+                window.draw(currentLine);
+            }
+        }
+        window.setView(lastView);
 
 
         rhythm.fps = fps;
@@ -184,6 +299,54 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
 
         rhythm.Draw(window);
 
+}
+void MissionController::FinishLastCutscene(){
+    /// runs when the last cutscene of a sequence is done
+}
+bool MissionController::isMoreCutscenes(){
+    /// returns true if there are more cutscenes
+    return currentCutsceneId<cutscene_text_identifiers.size()-1;
+}
+void MissionController::StartCutscene(const std::wstring& text,bool isBlackScreen, int TimeToShow){
+    /// because the description needs to be able to go over multiple lines, we have to split it into a series of lines
+    t_cutscene_text.clear();
+    std::vector<std::wstring> wordsinDesc = Func::Split(missionConfig->strRepo.GetUnicodeString(text),' ');
+    sf::String oldTotalString;
+    sf::String currentTotalString;
+    int maxWidth = missionConfig->GetInt("resX") * 0.4;
+    timer.restart();
+    inCutscene = true;
+    isBlackScreenCutscene = isBlackScreen;
+    targetTime = sf::seconds(TimeToShow);
+    /// we split it into words, then go word by word testing the width of the string
+    for (int i=0;i<wordsinDesc.size();i++){
+        std::wstring currentWord = wordsinDesc[i];
+        currentTotalString = currentTotalString + Func::ConvertToUtf8String(currentWord) + L" ";
+        sf::Text t_newLine;
+        t_newLine.setFont(f_font);
+        t_newLine.setCharacterSize(35);
+        t_newLine.setFillColor(sf::Color::White);
+        t_newLine.setString(currentTotalString);
+        if (t_newLine.getGlobalBounds().width>maxWidth){
+            /// when the string is too long, we go back to the last string and lock it in, then start a new line
+            currentTotalString = oldTotalString;
+            t_newLine.setString(currentTotalString);
+            t_newLine.setOrigin(t_newLine.getGlobalBounds().width/2,t_newLine.getGlobalBounds().height/2);
+            t_cutscene_text.push_back(t_newLine);
+            oldTotalString = currentWord+L" ";
+            currentTotalString = currentWord+L" ";
+        }
+        oldTotalString = currentTotalString;
+        /// if there are no more words, finish up the current line
+        if (i+1==wordsinDesc.size()){
+            currentTotalString = oldTotalString;
+            t_newLine.setString(currentTotalString);
+            t_newLine.setOrigin(t_newLine.getGlobalBounds().width/2,t_newLine.getGlobalBounds().height/2);
+            t_cutscene_text.push_back(t_newLine);
+            oldTotalString = "";
+            currentTotalString = "";
+        }
+    }
 }
 MissionController::~MissionController()
 {
