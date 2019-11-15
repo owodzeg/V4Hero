@@ -1,7 +1,7 @@
 #ifndef PATAPOLISMENU_H
 #define PATAPOLISMENU_H
 #include <SFML/Graphics.hpp>
-#include "MainMenuButtonList.h"
+#include "ButtonLists/MainMenuButtonList.h"
 #include "../Config.h"
 #include "../Graphics/Menu.h"
 #include "../Mission/MissionController.h"

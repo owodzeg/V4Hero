@@ -49,6 +49,8 @@ V4Core::V4Core()
     /** Load config from config.cfg **/
     config.LoadConfig();
 
+    /** Load save from savereader **/
+    savereader.LoadSave(config);
     /** "Alpha release" text **/
 
     f_font.loadFromFile("resources/fonts/p4kakupop-gothic.ttf");
@@ -64,6 +66,15 @@ V4Core::V4Core()
     mainMenu.Initialise(&config,&keyMap,this);
     menus.push_back(&mainMenu);
     config.configDebugID = 10;
+
+    /// If this is a new save (no previous save data) we load up the new game menu
+    newGameMenu.Initialise(&config,&keyMap,this);
+    menus.push_back(&newGameMenu);
+    if(savereader.isNewSave){
+        mainMenu.Hide();
+    } else {
+        newGameMenu.Hide();
+    }
 }
 
 void V4Core::Init()
@@ -107,6 +118,9 @@ void V4Core::Init()
                 keyMap[event.key.code] = false;
             }
 
+            if (savereader.isNewSave){
+                newGameMenu.EventFired(event);
+            }
             mainMenu.EventFired(event);
         }
 
@@ -121,7 +135,11 @@ void V4Core::Init()
             //currentController.Update(window,fps);
 
         //} else {
+        if (savereader.isNewSave){
+            newGameMenu.Update(window,fps);
+        } else {
             mainMenu.Update(window,fps);
+        }
         //}
 
         auto lastView = window.getView();

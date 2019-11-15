@@ -1,9 +1,9 @@
 #include "MainMenuButtonList.h"
 #include "string"
-#include "MenuButton.h"
+#include "../MenuButton.h"
 #include<iostream>
-#include "../Mission/MissionController.h"
-#include "MainMenu.h"
+#include "../../Mission/MissionController.h"
+#include "../MainMenu.h"
 using namespace std;
 MainMenuButtonList::MainMenuButtonList()
 {

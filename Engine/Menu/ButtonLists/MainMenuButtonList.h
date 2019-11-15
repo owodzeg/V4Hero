@@ -3,12 +3,12 @@
 
 #include <string>
 #include <SFML/Graphics.hpp>
-#include "MenuButton.h"
-#include "../Config.h"
-#include "../Mission/MissionController.h"
-#include "../Graphics/Menu.h"
-#include "ButtonList.h"
-#include "Patapolis.h"
+#include "../MenuButton.h"
+#include "../../Config.h"
+#include "../../Mission/MissionController.h"
+#include "../../Graphics/Menu.h"
+#include "../ButtonList.h"
+#include "../Patapolis.h"
 class Menu;
 class PatapolisMenu;
 class MainMenuButtonList : public ButtonList
