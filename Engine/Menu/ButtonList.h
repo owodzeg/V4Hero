@@ -19,11 +19,13 @@ class ButtonList
         MissionController *currentController;
         Menu *parentMenu;
         void UpdateButtons();
+        bool SelectButtons = true;
         virtual void Initialise(sf::Font *font,Config &newConfig, std::map<int,bool> *keymap,MissionController *controller,Menu *parentMenu);
         virtual void Update(sf::RenderWindow &window, float fps, sf::Vector2f *mousePos);
         virtual void KeyPressedEvent(sf::Event event);
         virtual void MouseReleasedEvent(sf::Event event);
         virtual void HighlightButton(MenuButton *button,int index);
+        virtual void DeselectButton(int index);
         virtual void SelectButton(int index);
 
         ButtonList();

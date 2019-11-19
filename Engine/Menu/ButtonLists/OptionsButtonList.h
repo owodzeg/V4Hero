@@ -3,11 +3,11 @@
 
 #include <string>
 #include <SFML/Graphics.hpp>
-#include "MenuButton.h"
-#include "../Config.h"
-#include "../Mission/MissionController.h"
-#include "../Graphics/Menu.h"
-#include "ButtonList.h"
+#include "../MenuButton.h"
+#include "../../Config.h"
+#include "../../Mission/MissionController.h"
+#include "../../Graphics/Menu.h"
+#include "../ButtonList.h"
 class Menu;
 class OptionsMenu;
 class OptionsButtonList : public ButtonList

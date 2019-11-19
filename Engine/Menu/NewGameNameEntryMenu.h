@@ -1,14 +1,15 @@
-#ifndef MAINMENU_H
-#define MAINMENU_H
+#ifndef NEWGAMENAMEENTRYMENU_H
+#define NEWGAMENAMEENTRYMENU_H
 #include <SFML/Graphics.hpp>
-#include "ButtonLists/MainMenuButtonList.h"
+#include "ButtonLists/NameEntryButtonList.h"
 #include "../Config.h"
 #include "../Graphics/Menu.h"
 #include "../Mission/MissionController.h"
 #include "OptionsMenu.h"
 #include "Patapolis.h"
+#include "MenuButton.h"
 class V4Core;
-class MainMenu : public Menu
+class NewGameNameEntryMenu : public Menu
 {
     public:
         sf::RectangleShape mm_bigBox;
@@ -16,22 +17,24 @@ class MainMenu : public Menu
 
         sf::Font f_font;
         sf::Text t_title;
+        sf::Text t_enteredtext;
         sf::Text t_pressToContinue;
 
-        MainMenuButtonList buttonList;
+        MenuButton* confirmButton;
+        NameEntryButtonList buttonList;
 
         OptionsMenu optionsMenu;
         PatapolisMenu patapolisMenu;
-        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent);
+        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent,Menu* parentMenu);
 
         void Update(sf::RenderWindow &window, float fps);
         void EventFired(sf::Event event);
         void OnExit();
         void UpdateButtons();
-        MainMenu();
-        ~MainMenu();
+        NewGameNameEntryMenu();
+        ~NewGameNameEntryMenu();
 
 };
 
 
-#endif // CAMERA_H
+#endif // NEWGAMENAMEENTRYMENU_H

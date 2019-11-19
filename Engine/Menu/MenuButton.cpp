@@ -41,12 +41,17 @@ void MenuButton::Update(sf::RenderWindow &window, float fps, sf::Vector2f *mouse
     if (textBounds.contains(*mousePos)){
         parentList->HighlightButton(this,buttonListIndex);
     }
+    else if(!parentList->SelectButtons)
+    {
+        parentList->DeselectButton(buttonListIndex);
+    }
 
 
     t_buttonText.setPosition(window.getSize().x/2,originY);
 
     ///Don't draw the bounding boxes for now. Later we can make a debug keybind for it - something like ctrl + f10
     //window.draw(debug_text_bounding_box);
+
     window.draw(t_buttonText);
 }
 void MenuButton::MouseUp(int xPos,int yPos){

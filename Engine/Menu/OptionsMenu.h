@@ -1,7 +1,7 @@
 #ifndef OPTIONSMENU_H
 #define OPTIONSMENU_H
 #include <SFML/Graphics.hpp>
-#include "OptionsButtonList.h"
+#include "ButtonLists/OptionsButtonList.h"
 #include "../Config.h"
 #include "../Graphics/Menu.h"
 #include "../Mission/MissionController.h"

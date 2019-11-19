@@ -1,12 +1,12 @@
 #include "OptionsButtonList.h"
 #include "string"
-#include "MenuButton.h"
+#include "../MenuButton.h"
 #include<iostream>
-#include "../Mission/MissionController.h"
-#include "MainMenu.h"
+#include "../../Mission/MissionController.h"
+#include "../MainMenu.h"
 #include <algorithm>
-#include "../Func.h"
-#include "../V4Core.h"
+#include "../../Func.h"
+#include "../../V4Core.h"
 using namespace std;
 OptionsButtonList::OptionsButtonList()
 {

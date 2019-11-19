@@ -12,13 +12,17 @@
 #include "Mission/MissionController.h"
 #include "Menu/MainMenu.h"
 #include "Graphics/Menu.h"
+#include "SaveReader.h"
+#include "Menu/NewGameMenu.h"
 class V4Core
 {
     private:
 
     Config config;
+    SaveReader savereader;
     //MissionController currentController;
     MainMenu mainMenu;
+    NewGameMenu newGameMenu;
 
 
 

@@ -32,6 +32,9 @@ void ButtonList::HighlightButton(MenuButton *button,int index){
         (*it).SetSelected(false);
     buttons[index].SetSelected(true);
 }
+void ButtonList::DeselectButton(int index){
+    buttons[index].SetSelected(false);
+}
 void ButtonList::SelectButton(int index){
 
 }
@@ -58,7 +61,9 @@ void ButtonList::KeyPressedEvent(sf::Event event)
     }
     for (std::vector<MenuButton>::iterator it = buttons.begin(); it != buttons.end(); ++it)
         (*it).SetSelected(false);
-    buttons[currentIndex].SetSelected(true);
+    if(SelectButtons){
+        buttons[currentIndex].SetSelected(true);
+    }
 }
 void ButtonList::UpdateButtons(){
     /// this should update the text on all the buttons
