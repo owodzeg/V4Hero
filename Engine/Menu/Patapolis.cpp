@@ -19,12 +19,15 @@ PatapolisMenu::PatapolisMenu()
 
     mm_titleBox.setSize(sf::Vector2f(100,10));
     mm_titleBox.setFillColor(sf::Color::Red);
+
+
     isActive=false;
 }
 void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, Menu *curParentMenu){
     Scene::Initialise(thisConfigs,keymap,parent);
     optionsMenu.Initialise(thisConfigs,keymap,parent,this);
     altar_menu.Initialise(thisConfigs,keymap,parent,this);
+    barracks_menu.Initialise(thisConfigs,keymap,parent,this);
     v4core->menus.push_back(&optionsMenu);
     parentMenu = curParentMenu;
 
@@ -58,6 +61,8 @@ void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4
 void PatapolisMenu::EventFired(sf::Event event){
     if (altar_menu.isActive){
             altar_menu.EventFired(event);
+    } else if (barracks_menu.isActive){
+            barracks_menu.EventFired(event);
     } else if(isActive){
         if(event.type == sf::Event::KeyPressed)
         {
@@ -153,6 +158,8 @@ void PatapolisMenu::EventFired(sf::Event event){
                         case 2:
                             /// armoury/barracks
                             // open barracks screen
+                            barracks_menu.Show();
+                            barracks_menu.isActive = true;
                             break;
                         case 3:
                             /// mater tree
@@ -178,14 +185,6 @@ void PatapolisMenu::EventFired(sf::Event event){
 
         } else if (event.type == sf::Event::MouseButtonReleased){
             // We use mouse released so a user can change their mind by keeping the mouse held and moving away.
-            std::ostringstream ss;
-            ss << p_background[0].x;
-            std::string s(ss.str());
-
-            std::ostringstream ss2;
-            ss2 << currentMenuPosition;
-            std::string s2(ss2.str());
-            thisConfig->debugOut->DebugMessage("Location: "+s+" and Pos: "+s2+"\n");
         }
     }
 
@@ -224,7 +223,9 @@ float EaseIn (float time, float startValue, float change, float duration) {
 };
 void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
 {
-    if(isActive){
+    if (barracks_menu.isActive){
+        barracks_menu.Update(window,fps);
+    } else if(isActive){
         mm_bigBox.setSize(sf::Vector2f(window.getSize().x,window.getSize().y-200));
         //mm_smallerBox.setSize(sf::Vector2f(100,10));
         //mm_titleBox.setSize(sf::Vector2f(100,10));

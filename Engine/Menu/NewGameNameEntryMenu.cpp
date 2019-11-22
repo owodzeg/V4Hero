@@ -1,5 +1,6 @@
 #include "NewGameNameEntryMenu.h"
 #include "ButtonList.h"
+#include "ButtonLists/NameEntryButtonList.h"
 #include "iostream"
 #include "../V4Core.h"
 #include <SFML/Graphics.hpp>
