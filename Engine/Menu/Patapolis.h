@@ -7,6 +7,7 @@
 #include "../Mission/MissionController.h"
 #include "OptionsMenu.h"
 #include "Altar.h"
+#include "Barracks.h"
 class V4Core;
 class PatapolisMenu : public Menu
 {
@@ -31,6 +32,7 @@ class PatapolisMenu : public Menu
         bool isAnim = false;
 
         AltarMenu altar_menu;
+        Barracks barracks_menu;
         OptionsMenu optionsMenu;
         Menu *parentMenu;
         int currentMenuPosition;

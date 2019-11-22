@@ -3,8 +3,6 @@
 #include <SFML/Graphics.hpp>
 #include "../Config.h"
 #include "../Graphics/Menu.h"
-#include "../Mission/MissionController.h"
-#include "OptionsMenu.h"
 class V4Core;
 class PatapolisMenu;
 class AltarMenu : public Menu
