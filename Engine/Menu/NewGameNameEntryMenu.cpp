@@ -11,18 +11,16 @@ NewGameNameEntryMenu::NewGameNameEntryMenu()
     //ctor
     f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
     //f_font.loadFromFile("resources/fonts/arial.ttf");
-    t_title.setFont(f_font);
+    t_promptText.setFont(f_font);
+    t_promptText.setCharacterSize(35);
+    t_promptText.setFillColor(sf::Color::Red);
 
+    t_title.setFont(f_font);
     t_title.setCharacterSize(55);
-    //t_title.setColor(sf::Color::White);
     t_title.setFillColor(sf::Color::White);
-    t_title.setString("Greetings Almighty! What is your name?");
-    t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
 
     t_enteredtext.setFont(f_font);
-
     t_enteredtext.setCharacterSize(35);
-    //t_enteredtext.setColor(sf::Color::White);
     t_enteredtext.setFillColor(sf::Color::White);
     t_enteredtext.setString("");
     t_enteredtext.setOrigin(t_enteredtext.getGlobalBounds().width/2,t_enteredtext.getGlobalBounds().height/2);
@@ -44,7 +42,21 @@ NewGameNameEntryMenu::NewGameNameEntryMenu()
 void NewGameNameEntryMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent,Menu* parentMenu){
     Scene::Initialise(thisConfigs,keymap,parent);
     v4core->menus.push_back(&optionsMenu);
+    savefilecreated.Initialise(thisConfigs,keymap,parent,this);
+    savefilecreated.Hide();
     buttonList.Initialise(&f_font,*thisConfig,keymap,&(v4core->currentController),this);
+
+
+    t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_what_is_your_name")));
+    t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
+
+    t_promptText.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_name_error_prompt")));
+    t_promptText.setOrigin(t_promptText.getGlobalBounds().width/2,t_promptText.getGlobalBounds().height/2);
+
+}
+string NewGameNameEntryMenu::GetEnteredString(){
+    sf::String currentText = t_enteredtext.getString();
+    return currentText.toAnsiString();
 }
 void NewGameNameEntryMenu::EventFired(sf::Event event){
     if(isActive){
@@ -78,7 +90,9 @@ void NewGameNameEntryMenu::EventFired(sf::Event event){
 }
 void NewGameNameEntryMenu::Update(sf::RenderWindow &window, float fps)
 {
-    if(isActive){
+    if(savefilecreated.isActive){
+        savefilecreated.Update(window, fps);
+    } else if(isActive){
 
         mm_bigBox.setSize(sf::Vector2f(window.getSize().x,window.getSize().y-200));
         //mm_smallerBox.setSize(sf::Vector2f(100,10));
@@ -95,6 +109,10 @@ void NewGameNameEntryMenu::Update(sf::RenderWindow &window, float fps)
 
         t_title.setPosition(window.getSize().x/2,200);
         window.draw(t_title);
+        if(showPromptText){
+            t_promptText.setPosition(window.getSize().x/2,400);
+            window.draw(t_promptText);
+        }
 
         t_enteredtext.setPosition(window.getSize().x/2,350);
         window.draw(t_enteredtext);

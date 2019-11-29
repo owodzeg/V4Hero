@@ -1,16 +1,15 @@
-#ifndef NEWGAMENAMEENTRYMENU_H
-#define NEWGAMENAMEENTRYMENU_H
+#ifndef SAVEFILECREATEDMENU_H
+#define SAVEFILECREATEDMENU_H
 #include <SFML/Graphics.hpp>
-#include "ButtonLists/NameEntryButtonList.h"
+#include "ButtonLists/SaveFileCreatedMenuButtonList.h"
 #include "../Config.h"
 #include "../Graphics/Menu.h"
 #include "../Mission/MissionController.h"
 #include "OptionsMenu.h"
-#include "SaveFileCreated.h"
 #include "Patapolis.h"
 #include "MenuButton.h"
 class V4Core;
-class NewGameNameEntryMenu : public Menu
+class SaveFileCreatedMenu : public Menu
 {
     public:
         sf::RectangleShape mm_bigBox;
@@ -18,28 +17,27 @@ class NewGameNameEntryMenu : public Menu
 
         sf::Font f_font;
         sf::Text t_title;
-        sf::Text t_enteredtext;
-        sf::Text t_pressToContinue;
-        sf::Text t_promptText;
-
-        bool showPromptText = false;
+        sf::Text t_welcome1;
+        sf::Text t_welcome2;
+        sf::Text t_welcome3;
 
         MenuButton* confirmButton;
-        NameEntryButtonList buttonList;
-        SaveFileCreatedMenu savefilecreated;
+        SaveFileCreatedMenuButtonList buttonList;
+        string kamiName = "";
 
         OptionsMenu optionsMenu;
         PatapolisMenu patapolisMenu;
+        void UpdateKamiName(string newName);
         void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent,Menu* parentMenu);
-        string GetEnteredString();
+
         void Update(sf::RenderWindow &window, float fps);
         void EventFired(sf::Event event);
         void OnExit();
         void UpdateButtons();
-        NewGameNameEntryMenu();
-        ~NewGameNameEntryMenu();
+        SaveFileCreatedMenu();
+        ~SaveFileCreatedMenu();
 
 };
 
 
-#endif // NEWGAMENAMEENTRYMENU_H
+#endif // SAVEFILECREATEDMENU_H

@@ -2,7 +2,6 @@
 #define SCENE_H
 #include <SFML/Graphics.hpp>
 #include "../Config.h"
-#include "../Mission/MissionController.h"
 class V4Core;
 class Scene
 {

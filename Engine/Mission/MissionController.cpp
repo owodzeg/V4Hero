@@ -119,6 +119,7 @@ void MissionController::StartMission(std::string songName){
     cutscene_blackscreens.push_back(true);
     currentCutsceneId=0;
     cutscenesLeft=true;
+    isFinishedLoading=true;
 }
 void MissionController::StopMission(){
     rhythm.Stop();
