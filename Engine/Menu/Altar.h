@@ -44,6 +44,7 @@ class AltarMenu : public Menu
         void EventFired(sf::Event event);
         void ShowCategory();
         void OnExit();
+        void UpdateAltarDescriptions();
         void UpdateButtons();
         AltarMenu();
         ~AltarMenu();

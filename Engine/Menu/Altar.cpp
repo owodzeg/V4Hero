@@ -67,18 +67,28 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
     t_itemcategory
     t_itemdescription
     */
+    Item* starting_item = v4core->savereader.invdata.GetItemByInvID(0).item;
     t_titlemenu.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"altar_title")));
     t_titlemenu.setOrigin(t_titlemenu.getGlobalBounds().width/2,t_titlemenu.getGlobalBounds().height/2);
 
-    t_itemtitle.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"altar_item_title")));
+    t_itemtitle.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(starting_item->item_name)));
     t_itemtitle.setOrigin(t_itemtitle.getGlobalBounds().width/2,t_itemtitle.getGlobalBounds().height/2);
-
-    t_itemcategory.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"altar_item_category")));
+    switch(starting_item->category_id){
+        case 0:
+            t_itemcategory.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_category_material")));
+            break;
+        case 1:
+            t_itemcategory.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_category_weapon")));
+            break;
+        case 2:
+            t_itemcategory.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_category_masks")));
+            break;
+    }
     t_itemcategory.setOrigin(t_itemcategory.getGlobalBounds().width/2,t_itemcategory.getGlobalBounds().height/2);
 
 
     /// because the description needs to be able to go over multiple lines, we have to split it into a series of lines
-    std::vector<std::wstring> wordsinDesc = Func::Split(thisConfig->strRepo.GetUnicodeString(L"altar_item_description"),' ');
+    std::vector<std::wstring> wordsinDesc = Func::Split(thisConfig->strRepo.GetUnicodeString(starting_item->item_description),' ');
     sf::String oldTotalString;
     sf::String currentTotalString;
     int maxWidth = ps_temp.t.getSize().x * 0.18;
@@ -139,8 +149,115 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
 
 }
 void AltarMenu::ShowCategory(){
-    int totalItems = 43;
+    int totalItems = v4core->savereader.invdata.items.size();
     numItemRows = ceil(totalItems/(numItemColumns+0.0));
+}
+void AltarMenu::UpdateAltarDescriptions(){
+    if (inventoryGridXPos+inventoryGridYPos*numItemColumns<v4core->savereader.invdata.items.size()){
+        Item* starting_item = v4core->savereader.invdata.GetItemByInvID(inventoryGridXPos+inventoryGridYPos*numItemColumns).item;
+        t_titlemenu.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"altar_title")));
+        t_titlemenu.setOrigin(t_titlemenu.getGlobalBounds().width/2,t_titlemenu.getGlobalBounds().height/2);
+
+        t_itemtitle.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(starting_item->item_name)));
+        t_itemtitle.setOrigin(t_itemtitle.getGlobalBounds().width/2,t_itemtitle.getGlobalBounds().height/2);
+        switch(starting_item->category_id){
+            case 0:
+                t_itemcategory.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_category_material")));
+                break;
+            case 1:
+                t_itemcategory.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_category_weapon")));
+                break;
+            case 2:
+                t_itemcategory.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_category_masks")));
+                break;
+        }
+        t_itemcategory.setOrigin(t_itemcategory.getGlobalBounds().width/2,t_itemcategory.getGlobalBounds().height/2);
+
+
+        /// because the description needs to be able to go over multiple lines, we have to split it into a series of lines
+        std::vector<std::wstring> wordsinDesc = Func::Split(thisConfig->strRepo.GetUnicodeString(starting_item->item_description),' ');
+        sf::String oldTotalString;
+        sf::String currentTotalString;
+        int maxWidth = s_titlemenu_bkg.t.getSize().x * 0.18;
+        /// we split it into words, then go word by word testing the width of the string
+        t_itemdescription.clear();
+        for (int i=0;i<wordsinDesc.size();i++){
+            std::wstring currentWord = wordsinDesc[i];
+            currentTotalString = currentTotalString + Func::ConvertToUtf8String(currentWord) + L" ";
+            sf::Text t_newLine;
+            t_newLine.setFont(f_font);
+            t_newLine.setCharacterSize(16);
+            t_newLine.setFillColor(sf::Color::Black);
+            t_newLine.setString(currentTotalString);
+            if (t_newLine.getGlobalBounds().width>maxWidth){
+                /// when the string is too long, we go back to the last string and lock it in, then start a new line
+                currentTotalString = oldTotalString;
+                t_newLine.setString(currentTotalString);
+                t_newLine.setOrigin(t_newLine.getGlobalBounds().width/2,t_newLine.getGlobalBounds().height/2);
+                t_itemdescription.push_back(t_newLine);
+                oldTotalString = currentWord+L" ";
+                currentTotalString = currentWord+L" ";
+            }
+            oldTotalString = currentTotalString;
+            /// if there are no more words, finish up the current line
+            if (i+1==wordsinDesc.size()){
+                currentTotalString = oldTotalString;
+                t_newLine.setString(currentTotalString);
+                t_newLine.setOrigin(t_newLine.getGlobalBounds().width/2,t_newLine.getGlobalBounds().height/2);
+                t_itemdescription.push_back(t_newLine);
+                oldTotalString = "";
+                currentTotalString = "";
+            }
+        }
+        //s_menu_bkg.t.getSize().x*0.2
+    } else {
+
+        t_titlemenu.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"altar_title")));
+        t_titlemenu.setOrigin(t_titlemenu.getGlobalBounds().width/2,t_titlemenu.getGlobalBounds().height/2);
+
+        t_itemtitle.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_none")));
+        t_itemtitle.setOrigin(t_itemtitle.getGlobalBounds().width/2,t_itemtitle.getGlobalBounds().height/2);
+
+        t_itemcategory.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_category_material")));
+        t_itemcategory.setOrigin(t_itemcategory.getGlobalBounds().width/2,t_itemcategory.getGlobalBounds().height/2);
+
+
+        /// because the description needs to be able to go over multiple lines, we have to split it into a series of lines
+        std::vector<std::wstring> wordsinDesc = Func::Split(thisConfig->strRepo.GetUnicodeString(L"desc_none"),' ');
+        sf::String oldTotalString;
+        sf::String currentTotalString;
+        int maxWidth = s_titlemenu_bkg.t.getSize().x * 0.18;
+        /// we split it into words, then go word by word testing the width of the string
+        t_itemdescription.clear();
+        for (int i=0;i<wordsinDesc.size();i++){
+            std::wstring currentWord = wordsinDesc[i];
+            currentTotalString = currentTotalString + Func::ConvertToUtf8String(currentWord) + L" ";
+            sf::Text t_newLine;
+            t_newLine.setFont(f_font);
+            t_newLine.setCharacterSize(16);
+            t_newLine.setFillColor(sf::Color::Black);
+            t_newLine.setString(currentTotalString);
+            if (t_newLine.getGlobalBounds().width>maxWidth){
+                /// when the string is too long, we go back to the last string and lock it in, then start a new line
+                currentTotalString = oldTotalString;
+                t_newLine.setString(currentTotalString);
+                t_newLine.setOrigin(t_newLine.getGlobalBounds().width/2,t_newLine.getGlobalBounds().height/2);
+                t_itemdescription.push_back(t_newLine);
+                oldTotalString = currentWord+L" ";
+                currentTotalString = currentWord+L" ";
+            }
+            oldTotalString = currentTotalString;
+            /// if there are no more words, finish up the current line
+            if (i+1==wordsinDesc.size()){
+                currentTotalString = oldTotalString;
+                t_newLine.setString(currentTotalString);
+                t_newLine.setOrigin(t_newLine.getGlobalBounds().width/2,t_newLine.getGlobalBounds().height/2);
+                t_itemdescription.push_back(t_newLine);
+                oldTotalString = "";
+                currentTotalString = "";
+            }
+        }
+    }
 }
 void AltarMenu::EventFired(sf::Event event){
     if(isActive){
@@ -214,7 +331,7 @@ void AltarMenu::EventFired(sf::Event event){
                 this->Hide();
                 this->isActive = false;
             }
-
+            UpdateAltarDescriptions();
 
         } else if (event.type == sf::Event::MouseButtonReleased){
             // We use mouse released so a user can change their mind by keeping the mouse held and moving away.
@@ -261,8 +378,8 @@ void AltarMenu::Update(sf::RenderWindow &window, float fps)
             window.draw(mm_highlighted_tile);
             int ypos = 2-currentRow;
             if (ypos>=0){
-                mm_icon_example_tile.setPosition(smallOffset+mm_icon_example_tile.getSize().x*2,p_titlemenu_bkg.y+mm_icon_example_tile.getSize().y*2-mm_highlighted_tile.getSize().y*currentRow);
-                window.draw(mm_icon_example_tile);
+                //mm_icon_example_tile.setPosition(smallOffset+mm_icon_example_tile.getSize().x*2,p_titlemenu_bkg.y+mm_icon_example_tile.getSize().y*2-mm_highlighted_tile.getSize().y*currentRow);
+                //window.draw(mm_icon_example_tile);
             }
 
 

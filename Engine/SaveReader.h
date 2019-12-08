@@ -6,9 +6,20 @@
 #include <map>
 #include <string>
 #include "DebugOut.h"
+#include "Item/ItemRegistry.h"
+#include "Item/InventoryData.h"
 class SaveReader
 {
     public:
+    ItemRegistry itemreg;
+    InventoryData invdata;
+
+    sf::String kaminame;
+    int timeslaunched;
+    int yariponsUnlocked;
+    int heroUnlocked;
+
+
     SaveReader();
     void LoadSave(Config& tconfig);
     DebugOut* debugOut;

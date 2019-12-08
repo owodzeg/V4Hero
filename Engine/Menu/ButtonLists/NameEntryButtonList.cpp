@@ -47,6 +47,26 @@ void NameEntryButtonList::SelectButton(int index){
                     savMenu->savefilecreated.Show();
                     savMenu->savefilecreated.isActive = true;
                     savMenu->savefilecreated.UpdateKamiName(savMenu->GetEnteredString());
+                    savMenu->v4core->savereader.kaminame = savMenu->GetEnteredString();
+                    savMenu->v4core->savereader.heroUnlocked = 0;
+                    savMenu->v4core->savereader.yariponsUnlocked = 0;
+                    savMenu->v4core->savereader.timeslaunched = 1;
+                    InventoryItem spear1;
+                    spear1.item = savMenu->v4core->savereader.itemreg.GetItemByID(1);
+                    InventoryItem spear2;
+                    spear2.item = savMenu->v4core->savereader.itemreg.GetItemByID(1);
+                    InventoryItem spear3;
+                    spear3.item = savMenu->v4core->savereader.itemreg.GetItemByID(1);
+                    InventoryItem iron_spear1;
+                    iron_spear1.item = savMenu->v4core->savereader.itemreg.GetItemByID(2);
+                    InventoryItem mask;
+                    mask.item = savMenu->v4core->savereader.itemreg.GetItemByID(4);
+                    savMenu->v4core->savereader.invdata.items.push_back(spear1);
+                    savMenu->v4core->savereader.invdata.items.push_back(spear2);
+                    savMenu->v4core->savereader.invdata.items.push_back(spear3);
+                    savMenu->v4core->savereader.invdata.items.push_back(iron_spear1);
+                    savMenu->v4core->savereader.invdata.items.push_back(mask);
+                    savMenu->v4core->savereader.Save();
                 } else {
                     savMenu->showPromptText = true;
                 }
