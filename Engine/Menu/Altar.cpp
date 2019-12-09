@@ -90,6 +90,21 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
     spear_icon.scaleX=0.28f;
     spear_icon.scaleY=0.22f;
 
+    ///             ####   MISC ITEM ICON
+    ps_temp.loadFromFile("resources/graphics/item/misc_icon.png",1);
+    ps_temp.setRepeated(false);
+    ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
+    ps_temp.setOrigin(0,0);
+    ps_temp.setColor(sf::Color(255,255,255,255));
+    ps_temp.setPosition(0,0);
+    ps_temp.DoAutoScale = false;
+    tmpp.x = (thisConfig->GetInt("resX")*75.0)/1920.0;//(thisConfig->GetInt("resX")*1920.0)/1920.0-1200;
+    tmpp.y = (thisConfig->GetInt("resY")*125.0)/1080.0;//(thisConfig->GetInt("resY")*400.0)/1080.0;
+    misc_icon = ps_temp;
+    p_misc_icon = tmpp;
+    misc_icon.scaleX=0.28f;
+    misc_icon.scaleY=0.22f;
+
     /// initialise text
     /*
     t_titlemenu
@@ -416,14 +431,19 @@ void AltarMenu::Update(sf::RenderWindow &window, float fps)
                     if (currentItemId<v4core->savereader.invdata.items.size()){
                         Item* starting_item = v4core->savereader.invdata.GetItemByInvID(currentItemId).item;
                         switch (starting_item->category_id){
-                        case 0:
+
                         case 1:
-                            spear_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*inventoryGridYPos-mm_highlighted_tile.getSize().y*y);
+                            spear_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
                             spear_icon.draw(window);
                             break;
                         case 2:
-                            mask_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*inventoryGridYPos-mm_highlighted_tile.getSize().y*y);
+                            mask_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
                             mask_icon.draw(window);
+                            break;
+                        case 0:
+                        default:
+                            misc_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
+                            misc_icon.draw(window);
                             break;
                         }
                     }

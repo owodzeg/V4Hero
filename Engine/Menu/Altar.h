@@ -40,6 +40,10 @@ class AltarMenu : public Menu
         PSprite spear_icon;
         sf::Vector2f p_spear_icon;
 
+        /// misc icon
+        PSprite misc_icon;
+        sf::Vector2f p_misc_icon;
+
 
         int numItemRows;
         int numItemColumns = 4;
