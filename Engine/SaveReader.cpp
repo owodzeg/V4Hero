@@ -38,6 +38,7 @@ void SaveReader::LoadSave(Config& tconfig)
     config = &tconfig;
     debugOut = config->debugOut;
 
+    itemreg.ReadItemFiles();
     ifstream conf("resources/data/sv1.p4sv");
     if(conf.good())
     {
@@ -45,12 +46,26 @@ void SaveReader::LoadSave(Config& tconfig)
         while(getline(conf, line))
         {
             ///ignore comments
-            if(line.find("#") == std::string::npos)
+            if(line.find("#") == std::string::npos && line.find("//") == std::string::npos && line.length()>0)
             {
                 ///Split the Key and Value
                 vector<string> key = Func::Split(line,':');
                 //configMap[key[0]] = key[1];
                 //cout << "Loaded key '" << key[0] << "' with value '" << key[1] << "'" << endl;
+                if(key[0]=="name"){
+                    kaminame = key[1];
+                } else if(key[0]=="timeslaunched"){
+                    timeslaunched = stoi(key[1]);
+                    timeslaunched++;
+                } else if(key[0]=="yariponsUnlocked"){
+                    timeslaunched = stoi(key[1]);
+                } else if(key[0]=="ITEM"){
+                    InventoryItem invItem;
+                    invItem.item = itemreg.GetItemByID(stoi(key[1]));
+                    invdata.items.push_back(invItem);
+                } else if(key[0]=="heroUnlocked"){
+                    heroUnlocked = stoi(key[1]);
+                }
 
             }
         }
@@ -60,7 +75,6 @@ void SaveReader::LoadSave(Config& tconfig)
         cout << "ERROR! Could not load save file!" << endl;
     }
     conf.close();
-
 }
 
 void SaveReader::Save()
@@ -69,7 +83,20 @@ void SaveReader::Save()
     conf2.seekp(0);
     if(conf2.is_open())
     {
-
+        conf2 << "Take caution! The data below represents your save data! Don't edit it unless you know what you're doing, and if you must, PLEASE back it up somewhere else first <3 #" <<'\n';
+        conf2 << "name:" << kaminame.toAnsiString() <<'\n';
+        conf2 << "timeslaunched:" << timeslaunched <<'\n';
+        conf2 << "yariponsUnlocked:" << yariponsUnlocked <<'\n';
+        conf2 << "heroUnlocked:" << heroUnlocked <<'\n';
+        conf2 << "# pon layout: " <<'\n';
+        conf2 << "# PON:unitTypeID (0 hero, 1 yaripon)|totalExpNum|lvlNum|slot1_Item_Id|slot2_Item_Id|slot3_Item_Id|slot4_Item_Id|slot5_Item_Id|" <<'\n';
+        conf2 << "PON:0|0|1|1|2|0|0|3" <<'\n';
+        conf2 << "# item layout:" <<'\n';
+        conf2 << "# ITEM:id" <<'\n';
+        for (int i=0; i<invdata.items.size(); i++){
+            InventoryItem current_item = invdata.items[i];
+            conf2 << "ITEM:" << current_item.item->item_id <<'\n';
+        }
             /*for(int i=0; i<configMap.size(); i++)
         {
             if(i == 0){

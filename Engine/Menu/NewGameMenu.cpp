@@ -67,6 +67,8 @@ void NewGameMenu::EventFired(sf::Event event){
         optionsMenu.EventFired(event);
     } else if (newGameNameEntryMenu.isActive){
         newGameNameEntryMenu.EventFired(event);
+    } else if (newGameNameEntryMenu.savefilecreated.isActive){
+        newGameNameEntryMenu.savefilecreated.EventFired(event);
     }
 }
 void NewGameMenu::Update(sf::RenderWindow &window, float fps)
@@ -122,12 +124,14 @@ void NewGameMenu::Update(sf::RenderWindow &window, float fps)
         window.setView(window.getDefaultView());
 
     } else {
-        if (v4core->currentController.isInitialized){
+        if (v4core->currentController.isInitialized && v4core->currentController.isFinishedLoading){
             v4core->currentController.Update(window, fps);
         } else if (optionsMenu.isActive){
             optionsMenu.Update(window,fps);
         } else if (newGameNameEntryMenu.isActive){
             newGameNameEntryMenu.Update(window,fps);
+        } else if (newGameNameEntryMenu.savefilecreated.isActive){
+            newGameNameEntryMenu.savefilecreated.Update(window,fps);
         }
     }
 

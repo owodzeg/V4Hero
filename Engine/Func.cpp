@@ -4,6 +4,8 @@
 #include <locale>
 #include <codecvt>
 #include "Func.h"
+#include <iostream>
+
 
 using namespace std;
 
@@ -42,6 +44,17 @@ sf::String Func::ConvertToUtf8String(const std::string &s)
     std::basic_string<sf::Uint32> tmp;
     sf::Utf8::toUtf32(s.begin(),s.end(),std::back_inserter(tmp));
     return sf::String(tmp);
+}
+std::string Func::trim(const std::string& str, const std::string& whitespace = " \t")
+{
+    const auto strBegin = str.find_first_not_of(whitespace);
+    if (strBegin == std::string::npos)
+        return ""; // no content
+
+    const auto strEnd = str.find_last_not_of(whitespace);
+    const auto strRange = strEnd - strBegin + 1;
+
+    return str.substr(strBegin, strRange);
 }
 std::wstring ConvertToWString(const std::string &s){
     std::wstring resws;
