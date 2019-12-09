@@ -32,6 +32,15 @@ class AltarMenu : public Menu
 
         PatapolisMenu *parentMenu;
 
+        /// mask icon
+        PSprite mask_icon;
+        sf::Vector2f p_mask_icon;
+
+        /// spear icon
+        PSprite spear_icon;
+        sf::Vector2f p_spear_icon;
+
+
         int numItemRows;
         int numItemColumns = 4;
         int currentRow = 0;

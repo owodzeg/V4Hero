@@ -59,6 +59,36 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
     s_titlemenu_bkg.scaleX=0.2f;
     s_titlemenu_bkg.scaleY=0.06f;
 
+    ///             ####   MASK ITEM ICON
+    ps_temp.loadFromFile("resources/graphics/item/mask_item.png",1);
+    ps_temp.setRepeated(false);
+    ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
+    ps_temp.setOrigin(0,0);
+    ps_temp.setColor(sf::Color(255,255,255,255));
+    ps_temp.setPosition(0,0);
+    ps_temp.DoAutoScale = false;
+    tmpp.x = (thisConfig->GetInt("resX")*75.0)/1920.0;//(thisConfig->GetInt("resX")*1920.0)/1920.0-1200;
+    tmpp.y = (thisConfig->GetInt("resY")*125.0)/1080.0;//(thisConfig->GetInt("resY")*400.0)/1080.0;
+    mask_icon = ps_temp;
+    p_mask_icon = tmpp;
+    mask_icon.scaleX=0.28f;
+    mask_icon.scaleY=0.22f;
+
+
+    ///             ####   SPEAR ITEM ICON
+    ps_temp.loadFromFile("resources/graphics/item/spear_item.png",1);
+    ps_temp.setRepeated(false);
+    ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
+    ps_temp.setOrigin(0,0);
+    ps_temp.setColor(sf::Color(255,255,255,255));
+    ps_temp.setPosition(0,0);
+    ps_temp.DoAutoScale = false;
+    tmpp.x = (thisConfig->GetInt("resX")*75.0)/1920.0;//(thisConfig->GetInt("resX")*1920.0)/1920.0-1200;
+    tmpp.y = (thisConfig->GetInt("resY")*125.0)/1080.0;//(thisConfig->GetInt("resY")*400.0)/1080.0;
+    spear_icon = ps_temp;
+    p_spear_icon = tmpp;
+    spear_icon.scaleX=0.28f;
+    spear_icon.scaleY=0.22f;
 
     /// initialise text
     /*
@@ -374,15 +404,33 @@ void AltarMenu::Update(sf::RenderWindow &window, float fps)
             mm_inventory_background.setPosition(smallOffset-5,p_titlemenu_bkg.y-5);
             window.draw(mm_inventory_background);
 
-            mm_highlighted_tile.setPosition(smallOffset+mm_highlighted_tile.getSize().x*inventoryGridXPos,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*inventoryGridYPos-mm_highlighted_tile.getSize().y*currentRow);
-            window.draw(mm_highlighted_tile);
+
             int ypos = 2-currentRow;
             if (ypos>=0){
                 //mm_icon_example_tile.setPosition(smallOffset+mm_icon_example_tile.getSize().x*2,p_titlemenu_bkg.y+mm_icon_example_tile.getSize().y*2-mm_highlighted_tile.getSize().y*currentRow);
                 //window.draw(mm_icon_example_tile);
             }
-
-
+            for (int x=0;x<numItemColumns;x++){
+                for (int y=0;y<numItemRows;y++){
+                    int currentItemId = x+y*numItemColumns;
+                    if (currentItemId<v4core->savereader.invdata.items.size()){
+                        Item* starting_item = v4core->savereader.invdata.GetItemByInvID(currentItemId).item;
+                        switch (starting_item->category_id){
+                        case 0:
+                        case 1:
+                            spear_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*inventoryGridYPos-mm_highlighted_tile.getSize().y*y);
+                            spear_icon.draw(window);
+                            break;
+                        case 2:
+                            mask_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*inventoryGridYPos-mm_highlighted_tile.getSize().y*y);
+                            mask_icon.draw(window);
+                            break;
+                        }
+                    }
+                }
+            }
+        mm_highlighted_tile.setPosition(smallOffset+mm_highlighted_tile.getSize().x*inventoryGridXPos,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*inventoryGridYPos-mm_highlighted_tile.getSize().y*currentRow);
+            window.draw(mm_highlighted_tile);
     }
 }
 
