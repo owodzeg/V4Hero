@@ -105,6 +105,21 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
     misc_icon.scaleX=0.28f;
     misc_icon.scaleY=0.22f;
 
+    ///             ####   ARMOUR ITEM ICON
+    ps_temp.loadFromFile("resources/graphics/item/armour_icon.png",1);
+    ps_temp.setRepeated(false);
+    ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
+    ps_temp.setOrigin(0,0);
+    ps_temp.setColor(sf::Color(255,255,255,255));
+    ps_temp.setPosition(0,0);
+    ps_temp.DoAutoScale = false;
+    tmpp.x = (thisConfig->GetInt("resX")*75.0)/1920.0;//(thisConfig->GetInt("resX")*1920.0)/1920.0-1200;
+    tmpp.y = (thisConfig->GetInt("resY")*125.0)/1080.0;//(thisConfig->GetInt("resY")*400.0)/1080.0;
+    armour_icon = ps_temp;
+    p_armour_icon = tmpp;
+    armour_icon.scaleX=0.28f;
+    armour_icon.scaleY=0.22f;
+
     /// initialise text
     /*
     t_titlemenu
@@ -355,8 +370,11 @@ void AltarMenu::EventFired(sf::Event event){
                     }
                 } else {
                     inventoryGridYPos = numItemRows-1;
-
-                    currentRow=inventoryGridYPos-4;
+                    if (numItemRows<5){
+                        currentRow=inventoryGridYPos-numItemRows+1;
+                    } else {
+                        currentRow=inventoryGridYPos-4;
+                    }
                 }
 
             } else if (event.key.code == thisConfig->GetInt("keybindDon") || event.key.code == thisConfig->GetInt("secondaryKeybindDon")){
@@ -425,10 +443,12 @@ void AltarMenu::Update(sf::RenderWindow &window, float fps)
                 //mm_icon_example_tile.setPosition(smallOffset+mm_icon_example_tile.getSize().x*2,p_titlemenu_bkg.y+mm_icon_example_tile.getSize().y*2-mm_highlighted_tile.getSize().y*currentRow);
                 //window.draw(mm_icon_example_tile);
             }
-            for (int x=0;x<numItemColumns;x++){
-                for (int y=0;y<numItemRows;y++){
+            int row_start = currentRow;
+            int row_end = row_start+4;
+            for (int y=0;y<numItemRows;y++){
+                for (int x=0;x<numItemColumns;x++){
                     int currentItemId = x+y*numItemColumns;
-                    if (currentItemId<v4core->savereader.invdata.items.size()){
+                    if (currentItemId<v4core->savereader.invdata.items.size() && (currentItemId/numItemColumns)>=row_start && (currentItemId/numItemColumns)<=row_end){
                         Item* starting_item = v4core->savereader.invdata.GetItemByInvID(currentItemId).item;
                         switch (starting_item->category_id){
 
@@ -439,6 +459,10 @@ void AltarMenu::Update(sf::RenderWindow &window, float fps)
                         case 2:
                             mask_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
                             mask_icon.draw(window);
+                            break;
+                        case 3:
+                            armour_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
+                            armour_icon.draw(window);
                             break;
                         case 0:
                         default:

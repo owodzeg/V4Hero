@@ -354,10 +354,16 @@ void Barracks::Update(sf::RenderWindow &window, float fps)
         //window.draw(t_title);
 
         float leftStatNameTextX = p_class_icon.x+120;
-        float leftStatValueTextX = (window.getSize().x/2)-300-50;
+        int bigSize=300;
+        int size2 = 300;
+        if (window.getSize().x<1600){
+            bigSize=170;
+            size2=210;
+        }
+        float leftStatValueTextX = (window.getSize().x/2)-bigSize-50;
 
-        float rightStatNameTextX = (window.getSize().x/2)-300+50;
-        float rightStatValueTextX = (window.getSize().x)-650;
+        float rightStatNameTextX = (window.getSize().x/2)-bigSize+50;
+        float rightStatValueTextX = (window.getSize().x)-50-(size2*2);
 
         /// left stats text
 
