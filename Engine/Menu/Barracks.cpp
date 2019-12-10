@@ -39,8 +39,8 @@ void Barracks::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     tmpp.y = (thisConfig->GetInt("resY")*100.0)/1080.0;//(thisConfig->GetInt("resY")*400.0)/1080.0;
     s_menu_bkg = ps_temp;
     p_menu_bkg = tmpp;
-    s_menu_bkg.scaleX=0.7f;
-    s_menu_bkg.scaleY=0.6f;
+    s_menu_bkg.scaleX=((thisConfig->GetInt("resX"))*0.7f)/(1920);
+    s_menu_bkg.scaleY=((thisConfig->GetInt("resY"))*0.6f)/(1080);
 
     ///             ####   UNIT CLASS ICON
     ps_temp.loadFromFile("resources/graphics/ui/yari_class_icon.png",1);
@@ -54,8 +54,8 @@ void Barracks::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     tmpp.y = (thisConfig->GetInt("resY")*125.0)/1080.0;//(thisConfig->GetInt("resY")*400.0)/1080.0;
     s_class_icon = ps_temp;
     p_class_icon = tmpp;
-    s_class_icon.scaleX=0.25f;
-    s_class_icon.scaleY=0.25f;
+    s_class_icon.scaleX=((thisConfig->GetInt("resX"))*0.25f)/(1920);
+    s_class_icon.scaleY=((thisConfig->GetInt("resY"))*0.25f)/(1080);
 
     ///             ####   UNIT ITEM ICON
     ps_temp.loadFromFile("resources/graphics/ui/unit_icon.png",1);
@@ -65,13 +65,14 @@ void Barracks::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     ps_temp.setColor(sf::Color(255,255,255,255));
     ps_temp.setPosition(0,0);
     ps_temp.DoAutoScale = false;
-    tmpp.x = (thisConfig->GetInt("resX")*1920.0)/1920.0 - (550*thisConfig->GetInt("resX"))/1920.0;
+    tmpp.x = (thisConfig->GetInt("resX")*1920.0)/1920.0 - (450*thisConfig->GetInt("resX"))/1920.0;
     tmpp.y = p_class_icon.y+44;//(thisConfig->GetInt("resY")*400.0)/1080.0;
     s_unit_icon = ps_temp;
     p_unit_icon = tmpp;
-    s_unit_icon.scaleX=0.15f;
-    s_unit_icon.scaleY=0.15f;
+    s_unit_icon.scaleX=((thisConfig->GetInt("resX"))*0.15f)/(1920);
+    s_unit_icon.scaleY=((thisConfig->GetInt("resY"))*0.15f)/(1080);
 
+    int equip_height = ((thisConfig->GetInt("resX"))*68)/(1920);
     ///             ####   WEAPON ITEM ICON
     ps_temp.loadFromFile("resources/graphics/ui/sword_weapon_icon.png",1);
     ps_temp.setRepeated(false);
@@ -81,11 +82,11 @@ void Barracks::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     ps_temp.setPosition(0,0);
     ps_temp.DoAutoScale = false;
     tmpp.x = (thisConfig->GetInt("resX")*1920.0)/1920.0 - (550*thisConfig->GetInt("resX"))/1920.0;
-    tmpp.y = p_unit_icon.y+68;//(thisConfig->GetInt("resY")*400.0)/1080.0;
+    tmpp.y = p_unit_icon.y+equip_height;//(thisConfig->GetInt("resY")*400.0)/1080.0;
     s_weapon_icon = ps_temp;
     p_weapon_icon = tmpp;
-    s_weapon_icon.scaleX=0.15f;
-    s_weapon_icon.scaleY=0.15f;
+    s_weapon_icon.scaleX=((thisConfig->GetInt("resX"))*0.15f)/(1920);
+    s_weapon_icon.scaleY=((thisConfig->GetInt("resY"))*0.15f)/(1080);
 
     ///             ####   WEAPON 2 (OTHER HAND) ITEM ICON
     ps_temp.loadFromFile("resources/graphics/ui/sword_weapon_icon.png",1);
@@ -96,11 +97,11 @@ void Barracks::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     ps_temp.setPosition(0,0);
     ps_temp.DoAutoScale = false;
     tmpp.x = (thisConfig->GetInt("resX")*1920.0)/1920.0 - (550*thisConfig->GetInt("resX"))/1920.0;
-    tmpp.y = p_weapon_icon.y+68;//(thisConfig->GetInt("resY")*400.0)/1080.0;
+    tmpp.y = p_weapon_icon.y+equip_height;//(thisConfig->GetInt("resY")*400.0)/1080.0;
     s_weapon2_icon = ps_temp;
     p_weapon2_icon = tmpp;
-    s_weapon2_icon.scaleX=0.15f;
-    s_weapon2_icon.scaleY=0.15f;
+    s_weapon2_icon.scaleX=((thisConfig->GetInt("resX"))*0.15f)/(1920);
+    s_weapon2_icon.scaleY=((thisConfig->GetInt("resY"))*0.15f)/(1080);
 
     ///             ####   ARMOUR ITEM ICON
     ps_temp.loadFromFile("resources/graphics/ui/sword_weapon_icon.png",1);
@@ -111,11 +112,11 @@ void Barracks::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     ps_temp.setPosition(0,0);
     ps_temp.DoAutoScale = false;
     tmpp.x = (thisConfig->GetInt("resX")*1920.0)/1920.0 - (550*thisConfig->GetInt("resX"))/1920.0;
-    tmpp.y = p_weapon2_icon.y+68;//(thisConfig->GetInt("resY")*400.0)/1080.0;
+    tmpp.y = p_weapon2_icon.y+equip_height;//(thisConfig->GetInt("resY")*400.0)/1080.0;
     s_armour_icon = ps_temp;
     p_armour_icon = tmpp;
-    s_armour_icon.scaleX=0.15f;
-    s_armour_icon.scaleY=0.15f;
+    s_armour_icon.scaleX=((thisConfig->GetInt("resX"))*0.15f)/(1920);
+    s_armour_icon.scaleY=((thisConfig->GetInt("resY"))*0.15f)/(1080);
 
     ///             ####   MASK ITEM ICON
     ps_temp.loadFromFile("resources/graphics/ui/mask_icon.png",1);
@@ -126,12 +127,11 @@ void Barracks::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     ps_temp.setPosition(0,0);
     ps_temp.DoAutoScale = false;
     tmpp.x = (thisConfig->GetInt("resX")*1920.0)/1920.0 - (550*thisConfig->GetInt("resX"))/1920.0;
-    tmpp.y = p_armour_icon.y+68;//(thisConfig->GetInt("resY")*400.0)/1080.0;
+    tmpp.y = p_armour_icon.y+equip_height;//(thisConfig->GetInt("resY")*400.0)/1080.0;
     s_mask_icon = ps_temp;
     p_mask_icon = tmpp;
-    s_mask_icon.scaleX=0.15f;
-    s_mask_icon.scaleY=0.15f;
-
+    s_mask_icon.scaleX=((thisConfig->GetInt("resX"))*0.15f)/(1920);
+    s_mask_icon.scaleY=((thisConfig->GetInt("resY"))*0.15f)/(1080);
 
     t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis")));
     t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
@@ -356,9 +356,17 @@ void Barracks::Update(sf::RenderWindow &window, float fps)
         float leftStatNameTextX = p_class_icon.x+120;
         int bigSize=300;
         int size2 = 300;
+        if (window.getSize().x<1900){
+            bigSize=220;
+            size2=250;
+        }
         if (window.getSize().x<1600){
             bigSize=170;
             size2=210;
+        }
+        if (window.getSize().x<1300){
+            bigSize=130;
+            size2=165;
         }
         float leftStatValueTextX = (window.getSize().x/2)-bigSize-50;
 
@@ -408,40 +416,41 @@ void Barracks::Update(sf::RenderWindow &window, float fps)
         window.draw(s_unit_attack_speed);
 
         /// equipped item + unit name text
-
+        int equip_height = (window.getSize().x*68)/(1920);
         if (enabledPositons[0]){  /// unit name
-            t_unit_rarepon_name.setPosition(p_unit_icon.x+68,p_unit_icon.y);
+            t_unit_rarepon_name.setPosition(p_unit_icon.x+equip_height,p_unit_icon.y);
             s_unit_icon.setPosition(p_unit_icon.x,p_unit_icon.y);
             s_unit_icon.draw(window);
             window.draw(t_unit_rarepon_name);
         }
         if (enabledPositons[1]){  /// wep1
-            t_weapon_name.setPosition(p_unit_icon.x+68,p_weapon_icon.y);
+            t_weapon_name.setPosition(p_unit_icon.x+equip_height,p_weapon_icon.y);
             s_weapon_icon.setPosition(p_unit_icon.x,p_weapon_icon.y);
             s_weapon_icon.draw(window);
             window.draw(t_weapon_name);
         }
         if (enabledPositons[2]){  /// wep2
-            t_weapon2_name.setPosition(p_unit_icon.x+68,p_weapon2_icon.y);
+            t_weapon2_name.setPosition(p_unit_icon.x+equip_height,p_weapon2_icon.y);
             s_weapon2_icon.setPosition(p_unit_icon.x,p_weapon2_icon.y);
             s_weapon2_icon.draw(window);
             window.draw(t_weapon2_name);
         }
         if (enabledPositons[3]){  /// armour
-            t_armour_name.setPosition(p_unit_icon.x+68,p_armour_icon.y);
+            t_armour_name.setPosition(p_unit_icon.x+equip_height,p_armour_icon.y);
             s_armour_icon.setPosition(p_unit_icon.x,p_armour_icon.y);
             s_armour_icon.draw(window);
             window.draw(t_armour_name);
         }
         if (enabledPositons[4]){  /// mask
-            t_mask_name.setPosition(p_unit_icon.x+68,p_mask_icon.y);
+            t_mask_name.setPosition(p_unit_icon.x+equip_height,p_mask_icon.y);
             s_mask_icon.setPosition(p_unit_icon.x,p_mask_icon.y);
             s_mask_icon.draw(window);
             window.draw(t_mask_name);
         }
-
-        mm_selected_item_line.setSize(sf::Vector2f(400,4));
-        mm_selected_item_line.setPosition(p_weapon_icon.x-30,p_unit_icon.y+30+currentItemPosition*68);
+        int barSize = window.getSize().x*400/1920;
+        int bar_offset = (window.getSize().x*30)/(1920);
+        mm_selected_item_line.setSize(sf::Vector2f(barSize,4));
+        mm_selected_item_line.setPosition(p_unit_icon.x-bar_offset,p_unit_icon.y+bar_offset+currentItemPosition*equip_height);
         window.draw(mm_selected_item_line);
     }
 }

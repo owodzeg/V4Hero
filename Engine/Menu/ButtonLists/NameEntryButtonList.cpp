@@ -60,12 +60,42 @@ void NameEntryButtonList::SelectButton(int index){
                     InventoryItem iron_spear1;
                     iron_spear1.item = savMenu->v4core->savereader.itemreg.GetItemByID(2);
                     InventoryItem mask;
-                    mask.item = savMenu->v4core->savereader.itemreg.GetItemByID(4);
+                    mask.item = savMenu->v4core->savereader.itemreg.GetItemByID(2);
+                    InventoryItem woodhelmet_1;
+                    woodhelmet_1.item = savMenu->v4core->savereader.itemreg.GetItemByID(16);
+                    InventoryItem woodhelmet_2;
+                    woodhelmet_2.item = savMenu->v4core->savereader.itemreg.GetItemByID(16);
+                    InventoryItem woodhelmet_3;
+                    woodhelmet_3.item = savMenu->v4core->savereader.itemreg.GetItemByID(16);
+                    InventoryItem ironhelmet_1;
+                    ironhelmet_1.item = savMenu->v4core->savereader.itemreg.GetItemByID(17);
+                    InventoryItem keepsake;
+                    keepsake.item = savMenu->v4core->savereader.itemreg.GetItemByID(15);
+
+                    InventoryItem pondrum;
+                    pondrum.item = savMenu->v4core->savereader.itemreg.GetItemByID(11);
+                    InventoryItem patadrum;
+                    patadrum.item = savMenu->v4core->savereader.itemreg.GetItemByID(12);
+                    InventoryItem chakadrum;
+                    chakadrum.item = savMenu->v4core->savereader.itemreg.GetItemByID(13);
+                    InventoryItem dondrum;
+                    dondrum.item = savMenu->v4core->savereader.itemreg.GetItemByID(14);
+
+
                     savMenu->v4core->savereader.invdata.items.push_back(spear1);
                     savMenu->v4core->savereader.invdata.items.push_back(spear2);
                     savMenu->v4core->savereader.invdata.items.push_back(spear3);
                     savMenu->v4core->savereader.invdata.items.push_back(iron_spear1);
                     savMenu->v4core->savereader.invdata.items.push_back(mask);
+                    savMenu->v4core->savereader.invdata.items.push_back(woodhelmet_1);
+                    savMenu->v4core->savereader.invdata.items.push_back(woodhelmet_2);
+                    savMenu->v4core->savereader.invdata.items.push_back(woodhelmet_3);
+                    savMenu->v4core->savereader.invdata.items.push_back(ironhelmet_1);
+                    savMenu->v4core->savereader.invdata.items.push_back(keepsake);
+                    savMenu->v4core->savereader.invdata.items.push_back(pondrum);
+                    savMenu->v4core->savereader.invdata.items.push_back(patadrum);
+                    savMenu->v4core->savereader.invdata.items.push_back(chakadrum);
+                    savMenu->v4core->savereader.invdata.items.push_back(dondrum);
                     savMenu->v4core->savereader.Save();
                 } else {
                     savMenu->showPromptText = true;

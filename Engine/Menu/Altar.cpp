@@ -58,6 +58,25 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
     p_titlemenu_bkg = tmpp2;
     s_titlemenu_bkg.scaleX=0.2f;
     s_titlemenu_bkg.scaleY=0.06f;
+    if(thisConfig->GetInt("resX")>1920){
+        numItemColumns=6;
+    } else if(thisConfig->GetInt("resX")>1600){
+        numItemColumns=5;
+    }
+
+    ShowCategory();
+    mm_inventory_background.setSize(sf::Vector2f(p_titlemenu_bkg.x - (s_titlemenu_bkg.t.getSize().x*0.2) - (thisConfig->GetInt("resX")*150)/1920.0,(p_menu_bkg.y+(s_menu_bkg.t.getSize().y*0.15)) - p_titlemenu_bkg.y));
+    mm_inventory_background.setFillColor(sf::Color(4,0,90));
+    float singleTileWidth = mm_inventory_background.getSize().x/numItemColumns;
+    float singleTileHeight = mm_inventory_background.getSize().y/5;//(thisConfig->GetInt("resX")*150)/1920.0;
+    cout<<singleTileWidth<<" "<<singleTileHeight<<'\n';
+    mm_highlighted_tile.setSize(sf::Vector2f(singleTileWidth,singleTileHeight));
+    mm_highlighted_tile.setFillColor(sf::Color(255,255,255,80));
+
+    mm_icon_example_tile.setSize(sf::Vector2f(singleTileWidth,singleTileHeight));
+    mm_icon_example_tile.setFillColor(sf::Color(255,255,255,0));
+    mm_icon_example_tile.setOutlineColor(sf::Color(255,255,255));
+    mm_icon_example_tile.setOutlineThickness(2);
 
     ///             ####   MASK ITEM ICON
     ps_temp.loadFromFile("resources/graphics/item/mask_item.png",1);
@@ -71,8 +90,8 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
     tmpp.y = (thisConfig->GetInt("resY")*125.0)/1080.0;//(thisConfig->GetInt("resY")*400.0)/1080.0;
     mask_icon = ps_temp;
     p_mask_icon = tmpp;
-    mask_icon.scaleX=0.28f;
-    mask_icon.scaleY=0.22f;
+    mask_icon.scaleX=singleTileWidth*0.31f/214;
+    mask_icon.scaleY=singleTileHeight*0.22f/110;
 
 
     ///             ####   SPEAR ITEM ICON
@@ -87,8 +106,8 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
     tmpp.y = (thisConfig->GetInt("resY")*125.0)/1080.0;//(thisConfig->GetInt("resY")*400.0)/1080.0;
     spear_icon = ps_temp;
     p_spear_icon = tmpp;
-    spear_icon.scaleX=0.28f;
-    spear_icon.scaleY=0.22f;
+    spear_icon.scaleX=singleTileWidth*0.31f/214;
+    spear_icon.scaleY=singleTileHeight*0.22f/110;
 
     ///             ####   MISC ITEM ICON
     ps_temp.loadFromFile("resources/graphics/item/misc_icon.png",1);
@@ -102,8 +121,8 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
     tmpp.y = (thisConfig->GetInt("resY")*125.0)/1080.0;//(thisConfig->GetInt("resY")*400.0)/1080.0;
     misc_icon = ps_temp;
     p_misc_icon = tmpp;
-    misc_icon.scaleX=0.28f;
-    misc_icon.scaleY=0.22f;
+    misc_icon.scaleX=singleTileWidth*0.31f/214;
+    misc_icon.scaleY=singleTileHeight*0.22f/110;
 
     ///             ####   ARMOUR ITEM ICON
     ps_temp.loadFromFile("resources/graphics/item/armour_icon.png",1);
@@ -117,8 +136,8 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
     tmpp.y = (thisConfig->GetInt("resY")*125.0)/1080.0;//(thisConfig->GetInt("resY")*400.0)/1080.0;
     armour_icon = ps_temp;
     p_armour_icon = tmpp;
-    armour_icon.scaleX=0.28f;
-    armour_icon.scaleY=0.22f;
+    armour_icon.scaleX=singleTileWidth*0.31f/214;
+    armour_icon.scaleY=singleTileHeight*0.22f/110;
 
     /// initialise text
     /*
@@ -151,7 +170,7 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
     std::vector<std::wstring> wordsinDesc = Func::Split(thisConfig->strRepo.GetUnicodeString(starting_item->item_description),' ');
     sf::String oldTotalString;
     sf::String currentTotalString;
-    int maxWidth = ps_temp.t.getSize().x * 0.18;
+    int maxWidth = s_titlemenu_bkg.t.getSize().x * 0.18;
     /// we split it into words, then go word by word testing the width of the string
     for (int i=0;i<wordsinDesc.size();i++){
         std::wstring currentWord = wordsinDesc[i];
@@ -184,28 +203,12 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
     //s_menu_bkg.t.getSize().x*0.2
 
     //(p_menu_bkg.y+(s_menu_bkg.t.getSize().y*0.15)) - p_titlemenu_bkg.y)
-    if(thisConfig->GetInt("resX")>1920){
-        numItemColumns=6;
-    } else if(thisConfig->GetInt("resX")>1600){
-        numItemColumns=5;
-    }
-    ShowCategory();
-    mm_inventory_background.setSize(sf::Vector2f(p_titlemenu_bkg.x - (s_titlemenu_bkg.t.getSize().x*0.2) - (thisConfig->GetInt("resX")*150)/1920.0,(p_menu_bkg.y+(s_menu_bkg.t.getSize().y*0.15)) - p_titlemenu_bkg.y));
-    mm_inventory_background.setFillColor(sf::Color(4,0,90));
-
-    float singleTileWidth = mm_inventory_background.getSize().x/numItemColumns;
-    float singleTileHeight = mm_inventory_background.getSize().y/5;//(thisConfig->GetInt("resX")*150)/1920.0;
-
-    mm_highlighted_tile.setSize(sf::Vector2f(singleTileWidth,singleTileHeight));
-    mm_highlighted_tile.setFillColor(sf::Color(255,255,255,80));
-
-    mm_icon_example_tile.setSize(sf::Vector2f(singleTileWidth,singleTileHeight));
-    mm_icon_example_tile.setFillColor(sf::Color(255,255,255,0));
-    mm_icon_example_tile.setOutlineColor(sf::Color(255,255,255));
-    mm_icon_example_tile.setOutlineThickness(2);
 
 
-    mm_inventory_background.setSize(sf::Vector2f(mm_inventory_background.getSize().x+10,mm_inventory_background.getSize().y+10));
+
+
+
+    mm_inventory_background.setSize(sf::Vector2f(mm_inventory_background.getSize().x+20,mm_inventory_background.getSize().y+20));
 
 }
 void AltarMenu::ShowCategory(){
@@ -409,72 +412,75 @@ void AltarMenu::EventFired(sf::Event event){
 void AltarMenu::Update(sf::RenderWindow &window, float fps)
 {
     if(isActive){
-            s_menu_bkg.setPosition(p_menu_bkg.x,p_menu_bkg.y);
-            s_menu_bkg.draw(window);
-            s_titlemenu_bkg.setPosition(p_titlemenu_bkg.x,p_titlemenu_bkg.y);
-            s_titlemenu_bkg.draw(window);
 
-//-(s_titlemenu_bkg.t.getSize().x*0.2)/2
-            /// draw altar menu text
-            float smallOffset = (thisConfig->GetInt("resX")*100)/1920.0;
-            float smallTextOffset = 0;
-            t_titlemenu.setPosition(p_titlemenu_bkg.x+smallTextOffset-(s_titlemenu_bkg.t.getSize().x*0.2)/2,p_titlemenu_bkg.y+(s_titlemenu_bkg.t.getSize().y*0.06)*1/3);
-            window.draw(t_titlemenu);
+//-(s_titleenu_bkg.t.getSize().x*0.2)/2
+        /// draw altar menu text
+        float smallOffset = (thisConfig->GetInt("resX")*100)/1920.0;
+        mm_inventory_background.setPosition(smallOffset-10,p_titlemenu_bkg.y-10);
+        window.draw(mm_inventory_background);
+        float smallTextOffset = 0;
+        t_titlemenu.setPosition(p_titlemenu_bkg.x+smallTextOffset-(s_titlemenu_bkg.t.getSize().x*0.2)/2,p_titlemenu_bkg.y+(s_titlemenu_bkg.t.getSize().y*0.06)*1/3);
+        window.draw(t_titlemenu);
+        int row_start = currentRow;
+        int row_end = row_start+4;
+        for (int y=0;y<numItemRows;y++){
+            for (int x=0;x<numItemColumns;x++){
+                int currentItemId = x+y*numItemColumns;
+                if (currentItemId<v4core->savereader.invdata.items.size() && (currentItemId/numItemColumns)>=row_start && (currentItemId/numItemColumns)<=row_end){
+                    Item* starting_item = v4core->savereader.invdata.GetItemByInvID(currentItemId).item;
+                    switch (starting_item->category_id){
 
-            t_itemtitle.setPosition(p_titlemenu_bkg.x+smallTextOffset-(s_menu_bkg.t.getSize().x*0.2)/2,p_menu_bkg.y+(s_menu_bkg.t.getSize().y*0.15)*1/8);
-            window.draw(t_itemtitle);
-
-            t_itemcategory.setPosition(p_titlemenu_bkg.x+smallTextOffset-(s_menu_bkg.t.getSize().x*0.2)/2,p_menu_bkg.y+((s_menu_bkg.t.getSize().y*0.15)*1/8)+42);
-            window.draw(t_itemcategory);
-
-            for (int i=0;i<t_itemdescription.size();i++){
-                sf::Text currentLine = t_itemdescription[i];
-
-                currentLine.setPosition(p_menu_bkg.x+smallTextOffset-(s_menu_bkg.t.getSize().x*0.2)/2,p_menu_bkg.y+((s_menu_bkg.t.getSize().y*0.15)*1/8)+74 + 22*i);
-
-                window.draw(currentLine);
-            }
-            mm_inventory_background.setPosition(smallOffset-5,p_titlemenu_bkg.y-5);
-            window.draw(mm_inventory_background);
-
-
-            int ypos = 2-currentRow;
-            if (ypos>=0){
-                //mm_icon_example_tile.setPosition(smallOffset+mm_icon_example_tile.getSize().x*2,p_titlemenu_bkg.y+mm_icon_example_tile.getSize().y*2-mm_highlighted_tile.getSize().y*currentRow);
-                //window.draw(mm_icon_example_tile);
-            }
-            int row_start = currentRow;
-            int row_end = row_start+4;
-            for (int y=0;y<numItemRows;y++){
-                for (int x=0;x<numItemColumns;x++){
-                    int currentItemId = x+y*numItemColumns;
-                    if (currentItemId<v4core->savereader.invdata.items.size() && (currentItemId/numItemColumns)>=row_start && (currentItemId/numItemColumns)<=row_end){
-                        Item* starting_item = v4core->savereader.invdata.GetItemByInvID(currentItemId).item;
-                        switch (starting_item->category_id){
-
-                        case 1:
-                            spear_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
-                            spear_icon.draw(window);
-                            break;
-                        case 2:
-                            mask_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
-                            mask_icon.draw(window);
-                            break;
-                        case 3:
-                            armour_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
-                            armour_icon.draw(window);
-                            break;
-                        case 0:
-                        default:
-                            misc_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
-                            misc_icon.draw(window);
-                            break;
-                        }
+                    case 1:
+                        spear_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
+                        spear_icon.draw(window);
+                        break;
+                    case 2:
+                        mask_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
+                        mask_icon.draw(window);
+                        break;
+                    case 3:
+                        armour_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
+                        armour_icon.draw(window);
+                        break;
+                    case 0:
+                    default:
+                        misc_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
+                        misc_icon.draw(window);
+                        break;
                     }
                 }
             }
+        }
+
+        s_menu_bkg.setPosition(p_menu_bkg.x,p_menu_bkg.y);
+        s_menu_bkg.draw(window);
+        s_titlemenu_bkg.setPosition(p_titlemenu_bkg.x,p_titlemenu_bkg.y);
+        s_titlemenu_bkg.draw(window);
+
         mm_highlighted_tile.setPosition(smallOffset+mm_highlighted_tile.getSize().x*inventoryGridXPos,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*inventoryGridYPos-mm_highlighted_tile.getSize().y*currentRow);
-            window.draw(mm_highlighted_tile);
+        window.draw(mm_highlighted_tile);
+
+        t_itemtitle.setPosition(p_titlemenu_bkg.x+smallTextOffset-(s_menu_bkg.t.getSize().x*0.2)/2,p_menu_bkg.y+(s_menu_bkg.t.getSize().y*0.15)*1/8);
+        window.draw(t_itemtitle);
+
+        t_itemcategory.setPosition(p_titlemenu_bkg.x+smallTextOffset-(s_menu_bkg.t.getSize().x*0.2)/2,p_menu_bkg.y+((s_menu_bkg.t.getSize().y*0.15)*1/8)+42);
+        window.draw(t_itemcategory);
+
+        for (int i=0;i<t_itemdescription.size();i++){
+            sf::Text currentLine = t_itemdescription[i];
+
+            currentLine.setPosition(p_menu_bkg.x+smallTextOffset-(s_menu_bkg.t.getSize().x*0.2)/2,p_menu_bkg.y+((s_menu_bkg.t.getSize().y*0.15)*1/8)+74 + 22*i);
+
+            window.draw(currentLine);
+        }
+
+
+        int ypos = 2-currentRow;
+        if (ypos>=0){
+            //mm_icon_example_tile.setPosition(smallOffset+mm_icon_example_tile.getSize().x*2,p_titlemenu_bkg.y+mm_icon_example_tile.getSize().y*2-mm_highlighted_tile.getSize().y*currentRow);
+            //window.draw(mm_icon_example_tile);
+        }
+
     }
 }
 
