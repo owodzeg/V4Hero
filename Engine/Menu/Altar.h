@@ -44,6 +44,10 @@ class AltarMenu : public Menu
         PSprite misc_icon;
         sf::Vector2f p_misc_icon;
 
+        /// armour icon
+        PSprite armour_icon;
+        sf::Vector2f p_armour_icon;
+
 
         int numItemRows;
         int numItemColumns = 4;

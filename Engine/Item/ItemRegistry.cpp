@@ -6,6 +6,7 @@
 #include<iostream>
 #include "Weapon.h"
 #include "Mask.h"
+#include "Armour.h"
 using namespace std;
 
 ItemRegistry::ItemRegistry(){
@@ -100,6 +101,42 @@ void ItemRegistry::ReadItemFiles(){
 
                                 quit=true;
                                 Mask mask = Mask::FromItem(newItem);
+                                while(getline(itemStream, line))
+                                {
+                                    ///ignore comments
+                                    if(line.find("#") == std::string::npos && line.find("//") == std::string::npos)
+                                    {
+                                        ///read into the item
+                                        vector<string> key = Func::Split(line,':');
+                                        if(key[0]=="id"){
+                                            mask.item_id = stoi(key[1]);
+                                        } else if(key[0]=="subtype"){
+                                            mask.subcategory_id = stoi(key[1]);
+                                        } else if(key[0]=="desc"){
+                                            std::wstring resws;
+                                            std::string str = key[1];
+                                            resws.assign(str.begin(), str.end());
+                                            mask.item_description = resws;
+                                        } else if(key[0]=="icon"){
+                                            mask.icon_path = key[1];
+                                        } else if(key[0]=="mindmg"){
+                                            mask.mindmg = stoi(key[1]);
+                                        } else if(key[0]=="maxdmg"){
+                                            mask.maxdmg = stoi(key[1]);
+                                        } else if(key[0]=="crit"){
+                                            mask.crit = stoi(key[1]);
+                                        } else if(key[0]=="attackspeed"){
+                                            mask.attackspeed = stoi(key[1]);
+                                        }
+                                    }
+                                }
+                                newItem = mask;
+                                break;
+                                }
+                            case 3: /// armour
+                                {
+                                quit=true;
+                                Armour mask = Armour::FromItem(newItem);
                                 while(getline(itemStream, line))
                                 {
                                     ///ignore comments
