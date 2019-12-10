@@ -54,6 +54,8 @@ void Background::Load(string bg_name,Config &thisConfigs)
         }
     }
 
+    cout << ratioX << " " << ratioY << endl;
+
     v_background.clear();
     vx_pos.clear();
     vx_pos.clear();
@@ -128,12 +130,12 @@ void Background::Load(string bg_name,Config &thisConfigs)
             ps_temp.setTextureRect(sf::IntRect(0,0,500000,ps_temp.t.getSize().y)); ///affect later with ratio
             ps_temp.setOrigin(10000,ps_temp.getLocalBounds().height);
             ps_temp.setColor(sf::Color(atoi(v_params[3].c_str()),atoi(v_params[4].c_str()),atoi(v_params[5].c_str()),255));
-            ps_temp.setPosition(-1000,atoi(v_params[1].c_str()));
+            ps_temp.setPosition(-1000,atoi(v_params[1].c_str())/ratioY);
 
             sf::Vector2f tmpp;
 
             tmpp.x = -1000;
-            tmpp.y = atoi(v_params[1].c_str());
+            tmpp.y = atoi(v_params[1].c_str()) * ratioY;
 
             s_background.push_back(ps_temp);
             p_background.push_back(tmpp);

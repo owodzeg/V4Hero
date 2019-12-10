@@ -13,6 +13,7 @@ class AnimatedObject
     public:
     vector<Object> objects;
     float max_time;
+    float cur_pos;
 
     ///OLD
     sf::Sprite s_wall;

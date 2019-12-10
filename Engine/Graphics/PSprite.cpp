@@ -76,9 +76,9 @@ void PSprite::setSprite(sf::Sprite& sprite)
 
 void PSprite::setPosition(float x, float y)
 {
-    s.setPosition(x*ratioX,y*ratioY);
-    lx = x*ratioX;
-    ly = y*ratioY;
+    s.setPosition(x/ratioX,y/ratioY);
+    lx = x/ratioX;
+    ly = y/ratioY;
 
     //std::cout << x << " " << y << "  " << lx << " " << ly << std::endl;
 }
