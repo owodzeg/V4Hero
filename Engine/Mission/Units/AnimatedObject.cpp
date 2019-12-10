@@ -54,6 +54,7 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
 
                     sf::Texture obj_texture;
                     obj_texture.loadFromMemory(texture_data.data(),texture_data.size());
+                    obj_texture.setSmooth(true);
 
                     int parent = 0; ///unused yet
 
@@ -180,9 +181,16 @@ void AnimatedObject::LoadConfig(Config *thisConfigs, std::string unitParamPath)
 }
 void AnimatedObject::Draw(sf::RenderWindow& window)
 {
+    cur_pos += 1 / float(fps);
+
+    if(cur_pos > max_time)
+    {
+        cur_pos = 0;
+    }
+
     for(int i=0; i<objects.size(); i++)
     {
-        objects[i].SetPos(0);
+        objects[i].SetPos(cur_pos);
         objects[i].Draw(window);
     }
 
