@@ -94,6 +94,7 @@ void ItemRegistry::ReadItemFiles(){
                                         }
                                     }
                                 }
+                                delete newItem;
                                 newItem = wep;
                                 cout<< newItem->item_id << wep->item_id<<'\n';
                                 break;
@@ -133,6 +134,7 @@ void ItemRegistry::ReadItemFiles(){
                                         }
                                     }
                                 }
+                                delete newItem;
                                 newItem = mask;
                                 break;
                                 }
@@ -169,6 +171,7 @@ void ItemRegistry::ReadItemFiles(){
                                         }
                                     }
                                 }
+                                delete newItem;
                                 newItem = masks;
                                 break;
                                 }
