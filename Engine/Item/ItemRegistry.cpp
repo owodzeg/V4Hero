@@ -5,7 +5,7 @@
 #include <fstream>
 #include<iostream>
 #include "Weapon.h"
-#include "Mask.h"
+#include "mask.h"
 #include "Armour.h"
 using namespace std;
 
@@ -36,7 +36,7 @@ void ItemRegistry::ReadItemFiles(){
     conf.close();
     bool quit=false;
     for (int i=0;i<itemPaths.size()-1;i++){
-        Item newItem;
+        Item* newItem=new Item();
         ifstream itemStream("resources/data/itemdata/"+itemPaths[i]+".txt");
         if(itemStream.good())
         {
@@ -49,20 +49,22 @@ void ItemRegistry::ReadItemFiles(){
                     ///read into the item
                     vector<string> key = Func::Split(line,':');
                     if(key[0]=="id"){
-                        newItem.item_id = stoi(key[1]);
+                        newItem->item_id = stoi(key[1]);
                     } else if(key[0]=="name"){
                         std::wstring resws;
                         std::string str = key[1];
                         resws.assign(str.begin(), str.end());
-                        newItem.item_name = resws;
+                        newItem->item_name = resws;
                     } else if(key[0]=="type"){
-                        newItem.category_id = stoi(key[1]);
+                        newItem->category_id = stoi(key[1]);
                         switch (stoi(key[1])){
                             case 1: /// weapon
                                 {
 
                                 quit=true;
-                                Weapon wep = Weapon::FromItem(newItem);
+                                ///Weapon* wep = new Weapon();
+                                Weapon* wep = Weapon::FromItem(newItem);
+                                //wep->item_id = newItem->item_id;
                                 while(getline(itemStream, line))
                                 {
                                     ///ignore comments
@@ -71,28 +73,30 @@ void ItemRegistry::ReadItemFiles(){
                                         ///read into the item
                                         vector<string> key = Func::Split(line,':');
                                         if(key[0]=="id"){
-                                            wep.item_id = stoi(key[1]);
+                                            wep->item_id = stoi(key[1]);
                                         } else if(key[0]=="subtype"){
-                                            wep.subcategory_id = stoi(key[1]);
+                                            wep->subcategory_id = stoi(key[1]);
                                         } else if(key[0]=="desc"){
                                             std::wstring resws;
                                             std::string str = key[1];
                                             resws.assign(str.begin(), str.end());
-                                            wep.item_description = resws;
+                                            wep->item_description = resws;
                                         } else if(key[0]=="icon"){
-                                            wep.icon_path = key[1];
+                                            wep->icon_path = key[1];
                                         } else if(key[0]=="mindmg"){
-                                            wep.mindmg = stoi(key[1]);
+                                            wep->mindmg = stoi(key[1]);
                                         } else if(key[0]=="maxdmg"){
-                                            wep.maxdmg = stoi(key[1]);
+                                            wep->maxdmg = stoi(key[1]);
                                         } else if(key[0]=="crit"){
-                                            wep.crit = stoi(key[1]);
+                                            wep->crit = stoi(key[1]);
                                         } else if(key[0]=="attackspeed"){
-                                            wep.attackspeed = stoi(key[1]);
+                                            wep->attackspeed = stoi(key[1]);
                                         }
                                     }
                                 }
+                                delete newItem;
                                 newItem = wep;
+                                cout<< newItem->item_id << wep->item_id<<'\n';
                                 break;
                                 }
                             case 2: /// mask
@@ -100,7 +104,7 @@ void ItemRegistry::ReadItemFiles(){
 
 
                                 quit=true;
-                                Mask mask = Mask::FromItem(newItem);
+                                Mask* mask = Mask::FromItem(newItem);
                                 while(getline(itemStream, line))
                                 {
                                     ///ignore comments
@@ -109,34 +113,35 @@ void ItemRegistry::ReadItemFiles(){
                                         ///read into the item
                                         vector<string> key = Func::Split(line,':');
                                         if(key[0]=="id"){
-                                            mask.item_id = stoi(key[1]);
+                                            mask->item_id = stoi(key[1]);
                                         } else if(key[0]=="subtype"){
-                                            mask.subcategory_id = stoi(key[1]);
+                                            mask->subcategory_id = stoi(key[1]);
                                         } else if(key[0]=="desc"){
                                             std::wstring resws;
                                             std::string str = key[1];
                                             resws.assign(str.begin(), str.end());
-                                            mask.item_description = resws;
+                                            mask->item_description = resws;
                                         } else if(key[0]=="icon"){
-                                            mask.icon_path = key[1];
+                                            mask->icon_path = key[1];
                                         } else if(key[0]=="mindmg"){
-                                            mask.mindmg = stoi(key[1]);
+                                            mask->mindmg = stoi(key[1]);
                                         } else if(key[0]=="maxdmg"){
-                                            mask.maxdmg = stoi(key[1]);
+                                            mask->maxdmg = stoi(key[1]);
                                         } else if(key[0]=="crit"){
-                                            mask.crit = stoi(key[1]);
+                                            mask->crit = stoi(key[1]);
                                         } else if(key[0]=="attackspeed"){
-                                            mask.attackspeed = stoi(key[1]);
+                                            mask->attackspeed = stoi(key[1]);
                                         }
                                     }
                                 }
+                                delete newItem;
                                 newItem = mask;
                                 break;
                                 }
                             case 3: /// armour
                                 {
                                 quit=true;
-                                Armour mask = Armour::FromItem(newItem);
+                                Armour* masks = Armour::FromItem(newItem);
                                 while(getline(itemStream, line))
                                 {
                                     ///ignore comments
@@ -145,28 +150,29 @@ void ItemRegistry::ReadItemFiles(){
                                         ///read into the item
                                         vector<string> key = Func::Split(line,':');
                                         if(key[0]=="id"){
-                                            mask.item_id = stoi(key[1]);
+                                            masks->item_id = stoi(key[1]);
                                         } else if(key[0]=="subtype"){
-                                            mask.subcategory_id = stoi(key[1]);
+                                            masks->subcategory_id = stoi(key[1]);
                                         } else if(key[0]=="desc"){
                                             std::wstring resws;
                                             std::string str = key[1];
                                             resws.assign(str.begin(), str.end());
-                                            mask.item_description = resws;
+                                            masks->item_description = resws;
                                         } else if(key[0]=="icon"){
-                                            mask.icon_path = key[1];
+                                            masks->icon_path = key[1];
                                         } else if(key[0]=="mindmg"){
-                                            mask.mindmg = stoi(key[1]);
+                                            masks->mindmg = stoi(key[1]);
                                         } else if(key[0]=="maxdmg"){
-                                            mask.maxdmg = stoi(key[1]);
+                                            masks->maxdmg = stoi(key[1]);
                                         } else if(key[0]=="crit"){
-                                            mask.crit = stoi(key[1]);
+                                            masks->crit = stoi(key[1]);
                                         } else if(key[0]=="attackspeed"){
-                                            mask.attackspeed = stoi(key[1]);
+                                            masks->attackspeed = stoi(key[1]);
                                         }
                                     }
                                 }
-                                newItem = mask;
+                                delete newItem;
+                                newItem = masks;
                                 break;
                                 }
                             case 0: /// regular item/material
@@ -178,14 +184,14 @@ void ItemRegistry::ReadItemFiles(){
                             break;
                         }
                     } else if(key[0]=="subtype"){
-                        newItem.subcategory_id = stoi(key[1]);
+                        newItem->subcategory_id = stoi(key[1]);
                     } else if(key[0]=="desc"){
                         std::wstring resws;
                         std::string str = key[1];
                         resws.assign(str.begin(), str.end());
-                        newItem.item_description = resws;
+                        newItem->item_description = resws;
                     } else if(key[0]=="icon"){
-                        newItem.icon_path = key[1];
+                        newItem->icon_path = key[1];
                     }
                 }
             }
@@ -198,6 +204,7 @@ void ItemRegistry::ReadItemFiles(){
         }
         itemStream.close();
         items.push_back(newItem);
+
     }
 }
 ItemRegistry::~ItemRegistry(){
@@ -206,9 +213,10 @@ ItemRegistry::~ItemRegistry(){
 Item* ItemRegistry::GetItemByID(int id){
 
     for (int i=0;i<items.size()-1;i++){
-        Item currentItem = items[i];
-        if (currentItem.item_id==id)
-            return &items[i];
+        Item* currentItem = items[i];
+        ///cout<<currentItem->item_id<<"|"<<id<<'\n';
+        if (currentItem->item_id==id)
+            return items[i];
     }
-    cout<<"A stupid happened"<<'\n';
+    cout<<"A stupid happened: "<<id<<'\n';
 }

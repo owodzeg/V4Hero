@@ -7,11 +7,13 @@
 #include <string>
 #include "DebugOut.h"
 #include "Item/ItemRegistry.h"
+#include "Pon/PonRegistry.h"
 #include "Item/InventoryData.h"
 class SaveReader
 {
     public:
     ItemRegistry itemreg;
+    PonRegistry ponreg;
     InventoryData invdata;
 
     sf::String kaminame;

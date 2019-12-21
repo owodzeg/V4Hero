@@ -9,7 +9,7 @@ class Mask : public Item
         int maxdmg=0; /// by default, masks add/deal no damage
         int crit=0;
         float attackspeed=0;/// 0% reduction
-        static Mask FromItem(Item item);
+        static Mask* FromItem(Item* item);
 };
 
 #endif // MASK_H

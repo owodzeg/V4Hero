@@ -73,6 +73,8 @@ class Barracks : public Menu
         PSprite s_mask_icon;
         sf::Vector2f p_mask_icon;
 
+        int current_selected_pon=0;
+
         Camera camera;
         Menu *parentMenu;
         int currentMenuPosition;
@@ -82,6 +84,8 @@ class Barracks : public Menu
         void EventFired(sf::Event event);
         void SetTitle(int menuPosition);
         void OnExit();
+        void OpenBarracksMenu();
+        void RefreshStats();
         void UpdateButtons();
         Barracks();
         ~Barracks();

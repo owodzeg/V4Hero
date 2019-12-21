@@ -60,7 +60,7 @@ void NameEntryButtonList::SelectButton(int index){
                     InventoryItem iron_spear1;
                     iron_spear1.item = savMenu->v4core->savereader.itemreg.GetItemByID(2);
                     InventoryItem mask;
-                    mask.item = savMenu->v4core->savereader.itemreg.GetItemByID(2);
+                    mask.item = savMenu->v4core->savereader.itemreg.GetItemByID(4);
                     InventoryItem woodhelmet_1;
                     woodhelmet_1.item = savMenu->v4core->savereader.itemreg.GetItemByID(16);
                     InventoryItem woodhelmet_2;
@@ -96,7 +96,72 @@ void NameEntryButtonList::SelectButton(int index){
                     savMenu->v4core->savereader.invdata.items.push_back(patadrum);
                     savMenu->v4core->savereader.invdata.items.push_back(chakadrum);
                     savMenu->v4core->savereader.invdata.items.push_back(dondrum);
+
+
+                    Pon starterPon = Pon(&savMenu->v4core->savereader);
+                    starterPon.pon_id = 0;
+                    starterPon.pon_class = 0;
+                    starterPon.pon_squad_position = 0;
+                    starterPon.pon_exp = 0;
+                    starterPon.pon_level = 1;
+                    //starterPon.weapon_invItem_id = 3;
+                    //starterPon.armour_invItem_id = 8;
+                    //starterPon.weapon2_invItem_id = -1;
+                    //tarterPon.mask_invItem_id = 4;
+                    starterPon.GiveItem(3);
+                    starterPon.GiveItem(8);
+                    starterPon.GiveItem(4);
+
+
+                    Pon starterPon2 = Pon(&savMenu->v4core->savereader);
+                    starterPon2.pon_id = 1;
+                    starterPon2.pon_class = 1;
+                    starterPon2.pon_squad_position = 0;
+                    starterPon2.pon_exp = 0;
+                    starterPon2.pon_level = 1;
+                    //starterPon2.weapon_invItem_id = 0;
+                    //starterPon2.armour_invItem_id = 5;
+                    //starterPon2.weapon2_invItem_id = -1;
+                    //starterPon2.mask_invItem_id = -1;
+                    starterPon2.GiveItem(0);
+                    starterPon2.GiveItem(5);
+
+
+                    Pon starterPon3 = Pon(&savMenu->v4core->savereader);
+                    starterPon3.pon_id = 2;
+                    starterPon3.pon_class = 1;
+                    starterPon3.pon_squad_position = 1;
+                    starterPon3.pon_exp = 0;
+                    starterPon3.pon_level = 1;
+                    //starterPon3.weapon_invItem_id = 1;
+                    //starterPon3.armour_invItem_id = 6;
+                    //starterPon3.weapon2_invItem_id = -1;
+                    //starterPon3.mask_invItem_id = -1;
+                    starterPon3.GiveItem(1);
+                    starterPon3.GiveItem(6);
+
+
+                    Pon starterPon4 = Pon(&savMenu->v4core->savereader);
+                    starterPon4.pon_id = 3;
+                    starterPon4.pon_class = 1;
+                    starterPon4.pon_squad_position = 2;
+                    starterPon4.pon_exp = 0;
+                    starterPon4.pon_level = 1;
+                    //starterPon4.weapon_invItem_id = 2;
+                    //starterPon4.armour_invItem_id = 7;
+                    //starterPon4.weapon2_invItem_id = -1;
+                    //starterPon4.mask_invItem_id = -1;
+                    starterPon4.GiveItem(2);
+                    starterPon4.GiveItem(7);
+
+                    savMenu->v4core->savereader.ponreg.pons.push_back(starterPon);
+                    savMenu->v4core->savereader.ponreg.pons.push_back(starterPon2);
+                    savMenu->v4core->savereader.ponreg.pons.push_back(starterPon3);
+                    savMenu->v4core->savereader.ponreg.pons.push_back(starterPon4);
+
+
                     savMenu->v4core->savereader.Save();
+
                 } else {
                     savMenu->showPromptText = true;
                 }

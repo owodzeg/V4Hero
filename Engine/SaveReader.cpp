@@ -65,6 +65,31 @@ void SaveReader::LoadSave(Config& tconfig)
                     invdata.items.push_back(invItem);
                 } else if(key[0]=="heroUnlocked"){
                     heroUnlocked = stoi(key[1]);
+                } else if(key[0]=="PON"){
+                    vector<string> ponData = Func::Split(key[1],'|');
+                    Pon newPon = Pon(this);
+                    newPon.pon_id=stoi(ponData[0]);
+                    newPon.pon_class=stoi(ponData[1]);
+                    newPon.pon_squad_position=stoi(ponData[2]);
+
+
+                    newPon.pon_exp=stoi(ponData[3]);
+                    newPon.pon_level=stoi(ponData[4]);
+
+                    if (stoi(ponData[5])!=-1){
+                        newPon.GiveItem(stoi(ponData[5]));
+                    }
+                    if (stoi(ponData[6])!=-1){
+                        newPon.GiveItem(stoi(ponData[6]));
+                    }
+                    if (stoi(ponData[7])!=-1){
+                        newPon.GiveItem(stoi(ponData[7]),1);
+                    }
+                    if (stoi(ponData[8])!=-1){
+                        newPon.GiveItem(stoi(ponData[8]));
+                    }
+
+                    ponreg.pons.push_back(newPon);
                 }
 
             }
@@ -88,15 +113,21 @@ void SaveReader::Save()
         conf2 << "timeslaunched:" << timeslaunched <<'\n';
         conf2 << "yariponsUnlocked:" << yariponsUnlocked <<'\n';
         conf2 << "heroUnlocked:" << heroUnlocked <<'\n';
-        conf2 << "# pon layout: " <<'\n';
-        conf2 << "# PON:unitTypeID (0 hero, 1 yaripon)|totalExpNum|lvlNum|slot1_Item_Id|slot2_Item_Id|slot3_Item_Id|slot4_Item_Id|slot5_Item_Id|" <<'\n';
-        conf2 << "PON:0|0|1|1|2|0|0|3" <<'\n';
         conf2 << "# item layout:" <<'\n';
         conf2 << "# ITEM:id" <<'\n';
         for (int i=0; i<invdata.items.size(); i++){
             InventoryItem current_item = invdata.items[i];
             conf2 << "ITEM:" << current_item.item->item_id <<'\n';
         }
+        conf2 << "# pon layout: " <<'\n';
+        conf2 << "# PON:unitTypeID (0 hero, 1 yaripon)|totalExpNum|lvlNum|slot1_Item_Id|slot2_Item_Id|slot3_Item_Id|slot4_Item_Id|slot5_Item_Id|" <<'\n';
+        for (int j=0; j<ponreg.pons.size(); j++){
+            Pon current_pon = ponreg.pons[j];
+            cout  <<"PON:" << current_pon.pon_id<<'|' <<current_pon.pon_class<<'|' <<current_pon.pon_squad_position<<'|' <<current_pon.pon_exp<<'|' <<current_pon.pon_level<<'|' <<current_pon.weapon_invItem_id<<'|' <<current_pon.armour_invItem_id<<'|' <<current_pon.weapon2_invItem_id<<'|' <<current_pon.mask_invItem_id<<'|' <<'\n';
+
+            conf2 << "PON:" << current_pon.pon_id<<'|' <<current_pon.pon_class<<'|' <<current_pon.pon_squad_position<<'|' <<current_pon.pon_exp<<'|' <<current_pon.pon_level<<'|' <<current_pon.weapon_invItem_id<<'|' <<current_pon.armour_invItem_id<<'|' <<current_pon.weapon2_invItem_id<<'|' <<current_pon.mask_invItem_id<<'|' <<'\n';
+        }
+
             /*for(int i=0; i<configMap.size(); i++)
         {
             if(i == 0){

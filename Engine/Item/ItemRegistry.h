@@ -5,7 +5,7 @@
 class ItemRegistry
 {
     public:
-        std::vector<Item> items;
+        std::vector<Item*> items;
         ItemRegistry();
         ~ItemRegistry();
         Item* GetItemByID(int id);
