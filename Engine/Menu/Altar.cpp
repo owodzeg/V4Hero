@@ -146,28 +146,28 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
     t_itemcategory
     t_itemdescription
     */
-    Item* starting_item = v4core->savereader.invdata.GetItemByInvID(0).item;
+    //Item* starting_item = v4core->savereader.invdata.GetItemByInvID(0).item;
     t_titlemenu.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"altar_title")));
     t_titlemenu.setOrigin(t_titlemenu.getGlobalBounds().width/2,t_titlemenu.getGlobalBounds().height/2);
 
-    t_itemtitle.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(starting_item->item_name)));
+    t_itemtitle.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"altar_item_title")));
     t_itemtitle.setOrigin(t_itemtitle.getGlobalBounds().width/2,t_itemtitle.getGlobalBounds().height/2);
-    switch(starting_item->category_id){
+    /*switch(starting_item->category_id){
         case 0:
             t_itemcategory.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_category_material")));
             break;
         case 1:
             t_itemcategory.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_category_weapon")));
             break;
-        case 2:
+        case 2:*/
             t_itemcategory.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_category_masks")));
-            break;
-    }
+            //break;
+    //}
     t_itemcategory.setOrigin(t_itemcategory.getGlobalBounds().width/2,t_itemcategory.getGlobalBounds().height/2);
 
 
     /// because the description needs to be able to go over multiple lines, we have to split it into a series of lines
-    std::vector<std::wstring> wordsinDesc = Func::Split(thisConfig->strRepo.GetUnicodeString(starting_item->item_description),' ');
+    std::vector<std::wstring> wordsinDesc = Func::Split(thisConfig->strRepo.GetUnicodeString(L"altar_item_description"),' ');
     sf::String oldTotalString;
     sf::String currentTotalString;
     int maxWidth = s_titlemenu_bkg.t.getSize().x * 0.18;
@@ -214,6 +214,13 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
 void AltarMenu::ShowCategory(){
     int totalItems = v4core->savereader.invdata.items.size();
     numItemRows = ceil(totalItems/(numItemColumns+0.0));
+
+}
+void AltarMenu::ShowAltar(){
+    ShowCategory();
+    inventoryGridXPos=0;
+    inventoryGridYPos=0;
+    UpdateAltarDescriptions();
 }
 void AltarMenu::UpdateAltarDescriptions(){
     if (inventoryGridXPos+inventoryGridYPos*numItemColumns<v4core->savereader.invdata.items.size()){

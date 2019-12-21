@@ -7,6 +7,7 @@ class InventoryItem
 {
     public:
     Item* item;
+    int PonIdRegistered=-1;
 };
 
 #endif // INVENTORY_ITEM_H

@@ -154,12 +154,14 @@ void PatapolisMenu::EventFired(sf::Event event){
                             // open inventory menu
                             altar_menu.Show();
                             altar_menu.isActive = true;
+                            altar_menu.ShowAltar();
                             break;
                         case 2:
                             /// armoury/barracks
                             // open barracks screen
                             barracks_menu.Show();
                             barracks_menu.isActive = true;
+                            barracks_menu.OpenBarracksMenu();
                             break;
                         case 3:
                             /// mater tree

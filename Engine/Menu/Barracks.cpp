@@ -318,6 +318,28 @@ void Barracks::EventFired(sf::Event event){
     }
 
 }
+void Barracks::OpenBarracksMenu(){
+    RefreshStats();
+}
+void Barracks::RefreshStats(){
+    Pon currentPon = parentMenu.v4core->savereader.ponreg.GetPonByID(current_selected_pon);
+    t_unit_rarepon_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_wooden_spear")));
+    t_unit_rarepon_name.setOrigin(0,t_unit_rarepon_name.getGlobalBounds().height/2);
+
+    t_weapon_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_wooden_spear")));
+    t_weapon_name.setOrigin(0,t_weapon_name.getGlobalBounds().height/2);
+
+    t_armour_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_wooden_spear")));
+    t_armour_name.setOrigin(0,t_armour_name.getGlobalBounds().height/2);
+
+    t_weapon2_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_wooden_spear")));
+    t_weapon2_name.setOrigin(0,t_weapon2_name.getGlobalBounds().height/2);
+
+    t_mask_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_wooden_spear")));
+    t_mask_name.setOrigin(0,t_mask_name.getGlobalBounds().height/2);
+
+
+}
 void Barracks::Update(sf::RenderWindow &window, float fps)
 {
     if(isActive){
