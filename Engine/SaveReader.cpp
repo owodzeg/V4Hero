@@ -88,10 +88,6 @@ void SaveReader::LoadSave(Config& tconfig)
                     if (stoi(ponData[8])!=-1){
                         newPon.GiveItem(stoi(ponData[8]));
                     }
-                    newPon.weapon_invItem_id=stoi(ponData[5]);
-                    newPon.armour_invItem_id=stoi(ponData[6]);
-                    newPon.weapon2_invItem_id=stoi(ponData[7]);
-                    newPon.mask_invItem_id=stoi(ponData[8]);
 
                     ponreg.pons.push_back(newPon);
                 }
@@ -127,6 +123,8 @@ void SaveReader::Save()
         conf2 << "# PON:unitTypeID (0 hero, 1 yaripon)|totalExpNum|lvlNum|slot1_Item_Id|slot2_Item_Id|slot3_Item_Id|slot4_Item_Id|slot5_Item_Id|" <<'\n';
         for (int j=0; j<ponreg.pons.size(); j++){
             Pon current_pon = ponreg.pons[j];
+            cout  <<"PON:" << current_pon.pon_id<<'|' <<current_pon.pon_class<<'|' <<current_pon.pon_squad_position<<'|' <<current_pon.pon_exp<<'|' <<current_pon.pon_level<<'|' <<current_pon.weapon_invItem_id<<'|' <<current_pon.armour_invItem_id<<'|' <<current_pon.weapon2_invItem_id<<'|' <<current_pon.mask_invItem_id<<'|' <<'\n';
+
             conf2 << "PON:" << current_pon.pon_id<<'|' <<current_pon.pon_class<<'|' <<current_pon.pon_squad_position<<'|' <<current_pon.pon_exp<<'|' <<current_pon.pon_level<<'|' <<current_pon.weapon_invItem_id<<'|' <<current_pon.armour_invItem_id<<'|' <<current_pon.weapon2_invItem_id<<'|' <<current_pon.mask_invItem_id<<'|' <<'\n';
         }
 

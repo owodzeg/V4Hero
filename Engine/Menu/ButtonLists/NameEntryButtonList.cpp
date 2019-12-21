@@ -60,7 +60,7 @@ void NameEntryButtonList::SelectButton(int index){
                     InventoryItem iron_spear1;
                     iron_spear1.item = savMenu->v4core->savereader.itemreg.GetItemByID(2);
                     InventoryItem mask;
-                    mask.item = savMenu->v4core->savereader.itemreg.GetItemByID(2);
+                    mask.item = savMenu->v4core->savereader.itemreg.GetItemByID(4);
                     InventoryItem woodhelmet_1;
                     woodhelmet_1.item = savMenu->v4core->savereader.itemreg.GetItemByID(16);
                     InventoryItem woodhelmet_2;
@@ -123,8 +123,8 @@ void NameEntryButtonList::SelectButton(int index){
                     //starterPon2.armour_invItem_id = 5;
                     //starterPon2.weapon2_invItem_id = -1;
                     //starterPon2.mask_invItem_id = -1;
-                    starterPon.GiveItem(0);
-                    starterPon.GiveItem(5);
+                    starterPon2.GiveItem(0);
+                    starterPon2.GiveItem(5);
 
 
                     Pon starterPon3 = Pon(&savMenu->v4core->savereader);
@@ -137,8 +137,8 @@ void NameEntryButtonList::SelectButton(int index){
                     //starterPon3.armour_invItem_id = 6;
                     //starterPon3.weapon2_invItem_id = -1;
                     //starterPon3.mask_invItem_id = -1;
-                    starterPon.GiveItem(1);
-                    starterPon.GiveItem(6);
+                    starterPon3.GiveItem(1);
+                    starterPon3.GiveItem(6);
 
 
                     Pon starterPon4 = Pon(&savMenu->v4core->savereader);
@@ -151,8 +151,8 @@ void NameEntryButtonList::SelectButton(int index){
                     //starterPon4.armour_invItem_id = 7;
                     //starterPon4.weapon2_invItem_id = -1;
                     //starterPon4.mask_invItem_id = -1;
-                    starterPon.GiveItem(2);
-                    starterPon.GiveItem(7);
+                    starterPon4.GiveItem(2);
+                    starterPon4.GiveItem(7);
 
                     savMenu->v4core->savereader.ponreg.pons.push_back(starterPon);
                     savMenu->v4core->savereader.ponreg.pons.push_back(starterPon2);

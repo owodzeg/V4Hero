@@ -10,7 +10,7 @@ class Armour : public Item
         int crit=0;
         int hp=0;
         float attackspeed=0.0;/// 0% reduction
-        static Armour FromItem(Item item);
+        static Armour* FromItem(Item* item);
 };
 
 #endif // ARMOUR_H

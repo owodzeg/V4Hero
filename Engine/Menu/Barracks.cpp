@@ -322,8 +322,9 @@ void Barracks::OpenBarracksMenu(){
     RefreshStats();
 }
 void Barracks::RefreshStats(){
-    Pon currentPon = parentMenu.v4core->savereader.ponreg.GetPonByID(current_selected_pon);
-    t_unit_rarepon_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_wooden_spear")));
+    Pon* currentPon = parentMenu->v4core->savereader.ponreg.GetPonByID(current_selected_pon);
+
+    t_unit_rarepon_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"rarepon_normal"))+" "+Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_lvl"))+" "+std::to_string(currentPon->pon_level));
     t_unit_rarepon_name.setOrigin(0,t_unit_rarepon_name.getGlobalBounds().height/2);
 
     t_weapon_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_wooden_spear")));
@@ -338,7 +339,26 @@ void Barracks::RefreshStats(){
     t_mask_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_wooden_spear")));
     t_mask_name.setOrigin(0,t_mask_name.getGlobalBounds().height/2);
 
+    s_unit_level.setString(std::to_string(currentPon->pon_level));
+    s_unit_level.setOrigin(0,s_unit_level.getGlobalBounds().height/2);
 
+    s_unit_experience.setString(std::to_string(currentPon->pon_exp));
+    s_unit_experience.setOrigin(0,s_unit_experience.getGlobalBounds().height/2);
+
+    s_unit_experience.setString(std::to_string(currentPon->pon_exp));
+    s_unit_experience.setOrigin(0,s_unit_experience.getGlobalBounds().height/2);
+
+    s_unit_damage.setString(std::to_string(currentPon->pon_min_dmg)+"/"+std::to_string(currentPon->pon_max_dmg));
+    s_unit_damage.setOrigin(0,s_unit_damage.getGlobalBounds().height/2);
+
+    s_unit_hp.setString(std::to_string(currentPon->pon_hp));
+    s_unit_hp.setOrigin(s_unit_hp.getGlobalBounds().width,s_unit_hp.getGlobalBounds().height/2);
+
+    s_unit_crit.setString(std::to_string(currentPon->pon_crit));
+    s_unit_crit.setOrigin(s_unit_crit.getGlobalBounds().width,s_unit_crit.getGlobalBounds().height/2);
+
+    s_unit_attack_speed.setString(std::to_string(currentPon->pon_attack_speed));
+    s_unit_attack_speed.setOrigin(s_unit_attack_speed.getGlobalBounds().width,s_unit_attack_speed.getGlobalBounds().height/2);
 }
 void Barracks::Update(sf::RenderWindow &window, float fps)
 {

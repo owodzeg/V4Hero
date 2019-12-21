@@ -9,7 +9,7 @@ class Weapon : public Item
         int maxdmg=1;
         int crit=0;
         float attackspeed=0.0;/// 0% reduction
-        static Weapon FromItem(Item item);
+        static Weapon* FromItem(Item* item);
 };
 
 #endif // WEAPON_H

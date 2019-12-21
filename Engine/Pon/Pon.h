@@ -19,7 +19,18 @@ class Pon
     int armour_invItem_id=-1;
     SaveReader* savReader;
 
+
+    int pon_hp=100;
+    int pon_min_dmg=0;
+    int pon_max_dmg=0;
+    int pon_crit=0;
+    float pon_attack_speed=2.00;
+
+
+
+
     void GiveItem(int InvItemId,int where=0);
+    void RemoveItem(int InvItemId,int where=0);
     Pon(SaveReader* core);
 
 };
