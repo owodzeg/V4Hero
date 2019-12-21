@@ -327,17 +327,34 @@ void Barracks::RefreshStats(){
     t_unit_rarepon_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"rarepon_normal"))+" "+Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_lvl"))+" "+std::to_string(currentPon->pon_level));
     t_unit_rarepon_name.setOrigin(0,t_unit_rarepon_name.getGlobalBounds().height/2);
 
-    t_weapon_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_wooden_spear")));
-    t_weapon_name.setOrigin(0,t_weapon_name.getGlobalBounds().height/2);
-
-    t_armour_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_wooden_spear")));
-    t_armour_name.setOrigin(0,t_armour_name.getGlobalBounds().height/2);
-
-    t_weapon2_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_wooden_spear")));
+    if(currentPon->weapon_invItem_id>=0){
+        InventoryItem wep = parentMenu->v4core->savereader.invdata.GetItemByInvID(currentPon->weapon_invItem_id);
+        t_weapon_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(wep.item->item_name)));
+        t_weapon_name.setOrigin(0,t_weapon_name.getGlobalBounds().height/2);
+    }
+    if(currentPon->weapon2_invItem_id>=0){
+        InventoryItem wep2 = parentMenu->v4core->savereader.invdata.GetItemByInvID(currentPon->weapon2_invItem_id);
+         t_weapon2_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(wep2.item->item_name)));
     t_weapon2_name.setOrigin(0,t_weapon2_name.getGlobalBounds().height/2);
-
-    t_mask_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_wooden_spear")));
+    }
+    if(currentPon->armour_invItem_id>=0){
+        InventoryItem armour = parentMenu->v4core->savereader.invdata.GetItemByInvID(currentPon->armour_invItem_id);
+        t_armour_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(armour.item->item_name)));
+    t_armour_name.setOrigin(0,t_armour_name.getGlobalBounds().height/2);
+    }
+    if(currentPon->mask_invItem_id>=0){
+        InventoryItem mask = parentMenu->v4core->savereader.invdata.GetItemByInvID(currentPon->mask_invItem_id);
+        t_mask_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(mask.item->item_name)));
     t_mask_name.setOrigin(0,t_mask_name.getGlobalBounds().height/2);
+    }
+
+
+
+
+
+
+
+
 
     s_unit_level.setString(std::to_string(currentPon->pon_level));
     s_unit_level.setOrigin(0,s_unit_level.getGlobalBounds().height/2);
