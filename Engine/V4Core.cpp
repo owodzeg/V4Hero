@@ -152,5 +152,8 @@ void V4Core::Init()
         window.setView(lastView);
 
         keyMap.clear();
+        if(closeWindow){
+            window.close();
+        }
     }
 }

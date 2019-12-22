@@ -34,13 +34,13 @@ class V4Core
     sf::Clock fpsclock;
 
     bool leftkey=false,rightkey=false,upkey=false,downkey=false;
-
     public:
     Config config;
     SaveReader savereader;
         MissionController currentController;
     V4Core();
     std::vector<Menu*> menus;
+    bool closeWindow=false;
     void Init();
 };
 
