@@ -10,6 +10,8 @@ class InventoryData
         InventoryItem GetItemByInvID(int id);
         int GetItemCountByTypeID(int id);
         int GetItemCountByName(std::string itemname);
+        std::vector<InventoryItem> ItemsByType(int type);
+        int CountItemsByType(int type);
         InventoryData();
         ~InventoryData();
 };

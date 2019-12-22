@@ -168,6 +168,8 @@ void ItemRegistry::ReadItemFiles(){
                                             masks->crit = stoi(key[1]);
                                         } else if(key[0]=="attackspeed"){
                                             masks->attackspeed = stoi(key[1]);
+                                        } else if(key[0]=="hp"){
+                                            masks->hp = stoi(key[1]);
                                         }
                                     }
                                 }

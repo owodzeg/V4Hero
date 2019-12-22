@@ -75,6 +75,40 @@ class Barracks : public Menu
 
         int current_selected_pon=0;
 
+        bool MenuMode = false;
+
+
+        /// mask icon
+        PSprite mask_icon;
+
+        /// spear icon
+        PSprite spear_icon;
+
+        /// misc icon
+        PSprite misc_icon;
+
+        /// armour icon
+        PSprite armour_icon;
+
+
+        int activeCategory=1;
+        int activeSubcategory=0;
+
+        int numItemRows;
+        int numItemColumns = 4;
+        int currentRow = 0;
+
+        int inventoryGridXPos = 0;
+        int inventoryGridYPos = 0;
+        sf::RectangleShape mm_inventory_background;
+        sf::RectangleShape mm_description_background;
+        sf::RectangleShape mm_highlighted_tile;
+
+        int current_pon=0;
+
+        sf::Text t_itemtitle;
+        std::vector<sf::Text> t_itemdescription;
+
         Camera camera;
         Menu *parentMenu;
         int currentMenuPosition;

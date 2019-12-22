@@ -58,7 +58,7 @@ V4Core::V4Core()
     t_debug.setFont(f_font);
     t_debug.setCharacterSize(24);
     t_debug.setFillColor(sf::Color::White);
-    t_debug.setString(config.strRepo.GetString(L"alpha_string"));//+strDay+" "+months[month]+" "+to_string(year)+".");
+    t_debug.setString(config.strRepo.GetString(L"demo_string"));//+strDay+" "+months[month]+" "+to_string(year)+".");
     t_debug.setOrigin(t_debug.getGlobalBounds().width/2,t_debug.getGlobalBounds().height/2);
 
     /** Initialize main menu **/
