@@ -12,9 +12,13 @@ Barracks::Barracks()
     t_title.setFont(f_font);
     t_title.setCharacterSize(38);
     t_title.setFillColor(sf::Color::White);
+    t_itemtitle.setFont(f_font);
+    t_itemtitle.setCharacterSize(28);
+    t_itemtitle.setFillColor(sf::Color::Black);
+
 
     mm_bigBox.setSize(sf::Vector2f(100,10));
-    mm_bigBox.setFillColor(sf::Color(4,0,90));
+    mm_bigBox.setFillColor(sf::Color(65, 59, 173));
 
     mm_selected_item_line.setSize(sf::Vector2f(200,4));
     mm_selected_item_line.setFillColor(sf::Color::Red);
@@ -278,37 +282,182 @@ void Barracks::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     enabledPositons.push_back(false);
     enabledPositons.push_back(true);
     enabledPositons.push_back(true);
+    mm_inventory_background.setSize(sf::Vector2f((v4core->config.GetInt("resX")*500)/1920,(v4core->config.GetInt("resX")*280)/1920));
+    mm_inventory_background.setFillColor(sf::Color(0,0,0));
+
+    mm_description_background.setSize(sf::Vector2f((v4core->config.GetInt("resX")*500)/1920,(v4core->config.GetInt("resX")*310)/1920));
+    mm_description_background.setFillColor(sf::Color(220,220,220,180));
+
+    float singleTileWidth = mm_inventory_background.getSize().x/numItemColumns;
+    float singleTileHeight = mm_inventory_background.getSize().y/5;//(thisConfig->GetInt("resX")*150)/1920.0;
+
+    mm_highlighted_tile.setSize(sf::Vector2f(singleTileWidth,singleTileHeight));
+    mm_highlighted_tile.setFillColor(sf::Color(255,255,255,80));
+
+    ///             ####   MASK ITEM ICON
+    ps_temp.loadFromFile("resources/graphics/item/mask_item.png",1);
+    ps_temp.setRepeated(false);
+    ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
+    ps_temp.setOrigin(0,0);
+    ps_temp.setColor(sf::Color(255,255,255,255));
+    ps_temp.setPosition(0,0);
+    ps_temp.DoAutoScale = false;
+    mask_icon = ps_temp;
+    mask_icon.scaleX=singleTileWidth*0.31f/214;
+    mask_icon.scaleY=singleTileHeight*0.22f/110;
+
+
+    ///             ####   SPEAR ITEM ICON
+    ps_temp.loadFromFile("resources/graphics/item/spear_item.png",1);
+    ps_temp.setRepeated(false);
+    ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
+    ps_temp.setOrigin(0,0);
+    ps_temp.setColor(sf::Color(255,255,255,255));
+    ps_temp.setPosition(0,0);
+    ps_temp.DoAutoScale = false;
+    spear_icon = ps_temp;
+    spear_icon.scaleX=singleTileWidth*0.31f/214;
+    spear_icon.scaleY=singleTileHeight*0.22f/110;
+
+    ///             ####   MISC ITEM ICON
+    ps_temp.loadFromFile("resources/graphics/item/misc_icon.png",1);
+    ps_temp.setRepeated(false);
+    ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
+    ps_temp.setOrigin(0,0);
+    ps_temp.setColor(sf::Color(255,255,255,255));
+    ps_temp.setPosition(0,0);
+    ps_temp.DoAutoScale = false;
+    misc_icon = ps_temp;
+    misc_icon.scaleX=singleTileWidth*0.31f/214;
+    misc_icon.scaleY=singleTileHeight*0.22f/110;
+
+    ///             ####   ARMOUR ITEM ICON
+    ps_temp.loadFromFile("resources/graphics/item/armour_icon.png",1);
+    ps_temp.setRepeated(false);
+    ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
+    ps_temp.setOrigin(0,0);
+    ps_temp.setColor(sf::Color(255,255,255,255));
+    ps_temp.setPosition(0,0);
+    ps_temp.DoAutoScale = false;
+    armour_icon = ps_temp;
+    armour_icon.scaleX=singleTileWidth*0.31f/214;
+    armour_icon.scaleY=singleTileHeight*0.22f/110;
+
+    mm_inventory_background.setSize(sf::Vector2f(mm_inventory_background.getSize().x+(40*thisConfigs->GetInt("resX")/1920),mm_inventory_background.getSize().y+(40*thisConfigs->GetInt("resX")/1920)));
+
 }
 void Barracks::EventFired(sf::Event event){
     if(isActive){
         if(event.type == sf::Event::KeyPressed)
         {
-            if (event.key.code == thisConfig->GetInt("keybindBack")){
-                this->Hide();
-                this->isActive = false;
-                parentMenu->Show();
-                parentMenu->isActive=true;
-            }
             int keyCode = event.key.code;
-            if(keyCode == thisConfig->GetInt("keybindChaka") || keyCode == thisConfig->GetInt("secondaryKeybindChaka"))
-            {
-                currentItemPosition -=1;
-                if (currentItemPosition<0){
-                    currentItemPosition = enabledPositons.size()-1;
-                }
-                while(!enabledPositons[currentItemPosition]){
+            if (!MenuMode){
+                if(keyCode == thisConfig->GetInt("keybindChaka") || keyCode == thisConfig->GetInt("secondaryKeybindChaka"))
+                {
                     currentItemPosition -=1;
+                    if (currentItemPosition<0){
+                        currentItemPosition = enabledPositons.size()-1;
+                    }
+                    while(!enabledPositons[currentItemPosition]){
+                        currentItemPosition -=1;
+                    }
+
+                }
+                if(keyCode == thisConfig->GetInt("keybindDon") || keyCode == thisConfig->GetInt("secondaryKeybindDon"))
+                {
+                    currentItemPosition +=1;
+                    if (currentItemPosition>enabledPositons.size()-1){
+                        currentItemPosition = 0;
+                    }
+                    while(!enabledPositons[currentItemPosition]){
+                        currentItemPosition +=1;
+                    }
                 }
 
-            }
-            if(keyCode == thisConfig->GetInt("keybindDon") || keyCode == thisConfig->GetInt("secondaryKeybindDon"))
-            {
-                currentItemPosition +=1;
-                if (currentItemPosition>enabledPositons.size()-1){
-                    currentItemPosition = 0;
+            } else {
+                if (event.key.code == thisConfig->GetInt("keybindPon") || event.key.code == thisConfig->GetInt("secondaryKeybindPon")){
+
+                    /// we need to move to the right
+                    if (inventoryGridXPos<numItemColumns-1){
+                        inventoryGridXPos+=1;
+                    } else {
+                        inventoryGridXPos = 0;
+                    }
+
+                } else if (event.key.code == thisConfig->GetInt("keybindPata") || event.key.code == thisConfig->GetInt("secondaryKeybindPata")){
+                    /// we need to move to the left
+                    if (inventoryGridXPos>0){
+                        inventoryGridXPos-=1;
+                    } else {
+                        inventoryGridXPos = numItemColumns-1;
+                    }
+
+                } else if (event.key.code == thisConfig->GetInt("keybindChaka") || event.key.code == thisConfig->GetInt("secondaryKeybindChaka")){
+                    /// we need to move up
+                    if (inventoryGridYPos>0){
+
+                        inventoryGridYPos-=1;
+                        if (inventoryGridYPos - currentRow<0){
+                                /// the position is above the top of the grid so we scroll up
+                                currentRow-=1;
+                        }
+                    } else {
+                        inventoryGridYPos = numItemRows-1;
+                        if (numItemRows<5){
+                            currentRow=inventoryGridYPos-numItemRows+1;
+                        } else {
+                            currentRow=inventoryGridYPos-4;
+                        }
+                    }
+
+                } else if (event.key.code == thisConfig->GetInt("keybindDon") || event.key.code == thisConfig->GetInt("secondaryKeybindDon")){
+                    /// we need to move down
+                    if (inventoryGridYPos<numItemRows-1){
+                        inventoryGridYPos+=1;
+                        if (inventoryGridYPos - currentRow>=5){
+                            /// the position is below the bottom of the grid so we scroll down
+                            currentRow+=1;
+                        }
+                    } else {
+                        inventoryGridYPos = 0;
+                        currentRow=0;
+                    }
+
                 }
-                while(!enabledPositons[currentItemPosition]){
-                    currentItemPosition +=1;
+                RefreshStats();
+            }
+            if(keyCode == thisConfig->GetInt("keybindMenuEnter"))
+            {
+                if (!MenuMode){
+                    MenuMode=true;
+
+                    if (currentItemPosition==1 || currentItemPosition==2){
+                        activeCategory=1;
+                    } else if(currentItemPosition==4) {
+                        activeCategory=2;
+                    } else if(currentItemPosition==3) {
+                        activeCategory=3;
+                    }
+                    OpenBarracksMenu();
+                } else {
+                    InventoryItem currentItem = v4core->savereader.invdata.ItemsByType(activeCategory)[inventoryGridXPos+inventoryGridYPos/numItemColumns];
+                    v4core->savereader.ponreg.pons[current_pon].GiveItem(currentItem.inventoryId);
+                    RefreshStats();
+                    MenuMode=false;
+                }
+            }
+            if(keyCode == thisConfig->GetInt("keybindBack"))
+            {
+                if (MenuMode){
+                    MenuMode=false;
+
+                    RefreshStats();
+                } else {
+                    this->Hide();
+                    this->isActive = false;
+                    parentMenu->Show();
+                    parentMenu->isActive=true;
+                    v4core->savereader.Save();
                 }
             }
 
@@ -319,9 +468,14 @@ void Barracks::EventFired(sf::Event event){
 
 }
 void Barracks::OpenBarracksMenu(){
+    inventoryGridXPos=0;
+    inventoryGridYPos=0;
+    int totalItems = v4core->savereader.invdata.CountItemsByType(activeCategory);
+    numItemRows = ceil(totalItems/(numItemColumns+0.0));
     RefreshStats();
 }
 void Barracks::RefreshStats(){
+
     Pon* currentPon = parentMenu->v4core->savereader.ponreg.GetPonByID(current_selected_pon);
 
     t_unit_rarepon_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"rarepon_normal"))+" "+Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_lvl"))+" "+std::to_string(currentPon->pon_level));
@@ -376,6 +530,96 @@ void Barracks::RefreshStats(){
 
     s_unit_attack_speed.setString(std::to_string(currentPon->pon_attack_speed));
     s_unit_attack_speed.setOrigin(s_unit_attack_speed.getGlobalBounds().width,s_unit_attack_speed.getGlobalBounds().height/2);
+
+
+
+
+
+    if (inventoryGridXPos+inventoryGridYPos*numItemColumns<v4core->savereader.invdata.ItemsByType(activeCategory).size()){
+        Item* starting_item = v4core->savereader.invdata.ItemsByType(activeCategory)[inventoryGridXPos+inventoryGridYPos*numItemColumns].item;
+
+        t_itemtitle.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(starting_item->item_name)));
+        t_itemtitle.setOrigin(t_itemtitle.getGlobalBounds().width/2,t_itemtitle.getGlobalBounds().height/2);
+
+
+        /// because the description needs to be able to go over multiple lines, we have to split it into a series of lines
+        std::vector<std::wstring> wordsinDesc = Func::Split(thisConfig->strRepo.GetUnicodeString(starting_item->item_description),' ');
+        sf::String oldTotalString;
+        sf::String currentTotalString;
+        int maxWidth = mm_description_background.getSize().x * 0.9;
+        /// we split it into words, then go word by word testing the width of the string
+        t_itemdescription.clear();
+        for (int i=0;i<wordsinDesc.size();i++){
+            std::wstring currentWord = wordsinDesc[i];
+            currentTotalString = currentTotalString + Func::ConvertToUtf8String(currentWord) + L" ";
+            sf::Text t_newLine;
+            t_newLine.setFont(f_font);
+            t_newLine.setCharacterSize(16);
+            t_newLine.setFillColor(sf::Color::Black);
+            t_newLine.setString(currentTotalString);
+            if (t_newLine.getGlobalBounds().width>maxWidth){
+                /// when the string is too long, we go back to the last string and lock it in, then start a new line
+                currentTotalString = oldTotalString;
+                t_newLine.setString(currentTotalString);
+                t_newLine.setOrigin(t_newLine.getGlobalBounds().width/2,t_newLine.getGlobalBounds().height/2);
+                t_itemdescription.push_back(t_newLine);
+                oldTotalString = currentWord+L" ";
+                currentTotalString = currentWord+L" ";
+            }
+            oldTotalString = currentTotalString;
+            /// if there are no more words, finish up the current line
+            if (i+1==wordsinDesc.size()){
+                currentTotalString = oldTotalString;
+                t_newLine.setString(currentTotalString);
+                t_newLine.setOrigin(t_newLine.getGlobalBounds().width/2,t_newLine.getGlobalBounds().height/2);
+                t_itemdescription.push_back(t_newLine);
+                oldTotalString = "";
+                currentTotalString = "";
+            }
+        }
+        //s_menu_bkg.t.getSize().x*0.2
+    } else {
+
+
+        t_itemtitle.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_none")));
+        t_itemtitle.setOrigin(t_itemtitle.getGlobalBounds().width/2,t_itemtitle.getGlobalBounds().height/2);
+
+        /// because the description needs to be able to go over multiple lines, we have to split it into a series of lines
+        std::vector<std::wstring> wordsinDesc = Func::Split(thisConfig->strRepo.GetUnicodeString(L"desc_none"),' ');
+        sf::String oldTotalString;
+        sf::String currentTotalString;
+        int maxWidth = mm_description_background.getSize().x * 0.9;
+        /// we split it into words, then go word by word testing the width of the string
+        t_itemdescription.clear();
+        for (int i=0;i<wordsinDesc.size();i++){
+            std::wstring currentWord = wordsinDesc[i];
+            currentTotalString = currentTotalString + Func::ConvertToUtf8String(currentWord) + L" ";
+            sf::Text t_newLine;
+            t_newLine.setFont(f_font);
+            t_newLine.setCharacterSize(16);
+            t_newLine.setFillColor(sf::Color::Black);
+            t_newLine.setString(currentTotalString);
+            if (t_newLine.getGlobalBounds().width>maxWidth){
+                /// when the string is too long, we go back to the last string and lock it in, then start a new line
+                currentTotalString = oldTotalString;
+                t_newLine.setString(currentTotalString);
+                t_newLine.setOrigin(t_newLine.getGlobalBounds().width/2,t_newLine.getGlobalBounds().height/2);
+                t_itemdescription.push_back(t_newLine);
+                oldTotalString = currentWord+L" ";
+                currentTotalString = currentWord+L" ";
+            }
+            oldTotalString = currentTotalString;
+            /// if there are no more words, finish up the current line
+            if (i+1==wordsinDesc.size()){
+                currentTotalString = oldTotalString;
+                t_newLine.setString(currentTotalString);
+                t_newLine.setOrigin(t_newLine.getGlobalBounds().width/2,t_newLine.getGlobalBounds().height/2);
+                t_itemdescription.push_back(t_newLine);
+                oldTotalString = "";
+                currentTotalString = "";
+            }
+        }
+    }
 }
 void Barracks::Update(sf::RenderWindow &window, float fps)
 {
@@ -510,6 +754,65 @@ void Barracks::Update(sf::RenderWindow &window, float fps)
         int bar_offset = (window.getSize().x*30)/(1920);
         mm_selected_item_line.setSize(sf::Vector2f(barSize,4));
         mm_selected_item_line.setPosition(p_unit_icon.x-bar_offset,p_unit_icon.y+bar_offset+currentItemPosition*equip_height);
+
+
+        if(MenuMode){
+        float smallOffset = (thisConfig->GetInt("resX")*100)/1920.0;
+        float tinyOffset = (thisConfig->GetInt("resX")*20)/1920.0;
+        mm_inventory_background.setPosition(smallOffset-10,(600*window.getSize().x)/1920-10);
+        window.draw(mm_inventory_background);
+        int row_start = currentRow;
+        int row_end = row_start+4;
+        for (int y=0;y<numItemRows;y++){
+            for (int x=0;x<numItemColumns;x++){
+                int currentItemId = x+y*numItemColumns;
+                if (currentItemId<v4core->savereader.invdata.ItemsByType(activeCategory).size() && (currentItemId/numItemColumns)>=row_start && (currentItemId/numItemColumns)<=row_end){
+                    Item* starting_item = v4core->savereader.invdata.ItemsByType(activeCategory)[currentItemId].item;
+                    switch (starting_item->category_id){
+
+                    case 1:
+                        spear_icon.setPosition(tinyOffset+mm_inventory_background.getPosition().x+mm_highlighted_tile.getSize().x*x,tinyOffset+mm_inventory_background.getPosition().y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
+                        spear_icon.draw(window);
+                        break;
+                    case 2:
+                        mask_icon.setPosition(tinyOffset+mm_inventory_background.getPosition().x+mm_highlighted_tile.getSize().x*x,tinyOffset+mm_inventory_background.getPosition().y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
+                        mask_icon.draw(window);
+                        break;
+                    case 3:
+                        armour_icon.setPosition(tinyOffset+mm_inventory_background.getPosition().x+mm_highlighted_tile.getSize().x*x,tinyOffset+mm_inventory_background.getPosition().y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
+                        armour_icon.draw(window);
+                        break;
+                    case 0:
+                    default:
+                        misc_icon.setPosition(tinyOffset+mm_inventory_background.getPosition().x+mm_highlighted_tile.getSize().x*x,tinyOffset+mm_inventory_background.getPosition().y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
+                        misc_icon.draw(window);
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        mm_description_background.setPosition((550*window.getSize().x)/1920+smallOffset-10,(600*window.getSize().x)/1920-10);
+        window.draw(mm_description_background);
+
+
+        mm_highlighted_tile.setPosition(mm_inventory_background.getPosition().x+tinyOffset+mm_highlighted_tile.getSize().x*inventoryGridXPos,mm_inventory_background.getPosition().y+tinyOffset+mm_highlighted_tile.getSize().y*inventoryGridYPos-mm_highlighted_tile.getSize().y*currentRow);
+        window.draw(mm_highlighted_tile);
+
+
+        t_itemtitle.setPosition(mm_description_background.getPosition().x+(mm_description_background.getSize().x)/2,mm_description_background.getPosition().y+(mm_description_background.getSize().y)*1/8);
+        window.draw(t_itemtitle);
+
+        for (int i=0;i<t_itemdescription.size();i++){
+            sf::Text currentLine = t_itemdescription[i];
+
+            currentLine.setPosition(mm_description_background.getPosition().x+(mm_description_background.getSize().x)/2,mm_description_background.getPosition().y+((mm_description_background.getSize().y)*1/8)+28 + 22*i);
+
+            window.draw(currentLine);
+        }
+        }
+
         window.draw(mm_selected_item_line);
     }
 }

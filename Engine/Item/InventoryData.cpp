@@ -24,3 +24,21 @@ int InventoryData::GetItemCountByTypeID(int id){
     }
     return totalcount;
 }
+std::vector<InventoryItem> InventoryData::ItemsByType(int type){
+    std::vector<InventoryItem> typeItems;
+    for (int i=0;i<items.size()-1;i++){
+        InventoryItem currentItem = items[i];
+        if (currentItem.item->category_id==type)
+            typeItems.push_back(currentItem);
+    }
+    return typeItems;
+}
+int InventoryData::CountItemsByType(int type){
+    int totalcount=0;
+    for (int i=0;i<items.size()-1;i++){
+        Item currentItem = *items[i].item;
+        if (currentItem.category_id==type)
+            totalcount++;
+    }
+    return totalcount;
+}

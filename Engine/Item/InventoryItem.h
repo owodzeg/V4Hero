@@ -8,6 +8,7 @@ class InventoryItem
     public:
     Item* item;
     int PonIdRegistered=-1;
+    int inventoryId;
 };
 
 #endif // INVENTORY_ITEM_H

@@ -142,7 +142,7 @@ void PatapolisMenu::EventFired(sf::Event event){
                     isAnim = true;
                     SetTitle(currentMenuPosition);
 
-            } else if (event.key.code == thisConfig->GetInt("keybindDon") || event.key.code == thisConfig->GetInt("secondaryKeybindDon")){
+            } else if (event.key.code == thisConfig->GetInt("keybindDon") || event.key.code == thisConfig->GetInt("secondaryKeybindDon") || event.key.code == thisConfig->GetInt("keybindMenuEnter")){
                     // select the current menu item
                     switch (currentMenuPosition){
                         case 0:

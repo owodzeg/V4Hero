@@ -53,33 +53,47 @@ void NameEntryButtonList::SelectButton(int index){
                     savMenu->v4core->savereader.timeslaunched = 1;
                     InventoryItem spear1;
                     spear1.item = savMenu->v4core->savereader.itemreg.GetItemByID(1);
+                    spear1.inventoryId=0;
                     InventoryItem spear2;
                     spear2.item = savMenu->v4core->savereader.itemreg.GetItemByID(1);
+                    spear2.inventoryId=1;
                     InventoryItem spear3;
                     spear3.item = savMenu->v4core->savereader.itemreg.GetItemByID(1);
+                    spear3.inventoryId=2;
                     InventoryItem iron_spear1;
                     iron_spear1.item = savMenu->v4core->savereader.itemreg.GetItemByID(2);
+                    iron_spear1.inventoryId=3;
                     InventoryItem mask;
                     mask.item = savMenu->v4core->savereader.itemreg.GetItemByID(4);
+                    mask.inventoryId=4;
                     InventoryItem woodhelmet_1;
                     woodhelmet_1.item = savMenu->v4core->savereader.itemreg.GetItemByID(16);
+                    woodhelmet_1.inventoryId=5;
                     InventoryItem woodhelmet_2;
                     woodhelmet_2.item = savMenu->v4core->savereader.itemreg.GetItemByID(16);
+                    woodhelmet_2.inventoryId=6;
                     InventoryItem woodhelmet_3;
                     woodhelmet_3.item = savMenu->v4core->savereader.itemreg.GetItemByID(16);
+                    woodhelmet_3.inventoryId=7;
                     InventoryItem ironhelmet_1;
                     ironhelmet_1.item = savMenu->v4core->savereader.itemreg.GetItemByID(17);
+                    ironhelmet_1.inventoryId=8;
                     InventoryItem keepsake;
                     keepsake.item = savMenu->v4core->savereader.itemreg.GetItemByID(15);
+                    keepsake.inventoryId=9;
 
                     InventoryItem pondrum;
                     pondrum.item = savMenu->v4core->savereader.itemreg.GetItemByID(11);
+                    pondrum.inventoryId=10;
                     InventoryItem patadrum;
                     patadrum.item = savMenu->v4core->savereader.itemreg.GetItemByID(12);
+                    patadrum.inventoryId=11;
                     InventoryItem chakadrum;
                     chakadrum.item = savMenu->v4core->savereader.itemreg.GetItemByID(13);
+                    chakadrum.inventoryId=12;
                     InventoryItem dondrum;
                     dondrum.item = savMenu->v4core->savereader.itemreg.GetItemByID(14);
+                    dondrum.inventoryId=13;
 
 
                     savMenu->v4core->savereader.invdata.items.push_back(spear1);

@@ -62,6 +62,7 @@ void SaveReader::LoadSave(Config& tconfig)
                 } else if(key[0]=="ITEM"){
                     InventoryItem invItem;
                     invItem.item = itemreg.GetItemByID(stoi(key[1]));
+                    invItem.inventoryId =invdata.items.size();
                     invdata.items.push_back(invItem);
                 } else if(key[0]=="heroUnlocked"){
                     heroUnlocked = stoi(key[1]);
