@@ -25,38 +25,70 @@ PatapolisMenu::PatapolisMenu()
 }
 void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, Menu *curParentMenu){
     Scene::Initialise(thisConfigs,keymap,parent);
-    optionsMenu.Initialise(thisConfigs,keymap,parent,this);
     altar_menu.Initialise(thisConfigs,keymap,parent,this);
     barracks_menu.Initialise(thisConfigs,keymap,parent,this);
-    v4core->menus.push_back(&optionsMenu);
     parentMenu = curParentMenu;
+    quality = thisConfig->GetInt("textureQuality");
+    float ratioX, ratioY;
+    switch(quality)
+    {
+        case 0: ///low
+        {
+            ratioX = thisConfig->GetInt("resX") / float(640);
+            ratioY = thisConfig->GetInt("resY") / float(360);
+            break;
+        }
 
-    thisConfig->debugOut->DebugMessage("Patapolis loaded: Void_Spacer_Village.png");
+        case 1: ///med
+        {
+            ratioX = thisConfig->GetInt("resX") / float(1280);
+            ratioY = thisConfig->GetInt("resY") / float(720);
+            break;
+        }
+
+        case 2: ///high
+        {
+            ratioX = thisConfig->GetInt("resX") / float(1920);
+            ratioY = thisConfig->GetInt("resY") / float(1080);
+            break;
+        }
+
+        case 3: ///ultra
+        {
+            ratioX = thisConfig->GetInt("resX") / float(3840);
+            ratioY = thisConfig->GetInt("resY") / float(2160);
+            break;
+        }
+    }
+
+    thisConfig->debugOut->DebugMessage("Patapolis loaded: Patapolis_M.png");
     t_background.clear();
     s_background.clear();
 
     PSprite ps_temp;
-    ps_temp.loadFromFile("resources/graphics/bg/city/Void_Spacer_Village.png",1);
+    ps_temp.loadFromFile("resources/graphics/bg/city/Patapolis.png",1);
     ps_temp.setRepeated(true);
     ps_temp.setTextureRect(sf::IntRect(0,0,500000,ps_temp.t.getSize().y)); ///affect later with ratio
     ps_temp.setOrigin(10000,ps_temp.getLocalBounds().height);
     ps_temp.setColor(sf::Color(255,255,255,255));
-    ps_temp.setPosition(-1000,613);
+    ps_temp.setPosition(-1000,2/ratioY);
 
     sf::Vector2f tmpp;
 
-    tmpp.x = -1000;
-    tmpp.y = 613;
+    tmpp.x = 4200;
+    tmpp.y = 800*ratioY;
 
     s_background.push_back(ps_temp);
+    s_background[0].scaleX=0.55f;
+    s_background[0].scaleY=0.55f;
     p_background.push_back(tmpp);
     background_xspeed.push_back(0);
 
-    t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis")));
+    t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_festival")));
     t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
 
-    possibleMenuPositions = {-2300, -1300,600,1500,3700};
-    currentMenuPosition = -1;
+    possibleMenuPositions = {-8600, -5800,-4200,-1100,400};
+    currentMenuPosition = 2;
 }
 void PatapolisMenu::EventFired(sf::Event event){
     if (altar_menu.isActive){
@@ -70,7 +102,7 @@ void PatapolisMenu::EventFired(sf::Event event){
             if (event.key.code == sf::Keyboard::Num1){
 
                     animStartVal=p_background[0].x;
-                    animChangeVal=2300-p_background[0].x;
+                    animChangeVal=8600-p_background[0].x;
                     anim_timer.restart();
                     totalTime=1;
                     isAnim = true;
@@ -80,7 +112,7 @@ void PatapolisMenu::EventFired(sf::Event event){
             } else if (event.key.code == sf::Keyboard::Num2){
 
                     animStartVal=p_background[0].x;
-                    animChangeVal=1300-p_background[0].x;
+                    animChangeVal=5800-p_background[0].x;
                     anim_timer.restart();
                     totalTime=1;
                     isAnim = true;
@@ -90,7 +122,7 @@ void PatapolisMenu::EventFired(sf::Event event){
             } else if (event.key.code == sf::Keyboard::Num3){
 
                     animStartVal=p_background[0].x;
-                    animChangeVal=-p_background[0].x-600;
+                    animChangeVal=4200-p_background[0].x;
                     anim_timer.restart();
                     totalTime=1;
                     isAnim = true;
@@ -100,7 +132,7 @@ void PatapolisMenu::EventFired(sf::Event event){
             } else if (event.key.code == sf::Keyboard::Num4){
 
                     animStartVal=p_background[0].x;
-                    animChangeVal=-p_background[0].x-1500;
+                    animChangeVal=1100-p_background[0].x;
                     anim_timer.restart();
                     totalTime=1;
                     isAnim = true;
@@ -110,7 +142,7 @@ void PatapolisMenu::EventFired(sf::Event event){
             } else if (event.key.code == sf::Keyboard::Num5){
 
                     animStartVal=p_background[0].x;
-                    animChangeVal=-p_background[0].x-3700;
+                    animChangeVal=-p_background[0].x-400;
                     anim_timer.restart();
                     totalTime=1;
                     isAnim = true;
@@ -119,7 +151,7 @@ void PatapolisMenu::EventFired(sf::Event event){
 
             } else if (event.key.code == thisConfig->GetInt("keybindPon") || event.key.code == thisConfig->GetInt("secondaryKeybindPon")){
                     currentMenuPosition += 1;
-                    if (currentMenuPosition>possibleMenuPositions.size()){
+                    if (currentMenuPosition>possibleMenuPositions.size()-1){
                         currentMenuPosition=0;
                     }
                     animStartVal=p_background[0].x;
@@ -146,30 +178,30 @@ void PatapolisMenu::EventFired(sf::Event event){
                     // select the current menu item
                     switch (currentMenuPosition){
                         case 0:
-                            /// obelisk
+                            /// trader/random
                             // open the world map
                             break;
                         case 1:
-                            /// altar
-                            // open inventory menu
-                            altar_menu.Show();
-                            altar_menu.isActive = true;
-                            altar_menu.ShowAltar();
-                            break;
-                        case 2:
                             /// armoury/barracks
-                            // open barracks screen
                             barracks_menu.Show();
                             barracks_menu.isActive = true;
                             barracks_menu.OpenBarracksMenu();
                             break;
+                        case 2:
+                            /// festival
+                            // open barracks screen
+                            break;
                         case 3:
-                            /// mater tree
+                            /// altar
                             // open mater menu
+                            altar_menu.Show();
+                            altar_menu.isActive = true;
+                            altar_menu.ShowAltar();
                             break;
                         case 4:
-                            /// cave
+                            /// obelisk
                             // idk?
+                            // open inventory menu
                             break;
                         default:
                             /// nothing
@@ -194,19 +226,19 @@ void PatapolisMenu::EventFired(sf::Event event){
 void PatapolisMenu::SetTitle(int menuPosition){
     switch(menuPosition){
         case 0:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_obelisk")));
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_trader")));
             break;
         case 1:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_altar")));
-            break;
-        case 2:
             t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_barracks")));
             break;
+        case 2:
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_festival")));
+            break;
         case 3:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_tree")));
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_altar")));
             break;
         case 4:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_cave")));
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_obelisk")));
             break;
         default:
             t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis")));

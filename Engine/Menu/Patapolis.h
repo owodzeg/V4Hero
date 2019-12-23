@@ -8,12 +8,14 @@
 #include "OptionsMenu.h"
 #include "Altar.h"
 #include "Barracks.h"
+#include "Obelisk.h"
 class V4Core;
 class PatapolisMenu : public Menu
 {
     public:
         sf::RectangleShape mm_bigBox;
         sf::RectangleShape mm_titleBox;
+    int quality = 0;
 
         sf::Font f_font;
         sf::Text t_title;
@@ -33,7 +35,7 @@ class PatapolisMenu : public Menu
 
         AltarMenu altar_menu;
         Barracks barracks_menu;
-        OptionsMenu optionsMenu;
+        ObeliskMenu obelisk_menu;
         Menu *parentMenu;
         int currentMenuPosition;
         std::vector<float> possibleMenuPositions;
