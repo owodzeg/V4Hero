@@ -263,6 +263,8 @@ float EaseIn (float time, float startValue, float change, float duration) {
 void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
 {
     if(isActive){
+
+                window.setView(window.getDefaultView());
         mm_bigBox.setSize(sf::Vector2f(window.getSize().x,window.getSize().y-200));
         //mm_smallerBox.setSize(sf::Vector2f(100,10));
         //mm_titleBox.setSize(sf::Vector2f(100,10));
