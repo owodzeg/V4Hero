@@ -27,6 +27,7 @@ void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4
     Scene::Initialise(thisConfigs,keymap,parent);
     altar_menu.Initialise(thisConfigs,keymap,parent,this);
     barracks_menu.Initialise(thisConfigs,keymap,parent,this);
+    obelisk_menu.Initialise(thisConfigs,keymap,parent,this);
     parentMenu = curParentMenu;
     quality = thisConfig->GetInt("textureQuality");
     float ratioX, ratioY;
@@ -69,25 +70,25 @@ void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4
     ps_temp.loadFromFile("resources/graphics/bg/city/Patapolis.png",1);
     ps_temp.setRepeated(true);
     ps_temp.setTextureRect(sf::IntRect(0,0,500000,ps_temp.t.getSize().y)); ///affect later with ratio
-    ps_temp.setOrigin(10000,ps_temp.getLocalBounds().height);
+    ps_temp.setOrigin(10000,0);
     ps_temp.setColor(sf::Color(255,255,255,255));
     ps_temp.setPosition(-1000,2/ratioY);
 
     sf::Vector2f tmpp;
-
-    tmpp.x = 4200;
-    tmpp.y = 800*ratioY;
+    //float xRatio = (thisConfig->GetInt("resX")/1600.0);
+    tmpp.x = 2880;
+    tmpp.y = 0*ratioY;
 
     s_background.push_back(ps_temp);
-    s_background[0].scaleX=0.55f;
-    s_background[0].scaleY=0.55f;
+    s_background[0].scaleX=0.60f;
+    s_background[0].scaleY=0.60f;
     p_background.push_back(tmpp);
     background_xspeed.push_back(0);
 
     t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_festival")));
     t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
 
-    possibleMenuPositions = {-8600, -5800,-4200,-1100,400};
+    possibleMenuPositions = {-6000, -4000,-2880,-730,350};
     currentMenuPosition = 2;
 }
 void PatapolisMenu::EventFired(sf::Event event){
@@ -95,6 +96,8 @@ void PatapolisMenu::EventFired(sf::Event event){
             altar_menu.EventFired(event);
     } else if (barracks_menu.isActive){
             barracks_menu.EventFired(event);
+    } else if (obelisk_menu.isActive){
+            obelisk_menu.EventFired(event);
     } else if(isActive){
         if(event.type == sf::Event::KeyPressed)
         {
@@ -102,7 +105,7 @@ void PatapolisMenu::EventFired(sf::Event event){
             if (event.key.code == sf::Keyboard::Num1){
 
                     animStartVal=p_background[0].x;
-                    animChangeVal=8600-p_background[0].x;
+                    animChangeVal=6000-p_background[0].x;
                     anim_timer.restart();
                     totalTime=1;
                     isAnim = true;
@@ -112,7 +115,7 @@ void PatapolisMenu::EventFired(sf::Event event){
             } else if (event.key.code == sf::Keyboard::Num2){
 
                     animStartVal=p_background[0].x;
-                    animChangeVal=5800-p_background[0].x;
+                    animChangeVal=4000-p_background[0].x;
                     anim_timer.restart();
                     totalTime=1;
                     isAnim = true;
@@ -122,7 +125,7 @@ void PatapolisMenu::EventFired(sf::Event event){
             } else if (event.key.code == sf::Keyboard::Num3){
 
                     animStartVal=p_background[0].x;
-                    animChangeVal=4200-p_background[0].x;
+                    animChangeVal=2880-p_background[0].x;
                     anim_timer.restart();
                     totalTime=1;
                     isAnim = true;
@@ -132,7 +135,7 @@ void PatapolisMenu::EventFired(sf::Event event){
             } else if (event.key.code == sf::Keyboard::Num4){
 
                     animStartVal=p_background[0].x;
-                    animChangeVal=1100-p_background[0].x;
+                    animChangeVal=730-p_background[0].x;
                     anim_timer.restart();
                     totalTime=1;
                     isAnim = true;
@@ -142,7 +145,7 @@ void PatapolisMenu::EventFired(sf::Event event){
             } else if (event.key.code == sf::Keyboard::Num5){
 
                     animStartVal=p_background[0].x;
-                    animChangeVal=-p_background[0].x-400;
+                    animChangeVal=-p_background[0].x-350;
                     anim_timer.restart();
                     totalTime=1;
                     isAnim = true;
@@ -202,6 +205,8 @@ void PatapolisMenu::EventFired(sf::Event event){
                             /// obelisk
                             // idk?
                             // open inventory menu
+                            obelisk_menu.Show();
+                            obelisk_menu.isActive = true;
                             break;
                         default:
                             /// nothing
@@ -257,9 +262,7 @@ float EaseIn (float time, float startValue, float change, float duration) {
 };
 void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
 {
-    if (barracks_menu.isActive){
-        barracks_menu.Update(window,fps);
-    } else if(isActive){
+    if(isActive){
         mm_bigBox.setSize(sf::Vector2f(window.getSize().x,window.getSize().y-200));
         //mm_smallerBox.setSize(sf::Vector2f(100,10));
         //mm_titleBox.setSize(sf::Vector2f(100,10));
@@ -300,8 +303,12 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
             //cout << s_background[i].y << endl;
             s_background[i].draw(window);
         }
-        if(altar_menu.isActive){
+        if (barracks_menu.isActive){
+            barracks_menu.Update(window,fps);
+        } else if(altar_menu.isActive){
             altar_menu.Update(window,fps);
+        } else if(obelisk_menu.isActive){
+            obelisk_menu.Update(window,fps);
         } else {
             t_title.setPosition(window.getSize().x/2,110);
             window.draw(t_title);

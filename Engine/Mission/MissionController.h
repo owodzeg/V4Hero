@@ -65,7 +65,7 @@ class MissionController
     bool isMoreCutscenes();
     void StopMission();
     void Initialise(Config &config, std::map<int,bool> &keymap,std::string backgroundName);
-    void StartMission(std::string songName);
+    void StartMission(std::string songName,bool showCutscene=false);
     void Update(sf::RenderWindow &window, float fps);
 
 

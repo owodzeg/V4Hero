@@ -37,7 +37,20 @@ void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     buttonList.Initialise(&f_font,*thisConfig,keymap,&(v4core->currentController),this,&optionsMenu,&patapolisMenu);
 }
 void MainMenu::EventFired(sf::Event event){
-    if(isActive){
+    if (patapolisMenu.isActive){
+        patapolisMenu.EventFired(event);
+    } else if (v4core->currentController.isInitialized){
+        if(event.type == sf::Event::KeyPressed)
+        {
+            // do something here;
+            buttonList.KeyPressedEvent(event);
+            if(event.key.code==sf::Keyboard::Escape) {
+                thisConfig->debugOut->DebugMessage("Returning to patapolis menu...");
+                v4core->currentController.StopMission();
+                patapolisMenu.Show();
+            }
+        }
+    } else if(isActive){
         if(event.type == sf::Event::KeyPressed)
         {
             // do something here;
@@ -53,8 +66,6 @@ void MainMenu::EventFired(sf::Event event){
         }
     } else if (optionsMenu.isActive){
         optionsMenu.EventFired(event);
-    } else if (patapolisMenu.isActive){
-        patapolisMenu.EventFired(event);
     }
 }
 void MainMenu::Update(sf::RenderWindow &window, float fps)
