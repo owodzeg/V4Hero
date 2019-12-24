@@ -100,29 +100,36 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     fade.setSize(sf::Vector2f(800,600));
     currentCutsceneId=0;
 }
-void MissionController::StartMission(std::string songName){
+void MissionController::StartMission(std::string songName,bool showCutscene){
     rhythm.LoadTheme(songName); // missionConfig->GetString("debugTheme")
-    cutscene_text_identifiers.push_back(L"intro_cutscene_1");
-    cutscene_text_identifiers.push_back(L"intro_cutscene_2");
-    cutscene_text_identifiers.push_back(L"intro_cutscene_3");
-    cutscene_text_identifiers.push_back(L"intro_cutscene_4");
-    cutscene_text_identifiers.push_back(L"intro_cutscene_5");
-    cutscene_lengths.push_back(4);
-    cutscene_lengths.push_back(4);
-    cutscene_lengths.push_back(3);
-    cutscene_lengths.push_back(3);
-    cutscene_lengths.push_back(2);
-    cutscene_blackscreens.push_back(true);
-    cutscene_blackscreens.push_back(true);
-    cutscene_blackscreens.push_back(true);
-    cutscene_blackscreens.push_back(true);
-    cutscene_blackscreens.push_back(true);
-    currentCutsceneId=0;
-    cutscenesLeft=true;
+    if(showCutscene){
+        cutscene_text_identifiers.push_back(L"intro_cutscene_1");
+        cutscene_text_identifiers.push_back(L"intro_cutscene_2");
+        cutscene_text_identifiers.push_back(L"intro_cutscene_3");
+        cutscene_text_identifiers.push_back(L"intro_cutscene_4");
+        cutscene_text_identifiers.push_back(L"intro_cutscene_5");
+        cutscene_lengths.push_back(4);
+        cutscene_lengths.push_back(4);
+        cutscene_lengths.push_back(3);
+        cutscene_lengths.push_back(3);
+        cutscene_lengths.push_back(2);
+        cutscene_blackscreens.push_back(true);
+        cutscene_blackscreens.push_back(true);
+        cutscene_blackscreens.push_back(true);
+        cutscene_blackscreens.push_back(true);
+        cutscene_blackscreens.push_back(true);
+        currentCutsceneId=0;
+        cutscenesLeft=true;
+        isFinishedLoading=true;
+    } else {
+        inCutscene = false;
+    }
+
     isFinishedLoading=true;
 }
 void MissionController::StopMission(){
     rhythm.Stop();
+    isInitialized = false;
 }
 void MissionController::Update(sf::RenderWindow &window, float fps){
         if(rhythm.current_song == "patapata")

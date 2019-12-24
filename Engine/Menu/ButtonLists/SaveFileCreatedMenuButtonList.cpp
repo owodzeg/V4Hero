@@ -25,7 +25,7 @@ void SaveFileCreatedMenuButtonList::SelectButton(int index){
             case 0:
                 /// start first mission
                 currentController->Initialise(*config,*keyMap,config->GetString("mission2Background"));
-                currentController->StartMission(config->GetString("mission2Theme"));
+                currentController->StartMission(config->GetString("mission2Theme"),true);
                 parentMenu->Hide();
                 break;
 

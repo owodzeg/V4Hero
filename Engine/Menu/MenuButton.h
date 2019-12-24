@@ -23,7 +23,7 @@ class MenuButton
         void AddEndString(std::wstring text);
         std::wstring GetEndString(std::wstring text);
 
-        MenuButton(std::wstring text,sf::Font *font,int fontSize, float y, ButtonList *p_list,int index);
+        MenuButton(std::wstring text,sf::Font *font,int fontSize, float y, ButtonList *p_list,int index,float x=-1);
         ~MenuButton();
 
 };

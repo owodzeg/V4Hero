@@ -19,6 +19,7 @@ void NewGameMenuButtonList::Initialise(sf::Font *font,Config &newConfig,  std::m
     buttons[0].SetSelected(true);
     optionsMenu = CurOptionsMenu;
     nameEntryMenu = CurNameEntryMenu;
+    this->SelectButtons = true;
 }
 void NewGameMenuButtonList::SelectButton(int index){
     currentIndex = index;
