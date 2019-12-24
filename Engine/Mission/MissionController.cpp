@@ -123,6 +123,10 @@ void MissionController::StartMission(std::string songName,bool showCutscene){
         isFinishedLoading=true;
     } else {
         inCutscene = false;
+        cutscene_blackscreens.clear();
+        cutscene_lengths.clear();
+        cutscene_text_identifiers.clear();
+        cutscenesLeft=false;
     }
 
     isFinishedLoading=true;

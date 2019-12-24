@@ -5,6 +5,7 @@
 #include "../../Mission/MissionController.h"
 #include "../MainMenu.h"
 #include "../SaveFileCreated.h"
+#include "../../V4Core.h"
 using namespace std;
 SaveFileCreatedMenuButtonList::SaveFileCreatedMenuButtonList()
 {
@@ -27,6 +28,10 @@ void SaveFileCreatedMenuButtonList::SelectButton(int index){
                 currentController->Initialise(*config,*keyMap,config->GetString("mission2Background"));
                 currentController->StartMission(config->GetString("mission2Theme"),true);
                 parentMenu->Hide();
+                parentMenu->v4core->savereader.isNewSave = false;
+                parentMenu->v4core->newGameMenu.Hide();
+                parentMenu->v4core->mainMenu.Hide();
+
                 break;
 
         }

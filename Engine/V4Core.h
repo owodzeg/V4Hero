@@ -19,8 +19,6 @@ class V4Core
     private:
 
     //MissionController currentController;
-    MainMenu mainMenu;
-    NewGameMenu newGameMenu;
 
 
 
@@ -35,6 +33,8 @@ class V4Core
 
     bool leftkey=false,rightkey=false,upkey=false,downkey=false;
     public:
+    NewGameMenu newGameMenu;
+    MainMenu mainMenu;
     Config config;
     SaveReader savereader;
         MissionController currentController;

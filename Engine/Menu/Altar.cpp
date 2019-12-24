@@ -288,7 +288,7 @@ void AltarMenu::UpdateAltarDescriptions(){
         t_itemtitle.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_none")));
         t_itemtitle.setOrigin(t_itemtitle.getGlobalBounds().width/2,t_itemtitle.getGlobalBounds().height/2);
 
-        t_itemcategory.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_category_material")));
+        t_itemcategory.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_category_nothing")));
         t_itemcategory.setOrigin(t_itemcategory.getGlobalBounds().width/2,t_itemcategory.getGlobalBounds().height/2);
 
 

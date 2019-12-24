@@ -15,9 +15,9 @@ void ObeliskButtonList::Initialise(sf::Font *font,Config &newConfig,  std::map<i
     ButtonList::Initialise(font,newConfig,thisKeymap,controller,mainMenu);
     //MenuButton* level1Button = new MenuButton(L"menu_button_1",font,42,300,this,0);
     //MenuButton* level2Button = new MenuButton(L"menu_button_2",font,42,350,this,1);
-    MenuButton* patapolisButton = new MenuButton(L"obelisk_mission_1_name",font,72,200,this,0,100);
-    MenuButton* optionsButton = new MenuButton(L"obelisk_mission_2_name",font,72,300,this,1,100);
-    MenuButton* quitButton = new MenuButton(L"obelisk_quit",font,72,config->GetInt("resY")-200,this,2,100);
+    MenuButton* patapolisButton = new MenuButton(L"obelisk_mission_1_name",font,52,200,this,0,100);
+    MenuButton* optionsButton = new MenuButton(L"obelisk_mission_2_name",font,52,300,this,1,100);
+    MenuButton* quitButton = new MenuButton(L"obelisk_quit",font,52,config->GetInt("resY")-200,this,2,100);
     buttons.push_back(*patapolisButton);
     //buttons.push_back(*level1Button);
     //buttons.push_back(*level2Button);

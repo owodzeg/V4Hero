@@ -45,7 +45,7 @@ void MainMenu::EventFired(sf::Event event){
             // do something here;
             buttonList.KeyPressedEvent(event);
             if(event.key.code==sf::Keyboard::Escape) {
-                thisConfig->debugOut->DebugMessage("Returning to patapolis menu...");
+                thisConfig->debugOut->DebugMessage("Returning to pataAAAApolis menu...");
                 v4core->currentController.StopMission();
                 patapolisMenu.Show();
             }
@@ -70,7 +70,9 @@ void MainMenu::EventFired(sf::Event event){
 }
 void MainMenu::Update(sf::RenderWindow &window, float fps)
 {
-    if(isActive){
+    if (v4core->currentController.isInitialized){
+            v4core->currentController.Update(window, fps);
+    } else if(isActive){
         mm_bigBox.setSize(sf::Vector2f(window.getSize().x,window.getSize().y-200));
         //mm_smallerBox.setSize(sf::Vector2f(100,10));
         //mm_titleBox.setSize(sf::Vector2f(100,10));
@@ -98,9 +100,7 @@ void MainMenu::Update(sf::RenderWindow &window, float fps)
         buttonList.Update(window, fps, &worldPos);
         window.setView(window.getDefaultView());
     } else {
-        if (v4core->currentController.isInitialized){
-            v4core->currentController.Update(window, fps);
-        } else if (patapolisMenu.isActive){
+        if (patapolisMenu.isActive){
             patapolisMenu.Update(window,fps);
         } else {
             optionsMenu.Update(window,fps);
