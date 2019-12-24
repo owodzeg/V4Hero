@@ -152,6 +152,8 @@ void AnimatedObject::LoadConfig(Config *thisConfigs, std::string unitParamPath)
             break;
         }
     }
+    animation_name.clear();
+    animation_frames.clear();
     cout<<unitParamPath+"param.dat | "<<"RESULTS: "<<results.size()<<'\n';
     hitBox =  sf::Rect<float>(atof(results[0].c_str())*ratioX,atof(results[1].c_str())*ratioY,atof(results[2].c_str())*ratioX,atof(results[3].c_str())*ratioY);
     while(getline(param,buff))

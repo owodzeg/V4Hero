@@ -81,7 +81,7 @@ class Rhythm
     /// Default FPS value ///
     float fps = 60;
 
-
+    int current_perfect;
     /// Config and Keybindings ///
     Config config;
     std::map<int,bool> keyMap;
