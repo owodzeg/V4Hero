@@ -113,6 +113,7 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
     camera.followobject_x=patapon.x;
     camera.camera_x=480;
     missionTimer.restart();
+    showTimer = false;
     switch(quality)
     {
         case 0: ///low
@@ -173,7 +174,7 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
     tangibleLevelObjects.clear();
     switch(missionID){
     case 1:{
-
+        showTimer=true;
         endFlag1.LoadConfig(missionConfig);
 
         tangibleLevelObjects.push_back(&endFlag1);
@@ -410,6 +411,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
 
         rhythm.fps = fps;
         ///ugh this is a BAD solution i need to do it differently
+        if(showTimer){
         auto lastView2 = window.getView();
 
         window.setView(window.getDefaultView());
@@ -418,6 +420,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         t_timerMenu.setPosition(window.getSize().x/2,100);
         window.draw(t_timerMenu);
         window.setView(lastView2);
+        }
         rhythm.Draw(window);
 
 }
