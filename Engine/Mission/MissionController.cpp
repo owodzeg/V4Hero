@@ -100,8 +100,41 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     fade.setSize(sf::Vector2f(800,600));
     currentCutsceneId=0;
 }
-void MissionController::StartMission(std::string songName,bool showCutscene){
+void MissionController::StartMission(std::string songName,int missionID,bool showCutscene){
     rhythm.LoadTheme(songName); // missionConfig->GetString("debugTheme")
+
+    int quality = missionConfig->GetInt("textureQuality");
+    float ratioX, ratioY;
+    switch(quality)
+    {
+        case 0: ///low
+        {
+            ratioX = missionConfig->GetInt("resX") / float(640);
+            ratioY = missionConfig->GetInt("resY") / float(360);
+            break;
+        }
+
+        case 1: ///med
+        {
+            ratioX = missionConfig->GetInt("resX") / float(1280);
+            ratioY = missionConfig->GetInt("resY") / float(720);
+            break;
+        }
+
+        case 2: ///high
+        {
+            ratioX = missionConfig->GetInt("resX") / float(1920);
+            ratioY = missionConfig->GetInt("resY") / float(1080);
+            break;
+        }
+
+        case 3: ///ultra
+        {
+            ratioX = missionConfig->GetInt("resX") / float(3840);
+            ratioY = missionConfig->GetInt("resY") / float(2160);
+            break;
+        }
+    }
     if(showCutscene){
         cutscene_text_identifiers.push_back(L"intro_cutscene_1");
         cutscene_text_identifiers.push_back(L"intro_cutscene_2");
@@ -121,6 +154,7 @@ void MissionController::StartMission(std::string songName,bool showCutscene){
         currentCutsceneId=0;
         cutscenesLeft=true;
         isFinishedLoading=true;
+
     } else {
         inCutscene = false;
         cutscene_blackscreens.clear();
@@ -128,7 +162,60 @@ void MissionController::StartMission(std::string songName,bool showCutscene){
         cutscene_text_identifiers.clear();
         cutscenesLeft=false;
     }
+    tangibleLevelObjects.clear();
+    switch(missionID){
+    case 1:{
 
+        endFlag1.LoadConfig(missionConfig);
+
+        tangibleLevelObjects.push_back(&endFlag1);
+
+        endFlag1.scaleX = ratioX*0.2;
+        endFlag1.scaleY = ratioY*0.2;
+
+        endFlag1.x = 2500;
+        endFlag1.y = missionConfig->GetInt("resY") - (250 * ratioY);
+        break;
+    }
+    case 2:{
+        kacheek.LoadConfig(missionConfig);
+        kacheek2.LoadConfig(missionConfig);
+        kacheek3.LoadConfig(missionConfig);
+        endFlag1.LoadConfig(missionConfig);
+        tangibleLevelObjects.push_back(&kacheek);
+        tangibleLevelObjects.push_back(&kacheek2);
+        tangibleLevelObjects.push_back(&kacheek3);
+        tangibleLevelObjects.push_back(&endFlag1);
+        kacheek.scaleX = ratioX;
+        kacheek.scaleY = ratioY;
+        kacheek2.scaleX = ratioX;
+        kacheek2.scaleY = ratioY;
+        kacheek3.scaleX = ratioX;
+        kacheek3.scaleY = ratioY;
+        endFlag1.scaleX = ratioX*0.2;
+        endFlag1.scaleY = ratioY*0.2;
+        kacheek.x = 1000;
+        kacheek.y = missionConfig->GetInt("resY") - (250 * ratioY);
+        kacheek2.x = 1500;
+        kacheek2.y = missionConfig->GetInt("resY") - (250 * ratioY);
+        kacheek3.x = 2000;
+        kacheek3.y = missionConfig->GetInt("resY") - (250 * ratioY);
+        endFlag1.x = 2500;
+        endFlag1.y = missionConfig->GetInt("resY") - (250 * ratioY);
+        break;
+
+    }
+    default:
+
+        endFlag1.LoadConfig(missionConfig);
+
+        tangibleLevelObjects.push_back(&endFlag1);
+        endFlag1.scaleX = ratioX*0.2;
+        endFlag1.scaleY = ratioY*0.2;
+        endFlag1.x = 2500;
+        endFlag1.y = missionConfig->GetInt("resY") - (250 * ratioY);
+        break;
+    }
     isFinishedLoading=true;
 }
 void MissionController::StopMission(){
@@ -215,10 +302,12 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
             rhythm.current_song = "";
         }
 
-
-        kacheek.Draw(window);
-        kacheek2.Draw(window);
-        kacheek3.Draw(window);
+        for (int i=0;i<tangibleLevelObjects.size()-1;i++){
+            tangibleLevelObjects[i]->Draw(window);
+        }
+        //kacheek.Draw(window);
+        //kacheek2.Draw(window);
+        //kacheek3.Draw(window);
         endFlag1.Draw(window);
 
         /// patapons (and other enemies) are drawn after level objects like kacheek so they are always on top
@@ -294,7 +383,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         window.setView(lastView);
 
         /// here we show the hitbox
-        bool showHitboxes = true;
+        bool showHitboxes = false;
         if(showHitboxes){
             sf::RectangleShape hitboxRect(sf::Vector2f(patapon.hitBox.width, patapon.hitBox.height));
             hitboxRect.setPosition(patapon.x+patapon.hitBox.left,patapon.y+patapon.hitBox.top);
