@@ -12,4 +12,5 @@ CollidableObject::CollidableObject()
 void CollidableObject::OnCollide(CollidableObject otherObject){
     // this space intentionally left blank
     cout<<"[COLLISION_SYSTEM]: Class derived from CollidableObject has not overridden OnCollide() method"<<endl;
+
 }

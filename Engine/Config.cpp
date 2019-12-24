@@ -7,6 +7,7 @@
 #include <cassert>
 #include <cctype>
 #include <string>
+#include "V4Core.h"
 
 using namespace std;
 
@@ -45,9 +46,9 @@ Config::Config()
     }
 }
 
-void Config::LoadConfig()
+void Config::LoadConfig(V4Core* core)
 {
-
+    thisCore=core;
     ifstream conf("config.ini");
 
     vector<string> keysCheckList = configKeys;

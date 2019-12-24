@@ -77,8 +77,8 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     kacheek2.scaleY = ratioY;
     kacheek3.scaleX = ratioX;
     kacheek3.scaleY = ratioY;
-    endFlag1.scaleX = ratioX;
-    endFlag1.scaleY = ratioY;
+    endFlag1.scaleX = ratioX*0.2;
+    endFlag1.scaleY = ratioY*0.2;
 
     kacheek.x = 1000;
     kacheek.y = config.GetInt("resY") - (250 * ratioY);
@@ -153,18 +153,6 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         kacheek2.fps = fps;
         kacheek3.fps = fps;
         endFlag1.fps = fps;
-
-        /// here we show the hitbox
-        bool showHitboxes = false;
-        if(showHitboxes){
-            sf::RectangleShape hitboxRect(sf::Vector2f(patapon.hitBox.width, patapon.hitBox.height));
-            hitboxRect.setPosition(patapon.x+patapon.hitBox.left,patapon.y+patapon.hitBox.top);
-            window.draw(hitboxRect);
-
-            sf::RectangleShape kacheekHitboxRect(sf::Vector2f(kacheek.hitBox.width, kacheek.hitBox.height));
-            kacheekHitboxRect.setPosition(kacheek.x+kacheek.hitBox.left,kacheek.y+kacheek.hitBox.top);
-            window.draw(kacheekHitboxRect);
-        }
 
         /** Make Patapon walk (temporary) **/
         if(camera.walk)
@@ -304,6 +292,18 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
             }
         }
         window.setView(lastView);
+
+        /// here we show the hitbox
+        bool showHitboxes = true;
+        if(showHitboxes){
+            sf::RectangleShape hitboxRect(sf::Vector2f(patapon.hitBox.width, patapon.hitBox.height));
+            hitboxRect.setPosition(patapon.x+patapon.hitBox.left,patapon.y+patapon.hitBox.top);
+            window.draw(hitboxRect);
+
+            sf::RectangleShape kacheekHitboxRect(sf::Vector2f(kacheek.hitBox.width, kacheek.hitBox.height));
+            kacheekHitboxRect.setPosition(kacheek.x+kacheek.hitBox.left,kacheek.y+kacheek.hitBox.top);
+            window.draw(kacheekHitboxRect);
+        }
 
 
         rhythm.fps = fps;

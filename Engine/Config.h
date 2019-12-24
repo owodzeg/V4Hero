@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 #include "DebugOut.h"
+class V4Core;
 class Config
 {
     public:
@@ -58,7 +59,7 @@ class Config
     "Donja Lalin Theme",
     "nanjarohills",
     "Freakout Rock Theme",
-    "patapineforest",
+    "evilmass",
     "0",
     "0",
     "1",
@@ -67,9 +68,10 @@ class Config
     int configDebugID=0;
     bool changedLang = false;
     Config();
-    void LoadConfig();
+    void LoadConfig(V4Core* core);
     void ReloadLanguages();
     DebugOut* debugOut;
+    V4Core* thisCore;
 
     StringRepository strRepo;
     ///I wanted to overload these two in a single function, but somehow it just doesnt want to work...

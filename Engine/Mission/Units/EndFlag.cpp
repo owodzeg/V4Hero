@@ -4,6 +4,7 @@
 #include <iostream>
 #include "../../Func.h"
 #include <sstream>
+#include "../../V4Core.h"
 EndFlag::EndFlag()
 {
 
@@ -22,4 +23,7 @@ void EndFlag::OnCollide(CollidableObject otherObject)
 
     /// note we don't call the parent function. It does nothing, it just serves
     /// as an incomplete function to be overridden by child classes.
+    /// end the mission
+    thisConfig->thisCore->currentController.StopMission();
+    thisConfig->thisCore->mainMenu.patapolisMenu.Show();
 }

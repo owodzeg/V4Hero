@@ -89,7 +89,7 @@ class Barracks : public Menu
 
         /// armour icon
         PSprite armour_icon;
-
+        int currentItemId;
 
         int activeCategory=1;
         int activeSubcategory=0;
@@ -101,14 +101,6 @@ class Barracks : public Menu
         int inventoryGridXPos = 0;
         int inventoryGridYPos = 0;
         sf::RectangleShape mm_inventory_background;
-        sf::RectangleShape mm_description_background;
-        sf::RectangleShape mm_highlighted_tile;
-
-        int current_pon=0;
-
-        sf::Text t_itemtitle;
-        std::vector<sf::Text> t_itemdescription;
-
         Camera camera;
         Menu *parentMenu;
         int currentMenuPosition;
@@ -117,6 +109,14 @@ class Barracks : public Menu
         void Update(sf::RenderWindow &window, float fps);
         void EventFired(sf::Event event);
         void SetTitle(int menuPosition);
+        sf::RectangleShape mm_description_background;
+        sf::RectangleShape mm_highlighted_tile;
+
+        int current_pon=0;
+
+        sf::Text t_itemtitle;
+        std::vector<sf::Text> t_itemdescription;
+
         void OnExit();
         void OpenBarracksMenu();
         void RefreshStats();

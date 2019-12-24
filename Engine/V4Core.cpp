@@ -47,7 +47,7 @@ V4Core::V4Core()
 */
 
     /** Load config from config.cfg **/
-    config.LoadConfig();
+    config.LoadConfig(this);
 
     /** Load save from savereader **/
     savereader.LoadSave(config);
