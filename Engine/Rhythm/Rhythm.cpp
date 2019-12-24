@@ -201,8 +201,9 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
                         ///Push the amount of perfect hits to the table and reset them
                         rhythmController.perfects.push_back(rhythmController.perfect);
-                        rhythmController.perfect = 0;
 
+                        current_perfect = rhythmController.perfect;
+                        rhythmController.perfect = 0;
                         rhythmController.command_perfects.clear();
 
                         combo = 2;
@@ -270,6 +271,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
                     ///Push the amount of perfect hits to the table and reset them
                     rhythmController.perfects.push_back(rhythmController.perfect);
+                    current_perfect = rhythmController.perfect;
                     rhythmController.perfect = 0;
 
                     rhythmController.command_perfects.clear();

@@ -14,6 +14,10 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     //ctor
     f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
     //f_font.loadFromFile("resources/fonts/arial.ttf");
+    t_timerMenu.setFont(f_font);
+    t_timerMenu.setCharacterSize(38);
+    t_timerMenu.setFillColor(sf::Color::White);
+    //f_font.loadFromFile("resources/fonts/arial.ttf");
     //t_cutscene_text.setFont(f_font);
 
     //t_cutscene_text.setCharacterSize(35);
@@ -105,6 +109,10 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
 
     int quality = missionConfig->GetInt("textureQuality");
     float ratioX, ratioY;
+    patapon.x=0;
+    camera.followobject_x=patapon.x;
+    camera.camera_x=480;
+    missionTimer.restart();
     switch(quality)
     {
         case 0: ///low
@@ -231,6 +239,11 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         {
             camera.walk = false;
         }
+        float booster=1.0;
+        if (rhythm.current_perfect == 4){
+            booster=1.2;
+        }
+        cout<<rhythm.current_perfect<<'\n';
 
         camera.Work(window,fps);
         test_bg.setCamera(camera);
@@ -244,7 +257,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         /** Make Patapon walk (temporary) **/
         if(camera.walk)
         {
-            float proposedXPos = camera.followobject_x + (2 * 60) / fps;
+            float proposedXPos = camera.followobject_x + (2 * 60 * booster) / fps;
             /// use the right hand side of the patapon sprite to check for collisions. This should be changed if the patapon walks to the left
             float proposedXPosRight = proposedXPos + patapon.hitBox.left + patapon.hitBox.width;
             /// need to have it check for collision and stop if blocked by kacheek here.
@@ -397,7 +410,14 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
 
         rhythm.fps = fps;
         ///ugh this is a BAD solution i need to do it differently
+        auto lastView2 = window.getView();
 
+        window.setView(window.getDefaultView());
+        t_timerMenu.setString(Func::ConvertToUtf8String(std::to_string(missionTimer.getElapsedTime().asSeconds())+" Seconds"));
+        t_timerMenu.setOrigin(t_timerMenu.getGlobalBounds().width/2,t_timerMenu.getGlobalBounds().height/2);
+        t_timerMenu.setPosition(window.getSize().x/2,100);
+        window.draw(t_timerMenu);
+        window.setView(lastView2);
         rhythm.Draw(window);
 
 }

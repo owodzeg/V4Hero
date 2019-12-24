@@ -28,7 +28,10 @@ class MissionController
     Kacheek kacheek2;
     Kacheek kacheek3;
     EndFlag endFlag1;
+        sf::Time startTime;
+        sf::Clock missionTimer;
 
+    sf::Text t_timerMenu;
     Camera camera;
     std::map<int,bool>* missionKeyMap;
     Config* missionConfig;
@@ -45,6 +48,7 @@ class MissionController
         bool inFadeTransition;
         bool isBlackScreenCutscene;
         bool cutscenesLeft=false;
+        bool showTimer=false;
         int currentCutsceneId;
         std::vector<std::wstring> cutscene_text_identifiers;
         std::vector<int> cutscene_lengths;
