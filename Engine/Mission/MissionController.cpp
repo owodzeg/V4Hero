@@ -302,13 +302,13 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
             rhythm.current_song = "";
         }
 
-        for (int i=0;i<tangibleLevelObjects.size()-1;i++){
+        for (int i=0;i<tangibleLevelObjects.size();i++){
             tangibleLevelObjects[i]->Draw(window);
         }
         //kacheek.Draw(window);
         //kacheek2.Draw(window);
         //kacheek3.Draw(window);
-        endFlag1.Draw(window);
+        //endFlag1.Draw(window);
 
         /// patapons (and other enemies) are drawn after level objects like kacheek so they are always on top
         patapon.Draw(window);
