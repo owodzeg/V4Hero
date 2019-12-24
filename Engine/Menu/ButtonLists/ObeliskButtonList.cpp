@@ -45,7 +45,7 @@ void ObeliskButtonList::SelectButton(int index){
             case 0:
                 // start options
                 currentController->Initialise(*config,*keyMap,config->GetString("mission1Background"));
-                currentController->StartMission(config->GetString("mission1Theme"));
+                currentController->StartMission(config->GetString("mission1Theme"),1);
                 obeliskMenu->parentMenu->Hide();
                 obeliskMenu->parentMenu->isActive=false;
                 parentMenu->Hide();
@@ -54,7 +54,7 @@ void ObeliskButtonList::SelectButton(int index){
             case 1:
                 // start options
                 currentController->Initialise(*config,*keyMap,config->GetString("mission2Background"));
-                currentController->StartMission(config->GetString("mission2Theme"));
+                currentController->StartMission(config->GetString("mission2Theme"),2);
                 obeliskMenu->parentMenu->Hide();
                 obeliskMenu->parentMenu->isActive=false;
                 parentMenu->Hide();
