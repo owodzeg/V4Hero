@@ -49,7 +49,19 @@ void NewGameMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Co
     buttonList.Initialise(&f_font,*thisConfig,keymap,&(v4core->currentController),this,&optionsMenu,&newGameNameEntryMenu);
 }
 void NewGameMenu::EventFired(sf::Event event){
-    if(isActive){
+    if (v4core->currentController.isInitialized){
+        if(event.type == sf::Event::KeyPressed)
+        {
+            // do something here;
+            buttonList.KeyPressedEvent(event);
+            if(event.key.code==sf::Keyboard::Escape) {
+                thisConfig->debugOut->DebugMessage("Returning to patapolis menu...");
+                v4core->currentController.StopMission();
+                v4core->mainMenu.Show();
+                v4core->mainMenu.patapolisMenu.Hide();
+            }
+        }
+    } else if(isActive){
         if(event.type == sf::Event::KeyPressed)
         {
             // do something here;
