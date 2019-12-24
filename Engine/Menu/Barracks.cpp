@@ -468,8 +468,20 @@ void Barracks::EventFired(sf::Event event){
 
 }
 void Barracks::OpenBarracksMenu(){
-    inventoryGridXPos=0;
-    inventoryGridYPos=0;
+    int egg;
+    Pon* currentPon = parentMenu->v4core->savereader.ponreg.GetPonByID(current_selected_pon);
+    if (currentItemPosition==1) {
+        egg = parentMenu->v4core->savereader.invdata.InvItemIdFromType(1,currentPon->weapon_invItem_id);
+    } else if (currentItemPosition==2){
+        egg = parentMenu->v4core->savereader.invdata.InvItemIdFromType(1,currentPon->weapon2_invItem_id);
+    } else if(currentItemPosition==4) {
+        egg = parentMenu->v4core->savereader.invdata.InvItemIdFromType(2,currentPon->mask_invItem_id);
+    } else if(currentItemPosition==3) {
+        egg = parentMenu->v4core->savereader.invdata.InvItemIdFromType(3,currentPon->armour_invItem_id);
+    }
+    cout<<egg<<'\n';
+    inventoryGridXPos=egg%4;
+    inventoryGridYPos=floor(egg/4);
     int totalItems = v4core->savereader.invdata.CountItemsByType(activeCategory);
     numItemRows = ceil(totalItems/(numItemColumns+0.0));
     RefreshStats();
