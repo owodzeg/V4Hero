@@ -86,7 +86,7 @@ void V4Core::Init()
     if(config.GetInt("enableFullscreen"))
         window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::Fullscreen);
     else
-        window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour");
+        window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::Titlebar | sf::Style::Close);
 
     window.setFramerateLimit(config.GetInt("framerateLimit"));
     window.setKeyRepeatEnabled(false);
