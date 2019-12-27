@@ -34,6 +34,8 @@ class V4Core
 
     bool leftkey=false,rightkey=false,upkey=false,downkey=false;
     public:
+    std::string hero_version = "v1.0.1";
+
     NewGameMenu newGameMenu;
     MainMenu mainMenu;
     Config config;
