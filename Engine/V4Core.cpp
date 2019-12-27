@@ -103,6 +103,7 @@ void V4Core::Init()
 			{
 			    ///keyMap[event.key.code] = true/false??? would that do the trick?
 			    keyMap[event.key.code] = true;
+			    keyMapHeld[event.key.code] = true;
 
 			    //if (!inMission){
                     //inMission=true;
@@ -115,7 +116,7 @@ void V4Core::Init()
 
 			if(event.type == sf::Event::KeyReleased)
             {
-                keyMap[event.key.code] = false;
+                keyMapHeld[event.key.code] = false;
             }
 
             if (savereader.isNewSave){
@@ -136,9 +137,9 @@ void V4Core::Init()
 
         //} else {
         if (savereader.isNewSave){
-            newGameMenu.Update(window,fps);
+            newGameMenu.Update(window,fps,&keyMapHeld);
         } else {
-            mainMenu.Update(window,fps);
+            mainMenu.Update(window,fps,&keyMapHeld);
         }
         //}
 

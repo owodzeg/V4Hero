@@ -32,7 +32,7 @@ class NewGameMenu : public Menu
         NewGameNameEntryMenu newGameNameEntryMenu;
         void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent);
 
-        void Update(sf::RenderWindow &window, float fps);
+        void Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap);
         void EventFired(sf::Event event);
         void OnExit();
         void UpdateButtons();
