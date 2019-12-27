@@ -219,7 +219,6 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
             bool foundCollision = false;
 
             for(int i=0;i<tangibleLevelObjects.size();i++){
-                cout << "tangibleLevelObjects " << i << " / " << tangibleLevelObjects.size() << endl;
                 //kacheek currentCollisionRect = *tangibleLevelObjects[i];
                 /// if the new x position after moving will be between left side of kacheek and right side of kacheek
                 if (proposedXPosRight>tangibleLevelObjects[i]->x+kacheek->hitBox.left && proposedXPosRight<tangibleLevelObjects[i]->x+kacheek->hitBox.left+tangibleLevelObjects[i]->width){
