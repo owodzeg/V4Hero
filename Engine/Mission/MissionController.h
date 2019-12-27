@@ -23,11 +23,11 @@ class MissionController
     Rhythm rhythm;
     bool isInitialized=false;;
     bool isFinishedLoading=false;
-    Patapon patapon;
-    Kacheek kacheek;
-    Kacheek kacheek2;
-    Kacheek kacheek3;
-    EndFlag endFlag1;
+    Patapon* patapon;
+    Kacheek* kacheek;
+    Kacheek* kacheek2;
+    Kacheek* kacheek3;
+    EndFlag* endFlag1;
         sf::Time startTime;
         sf::Clock missionTimer;
 
@@ -70,7 +70,7 @@ class MissionController
     void StopMission();
     void Initialise(Config &config, std::map<int,bool> &keymap,std::string backgroundName);
     void StartMission(std::string songName,int missionID,bool showCutscene=false);
-    void Update(sf::RenderWindow &window, float fps);
+    void Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap);
 
 
     MissionController();

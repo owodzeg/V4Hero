@@ -28,8 +28,10 @@ void Kacheek::Draw(sf::RenderWindow& window)
     /// call the parent function to draw the animations
     AnimatedObject::Draw(window);
 }
-void Kacheek::OnCollide(CollidableObject otherObject)
+void Kacheek::OnCollide(CollidableObject* otherObject)
 {
+    cout << "Kacheek::OnCollide" << endl;
+
     /// if the kacheek is collided with, it starts walking (running?) away
     if(current_animation != "walk")
     {

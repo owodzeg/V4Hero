@@ -14,7 +14,7 @@ class Kacheek : public CollidableObject
     Kacheek();
     void LoadConfig(Config *thisConfigs);
     void Draw(sf::RenderWindow& window);
-    void OnCollide(CollidableObject otherObject);
+    void OnCollide(CollidableObject* otherObject);
     sf::Clock walk_timer; ///TEMPORARY FOR SHOWCASE ONLY
 };
 
