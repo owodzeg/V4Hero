@@ -20,7 +20,7 @@ V4Core::V4Core()
         t = result.st_mtime;
     }
 
-    struct tm *st = localtime(&t);
+    //struct tm *st = localtime(&t);
 
     /*//int day = st->tm_mday;
     //int month = st->tm_mon;
@@ -85,6 +85,8 @@ void V4Core::Init()
 
     if(config.GetInt("enableFullscreen"))
         window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::Fullscreen);
+    else if(config.GetInt("enableBorderlessWindow"))
+        window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::None);
     else
         window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::Titlebar | sf::Style::Close);
 
@@ -176,6 +178,20 @@ void V4Core::Init()
                             keyMapHeld[config.GetInt("keybindChaka")] = true;
                             break;
                         }
+
+                        case 4:
+                        {
+                            keyMap[sf::Keyboard::Q] = true;
+                            keyMapHeld[sf::Keyboard::Q] = true;
+                            break;
+                        }
+
+                        case 5:
+                        {
+                            keyMap[sf::Keyboard::E] = true;
+                            keyMapHeld[sf::Keyboard::E] = true;
+                            break;
+                        }
                     }
                 }
             }
@@ -210,6 +226,18 @@ void V4Core::Init()
                         case 3:
                         {
                             keyMapHeld[config.GetInt("keybindChaka")] = false;
+                            break;
+                        }
+
+                        case 4:
+                        {
+                            keyMapHeld[sf::Keyboard::Q] = false;
+                            break;
+                        }
+
+                        case 5:
+                        {
+                            keyMapHeld[sf::Keyboard::E] = false;
                             break;
                         }
                     }
