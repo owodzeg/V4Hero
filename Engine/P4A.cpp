@@ -187,7 +187,7 @@ void P4A::ReadDictionary(std::string filename)
                 string str_filename(file_name);
                 str_filename = str_filename.substr(0,filename_length);
 
-                cout << "Filename: " << str_filename << endl;
+                //cout << "Filename: " << str_filename << endl;
                 in_fnames.push_back(str_filename);
 
                 p4a_offset += filename_length;
@@ -196,7 +196,7 @@ void P4A::ReadDictionary(std::string filename)
 
                 file.seekg(p4a_offset);
                 file.read(reinterpret_cast<char*>(&file_offset), 4);
-                cout << "File offset: " << file_offset << endl;
+                //cout << "File offset: " << file_offset << endl;
                 in_foffsets.push_back(file_offset);
 
                 p4a_offset += 4;
@@ -205,7 +205,7 @@ void P4A::ReadDictionary(std::string filename)
 
                 file.seekg(p4a_offset);
                 file.read(reinterpret_cast<char*>(&file_size), 4);
-                cout << "File size: " << file_size << endl;
+                //cout << "File size: " << file_size << endl;
                 in_fsizes.push_back(file_size);
 
                 p4a_offset += 4;
@@ -227,31 +227,31 @@ void P4A::ReadDictionary(std::string filename)
 
 std::string P4A::ReadToMemory(std::string name)
 {
-    cout << "Reading " << name << " from memory" << endl;
+    //cout << "Reading " << name << " from memory" << endl;
 
     for(int i=0; i<in_fnames.size(); i++)
     {
         if(in_fnames[i] == name)
         {
-            cout << "File found, open buffer" << endl;
+            //cout << "File found, open buffer" << endl;
 
             ifstream p4(p4a_filename, ios::binary);
-            cout << "Buffer size: " << in_fsizes[i] << " bytes" << endl;
+            //cout << "Buffer size: " << in_fsizes[i] << " bytes" << endl;
             string buffer;
             buffer.resize(in_fsizes[i]);
-            cout << "Allocated char, size: " << buffer.size() << endl;
+            //cout << "Allocated char, size: " << buffer.size() << endl;
 
             p4.seekg(in_foffsets[i]);
             p4.read(&buffer[0],in_fsizes[i]);
-            cout << "Buffer filled" << endl;
+            //cout << "Buffer filled" << endl;
 
             p4.close();
-            cout << "Reading successful" << endl;
+            //cout << "Reading successful" << endl;
             return string(buffer);
         }
     }
 
-    cout << "Can't find file to read from" << endl;
+    //cout << "Can't find file to read from" << endl;
     return "";
 }
 

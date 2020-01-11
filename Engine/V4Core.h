@@ -24,6 +24,7 @@ class V4Core
 
     std::vector<float> tot_fps;
     std::map<int,bool> keyMap;
+    std::map<int,bool> keyMapHeld;
 
     sf::Font f_font;
     sf::Text t_debug;
@@ -33,6 +34,8 @@ class V4Core
 
     bool leftkey=false,rightkey=false,upkey=false,downkey=false;
     public:
+    std::string hero_version = "v1.0.2";
+
     NewGameMenu newGameMenu;
     MainMenu mainMenu;
     Config config;

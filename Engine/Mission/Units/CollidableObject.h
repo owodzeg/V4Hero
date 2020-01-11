@@ -13,7 +13,7 @@ class CollidableObject : public AnimatedObject
     public:
 
     CollidableObject();
-    virtual void OnCollide(CollidableObject otherObject);
+    virtual void OnCollide(CollidableObject* otherObject);
 };
 
 #endif // COLLIDABLEOBJECT_H

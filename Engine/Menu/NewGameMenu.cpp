@@ -83,7 +83,7 @@ void NewGameMenu::EventFired(sf::Event event){
         newGameNameEntryMenu.savefilecreated.EventFired(event);
     }
 }
-void NewGameMenu::Update(sf::RenderWindow &window, float fps)
+void NewGameMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap)
 {
 
     if(isActive){
@@ -137,7 +137,7 @@ void NewGameMenu::Update(sf::RenderWindow &window, float fps)
 
     } else {
         if (v4core->currentController.isInitialized && v4core->currentController.isFinishedLoading){
-            v4core->currentController.Update(window, fps);
+            v4core->currentController.Update(window, fps, keyMap);
         } else if (optionsMenu.isActive){
             optionsMenu.Update(window,fps);
         } else if (newGameNameEntryMenu.isActive){

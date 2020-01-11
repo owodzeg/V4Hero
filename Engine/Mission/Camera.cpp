@@ -23,16 +23,18 @@ void Camera::zoomViewAt(sf::Vector2i pixel, sf::RenderWindow& window, float zoom
 }
 
 
-void Camera::Work(sf::RenderWindow& window,float fps)
+void Camera::Work(sf::RenderWindow& window,float fps, std::map<int,bool> *keyMap)
 {
     camera_y = window.getSize().y/2;
+
+    std::map<int,bool> cameraKeyMap = *keyMap;
 
     dest_zoom = 1;
     manual_x_dest = 0;
 
     /** Debug controls **/
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::O))
+    if(cameraKeyMap[sf::Keyboard::O])
     {
         if(fps >= 120)
         dest_zoom = 1.01 - (0.01 / (fps / float(60)));
@@ -40,7 +42,7 @@ void Camera::Work(sf::RenderWindow& window,float fps)
         dest_zoom = 1.01;
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::P))
+    if(cameraKeyMap[sf::Keyboard::P])
     {
         if(fps >= 120)
         dest_zoom = 0.99 + (0.01 / (fps / float(60)));
@@ -48,47 +50,47 @@ void Camera::Work(sf::RenderWindow& window,float fps)
         dest_zoom = 0.99;
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::K))
+    if(cameraKeyMap[sf::Keyboard::K])
     {
         camera_x -= 5;
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+    if(cameraKeyMap[sf::Keyboard::L])
     {
         camera_x += 5;
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+    if(cameraKeyMap[sf::Keyboard::Q])
     {
         manual_x_dest = -500;
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+    if(cameraKeyMap[sf::Keyboard::E])
     {
         manual_x_dest = 500;
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num4))
+    if(cameraKeyMap[sf::Keyboard::Num4])
     {
         debug_x_dest -= debug_x_speed;
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num6))
+    if(cameraKeyMap[sf::Keyboard::Num6])
     {
         debug_x_dest += debug_x_speed;
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num5))
+    if(cameraKeyMap[sf::Keyboard::Num5])
     {
         debug_x_dest = 0;
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num9))
+    if(cameraKeyMap[sf::Keyboard::Num9])
     {
         debug_x_speed -= 10;
     }
 
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num0))
+    if(cameraKeyMap[sf::Keyboard::Num0])
     {
         debug_x_speed += 10;
     }

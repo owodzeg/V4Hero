@@ -56,7 +56,7 @@ class Config
     std::to_string(sf::Keyboard::W),
     std::to_string(sf::Keyboard::Enter),
     std::to_string(sf::Keyboard::Escape),
-    "Donja Lalin Theme",
+    "Hey Whazzat Rock Theme",
     "nanjarohills",
     "Freakout Rock Theme",
     "evilmass",

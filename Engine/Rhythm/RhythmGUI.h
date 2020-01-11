@@ -17,7 +17,7 @@ class RhythmGUI
         sf::RectangleShape r_fever;
         sf::RectangleShape r_fever_meter;
 
-
+        float beatBounce = 0;
 
 
 

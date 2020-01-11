@@ -5,11 +5,36 @@
 #include <string>
 MissionController::MissionController()
 {
-    //ctor
+    ///first initialization, fill the buffers
+
+    patapon = new Patapon;
+    kacheek = new Kacheek;
+    kacheek2 = new Kacheek;
+    kacheek3 = new Kacheek;
+    endFlag1 = new EndFlag;
+    feverworm = new FeverWorm;
 
 }
 void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,std::string backgroundString){
     test_bg.Load(backgroundString, config);//config.GetString("debugBackground"));
+
+    ///clean the taken up memory
+    delete patapon;
+    delete kacheek;
+    delete kacheek2;
+    delete kacheek3;
+    delete endFlag1;
+    delete feverworm;
+
+    ///redeclare all objects
+    patapon = new Patapon;
+    kacheek = new Kacheek;
+    kacheek2 = new Kacheek;
+    kacheek3 = new Kacheek;
+    endFlag1 = new EndFlag;
+    feverworm = new FeverWorm;
+
+    tangibleLevelObjects.clear();
 
     //ctor
     f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
@@ -27,71 +52,7 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
 
     missionKeyMap = &keyMap;
     missionConfig = &config;
-    patapon.LoadConfig(&config);
 
-    kacheek.LoadConfig(&config);
-    kacheek2.LoadConfig(&config);
-    kacheek3.LoadConfig(&config);
-    endFlag1.LoadConfig(&config);
-    tangibleLevelObjects.push_back(&kacheek);
-    tangibleLevelObjects.push_back(&kacheek2);
-    tangibleLevelObjects.push_back(&kacheek3);
-    tangibleLevelObjects.push_back(&endFlag1);
-    int quality = config.GetInt("textureQuality");
-
-    float ratioX, ratioY;
-    switch(quality)
-    {
-        case 0: ///low
-        {
-            ratioX = config.GetInt("resX") / float(640);
-            ratioY = config.GetInt("resY") / float(360);
-            break;
-        }
-
-        case 1: ///med
-        {
-            ratioX = config.GetInt("resX") / float(1280);
-            ratioY = config.GetInt("resY") / float(720);
-            break;
-        }
-
-        case 2: ///high
-        {
-            ratioX = config.GetInt("resX") / float(1920);
-            ratioY = config.GetInt("resY") / float(1080);
-            break;
-        }
-
-        case 3: ///ultra
-        {
-            ratioX = config.GetInt("resX") / float(3840);
-            ratioY = config.GetInt("resY") / float(2160);
-            break;
-        }
-    }
-
-    pataponY = config.GetInt("resY") - (200 * ratioY);
-    patapon.scaleX = ratioX;
-    patapon.scaleY = ratioY;
-
-    kacheek.scaleX = ratioX;
-    kacheek.scaleY = ratioY;
-    kacheek2.scaleX = ratioX;
-    kacheek2.scaleY = ratioY;
-    kacheek3.scaleX = ratioX;
-    kacheek3.scaleY = ratioY;
-    endFlag1.scaleX = ratioX*0.2;
-    endFlag1.scaleY = ratioY*0.2;
-
-    kacheek.x = 1000;
-    kacheek.y = config.GetInt("resY") - (250 * ratioY);
-    kacheek2.x = 1500;
-    kacheek2.y = config.GetInt("resY") - (250 * ratioY);
-    kacheek3.x = 2000;
-    kacheek3.y = config.GetInt("resY") - (250 * ratioY);
-    endFlag1.x = 2500;
-    endFlag1.y = config.GetInt("resY") - (250 * ratioY);
     isInitialized = true;
     // this is outside the loop
     startAlpha = 255;
@@ -105,12 +66,12 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     currentCutsceneId=0;
 }
 void MissionController::StartMission(std::string songName,int missionID,bool showCutscene){
-    rhythm.LoadTheme(songName); // missionConfig->GetString("debugTheme")
 
     int quality = missionConfig->GetInt("textureQuality");
     float ratioX, ratioY;
-    patapon.x=0;
-    camera.followobject_x=patapon.x;
+    patapon->LoadConfig(missionConfig);
+    patapon->x=0;
+    camera.followobject_x=patapon->x;
     camera.camera_x=480;
     missionTimer.restart();
     showTimer = false;
@@ -144,6 +105,10 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
             break;
         }
     }
+    pataponY = missionConfig->GetInt("resY") - (200 * ratioY);
+    patapon->scaleX = ratioX;
+    patapon->scaleY = ratioY;
+
     if(showCutscene){
         cutscene_text_identifiers.push_back(L"intro_cutscene_1");
         cutscene_text_identifiers.push_back(L"intro_cutscene_2");
@@ -175,63 +140,65 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
     switch(missionID){
     case 1:{
         showTimer=true;
-        endFlag1.LoadConfig(missionConfig);
+        endFlag1->LoadConfig(missionConfig);
 
-        tangibleLevelObjects.push_back(&endFlag1);
+        tangibleLevelObjects.push_back(endFlag1);
 
-        endFlag1.scaleX = ratioX*0.2;
-        endFlag1.scaleY = ratioY*0.2;
+        endFlag1->scaleX = ratioX*0.2;
+        endFlag1->scaleY = ratioY*0.2;
 
-        endFlag1.x = 2500;
-        endFlag1.y = missionConfig->GetInt("resY") - (250 * ratioY);
+        endFlag1->setGlobalPosition(sf::Vector2f(2500,missionConfig->GetInt("resY") - (250 * ratioY)));
         break;
     }
     case 2:{
-        kacheek.LoadConfig(missionConfig);
-        kacheek2.LoadConfig(missionConfig);
-        kacheek3.LoadConfig(missionConfig);
-        endFlag1.LoadConfig(missionConfig);
-        tangibleLevelObjects.push_back(&kacheek);
-        tangibleLevelObjects.push_back(&kacheek2);
-        tangibleLevelObjects.push_back(&kacheek3);
-        tangibleLevelObjects.push_back(&endFlag1);
-        kacheek.scaleX = ratioX;
-        kacheek.scaleY = ratioY;
-        kacheek2.scaleX = ratioX;
-        kacheek2.scaleY = ratioY;
-        kacheek3.scaleX = ratioX;
-        kacheek3.scaleY = ratioY;
-        endFlag1.scaleX = ratioX*0.2;
-        endFlag1.scaleY = ratioY*0.2;
-        kacheek.x = 1000;
-        kacheek.y = missionConfig->GetInt("resY") - (250 * ratioY);
-        kacheek2.x = 1500;
-        kacheek2.y = missionConfig->GetInt("resY") - (250 * ratioY);
-        kacheek3.x = 2000;
-        kacheek3.y = missionConfig->GetInt("resY") - (250 * ratioY);
-        endFlag1.x = 2500;
-        endFlag1.y = missionConfig->GetInt("resY") - (250 * ratioY);
+        kacheek->LoadConfig(missionConfig);
+        kacheek2->LoadConfig(missionConfig);
+        kacheek3->LoadConfig(missionConfig);
+        feverworm->LoadConfig(missionConfig);
+        ///endFlag1->LoadConfig(missionConfig);
+        tangibleLevelObjects.push_back(kacheek);
+        tangibleLevelObjects.push_back(kacheek2);
+        tangibleLevelObjects.push_back(kacheek3);
+        tangibleLevelObjects.push_back(feverworm);
+        ///tangibleLevelObjects.push_back(endFlag1);
+        kacheek->scaleX = ratioX;
+        kacheek->scaleY = ratioY;
+        kacheek2->scaleX = ratioX;
+        kacheek2->scaleY = ratioY;
+        kacheek3->scaleX = ratioX;
+        kacheek3->scaleY = ratioY;
+        feverworm->scaleX = ratioX;
+        feverworm->scaleY = ratioY;
+        ///endFlag1->scaleX = ratioX*0.2;
+        ///endFlag1->scaleY = ratioY*0.2;
+        kacheek->setGlobalPosition(sf::Vector2f(1000,missionConfig->GetInt("resY") - (175 * ratioY)));
+        kacheek2->setGlobalPosition(sf::Vector2f(1500,missionConfig->GetInt("resY") - (175 * ratioY)));
+        kacheek3->setGlobalPosition(sf::Vector2f(2000,missionConfig->GetInt("resY") - (175 * ratioY)));
+        feverworm->setGlobalPosition(sf::Vector2f(-250,missionConfig->GetInt("resY") - (450 * ratioY)));
+        ///endFlag1->x = 2500;
+        ///endFlag1->y = missionConfig->GetInt("resY") - (250 * ratioY);
         break;
 
     }
     default:
 
-        endFlag1.LoadConfig(missionConfig);
+        endFlag1->LoadConfig(missionConfig);
 
-        tangibleLevelObjects.push_back(&endFlag1);
-        endFlag1.scaleX = ratioX*0.2;
-        endFlag1.scaleY = ratioY*0.2;
-        endFlag1.x = 2500;
-        endFlag1.y = missionConfig->GetInt("resY") - (250 * ratioY);
+        tangibleLevelObjects.push_back(endFlag1);
+        endFlag1->scaleX = ratioX*0.2;
+        endFlag1->scaleY = ratioY*0.2;
+        endFlag1->setGlobalPosition(sf::Vector2f(2500,missionConfig->GetInt("resY") - (250 * ratioY)));
         break;
     }
+
+    rhythm.LoadTheme(songName); // missionConfig->GetString("debugTheme")
     isFinishedLoading=true;
 }
 void MissionController::StopMission(){
     rhythm.Stop();
     isInitialized = false;
 }
-void MissionController::Update(sf::RenderWindow &window, float fps){
+void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap){
         if(rhythm.current_song == "patapata")
         {
             camera.walk = true;
@@ -244,23 +211,83 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         if (rhythm.current_perfect == 4){
             booster=1.2;
         }
-        cout<<rhythm.current_perfect<<'\n';
+        //cout<<rhythm.current_perfect<<'\n';
 
-        camera.Work(window,fps);
+        camera.Work(window,fps,keyMap);
         test_bg.setCamera(camera);
         test_bg.Draw(window);
 
-        kacheek.fps = fps;
-        kacheek2.fps = fps;
-        kacheek3.fps = fps;
-        endFlag1.fps = fps;
+        //feverworm->next_x = -60 + (rhythm.GetCombo() * 20);
+
+        kacheek->fps = fps;
+        kacheek2->fps = fps;
+        kacheek3->fps = fps;
+        endFlag1->fps = fps;
+        feverworm->fps = fps;
+
+        if(rhythm.GetCombo() >= 11)
+        {
+            if(feverworm->getAnimationSegment() == "fever")
+            {
+                feverworm->scaleX = 1+rhythm.r_gui.beatBounce;
+                feverworm->scaleY = 1+rhythm.r_gui.beatBounce;
+            }
+        }
+
+        if(rhythm.updateworm)
+        {
+            if(rhythm.GetRealCombo() == 0)
+            {
+                feverworm->global_x = -250;
+                feverworm->next_x = -250;
+                feverworm->speed = 120;
+            }
+
+            if(rhythm.GetRealCombo() == 2)
+            {
+                feverworm->next_x = 50;
+                feverworm->speed = 400;
+            }
+
+            if((rhythm.GetRealCombo() > 2) && (rhythm.GetCombo() < 11))
+            {
+                feverworm->next_x = 50 + (rhythm.GetSatisfaction() / 5.5) + ((rhythm.GetRealCombo() - 2) * 8);
+                feverworm->speed = 40;
+            }
+
+            if(rhythm.GetCombo() < 11)
+            {
+                if(rhythm.advanced_prefever)
+                {
+                    feverworm->setAnimationSegment("fast");
+                }
+                else
+                {
+                    feverworm->setAnimationSegment("slow");
+                }
+            }
+
+            if(rhythm.GetCombo() == 11)
+            {
+                feverworm->setAnimationSegment("transform");
+                feverworm->setLoop(false);
+            }
+
+            if(rhythm.GetCombo() >= 12)
+            {
+                feverworm->setAnimationSegment("fever");
+                feverworm->setLoop(true);
+            }
+
+            rhythm.updateworm = false;
+        }
 
         /** Make Patapon walk (temporary) **/
         if(camera.walk)
         {
             float proposedXPos = camera.followobject_x + (2 * 60 * booster) / fps;
             /// use the right hand side of the patapon sprite to check for collisions. This should be changed if the patapon walks to the left
-            float proposedXPosRight = proposedXPos + patapon.hitBox.left + patapon.hitBox.width;
+            float proposedXPosRight = proposedXPos + patapon->hitBox.left + patapon->hitBox.width;
             /// need to have it check for collision and stop if blocked by kacheek here.
 
             /// right now it is very basic checking only in X axis. Jumping over a
@@ -268,22 +295,27 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
 
             bool foundCollision = false;
 
-            for(int i=0;i<tangibleLevelObjects.size();i++){
-                //kacheek currentCollisionRect = *tangibleLevelObjects[i];
-                /// if the new x position after moving will be between left side of kacheek and right side of kacheek
-                if (proposedXPosRight>tangibleLevelObjects[i]->x+kacheek.hitBox.left && proposedXPosRight<tangibleLevelObjects[i]->x+kacheek.hitBox.left+tangibleLevelObjects[i]->width){
-                    /// then we have found a collision
-                    foundCollision = true;
-                    tangibleLevelObjects[i]->OnCollide(*tangibleLevelObjects[i]);
-                    std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
-                    /*///HARDCODED FOR KACHEEK SHOWCASE PURPOSES
-                    tangibleLevelObjects[i]->walk_timer.restart();
-
-                    if(tangibleLevelObjects[i]->current_animation != "walk")
+            for(int i=0;i<tangibleLevelObjects.size();i++)
+            {
+                for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
+                {
+                    //kacheek currentCollisionRect = *tangibleLevelObjects[i];
+                    /// if the new x position after moving will be between left side of kacheek and right side of kacheek
+                    if (proposedXPosRight>tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().left && proposedXPosRight<tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().width)
                     {
-                        tangibleLevelObjects[i]->current_animation = "walk";
-                        tangibleLevelObjects[i]->current_frame = 0;
-                    }*/
+                        /// then we have found a collision
+                        foundCollision = true;
+                        tangibleLevelObjects[i]->OnCollide(tangibleLevelObjects[i]);
+                        std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
+                        /*///HARDCODED FOR KACHEEK SHOWCASE PURPOSES
+                        tangibleLevelObjects[i]->walk_timer.restart();
+
+                        if(tangibleLevelObjects[i]->current_animation != "walk")
+                        {
+                            tangibleLevelObjects[i]->current_animation = "walk";
+                            tangibleLevelObjects[i]->current_frame = 0;
+                        }*/
+                    }
                 }
             }
 
@@ -293,9 +325,9 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
             }
         }
 
-        patapon.x = camera.followobject_x;
-        patapon.y = pataponY;
-        patapon.fps = fps;
+        patapon->x = camera.followobject_x;
+        patapon->y = pataponY;
+        patapon->fps = fps;
 
 
         // TODO: at some point some pointer shenanigans is required to make these be a reference to v4core's ones too.
@@ -305,13 +337,13 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
 
         if(rhythm.current_song == "patapata")
         {
-            patapon.current_animation = "walk";
+            patapon->current_animation = "walk";
         }
 
         if((rhythm.rhythmController.current_drum == "pata") or (rhythm.rhythmController.current_drum == "pon") or (rhythm.rhythmController.current_drum == "chaka") or (rhythm.rhythmController.current_drum == "don"))
         {
-            patapon.current_animation = rhythm.rhythmController.current_drum;
-            patapon.current_frame = 0;
+            patapon->current_animation = rhythm.rhythmController.current_drum;
+            patapon->current_frame = 0;
             rhythm.rhythmController.current_drum = "";
             rhythm.current_song = "";
         }
@@ -319,13 +351,13 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         for (int i=0;i<tangibleLevelObjects.size();i++){
             tangibleLevelObjects[i]->Draw(window);
         }
-        //kacheek.Draw(window);
-        //kacheek2.Draw(window);
-        //kacheek3.Draw(window);
-        //endFlag1.Draw(window);
+        //kacheek->Draw(window);
+        //kacheek2->Draw(window);
+        //kacheek3->Draw(window);
+        //endFlag1->Draw(window);
 
         /// patapons (and other enemies) are drawn after level objects like kacheek so they are always on top
-        patapon.Draw(window);
+        patapon->Draw(window);
 
         /// draw static UI elements
         auto lastView = window.getView();
@@ -399,13 +431,21 @@ void MissionController::Update(sf::RenderWindow &window, float fps){
         /// here we show the hitbox
         bool showHitboxes = false;
         if(showHitboxes){
-            sf::RectangleShape hitboxRect(sf::Vector2f(patapon.hitBox.width, patapon.hitBox.height));
-            hitboxRect.setPosition(patapon.x+patapon.hitBox.left,patapon.y+patapon.hitBox.top);
+            sf::RectangleShape hitboxRect(sf::Vector2f(patapon->hitBox.width, patapon->hitBox.height));
+            hitboxRect.setPosition(patapon->x+patapon->hitBox.left,patapon->y+patapon->hitBox.top);
             window.draw(hitboxRect);
 
-            sf::RectangleShape kacheekHitboxRect(sf::Vector2f(kacheek.hitBox.width, kacheek.hitBox.height));
-            kacheekHitboxRect.setPosition(kacheek.x+kacheek.hitBox.left,kacheek.y+kacheek.hitBox.top);
-            window.draw(kacheekHitboxRect);
+            for(int i=0; i<tangibleLevelObjects.size(); i++)
+            {
+                for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
+                {
+                    //cout << "hitbox " << h << " pos: " << tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x << " " << tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().y << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().top << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().left << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().width << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().height << endl;
+
+                    sf::RectangleShape kacheekHitboxRect(sf::Vector2f(tangibleLevelObjects[i]->hitboxes[h].getRect().width, tangibleLevelObjects[i]->hitboxes[h].getRect().height));
+                    kacheekHitboxRect.setPosition(tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().left,tangibleLevelObjects[i]->getGlobalPosition().y+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().y+tangibleLevelObjects[i]->hitboxes[h].getRect().top);
+                    window.draw(kacheekHitboxRect);
+                }
+            }
         }
 
 

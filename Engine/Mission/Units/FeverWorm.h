@@ -1,5 +1,5 @@
-#ifndef ENDFLAG_H
-#define ENDFLAG_H
+#ifndef FEVERWORM_H
+#define FEVERWORM_H
 
 #include <SFML/Graphics.hpp>
 #include "../../Config.h"
@@ -7,14 +7,15 @@
 
 using namespace std;
 
-class EndFlag : public CollidableObject
+class FeverWorm : public CollidableObject
 {
     public:
+    float next_x = -250;
+    float speed = 120;
 
-    EndFlag();
+    FeverWorm();
     void LoadConfig(Config *thisConfigs);
     void Draw(sf::RenderWindow& window);
-    void OnCollide(CollidableObject* otherObject);
 };
 
-#endif // ENDFLAG_H
+#endif // FEVERWORM_H

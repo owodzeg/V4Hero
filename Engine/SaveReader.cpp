@@ -16,8 +16,8 @@ SaveReader::SaveReader()
     bool exists = check.good();
     check.close();
 
-    ///if config not exists
-    if(!exists)
+    ///if config not exists -update: then dont create fresh one :)
+    /*if(!exists)
     {
         ofstream conf("resources/data/sv1.p4sv");
 
@@ -29,7 +29,8 @@ SaveReader::SaveReader()
         }
 
         conf.close();
-    }
+    }*/
+
     isNewSave = !exists;
 }
 
