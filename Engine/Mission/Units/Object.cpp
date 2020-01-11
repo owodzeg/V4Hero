@@ -10,9 +10,9 @@ Object::Object()
 
 void Object::Load(string filename, int xpos, int ypos)
 {
-    cout << "Loading object" << endl;
+    //cout << "Loading object" << endl;
     texture_path = filename.substr(filename.find_last_of("\\/")+1);
-    cout << "Texture path: " << texture_path << endl;
+    //cout << "Texture path: " << texture_path << endl;
 
     if(tex_obj.loadFromFile(filename))
     {
@@ -24,7 +24,7 @@ void Object::Load(string filename, int xpos, int ypos)
         x = xpos;
         y = ypos;
 
-        cout << "Object loaded successfully" << endl;
+        //cout << "Object loaded successfully" << endl;
     }
 }
 
@@ -39,7 +39,7 @@ void Object::Load(sf::Texture& texture, int xpos, int ypos)
     x = xpos;
     y = ypos;
 
-    cout << "Object loaded successfully" << endl;
+    //cout << "Object loaded successfully" << endl;
 }
 
 void Object::SetFrame(float time)
@@ -182,8 +182,7 @@ void Object::Draw(sf::RenderWindow& window)
     s_obj.setTexture(tex_obj);
     s_obj.setScale(s_x,s_y);
     s_obj.setOrigin(or_x,or_y);
-    s_obj.setPosition(x,y);
+    s_obj.setPosition(x+g_x,y+g_y);
     s_obj.setRotation(r);
-    s_obj.move(256,256);
     window.draw(s_obj);
 }
