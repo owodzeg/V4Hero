@@ -13,7 +13,7 @@ AnimatedObject::AnimatedObject()
 
 void AnimatedObject::loadAnim(std::string data, P4A handle)
 {
-    ///LOADANIM ver from 6.10.2019
+    ///LOADANIM ver from 9.01.2020
 
     objects.clear();
 
@@ -32,10 +32,91 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
             cout << "Anim format legit. Version " << version << endl;
         }
 
+        /**
+        [READ] V4Mater-ver-1.00
+        [READ] S:9.799995
+        [READ] OI:button_idle.png
+        [READ] F:animation_name,0.000000,0,106,502,0,24,24,1,1
+        [READ] F:animation_name,8.003246,0,1055,146,180.875,24,24,1,1
+        */
+
         if(legit)
         {
-            if(version == "1.00")
+            if(version == "1.01")
             {
+                //cout << "[READ " << version << "]: " << line << endl;
+
+                if(line.find("S:") != std::string::npos)
+                {
+                    max_time = atof(line.substr(line.find_first_of(":")+1).c_str());
+                    cout << "Time: " << max_time << endl;
+                }
+
+                if(line.find("A:") != std::string::npos)
+                {
+                    string animdata = line.substr(line.find_first_of(":")+1);
+                    vector<string> anim = Func::Split(animdata,',');
+
+                    /**Animation tmp;
+
+                    tmp.a_begin = atof(anim[0].c_str());
+                    tmp.a_end = atof(anim[1].c_str());
+                    tmp.a_name = anim[2];
+
+                    animations.push_back(tmp);*/
+                    animation_begin.push_back(atof(anim[0].c_str()));
+                    animation_end.push_back(atof(anim[1].c_str()));
+                    animation_names.push_back(anim[2]);
+                }
+
+                if(line.find("OI:") != std::string::npos)
+                {
+                    string objectdata = line.substr(line.find_first_of(":")+1);
+                    vector<string> object = Func::Split(objectdata,',');
+
+                    string tex_file = object[0];
+                    string texture_data = handle.ReadToMemory(tex_file);
+
+                    //cout << "texture data: " << texture_data.size() << endl;
+
+                    sf::Texture obj_texture;
+                    obj_texture.loadFromMemory(texture_data.data(),texture_data.size());
+                    obj_texture.setSmooth(true);
+
+                    int parent = 0; ///unused yet
+
+                    Object tmp;
+                    tmp.Load(obj_texture,0,0);
+                    tmp.layer = objects.size();
+                    tmp.parent = parent;
+                    objects.push_back(tmp);
+
+                    //cout << "Added new object from " << tex_file << endl;
+                }
+
+                if(line.find("F:") != std::string::npos)
+                {
+                    string framedata = line.substr(line.find_first_of(":")+1);
+                    vector<string> frame = Func::Split(framedata,',');
+
+                    float time = atof(frame[0].c_str());
+                    int objectID = atoi(frame[1].c_str());
+
+                    float pos_x = atof(frame[2].c_str());
+                    float pos_y = atof(frame[3].c_str());
+                    float rotation = atof(frame[4].c_str());
+                    float or_x = atof(frame[5].c_str());
+                    float or_y = atof(frame[6].c_str());
+                    float scale_x = atof(frame[7].c_str());
+                    float scale_y = atof(frame[8].c_str());
+                    objects[objectID].SetCustomFrame(time,pos_x,pos_y,or_x,or_y,rotation,scale_x,scale_y);
+                    //objects[objectID*2+1].SetCustomFrame(time,pos_x,pos_y,1,1,rotation,scale_x,scale_y);
+                }
+            }
+            else if(version == "1.00")
+            {
+                cout << "[READ " << version << "]: " << line << endl;
+
                 if(line.find("S:") != std::string::npos)
                 {
                     max_time = atof(line.substr(line.find_first_of(":")+1).c_str());
@@ -50,7 +131,7 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     string tex_file = object[0];
                     string texture_data = handle.ReadToMemory(tex_file);
 
-                    cout << "texture data: " << texture_data.size() << endl;
+                    //cout << "texture data: " << texture_data.size() << endl;
 
                     sf::Texture obj_texture;
                     obj_texture.loadFromMemory(texture_data.data(),texture_data.size());
@@ -64,8 +145,7 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     tmp.parent = parent;
                     objects.push_back(tmp);
 
-                    cout << "Added new object from " << tex_file << endl;
-
+                    //cout << "Added new object from " << tex_file << endl;
                 }
 
                 if(line.find("F:") != std::string::npos)
@@ -86,19 +166,52 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     float scale_x = atof(frame[8].c_str());
                     float scale_y = atof(frame[9].c_str());
                     objects[objectID].SetCustomFrame(time,pos_x,pos_y,or_x,or_y,rotation,scale_x,scale_y);
+                    //objects[objectID*2+1].SetCustomFrame(time,pos_x,pos_y,1,1,rotation,scale_x,scale_y);
                 }
             }
         }
     }
 
+    ///init first animation (change later to an option "default animation")
+    setAnimationSegment(animation_names[0]);
     //setPositions(0);
+}
+
+void AnimatedObject::setAnimationSegment(std::string new_segment_name)
+{
+    anim_begin = animation_begin[distance(animation_names.begin(), find(animation_names.begin(), animation_names.end(), new_segment_name))];
+    anim_end = animation_end[distance(animation_names.begin(), find(animation_names.begin(), animation_names.end(), new_segment_name))];
+
+    current_animation = new_segment_name;
+}
+
+std::string AnimatedObject::getAnimationSegment()
+{
+    return current_animation;
+}
+
+void AnimatedObject::setGlobalPosition(sf::Vector2f pos)
+{
+    global_x = pos.x;
+    global_y = pos.y;
+}
+
+sf::Vector2f AnimatedObject::getGlobalPosition()
+{
+    return sf::Vector2f(global_x,global_y);
+}
+
+void AnimatedObject::moveGlobalPosition(sf::Vector2f pos)
+{
+    global_x += pos.x;
+    global_y += pos.y;
 }
 
 void AnimatedObject::LoadConfig(Config *thisConfigs, std::string unitParamPath)
 {
     P4A handle;
 
-    /*if(unitParamPath != "")
+    if(unitParamPath != "")
     {
         handle.ReadDictionary(unitParamPath);
         string animdata = handle.ReadToMemory("data.anim");
@@ -109,8 +222,9 @@ void AnimatedObject::LoadConfig(Config *thisConfigs, std::string unitParamPath)
         }
 
         loadAnim(animdata,handle);
-    }*/
- thisConfig = thisConfigs;
+    }
+
+ /*thisConfig = thisConfigs;
  ifstream param(unitParamPath+"param.dat");//"resources/graphics/units/wall/param.dat");
 
     string buff;
@@ -179,24 +293,30 @@ void AnimatedObject::LoadConfig(Config *thisConfigs, std::string unitParamPath)
 
             animation_textures[animation_name[i]].push_back(temp);
         }
-    }
+    }*/
 }
 void AnimatedObject::Draw(sf::RenderWindow& window)
 {
-    /*cur_pos += 1 / float(fps);
+    if(cur_pos < anim_begin)
+    cur_pos = anim_begin;
 
-    if(cur_pos > max_time)
+    cur_pos += 1 / float(fps);
+
+    if(cur_pos > anim_end)
     {
-        cur_pos = 0;
+        cur_pos = anim_begin;
     }
 
     for(int i=0; i<objects.size(); i++)
     {
+        objects[i].g_x = global_x;
+        objects[i].g_y = global_y;
+
         objects[i].SetPos(cur_pos);
         objects[i].Draw(window);
     }
-*/
-float ratioX, ratioY;
+
+/*float ratioX, ratioY;
     switch(thisConfig->GetInt("textureQuality"))
     {
         case 0: ///low
@@ -245,5 +365,5 @@ float ratioX, ratioY;
     //cout<< hitBox.left<<" "<<hitBox.top<<" "<<hitBox.width<<" "<<hitBox.height<<endl;
     //hitBox = sf::Rect<float>(x*ratioX,y,spriteSize.width,spriteSize.height);
 
-    window.draw(s_wall);
+    window.draw(s_wall);*/
 }

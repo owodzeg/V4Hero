@@ -17,10 +17,16 @@ class AnimatedObject
 
     ///OLD
     sf::Sprite s_wall;
-    string current_animation = "idle";
+    string current_animation = "";
+    float anim_begin = 0;
+    float anim_end = 0;
+
     float current_frame = 0;
-    float x = 0;
-    float y = 520;
+    ///depracated
+    //float x = 0;
+    //float y = 520;
+    float global_x = 0;
+    float global_y = 0;
     float fps = 60;
     float width = 0;
     float scaleX = 1, scaleY = 1; ///TEMPORARY
@@ -28,11 +34,20 @@ class AnimatedObject
 
     map<string,vector<sf::Texture>> animation_textures;
 
-    vector<string> animation_name;
+    vector<float> animation_begin;
+    vector<float> animation_end;
+    vector<string> animation_names;
+
+
     vector<int> animation_frames;
     Config *thisConfig;
     AnimatedObject();
     void loadAnim(std::string data, P4A handle);
+    void setAnimationSegment(std::string new_segment_name);
+    std::string getAnimationSegment();
+    void setGlobalPosition(sf::Vector2f pos);
+    sf::Vector2f getGlobalPosition();
+    void moveGlobalPosition(sf::Vector2f pos);
     virtual void LoadConfig(Config *thisConfigs,std::string unitParamPath);
     virtual void Draw(sf::RenderWindow& window);
 };

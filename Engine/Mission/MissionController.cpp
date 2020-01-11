@@ -5,12 +5,26 @@
 #include <string>
 MissionController::MissionController()
 {
-    //ctor
+    ///first initialization, fill the buffers
+
+    patapon = new Patapon;
+    kacheek = new Kacheek;
+    kacheek2 = new Kacheek;
+    kacheek3 = new Kacheek;
+    endFlag1 = new EndFlag;
 
 }
 void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,std::string backgroundString){
     test_bg.Load(backgroundString, config);//config.GetString("debugBackground"));
 
+    ///clean the taken up memory
+    delete patapon;
+    delete kacheek;
+    delete kacheek2;
+    delete kacheek3;
+    delete endFlag1;
+
+    ///redeclare all objects
     patapon = new Patapon;
     kacheek = new Kacheek;
     kacheek2 = new Kacheek;
@@ -130,35 +144,31 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         endFlag1->scaleX = ratioX*0.2;
         endFlag1->scaleY = ratioY*0.2;
 
-        endFlag1->x = 2500;
-        endFlag1->y = missionConfig->GetInt("resY") - (250 * ratioY);
+        endFlag1->setGlobalPosition(sf::Vector2f(2500,missionConfig->GetInt("resY") - (250 * ratioY)));
         break;
     }
     case 2:{
         kacheek->LoadConfig(missionConfig);
         kacheek2->LoadConfig(missionConfig);
         kacheek3->LoadConfig(missionConfig);
-        endFlag1->LoadConfig(missionConfig);
+        ///endFlag1->LoadConfig(missionConfig);
         tangibleLevelObjects.push_back(kacheek);
         tangibleLevelObjects.push_back(kacheek2);
         tangibleLevelObjects.push_back(kacheek3);
-        tangibleLevelObjects.push_back(endFlag1);
+        ///tangibleLevelObjects.push_back(endFlag1);
         kacheek->scaleX = ratioX;
         kacheek->scaleY = ratioY;
         kacheek2->scaleX = ratioX;
         kacheek2->scaleY = ratioY;
         kacheek3->scaleX = ratioX;
         kacheek3->scaleY = ratioY;
-        endFlag1->scaleX = ratioX*0.2;
-        endFlag1->scaleY = ratioY*0.2;
-        kacheek->x = 1000;
-        kacheek->y = missionConfig->GetInt("resY") - (250 * ratioY);
-        kacheek2->x = 1500;
-        kacheek2->y = missionConfig->GetInt("resY") - (250 * ratioY);
-        kacheek3->x = 2000;
-        kacheek3->y = missionConfig->GetInt("resY") - (250 * ratioY);
-        endFlag1->x = 2500;
-        endFlag1->y = missionConfig->GetInt("resY") - (250 * ratioY);
+        ///endFlag1->scaleX = ratioX*0.2;
+        ///endFlag1->scaleY = ratioY*0.2;
+        kacheek->setGlobalPosition(sf::Vector2f(1000,missionConfig->GetInt("resY") - (53 * ratioY)));
+        kacheek2->setGlobalPosition(sf::Vector2f(1500,missionConfig->GetInt("resY") - (53 * ratioY)));
+        kacheek3->setGlobalPosition(sf::Vector2f(2000,missionConfig->GetInt("resY") - (53 * ratioY)));
+        ///endFlag1->x = 2500;
+        ///endFlag1->y = missionConfig->GetInt("resY") - (250 * ratioY);
         break;
 
     }
@@ -169,8 +179,7 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         tangibleLevelObjects.push_back(endFlag1);
         endFlag1->scaleX = ratioX*0.2;
         endFlag1->scaleY = ratioY*0.2;
-        endFlag1->x = 2500;
-        endFlag1->y = missionConfig->GetInt("resY") - (250 * ratioY);
+        endFlag1->setGlobalPosition(sf::Vector2f(2500,missionConfig->GetInt("resY") - (250 * ratioY)));
         break;
     }
 
@@ -221,7 +230,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
             for(int i=0;i<tangibleLevelObjects.size();i++){
                 //kacheek currentCollisionRect = *tangibleLevelObjects[i];
                 /// if the new x position after moving will be between left side of kacheek and right side of kacheek
-                if (proposedXPosRight>tangibleLevelObjects[i]->x+kacheek->hitBox.left && proposedXPosRight<tangibleLevelObjects[i]->x+kacheek->hitBox.left+tangibleLevelObjects[i]->width){
+                if (proposedXPosRight>tangibleLevelObjects[i]->getGlobalPosition().x+kacheek->hitBox.left && proposedXPosRight<tangibleLevelObjects[i]->getGlobalPosition().x+kacheek->hitBox.left+tangibleLevelObjects[i]->width){
                     /// then we have found a collision
                     foundCollision = true;
                     tangibleLevelObjects[i]->OnCollide(tangibleLevelObjects[i]);
@@ -354,7 +363,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
             window.draw(hitboxRect);
 
             sf::RectangleShape kacheekHitboxRect(sf::Vector2f(kacheek->hitBox.width, kacheek->hitBox.height));
-            kacheekHitboxRect.setPosition(kacheek->x+kacheek->hitBox.left,kacheek->y+kacheek->hitBox.top);
+            kacheekHitboxRect.setPosition(kacheek->getGlobalPosition().x+kacheek->hitBox.left,kacheek->getGlobalPosition().y+kacheek->hitBox.top);
             window.draw(kacheekHitboxRect);
         }
 
