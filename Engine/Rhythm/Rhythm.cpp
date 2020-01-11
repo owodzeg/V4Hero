@@ -52,6 +52,11 @@ void Rhythm::LoadTheme(string theme)
 
 void Rhythm::BreakCombo()
 {
+    updateworm = true;
+    satisfaction_value.clear();
+    rl_combo = 0;
+    advanced_prefever = false;
+
     config.debugOut->RhythmnDebugMessage("Oops! You broke your combo!\n");
 
     rhythmClock.restart();
@@ -91,6 +96,21 @@ void Rhythm::BreakCombo()
     cycle_mode = 1;
 
     bgm_cycle = 0;
+}
+
+int Rhythm::GetCombo()
+{
+    return combo;
+}
+
+int Rhythm::GetRealCombo()
+{
+    return rl_combo;
+}
+
+float Rhythm::GetSatisfaction()
+{
+    return last_satisfaction;
 }
 
 void Rhythm::checkRhythmController(sf::RenderWindow& window)
@@ -196,6 +216,9 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
                     if(index < av_commands.size()) ///Check if the command exists in available commands
                     {
+                        rl_combo++;
+                        cout << "rl_combo: " << rl_combo << endl;
+
                         ///Clear user input
                         rhythmController.commandInput.clear();
 
@@ -205,6 +228,26 @@ void Rhythm::Draw(sf::RenderWindow& window)
                         current_perfect = rhythmController.perfect;
                         rhythmController.perfect = 0;
                         rhythmController.command_perfects.clear();
+
+                        float acc = current_perfect;
+                        satisfaction_value.push_back(perfects_reward[acc]);
+
+                        cout << "acc: " << acc << " reward: " << perfects_reward[acc] << endl;
+
+                        if(satisfaction_value.size() > 3)
+                        satisfaction_value.erase(satisfaction_value.begin());
+
+                        float satisfaction = 0;
+
+                        if(satisfaction_value.size() == 3)
+                        satisfaction = satisfaction_value[2] * 0.8 + satisfaction_value[1] * 0.15 + satisfaction_value[0] * 0.05;
+                        if(satisfaction_value.size() == 2)
+                        satisfaction = satisfaction_value[1] * 0.15 + satisfaction_value[0] * 0.05;
+                        if(satisfaction_value.size() == 1)
+                        satisfaction = satisfaction_value[0] * 0.05;
+
+                        cout << "Satisfaction: " << satisfaction << endl;
+                        last_satisfaction = satisfaction;
 
                         combo = 2;
 
@@ -259,6 +302,10 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
                 if(index < av_commands.size()) ///Check if the command exists in available commands
                 {
+                    updateworm = true;
+
+                    rl_combo++;
+                    cout << "rl_combo: " << rl_combo << endl;
                     combo += 1;
 
                     if(combo >= 28)
@@ -279,21 +326,58 @@ void Rhythm::Draw(sf::RenderWindow& window)
                     while(rhythmController.perfects.size() > 4)
                     rhythmController.perfects.erase(rhythmController.perfects.begin());
 
-                    float acc = (rhythmController.perfects[0]+rhythmController.perfects[1]+rhythmController.perfects[2]+rhythmController.perfects[3]) / float(16);
-                    config.debugOut->RhythmnDebugMessage("Accuracy: " + std::to_string(acc*100) + "%\n" );
-
                     if(combo < 11)
                     {
-                        if(acc > acc_req[combo])
+                        float acc = current_perfect;
+                        satisfaction_value.push_back(perfects_reward[acc]);
+
+                        cout << "acc: " << acc << " reward: " << perfects_reward[acc] << endl;
+
+                        if(satisfaction_value.size() > 3)
+                        satisfaction_value.erase(satisfaction_value.begin());
+
+                        float satisfaction = 0;
+
+                        if(satisfaction_value.size() == 3)
+                        satisfaction = satisfaction_value[2] * 0.8 + satisfaction_value[1] * 0.15 + satisfaction_value[0] * 0.05;
+                        if(satisfaction_value.size() == 2)
+                        satisfaction = satisfaction_value[1] * 0.15 + satisfaction_value[0] * 0.05;
+                        if(satisfaction_value.size() == 1)
+                        satisfaction = satisfaction_value[0] * 0.05;
+
+                        cout << "Satisfaction: " << satisfaction << ", requirement: " << satisfaction_requirement[rl_combo] << " adv_pre: " << advanced_prefever << " theme_combo: " << combo << endl;
+                        last_satisfaction = satisfaction;
+
+                        config.debugOut->RhythmnDebugMessage("Accuracy: " + std::to_string(acc/16*100) + "%\n" );
+
+                        if((rl_combo >= 2) && (combo < 6))
                         {
-                            if(combo < 6)
+                            if((current_perfect >= 2) && (satisfaction >= 60))
                             {
-                                combo = 6;
+                                if(!advanced_prefever)
+                                {
+                                    advanced_prefever = true;
+                                    combo = 6;
+                                }
                             }
-                            else
+                        }
+
+                        if((rl_combo >= 3) && (combo >= 6))
+                        {
+                            if(current_perfect <= 1)
                             {
-                                combo = 11;
+                                if(advanced_prefever)
+                                {
+                                    advanced_prefever = false;
+                                    combo = 2;
+                                }
                             }
+                        }
+
+                        if(satisfaction > satisfaction_requirement[rl_combo])
+                        {
+                            if(advanced_prefever)
+                            combo = 11;
                         }
                     }
 

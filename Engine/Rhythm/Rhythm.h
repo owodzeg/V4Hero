@@ -14,7 +14,6 @@
 class Rhythm
 {
     private:
-    RhythmGUI r_gui;
     /// Theme and chant buffers ///
     std::map<std::string,sf::SoundBuffer> b_chant; ///Sound buffer for Patapon chants
     SongController *songController;
@@ -48,6 +47,7 @@ class Rhythm
 
     /// Initialize Rhythm System values ///
     int combo = 1; ///Rhythm combo, main navigator through BGM
+    int rl_combo = 0; ///Game combo, directing mechanics and fever
     float flicker = 0; ///For beat frame flickering
 
     std::vector<std::string> av_commands = {"PATAPATAPATAPON",
@@ -68,6 +68,12 @@ class Rhythm
                                         "patapata"}; ///Available songs
     std::vector<float> acc_req = {0,1,1,0.9325,0.875,0.8125,0.75,0.75,0.75,0.6875,0.625};
 
+    std::vector<float> perfects_reward = {0, 50, 150, 250, 300};
+    std::vector<float> satisfaction_requirement = {0, 0, 285, 285, 275, 265, 250, 250, 185, 185, 0};
+    std::vector<float> satisfaction_value;
+
+    float last_satisfaction = 0;
+
 
     /// Perfection calculator ///
     float accuracy = 0; ///value for calculating the accuracy
@@ -78,10 +84,13 @@ class Rhythm
     std::vector<Drum> drums;
 
     public:
+    RhythmGUI r_gui;
     /// Default FPS value ///
     float fps = 60;
 
     int current_perfect;
+    bool advanced_prefever = false; ///When the game is still before fever, but gets more livid
+    bool updateworm = false; ///For fever worm
     /// Config and Keybindings ///
     Config config;
     std::map<int,bool> keyMap;
@@ -96,6 +105,9 @@ class Rhythm
     void Stop();
     void LoadTheme(std::string theme);
     void BreakCombo();
+    int GetCombo();
+    int GetRealCombo();
+    float GetSatisfaction();
     void checkRhythmController(sf::RenderWindow& window);
     void Draw(sf::RenderWindow& window);
 
