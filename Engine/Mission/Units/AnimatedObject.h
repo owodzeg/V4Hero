@@ -14,8 +14,8 @@ class AnimatedObject
     public:
     vector<Object> objects;
     vector<Hitbox> hitboxes;
-    float max_time;
-    float cur_pos;
+    float max_time = 0;
+    float cur_pos = 0;
 
     ///OLD
     sf::Sprite s_wall;
@@ -34,6 +34,11 @@ class AnimatedObject
     float scaleX = 1, scaleY = 1; ///TEMPORARY
     sf::Rect<float> hitBox;
 
+    ///temporary
+    bool worm_fever = false;
+
+    bool loopable = true;
+
     map<string,vector<sf::Texture>> animation_textures;
 
     vector<float> animation_begin;
@@ -50,6 +55,7 @@ class AnimatedObject
     void setGlobalPosition(sf::Vector2f pos);
     sf::Vector2f getGlobalPosition();
     void moveGlobalPosition(sf::Vector2f pos);
+    void setLoop(bool loop);
     virtual void LoadConfig(Config *thisConfigs,std::string unitParamPath);
     virtual void Draw(sf::RenderWindow& window);
 };

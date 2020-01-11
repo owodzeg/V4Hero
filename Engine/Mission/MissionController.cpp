@@ -12,6 +12,7 @@ MissionController::MissionController()
     kacheek2 = new Kacheek;
     kacheek3 = new Kacheek;
     endFlag1 = new EndFlag;
+    feverworm = new FeverWorm;
 
 }
 void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,std::string backgroundString){
@@ -23,6 +24,7 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     delete kacheek2;
     delete kacheek3;
     delete endFlag1;
+    delete feverworm;
 
     ///redeclare all objects
     patapon = new Patapon;
@@ -30,6 +32,7 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     kacheek2 = new Kacheek;
     kacheek3 = new Kacheek;
     endFlag1 = new EndFlag;
+    feverworm = new FeverWorm;
 
     tangibleLevelObjects.clear();
 
@@ -151,10 +154,12 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         kacheek->LoadConfig(missionConfig);
         kacheek2->LoadConfig(missionConfig);
         kacheek3->LoadConfig(missionConfig);
+        feverworm->LoadConfig(missionConfig);
         ///endFlag1->LoadConfig(missionConfig);
         tangibleLevelObjects.push_back(kacheek);
         tangibleLevelObjects.push_back(kacheek2);
         tangibleLevelObjects.push_back(kacheek3);
+        tangibleLevelObjects.push_back(feverworm);
         ///tangibleLevelObjects.push_back(endFlag1);
         kacheek->scaleX = ratioX;
         kacheek->scaleY = ratioY;
@@ -162,11 +167,14 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         kacheek2->scaleY = ratioY;
         kacheek3->scaleX = ratioX;
         kacheek3->scaleY = ratioY;
+        feverworm->scaleX = ratioX;
+        feverworm->scaleY = ratioY;
         ///endFlag1->scaleX = ratioX*0.2;
         ///endFlag1->scaleY = ratioY*0.2;
         kacheek->setGlobalPosition(sf::Vector2f(1000,missionConfig->GetInt("resY") - (175 * ratioY)));
         kacheek2->setGlobalPosition(sf::Vector2f(1500,missionConfig->GetInt("resY") - (175 * ratioY)));
         kacheek3->setGlobalPosition(sf::Vector2f(2000,missionConfig->GetInt("resY") - (175 * ratioY)));
+        feverworm->setGlobalPosition(sf::Vector2f(-250,missionConfig->GetInt("resY") - (450 * ratioY)));
         ///endFlag1->x = 2500;
         ///endFlag1->y = missionConfig->GetInt("resY") - (250 * ratioY);
         break;
@@ -209,10 +217,70 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         test_bg.setCamera(camera);
         test_bg.Draw(window);
 
+        //feverworm->next_x = -60 + (rhythm.GetCombo() * 20);
+
         kacheek->fps = fps;
         kacheek2->fps = fps;
         kacheek3->fps = fps;
         endFlag1->fps = fps;
+        feverworm->fps = fps;
+
+        if(rhythm.GetCombo() >= 11)
+        {
+            if(feverworm->getAnimationSegment() == "fever")
+            {
+                feverworm->scaleX = 1+rhythm.r_gui.beatBounce;
+                feverworm->scaleY = 1+rhythm.r_gui.beatBounce;
+            }
+        }
+
+        if(rhythm.updateworm)
+        {
+            if(rhythm.GetRealCombo() == 0)
+            {
+                feverworm->global_x = -250;
+                feverworm->next_x = -250;
+                feverworm->speed = 120;
+            }
+
+            if(rhythm.GetRealCombo() == 2)
+            {
+                feverworm->next_x = 50;
+                feverworm->speed = 400;
+            }
+
+            if((rhythm.GetRealCombo() > 2) && (rhythm.GetCombo() < 11))
+            {
+                feverworm->next_x = 50 + (rhythm.GetSatisfaction() / 5.5) + ((rhythm.GetRealCombo() - 2) * 8);
+                feverworm->speed = 40;
+            }
+
+            if(rhythm.GetCombo() < 11)
+            {
+                if(rhythm.advanced_prefever)
+                {
+                    feverworm->setAnimationSegment("fast");
+                }
+                else
+                {
+                    feverworm->setAnimationSegment("slow");
+                }
+            }
+
+            if(rhythm.GetCombo() == 11)
+            {
+                feverworm->setAnimationSegment("transform");
+                feverworm->setLoop(false);
+            }
+
+            if(rhythm.GetCombo() >= 12)
+            {
+                feverworm->setAnimationSegment("fever");
+                feverworm->setLoop(true);
+            }
+
+            rhythm.updateworm = false;
+        }
 
         /** Make Patapon walk (temporary) **/
         if(camera.walk)
