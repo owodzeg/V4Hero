@@ -5,6 +5,7 @@
 #include "../../Config.h"
 #include "../../P4A.h"
 #include "Object.h"
+#include "Hitbox.h"
 
 using namespace std;
 
@@ -12,6 +13,7 @@ class AnimatedObject
 {
     public:
     vector<Object> objects;
+    vector<Hitbox> hitboxes;
     float max_time;
     float cur_pos;
 

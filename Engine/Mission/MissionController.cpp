@@ -164,9 +164,9 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         kacheek3->scaleY = ratioY;
         ///endFlag1->scaleX = ratioX*0.2;
         ///endFlag1->scaleY = ratioY*0.2;
-        kacheek->setGlobalPosition(sf::Vector2f(1000,missionConfig->GetInt("resY") - (53 * ratioY)));
-        kacheek2->setGlobalPosition(sf::Vector2f(1500,missionConfig->GetInt("resY") - (53 * ratioY)));
-        kacheek3->setGlobalPosition(sf::Vector2f(2000,missionConfig->GetInt("resY") - (53 * ratioY)));
+        kacheek->setGlobalPosition(sf::Vector2f(1000,missionConfig->GetInt("resY") - (175 * ratioY)));
+        kacheek2->setGlobalPosition(sf::Vector2f(1500,missionConfig->GetInt("resY") - (175 * ratioY)));
+        kacheek3->setGlobalPosition(sf::Vector2f(2000,missionConfig->GetInt("resY") - (175 * ratioY)));
         ///endFlag1->x = 2500;
         ///endFlag1->y = missionConfig->GetInt("resY") - (250 * ratioY);
         break;
@@ -227,22 +227,27 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
             bool foundCollision = false;
 
-            for(int i=0;i<tangibleLevelObjects.size();i++){
-                //kacheek currentCollisionRect = *tangibleLevelObjects[i];
-                /// if the new x position after moving will be between left side of kacheek and right side of kacheek
-                if (proposedXPosRight>tangibleLevelObjects[i]->getGlobalPosition().x+kacheek->hitBox.left && proposedXPosRight<tangibleLevelObjects[i]->getGlobalPosition().x+kacheek->hitBox.left+tangibleLevelObjects[i]->width){
-                    /// then we have found a collision
-                    foundCollision = true;
-                    tangibleLevelObjects[i]->OnCollide(tangibleLevelObjects[i]);
-                    std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
-                    /*///HARDCODED FOR KACHEEK SHOWCASE PURPOSES
-                    tangibleLevelObjects[i]->walk_timer.restart();
-
-                    if(tangibleLevelObjects[i]->current_animation != "walk")
+            for(int i=0;i<tangibleLevelObjects.size();i++)
+            {
+                for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
+                {
+                    //kacheek currentCollisionRect = *tangibleLevelObjects[i];
+                    /// if the new x position after moving will be between left side of kacheek and right side of kacheek
+                    if (proposedXPosRight>tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().left && proposedXPosRight<tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().width)
                     {
-                        tangibleLevelObjects[i]->current_animation = "walk";
-                        tangibleLevelObjects[i]->current_frame = 0;
-                    }*/
+                        /// then we have found a collision
+                        foundCollision = true;
+                        tangibleLevelObjects[i]->OnCollide(tangibleLevelObjects[i]);
+                        std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
+                        /*///HARDCODED FOR KACHEEK SHOWCASE PURPOSES
+                        tangibleLevelObjects[i]->walk_timer.restart();
+
+                        if(tangibleLevelObjects[i]->current_animation != "walk")
+                        {
+                            tangibleLevelObjects[i]->current_animation = "walk";
+                            tangibleLevelObjects[i]->current_frame = 0;
+                        }*/
+                    }
                 }
             }
 
@@ -362,9 +367,17 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
             hitboxRect.setPosition(patapon->x+patapon->hitBox.left,patapon->y+patapon->hitBox.top);
             window.draw(hitboxRect);
 
-            sf::RectangleShape kacheekHitboxRect(sf::Vector2f(kacheek->hitBox.width, kacheek->hitBox.height));
-            kacheekHitboxRect.setPosition(kacheek->getGlobalPosition().x+kacheek->hitBox.left,kacheek->getGlobalPosition().y+kacheek->hitBox.top);
-            window.draw(kacheekHitboxRect);
+            for(int i=0; i<tangibleLevelObjects.size(); i++)
+            {
+                for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
+                {
+                    //cout << "hitbox " << h << " pos: " << tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x << " " << tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().y << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().top << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().left << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().width << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().height << endl;
+
+                    sf::RectangleShape kacheekHitboxRect(sf::Vector2f(tangibleLevelObjects[i]->hitboxes[h].getRect().width, tangibleLevelObjects[i]->hitboxes[h].getRect().height));
+                    kacheekHitboxRect.setPosition(tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().left,tangibleLevelObjects[i]->getGlobalPosition().y+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().y+tangibleLevelObjects[i]->hitboxes[h].getRect().top);
+                    window.draw(kacheekHitboxRect);
+                }
+            }
         }
 
 

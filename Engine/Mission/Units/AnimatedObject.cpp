@@ -94,7 +94,21 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     //cout << "Added new object from " << tex_file << endl;
                 }
 
-                if(line.find("F:") != std::string::npos)
+                if(line.find("HB:") != std::string::npos)
+                {
+                    string hitboxdata = line.substr(line.find_first_of(":")+1);
+                    vector<string> hitbox = Func::Split(hitboxdata,',');
+
+                    if(hitbox[0] == "rectangle")
+                    {
+                        Hitbox tmp;
+                        hitboxes.push_back(tmp);
+
+                        cout << "Added new hitbox, type " << hitbox[0] << endl;
+                    }
+                }
+
+                if((line.find("F:") != std::string::npos) && (line[0] == 'F'))
                 {
                     string framedata = line.substr(line.find_first_of(":")+1);
                     vector<string> frame = Func::Split(framedata,',');
@@ -111,6 +125,25 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     float scale_y = atof(frame[8].c_str());
                     objects[objectID].SetCustomFrame(time,pos_x,pos_y,or_x,or_y,rotation,scale_x,scale_y);
                     //objects[objectID*2+1].SetCustomFrame(time,pos_x,pos_y,1,1,rotation,scale_x,scale_y);
+                }
+
+                if(line.find("HBF:") != std::string::npos)
+                {
+                    string hbframedata = line.substr(line.find_first_of(":")+1);
+                    vector<string> hbframe = Func::Split(hbframedata,',');
+
+                    float time = atof(hbframe[0].c_str());
+                    int hitboxID = atoi(hbframe[1].c_str());
+
+                    float g_x = atof(hbframe[2].c_str());
+                    float g_y = atof(hbframe[3].c_str());
+
+                    float x = atof(hbframe[4].c_str());
+                    float y = atof(hbframe[5].c_str());
+                    float width = atof(hbframe[6].c_str());
+                    float height = atof(hbframe[7].c_str());
+
+                    hitboxes[hitboxID].SetCustomFrame(time,g_x,g_y,x,y,width,height);
                 }
             }
             else if(version == "1.00")
@@ -305,6 +338,11 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
     if(cur_pos > anim_end)
     {
         cur_pos = anim_begin;
+    }
+
+    for(int i=0; i<hitboxes.size(); i++)
+    {
+        hitboxes[i].SetPos(cur_pos);
     }
 
     for(int i=0; i<objects.size(); i++)
