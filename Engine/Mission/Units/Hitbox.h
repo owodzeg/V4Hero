@@ -37,6 +37,8 @@ class Hitbox
     void SetFrame(float time);
     void SetCustomFrame(float in_time, float in_gx, float in_gy, float in_x, float in_y, float in_width, float in_height);
     void SetPos(float time);
+    sf::Rect<float> getRect();
+    sf::Vector2f getGlobalPosition();
     ~Hitbox();
 };
 

@@ -131,6 +131,16 @@ void Hitbox::SetPos(float time)
     }
 }
 
+sf::Rect<float> Hitbox::getRect()
+{
+    return hitboxObject;
+}
+
+sf::Vector2f Hitbox::getGlobalPosition()
+{
+    return sf::Vector2f(g_x,g_y);
+}
+
 Hitbox::~Hitbox()
 {
 
