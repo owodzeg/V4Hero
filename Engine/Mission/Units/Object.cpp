@@ -180,7 +180,7 @@ void Object::SetPos(float time)
 void Object::Draw(sf::RenderWindow& window)
 {
     s_obj.setTexture(tex_obj);
-    s_obj.setScale(s_x,s_y);
+    s_obj.setScale(s_x+(g_sx-1),s_y+(g_sy-1));
     s_obj.setOrigin(or_x,or_y);
     s_obj.setPosition(x+g_x,y+g_y);
     s_obj.setRotation(r);
