@@ -1,6 +1,9 @@
-
 #include "RhythmGUI.h"
 #include <cmath>
+#include <iostream>
+
+using namespace std;
+
 RhythmGUI::RhythmGUI()
 {
     //ctor
@@ -135,6 +138,7 @@ void RhythmGUI::doVisuals(sf::RenderWindow& window,int bgm_cycle,sf::Clock *rhyt
         }
 
         float sizeMod = rhythmAlpha/float(80);
+        beatBounce = sizeMod / 30;
 
         r_fever.setSize(sf::Vector2f(160+sizeMod*2,10+sizeMod*2));
         r_fever_meter.setSize(sf::Vector2f(feverMeterWidth+sizeMod*2,10+sizeMod*2));
@@ -145,11 +149,11 @@ void RhythmGUI::doVisuals(sf::RenderWindow& window,int bgm_cycle,sf::Clock *rhyt
 
     window.draw(r_rhythm);
     window.draw(r_rhythm2);
-    window.draw(r_fever);
+    //window.draw(r_fever);
 
     if(combo > 12)
     {
-        window.draw(r_fever_meter);
+        //window.draw(r_fever_meter);
     }
 
     for(int i=0; i<drums->size(); i++)
