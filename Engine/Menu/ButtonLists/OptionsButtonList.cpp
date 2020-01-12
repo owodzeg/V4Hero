@@ -100,6 +100,7 @@ void OptionsButtonList::Initialise(sf::Font *font,Config &newConfig,  std::map<i
     buttons[0].SetSelected(true);
 }
 void OptionsButtonList::Show(){
+    maxLang = config->strRepo.langFiles.size();
     resolutions.clear();
     resolutions.push_back(config->strRepo.GetUnicodeString(L"resolution_1280x720"));
     resolutions.push_back(config->strRepo.GetUnicodeString(L"resolution_1366x768"));

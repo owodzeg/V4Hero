@@ -164,26 +164,9 @@ void Config::SetString(std::string key,std::string val)
     configMap[key] = val;
 }
 std::wstring Config::GetLanguageName(){
-    switch (atoi(configMap["lang"].c_str())){
-        case 1:
-            return strRepo.GetUnicodeString(L"language_english");
-            break;
-        case 2:
-            return strRepo.GetUnicodeString(L"language_french");
-            break;
-        case 3:
-            return strRepo.GetUnicodeString(L"language_spanish");
-            break;
-        case 4:
-            return strRepo.GetUnicodeString(L"language_danish");
-            break;
-        case 5:
-            return strRepo.GetUnicodeString(L"language_polish");
-            break;
-        case 6:
-        default:
-            return strRepo.GetUnicodeString(L"language_english");
-            break;
-    }
+    std::string s = strRepo.langNames[atoi(configMap["lang"].c_str())-1];
+    std::wstring resws;
+    resws.assign(s.begin(), s.end());
+    return resws;
 }
 
