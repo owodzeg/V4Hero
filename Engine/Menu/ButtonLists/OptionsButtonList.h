@@ -13,7 +13,7 @@ class OptionsMenu;
 class OptionsButtonList : public ButtonList
 {
     public:
-        const int maxLang = 5;
+        int maxLang = 1;
         int curResPos;
         int curTextureQualPos;
         int curFpsCapPos;

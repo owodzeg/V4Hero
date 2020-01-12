@@ -42,19 +42,6 @@ void StringRepository::LoadLanguageFile(wifstream* conf)
                 vector<wstring> key = Func::Split(line,L'|');
                 if (key.size()==2){
                     stringMap[key[0]] = key[1];
-                    wcout << "Loaded string repo entry '" << key[0] << "' with value '" << key[1] << "'" << endl;
-
-                    /// below code shows raw unicode bytes
-                    /*
-                    const size_t length = key[1].length();
-                    for (size_t i = 0; i < length; ++i)
-                    {
-                    unsigned int value = key[1][i];
-                    std::cout << std::setw(2) << std::setfill('0') << std::hex << value << ' ' ;
-                    }
-                    cout<< "\n";
-                    */
-
                     for(int i=0; i<keysCheckList.size(); i++)
                     {
                         if(keysCheckList[i] == key[0])
@@ -77,11 +64,34 @@ void StringRepository::LoadLanguageFile(wifstream* conf)
 }
 void StringRepository::LoadLanguageFiles(int langNum)
 {
-    /// at some point we need to make this able to read an
-    /// arbritrary language file selected from config.ini.
-    ///
-    /// I have not done this yet though.
-    switch (langNum){
+    ifstream conf("resources/lang/lang.txt");
+    if(conf.good())
+    {
+        std::string line;
+        while(getline(conf, line))
+        {
+            ///ignore comments
+            if(line.find("//") == std::string::npos)
+            {
+                vector<string> key = Func::Split(line,L'|');
+                if (key.size()==2){
+
+                    cout << "Loaded language file'" << key[0] << "' with value '" << key[1] << "'" << endl;
+                    langFiles.push_back(""+key[1]);
+                    langNames.push_back(key[0]);
+                }
+            }
+        }
+        wifstream conf2("resources/lang/"+langFiles[langNum-1]+".txt");
+        cout<<"#### Loading language file: "<< langNames[langNum-1] <<endl;
+        LoadLanguageFile(&conf2);
+    } else {
+        wifstream conf2("resources/lang/str_ENG.txt");
+        LoadLanguageFile(&conf2);
+    }
+    conf.close();
+
+    /*switch (langNum){
         case 1:
             {
                 wifstream conf("resources/lang/str_ENG.txt");
@@ -114,7 +124,7 @@ void StringRepository::LoadLanguageFiles(int langNum)
             LoadLanguageFile(&conf);
             break;}
 
-    }
+    }*/
 }
 
 
