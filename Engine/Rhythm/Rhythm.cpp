@@ -352,7 +352,7 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
                         if((rl_combo >= 2) && (combo < 6))
                         {
-                            if((current_perfect >= 2) && (satisfaction >= 60))
+                            if((current_perfect >= 2) && ((satisfaction >= 150) || ((satisfaction_value.size() == 2) && (satisfaction >= 60))))
                             {
                                 if(!advanced_prefever)
                                 {
