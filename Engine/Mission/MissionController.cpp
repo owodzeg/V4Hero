@@ -236,6 +236,8 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
         if(rhythm.updateworm)
         {
+            feverworm->combo = rhythm.GetRealCombo();
+
             if(rhythm.GetRealCombo() < 2)
             {
                 feverworm->global_x = -250;
