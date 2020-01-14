@@ -221,10 +221,22 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
 
 void AnimatedObject::setAnimationSegment(std::string new_segment_name)
 {
-    anim_begin = animation_begin[distance(animation_names.begin(), find(animation_names.begin(), animation_names.end(), new_segment_name))];
-    anim_end = animation_end[distance(animation_names.begin(), find(animation_names.begin(), animation_names.end(), new_segment_name))];
+    cout << "AnimatedObject::setAnimationSegment(" << new_segment_name << ");" << endl;
 
-    current_animation = new_segment_name;
+    if(animation_begin.size() > 1)
+    {
+        anim_begin = animation_begin[distance(animation_names.begin(), find(animation_names.begin(), animation_names.end(), new_segment_name))];
+        anim_end = animation_end[distance(animation_names.begin(), find(animation_names.begin(), animation_names.end(), new_segment_name))];
+
+        current_animation = new_segment_name;
+    }
+    else
+    {
+        anim_begin = animation_begin[0];
+        anim_end = animation_end[0];
+
+        current_animation = new_segment_name;
+    }
 }
 
 std::string AnimatedObject::getAnimationSegment()
@@ -270,6 +282,8 @@ void AnimatedObject::LoadConfig(Config *thisConfigs, std::string unitParamPath)
 
         loadAnim(animdata,handle);
     }
+
+    thisConfig = thisConfigs;
 }
 void AnimatedObject::Draw(sf::RenderWindow& window)
 {
