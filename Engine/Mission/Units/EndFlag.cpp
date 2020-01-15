@@ -11,7 +11,7 @@ EndFlag::EndFlag()
 }
 void EndFlag::LoadConfig(Config *thisConfigs)
 {
-    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\end_flag.p4a");
+    AnimatedObject::LoadConfig(thisConfigs,"resources/graphics/units/endflag/");
 }
 void EndFlag::Draw(sf::RenderWindow& window)
 {
@@ -26,7 +26,5 @@ void EndFlag::OnCollide(CollidableObject* otherObject)
     /// as an incomplete function to be overridden by child classes.
     /// end the mission
     thisConfig->thisCore->currentController.StopMission();
-
-    cout << "Go to Patapolis" << endl;
     thisConfig->thisCore->mainMenu.patapolisMenu.Show();
 }
