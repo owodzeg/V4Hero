@@ -141,18 +141,13 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
     case 1:{
         showTimer=true;
         endFlag1->LoadConfig(missionConfig);
-        feverworm->LoadConfig(missionConfig);
 
         tangibleLevelObjects.push_back(endFlag1);
-        tangibleLevelObjects.push_back(feverworm);
 
-        endFlag1->scaleX = ratioX;
-        endFlag1->scaleY = ratioY;
-        feverworm->scaleX = ratioX;
-        feverworm->scaleY = ratioY;
+        endFlag1->scaleX = ratioX*0.2;
+        endFlag1->scaleY = ratioY*0.2;
 
-        endFlag1->setGlobalPosition(sf::Vector2f(2500,missionConfig->GetInt("resY") - (182 * ratioY)));
-        feverworm->setGlobalPosition(sf::Vector2f(-250,missionConfig->GetInt("resY") - (450 * ratioY)));
+        endFlag1->setGlobalPosition(sf::Vector2f(2500,missionConfig->GetInt("resY") - (250 * ratioY)));
         break;
     }
     case 2:{
@@ -160,12 +155,12 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         kacheek2->LoadConfig(missionConfig);
         kacheek3->LoadConfig(missionConfig);
         feverworm->LoadConfig(missionConfig);
-        endFlag1->LoadConfig(missionConfig);
+        ///endFlag1->LoadConfig(missionConfig);
         tangibleLevelObjects.push_back(kacheek);
         tangibleLevelObjects.push_back(kacheek2);
         tangibleLevelObjects.push_back(kacheek3);
         tangibleLevelObjects.push_back(feverworm);
-        tangibleLevelObjects.push_back(endFlag1);
+        ///tangibleLevelObjects.push_back(endFlag1);
         kacheek->scaleX = ratioX;
         kacheek->scaleY = ratioY;
         kacheek2->scaleX = ratioX;
@@ -180,7 +175,8 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         kacheek2->setGlobalPosition(sf::Vector2f(1500,missionConfig->GetInt("resY") - (175 * ratioY)));
         kacheek3->setGlobalPosition(sf::Vector2f(2000,missionConfig->GetInt("resY") - (175 * ratioY)));
         feverworm->setGlobalPosition(sf::Vector2f(-250,missionConfig->GetInt("resY") - (450 * ratioY)));
-        endFlag1->setGlobalPosition(sf::Vector2f(2500,missionConfig->GetInt("resY") - (182 * ratioY)));
+        ///endFlag1->x = 2500;
+        ///endFlag1->y = missionConfig->GetInt("resY") - (250 * ratioY);
         break;
 
     }
@@ -199,7 +195,6 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
     isFinishedLoading=true;
 }
 void MissionController::StopMission(){
-    cout << "MissionController::StopMission()" << endl;
     rhythm.Stop();
     isInitialized = false;
 }
@@ -241,8 +236,6 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
         if(rhythm.updateworm)
         {
-            feverworm->combo = rhythm.GetRealCombo();
-
             if(rhythm.GetRealCombo() < 2)
             {
                 feverworm->global_x = -250;
