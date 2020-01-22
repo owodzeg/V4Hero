@@ -58,7 +58,7 @@ class Config
     std::to_string(sf::Keyboard::Escape),
     "Hey Whazzat Rock Theme",
     "nanjarohills",
-    "Freakout Rock Theme",
+    "Pokkurimakka Rock Theme",
     "evilmass",
     "0",
     "0",
