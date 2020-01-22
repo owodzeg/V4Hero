@@ -16,6 +16,7 @@
 #include <thread>
 #include "Units/EndFlag.h"
 #include "Units/FeverWorm.h"
+#include "Units/Hatapon.h"
 
 class MissionController
 {
@@ -30,6 +31,7 @@ class MissionController
     Kacheek* kacheek3;
     EndFlag* endFlag1;
     FeverWorm* feverworm;
+    Hatapon* hatapon;
         sf::Time startTime;
         sf::Clock missionTimer;
 

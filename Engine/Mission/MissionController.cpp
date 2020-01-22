@@ -13,10 +13,13 @@ MissionController::MissionController()
     kacheek3 = new Kacheek;
     endFlag1 = new EndFlag;
     feverworm = new FeverWorm;
+    hatapon = new Hatapon;
 
 }
 void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,std::string backgroundString){
     test_bg.Load(backgroundString, config);//config.GetString("debugBackground"));
+
+    ///THIS DOESN'T WORK. CHANGE TO SMART POINTERS.
 
     ///clean the taken up memory
     delete patapon;
@@ -25,6 +28,7 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     delete kacheek3;
     delete endFlag1;
     delete feverworm;
+    delete hatapon;
 
     ///redeclare all objects
     patapon = new Patapon;
@@ -33,6 +37,9 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     kacheek3 = new Kacheek;
     endFlag1 = new EndFlag;
     feverworm = new FeverWorm;
+    hatapon = new Hatapon;
+
+    ///THIS DOESN'T WORK. CHANGE TO SMART POINTERS.
 
     tangibleLevelObjects.clear();
 
@@ -71,6 +78,7 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
     float ratioX, ratioY;
     patapon->LoadConfig(missionConfig);
     patapon->x=0;
+    hatapon->LoadConfig(missionConfig);
     camera.followobject_x=patapon->x;
     camera.camera_x=480;
     missionTimer.restart();
@@ -108,6 +116,10 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
     pataponY = missionConfig->GetInt("resY") - (200 * ratioY);
     patapon->scaleX = ratioX;
     patapon->scaleY = ratioY;
+
+    hatapon->setGlobalPosition(sf::Vector2f(-100, missionConfig->GetInt("resY") - (200 * ratioY)));
+    hatapon->scaleX = ratioX;
+    hatapon->scaleY = ratioY;
 
     if(showCutscene){
         cutscene_text_identifiers.push_back(L"intro_cutscene_1");
@@ -245,8 +257,8 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
             if(rhythm.GetRealCombo() < 2)
             {
-                feverworm->global_x = -250;
-                feverworm->next_x = -250;
+                feverworm->global_x = -300;
+                feverworm->next_x = -300;
                 feverworm->speed = 120;
             }
 
@@ -340,6 +352,8 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         patapon->y = pataponY;
         patapon->fps = fps;
 
+        hatapon->setGlobalPosition(sf::Vector2f(patapon->x-50,patapon->y-21));
+        hatapon->fps = fps;
 
         // TODO: at some point some pointer shenanigans is required to make these be a reference to v4core's ones too.
         rhythm.rhythmController.keyMap = *missionKeyMap;
@@ -349,6 +363,23 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         if(rhythm.current_song == "patapata")
         {
             patapon->current_animation = "walk";
+        }
+
+        if((rhythm.current_song != "") && ((rhythm.current_song != "dondon") && (rhythm.current_song != "ponpata")))
+        {
+            hatapon->setAnimationSegment("wave");
+        }
+        else if(rhythm.current_song == "dondon")
+        {
+            hatapon->setAnimationSegment("jump");
+        }
+        else if(rhythm.current_song == "ponpata")
+        {
+            hatapon->setAnimationSegment("flee");
+        }
+        else
+        {
+            hatapon->setAnimationSegment("idle");
         }
 
         if((rhythm.rhythmController.current_drum == "pata") or (rhythm.rhythmController.current_drum == "pon") or (rhythm.rhythmController.current_drum == "chaka") or (rhythm.rhythmController.current_drum == "don"))
@@ -369,6 +400,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
         /// patapons (and other enemies) are drawn after level objects like kacheek so they are always on top
         patapon->Draw(window);
+        hatapon->Draw(window);
 
         /// draw static UI elements
         auto lastView = window.getView();
