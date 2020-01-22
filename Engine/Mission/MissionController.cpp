@@ -198,12 +198,19 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
     }
     default:
 
+        feverworm->LoadConfig(missionConfig);
         endFlag1->LoadConfig(missionConfig);
 
+        tangibleLevelObjects.push_back(feverworm);
         tangibleLevelObjects.push_back(endFlag1);
-        endFlag1->scaleX = ratioX*0.2;
-        endFlag1->scaleY = ratioY*0.2;
+
+        endFlag1->scaleX = ratioX;
+        endFlag1->scaleY = ratioY;
+        feverworm->scaleX = ratioX;
+        feverworm->scaleY = ratioY;
+
         endFlag1->setGlobalPosition(sf::Vector2f(2500,missionConfig->GetInt("resY") - (250 * ratioY)));
+        feverworm->setGlobalPosition(sf::Vector2f(-250,missionConfig->GetInt("resY") - (450 * ratioY)));
         break;
     }
 
