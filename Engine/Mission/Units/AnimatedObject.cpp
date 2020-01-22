@@ -221,7 +221,7 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
 
 void AnimatedObject::setAnimationSegment(std::string new_segment_name)
 {
-    cout << "AnimatedObject::setAnimationSegment(" << new_segment_name << ");" << endl;
+    //cout << "AnimatedObject::setAnimationSegment(" << new_segment_name << ");" << endl;
 
     if(animation_begin.size() > 1)
     {
