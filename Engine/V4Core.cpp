@@ -103,8 +103,10 @@ void V4Core::Init()
 
             if(event.type == sf::Event::KeyPressed)
 			{
-			    ///keyMap[event.key.code] = true/false??? would that do the trick?
-			    cout << "[DEBUG] Key pressed: " << event.key.code << endl;
+			    if(config.GetInt("showKeyboardPressCode")==1){
+                    ///keyMap[event.key.code] = true/false??? would that do the trick?
+                    cout << "[DEBUG] Key pressed: " << event.key.code << endl;
+			    }
 
 			    keyMap[event.key.code] = true;
 			    keyMapHeld[event.key.code] = true;
@@ -120,7 +122,9 @@ void V4Core::Init()
 
 			if(event.type == sf::Event::KeyReleased)
             {
-			    cout << "[DEBUG] Key released: " << event.key.code << endl;
+                if(config.GetInt("showKeyboardPressCode")==1){
+                    cout << "[DEBUG] Key released: " << event.key.code << endl;
+                }
                 keyMapHeld[event.key.code] = false;
             }
 
