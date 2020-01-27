@@ -1,6 +1,6 @@
 #ifndef HITBOX_H
 #define HITBOX_H
-
+#include "HitboxFrame.h"
 #include <SFML/Graphics.hpp>
 
 ///Class for managing object hitboxes defined by V4Anim format
@@ -13,9 +13,10 @@ class Hitbox
     public:
     float g_x; ///global x pos
     float g_y; ///global y pos
-    sf::Rect<float> hitboxObject;
+    HitboxFrame hitboxObject;
 
-    struct Frame
+    /// frame should no longer be needed: use HitboxFrame instead
+    /*struct Frame
     {
         ///timestamp
         float time;
@@ -29,15 +30,15 @@ class Hitbox
         float y;
         float width;
         float height;
-    };
+    };*/
 
-    std::vector<Frame> frames; ///frames
+    std::vector<HitboxFrame> frames; ///frames
 
     Hitbox();
     void SetFrame(float time);
-    void SetCustomFrame(float in_time, float in_gx, float in_gy, float in_x, float in_y, float in_width, float in_height);
+    void SetCustomFrame(float in_time, float in_gx, float in_gy, float in_x, float in_y, float angle, float in_width, float in_height);
     void SetPos(float time);
-    sf::Rect<float> getRect();
+    HitboxFrame getRect();
     sf::Vector2f getGlobalPosition();
     ~Hitbox();
 };

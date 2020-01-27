@@ -17,6 +17,7 @@
 #include "Units/EndFlag.h"
 #include "Units/FeverWorm.h"
 #include "Units/Hatapon.h"
+#include "Units/HitboxFrame.h"
 
 class MissionController
 {
@@ -69,7 +70,7 @@ class MissionController
     void StartCutscene(const std::wstring& text,bool isBlackScreen,int TimeToShow);
 
     void FinishLastCutscene();
-
+    bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame,Patapon* patapon);
     bool isMoreCutscenes();
     void StopMission();
     void Initialise(Config &config, std::map<int,bool> &keymap,std::string backgroundName);

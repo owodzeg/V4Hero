@@ -222,6 +222,9 @@ void MissionController::StopMission(){
     rhythm.Stop();
     isInitialized = false;
 }
+void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap){
+    /// do the keyboard things
+    if(rhythm.rhythmController.keyMap[missionConfig->GetInt("keybindSpace")]){
 void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap){
         if(rhythm.current_song == "patapata")
         {
@@ -491,9 +494,9 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
                 {
                     //cout << "hitbox " << h << " pos: " << tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x << " " << tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().y << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().top << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().left << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().width << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().height << endl;
 
-                    sf::RectangleShape kacheekHitboxRect(sf::Vector2f(tangibleLevelObjects[i]->hitboxes[h].getRect().width, tangibleLevelObjects[i]->hitboxes[h].getRect().height));
-                    kacheekHitboxRect.setPosition(tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().left,tangibleLevelObjects[i]->getGlobalPosition().y+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().y+tangibleLevelObjects[i]->hitboxes[h].getRect().top);
-                    window.draw(kacheekHitboxRect);
+                    ///sf::RectangleShape kacheekHitboxRect(sf::Vector2f(tangibleLevelObjects[i]->hitboxes[h].getRect().width, tangibleLevelObjects[i]->hitboxes[h].getRect().height));
+                    ///kacheekHitboxRect.setPosition(tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().left,tangibleLevelObjects[i]->getGlobalPosition().y+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().y+tangibleLevelObjects[i]->hitboxes[h].getRect().top);
+                    ///window.draw(kacheekHitboxRect);
                 }
             }
         }
