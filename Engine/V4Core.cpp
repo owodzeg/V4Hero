@@ -109,6 +109,7 @@ void V4Core::Init()
 			    }
 
 			    keyMap[event.key.code] = true;
+			    cout<<"key pressed one time"<<endl;
 			    keyMapHeld[event.key.code] = true;
 
 			    //if (!inMission){

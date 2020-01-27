@@ -245,6 +245,7 @@ bool RhythmController::checkForInput()
         if(patterns["chaka"] >= 8)
         patterns["chaka"] = 0;
 
+
         ///Reset all keybindings
         keyMap[config.GetInt("keybindPata")] = false;
         keyMap[config.GetInt("secondaryKeybindPata")] = false;

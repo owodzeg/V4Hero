@@ -77,7 +77,3 @@ void HitboxFrame::clearVertices(){
 void HitboxFrame::addVertex(float relx,float rely){
     vertices.push_back(sf::Vector2f(relx,rely));
 }
-
-void HitboxFrame::addVertex(float relx,float rely){
-    vertices.push_back(sf::Vector2f(relx,rely));
-}

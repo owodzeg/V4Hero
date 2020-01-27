@@ -364,14 +364,16 @@ void Rhythm::Draw(sf::RenderWindow& window)
 
                         if((rl_combo >= 3) && (combo >= 6))
                         {
-                            if(current_perfect <= 1)
+                            if((current_perfect <= 1) || (satisfaction < 150))
                             {
-                                if(advanced_prefever)
-                                {
-                                    advanced_prefever = false;
-                                    combo = 2;
-                                }
+                                advanced_prefever = false;
+                                combo = 2;
                             }
+                        }
+
+                        if(rl_combo > 9)
+                        {
+                            combo = 11;
                         }
 
                         if(satisfaction > satisfaction_requirement[rl_combo])

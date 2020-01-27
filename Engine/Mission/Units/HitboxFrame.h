@@ -9,9 +9,6 @@ class HitboxFrame
 {
     private:
         ///timestamp
-        float time;
-        HitboxFrame();
-        ~HitboxFrame();
         ///global position, so the hitbox can be moved around as a whole
 
 
@@ -29,8 +26,6 @@ class HitboxFrame
         float g_x=0;
         float g_y=0;
         ///rotation (in radians)
-        float g_x=0;
-        float g_y=0;
         float rotation=0;
         float scaleX=1;
         float scaleY=1;
@@ -44,10 +39,6 @@ class HitboxFrame
 
         HitboxFrame();
         ~HitboxFrame();
-        void addVertex(float relX, float relY);
-        std::vector<sf::Vector2f> getCurrentVertices();
-        float minProjection(float axisAngle);
-        float maxProjection(float axisAngle);
 };
 
 #endif // HITBOXFRAME_H

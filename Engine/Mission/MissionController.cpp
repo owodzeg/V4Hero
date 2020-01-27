@@ -308,7 +308,7 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
                             tangibleLevelObjects[i]->current_animation = "walk";
                             tangibleLevelObjects[i]->current_frame = 0;
                         }*/
-                    }
+
 
                     /// NEW COLLISION SYSTEM:
                     /// Separating axis theorem
