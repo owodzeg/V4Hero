@@ -9,12 +9,6 @@ RhythmGUI::RhythmGUI()
     //ctor
      r_rhythm.setSize(sf::Vector2f(100,100));
     r_rhythm.setFillColor(sf::Color::White);
-
-    r_fever.setSize(sf::Vector2f(100,10));
-    r_fever.setFillColor(sf::Color::Red);
-
-    r_fever_meter.setSize(sf::Vector2f(100,10));
-    r_fever_meter.setFillColor(sf::Color::Yellow);
 }
 
 void RhythmGUI::Initialise(Config &config, std::map<int,bool> &keymap)
@@ -130,31 +124,12 @@ void RhythmGUI::doVisuals(sf::RenderWindow& window,int bgm_cycle,sf::Clock *rhyt
                 *flicker = 0;
         }
 
-        /// Fever meter - now with 16 segments!
-        int feverMeterWidth = 10*(combo-12);
-        if(feverMeterWidth > 160)
-        {
-            feverMeterWidth = 160;
-        }
-
         float sizeMod = rhythmAlpha/float(80);
         beatBounce = sizeMod / 30;
-
-        r_fever.setSize(sf::Vector2f(160+sizeMod*2,10+sizeMod*2));
-        r_fever_meter.setSize(sf::Vector2f(feverMeterWidth+sizeMod*2,10+sizeMod*2));
-
-        r_fever.setPosition(50*ratio_X-sizeMod,50*ratio_Y-sizeMod);
-        r_fever_meter.setPosition(50*ratio_X-sizeMod,50*ratio_Y-sizeMod);
     }
 
     window.draw(r_rhythm);
     window.draw(r_rhythm2);
-    //window.draw(r_fever);
-
-    if(combo > 12)
-    {
-        //window.draw(r_fever_meter);
-    }
 
     for(int i=0; i<drums->size(); i++)
     {
