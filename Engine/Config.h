@@ -23,6 +23,7 @@ class Config
     "keybindPon",
     "keybindDon",
     "keybindChaka",
+    "keybindSpace",
     "secondaryKeybindPata",
     "secondaryKeybindPon",
     "secondaryKeybindDon",
@@ -36,6 +37,7 @@ class Config
     "showDebugMsg",
     "showRhythmDebugMsg",
     "showImportantDebugMsg",
+    "showKeyboardPressCode",
     "lang"};
     std::vector<std::string> configDefaults = {"1280",
     "720",
@@ -50,6 +52,7 @@ class Config
     "72",
     "74",
     "73",
+    "5",
     std::to_string(sf::Keyboard::A),
     std::to_string(sf::Keyboard::D),
     std::to_string(sf::Keyboard::S),
@@ -63,6 +66,7 @@ class Config
     "0",
     "0",
     "1",
+    "0",
     "1"};
     std::map<std::string,std::string> configMap;
     int configDebugID=0;
