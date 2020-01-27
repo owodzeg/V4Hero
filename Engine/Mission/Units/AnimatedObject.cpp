@@ -144,8 +144,8 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     float y = atof(hbframe[5].c_str());
                     float width = atof(hbframe[6].c_str());
                     float height = atof(hbframe[7].c_str());
-
-                    hitboxes[hitboxID].SetCustomFrame(time,g_x,g_y,x,y,width,height);
+                    float rotation = 0; /// this needs to be loaded later IN RADIANS
+                    hitboxes[hitboxID].SetCustomFrame(time,g_x,g_y,x,y,rotation,width,height);
                 }
             }
             else if(version == "1.00")
@@ -221,8 +221,11 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
 
 void AnimatedObject::setAnimationSegment(std::string new_segment_name)
 {
+    //cout << "AnimatedObject::setAnimationSegment(" << new_segment_name << ");" << endl;
+
     anim_begin = animation_begin[distance(animation_names.begin(), find(animation_names.begin(), animation_names.end(), new_segment_name))];
     anim_end = animation_end[distance(animation_names.begin(), find(animation_names.begin(), animation_names.end(), new_segment_name))];
+
 
     current_animation = new_segment_name;
 }
