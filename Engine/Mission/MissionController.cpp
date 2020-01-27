@@ -47,6 +47,8 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
 
     tangibleLevelObjects.clear();
 
+    levelProjectiles.clear();
+
     //ctor
     f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
     //f_font.loadFromFile("resources/fonts/arial.ttf");
@@ -118,6 +120,7 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         }
     }
     pataponY = missionConfig->GetInt("resY") - (200 * ratioY);
+    floorY = missionConfig->GetInt("resY") - (100 * ratioY);
     patapon->scaleX = ratioX;
     patapon->scaleY = ratioY;
 
@@ -153,22 +156,18 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         cutscenesLeft=false;
     }
     tangibleLevelObjects.clear();
+    levelProjectiles.clear();
     switch(missionID){
     case 1:{
         showTimer=true;
         endFlag1->LoadConfig(missionConfig);
-        feverworm->LoadConfig(missionConfig);
 
         tangibleLevelObjects.push_back(endFlag1);
-        tangibleLevelObjects.push_back(feverworm);
 
-        endFlag1->scaleX = ratioX;
-        endFlag1->scaleY = ratioY;
-        feverworm->scaleX = ratioX;
-        feverworm->scaleY = ratioY;
+        endFlag1->scaleX = ratioX*0.2;
+        endFlag1->scaleY = ratioY*0.2;
 
-        endFlag1->setGlobalPosition(sf::Vector2f(2500,missionConfig->GetInt("resY") - (182 * ratioY)));
-        feverworm->setGlobalPosition(sf::Vector2f(-250,missionConfig->GetInt("resY") - (450 * ratioY)));
+        endFlag1->setGlobalPosition(sf::Vector2f(2500,missionConfig->GetInt("resY") - (250 * ratioY)));
         break;
     }
     case 2:{
@@ -176,12 +175,12 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         kacheek2->LoadConfig(missionConfig);
         kacheek3->LoadConfig(missionConfig);
         feverworm->LoadConfig(missionConfig);
-        endFlag1->LoadConfig(missionConfig);
+        ///endFlag1->LoadConfig(missionConfig);
         tangibleLevelObjects.push_back(kacheek);
         tangibleLevelObjects.push_back(kacheek2);
         tangibleLevelObjects.push_back(kacheek3);
         tangibleLevelObjects.push_back(feverworm);
-        tangibleLevelObjects.push_back(endFlag1);
+        ///tangibleLevelObjects.push_back(endFlag1);
         kacheek->scaleX = ratioX;
         kacheek->scaleY = ratioY;
         kacheek2->scaleX = ratioX;
@@ -196,7 +195,8 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         kacheek2->setGlobalPosition(sf::Vector2f(1500,missionConfig->GetInt("resY") - (175 * ratioY)));
         kacheek3->setGlobalPosition(sf::Vector2f(2000,missionConfig->GetInt("resY") - (175 * ratioY)));
         feverworm->setGlobalPosition(sf::Vector2f(-250,missionConfig->GetInt("resY") - (450 * ratioY)));
-        endFlag1->setGlobalPosition(sf::Vector2f(2500,missionConfig->GetInt("resY") - (182 * ratioY)));
+        ///endFlag1->x = 2500;
+        ///endFlag1->y = missionConfig->GetInt("resY") - (250 * ratioY);
         break;
 
     }
@@ -222,7 +222,6 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
     isFinishedLoading=true;
 }
 void MissionController::StopMission(){
-    cout << "MissionController::StopMission()" << endl;
     rhythm.Stop();
     isInitialized = false;
 }
@@ -287,14 +286,30 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
                 {
                     //kacheek currentCollisionRect = *tangibleLevelObjects[i];
                     /// if the new x position after moving will be between left side of kacheek and right side of kacheek
+
                     /*if (proposedXPosRight>tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().left && proposedXPosRight<tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().width)
+
+                    if (proposedXPosRight>tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().left && proposedXPosRight<tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().width)
+
                     {
                         /// then we have found a collision
                         foundCollision = true;
                         tangibleLevelObjects[i]->OnCollide(tangibleLevelObjects[i]);
                         std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
 
+
                     }*/
+
+                        /*///HARDCODED FOR KACHEEK SHOWCASE PURPOSES
+                        tangibleLevelObjects[i]->walk_timer.restart();
+
+                        if(tangibleLevelObjects[i]->current_animation != "walk")
+                        {
+                            tangibleLevelObjects[i]->current_animation = "walk";
+                            tangibleLevelObjects[i]->current_frame = 0;
+                        }*/
+                    }
+
                     /// NEW COLLISION SYSTEM:
                     /// Separating axis theorem
                     /// we check an axis at a time
@@ -307,6 +322,7 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
                     /// then we check if min2>max1 or min1>max2 there has been a collision in this axis
                     /// there has to be a collision in ALL axes for actual collision to be confirmed,
                     /// so we can stop checking if we find a single non-collision.
+
 
 
 
@@ -398,6 +414,7 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
 
                     //float hitboxTopY = tangibleLevelObjects[j]->getGlobalPosition().y+tangibleLevelObjects[j]->hitboxes[h].getGlobalPosition().y+tangibleLevelObjects[j]->hitboxes[h].getRect().top;
                     //float hitboxBottomY = tangibleLevelObjects[j]->getGlobalPosition().y+tangibleLevelObjects[j]->hitboxes[h].getGlobalPosition().y+tangibleLevelObjects[j]->hitboxes[h].getRect().height;
+
                     /// if the new x position after moving will be between left side of kacheek and right side of kacheek
                     //if (proposedXPosRight>hitboxLeftX
                     //    && proposedXPosRight<tangibleLevelObjects[j]->getGlobalPosition().x+tangibleLevelObjects[j]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[j]->hitboxes[h].getRect().width)
@@ -418,10 +435,8 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         {
             camera.walk = false;
         }
-        float booster=1.0;
-        if (rhythm.current_perfect == 4){
-            booster=1.2;
-        }
+        missionKeyMap = keyMap;
+
         //cout<<rhythm.current_perfect<<'\n';
 
         camera.Work(window,fps,keyMap);
@@ -447,8 +462,6 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
         if(rhythm.updateworm)
         {
-            feverworm->combo = rhythm.GetRealCombo();
-
             if(rhythm.GetRealCombo() < 2)
             {
                 feverworm->global_x = -300;
@@ -499,65 +512,18 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
             rhythm.updateworm = false;
         }
 
-        /** Make Patapon walk (temporary) **/
-        if(camera.walk)
-        {
-            float proposedXPos = camera.followobject_x + (2 * 60 * booster) / fps;
-            /// use the right hand side of the patapon sprite to check for collisions. This should be changed if the patapon walks to the left
-            float proposedXPosRight = proposedXPos + patapon->hitBox.left + patapon->hitBox.width;
-            /// need to have it check for collision and stop if blocked by kacheek here.
-
-            /// right now it is very basic checking only in X axis. Jumping over a
-            /// kacheek will not be possible.
-
-            bool foundCollision = false;
-
-            for(int i=0;i<tangibleLevelObjects.size();i++)
-            {
-                for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
-                {
-                    //kacheek currentCollisionRect = *tangibleLevelObjects[i];
-                    /// if the new x position after moving will be between left side of kacheek and right side of kacheek
-                    if (proposedXPosRight>tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().left && proposedXPosRight<tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().width)
-                    {
-                        /// then we have found a collision
-                        foundCollision = true;
-                        tangibleLevelObjects[i]->OnCollide(tangibleLevelObjects[i]);
-                        std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
-                        /*///HARDCODED FOR KACHEEK SHOWCASE PURPOSES
-                        tangibleLevelObjects[i]->walk_timer.restart();
-
-                        if(tangibleLevelObjects[i]->current_animation != "walk")
-                        {
-                            tangibleLevelObjects[i]->current_animation = "walk";
-                            tangibleLevelObjects[i]->current_frame = 0;
-                        }*/
-                    }
-                }
-            }
-
-            /// if the new position is inside a kacheek, don't move. If we found anything,
-            if (!foundCollision){
-                camera.followobject_x = proposedXPos;
-            }
-        }
-
-        patapon->x = camera.followobject_x;
-        patapon->y = pataponY;
-        patapon->fps = fps;
 
         hatapon->setGlobalPosition(sf::Vector2f(patapon->x-50,patapon->y-21));
         hatapon->fps = fps;
+        DoKeyboardEvents(window,fps,keyMap);
+        DoMovement(window,fps,keyMap);
 
         // TODO: at some point some pointer shenanigans is required to make these be a reference to v4core's ones too.
         rhythm.rhythmController.keyMap = *missionKeyMap;
         rhythm.rhythmController.config = *missionConfig;
         rhythm.config = *missionConfig;
 
-        if(rhythm.current_song == "patapata")
-        {
-            patapon->current_animation = "walk";
-        }
+
 
         if((rhythm.current_song != "") && ((rhythm.current_song != "dondon") && (rhythm.current_song != "ponpata")))
         {
@@ -596,6 +562,10 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         patapon->Draw(window);
         hatapon->Draw(window);
 
+        for(int i=0;i<levelProjectiles.size();i++)
+        {
+            levelProjectiles[i].get()->Draw(window,fps);
+        }
         /// draw static UI elements
         auto lastView = window.getView();
 

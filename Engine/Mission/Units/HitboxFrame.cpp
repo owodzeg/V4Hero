@@ -14,7 +14,6 @@ HitboxFrame::~HitboxFrame()
 
 }
 
-
 float HitboxFrame::minProjection(float axisAngle){
     float projectionLength = 99999999;
     vector<sf::Vector2f> currentVertices = getCurrentVertices();
@@ -62,9 +61,7 @@ vector<sf::Vector2f> HitboxFrame::getCurrentVertices(){
     vector<sf::Vector2f> newVertices;
     for (int i=0;i<vertices.size()-1;i++){
         sf::Vector2f currentVertex = vertices[i];
-
         /// I have worked through the matrix maths and calculated the following results, which have some minor optimisations
-
         /// scaleX*(gx + x*cos(angle) + y*sin(angle))
         float resultX = scaleX*(g_x+currentVertex.x*cos(rotation)+currentVertex.y*sin(rotation));
         /// scaleY*(gy + y*cos(angle) - x*sin(angle))
@@ -81,3 +78,6 @@ void HitboxFrame::addVertex(float relx,float rely){
     vertices.push_back(sf::Vector2f(relx,rely));
 }
 
+void HitboxFrame::addVertex(float relx,float rely){
+    vertices.push_back(sf::Vector2f(relx,rely));
+}
