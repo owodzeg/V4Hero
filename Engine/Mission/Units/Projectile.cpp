@@ -2,7 +2,7 @@
 #include "../../Item/Item.h"
 #include "CollidableObject.h"
 #include <math.h>
-
+#include "HitboxFrame.h"
 
 using namespace std;
 
@@ -28,8 +28,25 @@ void Projectile::Update(sf::RenderWindow &window, float fps){
     yPos+=GetYSpeed()/fps;
 }
 void Projectile::Draw(sf::RenderWindow &window, float fps){
-    sf::CircleShape shape(5);
+
+        HitboxFrame tmp;
+        tmp.time = 0;
+        tmp.g_x = 0;
+        tmp.g_y = 0;
+        tmp.clearVertices();
+        tmp.addVertex(-6,-2); /// "top left"
+        tmp.addVertex(6,-2); /// "top right"
+        tmp.addVertex(-6,2); /// "bottom left"
+        tmp.addVertex(6,2); /// "bottom right"
+        tmp.rotation = -angle;
+    std::vector<sf::Vector2f> currentVertices = tmp.getCurrentVertices();
+    sf::CircleShape shape(3);
     shape.setFillColor(sf::Color(100, 250, 50));
-    shape.setPosition(xPos-2.5,yPos-2.5);
+    shape.setPosition(xPos-1.5,yPos-1.5);
     window.draw(shape);
+    shape.setFillColor(sf::Color(50, 50, 50));
+    for (int i=0;i<currentVertices.size();i++){
+        shape.setPosition(currentVertices[i].x+xPos-1.5,currentVertices[i].y+yPos-1.5);
+        window.draw(shape);
+    }
 }
