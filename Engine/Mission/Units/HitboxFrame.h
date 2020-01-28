@@ -14,7 +14,6 @@ class HitboxFrame
 
         ///hitboxes' rect that react with other collidables
         std::vector<sf::Vector2f> vertices;
-
         //float x;
         //float y;
         //float width;
@@ -34,8 +33,8 @@ class HitboxFrame
         void addVertex(float relX, float relY);
         std::vector<sf::Vector2f> getCurrentVertices();
         std::vector<sf::Vector2f>* getBaseVerticiesDontUseThisUnlessYouKnowWhy();
-        float minProjection(float axisAngle);
-        float maxProjection(float axisAngle);
+        float minProjection(float axisAngle,float object_x,float object_y);
+        float maxProjection(float axisAngle,float object_x,float object_y);
 
         HitboxFrame();
         ~HitboxFrame();

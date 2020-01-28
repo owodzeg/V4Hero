@@ -71,7 +71,7 @@ class MissionController
     void StartCutscene(const std::wstring& text,bool isBlackScreen,int TimeToShow);
 
     void FinishLastCutscene();
-    bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame,Patapon* patapon);
+    bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame,AnimatedObject* targetObject, Patapon* patapon);
     bool isMoreCutscenes();
     void StopMission();
     void Initialise(Config &config, std::map<int,bool> &keymap,std::string backgroundName);

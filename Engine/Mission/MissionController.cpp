@@ -237,11 +237,11 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, st
         levelProjectiles.push_back(std::move(p));
     }
 }
-bool MissionController::DoCollisionStepInAxis(float currentAxisAngle,HitboxFrame* currentHitboxFrame, Patapon* patapon){
-    sf::Vector2f movingObjC1 = sf::Vector2f(patapon->hitBox.left,patapon->hitBox.top); /// "top left"
-    sf::Vector2f movingObjC2 = sf::Vector2f(patapon->hitBox.left+patapon->hitBox.width,patapon->hitBox.top); /// "top right"
-    sf::Vector2f movingObjC3 = sf::Vector2f(patapon->hitBox.left,patapon->hitBox.top+patapon->hitBox.height); /// "bottom left"
-    sf::Vector2f movingObjC4 = sf::Vector2f(patapon->hitBox.left+patapon->hitBox.width,patapon->hitBox.top+patapon->hitBox.height); /// "bottom right"
+bool MissionController::DoCollisionStepInAxis(float currentAxisAngle,HitboxFrame* currentHitboxFrame,AnimatedObject* targetObject, Patapon* patapon){
+    sf::Vector2f movingObjC1 = sf::Vector2f(patapon->x+patapon->hitBox.left,patapon->y+patapon->hitBox.top); /// "top left"
+    sf::Vector2f movingObjC2 = sf::Vector2f(patapon->x+patapon->hitBox.left+patapon->hitBox.width,patapon->y+patapon->hitBox.top); /// "top right"
+    sf::Vector2f movingObjC3 = sf::Vector2f(patapon->x+patapon->hitBox.left,patapon->y+patapon->hitBox.top+patapon->hitBox.height); /// "bottom left"
+    sf::Vector2f movingObjC4 = sf::Vector2f(patapon->x+patapon->hitBox.left+patapon->hitBox.width,patapon->y+patapon->hitBox.top+patapon->hitBox.height); /// "bottom right"
 
 
     float proj1 = PVector::getVectorCartesian(0,0,movingObjC1.x,movingObjC1.y).GetScalarProjectionOntoAxis(currentAxisAngle);
@@ -250,16 +250,18 @@ bool MissionController::DoCollisionStepInAxis(float currentAxisAngle,HitboxFrame
     float proj4 = PVector::getVectorCartesian(0,0,movingObjC4.x,movingObjC4.y).GetScalarProjectionOntoAxis(currentAxisAngle);
     float maxProjectionObj1 =   max(max(max(proj1,proj2),proj3),proj4);
     float minProjectionObj1 =   min(min(min(proj1,proj2),proj3),proj4);
+    //cout<<"MinPatapon: "<<minProjectionObj1<<endl;
 
-    float maxProjectionObj2 = currentHitboxFrame->minProjection(currentAxisAngle);
-    float minProjectionObj2 = currentHitboxFrame->maxProjection(currentAxisAngle);
-
-    if(minProjectionObj2>maxProjectionObj1 || minProjectionObj1>maxProjectionObj2){
+    //cout<<"MaxPatapon: "<<maxProjectionObj1<<endl;
+    float maxProjectionObj2 = currentHitboxFrame->maxProjection(currentAxisAngle, targetObject->global_x,targetObject->global_y);
+    float minProjectionObj2 = currentHitboxFrame->minProjection(currentAxisAngle, targetObject->global_x,targetObject->global_y);
+    if(maxProjectionObj1>minProjectionObj2 && minProjectionObj1<maxProjectionObj2){
         return true;
     }
     else{
         return false;
     }
+
 
 }
 void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap){
@@ -279,7 +281,6 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
             /// kacheek will not be possible.
 
             bool foundCollision = false;
-
             for(int i=0;i<tangibleLevelObjects.size();i++)
             {
                 for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
@@ -326,44 +327,51 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
 
 
 
-                    /// axis 1: obj1 "sideways"
+                    /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
                     float currentAxisAngle = 0;
-                    bool isCollision = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),patapon);
+                    bool isCollision = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],patapon);
                     if (!isCollision){
                         continue;
                     }
+                    //cout<<"COLLISION FOUND IN axis 1"<<endl;
 
                     /// axis 2: obj1 "up"
                     currentAxisAngle = 3.14159265358/2;
-                    bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),patapon);
+                    bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],patapon);
                     if (!isCollision2){
                         continue;
                     }
+                    //cout<<"COLLISION FOUND IN axis 2 (up)"<<endl;
 
                     /// axis 3: obj2 "up" (we add the 90 degrees from before to its current rotation)
                     currentAxisAngle = tangibleLevelObjects[i]->hitboxes[h].hitboxObject.rotation + currentAxisAngle;
 
-                    bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),patapon);
+                    bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],patapon);
                     if (!isCollision3){
                         continue;
                     }
+                    //cout<<"COLLISION FOUND IN axis 3 (up2)"<<endl;
 
                     /// axis 4: obj2 "sideways"
                     currentAxisAngle = tangibleLevelObjects[i]->hitboxes[h].hitboxObject.rotation;
 
-                    bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),patapon);
+                    bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],patapon);
                     if (!isCollision4){
                         continue;
                     }
 
 
+
                     /// we have a collision
                     if (isCollision&&isCollision2&&isCollision3&&isCollision4){
-
+                        foundCollision = true;
+                        tangibleLevelObjects[i]->OnCollide(tangibleLevelObjects[i]);
+                        std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
                     } else {
                         cout<<"Something is very wrong"<<endl;
                     }
                 }
+                //cout<< "CHECKING NEW UNIT. "<<i<<" out of "<<tangibleLevelObjects.size()-1<<endl;
             }
 
             /// if the new position is inside a kacheek, don't move. If we found anything,
@@ -636,18 +644,52 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         window.setView(lastView);
 
         /// here we show the hitbox
-        bool showHitboxes = false;
+        bool showHitboxes = true;
         if(showHitboxes){
             sf::RectangleShape hitboxRect(sf::Vector2f(patapon->hitBox.width, patapon->hitBox.height));
             hitboxRect.setPosition(patapon->x+patapon->hitBox.left,patapon->y+patapon->hitBox.top);
             window.draw(hitboxRect);
-
+            sf::Vector2f movingObjC1 = sf::Vector2f(patapon->x+patapon->hitBox.left,patapon->y+patapon->hitBox.top); /// "top left"
+            sf::CircleShape shape(5);
+                        shape.setFillColor(sf::Color(100, 250, 50));
+                        shape.setPosition(movingObjC1.x-2.5,movingObjC1.y-2.5);
+                        window.draw(shape);
+            sf::Vector2f movingObjC2 = sf::Vector2f(patapon->x+patapon->hitBox.left+patapon->hitBox.width,patapon->y+patapon->hitBox.top); /// "top right"
+                        shape.setPosition(movingObjC2.x-2.5,movingObjC2.y-2.5);
+                        window.draw(shape);
+            sf::Vector2f movingObjC3 = sf::Vector2f(patapon->x+patapon->hitBox.left,patapon->y+patapon->hitBox.top+patapon->hitBox.height); /// "bottom left"
+                        shape.setPosition(movingObjC3.x-2.5,movingObjC3.y-2.5);
+                        window.draw(shape);
+            sf::Vector2f movingObjC4 = sf::Vector2f(patapon->x+patapon->hitBox.left+patapon->hitBox.width,patapon->y+patapon->hitBox.top+patapon->hitBox.height); /// "bottom right"
+                        shape.setPosition(movingObjC4.x-2.5,movingObjC4.y-2.5);
+                        window.draw(shape);
             for(int i=0; i<tangibleLevelObjects.size(); i++)
             {
                 for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
                 {
                     //cout << "hitbox " << h << " pos: " << tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x << " " << tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().y << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().top << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().left << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().width << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().height << endl;
+                    // create an empty shape
 
+                    HitboxFrame* currentHitbox = &(tangibleLevelObjects[i]->hitboxes[h].hitboxObject);
+                    sf::ConvexShape convex;
+                    convex.setFillColor(sf::Color(150, 50, 250));
+                    // resize it to 5 points
+                    std::vector<sf::Vector2f> currentVertices = currentHitbox->getCurrentVertices();
+                    convex.setPointCount(currentVertices.size());
+                    for (int j=0;j<currentVertices.size();j++){
+
+
+                        sf::Vector2f currentPoint = currentVertices[j];
+                        currentPoint.x = currentPoint.x + tangibleLevelObjects[i]->global_x;
+                        currentPoint.y = currentPoint.y + tangibleLevelObjects[i]->global_y;
+                        //cout<<"DRAWING POINT: "<<currentVertices.size()<<" x: "<<currentPoint.x<<" y: "<<currentPoint.y<<endl;
+                        sf::CircleShape shape(5);
+                        shape.setFillColor(sf::Color(100, 250, 50));
+                        shape.setPosition(currentPoint.x-2.5,currentPoint.y-2.5);
+                        window.draw(shape);
+                        convex.setPoint(i, currentPoint);
+                    }
+                    window.draw(convex);
                     ///sf::RectangleShape kacheekHitboxRect(sf::Vector2f(tangibleLevelObjects[i]->hitboxes[h].getRect().width, tangibleLevelObjects[i]->hitboxes[h].getRect().height));
                     ///kacheekHitboxRect.setPosition(tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().left,tangibleLevelObjects[i]->getGlobalPosition().y+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().y+tangibleLevelObjects[i]->hitboxes[h].getRect().top);
                     ///window.draw(kacheekHitboxRect);

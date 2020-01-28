@@ -14,33 +14,44 @@ HitboxFrame::~HitboxFrame()
 
 }
 
-float HitboxFrame::minProjection(float axisAngle){
+float HitboxFrame::minProjection(float axisAngle,float object_x,float object_y){
     float projectionLength = 99999999;
     vector<sf::Vector2f> currentVertices = getCurrentVertices();
+
+    //cout<<" - SEARCHING FOR MIN PROJECTION"<<endl;
     /// go through each vertex (corner) and find the shortest projection from the origin to that vertex along the axis aligned with axisAngle
-    for (int i=0;i<currentVertices.size()-1;i++){
-        sf::Vector2f currentVertex = vertices[i];
-        PVector cornerVector = PVector::getVectorCartesian(0,0,currentVertex.x,currentVertex.y);
+    for (int i=0;i<currentVertices.size();i++){
+        sf::Vector2f currentVertex = currentVertices.at(i);
+        PVector cornerVector = PVector::getVectorCartesian(0,0,currentVertex.x+g_x+object_x,currentVertex.y+g_y+object_y);
         float currentProjectionLength = cornerVector.GetScalarProjectionOntoAxis(axisAngle);
+
+        //cout<<"# currentProjectionLength: "<<i<<"axisAngle: "<<axisAngle<<" val: "<<currentProjectionLength<<" gx: "<<object_x<<" gy: "<<object_y<<endl;
         if (currentProjectionLength<projectionLength){
             projectionLength=currentProjectionLength;
         }
     }
+    //cout<<"Min projection hitbox: "<<projectionLength<<endl;
     return projectionLength;
 }
 
-float HitboxFrame::maxProjection(float axisAngle){
+float HitboxFrame::maxProjection(float axisAngle,float object_x,float object_y){
     float projectionLength = 0;
     vector<sf::Vector2f> currentVertices = getCurrentVertices();
+
+    //cout<<" - SEARCHING FOR MAX PROJECTION"<<endl;
     /// go through each vertex (corner) and find the longest projection from the origin to that vertex along the axis aligned with axisAngle
-    for (int i=0;i<currentVertices.size()-1;i++){
-        sf::Vector2f currentVertex = vertices[i];
-        PVector cornerVector = PVector::getVectorCartesian(0,0,currentVertex.x,currentVertex.y);
+    for (int i=0;i<currentVertices.size();i++){
+        sf::Vector2f currentVertex = currentVertices.at(i);
+        PVector cornerVector = PVector::getVectorCartesian(0,0,currentVertex.x+g_x+object_x,currentVertex.y+g_y+object_y);
         float currentProjectionLength = cornerVector.GetScalarProjectionOntoAxis(axisAngle);
+
+        //cout<<"# currentProjectionLength: "<<i<<"axisAngle: "<<axisAngle<<" val: "<<currentProjectionLength<<" gx: "<<object_x<<" gy: "<<object_y<<endl;
         if (currentProjectionLength>projectionLength){
             projectionLength=currentProjectionLength;
         }
     }
+
+    //cout<<"Max projection hitbox: "<<projectionLength<<endl;
     return projectionLength;
 }
 vector<sf::Vector2f>* HitboxFrame::getBaseVerticiesDontUseThisUnlessYouKnowWhy(){
@@ -59,7 +70,7 @@ vector<sf::Vector2f> HitboxFrame::getCurrentVertices(){
     ///     -----       ----------------------------------------------------
     /// result: a 1x4 vector
     vector<sf::Vector2f> newVertices;
-    for (int i=0;i<vertices.size()-1;i++){
+    for (int i=0;i<vertices.size();i++){
         sf::Vector2f currentVertex = vertices[i];
         /// I have worked through the matrix maths and calculated the following results, which have some minor optimisations
         /// scaleX*(gx + x*cos(angle) + y*sin(angle))
@@ -68,7 +79,7 @@ vector<sf::Vector2f> HitboxFrame::getCurrentVertices(){
         float resultY = scaleY*(g_y + currentVertex.y*cos(rotation) - currentVertex.x*sin(rotation));
         newVertices.push_back(sf::Vector2f(resultX,resultY));
     }
-
+    return newVertices;
 
 }
 void HitboxFrame::clearVertices(){
