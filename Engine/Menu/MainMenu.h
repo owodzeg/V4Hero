@@ -24,7 +24,7 @@ class MainMenu : public Menu
         PatapolisMenu patapolisMenu;
         void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent);
 
-        void Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap);
+        void Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld);
         void EventFired(sf::Event event);
         void OnExit();
         void UpdateButtons();

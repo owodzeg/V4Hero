@@ -155,6 +155,7 @@ bool RhythmController::checkForInput()
     ///IF statement that applies to all drum keybinds (to not repeat the same code over and over)
     if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")] || keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")] || keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")] || keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
     {
+        //cout<<"Input registered"<<endl;
         config.debugOut->RhythmnDebugMessage(current_drum + " " + std::to_string(masterTimer) + " ms \n");
         config.debugOut->RhythmnDebugMessage("drum quality was " + std::to_string(drum_quality) +"\n");
 
@@ -214,7 +215,7 @@ bool RhythmController::checkForInput()
 
             perfect = command_perfects[0]+command_perfects[1]+command_perfects[2]+command_perfects[3];
         }
-
+        //cout<<"Input registered"<<commandInput.size()<<endl;
         if(commandInput.size() == 4)
         {
             string fullcom = commandInput[0]+commandInput[1]+commandInput[2]+commandInput[3]; ///Create a full command using 4 individual hits

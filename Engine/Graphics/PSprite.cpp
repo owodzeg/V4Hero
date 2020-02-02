@@ -92,7 +92,7 @@ sf::FloatRect PSprite::getLocalBounds()
     return s.getLocalBounds();
 }
 
-void PSprite::draw(sf::RenderWindow& window)
+void PSprite::draw(sf::RenderWindow& window,float angle)
 {
     if(DoAutoScale){
         switch(quality)
@@ -133,6 +133,6 @@ void PSprite::draw(sf::RenderWindow& window)
     }
     ///std::cout << "[PSPRITE] " << ratioX << " " << ratioY << std::endl;
 
-
+    s.setRotation(angle*(180/3.14159265358));
     window.draw(s);
 }

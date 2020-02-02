@@ -22,7 +22,6 @@ class AltarMenu : public Menu
         std::vector<sf::Text> t_itemdescription;
         Camera camera;
 
-        sf::Texture t_menu_bkg;
         PSprite s_menu_bkg;
         sf::Vector2f p_menu_bkg;
 
