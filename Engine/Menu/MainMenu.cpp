@@ -68,10 +68,10 @@ void MainMenu::EventFired(sf::Event event){
         optionsMenu.EventFired(event);
     }
 }
-void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap)
+void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld)
 {
     if (v4core->currentController.isInitialized){
-            v4core->currentController.Update(window, fps, keyMap);
+            v4core->currentController.Update(window, fps, keyMap,keyMapHeld);
     } else if(isActive){
         mm_bigBox.setSize(sf::Vector2f(window.getSize().x,window.getSize().y-200));
         //mm_smallerBox.setSize(sf::Vector2f(100,10));

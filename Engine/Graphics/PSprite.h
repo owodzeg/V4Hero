@@ -26,7 +26,7 @@ class PSprite
     void setPosition(float x, float y);
     sf::FloatRect getLocalBounds();
     void setScale(float s);
-    void draw(sf::RenderWindow& window);
+    void draw(sf::RenderWindow& window,float rotation=0);
 };
 
 #endif // PSPRITE_H

@@ -294,9 +294,9 @@ void V4Core::Init()
 
         //} else {
         if (savereader.isNewSave){
-            newGameMenu.Update(window,fps,&keyMapHeld);
+            newGameMenu.Update(window,fps,&keyMap,&keyMapHeld);
         } else {
-            mainMenu.Update(window,fps,&keyMapHeld);
+            mainMenu.Update(window,fps,&keyMap,&keyMapHeld);
         }
         //}
 

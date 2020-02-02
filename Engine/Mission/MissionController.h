@@ -40,6 +40,7 @@ class MissionController
     std::map<int,bool>* missionKeyMap;
     Config* missionConfig;
 
+    PSprite s_proj;
     sf::Font f_font;
     /// Things for the cutscenes
         std::vector<sf::Text> t_cutscene_text;
@@ -69,12 +70,18 @@ class MissionController
     void StartCutscene(const std::wstring& text,bool isBlackScreen,int TimeToShow);
 
     void FinishLastCutscene();
-
+    bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame,AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY);
+    bool DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY);
     bool isMoreCutscenes();
     void StopMission();
     void Initialise(Config &config, std::map<int,bool> &keymap,std::string backgroundName);
     void StartMission(std::string songName,int missionID,bool showCutscene=false);
-    void Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap);
+    void Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
+    void DoMovement(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
+    void DoKeyboardEvents(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
+    float pataponMaxProjection(float axisAngle);
+
+    float pataponMinProjection(float axisAngle);
 
 
     MissionController();
