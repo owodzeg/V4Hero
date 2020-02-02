@@ -689,54 +689,56 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
     if(rhythm.updateworm)
     {
-        if(rhythm.GetRealCombo() < 2)
-        {
-            feverworm->global_x = -300;
-            feverworm->next_x = -300;
-            feverworm->speed = 120;
-        }
+        feverworm->combo = rhythm.GetRealCombo();
 
-        if(rhythm.GetRealCombo() == 2)
-        {
-            feverworm->next_x = 30;
-            feverworm->speed = 400;
-        }
+            if(rhythm.GetRealCombo() < 2)
+            {
+                feverworm->global_x = -300;
+                feverworm->next_x = -300;
+                feverworm->speed = 120;
+            }
 
-        if((rhythm.GetRealCombo() > 2) && (rhythm.GetCombo() < 11))
-        {
-            if(rhythm.advanced_prefever)
+            if(rhythm.GetRealCombo() == 2)
+            {
+                feverworm->next_x = 30;
+                feverworm->speed = 400;
+            }
+
+            if((rhythm.GetRealCombo() > 2) && (rhythm.GetCombo() < 11))
+            {
+                if(rhythm.advanced_prefever)
                 feverworm->next_x = 50 + (rhythm.GetSatisfaction() / 5.5) + ((rhythm.GetRealCombo() - 2) * 8);
-            else
+                else
                 feverworm->next_x = 30 + ((rhythm.GetRealCombo() - 2) * 8);
 
-            feverworm->speed = 40;
-        }
-
-        if(rhythm.GetCombo() < 11)
-        {
-            if(rhythm.advanced_prefever)
-            {
-                feverworm->setAnimationSegment("fast");
+                feverworm->speed = 40;
             }
-            else
+
+            if(rhythm.GetCombo() < 11)
             {
-                feverworm->setAnimationSegment("slow");
+                if(rhythm.advanced_prefever)
+                {
+                    feverworm->setAnimationSegment("fast");
+                }
+                else
+                {
+                    feverworm->setAnimationSegment("slow");
+                }
             }
-        }
 
-        if(rhythm.GetCombo() == 11)
-        {
-            feverworm->setAnimationSegment("transform");
-            feverworm->setLoop(false);
-        }
+            if(rhythm.GetCombo() == 11)
+            {
+                feverworm->setAnimationSegment("transform");
+                feverworm->setLoop(false);
+            }
 
-        if(rhythm.GetCombo() >= 12)
-        {
-            feverworm->setAnimationSegment("fever");
-            feverworm->setLoop(true);
-        }
+            if(rhythm.GetCombo() >= 12)
+            {
+                feverworm->setAnimationSegment("fever");
+                feverworm->setLoop(true);
+            }
 
-        rhythm.updateworm = false;
+            rhythm.updateworm = false;
     }
 
 
