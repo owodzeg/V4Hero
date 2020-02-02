@@ -3,6 +3,10 @@
 #include <cstdlib>
 #include <time.h>
 #include <string>
+#include "Units/Spear.h"
+#include "Units/Projectile.h"
+#include "../Math/PVector.h"
+#include "Units/HitboxFrame.h"
 MissionController::MissionController()
 {
     ///first initialization, fill the buffers
@@ -57,6 +61,8 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     ///THIS DOESN'T WORK. CHANGE TO SMART POINTERS.
 
     tangibleLevelObjects.clear();
+
+    levelProjectiles.clear();
 
     //ctor
     f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
@@ -130,6 +136,7 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
     }
     }
     pataponY = missionConfig->GetInt("resY") - (200 * ratioY);
+    floorY = missionConfig->GetInt("resY") - (100 * ratioY);
     patapon->scaleX = ratioX;
     patapon->scaleY = ratioY;
 
@@ -175,18 +182,13 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
     {
         showTimer=true;
         endFlag1->LoadConfig(missionConfig);
-        feverworm->LoadConfig(missionConfig);
 
         tangibleLevelObjects.push_back(endFlag1);
-        tangibleLevelObjects.push_back(feverworm);
 
-        endFlag1->scaleX = ratioX;
-        endFlag1->scaleY = ratioY;
-        feverworm->scaleX = ratioX;
-        feverworm->scaleY = ratioY;
+        endFlag1->scaleX = ratioX*0.2;
+        endFlag1->scaleY = ratioY*0.2;
 
-        endFlag1->setGlobalPosition(sf::Vector2f(2500,missionConfig->GetInt("resY") - (182 * ratioY)));
-        feverworm->setGlobalPosition(sf::Vector2f(-250,missionConfig->GetInt("resY") - (450 * ratioY)));
+        endFlag1->setGlobalPosition(sf::Vector2f(2500,missionConfig->GetInt("resY") - (250 * ratioY)));
         break;
     }
     case 2:
@@ -195,12 +197,12 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         kacheek2->LoadConfig(missionConfig);
         kacheek3->LoadConfig(missionConfig);
         feverworm->LoadConfig(missionConfig);
-        endFlag1->LoadConfig(missionConfig);
+        ///endFlag1->LoadConfig(missionConfig);
         tangibleLevelObjects.push_back(kacheek);
         tangibleLevelObjects.push_back(kacheek2);
         tangibleLevelObjects.push_back(kacheek3);
         tangibleLevelObjects.push_back(feverworm);
-        tangibleLevelObjects.push_back(endFlag1);
+        ///tangibleLevelObjects.push_back(endFlag1);
         kacheek->scaleX = ratioX;
         kacheek->scaleY = ratioY;
         kacheek2->scaleX = ratioX;
@@ -215,7 +217,8 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         kacheek2->setGlobalPosition(sf::Vector2f(1500,missionConfig->GetInt("resY") - (175 * ratioY)));
         kacheek3->setGlobalPosition(sf::Vector2f(2000,missionConfig->GetInt("resY") - (175 * ratioY)));
         feverworm->setGlobalPosition(sf::Vector2f(-250,missionConfig->GetInt("resY") - (450 * ratioY)));
-        endFlag1->setGlobalPosition(sf::Vector2f(2500,missionConfig->GetInt("resY") - (182 * ratioY)));
+        ///endFlag1->x = 2500;
+        ///endFlag1->y = missionConfig->GetInt("resY") - (250 * ratioY);
         break;
 
     }
@@ -688,14 +691,9 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
     {
         if(rhythm.GetRealCombo() < 2)
         {
-            feverworm->combo = rhythm.GetRealCombo();
-
-            if(rhythm.GetRealCombo() < 2)
-            {
-                feverworm->global_x = -300;
-                feverworm->next_x = -300;
-                feverworm->speed = 120;
-            }
+            feverworm->global_x = -300;
+            feverworm->next_x = -300;
+            feverworm->speed = 120;
         }
 
         if(rhythm.GetRealCombo() == 2)

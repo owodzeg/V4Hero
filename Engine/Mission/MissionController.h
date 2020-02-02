@@ -10,6 +10,7 @@
 #include "Units/Patapon.h"
 #include "Units/Kacheek.h"
 #include "Units/AnimatedObject.h"
+#include "Units/Projectile.h"
 #include "Units/CollidableObject.h"
 #include "Units/Wall.h"
 #include <string>
@@ -17,6 +18,7 @@
 #include "Units/EndFlag.h"
 #include "Units/FeverWorm.h"
 #include "Units/Hatapon.h"
+#include "Units/HitboxFrame.h"
 
 class MissionController
 {
@@ -60,13 +62,13 @@ class MissionController
         std::vector<bool> cutscene_blackscreens;
     /// this is a list of things in the level that
     /// we need to check against for collision (but not always damage)
-    ///
-    /// TODO: rename/refactor wall into tangibleObject class
     std::vector<CollidableObject*> tangibleLevelObjects;
+    std::vector<std::unique_ptr<Projectile>> levelProjectiles;
 
     float pataponY = 200; ///temp
     float wallY = 200; ///temp
-
+    float gravity=981;
+    float floorY=200;
     void StartCutscene(const std::wstring& text,bool isBlackScreen,int TimeToShow);
 
     void FinishLastCutscene();
