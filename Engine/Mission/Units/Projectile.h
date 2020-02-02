@@ -2,6 +2,7 @@
 #define PROJECTILE_H
 #include <SFML/Graphics.hpp>
 #include "CollidableObject.h"
+#include "../../Graphics/PSprite.h"
 class Projectile
 {
     public:
@@ -14,7 +15,8 @@ class Projectile
         float xPos;
         float yPos;
 
-
+        PSprite* sprite;
+        Projectile(PSprite& tsprite);
 
         float GetXSpeed();
         float GetYSpeed();

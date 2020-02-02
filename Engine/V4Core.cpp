@@ -109,7 +109,6 @@ void V4Core::Init()
 			    }
 
 			    keyMap[event.key.code] = true;
-			    cout<<"key pressed one time"<<endl;
 			    keyMapHeld[event.key.code] = true;
 
 			    //if (!inMission){
@@ -299,9 +298,9 @@ void V4Core::Init()
 
         //} else {
         if (savereader.isNewSave){
-            newGameMenu.Update(window,fps,&keyMap);
+            newGameMenu.Update(window,fps,&keyMap,&keyMapHeld);
         } else {
-            mainMenu.Update(window,fps,&keyMap);
+            mainMenu.Update(window,fps,&keyMap,&keyMapHeld);
         }
         //}
 

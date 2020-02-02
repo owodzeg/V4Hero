@@ -24,6 +24,20 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
 {
     test_bg.Load(backgroundString, config);//config.GetString("debugBackground"));
 
+    PSprite ps_temp;
+    ps_temp.loadFromFile("resources/graphics/item/icon/spear.png",1);
+    ps_temp.setRepeated(false);
+    ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
+    ps_temp.setOrigin(ps_temp.t.getSize().x,0);
+    ps_temp.setColor(sf::Color(255,255,255,255));
+    ps_temp.setPosition(0,0);
+    ps_temp.DoAutoScale = false;
+
+    s_proj = ps_temp;
+    s_proj.scaleX=0.15f;
+    s_proj.scaleY=0.15f;
+
+
     ///THIS DOESN'T WORK. CHANGE TO SMART POINTERS.
 
     ///clean the taken up memory
@@ -234,22 +248,27 @@ void MissionController::StopMission()
     rhythm.Stop();
     isInitialized = false;
 }
-void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap)
+void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld)
 {
     /// do the keyboard things
     if(rhythm.rhythmController.keyMap[missionConfig->GetInt("keybindSpace")])
     {
-        cout<<"created new projectile. Now there are "<<levelProjectiles.size()+1<<endl;
-        unique_ptr<Spear> p = make_unique<Spear>();
+        //cout<<"created new projectile. Now there are "<<levelProjectiles.size()+1<<endl;
+        unique_ptr<Spear> p = make_unique<Spear>(s_proj);
         p.get()->xPos = patapon->x+patapon->hitBox.left+patapon->hitBox.width/2;
         p.get()->yPos = patapon->y+patapon->hitBox.top+patapon->hitBox.height/2;
-        p.get()->speed=1000;
+        p.get()->speed=1050;
         p.get()->angle=-3.14159*4.0/12; /// 60 degrees from the floor - pi*4/12
+        p.get()->maxdmg = 3;
+        p.get()->mindmg = 2;
+        p.get()->crit = 0;
+        p.get()->crit = 0;
+
         levelProjectiles.push_back(std::move(p));
     }
 }
 
-bool MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY)
+bool MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float currentObjectY)
 {
     for(int i=0; i<tangibleLevelObjects.size(); i++)
     {
@@ -272,8 +291,26 @@ bool MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFra
 
 
             /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
+            //cout<<"Collision step for projectile at X: "<<currentObjectX<<" against object at x: "<<tangibleLevelObjects[i]->global_x<<endl;
+
             float currentAxisAngle = currentObjectHitBoxFrame->rotation;
-            bool isCollision = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],currentObjectHitBoxFrame,currentObjectX,CurrentObjectY);
+            vector<sf::Vector2f> currentVertices = currentObjectHitBoxFrame->getCurrentVertices();
+            PVector pv1 = PVector::getVectorCartesian(0,0,currentVertices[0].x+currentObjectX,currentVertices[0].y+currentObjectY);
+            PVector pv2 = PVector::getVectorCartesian(0,0,currentVertices[1].x+currentObjectX,currentVertices[1].y+currentObjectY);
+            PVector pv3 = PVector::getVectorCartesian(0,0,currentVertices[2].x+currentObjectX,currentVertices[2].y+currentObjectY);
+            PVector pv4 = PVector::getVectorCartesian(0,0,currentVertices[3].x+currentObjectX,currentVertices[3].y+currentObjectY);
+
+            pv1.angle =-atan2(currentVertices[0].y+currentObjectY, currentVertices[0].x+currentObjectX);
+            pv2.angle =-atan2(currentVertices[1].y+currentObjectY, currentVertices[1].x+currentObjectX);
+            pv3.angle =-atan2(currentVertices[2].y+currentObjectY, currentVertices[2].x+currentObjectX);
+            pv4.angle =-atan2(currentVertices[3].y+currentObjectY, currentVertices[3].x+currentObjectX);
+
+            float proj1 = pv1.GetScalarProjectionOntoAxis(currentAxisAngle);
+            float proj2 = pv2.GetScalarProjectionOntoAxis(currentAxisAngle);
+            float proj3 = pv3.GetScalarProjectionOntoAxis(currentAxisAngle);
+            float proj4 = pv4.GetScalarProjectionOntoAxis(currentAxisAngle);
+
+            bool isCollision = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],currentObjectHitBoxFrame,currentObjectX,currentObjectY);
             if (!isCollision)
             {
                 continue;
@@ -282,7 +319,7 @@ bool MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFra
 
             /// axis 2: obj1 "up"
             currentAxisAngle = 3.14159265358/2+currentObjectHitBoxFrame->rotation;
-            bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],currentObjectHitBoxFrame,currentObjectX,CurrentObjectY);
+            bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],currentObjectHitBoxFrame,currentObjectX,currentObjectY);
             if (!isCollision2)
             {
                 continue;
@@ -292,7 +329,7 @@ bool MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFra
             /// axis 3: obj2 "up" (we add the 90 degrees from before to its current rotation)
             currentAxisAngle = tangibleLevelObjects[i]->hitboxes[h].hitboxObject.rotation + 3.14159265358/2;
 
-            bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],currentObjectHitBoxFrame,currentObjectX,CurrentObjectY);
+            bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],currentObjectHitBoxFrame,currentObjectX,currentObjectY);
             if (!isCollision3)
             {
                 continue;
@@ -302,7 +339,7 @@ bool MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFra
             /// axis 4: obj2 "sideways"
             currentAxisAngle = tangibleLevelObjects[i]->hitboxes[h].hitboxObject.rotation;
 
-            bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],currentObjectHitBoxFrame,currentObjectX,CurrentObjectY);
+            bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],currentObjectHitBoxFrame,currentObjectX,currentObjectY);
             if (!isCollision4)
             {
                 continue;
@@ -312,6 +349,7 @@ bool MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFra
             if (isCollision&&isCollision2&&isCollision3&&isCollision4)
             {
                 std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
+                tangibleLevelObjects[i]->OnCollide(tangibleLevelObjects[i]);
                 return true;
             }
             else
@@ -321,15 +359,113 @@ bool MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFra
         }
     }
 }
+float MissionController::pataponMaxProjection(float axisAngle){
+    float currentAxisAngle = 0;
+    sf::Vector2f movingObjC1 = sf::Vector2f(patapon->hitBox.left,patapon->hitBox.top); /// "top left"
+    sf::Vector2f movingObjC2 = sf::Vector2f(patapon->hitBox.left+patapon->hitBox.width,patapon->hitBox.top); /// "top right"
+    sf::Vector2f movingObjC3 = sf::Vector2f(patapon->hitBox.left,patapon->hitBox.top+patapon->hitBox.height); /// "bottom left"
+    sf::Vector2f movingObjC4 = sf::Vector2f(patapon->hitBox.left+patapon->hitBox.width,patapon->hitBox.top+patapon->hitBox.height); /// "bottom right"
 
+
+
+    HitboxFrame tmp;
+    tmp.time = 0;
+    tmp.g_x = 0;
+    tmp.g_y = 0;
+    tmp.clearVertices();
+    tmp.addVertex(movingObjC1.x,movingObjC1.y); /// "top left"
+    tmp.addVertex(movingObjC2.x,movingObjC2.y); /// "top right"
+    tmp.addVertex(movingObjC3.x,movingObjC3.y); /// "bottom left"
+    tmp.addVertex(movingObjC4.x,movingObjC4.y); /// "bottom right"
+    tmp.rotation = 0;
+
+    std::vector<sf::Vector2f> currentVertices = tmp.getCurrentVertices();
+
+    PVector pv1 = PVector::getVectorCartesian(0,0,currentVertices[0].x+patapon->x,currentVertices[0].y+patapon->y);
+    PVector pv2 = PVector::getVectorCartesian(0,0,currentVertices[1].x+patapon->x,currentVertices[1].y+patapon->y);
+    PVector pv3 = PVector::getVectorCartesian(0,0,currentVertices[2].x+patapon->x,currentVertices[2].y+patapon->y);
+    PVector pv4 = PVector::getVectorCartesian(0,0,currentVertices[3].x+patapon->x,currentVertices[3].y+patapon->y);
+
+    pv1.angle =-atan2(currentVertices[0].y+patapon->y, currentVertices[0].x+patapon->x);
+    pv2.angle =-atan2(currentVertices[1].y+patapon->y, currentVertices[1].x+patapon->x);
+    pv3.angle =-atan2(currentVertices[2].y+patapon->y, currentVertices[2].x+patapon->x);
+    pv4.angle =-atan2(currentVertices[3].y+patapon->y, currentVertices[3].x+patapon->x);
+
+    float proj1 = pv1.GetScalarProjectionOntoAxis(axisAngle);
+    float proj2 = pv2.GetScalarProjectionOntoAxis(axisAngle);
+    float proj3 = pv3.GetScalarProjectionOntoAxis(axisAngle);
+    float proj4 = pv4.GetScalarProjectionOntoAxis(axisAngle);
+
+    /*if(axisAngle!=0){
+        cout<<"NEW MAX TEST"<<endl;
+        cout<<"Angle: "<<pv1.angle<<" distance: "<<pv1.distance<<" current X: "<<currentVertices[0].x+patapon->x<<" current Y: "<<currentVertices[0].y+patapon->y<<" proj: "<<proj1<<endl;
+        cout<<"Angle: "<<pv2.angle<<" distance: "<<pv2.distance<<" current X: "<<currentVertices[1].x+patapon->x<<" current Y: "<<currentVertices[1].y+patapon->y<<" proj: "<<proj2<<endl;
+        cout<<"Angle: "<<pv3.angle<<" distance: "<<pv3.distance<<" current X: "<<currentVertices[2].x+patapon->x<<" current Y: "<<currentVertices[2].y+patapon->y<<" proj: "<<proj3<<endl;
+        cout<<"Angle: "<<pv4.angle<<" distance: "<<pv4.distance<<" current X: "<<currentVertices[3].x+patapon->x<<" current Y: "<<currentVertices[3].y+patapon->y<<" proj: "<<proj4<<endl;
+    }*/
+    float maxProjectionObj1 = max(max(max(proj1,proj2),proj3),proj4);
+    float minProjectionObj1 = min(min(min(proj1,proj2),proj3),proj4);
+    return maxProjectionObj1;
+}
+float MissionController::pataponMinProjection(float axisAngle){
+    float currentAxisAngle = 0;
+    sf::Vector2f movingObjC1 = sf::Vector2f(patapon->hitBox.left,patapon->hitBox.top); /// "top left"
+    sf::Vector2f movingObjC2 = sf::Vector2f(patapon->hitBox.left+patapon->hitBox.width,patapon->hitBox.top); /// "top right"
+    sf::Vector2f movingObjC3 = sf::Vector2f(patapon->hitBox.left,patapon->hitBox.top+patapon->hitBox.height); /// "bottom left"
+    sf::Vector2f movingObjC4 = sf::Vector2f(patapon->hitBox.left+patapon->hitBox.width,patapon->hitBox.top+patapon->hitBox.height); /// "bottom right"
+
+
+
+    HitboxFrame tmp;
+    tmp.time = 0;
+    tmp.g_x = 0;
+    tmp.g_y = 0;
+    tmp.clearVertices();
+    tmp.addVertex(movingObjC1.x,movingObjC1.y); /// "top left"
+    tmp.addVertex(movingObjC2.x,movingObjC2.y); /// "top right"
+    tmp.addVertex(movingObjC3.x,movingObjC3.y); /// "bottom left"
+    tmp.addVertex(movingObjC4.x,movingObjC4.y); /// "bottom right"
+    tmp.rotation = 0;
+
+    std::vector<sf::Vector2f> currentVertices = tmp.getCurrentVertices();
+
+    PVector pv1 = PVector::getVectorCartesian(0,0,currentVertices[0].x+patapon->x,currentVertices[0].y+patapon->y);
+    PVector pv2 = PVector::getVectorCartesian(0,0,currentVertices[1].x+patapon->x,currentVertices[1].y+patapon->y);
+    PVector pv3 = PVector::getVectorCartesian(0,0,currentVertices[2].x+patapon->x,currentVertices[2].y+patapon->y);
+    PVector pv4 = PVector::getVectorCartesian(0,0,currentVertices[3].x+patapon->x,currentVertices[3].y+patapon->y);
+    pv1.angle =-atan2(currentVertices[0].y+patapon->y, currentVertices[0].x+patapon->x);
+    pv2.angle =-atan2(currentVertices[1].y+patapon->y, currentVertices[1].x+patapon->x);
+    pv3.angle =-atan2(currentVertices[2].y+patapon->y, currentVertices[2].x+patapon->x);
+    pv4.angle =-atan2(currentVertices[3].y+patapon->y, currentVertices[3].x+patapon->x);
+
+    float proj1 = pv1.GetScalarProjectionOntoAxis(axisAngle);
+    float proj2 = pv2.GetScalarProjectionOntoAxis(axisAngle);
+    float proj3 = pv3.GetScalarProjectionOntoAxis(axisAngle);
+    float proj4 = pv4.GetScalarProjectionOntoAxis(axisAngle);
+
+
+    float maxProjectionObj1 = max(max(max(proj1,proj2),proj3),proj4);
+    float minProjectionObj1 = min(min(min(proj1,proj2),proj3),proj4);
+    return minProjectionObj1;
+}
 bool MissionController::DoCollisionStepInAxis(float currentAxisAngle,HitboxFrame* currentHitboxFrame,AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float currentObjectY)
 {
     std::vector<sf::Vector2f> currentVertices = currentObjectHitBoxFrame->getCurrentVertices();
+    PVector pv1 = PVector::getVectorCartesian(0,0,currentVertices[0].x+currentObjectX,currentVertices[0].y+currentObjectY);
+    PVector pv2 = PVector::getVectorCartesian(0,0,currentVertices[1].x+currentObjectX,currentVertices[1].y+currentObjectY);
+    PVector pv3 = PVector::getVectorCartesian(0,0,currentVertices[2].x+currentObjectX,currentVertices[2].y+currentObjectY);
+    PVector pv4 = PVector::getVectorCartesian(0,0,currentVertices[3].x+currentObjectX,currentVertices[3].y+currentObjectY);
+    pv1.angle =-atan2(currentVertices[0].y+currentObjectY, currentVertices[0].x+currentObjectX);
+    pv2.angle =-atan2(currentVertices[1].y+currentObjectY, currentVertices[1].x+currentObjectX);
+    pv3.angle =-atan2(currentVertices[2].y+currentObjectY, currentVertices[2].x+currentObjectX);
+    pv4.angle =-atan2(currentVertices[3].y+currentObjectY, currentVertices[3].x+currentObjectX);
 
-    float proj1 = PVector::getVectorCartesian(0,0,currentVertices[0].x+currentObjectX,currentVertices[0].y+currentObjectY).GetScalarProjectionOntoAxis(currentAxisAngle);
-    float proj2 = PVector::getVectorCartesian(0,0,currentVertices[1].x+currentObjectX,currentVertices[1].y+currentObjectY).GetScalarProjectionOntoAxis(currentAxisAngle);
-    float proj3 = PVector::getVectorCartesian(0,0,currentVertices[2].x+currentObjectX,currentVertices[2].y+currentObjectY).GetScalarProjectionOntoAxis(currentAxisAngle);
-    float proj4 = PVector::getVectorCartesian(0,0,currentVertices[3].x+currentObjectX,currentVertices[3].y+currentObjectY).GetScalarProjectionOntoAxis(currentAxisAngle);
+    float proj1 = pv1.GetScalarProjectionOntoAxis(currentAxisAngle);
+    float proj2 = pv2.GetScalarProjectionOntoAxis(currentAxisAngle);
+    float proj3 = pv3.GetScalarProjectionOntoAxis(currentAxisAngle);
+    float proj4 = pv4.GetScalarProjectionOntoAxis(currentAxisAngle);
+
+
     float maxProjectionObj1 = max(max(max(proj1,proj2),proj3),proj4);
     float minProjectionObj1 = min(min(min(proj1,proj2),proj3),proj4);
 
@@ -346,7 +482,7 @@ bool MissionController::DoCollisionStepInAxis(float currentAxisAngle,HitboxFrame
 
 
 }
-void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap)
+void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld)
 {
     /** Make Patapon walk (temporary) **/
     float booster=1.0;
@@ -369,32 +505,6 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
         {
             for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
             {
-                //kacheek currentCollisionRect = *tangibleLevelObjects[i];
-                /// if the new x position after moving will be between left side of kacheek and right side of kacheek
-
-                /*if (proposedXPosRight>tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().left && proposedXPosRight<tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().width)
-
-                if (proposedXPosRight>tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().left && proposedXPosRight<tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().width)
-
-                {
-                    /// then we have found a collision
-                    foundCollision = true;
-                    tangibleLevelObjects[i]->OnCollide(tangibleLevelObjects[i]);
-                    std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
-
-
-                }*/
-
-                /*///HARDCODED FOR KACHEEK SHOWCASE PURPOSES
-                tangibleLevelObjects[i]->walk_timer.restart();
-
-                if(tangibleLevelObjects[i]->current_animation != "walk")
-                {
-                    tangibleLevelObjects[i]->current_animation = "walk";
-                    tangibleLevelObjects[i]->current_frame = 0;
-                }*/
-
-
                 /// NEW COLLISION SYSTEM:
                 /// Separating axis theorem
                 /// we check an axis at a time
@@ -417,6 +527,8 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
                 sf::Vector2f movingObjC2 = sf::Vector2f(patapon->hitBox.left+patapon->hitBox.width,patapon->hitBox.top); /// "top right"
                 sf::Vector2f movingObjC3 = sf::Vector2f(patapon->hitBox.left,patapon->hitBox.top+patapon->hitBox.height); /// "bottom left"
                 sf::Vector2f movingObjC4 = sf::Vector2f(patapon->hitBox.left+patapon->hitBox.width,patapon->hitBox.top+patapon->hitBox.height); /// "bottom right"
+
+
 
                 HitboxFrame tmp;
                 tmp.time = 0;
@@ -467,6 +579,9 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
 
 
 
+
+
+
                 /// we have a collision
                 if (isCollision&&isCollision2&&isCollision3&&isCollision4)
                 {
@@ -479,7 +594,6 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
                     cout<<"Something is very wrong"<<endl;
                 }
             }
-            //cout<< "CHECKING NEW UNIT. "<<i<<" out of "<<tangibleLevelObjects.size()-1<<endl;
         }
 
         /// if the new position is inside a kacheek, don't move. If we found anything,
@@ -521,7 +635,7 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
     {
         Projectile* p = levelProjectiles[i].get();
         float ypos = p->yPos;
-        float xpos = p->yPos;
+        float xpos = p->xPos;
         HitboxFrame tmp;
         tmp.time = 0;
         tmp.g_x = 0;
@@ -531,14 +645,14 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
         tmp.addVertex(3,-1); /// "top right"
         tmp.addVertex(-3,1); /// "bottom left"
         tmp.addVertex(3,1); /// "bottom right"
-        tmp.rotation = p->angle;
+        tmp.rotation = -p->angle;
         if (DoCollisionForObject(&tmp,xpos,ypos)){
             levelProjectiles.erase(levelProjectiles.begin()+i);
         };
     }
 
 }
-void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap)
+void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld)
 {
     if(rhythm.current_song == "patapata")
     {
@@ -552,7 +666,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
     //cout<<rhythm.current_perfect<<'\n';
 
-    camera.Work(window,fps,keyMap);
+    camera.Work(window,fps,keyMapHeld);
     test_bg.setCamera(camera);
     test_bg.Draw(window);
 
@@ -628,8 +742,8 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
     hatapon->setGlobalPosition(sf::Vector2f(patapon->x-50,patapon->y-21));
     hatapon->fps = fps;
-    DoKeyboardEvents(window,fps,keyMap);
-    DoMovement(window,fps,keyMap);
+    DoKeyboardEvents(window,fps,keyMap,keyMapHeld);
+    DoMovement(window,fps,keyMap,keyMapHeld);
 
     // TODO: at some point some pointer shenanigans is required to make these be a reference to v4core's ones too.
     rhythm.rhythmController.keyMap = *missionKeyMap;
@@ -764,12 +878,43 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
     window.setView(lastView);
 
     /// here we show the hitbox
-    bool showHitboxes = true;
+    bool showHitboxes = false;
     if(showHitboxes)
     {
         sf::RectangleShape hitboxRect(sf::Vector2f(patapon->hitBox.width, patapon->hitBox.height));
         hitboxRect.setPosition(patapon->x+patapon->hitBox.left,patapon->y+patapon->hitBox.top);
-        window.draw(hitboxRect);
+        //window.draw(hitboxRect);
+
+
+        float minProjectionObj2 = pataponMinProjection(0);
+        sf::CircleShape markerr(5);
+        markerr.setFillColor(sf::Color(250, 250, 50));
+        markerr.setPosition(0-2.5,0-2.5);
+        window.draw(markerr);
+        markerr.setFillColor(sf::Color(250, 250, 50));
+        markerr.setPosition(minProjectionObj2-2.5,patapon->y-2.5+patapon->hitBox.top+patapon->hitBox.height/2);
+        window.draw(markerr);
+
+
+        float maxProjectionObj2 = pataponMaxProjection(0);
+        markerr.setFillColor(sf::Color(150, 50, 250));
+        markerr.setPosition(maxProjectionObj2-2.5,patapon->y-2.5+patapon->hitBox.top+patapon->hitBox.height/2);
+        window.draw(markerr);
+
+        float angled = 3.14159265358/2;
+        float minProjectionObj22 = pataponMinProjection(angled);
+
+        markerr.setFillColor(sf::Color(250, 250, 50));
+        markerr.setPosition(patapon->x-2.5+patapon->hitBox.left+patapon->hitBox.width/2,minProjectionObj22-2.5);
+        window.draw(markerr);
+
+
+        float maxProjectionObj22 = pataponMaxProjection(angled);
+        markerr.setFillColor(sf::Color(150, 50, 250));
+        markerr.setPosition(patapon->x-2.5+patapon->hitBox.left+patapon->hitBox.width/2,maxProjectionObj22-2.5);
+        window.draw(markerr);
+
+        /*
         sf::Vector2f movingObjC1 = sf::Vector2f(patapon->x+patapon->hitBox.left,patapon->y+patapon->hitBox.top); /// "top left"
         sf::CircleShape shape(5);
         shape.setFillColor(sf::Color(100, 250, 50));
@@ -783,7 +928,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         window.draw(shape);
         sf::Vector2f movingObjC4 = sf::Vector2f(patapon->x+patapon->hitBox.left+patapon->hitBox.width,patapon->y+patapon->hitBox.top+patapon->hitBox.height); /// "bottom right"
         shape.setPosition(movingObjC4.x-2.5,movingObjC4.y-2.5);
-        window.draw(shape);
+        window.draw(shape);*/
         for(int i=0; i<tangibleLevelObjects.size(); i++)
         {
             for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
@@ -802,8 +947,8 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
 
                     sf::Vector2f currentPoint = currentVertices[j];
-                    currentPoint.x = currentPoint.x + tangibleLevelObjects[i]->global_x;
-                    currentPoint.y = currentPoint.y + tangibleLevelObjects[i]->global_y;
+                    currentPoint.x = currentPoint.x + currentHitbox->g_x + tangibleLevelObjects[i]->global_x;
+                    currentPoint.y = currentPoint.y + currentHitbox->g_y + tangibleLevelObjects[i]->global_y;
                     //cout<<"DRAWING POINT: "<<currentVertices.size()<<" x: "<<currentPoint.x<<" y: "<<currentPoint.y<<endl;
                     sf::CircleShape shape(5);
                     shape.setFillColor(sf::Color(100, 250, 50));
@@ -811,6 +956,31 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
                     window.draw(shape);
                     convex.setPoint(i, currentPoint);
                 }
+                float minProjectionObj2 = currentHitbox->minProjection(0, tangibleLevelObjects[i]->global_x,tangibleLevelObjects[i]->global_y);
+                sf::CircleShape marker(5);
+                marker.setFillColor(sf::Color(250, 50, 150));
+                marker.setPosition(minProjectionObj2-2.5,tangibleLevelObjects[i]->global_y-2.5);
+                window.draw(marker);
+
+
+                float maxProjectionObj2 = currentHitbox->maxProjection(0, tangibleLevelObjects[i]->global_x,tangibleLevelObjects[i]->global_y);
+                marker.setFillColor(sf::Color(150, 50, 250));
+                marker.setPosition(maxProjectionObj2-2.5,tangibleLevelObjects[i]->global_y-2.5);
+                window.draw(marker);
+
+                float angled = 3.14159265358/2;
+                float minProjectionObj22 = currentHitbox->minProjection(angled, tangibleLevelObjects[i]->global_x,tangibleLevelObjects[i]->global_y);
+
+                marker.setFillColor(sf::Color(250, 50, 150));
+                marker.setPosition(tangibleLevelObjects[i]->global_x-2.5,minProjectionObj22-2.5);
+                window.draw(marker);
+
+
+                float maxProjectionObj22 = currentHitbox->maxProjection(angled, tangibleLevelObjects[i]->global_x,tangibleLevelObjects[i]->global_y);
+                marker.setFillColor(sf::Color(150, 50, 250));
+                marker.setPosition(tangibleLevelObjects[i]->global_x-2.5,maxProjectionObj22-2.5);
+                window.draw(marker);
+
                 window.draw(convex);
                 ///sf::RectangleShape kacheekHitboxRect(sf::Vector2f(tangibleLevelObjects[i]->hitboxes[h].getRect().width, tangibleLevelObjects[i]->hitboxes[h].getRect().height));
                 ///kacheekHitboxRect.setPosition(tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().left,tangibleLevelObjects[i]->getGlobalPosition().y+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().y+tangibleLevelObjects[i]->hitboxes[h].getRect().top);

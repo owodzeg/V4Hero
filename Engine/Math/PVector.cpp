@@ -20,13 +20,14 @@ PVector& PVector::getVectorDistanceAngle(float l,float theta)
 float PVector::GetScalarProjectionOntoAxis(float axisAngle){
     float scalarProjectionLength = 0;
 
-    /// we might run into issues if the angles are scaled between 0 and 360?
-    float angleDiff = angle - axisAngle;
-    if (angleDiff>180){
-        angleDiff = angleDiff-360;
+    /// we might run into issues if the angles are clamped between 0 and 360?
+    float angleDiff = angle + axisAngle;
+    float pi=3.14159265358;
+    if (angleDiff>pi){
+        angleDiff = angleDiff-2*pi;
     }
-    if (angleDiff<-180){
-        angleDiff = angleDiff+360;
+    if (angleDiff<-pi){
+        angleDiff = angleDiff+2*pi;
     }
     /// the angle difference should be clamped between -180 and 180 now
 

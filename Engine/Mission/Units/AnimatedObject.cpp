@@ -144,7 +144,7 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     float height = atof(hbframe[7].c_str());
                     float x = atof(hbframe[4].c_str())+width/2;
                     float y = atof(hbframe[5].c_str())+height/2;
-                    float rotation = 3.14159265358/2; /// this needs to be loaded later IN RADIANS
+                    float rotation = 0;///3.14159265358/6; /// this needs to be loaded later IN RADIANS
                     hitboxes[hitboxID].SetCustomFrame(time,g_x,g_y,x,y,rotation,width,height);
                 }
             }

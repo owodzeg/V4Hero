@@ -23,6 +23,7 @@ float HitboxFrame::minProjection(float axisAngle,float object_x,float object_y){
     for (int i=0;i<currentVertices.size();i++){
         sf::Vector2f currentVertex = currentVertices.at(i);
         PVector cornerVector = PVector::getVectorCartesian(0,0,currentVertex.x+g_x+object_x,currentVertex.y+g_y+object_y);
+        cornerVector.angle =-atan2(currentVertex.y+g_y+object_y, currentVertex.x+g_x+object_x);
         float currentProjectionLength = cornerVector.GetScalarProjectionOntoAxis(axisAngle);
 
         //cout<<"# currentProjectionLength: "<<i<<"axisAngle: "<<axisAngle<<" val: "<<currentProjectionLength<<" gx: "<<object_x<<" gy: "<<object_y<<endl;
@@ -36,15 +37,22 @@ float HitboxFrame::minProjection(float axisAngle,float object_x,float object_y){
 
 float HitboxFrame::maxProjection(float axisAngle,float object_x,float object_y){
     float projectionLength = 0;
-    vector<sf::Vector2f> currentVertices = getCurrentVertices();
 
+    vector<sf::Vector2f> currentVertices = getCurrentVertices();
+    float angled = 3.14159265358/2;
+    if(axisAngle==angled){
+        //cout<<" "<<endl;
+    }
     //cout<<" - SEARCHING FOR MAX PROJECTION"<<endl;
     /// go through each vertex (corner) and find the longest projection from the origin to that vertex along the axis aligned with axisAngle
     for (int i=0;i<currentVertices.size();i++){
         sf::Vector2f currentVertex = currentVertices.at(i);
         PVector cornerVector = PVector::getVectorCartesian(0,0,currentVertex.x+g_x+object_x,currentVertex.y+g_y+object_y);
+        cornerVector.angle =-atan2(currentVertex.y+g_y+object_y, currentVertex.x+g_x+object_x);
         float currentProjectionLength = cornerVector.GetScalarProjectionOntoAxis(axisAngle);
-
+        if (axisAngle==angled){
+            //cout<<"angle: "<<cornerVector.angle<<" axisAngle: "<<axisAngle<<" angleDiff: "<<(cornerVector.angle)-axisAngle<<endl;
+        }
         //cout<<"# currentProjectionLength: "<<i<<"axisAngle: "<<axisAngle<<" val: "<<currentProjectionLength<<" gx: "<<object_x<<" gy: "<<object_y<<endl;
         if (currentProjectionLength>projectionLength){
             projectionLength=currentProjectionLength;

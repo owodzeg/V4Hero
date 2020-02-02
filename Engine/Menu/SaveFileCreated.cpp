@@ -114,7 +114,7 @@ void SaveFileCreatedMenu::Update(sf::RenderWindow &window, float fps)
 
     } else {
         if (v4core->currentController.isInitialized){
-            v4core->currentController.Update(window, fps, keyMap);
+            //v4core->currentController.Update(window, fps, keyMap);
         }
     }
 
