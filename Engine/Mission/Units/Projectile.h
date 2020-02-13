@@ -15,6 +15,10 @@ class Projectile
         float xPos;
         float yPos;
 
+        ///temp implementation
+        float hspeed;
+        float vspeed;
+
         PSprite* sprite;
         Projectile(PSprite& tsprite);
 
