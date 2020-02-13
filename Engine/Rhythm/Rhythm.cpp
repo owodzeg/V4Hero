@@ -36,6 +36,15 @@ void Rhythm::LoadTheme(string theme)
     bgm_cycle = 0;
 
     combo = 0;
+    rl_combo = 0;
+
+    ///restart values
+    current_perfect = 0;
+    advanced_prefever = false;
+    updateworm = false;
+    last_satisfaction = 0;
+
+    satisfaction_value.clear();
 
     ///Stop any current action
     current_song = "";
