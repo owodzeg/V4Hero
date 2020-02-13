@@ -27,11 +27,26 @@ class AnimatedObject
     ///depracated
     //float x = 0;
     //float y = 520;
+    ///THIS IS FOR GLOBAL MOVEMENT, like an arrow in Patapon 3 Multiplayer, that decides your "main" point on the map/whatever
     float global_x = 0;
     float global_y = 0;
+    ///THIS IS FOR LOCAL MOVEMENT, basically if you want to keep the original global position, but you want to slightly go off that (like Patapons coming closer to an opponent)
+    float local_x = 0;
+    float local_y = 0;
     float fps = 60;
     float width = 0;
     float scaleX = 1, scaleY = 1; ///TEMPORARY
+
+    enum EntityType
+    {
+        NONE = 0,
+        HOSTILE = 1,
+        PASSIVE = 2
+    };
+
+    int type = NONE;
+
+    float framerate = 1;
     sf::Rect<float> hitBox;
 
     ///temporary
@@ -44,14 +59,19 @@ class AnimatedObject
     vector<float> animation_begin;
     vector<float> animation_end;
     vector<string> animation_names;
+    vector<string> animation_goto;
 
 
     vector<int> animation_frames;
     Config *thisConfig;
     AnimatedObject();
     void loadAnim(std::string data, P4A handle);
+    int getSegmentIndex(std::string segment_name);
     void setAnimationSegment(std::string new_segment_name);
+    void setAnimationSegment(std::string new_segment_name, bool force_start);
     std::string getAnimationSegment();
+    float getAnimationLength(std::string segment_name);
+    float getAnimationPos();
     void setGlobalPosition(sf::Vector2f pos);
     sf::Vector2f getGlobalPosition();
     void moveGlobalPosition(sf::Vector2f pos);

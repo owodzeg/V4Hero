@@ -69,6 +69,12 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     animation_begin.push_back(atof(anim[0].c_str()));
                     animation_end.push_back(atof(anim[1].c_str()));
                     animation_names.push_back(anim[2]);
+
+                    ///Go-to anim implementation
+                    if(anim.size() >= 4)
+                    animation_goto.push_back(anim[3]);
+                    else
+                    animation_goto.push_back("");
                 }
 
                 if(line.find("OI:") != std::string::npos)
@@ -219,6 +225,20 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
     //setPositions(0);
 }
 
+int AnimatedObject::getSegmentIndex(std::string segment_name)
+{
+	std::vector<string>::iterator it = std::find(animation_names.begin(), animation_names.end(), segment_name);
+
+	if (it != animation_names.end())
+	{
+		return std::distance(animation_names.begin(), it);
+	}
+	else
+	{
+		return -1;
+	}
+}
+
 void AnimatedObject::setAnimationSegment(std::string new_segment_name)
 {
     //cout << "AnimatedObject::setAnimationSegment(" << new_segment_name << ");" << endl;
@@ -239,9 +259,66 @@ void AnimatedObject::setAnimationSegment(std::string new_segment_name)
     }
 }
 
+void AnimatedObject::setAnimationSegment(std::string new_segment_name, bool force_start)
+{
+    //cout << "AnimatedObject::setAnimationSegment(" << new_segment_name << ");" << endl;
+
+    if(animation_begin.size() > 1)
+    {
+        anim_begin = animation_begin[distance(animation_names.begin(), find(animation_names.begin(), animation_names.end(), new_segment_name))];
+        anim_end = animation_end[distance(animation_names.begin(), find(animation_names.begin(), animation_names.end(), new_segment_name))];
+
+        current_animation = new_segment_name;
+    }
+    else
+    {
+        anim_begin = animation_begin[0];
+        anim_end = animation_end[0];
+
+        current_animation = new_segment_name;
+    }
+
+    if(force_start)
+    cur_pos = anim_begin;
+}
+
 std::string AnimatedObject::getAnimationSegment()
 {
     return current_animation;
+}
+
+float AnimatedObject::getAnimationLength(std::string segment_name)
+{
+    float b,e;
+
+    if(animation_begin.size() > 1)
+    {
+        b = animation_begin[distance(animation_names.begin(), find(animation_names.begin(), animation_names.end(), segment_name))];
+        e = animation_end[distance(animation_names.begin(), find(animation_names.begin(), animation_names.end(), segment_name))];
+    }
+    else
+    {
+        b = animation_begin[0];
+        e = animation_end[0];
+    }
+
+    return e-b;
+}
+
+float AnimatedObject::getAnimationPos()
+{
+    float e;
+
+    if(animation_begin.size() > 1)
+    {
+        e = animation_end[distance(animation_names.begin(), find(animation_names.begin(), animation_names.end(), current_animation))];
+    }
+    else
+    {
+        e = animation_end[0];
+    }
+
+    return getAnimationLength(current_animation)-(e-cur_pos);
 }
 
 void AnimatedObject::setGlobalPosition(sf::Vector2f pos)
@@ -252,7 +329,7 @@ void AnimatedObject::setGlobalPosition(sf::Vector2f pos)
 
 sf::Vector2f AnimatedObject::getGlobalPosition()
 {
-    return sf::Vector2f(global_x,global_y);
+    return sf::Vector2f(global_x+local_x,global_y+local_y);
 }
 
 void AnimatedObject::moveGlobalPosition(sf::Vector2f pos)
@@ -290,7 +367,7 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
     if(cur_pos < anim_begin)
     cur_pos = anim_begin;
 
-    cur_pos += 1 / float(fps);
+    cur_pos += framerate / float(fps);
 
     if(cur_pos > anim_end)
     {
@@ -300,7 +377,22 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
         cur_pos = anim_end;
     }
 
+    if(animation_goto[getSegmentIndex(current_animation)] != "")
+    {
+        setLoop(false);
+
+        if(cur_pos >= anim_end)
+        {
+            cout << "Animation go to: " << animation_goto[getSegmentIndex(current_animation)] << " SegmentIndex: " << getSegmentIndex(current_animation) << " current animation: " << current_animation << endl;
+            setAnimationSegment(animation_goto[getSegmentIndex(current_animation)], true);
+            setLoop(true);
+        }
+    }
+
+    /// ////////////////////////////////////////////////////////////////////////////////////////////////// ///
     ///SUPER TEMPORARY WORKAROUND FOR FEVER WORM, add one time animations that transfer to another immediately
+    /// ////////////////////////////////////////////////////////////////////////////////////////////////// ///
+
     if(getAnimationSegment() == "transform")
     {
         if(cur_pos == anim_end)
@@ -311,6 +403,20 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
         }
     }
 
+    /// /////////////////////////////////////////////////////////////////////////////////////////////// ///
+    ///SUPER TEMPORARY WORKAROUND FOR PATAPON, add one time animations that transfer to another immediately
+    /// /////////////////////////////////////////////////////////////////////////////////////////////// ///
+    /**if((getAnimationSegment() == "pata") || (getAnimationSegment() == "pata_focus") || (getAnimationSegment() == "pon") || (getAnimationSegment() == "pon_focus") || (getAnimationSegment() == "chaka") || (getAnimationSegment() == "chaka_focus") || (getAnimationSegment() == "don") || (getAnimationSegment() == "don_focus") || (getAnimationSegment() == "attack_yari"))
+    {
+        if(cur_pos == anim_end)
+        {
+            cout << "sure" << endl;
+
+            setAnimationSegment("idle", true, false);
+            setLoop(true);
+        }
+    }*/
+
     for(int i=0; i<hitboxes.size(); i++)
     {
         hitboxes[i].SetPos(cur_pos);
@@ -320,6 +426,8 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
     {
         objects[i].g_x = global_x;
         objects[i].g_y = global_y;
+        objects[i].gl_x = local_x;
+        objects[i].gl_y = local_y;
         objects[i].g_sx = scaleX;
         objects[i].g_sy = scaleY;
 

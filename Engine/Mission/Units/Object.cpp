@@ -182,7 +182,7 @@ void Object::Draw(sf::RenderWindow& window)
     s_obj.setTexture(tex_obj);
     s_obj.setScale(s_x+(g_sx-1),s_y+(g_sy-1));
     s_obj.setOrigin(or_x,or_y);
-    s_obj.setPosition(x+g_x,y+g_y);
+    s_obj.setPosition(x+g_x+gl_x,y+g_y+gl_y);
     s_obj.setRotation(r);
     window.draw(s_obj);
 }
