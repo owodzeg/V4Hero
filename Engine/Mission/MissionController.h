@@ -65,7 +65,7 @@ class MissionController
     std::vector<CollidableObject*> tangibleLevelObjects;
     std::vector<std::unique_ptr<Projectile>> levelProjectiles;
 
-    float pataponY = 200; ///temp
+    float pataponY = 600; ///temp
     float wallY = 200; ///temp
     float gravity=981;
     float floorY=200;
