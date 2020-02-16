@@ -16,9 +16,11 @@ Barracks::Barracks()
     t_itemtitle.setCharacterSize(28);
     t_itemtitle.setFillColor(sf::Color::Black);
 
-
+    patapon = new Patapon;
+    patapon2 = new Patapon;
+    patapon3 = new Patapon;
     mm_bigBox.setSize(sf::Vector2f(100,10));
-    mm_bigBox.setFillColor(sf::Color(65, 59, 173));
+    mm_bigBox.setFillColor(sf::Color(0, 0, 0));
 
     mm_selected_item_line.setSize(sf::Vector2f(200,4));
     mm_selected_item_line.setFillColor(sf::Color::Red);
@@ -29,8 +31,65 @@ void Barracks::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     parentMenu = curParentMenu;
 
 
+    patapon->LoadConfig(thisConfigs);
+    patapon2->LoadConfig(thisConfigs);
+    patapon3->LoadConfig(thisConfigs);
+    int quality = thisConfigs->GetInt("textureQuality");
+    switch(quality)
+    {
+    case 0: ///low
+    {
+        ratioX = thisConfigs->GetInt("resX") / float(640);
+        ratioY = thisConfigs->GetInt("resY") / float(360);
+        break;
+    }
+
+    case 1: ///med
+    {
+        ratioX = thisConfigs->GetInt("resX") / float(1280);
+        ratioY = thisConfigs->GetInt("resY") / float(720);
+        break;
+    }
+
+    case 2: ///high
+    {
+        ratioX = thisConfigs->GetInt("resX") / float(1920);
+        ratioY = thisConfigs->GetInt("resY") / float(1080);
+        break;
+    }
+
+    case 3: ///ultra
+    {
+        ratioX = thisConfigs->GetInt("resX") / float(3840);
+        ratioY = thisConfigs->GetInt("resY") / float(2160);
+        break;
+    }
+    }
+    pataponY = thisConfigs->GetInt("resY") - (85 * ratioY);
+    floorY = thisConfigs->GetInt("resY") - (100 * ratioY);
+    patapon->scaleX = ratioX/1.2;
+    patapon->scaleY = ratioY/1.2;
+    patapon2->scaleX = ratioX/1.2;
+    patapon2->scaleY = ratioY/1.2;
+    patapon3->scaleX = ratioX/1.2;
+    patapon3->scaleY = ratioY/1.2;
     ///             ####   BARRACKS MENU BACKGROUND
     PSprite ps_temp;
+    ps_temp.loadFromFile("resources/graphics/bg/barracks/barracks.png",1);
+    ps_temp.setRepeated(true);
+    ps_temp.setTextureRect(sf::IntRect(0,0,500000,ps_temp.t.getSize().y)); ///affect later with ratio
+    ps_temp.setOrigin(0,0);
+    ps_temp.setColor(sf::Color(255,255,255,255));
+
+    sf::Vector2f tmpp;
+    //float xRatio = (thisConfig->GetInt("resX")/1600.0);
+    tmpp.x = 0;
+    tmpp.y = 0;
+
+    s_background = ps_temp;
+    s_background.scaleX=0.65f;
+    s_background.scaleY=0.65f;
+
     ps_temp.loadFromFile("resources/graphics/ui/barracks_menu.png",1);
     ps_temp.setRepeated(false);
     ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
@@ -38,13 +97,25 @@ void Barracks::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     ps_temp.setColor(sf::Color(255,255,255,255));
     ps_temp.setPosition(0,0);
     ps_temp.DoAutoScale = false;
-    sf::Vector2f tmpp;
     tmpp.x = (thisConfig->GetInt("resX")*50.0)/1920.0;//(thisConfig->GetInt("resX")*1920.0)/1920.0-1200;
     tmpp.y = (thisConfig->GetInt("resY")*100.0)/1080.0;//(thisConfig->GetInt("resY")*400.0)/1080.0;
     s_menu_bkg = ps_temp;
     p_menu_bkg = tmpp;
     s_menu_bkg.scaleX=((thisConfig->GetInt("resX"))*0.7f)/(1920);
     s_menu_bkg.scaleY=((thisConfig->GetInt("resY"))*0.6f)/(1080);
+
+    ///         highlighted unit
+    ps_temp.loadFromFile("resources/graphics/ui/highlight.png",1);
+    ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
+    ps_temp.setOrigin(0,0);
+    ps_temp.setColor(sf::Color(255,255,255,255));
+    ps_temp.setPosition(0,0);
+    ps_temp.DoAutoScale = false;
+    s_pon_highlight = ps_temp;
+    s_pon_highlight.scaleX=((thisConfig->GetInt("resX"))*0.8f)/(1920);
+    s_pon_highlight.scaleY=((thisConfig->GetInt("resY"))*1.0f)/(1080);
+
+
 
     ///             ####   UNIT CLASS ICON
     ps_temp.loadFromFile("resources/graphics/ui/yari_class_icon.png",1);
@@ -637,14 +708,34 @@ void Barracks::Update(sf::RenderWindow &window, float fps)
 {
     if(isActive){
 
-        mm_bigBox.setSize(sf::Vector2f(window.getSize().x,window.getSize().y-200));
+        mm_bigBox.setSize(sf::Vector2f(window.getSize().x,window.getSize().y-115));
 
-        mm_bigBox.setPosition(0,85);
-
+        mm_bigBox.setPosition(0,0);
 
         window.draw(mm_bigBox);
 
 
+        s_background.setPosition(0,(window.getSize().y*50)/1080);
+        s_background.draw(window);
+        int highlightWidth=225;
+        int ponwidth=75;
+        patapon->setGlobalPosition(sf::Vector2f((window.getSize().x*highlightWidth*2+window.getSize().x*ponwidth*0.7)/1920,pataponY));
+        patapon->fps = fps;
+        patapon->Draw(window);
+
+        patapon2->setGlobalPosition(sf::Vector2f((window.getSize().x*highlightWidth*2+window.getSize().x*ponwidth*1.7)/1920,pataponY));
+        patapon2->fps = fps;
+        patapon2->Draw(window);
+
+        patapon3->setGlobalPosition(sf::Vector2f((window.getSize().x*highlightWidth*2+window.getSize().x*ponwidth*2.7)/1920,pataponY));
+        patapon3->fps = fps;
+        patapon3->Draw(window);
+
+        s_pon_highlight.setPosition((window.getSize().x*highlightWidth*2)/1920,(window.getSize().y*675)/1080);
+        s_pon_highlight.draw(window);
+
+        //s_pon_highlight.setPosition((window.getSize().x*highlightWidth*5)/1920,(window.getSize().y*675)/1080);
+        //s_pon_highlight.draw(window);
 
         sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
         auto lastView = window.getView();

@@ -25,7 +25,7 @@ class MissionController
     public:
     Background test_bg;
     Rhythm rhythm;
-    bool isInitialized=false;;
+    bool isInitialized=false;
     bool isFinishedLoading=false;
     Patapon* patapon;
     Kacheek* kacheek;
