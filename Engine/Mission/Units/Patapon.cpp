@@ -10,104 +10,152 @@ Patapon::Patapon()
 }
 void Patapon::LoadConfig(Config *thisConfigs)
 {
- thisConfig = thisConfigs;
- ifstream param("resources/graphics/units/patapon/param.dat");
+    /// load patapon from p4a file
+    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\patapon.p4a");
+}
 
- float ratioX, ratioY;
-    switch(thisConfigs->GetInt("textureQuality"))
+void Patapon::startAttack()
+{
+    if(action != ATTACK)
     {
-        case 0: ///low
-        {
-            ratioX = thisConfig->GetInt("resX") / float(640);
-            ratioY = thisConfig->GetInt("resY") / float(360);
-            break;
-        }
-
-        case 1: ///med
-        {
-            ratioX = thisConfig->GetInt("resX") / float(1280);
-            ratioY = thisConfig->GetInt("resY") / float(720);
-            break;
-        }
-
-        case 2: ///high
-        {
-            ratioX = thisConfig->GetInt("resX") / float(1920);
-            ratioY = thisConfig->GetInt("resY") / float(1080);
-            break;
-        }
-
-        case 3: ///ultra
-        {
-            ratioX = thisConfig->GetInt("resX") / float(3840);
-            ratioY = thisConfig->GetInt("resY") / float(2160);
-            break;
-        }
-    }
-
-    string buff;
-    getline(param,buff);
-    string name = buff.substr(0,buff.find_first_of(":"));
-    string coords = buff.substr(buff.find_first_of(":")+1);
-
-    std::vector<std::string> results = Func::Split(coords,',');
-    hitBox =  sf::Rect<float>(atof(results[0].c_str())*ratioX,atof(results[1].c_str())*ratioY,atof(results[2].c_str())*ratioX,atof(results[3].c_str())*ratioY);
-
-    while(getline(param,buff))
-    {
-        string name = buff.substr(0,buff.find_first_of(","));
-        string frames = buff.substr(buff.find_first_of(",")+1);
-
-        animation_name.push_back(name);
-        animation_frames.push_back(atoi(frames.c_str()));
-    }
-
-    param.close();
-
-    for(int i=0; i<animation_name.size(); i++)
-    {
-        thisConfig->debugOut->DebugMessage("Loading animation '" + animation_name[i] + "'...\n");
-
-        for(int a=1; a<=animation_frames[i]; a++)
-        {
-            sf::Texture temp;
-            temp.loadFromFile("resources/graphics/units/patapon/"+animation_name[i]+"/"+to_string(a)+".png");
-            temp.setSmooth(true);
-
-            animation_textures[animation_name[i]].push_back(temp);
-        }
+        action = ATTACK;
+        //AnimatedObject::setAnimationSegment("attack_yari");
+        //attack_clock.restart();
     }
 }
+
 void Patapon::Draw(sf::RenderWindow& window)
 {
-    s_patapon.setTexture(animation_textures[current_animation][floor(current_frame)]);
-
-    if(current_animation == "walk")
+    if(AnimatedObject::getAnimationSegment() == "walk")
     {
-        current_frame += float(24) / fps;
+        framerate = 0.8;
     }
     else
     {
-        current_frame += float(30) / fps;
+        framerate = 1;
     }
 
-    if(current_frame >= animation_textures[current_animation].size())
+    if(gclosest <= 850)
     {
-        current_frame = 0;
+        focus = true;
+    }
+    else
+    {
+        focus = false;
+    }
 
-        if((current_animation == "pata") or (current_animation == "pon") or (current_animation == "don") or (current_animation == "chaka"))
+    if((!focus) || (action == WALK))
+    {
+        if(lclosest <= gclosest-5)
         {
-            current_animation = "idle";
+            local_x -= float(200) / fps;
+            AnimatedObject::setAnimationSegment("walk");
+            AnimatedObject::setLoop(true);
+            getback = true;
+        }
+        else if(lclosest >= gclosest+5)
+        {
+            local_x += float(200) / fps;
+            AnimatedObject::setAnimationSegment("walk");
+            AnimatedObject::setLoop(true);
+            getback = true;
+        }
+        else
+        {
+            //AnimatedObject::setAnimationSegment("idle");
+            getback = false;
         }
     }
 
+    cout << "gclosest: " << gclosest << " lclosest: " << lclosest << " global_x: " << global_x << " local_x: " << local_x << endl;
 
-    s_patapon.setScale(0.6*scaleX,0.6*scaleY);
+    if(action == ATTACK)
+    {
+        if(focus)
+        {
+            if((lclosest >= 375) && (lclosest <= 475))
+            {
+                getback = false;
 
-    s_patapon.setPosition(x,y);
+                if(stopthrew)
+                {
+                    if(attack_clock.getElapsedTime().asSeconds() > attack_speed)
+                    {
+                        AnimatedObject::setAnimationSegment("attack_yari");
+                        attack_clock.restart();
 
-    window.draw(s_patapon);
+                        stopthrew = false;
+                    }
+                }
+                else
+                {
+                    if(AnimatedObject::getAnimationSegment() != "attack_yari")
+                    {
+                        AnimatedObject::setAnimationSegment("attack_yari");
+                        attack_clock.restart();
+                    }
+                }
+            }
+            else if(lclosest > 475)
+            {
+                AnimatedObject::setAnimationSegment("walk");
+                getback = true;
 
-    if(!((current_animation == "pata") or (current_animation == "pon") or (current_animation == "don") or (current_animation == "chaka")))
-    current_animation = "idle";
+                local_x += float(200) / fps;
+            }
+            else if(lclosest < 375)
+            {
+                AnimatedObject::setAnimationSegment("walk");
+                getback = true;
+
+                local_x -= float(200) / fps;
+            }
+        }
+    }
+    else
+    {
+        stopthrew = false;
+    }
+
+    //cout << current_animation << " " << AnimatedObject::getAnimationPos() << endl;
+
+    if(AnimatedObject::getAnimationSegment() == "attack_yari")
+    {
+        if((AnimatedObject::getAnimationPos() >= 0.066) && (AnimatedObject::getAnimationPos() <= 0.5))
+        {
+            vspeed = -433;
+        }
+
+        if(!stopthrew)
+        {
+            if(AnimatedObject::getAnimationPos() >= 0.733)
+            {
+                threw = true;
+                stopthrew = true;
+            }
+        }
+    }
+
+    //cout << "1 local_y: " << local_y << " vspeed: " << vspeed << endl;
+
+    vspeed += gravity / fps;
+
+    //cout << "2 local_y: " << local_y << " vspeed: " << vspeed << endl;
+
+    if(vspeed >= 0)
+    {
+        if(local_y >= 0)
+        {
+            vspeed = 0;
+            local_y = 0;
+        }
+    }
+
+    //cout << "3 local_y: " << local_y << " vspeed: " << vspeed << endl;
+
+    local_y += vspeed / fps;
+
+    //cout << "4 local_y: " << local_y << " vspeed: " << vspeed << endl;
+
+    AnimatedObject::Draw(window);
 }

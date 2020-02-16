@@ -6,7 +6,7 @@
 #include <sstream>
 Kacheek::Kacheek()
 {
-
+    type = HOSTILE;
 }
 void Kacheek::LoadConfig(Config *thisConfigs)
 {

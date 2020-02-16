@@ -3,29 +3,36 @@
 
 #include <SFML/Graphics.hpp>
 #include "../../Config.h"
+#include "CollidableObject.h"
 
 using namespace std;
 
-class Patapon
+class Patapon : public CollidableObject
 {
     public:
-    sf::Sprite s_patapon;
-    string current_animation = "walk";
-    float current_frame = 0;
+    int action = 0;
+    float attack_speed = 2.00;
+    sf::Clock attack_clock;
+    bool threw = false;
+    bool stopthrew = false;
 
-    float x = 0;
-    float y = 520;
-    float fps = 60;
-    sf::Rect<float> hitBox;
-    float scaleX = 1, scaleY = 1; ///TEMPORARY
+    float vspeed = 0;
+    float gravity = 981;
+    float gclosest = 9999;
+    float lclosest = 9999;
 
-    vector<string> animation_name;
-    vector<int> animation_frames;
+    bool focus = false;
+    bool getback = false;
 
-    map<string,vector<sf::Texture>> animation_textures;
+    enum Actions
+    {
+        WALK = 1,
+        ATTACK = 2
+    };
 
     Config *thisConfig;
     Patapon();
+    void startAttack();
     void LoadConfig(Config *thisConfigs);
     void Draw(sf::RenderWindow& window);
 };

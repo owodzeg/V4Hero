@@ -8,28 +8,38 @@ using namespace std;
 
 float Projectile::GetXSpeed(){
     /// get the x speed of the projectile
-    return speed*cos(angle);
+    //return speed*cos(angle);
+    return hspeed;
 }
 float Projectile::GetYSpeed(){
     /// get the y speed of the projectile
-    return speed*sin(angle);
+    //return speed*sin(angle);
+    return vspeed;
 }
 void Projectile::SetNewSpeedVector(float xSpeed, float ySpeed){
     /// set the speed and angle of the projectile
+
     speed = sqrt(pow(xSpeed,2)+pow(ySpeed,2));
-    angle = asin(ySpeed/speed);
+    //angle = asin(ySpeed/speed);
+    angle = atan2(ySpeed, xSpeed);
 }
 void Projectile::OnCollide(CollidableObject* otherObject){
     // this space intentionally left blank
     cout<<"[COLLISION_SYSTEM]: Class derived from Projectile has not overridden OnCollide() method"<<endl;
 }
 void Projectile::Update(sf::RenderWindow &window, float fps){
+    vspeed += float(981) / fps;
+    hspeed -= float(166) / fps;
+    if(hspeed < 0)
+    hspeed = 0;
+
     xPos+=GetXSpeed()/fps;
     yPos+=GetYSpeed()/fps;
 }
 
 Projectile::Projectile(PSprite& tsprite){
     sprite=&tsprite;
+    sprite->setOrigin(sprite->getLocalBounds().width/2,sprite->getLocalBounds().height/2);
 }
 void Projectile::Draw(sf::RenderWindow &window, float fps){
 
