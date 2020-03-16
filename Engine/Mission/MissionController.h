@@ -69,6 +69,11 @@ class MissionController
     float wallY = 200; ///temp
     float gravity=981;
     float floorY=200;
+
+    float army_X = 400;
+
+    std::vector<Patapon> units; ///temporary until a better solution is possible
+
     void StartCutscene(const std::wstring& text,bool isBlackScreen,int TimeToShow);
 
     void FinishLastCutscene();
