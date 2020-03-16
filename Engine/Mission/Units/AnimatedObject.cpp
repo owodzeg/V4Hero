@@ -69,6 +69,7 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     animation_begin.push_back(atof(anim[0].c_str()));
                     animation_end.push_back(atof(anim[1].c_str()));
                     animation_names.push_back(anim[2]);
+                    animation_index[anim[2]] = animation_names.size() - 1;
 
                     ///Go-to anim implementation
                     if(anim.size() >= 4)
@@ -227,6 +228,7 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
 
 int AnimatedObject::getSegmentIndex(std::string segment_name)
 {
+    /**
 	std::vector<string>::iterator it = std::find(animation_names.begin(), animation_names.end(), segment_name);
 
 	if (it != animation_names.end())
@@ -237,6 +239,9 @@ int AnimatedObject::getSegmentIndex(std::string segment_name)
 	{
 		return -1;
 	}
+	**/
+
+	return animation_index[segment_name];
 }
 
 void AnimatedObject::setAnimationSegment(std::string new_segment_name)
@@ -403,24 +408,11 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
         }
     }
 
-    /// /////////////////////////////////////////////////////////////////////////////////////////////// ///
-    ///SUPER TEMPORARY WORKAROUND FOR PATAPON, add one time animations that transfer to another immediately
-    /// /////////////////////////////////////////////////////////////////////////////////////////////// ///
-    /**if((getAnimationSegment() == "pata") || (getAnimationSegment() == "pata_focus") || (getAnimationSegment() == "pon") || (getAnimationSegment() == "pon_focus") || (getAnimationSegment() == "chaka") || (getAnimationSegment() == "chaka_focus") || (getAnimationSegment() == "don") || (getAnimationSegment() == "don_focus") || (getAnimationSegment() == "attack_yari"))
-    {
-        if(cur_pos == anim_end)
-        {
-            cout << "sure" << endl;
-
-            setAnimationSegment("idle", true, false);
-            setLoop(true);
-        }
-    }*/
-
     for(int i=0; i<hitboxes.size(); i++)
     {
         hitboxes[i].SetPos(cur_pos);
     }
+
 
     for(int i=0; i<objects.size(); i++)
     {
