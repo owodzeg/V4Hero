@@ -77,7 +77,7 @@ void Background::Load(string bg_name,Config &thisConfigs)
             string vx_params = buff.substr(buff.find_first_of(":")+1);
             vector<string> v_vxparams = Func::Split(vx_params,';');
 
-            //float ratioY = thisConfig->GetInt("resY") / float(720);
+            //float ratioY = float(720) / float(720);
 
             for(int i=0; i<v_vxparams.size(); i++)
             {
@@ -91,7 +91,7 @@ void Background::Load(string bg_name,Config &thisConfigs)
 
                 if(tmp[0] == "-1")
                 {
-                    tmp_vector.y = thisConfig->GetInt("resY") - (110 * ratioY);
+                    tmp_vector.y = float(610) * ratioY;
                 }
 
                 tmp_color.r = atoi(tmp[1].c_str());
@@ -100,12 +100,12 @@ void Background::Load(string bg_name,Config &thisConfigs)
 
                 sf::Vector2f tmp_vector2;
 
-                tmp_vector2.x = thisConfig->GetInt("resX");
+                tmp_vector2.x = float(1280) * ratioX;
                 tmp_vector2.y = atof(tmp[0].c_str()) * ratioY;
 
                 if(tmp[0] == "-1")
                 {
-                    tmp_vector2.y = thisConfig->GetInt("resY") - (110 * ratioY);
+                    tmp_vector2.y = float(610) * ratioY;
                 }
 
                 vx_pos.push_back(tmp_vector);
@@ -127,8 +127,8 @@ void Background::Load(string bg_name,Config &thisConfigs)
             PSprite ps_temp;
             ps_temp.loadFromFile("resources/graphics/bg/"+bg_name+"/"+v_params[0],quality);
             ps_temp.setRepeated(true);
-            ps_temp.setTextureRect(sf::IntRect(0,0,500000,ps_temp.t.getSize().y)); ///affect later with ratio
-            ps_temp.setOrigin(10000,ps_temp.getLocalBounds().height);
+            ps_temp.setTextureRect(sf::IntRect(0,0,500000,ps_temp.t.getSize().y));
+            ps_temp.setOrigin(10000,ps_temp.getGlobalBounds().height);
             ps_temp.setColor(sf::Color(atoi(v_params[3].c_str()),atoi(v_params[4].c_str()),atoi(v_params[5].c_str()),255));
             ps_temp.setPosition(-1000,atoi(v_params[1].c_str()));
 
@@ -165,7 +165,7 @@ void Background::Draw(sf::RenderWindow& window)
         //s_background[i].setTexture(t_background[i]);
 
         s_background[i].setPosition(-(background_xspeed[i]*camera.camera_x)-(background_xspeed[i]*camera.manual_x)-(background_xspeed[i]*camera.debug_x),p_background[i].y);
-        //cout << s_background[i].y << endl;
+        //cout << s_background[i].ly << endl;
         s_background[i].draw(window);
     }
 }

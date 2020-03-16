@@ -40,7 +40,6 @@ FeverWorm::FeverWorm()
 
 void FeverWorm::LoadConfig(Config *thisConfigs)
 {
-    /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\fever_worm.p4a");
 }
 
@@ -70,7 +69,7 @@ void FeverWorm::Draw(sf::RenderWindow& window)
 
     if((AnimatedObject::getAnimationSegment() != "fever") && (AnimatedObject::getAnimationSegment() != "transform") && ((combo >= 2) && (combo <= 9)))
     {
-        number.setTexture(tex_number[combo],true);
+        number.setTexture(tex_number[combo]);
         number.setOrigin(number.getGlobalBounds().width/2,number.getGlobalBounds().height/2);
         number.setPosition(50,AnimatedObject::getGlobalPosition().y-42);
 
@@ -81,14 +80,14 @@ void FeverWorm::Draw(sf::RenderWindow& window)
         let_o1.setPosition(let_b.getPosition().x+26,let_b.getPosition().y);
         let_exc.setPosition(let_o1.getPosition().x+20,let_o1.getPosition().y);
 
-        window.draw(number);
+        number.draw(window);
 
-        window.draw(let_c);
-        window.draw(let_o1);
-        window.draw(let_m);
-        window.draw(let_b);
-        window.draw(let_o2);
-        window.draw(let_exc);
+        let_c.draw(window);
+        let_o1.draw(window);
+        let_m.draw(window);
+        let_b.draw(window);
+        let_o2.draw(window);
+        let_exc.draw(window);
     }
 
     window.setView(view);

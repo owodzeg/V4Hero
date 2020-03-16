@@ -429,11 +429,11 @@ void Drum::Draw(sf::RenderWindow& window)
     s_drum.setTexture(t_drum);
     s_drum.setScale(x_scale,y_scale);
     s_drum.setColor(sf::Color(255,255,255,alpha));
-    s_drum.setRotation(rotation+pattern_Angle[pattern]);
+    s_drum.setRotation((rotation+pattern_Angle[pattern]) * 3.1415928 / 180.f);
 
     s_drum.setOrigin(s_drum.getLocalBounds().width/2,s_drum.getLocalBounds().height/2);
 
-    s_drum.setPosition(x+pattern_X[pattern]*ratio_X,y+pattern_Y[pattern]*ratio_Y);
+    s_drum.setPosition(x+pattern_X[pattern],y+pattern_Y[pattern]);
 
     if(drumClock.getElapsedTime().asMilliseconds() < 200)
     {
@@ -453,7 +453,7 @@ void Drum::Draw(sf::RenderWindow& window)
     s_flash.setColor(sf::Color(255,255,255,flashalpha));
     s_flash.setScale(x_flashscale,y_flashscale);
     s_flash.setOrigin(s_flash.getLocalBounds().width/2,s_flash.getLocalBounds().height/2);
-    s_flash.setPosition(x+pattern_X[pattern]*ratio_X,y+pattern_Y[pattern]*ratio_Y);
+    s_flash.setPosition(x+pattern_X[pattern],y+pattern_Y[pattern]);
 
     shockwaveSize += float(1300) / fps;
     shockwaveAlpha -= float(100) / fps;
@@ -478,8 +478,8 @@ void Drum::Draw(sf::RenderWindow& window)
     c_shockwave2.setOrigin(c_shockwave2.getLocalBounds().width/2,c_shockwave2.getLocalBounds().height/2);
     c_shockwave2.setPosition(x+pattern_X[pattern]*ratio_X,y+pattern_Y[pattern]*ratio_Y);
 
-    window.draw(s_drum);
-    window.draw(s_flash);
+    s_drum.draw(window);
+    s_flash.draw(window);
     window.draw(c_shockwave);
     window.draw(c_shockwave2);
 
