@@ -113,6 +113,11 @@ void Object::SetPos(float time)
                     s_x = frames[i].scale_x + ((frames[i+1].scale_x - frames[i].scale_x) * time_percentage);
                     s_y = frames[i].scale_y + ((frames[i+1].scale_y - frames[i].scale_y) * time_percentage);
 
+                    if(frames[i+1].pos_x == -999999)
+                    disable = true;
+                    else
+                    disable = false;
+
                     break;
                 }
                 else
@@ -131,6 +136,11 @@ void Object::SetPos(float time)
                     or_y = frames[frames.size()-1].or_y;
                     s_x = frames[frames.size()-1].scale_x;
                     s_y = frames[frames.size()-1].scale_y;
+
+                    if(frames[frames.size()-1].pos_x == -999999)
+                    disable = true;
+                    else
+                    disable = false;
                 }
             }
             else
@@ -149,6 +159,11 @@ void Object::SetPos(float time)
                 or_y = frames[i].or_y;
                 s_x = frames[i].scale_x;
                 s_y = frames[i].scale_y;
+
+                if(frames[i].pos_x == -999999)
+                disable = true;
+                else
+                disable = false;
 
                 break;
             }
@@ -170,6 +185,11 @@ void Object::SetPos(float time)
             s_x = frames[i].scale_x;
             s_y = frames[i].scale_y;
 
+            if(frames[i].pos_x == -999999)
+            disable = true;
+            else
+            disable = false;
+
             break;
         }
     }
@@ -179,10 +199,13 @@ void Object::SetPos(float time)
 
 void Object::Draw(sf::RenderWindow& window)
 {
-    s_obj.setTexture(tex_obj);
-    s_obj.setScale(s_x+(g_sx-1),s_y+(g_sy-1));
-    s_obj.setOrigin(or_x,or_y);
-    s_obj.setPosition(x+g_x+gl_x,y+g_y+gl_y);
-    s_obj.setRotation(r);
-    window.draw(s_obj);
+    if(!disable)
+    {
+        //s_obj.setTexture(tex_obj);
+        s_obj.setScale(s_x+(g_sx-1),s_y+(g_sy-1));
+        s_obj.setOrigin(or_x,or_y);
+        s_obj.setPosition(x+g_x+gl_x,y+g_y+gl_y);
+        s_obj.setRotation(r);
+        s_obj.draw(window);
+    }
 }
