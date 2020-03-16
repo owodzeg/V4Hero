@@ -31,6 +31,7 @@ void PSprite::loadFromFile(std::string file, int q)
         break;
     }
 
+    sq = "M";
     std::string c = a+"_"+sq+b;
 
     quality = q;
@@ -55,7 +56,19 @@ void PSprite::setTextureRect(sf::IntRect rect)
 
 void PSprite::setOrigin(float x, float y)
 {
-    s.setOrigin(x*ratioX,y*ratioY);
+    orX = x;
+    orY = y;
+}
+
+void PSprite::setScale(float x, float y)
+{
+    scaleX = x;
+    scaleY = y;
+}
+
+void PSprite::setRotation(float a)
+{
+    angle = a;
 }
 
 void PSprite::setColor(sf::Color color)
@@ -66,7 +79,7 @@ void PSprite::setColor(sf::Color color)
 void PSprite::setTexture(sf::Texture& texture)
 {
     t = texture;
-    s.setTexture(t);
+    s.setTexture(t,true);
 }
 
 void PSprite::setSprite(sf::Sprite& sprite)
@@ -76,13 +89,21 @@ void PSprite::setSprite(sf::Sprite& sprite)
 
 void PSprite::setPosition(float x, float y)
 {
-    s.setPosition(x*ratioX,y*ratioY);
-    lx = x*ratioX;
-    ly = y*ratioY;
+    //s.setPosition(x*ratioX,y*ratioY);
+    lx = x;
+    ly = y;
 
     //std::cout << x << " " << y << "  " << lx << " " << ly << std::endl;
 }
-void PSprite::setScale(float s){
+
+sf::Vector2f PSprite::getPosition()
+{
+    return sf::Vector2f(lx,ly);
+}
+
+
+void PSprite::setScale(float s)
+{
     scaleX = s;
     scaleY = s;
 }
@@ -92,47 +113,48 @@ sf::FloatRect PSprite::getLocalBounds()
     return s.getLocalBounds();
 }
 
-void PSprite::draw(sf::RenderWindow& window,float angle)
+sf::FloatRect PSprite::getGlobalBounds()
 {
-    if(DoAutoScale){
-        switch(quality)
+    return s.getGlobalBounds();
+}
+
+void PSprite::draw(sf::RenderWindow& window)
+{
+    switch(quality)
+    {
+        case 0: ///low
         {
-            case 0: ///low
-            {
-                ratioX = window.getSize().x / float(640);
-                ratioY = window.getSize().y / float(360);
-                break;
-            }
-
-            case 1: ///med
-            {
-                ratioX = window.getSize().x / float(1280);
-                ratioY = window.getSize().y / float(720);
-                break;
-            }
-
-            case 2: ///high
-            {
-                ratioX = window.getSize().x / float(1920);
-                ratioY = window.getSize().y / float(1080);
-                break;
-            }
-
-            case 3: ///ultra
-            {
-                ratioX = window.getSize().x / float(3840);
-                ratioY = window.getSize().y / float(2160);
-                break;
-            }
+            ratioX = window.getSize().x / float(640);
+            ratioY = window.getSize().y / float(360);
+            break;
         }
-        s.setTexture(t);
-        s.setScale(ratioX*scaleX, ratioY*scaleY);
-    } else {
-        s.setTexture(t);
-        s.setScale(scaleX, scaleY);
-    }
-    ///std::cout << "[PSPRITE] " << ratioX << " " << ratioY << std::endl;
 
+        case 1: ///med
+        {
+            ratioX = window.getSize().x / float(1280);
+            ratioY = window.getSize().y / float(720);
+            break;
+        }
+
+        case 2: ///high
+        {
+            ratioX = window.getSize().x / float(1920);
+            ratioY = window.getSize().y / float(1080);
+            break;
+        }
+
+        case 3: ///ultra
+        {
+            ratioX = window.getSize().x / float(3840);
+            ratioY = window.getSize().y / float(2160);
+            break;
+        }
+    }
+
+    s.setTexture(t);
+    s.setScale(ratioX*scaleX, ratioY*scaleY);
+    s.setOrigin(orX,orY);
+    s.setPosition(lx*ratioX, ly*ratioY);
     s.setRotation(angle*(180/3.14159265358));
     window.draw(s);
 }
