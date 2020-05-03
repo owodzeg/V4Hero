@@ -10,7 +10,7 @@ MainMenu::MainMenu()
 void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent)
 {
     f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
-
+    config = thisConfigs;
     int q = thisConfigs->GetInt("textureQuality");
 
     float ratioX, ratioY;
@@ -190,7 +190,19 @@ void MainMenu::EventFired(sf::Event event){
     {
         if(event.type == sf::Event::KeyPressed)
         {
-
+            UsingMouseSelection=false;
+            if (event.key.code == config->GetInt("keybindPata") || event.key.code == config->GetInt("keybindChaka") || event.key.code == config->GetInt("secondaryKeybindPata") || event.key.code == config->GetInt("secondaryKeybindChaka")){
+                totem_sel-=1;
+                if (totem_sel<0)
+                    totem_sel=3;
+                old_sel = totem_sel;
+            }
+            if (event.key.code == config->GetInt("keybindPon") || event.key.code == config->GetInt("keybindDon") || event.key.code == config->GetInt("secondaryKeybindPon") || event.key.code == config->GetInt("secondaryKeybindDon")){
+                totem_sel+=1;
+                if (totem_sel>3)
+                    totem_sel=0;
+                old_sel = totem_sel;
+            }
         }
         else if (event.type == sf::Event::MouseButtonReleased)
         {
@@ -200,6 +212,7 @@ void MainMenu::EventFired(sf::Event event){
         {
             mouseX = event.mouseMove.x;
             mouseY = event.mouseMove.y;
+            UsingMouseSelection=true;
         }
     }
 }
@@ -262,12 +275,14 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
         for(int i=0; i<=3; i++)
         {
             totem[i].setPosition((((float(120) + float(306) * i) / 1280) * maxQX) + g_x[3]/1.4, maxQY);
-
-            if((mouseX / float(1280) * maxQX) - g_x[3] > totem[i].getPosition().x)
+            if (UsingMouseSelection)
             {
-                if((mouseX / float(1280) * maxQX) - g_x[3] < totem[i].getPosition().x + ((totem[totem_sel].getGlobalBounds().width / 1280) * maxQX))
+                if((mouseX / float(1280) * maxQX) - g_x[3] > totem[i].getPosition().x)
                 {
-                    totem_sel = i;
+                    if((mouseX / float(1280) * maxQX) - g_x[3] < totem[i].getPosition().x + ((totem[totem_sel].getGlobalBounds().width / 1280) * maxQX))
+                    {
+                        totem_sel = i;
+                    }
                 }
             }
         }

@@ -34,9 +34,9 @@ class MainMenu : public Menu
         int totem_sel = 0;
         int old_sel = 0;
         float fire = 0;
-
+        bool UsingMouseSelection = true;
         float g_x[4], g_dest[4];
-
+        Config *config;
         PatapolisMenu patapolisMenu;
         void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent);
 
