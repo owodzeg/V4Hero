@@ -3,7 +3,7 @@
 #include <time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
+#include <windows.h>
 #include "V4Core.h"
 
 using namespace std;
@@ -44,7 +44,7 @@ V4Core::V4Core()
         else
         strDay += "th";
     }
-*/
+    */
 
     /** Load config from config.cfg **/
     config.LoadConfig(this);
@@ -75,18 +75,48 @@ V4Core::V4Core()
     /// If this is a new save (no previous save data) we load up the new game menu
     newGameMenu.Initialise(&config,&keyMap,this);
     menus.push_back(&newGameMenu);
-    if(savereader.isNewSave){
+    if(savereader.isNewSave)
+    {
         mainMenu.Hide();
-    } else {
+    }
+    else
+    {
         newGameMenu.Hide();
     }
 }
+void V4Core::LoadingThread()
+{
+    sf::Context context;
+    window.setActive(true);
+    window.draw(t_version);
+    window.clear();
+    window.display();
+    int i=0;
+    while (continueLoading)
+    {
+        i++;
+        window.clear();
+        // drawing some text
+        t_version.setPosition(config.GetInt("resX")/2-50-100*sin(i/50.0),config.GetInt("resY")/2-20-100*sin((i+30)/50.0));
+        window.draw(t_version);
 
+        window.display();
+    }
+
+    window.setActive(false);
+
+}
+void V4Core::ShowTip()
+{
+    //loadingThreadInstance = sf::Thread(LoadingThread);
+    //loadingThreadInstance.launch();
+    continueLoading=true;
+
+}
 void V4Core::Init()
 {
+    DisableProcessWindowsGhosting();
     srand(time(NULL));
-
-    sf::RenderWindow window;
 
     if(config.GetInt("enableFullscreen"))
         window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::Fullscreen);
@@ -100,62 +130,63 @@ void V4Core::Init()
 
     while (window.isOpen())
     {
-        sf::Event event;
-        while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
-                window.close();
+            sf::Event event;
+            while (window.pollEvent(event))
+            {
+                if (event.type == sf::Event::Closed)
+                    window.close();
 
-            if(event.type == sf::Event::KeyPressed)
-			{
-			    ///keyMap[event.key.code] = true/false??? would that do the trick?
-			    cout << "[DEBUG] Key pressed: " << event.key.code << endl;
+                if(event.type == sf::Event::KeyPressed)
+                {
+                    ///keyMap[event.key.code] = true/false??? would that do the trick?
+                    cout << "[DEBUG] Key pressed: " << event.key.code << endl;
 
-			    keyMap[event.key.code] = true;
-			    keyMapHeld[event.key.code] = true;
+                    keyMap[event.key.code] = true;
+                    keyMapHeld[event.key.code] = true;
 
-			    //if (!inMission){
+                    //if (!inMission){
                     //inMission=true;
                     //currentController.StartMission();
-			    //} else if(event.key.code==59) {
-                //    cout<<"Returning to main menu...";
-                //    inMission=false;
-			    //}
-			}
+                    //} else if(event.key.code==59) {
+                    //    cout<<"Returning to main menu...";
+                    //    inMission=false;
+                    //}
+                }
 
-			if(event.type == sf::Event::KeyReleased)
-            {
-			    cout << "[DEBUG] Key released: " << event.key.code << endl;
-                keyMapHeld[event.key.code] = false;
-            }
-
-            /**
-            Joystick map (x360, ds4 is turned off by default, unsure about custom joysticks)
-            0 - square
-            1 - cross
-            2 - circle
-            3 - triangle
-            4 - L1
-            5 - R1
-            6 - L2
-            7 - R2
-            8 - share (start)
-            9 - options (select)
-            10 - L3 (analog)
-            11 - R3 (analog)
-            12 - PS/XB button
-            13 - DS4 touchpad
-            **/
-
-            if (event.type == sf::Event::JoystickButtonPressed)
-            {
-                if(event.joystickButton.joystickId == 0)
+                if(event.type == sf::Event::KeyReleased)
                 {
-                    std::cout << "[DEBUG] Joystick (" << event.joystickButton.joystickId << ") key pressed: " << event.joystickButton.button << std::endl;
+                    cout << "[DEBUG] Key released: " << event.key.code << endl;
+                    keyMapHeld[event.key.code] = false;
+                }
 
-                    /// TEMPORARY SOLUTION! Make joysticks mappable in future, just like keyboard. //
-                    switch(event.joystickButton.button)
+                /**
+                Joystick map (x360, ds4 is turned off by default, unsure about custom joysticks)
+                0 - square
+                1 - cross
+                2 - circle
+                3 - triangle
+                4 - L1
+                5 - R1
+                6 - L2
+                7 - R2
+                8 - share (start)
+                9 - options (select)
+                10 - L3 (analog)
+                11 - R3 (analog)
+                12 - PS/XB button
+                13 - DS4 touchpad
+                **/
+
+                if (event.type == sf::Event::JoystickButtonPressed)
+                {
+                    if(event.joystickButton.joystickId == 0)
                     {
+                        std::cout << "[DEBUG] Joystick (" << event.joystickButton.joystickId << ") key pressed: " << event.joystickButton.button << std::endl;
+
+                        /// TEMPORARY SOLUTION! Make joysticks mappable in future, just like keyboard. //
+                        switch(event.joystickButton.button)
+                        {
                         case 0:
                         {
                             keyMap[config.GetInt("keybindPata")] = true;
@@ -197,19 +228,19 @@ void V4Core::Init()
                             keyMapHeld[sf::Keyboard::E] = true;
                             break;
                         }
+                        }
                     }
                 }
-            }
 
-            if (event.type == sf::Event::JoystickButtonReleased)
-            {
-                if(event.joystickButton.joystickId == 0)
+                if (event.type == sf::Event::JoystickButtonReleased)
                 {
-                    std::cout << "[DEBUG] Joystick (" << event.joystickButton.joystickId << ") key released: " << event.joystickButton.button << std::endl;
-
-                    /// TEMPORARY SOLUTION! Make joysticks mappable in future, just like keyboard. //
-                    switch(event.joystickButton.button)
+                    if(event.joystickButton.joystickId == 0)
                     {
+                        std::cout << "[DEBUG] Joystick (" << event.joystickButton.joystickId << ") key released: " << event.joystickButton.button << std::endl;
+
+                        /// TEMPORARY SOLUTION! Make joysticks mappable in future, just like keyboard. //
+                        switch(event.joystickButton.button)
+                        {
                         case 0:
                         {
                             keyMapHeld[config.GetInt("keybindPata")] = false;
@@ -245,81 +276,85 @@ void V4Core::Init()
                             keyMapHeld[sf::Keyboard::E] = false;
                             break;
                         }
+                        }
                     }
                 }
-            }
 
-            if (event.type == sf::Event::JoystickMoved)
-            {
-                if(event.joystickMove.joystickId == 0)
+                if (event.type == sf::Event::JoystickMoved)
                 {
-                    if (event.joystickMove.axis == sf::Joystick::PovX)
+                    if(event.joystickMove.joystickId == 0)
                     {
-                        if(event.joystickMove.position == -100)
+                        if (event.joystickMove.axis == sf::Joystick::PovX)
                         {
-                            cout << "left" << endl;
+                            if(event.joystickMove.position == -100)
+                            {
+                                cout << "left" << endl;
+                            }
+
+                            if(event.joystickMove.position == 100)
+                            {
+                                cout << "right" << endl;
+                            }
                         }
 
-                        if(event.joystickMove.position == 100)
+                        if (event.joystickMove.axis == sf::Joystick::PovY)
                         {
-                            cout << "right" << endl;
-                        }
-                    }
+                            if(event.joystickMove.position == -100)
+                            {
+                                cout << "down" << endl;
+                            }
 
-                    if (event.joystickMove.axis == sf::Joystick::PovY)
-                    {
-                        if(event.joystickMove.position == -100)
-                        {
-                            cout << "down" << endl;
-                        }
-
-                        if(event.joystickMove.position == 100)
-                        {
-                            cout << "up" << endl;
+                            if(event.joystickMove.position == 100)
+                            {
+                                cout << "up" << endl;
+                            }
                         }
                     }
                 }
+
+                if (savereader.isNewSave)
+                {
+                    newGameMenu.EventFired(event);
+                }
+                mainMenu.EventFired(event);
             }
 
-            if (savereader.isNewSave){
-                newGameMenu.EventFired(event);
-            }
-            mainMenu.EventFired(event);
-        }
+            fps = float(1000000) / fpsclock.getElapsedTime().asMicroseconds();
+            fpsclock.restart();
 
-        fps = float(1000000) / fpsclock.getElapsedTime().asMicroseconds();
-        fpsclock.restart();
+            //cout << fps << endl;
 
-        //cout << fps << endl;
-
-        window.clear();
-        // Something important goes here ok cool thanks
-        //if(inMission){
+            window.clear();
+            // Something important goes here ok cool thanks
+            //if(inMission){
             //currentController.Update(window,fps);
 
-        //} else {
-        //if (savereader.isNewSave){
-        //    newGameMenu.Update(window,fps,&keyMap,&keyMapHeld);
-        //} else {
+            //} else {
+            //if (savereader.isNewSave){
+            //    newGameMenu.Update(window,fps,&keyMap,&keyMapHeld);
+            //} else {
             mainMenu.Update(window,fps,&keyMap,&keyMapHeld);
-        //}
-        //}
+            //}
+            //}
 
-        auto lastView = window.getView();
-        window.setView(window.getDefaultView());
+            auto lastView = window.getView();
+            window.setView(window.getDefaultView());
 
-        //t_debug.setPosition(window.getSize().x/2,window.getSize().y-20);
-        //window.draw(t_debug);
+            //t_debug.setPosition(window.getSize().x/2,window.getSize().y-20);
+            //window.draw(t_debug);
 
-        t_version.setPosition(4,4);
-        window.draw(t_version);
-        window.display();
+            t_version.setPosition(4,4);
+            window.draw(t_version);
+            window.display();
 
-        window.setView(lastView);
+            window.setView(lastView);
 
-        keyMap.clear();
-        if(closeWindow){
-            window.close();
+            keyMap.clear();
+            if(closeWindow)
+            {
+                window.close();
+            }
         }
     }
+    cout<<"Main game loop exited. Shutting down..."<<endl;
 }

@@ -22,6 +22,8 @@ MissionController::MissionController()
 }
 void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,std::string backgroundString)
 {
+
+    sf::Context context;
     test_bg.Load(backgroundString, config);//config.GetString("debugBackground"));
 
     PSprite ps_temp;
@@ -102,6 +104,7 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
 void MissionController::StartMission(std::string songName,int missionID,bool showCutscene)
 {
 
+    sf::Context context;
     int quality = missionConfig->GetInt("textureQuality");
     float ratioX, ratioY;
     patapon->LoadConfig(missionConfig);

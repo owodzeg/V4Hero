@@ -24,6 +24,8 @@ PatapolisMenu::PatapolisMenu()
     isActive=false;
 }
 void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, Menu *curParentMenu){
+
+    sf::Context context;
     Scene::Initialise(thisConfigs,keymap,parent);
     altar_menu.Initialise(thisConfigs,keymap,parent,this);
     barracks_menu.Initialise(thisConfigs,keymap,parent,this);

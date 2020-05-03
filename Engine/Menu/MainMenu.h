@@ -38,11 +38,13 @@ class MainMenu : public Menu
         float g_x[4], g_dest[4];
         Config *config;
         PatapolisMenu patapolisMenu;
-        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent);
+        std::map<int,bool> *keyMapping;
 
+        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent);
         void Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld);
         void EventFired(sf::Event event);
         void OnExit();
+        void SelectMenuOption();
         void UpdateButtons();
         MainMenu();
         ~MainMenu();

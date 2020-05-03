@@ -172,7 +172,8 @@ void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     g_x[3] = 0;
 
     Scene::Initialise(thisConfigs,keymap,parent);
-    //patapolisMenu.Initialise(thisConfigs,keymap,parent,this);
+    keyMapping=keymap;
+    //
 }
 void MainMenu::EventFired(sf::Event event){
     if (patapolisMenu.isActive)
@@ -203,10 +204,16 @@ void MainMenu::EventFired(sf::Event event){
                     totem_sel=0;
                 old_sel = totem_sel;
             }
+            if (event.key.code == config->GetInt("keybindMenuEnter"))
+            {
+                SelectMenuOption();
+            }
         }
         else if (event.type == sf::Event::MouseButtonReleased)
         {
-
+        if (event.mouseButton.button == sf::Mouse::Left){
+                SelectMenuOption();
+            }
         }
         else if (event.type == sf::Event::MouseMoved)
         {
@@ -214,6 +221,43 @@ void MainMenu::EventFired(sf::Event event){
             mouseY = event.mouseMove.y;
             UsingMouseSelection=true;
         }
+    }
+}
+void MainMenu::SelectMenuOption()
+{
+    switch (totem_sel){
+    case 0:
+        // load the start game cutscenes and menu
+        break;
+    case 1:
+        // load save and patapolis
+        {
+
+        Hide();
+        sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+        v4core->continueLoading=true;
+        v4core->window.setActive(false);
+        loadingThreadInstance.launch();
+
+        patapolisMenu.Show();
+        patapolisMenu.isActive = true;
+        patapolisMenu.Initialise(config,keyMapping,v4core,this);
+
+        v4core->continueLoading=false;
+        }
+        break;
+    case 2:
+        // load the options menu
+        Hide();
+        //optionsMenu->Show();
+        break;
+    case 3:
+        // quit the game probably
+        v4core->closeWindow=true;
+        break;
+    default:
+        cout<<"WTF happened? you probably added more menu buttons but messed it up"<<endl;
+        break;
     }
 }
 void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld)

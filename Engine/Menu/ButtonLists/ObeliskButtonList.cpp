@@ -44,22 +44,42 @@ void ObeliskButtonList::SelectButton(int index){
 
             case 0:
                 // start options
-                currentController->Initialise(*config,*keyMap,config->GetString("mission1Background"));
-                currentController->StartMission(config->GetString("mission1Theme"),1);
-                obeliskMenu->parentMenu->Hide();
-                obeliskMenu->parentMenu->isActive=false;
-                parentMenu->Hide();
-                parentMenu->isActive = false;
+                {
+                    sf::Thread loadingThreadInstance(parentMenu->v4core->LoadingThread,parentMenu->v4core);
+                    parentMenu->v4core->continueLoading=true;
+                    parentMenu->v4core->window.setActive(false);
+                    loadingThreadInstance.launch();
+
+                    currentController->Initialise(*config,*keyMap,config->GetString("mission1Background"));
+                    currentController->StartMission(config->GetString("mission1Theme"),1);
+                    obeliskMenu->parentMenu->Hide();
+                    obeliskMenu->parentMenu->isActive=false;
+                    parentMenu->Hide();
+                    parentMenu->isActive = false;
+
+
+                    parentMenu->v4core->continueLoading=false;
                 break;
+                }
             case 1:
                 // start options
-                currentController->Initialise(*config,*keyMap,config->GetString("mission2Background"));
-                currentController->StartMission(config->GetString("mission2Theme"),2);
-                obeliskMenu->parentMenu->Hide();
-                obeliskMenu->parentMenu->isActive=false;
-                parentMenu->Hide();
-                parentMenu->isActive = false;
-                break;
+                {
+                    sf::Thread loadingThreadInstance(parentMenu->v4core->LoadingThread,parentMenu->v4core);
+                    parentMenu->v4core->continueLoading=true;
+                    parentMenu->v4core->window.setActive(false);
+                    loadingThreadInstance.launch();
+
+                    currentController->Initialise(*config,*keyMap,config->GetString("mission2Background"));
+                    currentController->StartMission(config->GetString("mission2Theme"),2);
+                    obeliskMenu->parentMenu->Hide();
+                    obeliskMenu->parentMenu->isActive=false;
+                    parentMenu->Hide();
+                    parentMenu->isActive = false;
+
+                    parentMenu->v4core->continueLoading=false;
+
+                    break;
+                }
             case 2:
                 // start options
                 parentMenu->Hide();

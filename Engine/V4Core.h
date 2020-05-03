@@ -17,35 +17,35 @@
 class V4Core
 {
     private:
-
     //MissionController currentController;
+        std::vector<float> tot_fps;
+        std::map<int,bool> keyMap;
+        std::map<int,bool> keyMapHeld;
+        sf::Thread* loadingThreadInstance;
 
-
-
-    std::vector<float> tot_fps;
-    std::map<int,bool> keyMap;
-    std::map<int,bool> keyMapHeld;
-
-    sf::Font f_font;
-    sf::Text t_debug;
-    sf::Text t_version;
-
-    float fps = 60;
-    sf::Clock fpsclock;
+        sf::Font f_font;
+        sf::Text t_debug;
+        sf::Text t_version;
+        float fps = 60;
+        sf::Clock fpsclock;
 
     bool leftkey=false,rightkey=false,upkey=false,downkey=false;
     public:
-    std::string hero_version = "v1.0.4";
+        std::string hero_version = "v1.0.4";
+        sf::RenderWindow window;
 
-    NewGameMenu newGameMenu;
-    MainMenu mainMenu;
-    Config config;
-    SaveReader savereader;
+        NewGameMenu newGameMenu;
+        MainMenu mainMenu;
+        Config config;
+        SaveReader savereader;
         MissionController currentController;
-    V4Core();
-    std::vector<Menu*> menus;
-    bool closeWindow=false;
-    void Init();
+        V4Core();
+        std::vector<Menu*> menus;
+        bool closeWindow=false;
+        void Init();
+        void ShowTip();
+        void LoadingThread();
+        bool continueLoading;
 };
 
 #endif // V4CORE_H
