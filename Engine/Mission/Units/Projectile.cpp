@@ -67,5 +67,6 @@ void Projectile::Draw(sf::RenderWindow &window, float fps){
     }*/
 
     sprite->setPosition(xPos,yPos);
-    sprite->draw(window,3.14159265358/2+angle);
+    sprite->setRotation(3.14159265358/2+angle);
+    sprite->draw(window);
 }

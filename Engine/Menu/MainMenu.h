@@ -7,20 +7,36 @@
 #include "../Mission/MissionController.h"
 #include "OptionsMenu.h"
 #include "Patapolis.h"
+#include "../Graphics/PSprite.h"
 class V4Core;
 class MainMenu : public Menu
 {
     public:
-        sf::RectangleShape mm_bigBox;
-        sf::RectangleShape mm_titleBox;
-
         sf::Font f_font;
-        sf::Text t_title;
-        sf::Text t_pressToContinue;
+        PSprite grass_1,grass_2,grass_3,grass_4;
+        PSprite logo,logo_shadow;
+        PSprite totem[4];
+        PSprite fire_1,fire_2,fire_3,aura,sword;
+        PSprite sword_1,sword_2;
 
-        MainMenuButtonList buttonList;
+        std::vector<std::string> temp_menu = {"New game", "Continue", "Options", "Exit"};
 
-        OptionsMenu optionsMenu;
+        sf::Text t_option[4];
+
+        sf::VertexArray v_background;
+
+        float maxQX, maxQY;
+        int fade = 0;
+        float alpha = 240;
+
+        float mouseX = 0, mouseY = 0;
+
+        int totem_sel = 0;
+        int old_sel = 0;
+        float fire = 0;
+
+        float g_x[4], g_dest[4];
+
         PatapolisMenu patapolisMenu;
         void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent);
 

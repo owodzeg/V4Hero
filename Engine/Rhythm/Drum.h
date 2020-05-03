@@ -2,6 +2,7 @@
 #define DRUM_H
 
 #include <SFML/Graphics.hpp>
+#include "../Graphics/PSprite.h"
 
 class Drum
 {
@@ -9,8 +10,8 @@ class Drum
     sf::Texture t_drum;
     sf::Texture t_flash;
 
-    sf::Sprite s_drum;
-    sf::Sprite s_flash;
+    PSprite s_drum;
+    PSprite s_flash;
 
     sf::CircleShape c_shockwave;
     sf::CircleShape c_shockwave2;

@@ -2,6 +2,7 @@
 #define OBJECT_H
 
 #include <SFML/Graphics.hpp>
+#include "../../Graphics/PSprite.h"
 
 using namespace std;
 
@@ -14,7 +15,7 @@ class Object
     std::string texture_path;
 
     sf::Texture tex_obj;
-    sf::Sprite s_obj;
+    PSprite s_obj;
 
     float g_x,g_y; ///global position
     float gl_x,gl_y; ///global-local position
@@ -40,6 +41,9 @@ class Object
     };
 
     vector<Frame> frames; ///frames
+
+    ///disable drawing object when its out of bounds
+    bool disable = true;
 
     Object();
     void Load(string filename, int xpos, int ypos);

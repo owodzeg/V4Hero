@@ -24,15 +24,13 @@ class AnimatedObject
     float anim_end = 0;
 
     float current_frame = 0;
-    ///depracated
-    //float x = 0;
-    //float y = 520;
     ///THIS IS FOR GLOBAL MOVEMENT, like an arrow in Patapon 3 Multiplayer, that decides your "main" point on the map/whatever
     float global_x = 0;
     float global_y = 0;
     ///THIS IS FOR LOCAL MOVEMENT, basically if you want to keep the original global position, but you want to slightly go off that (like Patapons coming closer to an opponent)
     float local_x = 0;
     float local_y = 0;
+
     float fps = 60;
     float width = 0;
     float scaleX = 1, scaleY = 1; ///TEMPORARY
@@ -60,6 +58,9 @@ class AnimatedObject
     vector<float> animation_end;
     vector<string> animation_names;
     vector<string> animation_goto;
+
+    ///for getSegmentIndex
+    map<string, int> animation_index;
 
 
     vector<int> animation_frames;

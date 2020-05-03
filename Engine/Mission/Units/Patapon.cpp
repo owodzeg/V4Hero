@@ -98,14 +98,14 @@ void Patapon::Draw(sf::RenderWindow& window)
             }
             else if(lclosest > 475)
             {
-                AnimatedObject::setAnimationSegment("walk");
+                AnimatedObject::setAnimationSegment("walk_focus");
                 getback = true;
 
                 local_x += float(200) / fps;
             }
             else if(lclosest < 375)
             {
-                AnimatedObject::setAnimationSegment("walk");
+                AnimatedObject::setAnimationSegment("walk_focus");
                 getback = true;
 
                 local_x -= float(200) / fps;

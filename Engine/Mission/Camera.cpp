@@ -172,6 +172,6 @@ void Camera::Work(sf::RenderWindow& window,float fps, std::map<int,bool> *keyMap
     /** Apply camera position **/
 
     sf::View view{window.getView()};
-    view.setCenter(camera_x+zoom_x+manual_x+debug_x,camera_y+zoom_y+manual_y);
+    view.setCenter(camera_x+zoom_x+manual_x+debug_x-100,camera_y+zoom_y+manual_y);
     window.setView(view);
 }
