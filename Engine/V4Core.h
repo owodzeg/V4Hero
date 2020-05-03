@@ -28,13 +28,14 @@ class V4Core
 
     sf::Font f_font;
     sf::Text t_debug;
+    sf::Text t_version;
 
     float fps = 60;
     sf::Clock fpsclock;
 
     bool leftkey=false,rightkey=false,upkey=false,downkey=false;
     public:
-    std::string hero_version = "v1.0.3";
+    std::string hero_version = "v1.0.4";
 
     NewGameMenu newGameMenu;
     MainMenu mainMenu;

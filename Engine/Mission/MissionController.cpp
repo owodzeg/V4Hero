@@ -60,7 +60,13 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
 
     ///THIS DOESN'T WORK. CHANGE TO SMART POINTERS.
 
+    for(auto it=tangibleLevelObjects.begin(); it!=tangibleLevelObjects.end(); ++it)
+    {
+        delete *it;
+    }
+
     tangibleLevelObjects.clear();
+    units.clear();
 
     levelProjectiles.clear();
 
@@ -172,8 +178,10 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         cutscene_text_identifiers.clear();
         cutscenesLeft=false;
     }
+
     tangibleLevelObjects.clear();
     levelProjectiles.clear();
+
     switch(missionID)
     {
     case 1:
@@ -182,8 +190,6 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         endFlag1->LoadConfig(missionConfig);
         feverworm->LoadConfig(missionConfig);
         kacheek->LoadConfig(missionConfig);
-        kacheek2->LoadConfig(missionConfig);
-        kacheek3->LoadConfig(missionConfig);
 
         tangibleLevelObjects.push_back(endFlag1);
         tangibleLevelObjects.push_back(feverworm);

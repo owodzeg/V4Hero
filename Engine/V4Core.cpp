@@ -61,6 +61,11 @@ V4Core::V4Core()
     t_debug.setString(config.strRepo.GetString(L"demo_string"));//+strDay+" "+months[month]+" "+to_string(year)+".");
     t_debug.setOrigin(t_debug.getGlobalBounds().width/2,t_debug.getGlobalBounds().height/2);
 
+    t_version.setFont(f_font);
+    t_version.setCharacterSize(24);
+    t_version.setFillColor(sf::Color(255,255,255,32));
+    t_version.setString("V4Hero Client "+hero_version);
+
     /** Initialize main menu **/
 
     mainMenu.Initialise(&config,&keyMap,this);
@@ -293,18 +298,21 @@ void V4Core::Init()
             //currentController.Update(window,fps);
 
         //} else {
-        if (savereader.isNewSave){
-            newGameMenu.Update(window,fps,&keyMap,&keyMapHeld);
-        } else {
+        //if (savereader.isNewSave){
+        //    newGameMenu.Update(window,fps,&keyMap,&keyMapHeld);
+        //} else {
             mainMenu.Update(window,fps,&keyMap,&keyMapHeld);
-        }
+        //}
         //}
 
         auto lastView = window.getView();
         window.setView(window.getDefaultView());
 
-        t_debug.setPosition(window.getSize().x/2,window.getSize().y-20);
-        window.draw(t_debug);
+        //t_debug.setPosition(window.getSize().x/2,window.getSize().y-20);
+        //window.draw(t_debug);
+
+        t_version.setPosition(4,4);
+        window.draw(t_version);
         window.display();
 
         window.setView(lastView);

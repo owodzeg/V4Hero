@@ -31,7 +31,6 @@ void PSprite::loadFromFile(std::string file, int q)
         break;
     }
 
-    sq = "M";
     std::string c = a+"_"+sq+b;
 
     quality = q;
@@ -39,6 +38,7 @@ void PSprite::loadFromFile(std::string file, int q)
     std::cout << "[PSPRITE] Loading " << c << std::endl;
 
     t.loadFromFile(c);
+    t.setSmooth(true);
     s.setTexture(t);
 }
 

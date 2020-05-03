@@ -70,7 +70,7 @@ class MissionController
     float gravity=981;
     float floorY=200;
 
-    float army_X = 400;
+    float army_X = 800;
 
     std::vector<Patapon> units; ///temporary until a better solution is possible
 
