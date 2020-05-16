@@ -7,6 +7,7 @@
 #include "Units/Projectile.h"
 #include "../Math/PVector.h"
 #include "Units/HitboxFrame.h"
+#include "../V4Core.h"
 MissionController::MissionController()
 {
     ///first initialization, fill the buffers
@@ -20,9 +21,9 @@ MissionController::MissionController()
     hatapon = new Hatapon;
 
 }
-void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,std::string backgroundString)
+void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,std::string backgroundString,V4Core &v4core_)
 {
-
+    v4core = &v4core_;
     sf::Context context;
     test_bg.Load(backgroundString, config);//config.GetString("debugBackground"));
 
@@ -244,6 +245,7 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
     units.push_back(*patapon);
 
     rhythm.LoadTheme(songName); // missionConfig->GetString("debugTheme")
+    v4core->LoadingWaitForKeyPress();
     isFinishedLoading=true;
 }
 void MissionController::StopMission()

@@ -66,6 +66,11 @@ V4Core::V4Core()
     t_version.setFillColor(sf::Color(255,255,255,32));
     t_version.setString("V4Hero Client "+hero_version);
 
+    t_pressAnyKey.setFont(f_font);
+    t_pressAnyKey.setCharacterSize(42);
+    t_pressAnyKey.setFillColor(sf::Color(255,255,255,255));
+    t_pressAnyKey.setString("Press any key to continue...");
+
     /** Initialize main menu **/
 
     mainMenu.Initialise(&config,&keyMap,this);
@@ -84,6 +89,30 @@ V4Core::V4Core()
         newGameMenu.Hide();
     }
 }
+void V4Core::LoadingWaitForKeyPress()
+{
+    bool biff = true;
+    pressAnyKey = true;
+    while (biff)
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+
+            if(event.type == sf::Event::KeyReleased)
+            {
+                cout << "[DEBUG] Key released: " << event.key.code << endl;
+                //keyMapHeld[event.key.code] = false;
+                biff=false;
+                pressAnyKey = false;
+                continueLoading = false;
+            }
+
+        }
+    }
+}
 void V4Core::LoadingThread()
 {
     sf::Context context;
@@ -97,13 +126,22 @@ void V4Core::LoadingThread()
         i++;
         window.clear();
         // drawing some text
-        t_version.setPosition(config.GetInt("resX")/2-50-100*sin(i/50.0),config.GetInt("resY")/2-20-100*sin((i+30)/50.0));
-        window.draw(t_version);
+        if (!pressAnyKey){
+            t_version.setPosition(config.GetInt("resX")/2-50-100*sin(i/50.0),config.GetInt("resY")/2-20-100*sin((i+30)/50.0));
+            window.draw(t_version);
+        } else {
+            t_pressAnyKey.setPosition(12,config.GetInt("resY")-54);
+            window.draw(t_version);
+            window.draw(t_pressAnyKey);
+        }
 
         window.display();
+
     }
 
     window.setActive(false);
+
+
 
 }
 void V4Core::ShowTip()
@@ -130,230 +168,228 @@ void V4Core::Init()
 
     while (window.isOpen())
     {
+        sf::Event event;
+        while (window.pollEvent(event))
         {
-            sf::Event event;
-            while (window.pollEvent(event))
-            {
-                if (event.type == sf::Event::Closed)
-                    window.close();
-
-                if(event.type == sf::Event::KeyPressed)
-                {
-                    ///keyMap[event.key.code] = true/false??? would that do the trick?
-                    cout << "[DEBUG] Key pressed: " << event.key.code << endl;
-
-                    keyMap[event.key.code] = true;
-                    keyMapHeld[event.key.code] = true;
-
-                    //if (!inMission){
-                    //inMission=true;
-                    //currentController.StartMission();
-                    //} else if(event.key.code==59) {
-                    //    cout<<"Returning to main menu...";
-                    //    inMission=false;
-                    //}
-                }
-
-                if(event.type == sf::Event::KeyReleased)
-                {
-                    cout << "[DEBUG] Key released: " << event.key.code << endl;
-                    keyMapHeld[event.key.code] = false;
-                }
-
-                /**
-                Joystick map (x360, ds4 is turned off by default, unsure about custom joysticks)
-                0 - square
-                1 - cross
-                2 - circle
-                3 - triangle
-                4 - L1
-                5 - R1
-                6 - L2
-                7 - R2
-                8 - share (start)
-                9 - options (select)
-                10 - L3 (analog)
-                11 - R3 (analog)
-                12 - PS/XB button
-                13 - DS4 touchpad
-                **/
-
-                if (event.type == sf::Event::JoystickButtonPressed)
-                {
-                    if(event.joystickButton.joystickId == 0)
-                    {
-                        std::cout << "[DEBUG] Joystick (" << event.joystickButton.joystickId << ") key pressed: " << event.joystickButton.button << std::endl;
-
-                        /// TEMPORARY SOLUTION! Make joysticks mappable in future, just like keyboard. //
-                        switch(event.joystickButton.button)
-                        {
-                        case 0:
-                        {
-                            keyMap[config.GetInt("keybindPata")] = true;
-                            keyMapHeld[config.GetInt("keybindPata")] = true;
-                            break;
-                        }
-
-                        case 1:
-                        {
-                            keyMap[config.GetInt("keybindDon")] = true;
-                            keyMapHeld[config.GetInt("keybindDon")] = true;
-                            break;
-                        }
-
-                        case 2:
-                        {
-                            keyMap[config.GetInt("keybindPon")] = true;
-                            keyMapHeld[config.GetInt("keybindPon")] = true;
-                            break;
-                        }
-
-                        case 3:
-                        {
-                            keyMap[config.GetInt("keybindChaka")] = true;
-                            keyMapHeld[config.GetInt("keybindChaka")] = true;
-                            break;
-                        }
-
-                        case 4:
-                        {
-                            keyMap[sf::Keyboard::Q] = true;
-                            keyMapHeld[sf::Keyboard::Q] = true;
-                            break;
-                        }
-
-                        case 5:
-                        {
-                            keyMap[sf::Keyboard::E] = true;
-                            keyMapHeld[sf::Keyboard::E] = true;
-                            break;
-                        }
-                        }
-                    }
-                }
-
-                if (event.type == sf::Event::JoystickButtonReleased)
-                {
-                    if(event.joystickButton.joystickId == 0)
-                    {
-                        std::cout << "[DEBUG] Joystick (" << event.joystickButton.joystickId << ") key released: " << event.joystickButton.button << std::endl;
-
-                        /// TEMPORARY SOLUTION! Make joysticks mappable in future, just like keyboard. //
-                        switch(event.joystickButton.button)
-                        {
-                        case 0:
-                        {
-                            keyMapHeld[config.GetInt("keybindPata")] = false;
-                            break;
-                        }
-
-                        case 1:
-                        {
-                            keyMapHeld[config.GetInt("keybindDon")] = false;
-                            break;
-                        }
-
-                        case 2:
-                        {
-                            keyMapHeld[config.GetInt("keybindPon")] = false;
-                            break;
-                        }
-
-                        case 3:
-                        {
-                            keyMapHeld[config.GetInt("keybindChaka")] = false;
-                            break;
-                        }
-
-                        case 4:
-                        {
-                            keyMapHeld[sf::Keyboard::Q] = false;
-                            break;
-                        }
-
-                        case 5:
-                        {
-                            keyMapHeld[sf::Keyboard::E] = false;
-                            break;
-                        }
-                        }
-                    }
-                }
-
-                if (event.type == sf::Event::JoystickMoved)
-                {
-                    if(event.joystickMove.joystickId == 0)
-                    {
-                        if (event.joystickMove.axis == sf::Joystick::PovX)
-                        {
-                            if(event.joystickMove.position == -100)
-                            {
-                                cout << "left" << endl;
-                            }
-
-                            if(event.joystickMove.position == 100)
-                            {
-                                cout << "right" << endl;
-                            }
-                        }
-
-                        if (event.joystickMove.axis == sf::Joystick::PovY)
-                        {
-                            if(event.joystickMove.position == -100)
-                            {
-                                cout << "down" << endl;
-                            }
-
-                            if(event.joystickMove.position == 100)
-                            {
-                                cout << "up" << endl;
-                            }
-                        }
-                    }
-                }
-
-                if (savereader.isNewSave)
-                {
-                    newGameMenu.EventFired(event);
-                }
-                mainMenu.EventFired(event);
-            }
-
-            fps = float(1000000) / fpsclock.getElapsedTime().asMicroseconds();
-            fpsclock.restart();
-
-            //cout << fps << endl;
-
-            window.clear();
-            // Something important goes here ok cool thanks
-            //if(inMission){
-            //currentController.Update(window,fps);
-
-            //} else {
-            //if (savereader.isNewSave){
-            //    newGameMenu.Update(window,fps,&keyMap,&keyMapHeld);
-            //} else {
-            mainMenu.Update(window,fps,&keyMap,&keyMapHeld);
-            //}
-            //}
-
-            auto lastView = window.getView();
-            window.setView(window.getDefaultView());
-
-            //t_debug.setPosition(window.getSize().x/2,window.getSize().y-20);
-            //window.draw(t_debug);
-
-            t_version.setPosition(4,4);
-            window.draw(t_version);
-            window.display();
-
-            window.setView(lastView);
-
-            keyMap.clear();
-            if(closeWindow)
-            {
+            if (event.type == sf::Event::Closed)
                 window.close();
+
+            if(event.type == sf::Event::KeyPressed)
+            {
+                ///keyMap[event.key.code] = true/false??? would that do the trick?
+                cout << "[DEBUG] Key pressed: " << event.key.code << endl;
+
+                keyMap[event.key.code] = true;
+                keyMapHeld[event.key.code] = true;
+
+                //if (!inMission){
+                //inMission=true;
+                //currentController.StartMission();
+                //} else if(event.key.code==59) {
+                //    cout<<"Returning to main menu...";
+                //    inMission=false;
+                //}
             }
+
+            if(event.type == sf::Event::KeyReleased)
+            {
+                cout << "[DEBUG] Key released: " << event.key.code << endl;
+                keyMapHeld[event.key.code] = false;
+            }
+
+            /**
+            Joystick map (x360, ds4 is turned off by default, unsure about custom joysticks)
+            0 - square
+            1 - cross
+            2 - circle
+            3 - triangle
+            4 - L1
+            5 - R1
+            6 - L2
+            7 - R2
+            8 - share (start)
+            9 - options (select)
+            10 - L3 (analog)
+            11 - R3 (analog)
+            12 - PS/XB button
+            13 - DS4 touchpad
+            **/
+
+            if (event.type == sf::Event::JoystickButtonPressed)
+            {
+                if(event.joystickButton.joystickId == 0)
+                {
+                    std::cout << "[DEBUG] Joystick (" << event.joystickButton.joystickId << ") key pressed: " << event.joystickButton.button << std::endl;
+
+                    /// TEMPORARY SOLUTION! Make joysticks mappable in future, just like keyboard. //
+                    switch(event.joystickButton.button)
+                    {
+                    case 0:
+                    {
+                        keyMap[config.GetInt("keybindPata")] = true;
+                        keyMapHeld[config.GetInt("keybindPata")] = true;
+                        break;
+                    }
+
+                    case 1:
+                    {
+                        keyMap[config.GetInt("keybindDon")] = true;
+                        keyMapHeld[config.GetInt("keybindDon")] = true;
+                        break;
+                    }
+
+                    case 2:
+                    {
+                        keyMap[config.GetInt("keybindPon")] = true;
+                        keyMapHeld[config.GetInt("keybindPon")] = true;
+                        break;
+                    }
+
+                    case 3:
+                    {
+                        keyMap[config.GetInt("keybindChaka")] = true;
+                        keyMapHeld[config.GetInt("keybindChaka")] = true;
+                        break;
+                    }
+
+                    case 4:
+                    {
+                        keyMap[sf::Keyboard::Q] = true;
+                        keyMapHeld[sf::Keyboard::Q] = true;
+                        break;
+                    }
+
+                    case 5:
+                    {
+                        keyMap[sf::Keyboard::E] = true;
+                        keyMapHeld[sf::Keyboard::E] = true;
+                        break;
+                    }
+                    }
+                }
+            }
+
+            if (event.type == sf::Event::JoystickButtonReleased)
+            {
+                if(event.joystickButton.joystickId == 0)
+                {
+                    std::cout << "[DEBUG] Joystick (" << event.joystickButton.joystickId << ") key released: " << event.joystickButton.button << std::endl;
+
+                    /// TEMPORARY SOLUTION! Make joysticks mappable in future, just like keyboard. //
+                    switch(event.joystickButton.button)
+                    {
+                    case 0:
+                    {
+                        keyMapHeld[config.GetInt("keybindPata")] = false;
+                        break;
+                    }
+
+                    case 1:
+                    {
+                        keyMapHeld[config.GetInt("keybindDon")] = false;
+                        break;
+                    }
+
+                    case 2:
+                    {
+                        keyMapHeld[config.GetInt("keybindPon")] = false;
+                        break;
+                    }
+
+                    case 3:
+                    {
+                        keyMapHeld[config.GetInt("keybindChaka")] = false;
+                        break;
+                    }
+
+                    case 4:
+                    {
+                        keyMapHeld[sf::Keyboard::Q] = false;
+                        break;
+                    }
+
+                    case 5:
+                    {
+                        keyMapHeld[sf::Keyboard::E] = false;
+                        break;
+                    }
+                    }
+                }
+            }
+
+            if (event.type == sf::Event::JoystickMoved)
+            {
+                if(event.joystickMove.joystickId == 0)
+                {
+                    if (event.joystickMove.axis == sf::Joystick::PovX)
+                    {
+                        if(event.joystickMove.position == -100)
+                        {
+                            cout << "left" << endl;
+                        }
+
+                        if(event.joystickMove.position == 100)
+                        {
+                            cout << "right" << endl;
+                        }
+                    }
+
+                    if (event.joystickMove.axis == sf::Joystick::PovY)
+                    {
+                        if(event.joystickMove.position == -100)
+                        {
+                            cout << "down" << endl;
+                        }
+
+                        if(event.joystickMove.position == 100)
+                        {
+                            cout << "up" << endl;
+                        }
+                    }
+                }
+            }
+
+            if (savereader.isNewSave)
+            {
+                newGameMenu.EventFired(event);
+            }
+            mainMenu.EventFired(event);
+        }
+
+        fps = float(1000000) / fpsclock.getElapsedTime().asMicroseconds();
+        fpsclock.restart();
+
+        //cout << fps << endl;
+
+        window.clear();
+        // Something important goes here ok cool thanks
+        //if(inMission){
+        //currentController.Update(window,fps);
+
+        //} else {
+        //if (savereader.isNewSave){
+        //    newGameMenu.Update(window,fps,&keyMap,&keyMapHeld);
+        //} else {
+        mainMenu.Update(window,fps,&keyMap,&keyMapHeld);
+        //}
+        //}
+
+        auto lastView = window.getView();
+        window.setView(window.getDefaultView());
+
+        //t_debug.setPosition(window.getSize().x/2,window.getSize().y-20);
+        //window.draw(t_debug);
+
+        t_version.setPosition(4,4);
+        window.draw(t_version);
+        window.display();
+
+        window.setView(lastView);
+
+        keyMap.clear();
+        if(closeWindow)
+        {
+            window.close();
         }
     }
     cout<<"Main game loop exited. Shutting down..."<<endl;

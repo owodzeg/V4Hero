@@ -50,7 +50,7 @@ void ObeliskButtonList::SelectButton(int index){
                     parentMenu->v4core->window.setActive(false);
                     loadingThreadInstance.launch();
 
-                    currentController->Initialise(*config,*keyMap,config->GetString("mission1Background"));
+                    currentController->Initialise(*config,*keyMap,config->GetString("mission1Background"),*parentMenu->v4core);
                     currentController->StartMission(config->GetString("mission1Theme"),1);
                     obeliskMenu->parentMenu->Hide();
                     obeliskMenu->parentMenu->isActive=false;
@@ -69,7 +69,7 @@ void ObeliskButtonList::SelectButton(int index){
                     parentMenu->v4core->window.setActive(false);
                     loadingThreadInstance.launch();
 
-                    currentController->Initialise(*config,*keyMap,config->GetString("mission2Background"));
+                    currentController->Initialise(*config,*keyMap,config->GetString("mission2Background"),*parentMenu->v4core);
                     currentController->StartMission(config->GetString("mission2Theme"),2);
                     obeliskMenu->parentMenu->Hide();
                     obeliskMenu->parentMenu->isActive=false;

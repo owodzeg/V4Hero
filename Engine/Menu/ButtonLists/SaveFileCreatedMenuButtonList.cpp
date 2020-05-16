@@ -25,7 +25,7 @@ void SaveFileCreatedMenuButtonList::SelectButton(int index){
     switch (currentIndex){
             case 0:
                 /// start first mission
-                currentController->Initialise(*config,*keyMap,config->GetString("mission2Background"));
+                currentController->Initialise(*config,*keyMap,config->GetString("mission2Background"),*parentMenu->v4core);
                 currentController->StartMission(config->GetString("mission2Theme"),true);
                 parentMenu->Hide();
                 parentMenu->v4core->savereader.isNewSave = false;

@@ -26,6 +26,7 @@ class V4Core
         sf::Font f_font;
         sf::Text t_debug;
         sf::Text t_version;
+        sf::Text t_pressAnyKey;
         float fps = 60;
         sf::Clock fpsclock;
 
@@ -45,7 +46,8 @@ class V4Core
         void Init();
         void ShowTip();
         void LoadingThread();
+        void LoadingWaitForKeyPress();
         bool continueLoading;
+        bool pressAnyKey;
 };
-
 #endif // V4CORE_H
