@@ -6,6 +6,7 @@
 #include "../Graphics/Menu.h"
 #include "../Mission/MissionController.h"
 #include "OptionsMenu.h"
+#include "NewGameNameEntryMenu.h"
 #include "Patapolis.h"
 #include "../Graphics/PSprite.h"
 class V4Core;
@@ -38,6 +39,7 @@ class MainMenu : public Menu
         float g_x[4], g_dest[4];
         Config *config;
         PatapolisMenu patapolisMenu;
+        NewGameNameEntryMenu nameEntryMenu;
         std::map<int,bool> *keyMapping;
 
         void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent);

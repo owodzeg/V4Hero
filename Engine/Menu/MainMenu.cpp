@@ -228,6 +228,20 @@ void MainMenu::SelectMenuOption()
     switch (totem_sel){
     case 0:
         // load the start game cutscenes and menu
+        {
+
+        Hide();
+        sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+        v4core->continueLoading=true;
+        v4core->window.setActive(false);
+        loadingThreadInstance.launch();
+
+        nameEntryMenu.Show();
+        nameEntryMenu.isActive = true;
+        nameEntryMenu.Initialise(config,keyMapping,v4core,this);
+
+        v4core->continueLoading=false;
+        }
         break;
     case 1:
         // load save and patapolis
@@ -433,6 +447,8 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
     } else {
         if (patapolisMenu.isActive){
             patapolisMenu.Update(window,fps);
+        } else if (nameEntryMenu.isActive){
+            nameEntryMenu.Update(window,fps);
         } else {
         }
     }
