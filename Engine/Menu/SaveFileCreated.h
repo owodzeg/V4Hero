@@ -9,6 +9,7 @@
 #include "Patapolis.h"
 #include "MenuButton.h"
 class V4Core;
+class NewGameNameEntryMenu;
 class SaveFileCreatedMenu : public Menu
 {
     public:
@@ -25,10 +26,9 @@ class SaveFileCreatedMenu : public Menu
         SaveFileCreatedMenuButtonList buttonList;
         string kamiName = "";
 
-        OptionsMenu optionsMenu;
-        PatapolisMenu patapolisMenu;
+        NewGameNameEntryMenu* nameEntryMenu;
         void UpdateKamiName(string newName);
-        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent,Menu* parentMenu);
+        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent,NewGameNameEntryMenu* parentMenu);
 
         void Update(sf::RenderWindow &window, float fps);
         void EventFired(sf::Event event);

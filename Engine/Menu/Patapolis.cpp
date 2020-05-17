@@ -94,7 +94,9 @@ void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4
     possibleMenuPositions = {-6000, -4000,-2880,-730,350};
     currentMenuPosition = 2;
     // write code here
-    v4core->LoadingWaitForKeyPress();
+    initialised=true;
+    if (doWaitKeyPress)
+        v4core->LoadingWaitForKeyPress();
 }
 void PatapolisMenu::EventFired(sf::Event event)
 {

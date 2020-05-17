@@ -28,5 +28,24 @@ void EndFlag::OnCollide(CollidableObject* otherObject)
     thisConfig->thisCore->currentController.StopMission();
 
     cout << "Go to Patapolis" << endl;
-    thisConfig->thisCore->mainMenu.patapolisMenu.Show();
+
+    if (!thisConfig->thisCore->mainMenu.patapolisMenu.initialised){
+        /// patapolis might not be initialised because we could be running the pre-patapolis scripted first mission.
+
+        thisConfig->thisCore->continueLoading=true;
+        thisConfig->thisCore->window.setActive(false);
+        sf::Thread loadingThreadInstance(thisConfig->thisCore->LoadingThread,thisConfig->thisCore);
+        loadingThreadInstance.launch();
+
+        thisConfig->thisCore->mainMenu.patapolisMenu.doWaitKeyPress = false;
+        thisConfig->thisCore->mainMenu.patapolisMenu.Show();
+        thisConfig->thisCore->mainMenu.patapolisMenu.isActive = true;
+        thisConfig->thisCore->mainMenu.patapolisMenu.Initialise(thisConfig,thisConfig->thisCore->mainMenu.keyMapping,thisConfig->thisCore,&thisConfig->thisCore->mainMenu);
+
+        thisConfig->thisCore->continueLoading=false;
+
+    } else {
+        thisConfig->thisCore->mainMenu.patapolisMenu.Show();
+        thisConfig->thisCore->mainMenu.patapolisMenu.isActive = true;
+    }
 }

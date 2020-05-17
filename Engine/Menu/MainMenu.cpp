@@ -180,6 +180,10 @@ void MainMenu::EventFired(sf::Event event){
     {
         patapolisMenu.EventFired(event);
     }
+    else if (nameEntryMenu.isActive)
+    {
+        nameEntryMenu.EventFired(event);
+    }
     else if (v4core->currentController.isInitialized)
     {
         if(event.type == sf::Event::KeyPressed)

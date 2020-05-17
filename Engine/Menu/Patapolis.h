@@ -32,6 +32,8 @@ class PatapolisMenu : public Menu
         float animChangeVal;
         float totalTime;
         bool isAnim = false;
+        bool initialised=false;
+        bool doWaitKeyPress=true;
 
         AltarMenu altar_menu;
         Barracks barracks_menu;

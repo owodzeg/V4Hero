@@ -101,7 +101,7 @@ void V4Core::LoadingWaitForKeyPress()
             if (event.type == sf::Event::Closed)
                 window.close();
 
-            if(event.type == sf::Event::KeyReleased)
+            if(event.type == sf::Event::KeyPressed)
             {
                 cout << "[DEBUG] Key released: " << event.key.code << endl;
                 //keyMapHeld[event.key.code] = false;

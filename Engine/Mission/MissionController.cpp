@@ -63,10 +63,7 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
 
     ///THIS DOESN'T WORK. CHANGE TO SMART POINTERS.
 
-    for(auto it=tangibleLevelObjects.begin(); it!=tangibleLevelObjects.end(); ++it)
-    {
-        delete *it;
-    }
+
 
     tangibleLevelObjects.clear();
     units.clear();
@@ -113,7 +110,6 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
 
     army_X=0;
     camera.camera_x=480;
-    missionTimer.restart();
     showTimer = false;
 
     switch(quality)
@@ -244,9 +240,10 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
     units.push_back(*patapon);
     units.push_back(*patapon);
 
-    rhythm.LoadTheme(songName); // missionConfig->GetString("debugTheme")
-    v4core->LoadingWaitForKeyPress();
     isFinishedLoading=true;
+    v4core->LoadingWaitForKeyPress();
+    rhythm.LoadTheme(songName); // missionConfig->GetString("debugTheme")
+    missionTimer.restart();
 }
 void MissionController::StopMission()
 {
