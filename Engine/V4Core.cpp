@@ -72,8 +72,11 @@ V4Core::V4Core()
     t_pressAnyKey.setString("Press any key to continue...");
 
     /** Initialize main menu **/
-
+    tipsUtil.LoadBackgrounds(config);
+    tipsUtil.LoadIcons(config);
+    tipsUtil.LoadStrings(config);
     mainMenu.Initialise(&config,&keyMap,this);
+
     menus.push_back(&mainMenu);
     config.configDebugID = 10;
 
@@ -121,6 +124,31 @@ void V4Core::LoadingThread()
     window.clear();
     window.display();
     int i=0;
+    srand (time(NULL));
+    int tipBackground = rand() % tipsUtil.t_backgrounds.size();
+    int tipIcon = rand() % tipsUtil.t_icons.size();
+    int tipText = rand() % tipsUtil.tipTitles.size();
+    int ScrWidth = 3840;
+    int ScrHeight = 2160;
+
+
+    sf::Text t_tipTitle = sf::Text();
+    t_tipTitle.setFont(f_font);
+    t_tipTitle.setCharacterSize(42*config.GetInt("resX")/1280);
+    t_tipTitle.setFillColor(sf::Color(255,255,255,255));
+    t_tipTitle.setString(tipsUtil.tipTitles[tipText]);
+    std::vector<std::string> lines = Func::Split(tipsUtil.tipTexts[tipText],'\\');
+    std::vector<sf::Text> t_tipTextLines;
+    for (auto it = lines.begin();it<lines.end();++it){
+        sf::Text t_tipText = sf::Text();
+        t_tipText.setFont(f_font);
+        t_tipText.setCharacterSize(28*config.GetInt("resX")/1280);
+        t_tipText.setFillColor(sf::Color(255,255,255,255));
+        t_tipText.setString(*it);
+        t_tipTextLines.push_back(t_tipText);
+    }
+
+
     while (continueLoading)
     {
         i++;
@@ -128,9 +156,33 @@ void V4Core::LoadingThread()
         // drawing some text
         if (!pressAnyKey){
             t_version.setPosition(config.GetInt("resX")/2-50-100*sin(i/50.0),config.GetInt("resY")/2-20-100*sin((i+30)/50.0));
+            tipsUtil.t_backgrounds[tipBackground].setPosition(0,0);
+            tipsUtil.t_backgrounds[tipBackground].draw(window);
+
+            tipsUtil.t_icons[tipIcon].setPosition((ScrWidth*3)/4,ScrHeight/4);
+            tipsUtil.t_icons[tipIcon].draw(window);
+            t_tipTitle.setPosition(24,42);
+            window.draw(t_tipTitle);
+            for (int i = 0;i<t_tipTextLines.size();++i){
+                t_tipTextLines[i].setPosition(24,152+26*i);
+                window.draw(t_tipTextLines[i]);
+            }
             window.draw(t_version);
         } else {
             t_pressAnyKey.setPosition(12,config.GetInt("resY")-54);
+            tipsUtil.t_backgrounds[tipBackground].setPosition(0,0);
+            tipsUtil.t_backgrounds[tipBackground].draw(window);
+
+            tipsUtil.t_icons[tipIcon].setPosition((ScrWidth*3)/4,ScrHeight/4);
+            tipsUtil.t_icons[tipIcon].draw(window);
+
+            t_tipTitle.setPosition(24,42);
+            window.draw(t_tipTitle);
+
+            for (int i = 0;i<t_tipTextLines.size();++i){
+                t_tipTextLines[i].setPosition(24,152+26*i);
+                window.draw(t_tipTextLines[i]);
+            }
             window.draw(t_version);
             window.draw(t_pressAnyKey);
         }

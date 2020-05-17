@@ -14,6 +14,7 @@
 #include "Graphics/Menu.h"
 #include "SaveReader.h"
 #include "Menu/NewGameMenu.h"
+#include "TipsUtil.h"
 class V4Core
 {
     private:
@@ -38,6 +39,7 @@ class V4Core
         NewGameMenu newGameMenu;
         MainMenu mainMenu;
         Config config;
+        TipsUtil tipsUtil;
         SaveReader savereader;
         MissionController currentController;
         V4Core();
