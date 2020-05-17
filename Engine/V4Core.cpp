@@ -139,10 +139,11 @@ void V4Core::LoadingThread()
     t_tipTitle.setString(tipsUtil.tipTitles[tipText]);
     std::vector<std::string> lines = Func::Split(tipsUtil.tipTexts[tipText],'\\');
     std::vector<sf::Text> t_tipTextLines;
+    int textSize = 28*config.GetInt("resX")/1280;
     for (auto it = lines.begin();it<lines.end();++it){
         sf::Text t_tipText = sf::Text();
         t_tipText.setFont(f_font);
-        t_tipText.setCharacterSize(28*config.GetInt("resX")/1280);
+        t_tipText.setCharacterSize(textSize);
         t_tipText.setFillColor(sf::Color(255,255,255,255));
         t_tipText.setString(*it);
         t_tipTextLines.push_back(t_tipText);
@@ -164,7 +165,7 @@ void V4Core::LoadingThread()
             t_tipTitle.setPosition(24,42);
             window.draw(t_tipTitle);
             for (int i = 0;i<t_tipTextLines.size();++i){
-                t_tipTextLines[i].setPosition(24,152+26*i);
+                t_tipTextLines[i].setPosition(24,152+(textSize+4)*i);
                 window.draw(t_tipTextLines[i]);
             }
             window.draw(t_version);
@@ -180,7 +181,7 @@ void V4Core::LoadingThread()
             window.draw(t_tipTitle);
 
             for (int i = 0;i<t_tipTextLines.size();++i){
-                t_tipTextLines[i].setPosition(24,152+26*i);
+                t_tipTextLines[i].setPosition(24,152+(textSize+4)*i);
                 window.draw(t_tipTextLines[i]);
             }
             window.draw(t_version);
