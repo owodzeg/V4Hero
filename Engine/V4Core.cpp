@@ -131,6 +131,9 @@ void V4Core::LoadingThread()
     int ScrWidth = 3840;
     int ScrHeight = 2160;
 
+    int WScrWidth = config.GetInt("resX");
+    int WScrHeight = config.GetInt("resY");
+
 
     sf::Text t_tipTitle = sf::Text();
     t_tipTitle.setFont(f_font);
@@ -162,10 +165,10 @@ void V4Core::LoadingThread()
 
             tipsUtil.t_icons[tipIcon].setPosition((ScrWidth*3)/4,ScrHeight/4);
             tipsUtil.t_icons[tipIcon].draw(window);
-            t_tipTitle.setPosition(24,42);
+            t_tipTitle.setPosition(24,42*WScrWidth/1280);
             window.draw(t_tipTitle);
             for (int i = 0;i<t_tipTextLines.size();++i){
-                t_tipTextLines[i].setPosition(24,152+(textSize+4)*i);
+                t_tipTextLines[i].setPosition(24,152*WScrWidth/1280+(textSize+4)*i);
                 window.draw(t_tipTextLines[i]);
             }
             window.draw(t_version);
@@ -177,11 +180,11 @@ void V4Core::LoadingThread()
             tipsUtil.t_icons[tipIcon].setPosition((ScrWidth*3)/4,ScrHeight/4);
             tipsUtil.t_icons[tipIcon].draw(window);
 
-            t_tipTitle.setPosition(24,42);
+            t_tipTitle.setPosition(24,42*WScrWidth/1280);
             window.draw(t_tipTitle);
 
             for (int i = 0;i<t_tipTextLines.size();++i){
-                t_tipTextLines[i].setPosition(24,152+(textSize+4)*i);
+                t_tipTextLines[i].setPosition(24,152*WScrWidth/1280+(textSize+4)*i);
                 window.draw(t_tipTextLines[i]);
             }
             window.draw(t_version);
