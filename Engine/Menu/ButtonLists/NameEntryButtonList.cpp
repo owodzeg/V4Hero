@@ -43,7 +43,7 @@ void NameEntryButtonList::SelectButton(int index){
             case 0:
                 /// start first mission
                 if (trim(savMenu->GetEnteredString()," \t").length()>1 && trim(savMenu->GetEnteredString()," \t").length()<50) {
-                    parentMenu->Hide();
+
                     savMenu->savefilecreated.Show();
                     savMenu->savefilecreated.isActive = true;
                     savMenu->savefilecreated.UpdateKamiName(savMenu->GetEnteredString());

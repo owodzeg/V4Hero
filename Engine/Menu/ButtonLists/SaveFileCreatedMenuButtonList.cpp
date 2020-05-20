@@ -19,18 +19,24 @@ void SaveFileCreatedMenuButtonList::Initialise(sf::Font *font,Config &newConfig,
     buttons[0].SetSelected(false);
 
     this->SelectButtons = false;
+    svCrtMnu = parMenu;
 }
 void SaveFileCreatedMenuButtonList::SelectButton(int index){
     currentIndex = index;
     switch (currentIndex){
             case 0:
-                /// start first mission
-                currentController->Initialise(*config,*keyMap,config->GetString("mission2Background"));
-                currentController->StartMission(config->GetString("mission2Theme"),true);
+                sf::Thread loadingThreadInstance(parentMenu->v4core->LoadingThread,parentMenu->v4core);
+                parentMenu->v4core->continueLoading=true;
+                parentMenu->v4core->window.setActive(false);
+                loadingThreadInstance.launch();
+
                 parentMenu->Hide();
-                parentMenu->v4core->savereader.isNewSave = false;
-                parentMenu->v4core->newGameMenu.Hide();
-                parentMenu->v4core->mainMenu.Hide();
+                parentMenu->isActive = false;
+                svCrtMnu->nameEntryMenu->Hide();
+
+                currentController->Initialise(*config,*keyMap,config->GetString("mission2Background"),*parentMenu->v4core);
+                currentController->StartMission(config->GetString("mission2Theme"),2,true);
+
 
                 break;
 

@@ -37,7 +37,6 @@ NewGameNameEntryMenu::NewGameNameEntryMenu()
 
     mm_titleBox.setSize(sf::Vector2f(100,10));
     mm_titleBox.setFillColor(sf::Color::Red);
-    isActive=true;
 }
 void NewGameNameEntryMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent,Menu* parentMenu){
     Scene::Initialise(thisConfigs,keymap,parent);
@@ -59,7 +58,12 @@ string NewGameNameEntryMenu::GetEnteredString(){
     return currentText.toAnsiString();
 }
 void NewGameNameEntryMenu::EventFired(sf::Event event){
-    if(isActive){
+    if(savefilecreated.isActive)
+    {
+        savefilecreated.EventFired(event);
+    }
+    else if(isActive)
+    {
         if(event.type == sf::Event::KeyPressed)
         {
             if(event.key.code==sf::Keyboard::Enter) {

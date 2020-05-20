@@ -8,6 +8,7 @@ DoAutoScale=true;
 
 void PSprite::loadFromFile(std::string file, int q)
 {
+    std::cout<<file<<std::endl;
     std::string a = file.substr(0,file.find_last_of("."));
     std::string b = file.substr(file.find_last_of("."));
     std::string sq = "";

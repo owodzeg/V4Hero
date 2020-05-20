@@ -35,9 +35,9 @@ SaveFileCreatedMenu::SaveFileCreatedMenu()
     mm_titleBox.setFillColor(sf::Color::Red);
     isActive=true;
 }
-void SaveFileCreatedMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent,Menu* parentMenu){
+void SaveFileCreatedMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent,NewGameNameEntryMenu* parentMenu_){
     Scene::Initialise(thisConfigs,keymap,parent);
-    v4core->menus.push_back(&optionsMenu);
+    //v4core->menus.push_back(&optionsMenu);
     buttonList.Initialise(&f_font,*thisConfig,keymap,&(v4core->currentController),this);
 
     t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_game_save_created")));
@@ -51,6 +51,7 @@ void SaveFileCreatedMenu::Initialise(Config *thisConfigs,std::map<int,bool> *key
 
     t_welcome3.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_welcome2")));
     t_welcome3.setOrigin(t_welcome3.getGlobalBounds().width/2,t_welcome3.getGlobalBounds().height/2);
+    nameEntryMenu = parentMenu_;
 
 }
 void SaveFileCreatedMenu::UpdateKamiName(string newName){

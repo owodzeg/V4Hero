@@ -6,6 +6,7 @@
 #include "../Graphics/Menu.h"
 #include "../Mission/MissionController.h"
 #include "OptionsMenu.h"
+#include "NewGameNameEntryMenu.h"
 #include "Patapolis.h"
 #include "../Graphics/PSprite.h"
 class V4Core;
@@ -34,15 +35,18 @@ class MainMenu : public Menu
         int totem_sel = 0;
         int old_sel = 0;
         float fire = 0;
-
+        bool UsingMouseSelection = true;
         float g_x[4], g_dest[4];
-
+        Config *config;
         PatapolisMenu patapolisMenu;
-        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent);
+        NewGameNameEntryMenu nameEntryMenu;
+        std::map<int,bool> *keyMapping;
 
+        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent);
         void Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld);
         void EventFired(sf::Event event);
         void OnExit();
+        void SelectMenuOption();
         void UpdateButtons();
         MainMenu();
         ~MainMenu();

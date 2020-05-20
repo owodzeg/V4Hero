@@ -23,7 +23,10 @@ PatapolisMenu::PatapolisMenu()
 
     isActive=false;
 }
-void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, Menu *curParentMenu){
+void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, Menu *curParentMenu)
+{
+
+    sf::Context context;
     Scene::Initialise(thisConfigs,keymap,parent);
     altar_menu.Initialise(thisConfigs,keymap,parent,this);
     barracks_menu.Initialise(thisConfigs,keymap,parent,this);
@@ -33,33 +36,33 @@ void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4
     float ratioX, ratioY;
     switch(quality)
     {
-        case 0: ///low
-        {
-            ratioX = thisConfig->GetInt("resX") / float(640);
-            ratioY = thisConfig->GetInt("resY") / float(360);
-            break;
-        }
+    case 0: ///low
+    {
+        ratioX = thisConfig->GetInt("resX") / float(640);
+        ratioY = thisConfig->GetInt("resY") / float(360);
+        break;
+    }
 
-        case 1: ///med
-        {
-            ratioX = thisConfig->GetInt("resX") / float(1280);
-            ratioY = thisConfig->GetInt("resY") / float(720);
-            break;
-        }
+    case 1: ///med
+    {
+        ratioX = thisConfig->GetInt("resX") / float(1280);
+        ratioY = thisConfig->GetInt("resY") / float(720);
+        break;
+    }
 
-        case 2: ///high
-        {
-            ratioX = thisConfig->GetInt("resX") / float(1920);
-            ratioY = thisConfig->GetInt("resY") / float(1080);
-            break;
-        }
+    case 2: ///high
+    {
+        ratioX = thisConfig->GetInt("resX") / float(1920);
+        ratioY = thisConfig->GetInt("resY") / float(1080);
+        break;
+    }
 
-        case 3: ///ultra
-        {
-            ratioX = thisConfig->GetInt("resX") / float(3840);
-            ratioY = thisConfig->GetInt("resY") / float(2160);
-            break;
-        }
+    case 3: ///ultra
+    {
+        ratioX = thisConfig->GetInt("resX") / float(3840);
+        ratioY = thisConfig->GetInt("resY") / float(2160);
+        break;
+    }
     }
 
     thisConfig->debugOut->DebugMessage("Patapolis loaded: Patapolis_M.png");
@@ -90,131 +93,163 @@ void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4
 
     possibleMenuPositions = {-6000, -4000,-2880,-730,350};
     currentMenuPosition = 2;
+    // write code here
+    initialised=true;
+    if (doWaitKeyPress)
+        v4core->LoadingWaitForKeyPress();
 }
-void PatapolisMenu::EventFired(sf::Event event){
-    if (altar_menu.isActive){
-            altar_menu.EventFired(event);
-    } else if (barracks_menu.isActive){
-            barracks_menu.EventFired(event);
-    } else if (obelisk_menu.isActive){
-            obelisk_menu.EventFired(event);
-    } else if(isActive){
+void PatapolisMenu::EventFired(sf::Event event)
+{
+    if (altar_menu.isActive)
+    {
+        altar_menu.EventFired(event);
+    }
+    else if (barracks_menu.isActive)
+    {
+        barracks_menu.EventFired(event);
+    }
+    else if (obelisk_menu.isActive)
+    {
+        obelisk_menu.EventFired(event);
+    }
+    else if(isActive)
+    {
         if(event.type == sf::Event::KeyPressed)
         {
             // do something here;
-            if (event.key.code == sf::Keyboard::Num1){
+            if (event.key.code == sf::Keyboard::Num1)
+            {
 
-                    animStartVal=p_background[0].x;
-                    animChangeVal=6000-p_background[0].x;
-                    anim_timer.restart();
-                    totalTime=1;
-                    isAnim = true;
-                    currentMenuPosition = 0;
-                    SetTitle(currentMenuPosition);
+                animStartVal=p_background[0].x;
+                animChangeVal=6000-p_background[0].x;
+                anim_timer.restart();
+                totalTime=1;
+                isAnim = true;
+                currentMenuPosition = 0;
+                SetTitle(currentMenuPosition);
 
-            } else if (event.key.code == sf::Keyboard::Num2){
+            }
+            else if (event.key.code == sf::Keyboard::Num2)
+            {
 
-                    animStartVal=p_background[0].x;
-                    animChangeVal=4000-p_background[0].x;
-                    anim_timer.restart();
-                    totalTime=1;
-                    isAnim = true;
-                    currentMenuPosition = 1;
-                    SetTitle(currentMenuPosition);
+                animStartVal=p_background[0].x;
+                animChangeVal=4000-p_background[0].x;
+                anim_timer.restart();
+                totalTime=1;
+                isAnim = true;
+                currentMenuPosition = 1;
+                SetTitle(currentMenuPosition);
 
-            } else if (event.key.code == sf::Keyboard::Num3){
+            }
+            else if (event.key.code == sf::Keyboard::Num3)
+            {
 
-                    animStartVal=p_background[0].x;
-                    animChangeVal=2880-p_background[0].x;
-                    anim_timer.restart();
-                    totalTime=1;
-                    isAnim = true;
-                    currentMenuPosition = 2;
-                    SetTitle(currentMenuPosition);
+                animStartVal=p_background[0].x;
+                animChangeVal=2880-p_background[0].x;
+                anim_timer.restart();
+                totalTime=1;
+                isAnim = true;
+                currentMenuPosition = 2;
+                SetTitle(currentMenuPosition);
 
-            } else if (event.key.code == sf::Keyboard::Num4){
+            }
+            else if (event.key.code == sf::Keyboard::Num4)
+            {
 
-                    animStartVal=p_background[0].x;
-                    animChangeVal=730-p_background[0].x;
-                    anim_timer.restart();
-                    totalTime=1;
-                    isAnim = true;
-                    currentMenuPosition = 3;
-                    SetTitle(currentMenuPosition);
+                animStartVal=p_background[0].x;
+                animChangeVal=730-p_background[0].x;
+                anim_timer.restart();
+                totalTime=1;
+                isAnim = true;
+                currentMenuPosition = 3;
+                SetTitle(currentMenuPosition);
 
-            } else if (event.key.code == sf::Keyboard::Num5){
+            }
+            else if (event.key.code == sf::Keyboard::Num5)
+            {
 
-                    animStartVal=p_background[0].x;
-                    animChangeVal=-p_background[0].x-350;
-                    anim_timer.restart();
-                    totalTime=1;
-                    isAnim = true;
-                    currentMenuPosition = 4;
-                    SetTitle(currentMenuPosition);
+                animStartVal=p_background[0].x;
+                animChangeVal=-p_background[0].x-350;
+                anim_timer.restart();
+                totalTime=1;
+                isAnim = true;
+                currentMenuPosition = 4;
+                SetTitle(currentMenuPosition);
 
-            } else if (event.key.code == thisConfig->GetInt("keybindPon") || event.key.code == thisConfig->GetInt("secondaryKeybindPon")){
-                    currentMenuPosition += 1;
-                    if (currentMenuPosition>possibleMenuPositions.size()-1){
-                        currentMenuPosition=0;
-                    }
-                    animStartVal=p_background[0].x;
-                    animChangeVal=-p_background[0].x-possibleMenuPositions[currentMenuPosition];
-                    anim_timer.restart();
-                    totalTime=1;
-                    isAnim = true;
-                    SetTitle(currentMenuPosition);
+            }
+            else if (event.key.code == thisConfig->GetInt("keybindPon") || event.key.code == thisConfig->GetInt("secondaryKeybindPon"))
+            {
+                currentMenuPosition += 1;
+                if (currentMenuPosition>possibleMenuPositions.size()-1)
+                {
+                    currentMenuPosition=0;
+                }
+                animStartVal=p_background[0].x;
+                animChangeVal=-p_background[0].x-possibleMenuPositions[currentMenuPosition];
+                anim_timer.restart();
+                totalTime=1;
+                isAnim = true;
+                SetTitle(currentMenuPosition);
 
 
-            } else if (event.key.code == thisConfig->GetInt("keybindPata") || event.key.code == thisConfig->GetInt("secondaryKeybindPata")){
-                    currentMenuPosition -= 1;
-                    if (currentMenuPosition<0){
-                        currentMenuPosition=4;
-                    }
-                    animStartVal=p_background[0].x;
-                    animChangeVal=-p_background[0].x-possibleMenuPositions[currentMenuPosition];
-                    anim_timer.restart();
-                    totalTime=1;
-                    isAnim = true;
-                    SetTitle(currentMenuPosition);
+            }
+            else if (event.key.code == thisConfig->GetInt("keybindPata") || event.key.code == thisConfig->GetInt("secondaryKeybindPata"))
+            {
+                currentMenuPosition -= 1;
+                if (currentMenuPosition<0)
+                {
+                    currentMenuPosition=4;
+                }
+                animStartVal=p_background[0].x;
+                animChangeVal=-p_background[0].x-possibleMenuPositions[currentMenuPosition];
+                anim_timer.restart();
+                totalTime=1;
+                isAnim = true;
+                SetTitle(currentMenuPosition);
 
-            } else if (event.key.code == thisConfig->GetInt("keybindDon") || event.key.code == thisConfig->GetInt("secondaryKeybindDon") || event.key.code == thisConfig->GetInt("keybindMenuEnter")){
-                    // select the current menu item
-                    switch (currentMenuPosition){
-                        case 0:
-                            /// trader/random
-                            // open the world map
-                            break;
-                        case 1:
-                            /// armoury/barracks
-                            barracks_menu.Show();
-                            barracks_menu.isActive = true;
-                            barracks_menu.OpenBarracksMenu();
-                            break;
-                        case 2:
-                            /// festival
-                            // open barracks screen
-                            break;
-                        case 3:
-                            /// altar
-                            // open mater menu
-                            altar_menu.Show();
-                            altar_menu.isActive = true;
-                            altar_menu.ShowAltar();
-                            break;
-                        case 4:
-                            /// obelisk
-                            // idk?
-                            // open inventory menu
-                            obelisk_menu.Show();
-                            obelisk_menu.isActive = true;
-                            break;
-                        default:
-                            /// nothing
+            }
+            else if (event.key.code == thisConfig->GetInt("keybindDon") || event.key.code == thisConfig->GetInt("secondaryKeybindDon") || event.key.code == thisConfig->GetInt("keybindMenuEnter"))
+            {
+                // select the current menu item
+                switch (currentMenuPosition)
+                {
+                case 0:
+                    /// trader/random
+                    // open the world map
+                    break;
+                case 1:
+                    /// armoury/barracks
+                    barracks_menu.Show();
+                    barracks_menu.isActive = true;
+                    barracks_menu.OpenBarracksMenu();
+                    break;
+                case 2:
+                    /// festival
+                    // open barracks screen
+                    break;
+                case 3:
+                    /// altar
+                    // open mater menu
+                    altar_menu.Show();
+                    altar_menu.isActive = true;
+                    altar_menu.ShowAltar();
+                    break;
+                case 4:
+                    /// obelisk
+                    // idk?
+                    // open inventory menu
+                    obelisk_menu.Show();
+                    obelisk_menu.isActive = true;
+                    break;
+                default:
+                    /// nothing
 
-                            break;
-                    }
+                    break;
+                }
 
-            } else if (event.key.code == thisConfig->GetInt("keybindBack")){
+            }
+            else if (event.key.code == thisConfig->GetInt("keybindBack"))
+            {
                 this->Hide();
                 this->isActive = false;
                 parentMenu->Show();
@@ -222,49 +257,56 @@ void PatapolisMenu::EventFired(sf::Event event){
             }
 
 
-        } else if (event.type == sf::Event::MouseButtonReleased){
+        }
+        else if (event.type == sf::Event::MouseButtonReleased)
+        {
             // We use mouse released so a user can change their mind by keeping the mouse held and moving away.
         }
     }
 
 }
-void PatapolisMenu::SetTitle(int menuPosition){
-    switch(menuPosition){
-        case 0:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_trader")));
-            break;
-        case 1:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_barracks")));
-            break;
-        case 2:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_festival")));
-            break;
-        case 3:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_altar")));
-            break;
-        case 4:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_obelisk")));
-            break;
-        default:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis")));
-            break;
+void PatapolisMenu::SetTitle(int menuPosition)
+{
+    switch(menuPosition)
+    {
+    case 0:
+        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_trader")));
+        break;
+    case 1:
+        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_barracks")));
+        break;
+    case 2:
+        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_festival")));
+        break;
+    case 3:
+        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_altar")));
+        break;
+    case 4:
+        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_obelisk")));
+        break;
+    default:
+        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis")));
+        break;
     }
     t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
 }
-float EaseIn (float time, float startValue, float change, float duration) {
-     time /= duration / 2;
-     if (time < 1)  {
-          return change / 2 * time * time + startValue;
-     }
+float EaseIn (float time, float startValue, float change, float duration)
+{
+    time /= duration / 2;
+    if (time < 1)
+    {
+        return change / 2 * time * time + startValue;
+    }
 
-     time--;
-     return -change / 2 * (time * (time - 2) - 1) + startValue;
+    time--;
+    return -change / 2 * (time * (time - 2) - 1) + startValue;
 };
 void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
 {
-    if(isActive){
+    if(isActive)
+    {
 
-                window.setView(window.getDefaultView());
+        window.setView(window.getDefaultView());
         mm_bigBox.setSize(sf::Vector2f(window.getSize().x,window.getSize().y-200));
         //mm_smallerBox.setSize(sf::Vector2f(100,10));
         //mm_titleBox.setSize(sf::Vector2f(100,10));
@@ -294,7 +336,8 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
         {
             isAnim = false;
         }
-        if (isAnim){
+        if (isAnim)
+        {
             p_background[0].x = EaseIn(anim_timer.getElapsedTime().asSeconds(),animStartVal,animChangeVal,totalTime);
         }
         for(int i=0; i<s_background.size(); i++)
@@ -305,23 +348,32 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
             //cout << s_background[i].y << endl;
             s_background[i].draw(window);
         }
-        if (barracks_menu.isActive){
+        if (barracks_menu.isActive)
+        {
             barracks_menu.Update(window,fps);
-        } else if(altar_menu.isActive){
+        }
+        else if(altar_menu.isActive)
+        {
             altar_menu.Update(window,fps);
-        } else if(obelisk_menu.isActive){
+        }
+        else if(obelisk_menu.isActive)
+        {
             obelisk_menu.Update(window,fps);
-        } else {
+        }
+        else
+        {
             t_title.setPosition(window.getSize().x/2,110);
             window.draw(t_title);
         }
     }
 }
 
-void PatapolisMenu::UpdateButtons(){
+void PatapolisMenu::UpdateButtons()
+{
     /// this should update the text on all the buttons
 }
-void PatapolisMenu::OnExit(){
+void PatapolisMenu::OnExit()
+{
     /// when we exit the main menu, we do nothing for now.
     /// perhaps we would want to unload sprites or songs etc
 }

@@ -10,6 +10,17 @@ class Barracks : public Menu
         sf::RectangleShape mm_bigBox;
         sf::RectangleShape mm_titleBox;
         sf::RectangleShape mm_selected_item_line;
+        Patapon* patapon;
+        Patapon* patapon2;
+        Patapon* patapon3;
+
+        sf::Texture t_background;
+        PSprite s_background;
+        float ratioX;
+        float ratioY;
+
+        float pataponY;
+        float floorY;
 
         sf::Font f_font;
         sf::Text t_title;
@@ -48,6 +59,9 @@ class Barracks : public Menu
         /// menu background
         PSprite s_menu_bkg;
         sf::Vector2f p_menu_bkg;
+
+        /// highlighted unit
+        PSprite s_pon_highlight;
 
         /// class icon
         PSprite s_class_icon;

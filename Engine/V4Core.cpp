@@ -3,7 +3,7 @@
 #include <time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
+#include <windows.h>
 #include "V4Core.h"
 
 using namespace std;
@@ -44,7 +44,7 @@ V4Core::V4Core()
         else
         strDay += "th";
     }
-*/
+    */
 
     /** Load config from config.cfg **/
     config.LoadConfig(this);
@@ -66,27 +66,151 @@ V4Core::V4Core()
     t_version.setFillColor(sf::Color(255,255,255,32));
     t_version.setString("V4Hero Client "+hero_version);
 
-    /** Initialize main menu **/
+    t_pressAnyKey.setFont(f_font);
+    t_pressAnyKey.setCharacterSize(42);
+    t_pressAnyKey.setFillColor(sf::Color(255,255,255,255));
+    t_pressAnyKey.setString("Press any key to continue...");
 
+    /** Initialize main menu **/
+    tipsUtil.LoadBackgrounds(config);
+    tipsUtil.LoadIcons(config);
+    tipsUtil.LoadStrings(config);
     mainMenu.Initialise(&config,&keyMap,this);
+
     menus.push_back(&mainMenu);
     config.configDebugID = 10;
 
     /// If this is a new save (no previous save data) we load up the new game menu
     newGameMenu.Initialise(&config,&keyMap,this);
     menus.push_back(&newGameMenu);
-    if(savereader.isNewSave){
+    if(savereader.isNewSave)
+    {
         mainMenu.Hide();
-    } else {
+    }
+    else
+    {
         newGameMenu.Hide();
     }
 }
+void V4Core::LoadingWaitForKeyPress()
+{
+    bool biff = true;
+    pressAnyKey = true;
+    while (biff)
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
 
+            if(event.type == sf::Event::KeyPressed)
+            {
+                cout << "[DEBUG] Key released: " << event.key.code << endl;
+                //keyMapHeld[event.key.code] = false;
+                biff=false;
+                pressAnyKey = false;
+                continueLoading = false;
+            }
+
+        }
+    }
+}
+void V4Core::LoadingThread()
+{
+    sf::Context context;
+    window.setActive(true);
+    window.draw(t_version);
+    window.clear();
+    window.display();
+    int i=0;
+    srand (time(NULL));
+    int tipBackground = rand() % tipsUtil.t_backgrounds.size();
+    int tipIcon = rand() % tipsUtil.t_icons.size();
+    int tipText = rand() % tipsUtil.tipTitles.size();
+    int ScrWidth = 3840;
+    int ScrHeight = 2160;
+
+    int WScrWidth = config.GetInt("resX");
+    int WScrHeight = config.GetInt("resY");
+
+
+    sf::Text t_tipTitle = sf::Text();
+    t_tipTitle.setFont(f_font);
+    t_tipTitle.setCharacterSize(42*config.GetInt("resX")/1280);
+    t_tipTitle.setFillColor(sf::Color(255,255,255,255));
+    t_tipTitle.setString(tipsUtil.tipTitles[tipText]);
+    std::vector<std::string> lines = Func::Split(tipsUtil.tipTexts[tipText],'\\');
+    std::vector<sf::Text> t_tipTextLines;
+    int textSize = 28*config.GetInt("resX")/1280;
+    for (auto it = lines.begin();it<lines.end();++it){
+        sf::Text t_tipText = sf::Text();
+        t_tipText.setFont(f_font);
+        t_tipText.setCharacterSize(textSize);
+        t_tipText.setFillColor(sf::Color(255,255,255,255));
+        t_tipText.setString(*it);
+        t_tipTextLines.push_back(t_tipText);
+    }
+
+
+    while (continueLoading)
+    {
+        i++;
+        window.clear();
+        // drawing some text
+        if (!pressAnyKey){
+            t_version.setPosition(config.GetInt("resX")/2-50-100*sin(i/50.0),config.GetInt("resY")/2-20-100*sin((i+30)/50.0));
+            tipsUtil.t_backgrounds[tipBackground].setPosition(0,0);
+            tipsUtil.t_backgrounds[tipBackground].draw(window);
+
+            tipsUtil.t_icons[tipIcon].setPosition((ScrWidth*3)/4,ScrHeight/4);
+            tipsUtil.t_icons[tipIcon].draw(window);
+            t_tipTitle.setPosition(24,42*WScrWidth/1280);
+            window.draw(t_tipTitle);
+            for (int i = 0;i<t_tipTextLines.size();++i){
+                t_tipTextLines[i].setPosition(24,152*WScrWidth/1280+(textSize+4)*i);
+                window.draw(t_tipTextLines[i]);
+            }
+            window.draw(t_version);
+        } else {
+            t_pressAnyKey.setPosition(12,config.GetInt("resY")-54);
+            tipsUtil.t_backgrounds[tipBackground].setPosition(0,0);
+            tipsUtil.t_backgrounds[tipBackground].draw(window);
+
+            tipsUtil.t_icons[tipIcon].setPosition((ScrWidth*3)/4,ScrHeight/4);
+            tipsUtil.t_icons[tipIcon].draw(window);
+
+            t_tipTitle.setPosition(24,42*WScrWidth/1280);
+            window.draw(t_tipTitle);
+
+            for (int i = 0;i<t_tipTextLines.size();++i){
+                t_tipTextLines[i].setPosition(24,152*WScrWidth/1280+(textSize+4)*i);
+                window.draw(t_tipTextLines[i]);
+            }
+            window.draw(t_version);
+            window.draw(t_pressAnyKey);
+        }
+
+        window.display();
+
+    }
+
+    window.setActive(false);
+
+
+
+}
+void V4Core::ShowTip()
+{
+    //loadingThreadInstance = sf::Thread(LoadingThread);
+    //loadingThreadInstance.launch();
+    continueLoading=true;
+
+}
 void V4Core::Init()
 {
+    DisableProcessWindowsGhosting();
     srand(time(NULL));
-
-    sf::RenderWindow window;
 
     if(config.GetInt("enableFullscreen"))
         window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::Fullscreen);
@@ -107,25 +231,25 @@ void V4Core::Init()
                 window.close();
 
             if(event.type == sf::Event::KeyPressed)
-			{
-			    ///keyMap[event.key.code] = true/false??? would that do the trick?
-			    cout << "[DEBUG] Key pressed: " << event.key.code << endl;
+            {
+                ///keyMap[event.key.code] = true/false??? would that do the trick?
+                cout << "[DEBUG] Key pressed: " << event.key.code << endl;
 
-			    keyMap[event.key.code] = true;
-			    keyMapHeld[event.key.code] = true;
+                keyMap[event.key.code] = true;
+                keyMapHeld[event.key.code] = true;
 
-			    //if (!inMission){
-                    //inMission=true;
-                    //currentController.StartMission();
-			    //} else if(event.key.code==59) {
+                //if (!inMission){
+                //inMission=true;
+                //currentController.StartMission();
+                //} else if(event.key.code==59) {
                 //    cout<<"Returning to main menu...";
                 //    inMission=false;
-			    //}
-			}
+                //}
+            }
 
-			if(event.type == sf::Event::KeyReleased)
+            if(event.type == sf::Event::KeyReleased)
             {
-			    cout << "[DEBUG] Key released: " << event.key.code << endl;
+                cout << "[DEBUG] Key released: " << event.key.code << endl;
                 keyMapHeld[event.key.code] = false;
             }
 
@@ -156,47 +280,47 @@ void V4Core::Init()
                     /// TEMPORARY SOLUTION! Make joysticks mappable in future, just like keyboard. //
                     switch(event.joystickButton.button)
                     {
-                        case 0:
-                        {
-                            keyMap[config.GetInt("keybindPata")] = true;
-                            keyMapHeld[config.GetInt("keybindPata")] = true;
-                            break;
-                        }
+                    case 0:
+                    {
+                        keyMap[config.GetInt("keybindPata")] = true;
+                        keyMapHeld[config.GetInt("keybindPata")] = true;
+                        break;
+                    }
 
-                        case 1:
-                        {
-                            keyMap[config.GetInt("keybindDon")] = true;
-                            keyMapHeld[config.GetInt("keybindDon")] = true;
-                            break;
-                        }
+                    case 1:
+                    {
+                        keyMap[config.GetInt("keybindDon")] = true;
+                        keyMapHeld[config.GetInt("keybindDon")] = true;
+                        break;
+                    }
 
-                        case 2:
-                        {
-                            keyMap[config.GetInt("keybindPon")] = true;
-                            keyMapHeld[config.GetInt("keybindPon")] = true;
-                            break;
-                        }
+                    case 2:
+                    {
+                        keyMap[config.GetInt("keybindPon")] = true;
+                        keyMapHeld[config.GetInt("keybindPon")] = true;
+                        break;
+                    }
 
-                        case 3:
-                        {
-                            keyMap[config.GetInt("keybindChaka")] = true;
-                            keyMapHeld[config.GetInt("keybindChaka")] = true;
-                            break;
-                        }
+                    case 3:
+                    {
+                        keyMap[config.GetInt("keybindChaka")] = true;
+                        keyMapHeld[config.GetInt("keybindChaka")] = true;
+                        break;
+                    }
 
-                        case 4:
-                        {
-                            keyMap[sf::Keyboard::Q] = true;
-                            keyMapHeld[sf::Keyboard::Q] = true;
-                            break;
-                        }
+                    case 4:
+                    {
+                        keyMap[sf::Keyboard::Q] = true;
+                        keyMapHeld[sf::Keyboard::Q] = true;
+                        break;
+                    }
 
-                        case 5:
-                        {
-                            keyMap[sf::Keyboard::E] = true;
-                            keyMapHeld[sf::Keyboard::E] = true;
-                            break;
-                        }
+                    case 5:
+                    {
+                        keyMap[sf::Keyboard::E] = true;
+                        keyMapHeld[sf::Keyboard::E] = true;
+                        break;
+                    }
                     }
                 }
             }
@@ -210,41 +334,41 @@ void V4Core::Init()
                     /// TEMPORARY SOLUTION! Make joysticks mappable in future, just like keyboard. //
                     switch(event.joystickButton.button)
                     {
-                        case 0:
-                        {
-                            keyMapHeld[config.GetInt("keybindPata")] = false;
-                            break;
-                        }
+                    case 0:
+                    {
+                        keyMapHeld[config.GetInt("keybindPata")] = false;
+                        break;
+                    }
 
-                        case 1:
-                        {
-                            keyMapHeld[config.GetInt("keybindDon")] = false;
-                            break;
-                        }
+                    case 1:
+                    {
+                        keyMapHeld[config.GetInt("keybindDon")] = false;
+                        break;
+                    }
 
-                        case 2:
-                        {
-                            keyMapHeld[config.GetInt("keybindPon")] = false;
-                            break;
-                        }
+                    case 2:
+                    {
+                        keyMapHeld[config.GetInt("keybindPon")] = false;
+                        break;
+                    }
 
-                        case 3:
-                        {
-                            keyMapHeld[config.GetInt("keybindChaka")] = false;
-                            break;
-                        }
+                    case 3:
+                    {
+                        keyMapHeld[config.GetInt("keybindChaka")] = false;
+                        break;
+                    }
 
-                        case 4:
-                        {
-                            keyMapHeld[sf::Keyboard::Q] = false;
-                            break;
-                        }
+                    case 4:
+                    {
+                        keyMapHeld[sf::Keyboard::Q] = false;
+                        break;
+                    }
 
-                        case 5:
-                        {
-                            keyMapHeld[sf::Keyboard::E] = false;
-                            break;
-                        }
+                    case 5:
+                    {
+                        keyMapHeld[sf::Keyboard::E] = false;
+                        break;
+                    }
                     }
                 }
             }
@@ -281,7 +405,8 @@ void V4Core::Init()
                 }
             }
 
-            if (savereader.isNewSave){
+            if (savereader.isNewSave)
+            {
                 newGameMenu.EventFired(event);
             }
             mainMenu.EventFired(event);
@@ -295,13 +420,13 @@ void V4Core::Init()
         window.clear();
         // Something important goes here ok cool thanks
         //if(inMission){
-            //currentController.Update(window,fps);
+        //currentController.Update(window,fps);
 
         //} else {
         //if (savereader.isNewSave){
         //    newGameMenu.Update(window,fps,&keyMap,&keyMapHeld);
         //} else {
-            mainMenu.Update(window,fps,&keyMap,&keyMapHeld);
+        mainMenu.Update(window,fps,&keyMap,&keyMapHeld);
         //}
         //}
 
@@ -318,8 +443,10 @@ void V4Core::Init()
         window.setView(lastView);
 
         keyMap.clear();
-        if(closeWindow){
+        if(closeWindow)
+        {
             window.close();
         }
     }
+    cout<<"Main game loop exited. Shutting down..."<<endl;
 }

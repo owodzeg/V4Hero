@@ -19,13 +19,13 @@
 #include "Units/FeverWorm.h"
 #include "Units/Hatapon.h"
 #include "Units/HitboxFrame.h"
-
+class V4Core;
 class MissionController
 {
     public:
     Background test_bg;
     Rhythm rhythm;
-    bool isInitialized=false;;
+    bool isInitialized=false;
     bool isFinishedLoading=false;
     Patapon* patapon;
     Kacheek* kacheek;
@@ -41,6 +41,7 @@ class MissionController
     Camera camera;
     std::map<int,bool>* missionKeyMap;
     Config* missionConfig;
+    V4Core* v4core;
 
     PSprite s_proj;
     sf::Font f_font;
@@ -81,7 +82,7 @@ class MissionController
     bool DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY);
     bool isMoreCutscenes();
     void StopMission();
-    void Initialise(Config &config, std::map<int,bool> &keymap,std::string backgroundName);
+    void Initialise(Config &config, std::map<int,bool> &keymap,std::string backgroundName,V4Core &v4core_);
     void StartMission(std::string songName,int missionID,bool showCutscene=false);
     void Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
     void DoMovement(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
