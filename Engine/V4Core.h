@@ -15,6 +15,7 @@
 #include "SaveReader.h"
 #include "Menu/NewGameMenu.h"
 #include "TipsUtil.h"
+#include "../discord-cpp/discord.h"
 class V4Core
 {
     private:
@@ -33,7 +34,7 @@ class V4Core
 
     bool leftkey=false,rightkey=false,upkey=false,downkey=false;
     public:
-        std::string hero_version = "v1.0.4";
+        std::string hero_version = "v1.1";
         sf::RenderWindow window;
 
         NewGameMenu newGameMenu;
@@ -43,6 +44,7 @@ class V4Core
         SaveReader savereader;
         MissionController currentController;
         V4Core();
+        void ChangeRichPresence(string title, string bg_image, string sm_image);
         std::vector<Menu*> menus;
         bool closeWindow=false;
         void Init();
@@ -51,5 +53,17 @@ class V4Core
         void LoadingWaitForKeyPress();
         bool continueLoading;
         bool pressAnyKey;
+
+        struct DiscordState {
+            discord::User currentUser;
+
+            std::unique_ptr<discord::Core> core;
+        };
+
+        string rpc_details;
+        string rpc_current;
+
+        DiscordState state{};
+        discord::Core* core{};
 };
 #endif // V4CORE_H
