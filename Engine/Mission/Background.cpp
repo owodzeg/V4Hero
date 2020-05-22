@@ -142,6 +142,10 @@ void Background::Load(string bg_name,Config &thisConfigs)
             background_xspeed.push_back(atof(v_params[2].c_str()));
         }
     }
+
+    floor_height = float(110) * ratioY;
+
+    param_file.close();
 }
 
 void Background::Draw(sf::RenderWindow& window)
@@ -168,4 +172,15 @@ void Background::Draw(sf::RenderWindow& window)
         //cout << s_background[i].ly << endl;
         s_background[i].draw(window);
     }
+
+    auto lastView2 = window.getView();
+
+    window.setView(window.getDefaultView());
+
+    r_ground.setSize(sf::Vector2f(window.getSize().x, floor_height));
+    r_ground.setFillColor(sf::Color::Black);
+    r_ground.setPosition(0, window.getSize().y - floor_height);
+    window.draw(r_ground);
+
+    window.setView(lastView2);
 }

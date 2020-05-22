@@ -20,8 +20,10 @@ class Background
     std::vector<sf::Vector2f> p_background;
     std::vector<float> background_xspeed;
     std::vector<float> background_y;
+    sf::RectangleShape r_ground;
 
     float temp_camerax = 0;
+    float floor_height = 0;
     int quality = 0;
 
     Background();
