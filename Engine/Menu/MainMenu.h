@@ -41,6 +41,7 @@ class MainMenu : public Menu
         Config *config;
         PatapolisMenu patapolisMenu;
         NewGameNameEntryMenu nameEntryMenu;
+        OptionsMenu optionsMenu;
         std::map<int,bool> *keyMapping;
 
         void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent);

@@ -164,7 +164,8 @@ void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
 
     Scene::Initialise(thisConfigs,keymap,parent);
     keyMapping=keymap;
-    //
+
+    optionsMenu.Initialise(config,keyMapping,v4core,this);
 }
 void MainMenu::EventFired(sf::Event event){
     if (patapolisMenu.isActive)
@@ -174,6 +175,10 @@ void MainMenu::EventFired(sf::Event event){
     else if (nameEntryMenu.isActive)
     {
         nameEntryMenu.EventFired(event);
+    }
+    else if (optionsMenu.isActive)
+    {
+        optionsMenu.EventFired(event);
     }
     else if (v4core->currentController.isInitialized)
     {
@@ -258,7 +263,8 @@ void MainMenu::SelectMenuOption()
     case 2:
         // load the options menu
         Hide();
-        //optionsMenu->Show();
+        v4core->ChangeRichPresence("In Options menu", "logo", "");
+        optionsMenu.Show();
         break;
     case 3:
         // quit the game probably
@@ -325,18 +331,18 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
 
         float fire_shift = 0;
 
-        cout << "MouseX: " << (mouseX / window.getSize().x) * 1280 << endl;
+        //cout << "MouseX: " << (mouseX / window.getSize().x) * 1280 << endl;
 
         for(int i=0; i<=3; i++)
         {
-            cout << "Totem " << i << " bounds: " << totem[i].getPosition().x << " - " << (totem[i].getPosition().x + totem[totem_sel].getLocalBounds().width) << endl;
+            //cout << "Totem " << i << " bounds: " << totem[i].getPosition().x << " - " << (totem[i].getPosition().x + totem[totem_sel].getGlobalBounds().width) << endl;
 
             totem[i].setPosition((float(120) + float(306) * i) + g_x[3]/1.4, 720);
             if (UsingMouseSelection)
             {
                 if((mouseX / window.getSize().x) * 1280 > totem[i].getPosition().x)
                 {
-                    if((mouseX / window.getSize().x) * 1280 < (totem[i].getPosition().x + totem[totem_sel].getLocalBounds().width))
+                    if((mouseX / window.getSize().x) * 1280 < (totem[i].getPosition().x + totem[totem_sel].getGlobalBounds().width))
                     {
                         totem_sel = i;
                     }
@@ -368,9 +374,9 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
             }
         }
 
-        fire_1.setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getLocalBounds().width/2), 720 - totem[totem_sel].getLocalBounds().height + fire_shift);
-        fire_2.setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getLocalBounds().width/2), 720 - totem[totem_sel].getLocalBounds().height + fire_shift);
-        fire_3.setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getLocalBounds().width/2), 720 - totem[totem_sel].getLocalBounds().height + fire_shift);
+        fire_1.setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getGlobalBoundsScaled().width/2), 720 - totem[totem_sel].getGlobalBoundsScaled().height + fire_shift);
+        fire_2.setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getGlobalBoundsScaled().width/2), 720 - totem[totem_sel].getGlobalBoundsScaled().height + fire_shift);
+        fire_3.setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getGlobalBoundsScaled().width/2), 720 - totem[totem_sel].getGlobalBoundsScaled().height + fire_shift);
 
         //cout << int(floor(fire)) << " " << totem[totem_sel].getGlobalBounds().width << " " << totem[totem_sel].getGlobalBounds().height << " vs " << fire_1.getPosition().x << " " << fire_1.getPosition().y << endl;
 
@@ -393,7 +399,7 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
         if(fire >= 3)
         fire = 0;
 
-        aura.setPosition(fire_1.getPosition().x, fire_1.getPosition().y - (fire_1.getLocalBounds().height/2));
+        aura.setPosition(fire_1.getPosition().x, fire_1.getPosition().y - (fire_1.getGlobalBoundsScaled().height/2));
         aura.setScale(aurascale,aurascale);
         aura.draw(window);
 
@@ -421,12 +427,15 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
             }
 
             t_option[i].setString(temp_menu[i]);
-            t_option[i].setOrigin(t_option[i].getLocalBounds().width/2, t_option[i].getLocalBounds().height/2);
+            t_option[i].setOrigin(t_option[i].getGlobalBounds().width/2, t_option[i].getGlobalBounds().height/2);
+
+
+            cout << "Text " << i << ": " << t_option[i].orX << " " << t_option[i].orY << " " << t_option[i].getGlobalBounds().width << " " << t_option[i].getGlobalBounds().height << " " << t_option[i].getGlobalBoundsScaled().width << " " << t_option[i].getGlobalBoundsScaled().height << endl;
 
             if(i == totem_sel)
-            t_option[i].setPosition(totem[i].getPosition().x + (totem[i].getLocalBounds().width/2), 720 - totem[i].getLocalBounds().height - fire_1.getLocalBounds().height - 35);
+            t_option[i].setPosition(totem[i].getPosition().x + (totem[i].getGlobalBoundsScaled().width/2), 720 - totem[i].getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height - 35);
             else
-            t_option[i].setPosition(totem[i].getPosition().x + (totem[i].getLocalBounds().width/2), 720 - totem[i].getLocalBounds().height - fire_1.getLocalBounds().height/2);
+            t_option[i].setPosition(totem[i].getPosition().x + (totem[i].getGlobalBoundsScaled().width/2), 720 - totem[i].getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height/2);
 
             t_option[i].setColor(sf::Color(255,255,255,96));
             t_option[totem_sel].setColor(sf::Color::White);
@@ -434,8 +443,8 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
             t_option[i].draw(window);
         }
 
-        sword_1.setPosition(fire_1.getPosition().x - (fire_1.getGlobalBounds().width/2 + t_option[totem_sel].getLocalBounds().width/2 + sword_1.getGlobalBounds().width/2), 720 - totem[totem_sel].getLocalBounds().height - fire_1.getLocalBounds().height - 30);
-        sword_2.setPosition(fire_1.getPosition().x + (fire_1.getGlobalBounds().width/2 + t_option[totem_sel].getLocalBounds().width/2 + sword_2.getGlobalBounds().width/2), 720 - totem[totem_sel].getLocalBounds().height - fire_1.getLocalBounds().height - 30);
+        sword_1.setPosition(fire_1.getPosition().x - (fire_1.getGlobalBoundsScaled().width/2 + t_option[totem_sel].getGlobalBoundsScaled().width/2 + sword_1.getGlobalBoundsScaled().width/2), 720 - totem[totem_sel].getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height - 30);
+        sword_2.setPosition(fire_1.getPosition().x + (fire_1.getGlobalBoundsScaled().width/2 + t_option[totem_sel].getGlobalBoundsScaled().width/2 + sword_2.getGlobalBoundsScaled().width/2), 720 - totem[totem_sel].getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height - 30);
 
         sword_1.draw(window);
         sword_2.draw(window);
@@ -448,7 +457,8 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
             patapolisMenu.Update(window,fps);
         } else if (nameEntryMenu.isActive){
             nameEntryMenu.Update(window,fps);
-        } else {
+        } else if (optionsMenu.isActive) {
+            optionsMenu.Update(window,fps);
         }
     }
 
