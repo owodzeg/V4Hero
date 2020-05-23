@@ -80,7 +80,16 @@ sf::FloatRect PText::getGlobalBounds()
 
 sf::FloatRect PText::getGlobalBoundsScaled()
 {
-    return sf::FloatRect(t.getGlobalBounds().left, t.getGlobalBounds().top, t.getGlobalBounds().width / resRatioX, t.getGlobalBounds().height / resRatioY);
+    float nw = 1;
+    float nh = 1;
+
+    if(t.getGlobalBounds().width > 0)
+    nw = t.getGlobalBounds().width / resRatioX;
+
+    if(t.getGlobalBounds().height > 0)
+    nh = t.getGlobalBounds().height / resRatioY;
+
+    return sf::FloatRect(t.getGlobalBounds().left, t.getGlobalBounds().top, nw, nh);
     //return t.getGlobalBounds();
 }
 
