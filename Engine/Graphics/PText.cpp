@@ -151,7 +151,7 @@ void PText::draw(sf::RenderWindow& window)
     t.setFont(f);
     t.setCharacterSize(cS);
     t.setString(txt);
-    t.setScale(ratioX*scaleX, ratioY*scaleY);
+    t.setScale(resRatioX*scaleX, resRatioY*scaleY);
     t.setOrigin(orX,orY);
     t.setPosition(lx*resRatioX, ly*resRatioY);
     t.setRotation(angle*(180/3.14159265358));
