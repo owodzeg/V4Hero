@@ -22,7 +22,7 @@ V4Core::V4Core()
 
     discord::Activity activity{};
     activity.SetDetails(rpc_details.c_str());
-    activity.SetState("In main menu");
+    activity.SetState("In Main menu");
     activity.GetAssets().SetLargeImage("logo");
     activity.SetType(discord::ActivityType::Playing);
     state.core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
