@@ -96,7 +96,10 @@ void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4
     // write code here
     initialised=true;
     if (doWaitKeyPress)
+    {
         v4core->LoadingWaitForKeyPress();
+        v4core->ChangeRichPresence("In Patapolis", "logo", "");
+    }
 }
 void PatapolisMenu::EventFired(sf::Event event)
 {

@@ -9,6 +9,7 @@
 #include "NewGameNameEntryMenu.h"
 #include "Patapolis.h"
 #include "../Graphics/PSprite.h"
+#include "../Graphics/PText.h"
 class V4Core;
 class MainMenu : public Menu
 {
@@ -22,7 +23,7 @@ class MainMenu : public Menu
 
         std::vector<std::string> temp_menu = {"New game", "Continue", "Options", "Exit"};
 
-        sf::Text t_option[4];
+        PText t_option[4];
 
         sf::VertexArray v_background;
 

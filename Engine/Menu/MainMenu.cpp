@@ -12,17 +12,16 @@ void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
     config = thisConfigs;
     int q = thisConfigs->GetInt("textureQuality");
+    int r = 1;
 
     float ratioX, ratioY;
+
     switch(q)
     {
         case 0: ///low
         {
             ratioX = thisConfigs->GetInt("resX") / float(640);
             ratioY = thisConfigs->GetInt("resY") / float(360);
-
-            maxQX = float(640);
-            maxQY = float(360);
             break;
         }
 
@@ -30,9 +29,6 @@ void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
         {
             ratioX = thisConfigs->GetInt("resX") / float(1280);
             ratioY = thisConfigs->GetInt("resY") / float(720);
-
-            maxQX = float(1280);
-            maxQY = float(720);
             break;
         }
 
@@ -40,9 +36,6 @@ void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
         {
             ratioX = thisConfigs->GetInt("resX") / float(1920);
             ratioY = thisConfigs->GetInt("resY") / float(1080);
-
-            maxQX = float(1920);
-            maxQY = float(1080);
             break;
         }
 
@@ -50,17 +43,17 @@ void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
         {
             ratioX = thisConfigs->GetInt("resX") / float(3840);
             ratioY = thisConfigs->GetInt("resY") / float(2160);
-
-            maxQX = float(3840);
-            maxQY = float(2160);
             break;
         }
     }
 
-    grass_1.loadFromFile("resources/graphics/ui/menu/grass_1.png", q);
-    grass_2.loadFromFile("resources/graphics/ui/menu/grass_2.png", q);
-    grass_3.loadFromFile("resources/graphics/ui/menu/grass_3.png", q);
-    grass_4.loadFromFile("resources/graphics/ui/menu/grass_4.png", q);
+    float resRatioX = thisConfigs->GetInt("resX") / float(1280);
+    float resRatioY = thisConfigs->GetInt("resY") / float(720);
+
+    grass_1.loadFromFile("resources/graphics/ui/menu/grass_1.png", q, r);
+    grass_2.loadFromFile("resources/graphics/ui/menu/grass_2.png", q, r);
+    grass_3.loadFromFile("resources/graphics/ui/menu/grass_3.png", q, r);
+    grass_4.loadFromFile("resources/graphics/ui/menu/grass_4.png", q, r);
 
     grass_1.setScale(1.05,1.05);
     grass_2.setScale(1.05,1.05);
@@ -72,35 +65,35 @@ void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     grass_3.setOrigin(grass_3.getGlobalBounds().width/float(100),grass_3.getGlobalBounds().height);
     grass_4.setOrigin(grass_4.getGlobalBounds().width/float(100),grass_4.getGlobalBounds().height);
 
-    logo.loadFromFile("resources/graphics/ui/menu/logo.png", q);
+    logo.loadFromFile("resources/graphics/ui/menu/logo.png", q, r);
     logo.setOrigin(logo.getGlobalBounds().width/2, logo.getGlobalBounds().height/2);
 
-    logo_shadow.loadFromFile("resources/graphics/ui/menu/logo_shadow.png", q);
+    logo_shadow.loadFromFile("resources/graphics/ui/menu/logo_shadow.png", q, r);
     logo_shadow.setOrigin(logo_shadow.getGlobalBounds().width/2, logo_shadow.getGlobalBounds().height/2);
 
-    totem[0].loadFromFile("resources/graphics/ui/menu/totem_1.png", q);
-    totem[1].loadFromFile("resources/graphics/ui/menu/totem_2.png", q);
-    totem[2].loadFromFile("resources/graphics/ui/menu/totem_3.png", q);
-    totem[3].loadFromFile("resources/graphics/ui/menu/totem_4.png", q);
+    totem[0].loadFromFile("resources/graphics/ui/menu/totem_1.png", q, r);
+    totem[1].loadFromFile("resources/graphics/ui/menu/totem_2.png", q, r);
+    totem[2].loadFromFile("resources/graphics/ui/menu/totem_3.png", q, r);
+    totem[3].loadFromFile("resources/graphics/ui/menu/totem_4.png", q, r);
 
     totem[0].setOrigin(0,totem[0].getGlobalBounds().height);
     totem[1].setOrigin(0,totem[1].getGlobalBounds().height);
     totem[2].setOrigin(0,totem[2].getGlobalBounds().height);
     totem[3].setOrigin(0,totem[3].getGlobalBounds().height);
 
-    fire_1.loadFromFile("resources/graphics/ui/menu/fire_1.png", q);
-    fire_2.loadFromFile("resources/graphics/ui/menu/fire_2.png", q);
-    fire_3.loadFromFile("resources/graphics/ui/menu/fire_3.png", q);
+    fire_1.loadFromFile("resources/graphics/ui/menu/fire_1.png", q, r);
+    fire_2.loadFromFile("resources/graphics/ui/menu/fire_2.png", q, r);
+    fire_3.loadFromFile("resources/graphics/ui/menu/fire_3.png", q, r);
 
     fire_1.setOrigin(fire_1.getGlobalBounds().width/2, fire_1.getGlobalBounds().height);
     fire_2.setOrigin(fire_2.getGlobalBounds().width/2, fire_2.getGlobalBounds().height);
     fire_3.setOrigin(fire_3.getGlobalBounds().width/2, fire_3.getGlobalBounds().height);
 
-    aura.loadFromFile("resources/graphics/ui/menu/aura.png", q);
+    aura.loadFromFile("resources/graphics/ui/menu/aura.png", q, r);
     aura.setOrigin(aura.getGlobalBounds().width/2, aura.getGlobalBounds().height/2);
 
-    sword_1.loadFromFile("resources/graphics/ui/menu/sword.png", q);
-    sword_2.loadFromFile("resources/graphics/ui/menu/sword.png", q);
+    sword_1.loadFromFile("resources/graphics/ui/menu/sword.png", q, r);
+    sword_2.loadFromFile("resources/graphics/ui/menu/sword.png", q, r);
 
     sword_1.setOrigin(sword_1.getGlobalBounds().width/2, sword_1.getGlobalBounds().height/2);
     sword_2.setOrigin(sword_2.getGlobalBounds().width/2, sword_2.getGlobalBounds().height/2);
@@ -110,9 +103,7 @@ void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
 
     for(int i=0; i<=3; i++)
     {
-        t_option[i].setFont(f_font);
-        t_option[i].setCharacterSize(24);
-        t_option[i].setColor(sf::Color::White);
+        t_option[i].createText(f_font, 24, sf::Color::White, "", q, r);
     }
 
     string vx_params = "0,135,38,23;80,135,38,23;680,205,107,132;-1,205,107,132";
@@ -129,11 +120,11 @@ void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
         sf::Color tmp_color;
 
         tmp_vector.x = 0;
-        tmp_vector.y = ((atof(tmp[0].c_str()) / 720) * maxQY) * ratioY;
+        tmp_vector.y = atof(tmp[0].c_str()) * resRatioY;
 
         if(tmp[0] == "-1")
         {
-            tmp_vector.y = maxQY * ratioY;
+            tmp_vector.y = 720 * resRatioY;
         }
 
         tmp_color.r = atoi(tmp[1].c_str());
@@ -142,12 +133,12 @@ void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
 
         sf::Vector2f tmp_vector2;
 
-        tmp_vector2.x = maxQX * ratioX;
-        tmp_vector2.y = ((atof(tmp[0].c_str()) / 720) * maxQY) * ratioY;
+        tmp_vector2.x = 1280 * resRatioX;
+        tmp_vector2.y = atof(tmp[0].c_str()) * resRatioY;
 
         if(tmp[0] == "-1")
         {
-            tmp_vector2.y = maxQY * ratioY;
+            tmp_vector2.y = 720 * resRatioY;
         }
 
         vx_pos.push_back(tmp_vector);
@@ -301,10 +292,10 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
         float scale = 1 + ((alpha - 220) / 500);
         float aurascale = 1 + ((alpha - 220)) / 250;
 
-        g_dest[0] = ((mouseX/320.f - 2.f) * (-1) / 1280) * maxQX;
-        g_dest[1] = ((mouseX/106.f - 6.f) * (-1) / 1280) * maxQX;
-        g_dest[2] = ((mouseX/45.f - 14.f) * (-1) / 1280) * maxQX;
-        g_dest[3] = ((mouseX/21.f - 30.f) * (-1) / 1280) * maxQX;
+        g_dest[0] = (mouseX/320.f - 2.f) * (-1);
+        g_dest[1] = (mouseX/106.f - 6.f) * (-1);
+        g_dest[2] = (mouseX/45.f - 14.f) * (-1);
+        g_dest[3] = (mouseX/21.f - 30.f) * (-1);
 
         for(int i=0; i<=3; i++)
         {
@@ -314,17 +305,17 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
             g_x[i] += abs(g_dest[i] - g_x[i]) / 100;
         }
 
-        grass_1.setPosition(g_x[0], maxQY-((float(100) / 720) * maxQY));
-        grass_2.setPosition(g_x[1], maxQY-((float(30) / 720) * maxQY));
-        grass_3.setPosition(g_x[2], maxQY+((float(10) / 720) * maxQY));
-        grass_4.setPosition(g_x[3], maxQY+((float(4) / 720) * maxQY));
+        grass_1.setPosition(g_x[0], 620);
+        grass_2.setPosition(g_x[1], 690);
+        grass_3.setPosition(g_x[2], 710);
+        grass_4.setPosition(g_x[3], 716);
 
         grass_1.draw(window);
         grass_2.draw(window);
         grass_3.draw(window);
 
-        logo_shadow.setPosition(maxQX/2,((float(140) / 720) * maxQY));
-        logo.setPosition(maxQX/2,((float(140) / 720) * maxQY));
+        logo_shadow.setPosition(640,140);
+        logo.setPosition(640,140);
 
         logo_shadow.setColor(sf::Color(255,255,255,alpha));
         logo_shadow.setScale(scale,scale);
@@ -334,14 +325,18 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
 
         float fire_shift = 0;
 
+        cout << "MouseX: " << (mouseX / window.getSize().x) * 1280 << endl;
+
         for(int i=0; i<=3; i++)
         {
-            totem[i].setPosition((((float(120) + float(306) * i) / 1280) * maxQX) + g_x[3]/1.4, maxQY);
+            cout << "Totem " << i << " bounds: " << totem[i].getPosition().x << " - " << (totem[i].getPosition().x + totem[totem_sel].getLocalBounds().width) << endl;
+
+            totem[i].setPosition((float(120) + float(306) * i) + g_x[3]/1.4, 720);
             if (UsingMouseSelection)
             {
-                if((mouseX / float(1280) * maxQX) - g_x[3] > totem[i].getPosition().x)
+                if((mouseX / window.getSize().x) * 1280 > totem[i].getPosition().x)
                 {
-                    if((mouseX / float(1280) * maxQX) - g_x[3] < totem[i].getPosition().x + ((totem[totem_sel].getGlobalBounds().width / 1280) * maxQX))
+                    if((mouseX / window.getSize().x) * 1280 < (totem[i].getPosition().x + totem[totem_sel].getLocalBounds().width))
                     {
                         totem_sel = i;
                     }
@@ -353,29 +348,29 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
         {
             case 0:
             {
-                fire_shift = float(34) / float(720) * maxQY;
+                fire_shift = float(34);
                 break;
             }
             case 1:
             {
-                fire_shift = float(40) / float(720) * maxQY;
+                fire_shift = float(40);
                 break;
             }
             case 2:
             {
-                fire_shift = float(6) / float(720) * maxQY;
+                fire_shift = float(6);
                 break;
             }
             case 3:
             {
-                fire_shift = float(10) / float(720) * maxQY;
+                fire_shift = float(10);
                 break;
             }
         }
 
-        fire_1.setPosition(totem[totem_sel].getPosition().x + ((totem[totem_sel].getGlobalBounds().width/2) / 1280) * maxQX, maxQY - totem[totem_sel].getGlobalBounds().height / 720 * maxQY + fire_shift);
-        fire_2.setPosition(totem[totem_sel].getPosition().x + ((totem[totem_sel].getGlobalBounds().width/2) / 1280) * maxQX, maxQY - totem[totem_sel].getGlobalBounds().height / 720 * maxQY + fire_shift);
-        fire_3.setPosition(totem[totem_sel].getPosition().x + ((totem[totem_sel].getGlobalBounds().width/2) / 1280) * maxQX, maxQY - totem[totem_sel].getGlobalBounds().height / 720 * maxQY + fire_shift);
+        fire_1.setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getLocalBounds().width/2), 720 - totem[totem_sel].getLocalBounds().height + fire_shift);
+        fire_2.setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getLocalBounds().width/2), 720 - totem[totem_sel].getLocalBounds().height + fire_shift);
+        fire_3.setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getLocalBounds().width/2), 720 - totem[totem_sel].getLocalBounds().height + fire_shift);
 
         //cout << int(floor(fire)) << " " << totem[totem_sel].getGlobalBounds().width << " " << totem[totem_sel].getGlobalBounds().height << " vs " << fire_1.getPosition().x << " " << fire_1.getPosition().y << endl;
 
@@ -398,7 +393,7 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
         if(fire >= 3)
         fire = 0;
 
-        aura.setPosition(fire_1.getPosition().x, fire_1.getPosition().y - (fire_1.getGlobalBounds().height/2) / 720 * maxQY);
+        aura.setPosition(fire_1.getPosition().x, fire_1.getPosition().y - (fire_1.getLocalBounds().height/2));
         aura.setScale(aurascale,aurascale);
         aura.draw(window);
 
@@ -426,21 +421,21 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
             }
 
             t_option[i].setString(temp_menu[i]);
-            t_option[i].setOrigin(t_option[i].getGlobalBounds().width/2, t_option[i].getGlobalBounds().height/2);
+            t_option[i].setOrigin(t_option[i].getLocalBounds().width/2, t_option[i].getLocalBounds().height/2);
 
             if(i == totem_sel)
-            t_option[i].setPosition((totem[i].getPosition().x + ((totem[i].getGlobalBounds().width/2) / 1280) * maxQX) / maxQX * window.getSize().x, ((maxQY - totem[i].getGlobalBounds().height / 720 * maxQY) - ((fire_1.getGlobalBounds().height + 35) / 720) * maxQY) / maxQY * window.getSize().y);
+            t_option[i].setPosition(totem[i].getPosition().x + (totem[i].getLocalBounds().width/2), 720 - totem[i].getLocalBounds().height - fire_1.getLocalBounds().height - 35);
             else
-            t_option[i].setPosition((totem[i].getPosition().x + ((totem[i].getGlobalBounds().width/2) / 1280) * maxQX) / maxQX * window.getSize().x, ((maxQY - totem[i].getGlobalBounds().height / 720 * maxQY) - ((fire_1.getGlobalBounds().height/2) / 720) * maxQY) / maxQY * window.getSize().y);
+            t_option[i].setPosition(totem[i].getPosition().x + (totem[i].getLocalBounds().width/2), 720 - totem[i].getLocalBounds().height - fire_1.getLocalBounds().height/2);
 
             t_option[i].setColor(sf::Color(255,255,255,96));
             t_option[totem_sel].setColor(sf::Color::White);
 
-            window.draw(t_option[i]);
+            t_option[i].draw(window);
         }
 
-        sword_1.setPosition(fire_1.getPosition().x - ((fire_1.getGlobalBounds().width/2 + t_option[totem_sel].getGlobalBounds().width/2 + sword_1.getGlobalBounds().width/2) / 1280) * maxQX, (maxQY - totem[totem_sel].getGlobalBounds().height / 720 * maxQY) - ((fire_1.getGlobalBounds().height + 30) / 720) * maxQY);
-        sword_2.setPosition(fire_1.getPosition().x + ((fire_1.getGlobalBounds().width/2 + t_option[totem_sel].getGlobalBounds().width/2 + sword_2.getGlobalBounds().width/2) / 1280) * maxQX, (maxQY - totem[totem_sel].getGlobalBounds().height / 720 * maxQY) - ((fire_1.getGlobalBounds().height + 30) / 720) * maxQY);
+        sword_1.setPosition(fire_1.getPosition().x - (fire_1.getGlobalBounds().width/2 + t_option[totem_sel].getLocalBounds().width/2 + sword_1.getGlobalBounds().width/2), 720 - totem[totem_sel].getLocalBounds().height - fire_1.getLocalBounds().height - 30);
+        sword_2.setPosition(fire_1.getPosition().x + (fire_1.getGlobalBounds().width/2 + t_option[totem_sel].getLocalBounds().width/2 + sword_2.getGlobalBounds().width/2), 720 - totem[totem_sel].getLocalBounds().height - fire_1.getLocalBounds().height - 30);
 
         sword_1.draw(window);
         sword_2.draw(window);

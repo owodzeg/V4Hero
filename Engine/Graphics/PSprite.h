@@ -10,8 +10,10 @@ class PSprite
     public:
     sf::Texture t;
     sf::Sprite s;
-    int quality=1;
+    int qualitySetting=1;
+    int resSetting=1;
     float ratioX=1,ratioY=1;
+    float resRatioX=1,resRatioY=1;
     float scaleX=1,scaleY=1;
     float orX, orY;
     float lx,ly;
@@ -19,6 +21,7 @@ class PSprite
     bool DoAutoScale;
     PSprite();
     void loadFromFile(std::string file, int q);
+    void loadFromFile(std::string file, int q, int r);
     void setRepeated(bool r);
     void setTextureRect(sf::IntRect rect);
     void setOrigin(float x, float y);

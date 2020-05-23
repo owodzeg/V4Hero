@@ -34,7 +34,46 @@ void PSprite::loadFromFile(std::string file, int q)
 
     std::string c = a+"_"+sq+b;
 
-    quality = q;
+    qualitySetting = q;
+    resSetting = 1;
+
+    std::cout << "[PSPRITE] Loading " << c << std::endl;
+
+    t.loadFromFile(c);
+    t.setSmooth(true);
+    s.setTexture(t);
+}
+
+void PSprite::loadFromFile(std::string file, int q, int r=1)
+{
+    std::cout<<file<<std::endl;
+    std::string a = file.substr(0,file.find_last_of("."));
+    std::string b = file.substr(file.find_last_of("."));
+    std::string sq = "";
+
+    switch(q)
+    {
+        case 0:
+        sq = "L";
+        break;
+
+        case 1:
+        sq = "M";
+        break;
+
+        case 2:
+        sq = "H";
+        break;
+
+        case 3:
+        sq = "U";
+        break;
+    }
+
+    std::string c = a+"_"+sq+b;
+
+    qualitySetting = q;
+    resSetting = r;
 
     std::cout << "[PSPRITE] Loading " << c << std::endl;
 
@@ -45,7 +84,7 @@ void PSprite::loadFromFile(std::string file, int q)
 
 void PSprite::setRepeated(bool r)
 {
-    t.setRepeated(true);
+    t.setRepeated(r);
     s.setTexture(t);
 }
 
@@ -102,7 +141,6 @@ sf::Vector2f PSprite::getPosition()
     return sf::Vector2f(lx,ly);
 }
 
-
 void PSprite::setScale(float s)
 {
     scaleX = s;
@@ -121,7 +159,7 @@ sf::FloatRect PSprite::getGlobalBounds()
 
 void PSprite::draw(sf::RenderWindow& window)
 {
-    switch(quality)
+    switch(qualitySetting)
     {
         case 0: ///low
         {
@@ -152,10 +190,41 @@ void PSprite::draw(sf::RenderWindow& window)
         }
     }
 
+    switch(resSetting)
+    {
+        case 0: ///low
+        {
+            resRatioX = window.getSize().x / float(640);
+            resRatioY = window.getSize().y / float(360);
+            break;
+        }
+
+        case 1: ///med
+        {
+            resRatioX = window.getSize().x / float(1280);
+            resRatioY = window.getSize().y / float(720);
+            break;
+        }
+
+        case 2: ///high
+        {
+            resRatioX = window.getSize().x / float(1920);
+            resRatioY = window.getSize().y / float(1080);
+            break;
+        }
+
+        case 3: ///ultra
+        {
+            resRatioX = window.getSize().x / float(3840);
+            resRatioY = window.getSize().y / float(2160);
+            break;
+        }
+    }
+
     s.setTexture(t);
     s.setScale(ratioX*scaleX, ratioY*scaleY);
     s.setOrigin(orX,orY);
-    s.setPosition(lx*ratioX, ly*ratioY);
+    s.setPosition(lx*resRatioX, ly*resRatioY);
     s.setRotation(angle*(180/3.14159265358));
     window.draw(s);
 }

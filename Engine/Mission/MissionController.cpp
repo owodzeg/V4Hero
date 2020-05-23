@@ -101,6 +101,8 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
 }
 void MissionController::StartMission(std::string songName,int missionID,bool showCutscene)
 {
+    string missionName = "";
+    string missionImg = "";
 
     sf::Context context;
     int quality = missionConfig->GetInt("textureQuality");
@@ -200,6 +202,9 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         kacheek->setGlobalPosition(sf::Vector2f(1000,720 - (175)));
         kacheek2->setGlobalPosition(sf::Vector2f(1500,720 - (175)));
         kacheek3->setGlobalPosition(sf::Vector2f(2000,720 - (175)));
+
+        missionName = "undefined";
+        missionImg = "wasteland";
         break;
     }
     case 2:
@@ -220,6 +225,9 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         kacheek3->setGlobalPosition(sf::Vector2f(2000,720 - (175)));
         feverworm->setGlobalPosition(sf::Vector2f(-250,720 - (450)));
         endFlag1->setGlobalPosition(sf::Vector2f(2500,720 - (180)));
+
+        missionName = "undefined";
+        missionImg = "gonrok";
         break;
 
     }
@@ -233,6 +241,9 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
 
         endFlag1->setGlobalPosition(sf::Vector2f(2500,720 - (250)));
         feverworm->setGlobalPosition(sf::Vector2f(-250,720 - (450)));
+
+        missionName = "Unspecified Mission";
+        missionImg = "wasteland";
         break;
     }
 
@@ -242,6 +253,9 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
 
     isFinishedLoading=true;
     v4core->LoadingWaitForKeyPress();
+
+    string fm = "Playing mission: "+missionName;
+    v4core->ChangeRichPresence(fm.c_str(), missionImg.c_str(), "logo");
     rhythm.LoadTheme(songName); // missionConfig->GetString("debugTheme")
     missionTimer.restart();
 }
