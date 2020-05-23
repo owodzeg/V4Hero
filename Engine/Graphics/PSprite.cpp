@@ -157,6 +157,12 @@ sf::FloatRect PSprite::getGlobalBounds()
     return s.getGlobalBounds();
 }
 
+sf::FloatRect PSprite::getGlobalBoundsScaled()
+{
+    return sf::FloatRect(s.getGlobalBounds().left, s.getGlobalBounds().top, s.getGlobalBounds().width / resRatioX, s.getGlobalBounds().height / resRatioY);
+    //return s.getGlobalBounds();
+}
+
 void PSprite::draw(sf::RenderWindow& window)
 {
     switch(qualitySetting)

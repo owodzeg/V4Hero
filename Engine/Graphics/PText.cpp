@@ -78,6 +78,12 @@ sf::FloatRect PText::getGlobalBounds()
     return t.getGlobalBounds();
 }
 
+sf::FloatRect PText::getGlobalBoundsScaled()
+{
+    return sf::FloatRect(t.getGlobalBounds().left, t.getGlobalBounds().top, t.getGlobalBounds().width / resRatioX, t.getGlobalBounds().height / resRatioY);
+    //return t.getGlobalBounds();
+}
+
 void PText::draw(sf::RenderWindow& window)
 {
     switch(qualitySetting)

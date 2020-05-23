@@ -37,6 +37,7 @@ class PText
     sf::Vector2f getPosition();
     sf::FloatRect getLocalBounds();
     sf::FloatRect getGlobalBounds();
+    sf::FloatRect getGlobalBoundsScaled();
     void setScale(float s);
     void draw(sf::RenderWindow& window);
 };

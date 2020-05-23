@@ -15,8 +15,8 @@ class PSprite
     float ratioX=1,ratioY=1;
     float resRatioX=1,resRatioY=1;
     float scaleX=1,scaleY=1;
-    float orX, orY;
-    float lx,ly;
+    float orX=0, orY=0;
+    float lx=0,ly=0;
     float angle = 0;
     bool DoAutoScale;
     PSprite();
@@ -34,6 +34,7 @@ class PSprite
     sf::Vector2f getPosition();
     sf::FloatRect getLocalBounds();
     sf::FloatRect getGlobalBounds();
+    sf::FloatRect getGlobalBoundsScaled();
     void setScale(float s);
     void draw(sf::RenderWindow& window);
 };
