@@ -7,7 +7,7 @@ OptionsMenu::OptionsMenu()
     //ctor
     f_font.loadFromFile("resources/fonts/patapon.ttf");
     m_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
-    t_title.setFont(f_font);
+    /*t_title.setFont(f_font);
 
     t_title.setCharacterSize(112);
     //t_title.setColor(sf::Color::White);
@@ -34,7 +34,7 @@ OptionsMenu::OptionsMenu()
     mm_smallerBox.setFillColor(sf::Color::Red);
 
     mm_titleBox.setSize(sf::Vector2f(100,10));
-    mm_titleBox.setFillColor(sf::Color::Red);
+    mm_titleBox.setFillColor(sf::Color::Red);*/
     isActive=false;
     madeChanges=false;
 }
@@ -42,12 +42,144 @@ void OptionsMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Co
     Scene::Initialise(thisConfigs,keymap,parent);
     buttonList.Initialise(&m_font,*thisConfig,keymap,&(v4core->currentController),this);
     parentMenu = curParentMenu;
-    t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"menu_button_3")));
+    /*t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"menu_button_3")));
     t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
     t_disclaimer.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"option_disclaimer")));
-    t_disclaimer.setOrigin(t_disclaimer.getGlobalBounds().width/2,t_disclaimer.getGlobalBounds().height/2);
+    t_disclaimer.setOrigin(t_disclaimer.getGlobalBounds().width/2,t_disclaimer.getGlobalBounds().height/2);*/
 
+    int q = thisConfigs->GetInt("textureQuality");
+    bg.loadFromFile("resources/graphics/ui/options/options.png", q, 1);
+    sword.loadFromFile("resources/graphics/ui/options/sword.png", q, 2);
+
+    handle.loadFromFile("resources/graphics/ui/options/handle.png", q, 1);
+
+    aura1.loadFromFile("resources/graphics/ui/options/aura.png", q, 1);
+    aura2.loadFromFile("resources/graphics/ui/options/aura.png", q, 1);
+
+    l_fire1.loadFromFile("resources/graphics/ui/options/l_fire1.png", q, 1);
+    l_fire2.loadFromFile("resources/graphics/ui/options/l_fire2.png", q, 1);
+    l_fire3.loadFromFile("resources/graphics/ui/options/l_fire3.png", q, 1);
+
+    r_fire1.loadFromFile("resources/graphics/ui/options/r_fire1.png", q, 1);
+    r_fire2.loadFromFile("resources/graphics/ui/options/r_fire2.png", q, 1);
+    r_fire3.loadFromFile("resources/graphics/ui/options/r_fire3.png", q, 1);
+
+    options_header.createText(m_font, 45, sf::Color::White, "Options", q, 2);
+
+    PText opt;
+    opt.createText(m_font, 25, sf::Color::White, "Graphics settings", q, 2);
+    options.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Audio settings", q, 2);
+    options.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Input settings", q, 2);
+    options.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Language settings", q, 2);
+    options.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Back to Main menu", q, 2);
+    options.push_back(opt);
+
+    opt.createText(m_font, 25, sf::Color::White, "Game resolution", q, 2);
+    g_options.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Texture quality", q, 2);
+    g_options.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Framerate limit", q, 2);
+    g_options.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Switch fullscreen", q, 2);
+    g_options.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Borderless window", q, 2);
+    g_options.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+    g_options.push_back(opt);
+
+    vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes();
+    for(int i=0; i<modes.size(); i++)
+    {
+        if(float(modes[i].height) / float(modes[i].width) == 0.5625)
+        {
+            string res = to_string(modes[i].width)+"x"+to_string(modes[i].height);
+
+            opt.createText(m_font, 25, sf::Color::White, res, q, 2);
+            resolutions.push_back(opt);
+
+            Resolution tmp;
+            tmp.width = modes[i].width;
+            tmp.height = modes[i].height;
+
+            float_resolutions.push_back(tmp);
+        }
+    }
+    opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+    resolutions.push_back(opt);
+
+    opt.createText(m_font, 25, sf::Color::White, "0 (unlimited)", q, 2);
+    framerates.push_back(opt);
+    float_framerates.push_back(0);
+    opt.createText(m_font, 25, sf::Color::White, "240", q, 2);
+    framerates.push_back(opt);
+    float_framerates.push_back(240);
+    opt.createText(m_font, 25, sf::Color::White, "120", q, 2);
+    framerates.push_back(opt);
+    float_framerates.push_back(120);
+    opt.createText(m_font, 25, sf::Color::White, "60", q, 2);
+    framerates.push_back(opt);
+    float_framerates.push_back(60);
+    opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+    framerates.push_back(opt);
+
+    opt.createText(m_font, 25, sf::Color::White, "Low", q, 2);
+    qualities.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Medium", q, 2);
+    qualities.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "High", q, 2);
+    qualities.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Ultra", q, 2);
+    qualities.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+    qualities.push_back(opt);
+
+    opt.createText(m_font, 25, sf::Color::White, "Master volume", q, 2);
+    a_options.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Drum sounds", q, 2);
+    a_options.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Patapon drum chants", q, 2);
+    a_options.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Patapon responses", q, 2);
+    a_options.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+    a_options.push_back(opt);
+
+    opt.createText(m_font, 25, sf::Color::White, "Volume: 100%", q, 2);
+    ms_volume.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+    ms_volume.push_back(opt);
+
+    opt.createText(m_font, 25, sf::Color::White, "Enable", q, 2);
+    switches.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Disable", q, 2);
+    switches.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+    switches.push_back(opt);
 }
+
+void OptionsMenu::SelectMenuOption()
+{
+    if(sel != -1)
+    {
+        if(state == 0)
+        {
+            state = sel+1;
+        }
+        else
+        {
+            state = state*10 + (sel+1);
+        }
+    }
+
+    sel = 0;
+
+    cout << "State switched to " << state << endl;
+}
+
 void OptionsMenu::EventFired(sf::Event event){
     if(event.type == sf::Event::KeyPressed)
     {
@@ -60,38 +192,654 @@ void OptionsMenu::EventFired(sf::Event event){
     } else if (event.type == sf::Event::MouseButtonReleased){
         // We use mouse released so a user can change their mind by keeping the mouse held and moving away.
         buttonList.MouseReleasedEvent(event);
+        if (event.mouseButton.button == sf::Mouse::Left)
+        {
+            SelectMenuOption();
+        }
+    }
+    else if (event.type == sf::Event::MouseMoved)
+    {
+        mouseX = event.mouseMove.x;
+        mouseY = event.mouseMove.y;
     }
 }
 void OptionsMenu::Update(sf::RenderWindow &window, float fps)
 {
-    if(isActive){
-        mm_bigBox.setSize(sf::Vector2f(window.getSize().x,window.getSize().y-200));
-        //mm_smallerBox.setSize(sf::Vector2f(100,10));
-        //mm_titleBox.setSize(sf::Vector2f(100,10));
+    if(isActive)
+    {
+        cout << "state: " << state << endl;
 
-        mm_bigBox.setPosition(0,85);
-        //mm_smallerBox.setPosition(100,10);
-        //mm_titleBox.setPosition(100,10);
+        bg.setPosition(0,0);
+        bg.draw(window);
 
+        if(sel == -1)
+        sword.setPosition(-999, -999);
+        else
+        sword.setPosition(725, 507 + 40*sel);
 
-        window.draw(mm_bigBox);
-        //window.draw(mm_smallerBox);
-        //window.draw(mm_titleBox);
+        cout << "MouseY: " << mouseY / window.getSize().y * 1080 << endl;
 
-        t_title.setPosition(window.getSize().x/2,100);
-        t_disclaimer.setPosition(window.getSize().x/2,550);
-        window.draw(t_title);
-        if (madeChanges){
-            window.draw(t_disclaimer);
+        switch(state)
+        {
+            case 0:
+            {
+                options_header.setString("Options");
+                options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
+                options_header.setPosition(930, 460);
+                options_header.draw(window);
+
+                for(int i=0; i<options.size(); i++)
+                {
+                    //cout << "Options menu " << i << " " << options[i].getGlobalBounds().width/2 << " " << options[i].getGlobalBounds().height/2 << " " << options[i].getGlobalBoundsScaled().width/2 << " " << options[i].getGlobalBoundsScaled().height/2 << " " << options[i].orX << " " << options[i].orY << " " << options[i].lx << " " << options[i].ly << endl;
+
+                    options[i].setOrigin(0, options[i].getGlobalBoundsScaled().height/2);
+                    options[i].setPosition(810, 520 + 40*i);
+                    options[i].setColor(sf::Color::White);
+
+                    if(mouseY / window.getSize().y * 1080 >= (options[i].getPosition().y - options[i].getGlobalBoundsScaled().height/2 + 8))
+                    {
+                        if(mouseY / window.getSize().y * 1080 <= (options[i].getPosition().y + options[i].getGlobalBoundsScaled().height/2 + 8))
+                        {
+                            options[i].setColor(sf::Color(255,255,255,192));
+
+                            sel = i;
+                        }
+                    }
+
+                    options[i].draw(window);
+                }
+
+                sword.draw(window);
+
+                break;
+            }
+
+            case 1:
+            {
+                options_header.setString("Graphics settings");
+                options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
+                options_header.setPosition(930, 460);
+                options_header.draw(window);
+
+                for(int i=0; i<g_options.size(); i++)
+                {
+                    g_options[i].setOrigin(0, g_options[i].getGlobalBoundsScaled().height/2);
+                    g_options[i].setPosition(810, 520 + 40*i);
+                    g_options[i].setColor(sf::Color::White);
+
+                    if(mouseY / window.getSize().y * 1080 >= (g_options[i].getPosition().y - g_options[i].getGlobalBoundsScaled().height/2 + 8))
+                    {
+                        if(mouseY / window.getSize().y * 1080 <= (g_options[i].getPosition().y + g_options[i].getGlobalBoundsScaled().height/2 + 8))
+                        {
+                            g_options[i].setColor(sf::Color(255,255,255,192));
+
+                            sel = i;
+                        }
+                    }
+
+                    g_options[i].draw(window);
+                }
+
+                sword.draw(window);
+
+                break;
+            }
+
+            case 2:
+            {
+                options_header.setString("Audio settings");
+                options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
+                options_header.setPosition(930, 460);
+                options_header.draw(window);
+
+                for(int i=0; i<a_options.size(); i++)
+                {
+                    a_options[i].setOrigin(0, a_options[i].getGlobalBoundsScaled().height/2);
+                    a_options[i].setPosition(810, 520 + 40*i);
+                    a_options[i].setColor(sf::Color::White);
+
+                    if(mouseY / window.getSize().y * 1080 >= (a_options[i].getPosition().y - a_options[i].getGlobalBoundsScaled().height/2 + 8))
+                    {
+                        if(mouseY / window.getSize().y * 1080 <= (a_options[i].getPosition().y + a_options[i].getGlobalBoundsScaled().height/2 + 8))
+                        {
+                            a_options[i].setColor(sf::Color(255,255,255,192));
+
+                            sel = i;
+                        }
+                    }
+
+                    a_options[i].draw(window);
+                }
+
+                sword.draw(window);
+
+                break;
+            }
+
+            case 5:
+            {
+                Back();
+                thisConfig->SaveConfig();
+                sel = 0;
+                break;
+            }
+
+            case 11:
+            {
+                options_header.setString("Screen resolution");
+                options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
+                options_header.setPosition(930, 460);
+                options_header.draw(window);
+
+                for(int i=0; i<resolutions.size(); i++)
+                {
+                    resolutions[i].setOrigin(0, resolutions[i].getGlobalBoundsScaled().height/2);
+                    resolutions[i].setPosition(810, 520 + 40*i);
+                    resolutions[i].setColor(sf::Color::White);
+
+                    if((float_resolutions[i].width == thisConfig->GetInt("resX")) && (float_resolutions[i].height == thisConfig->GetInt("resY")))
+                    resolutions[i].setColor(sf::Color(0,192,0,255));
+
+                    if(mouseY / window.getSize().y * 1080 >= (resolutions[i].getPosition().y - resolutions[i].getGlobalBoundsScaled().height/2 + 8))
+                    {
+                        if(mouseY / window.getSize().y * 1080 <= (resolutions[i].getPosition().y + resolutions[i].getGlobalBoundsScaled().height/2 + 8))
+                        {
+                            resolutions[i].setColor(sf::Color(255,255,255,192));
+
+                            sel = i;
+                        }
+                    }
+
+                    resolutions[i].draw(window);
+                }
+
+                sword.draw(window);
+
+                break;
+            }
+
+            case 12:
+            {
+                options_header.setString("Texture quality");
+                options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
+                options_header.setPosition(930, 460);
+                options_header.draw(window);
+
+                for(int i=0; i<qualities.size(); i++)
+                {
+                    qualities[i].setOrigin(0, qualities[i].getGlobalBoundsScaled().height/2);
+                    qualities[i].setPosition(810, 520 + 40*i);
+                    qualities[i].setColor(sf::Color::White);
+
+                    if(thisConfig->GetInt("textureQuality") == i)
+                    qualities[i].setColor(sf::Color(0,192,0,255));
+
+                    if(mouseY / window.getSize().y * 1080 >= (qualities[i].getPosition().y - qualities[i].getGlobalBoundsScaled().height/2 + 8))
+                    {
+                        if(mouseY / window.getSize().y * 1080 <= (qualities[i].getPosition().y + qualities[i].getGlobalBoundsScaled().height/2 + 8))
+                        {
+                            qualities[i].setColor(sf::Color(255,255,255,192));
+
+                            sel = i;
+                        }
+                    }
+
+                    qualities[i].draw(window);
+                }
+
+                sword.draw(window);
+
+                break;
+            }
+
+            case 13:
+            {
+                options_header.setString("Framerate limit");
+                options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
+                options_header.setPosition(930, 460);
+                options_header.draw(window);
+
+                for(int i=0; i<framerates.size(); i++)
+                {
+                    framerates[i].setOrigin(0, framerates[i].getGlobalBoundsScaled().height/2);
+                    framerates[i].setPosition(810, 520 + 40*i);
+                    framerates[i].setColor(sf::Color::White);
+
+                    if(thisConfig->GetInt("framerateLimit") == float_framerates[i])
+                    framerates[i].setColor(sf::Color(0,192,0,255));
+
+                    if(mouseY / window.getSize().y * 1080 >= (framerates[i].getPosition().y - framerates[i].getGlobalBoundsScaled().height/2 + 8))
+                    {
+                        if(mouseY / window.getSize().y * 1080 <= (framerates[i].getPosition().y + framerates[i].getGlobalBoundsScaled().height/2 + 8))
+                        {
+                            framerates[i].setColor(sf::Color(255,255,255,192));
+
+                            sel = i;
+                        }
+                    }
+
+                    framerates[i].draw(window);
+                }
+
+                sword.draw(window);
+
+                break;
+            }
+
+            case 14:
+            {
+                options_header.setString("Switch fullscreen");
+                options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
+                options_header.setPosition(930, 460);
+                options_header.draw(window);
+
+                for(int i=0; i<switches.size(); i++)
+                {
+                    switches[i].setOrigin(0, switches[i].getGlobalBoundsScaled().height/2);
+                    switches[i].setPosition(810, 520 + 40*i);
+                    switches[i].setColor(sf::Color::White);
+
+                    if((thisConfig->GetInt("enableFullscreen") == !i) && (i != 2))
+                    switches[i].setColor(sf::Color(0,192,0,255));
+
+                    if(mouseY / window.getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height/2 + 8))
+                    {
+                        if(mouseY / window.getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height/2 + 8))
+                        {
+                            switches[i].setColor(sf::Color(255,255,255,192));
+
+                            sel = i;
+                        }
+                    }
+
+                    switches[i].draw(window);
+                }
+
+                sword.draw(window);
+
+                break;
+            }
+
+            case 15:
+            {
+                options_header.setString("Borderless window");
+                options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
+                options_header.setPosition(930, 460);
+                options_header.draw(window);
+
+                for(int i=0; i<switches.size(); i++)
+                {
+                    switches[i].setOrigin(0, switches[i].getGlobalBoundsScaled().height/2);
+                    switches[i].setPosition(810, 520 + 40*i);
+                    switches[i].setColor(sf::Color::White);
+
+                    if((thisConfig->GetInt("enableBorderlessWindow") == !i) && (i != 2))
+                    switches[i].setColor(sf::Color(0,192,0,255));
+
+                    if(mouseY / window.getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height/2 + 8))
+                    {
+                        if(mouseY / window.getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height/2 + 8))
+                        {
+                            switches[i].setColor(sf::Color(255,255,255,192));
+
+                            sel = i;
+                        }
+                    }
+
+                    switches[i].draw(window);
+                }
+
+                sword.draw(window);
+
+                break;
+            }
+
+            case 16:
+            {
+                state = 0;
+                sel = 0;
+                break;
+            }
+
+            case 21:
+            {
+                options_header.setString("Master volume");
+                options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
+                options_header.setPosition(930, 460);
+                options_header.draw(window);
+
+                for(int i=0; i<ms_volume.size(); i++)
+                {
+                    ms_volume[i].setOrigin(0, ms_volume[i].getGlobalBoundsScaled().height/2);
+                    ms_volume[i].setPosition(810, 520 + 40*i);
+                    ms_volume[i].setColor(sf::Color::White);
+
+                    if(mouseY / window.getSize().y * 1080 >= (ms_volume[i].getPosition().y - ms_volume[i].getGlobalBoundsScaled().height/2 + 8))
+                    {
+                        if(mouseY / window.getSize().y * 1080 <= (ms_volume[i].getPosition().y + ms_volume[i].getGlobalBoundsScaled().height/2 + 8))
+                        {
+                            ms_volume[i].setColor(sf::Color(255,255,255,192));
+
+                            sel = i;
+                        }
+                    }
+
+                    ms_volume[i].draw(window);
+                }
+
+                sword.draw(window);
+
+                break;
+            }
+
+            case 22:
+            {
+                options_header.setString("Drum sounds");
+                options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
+                options_header.setPosition(930, 460);
+                options_header.draw(window);
+
+                for(int i=0; i<switches.size(); i++)
+                {
+                    switches[i].setOrigin(0, switches[i].getGlobalBoundsScaled().height/2);
+                    switches[i].setPosition(810, 520 + 40*i);
+                    switches[i].setColor(sf::Color::White);
+
+                    if((thisConfig->GetInt("enableDrums") == !i) && (i != 2))
+                    switches[i].setColor(sf::Color(0,192,0,255));
+
+                    if(mouseY / window.getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height/2 + 8))
+                    {
+                        if(mouseY / window.getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height/2 + 8))
+                        {
+                            switches[i].setColor(sf::Color(255,255,255,192));
+
+                            sel = i;
+                        }
+                    }
+
+                    switches[i].draw(window);
+                }
+
+                sword.draw(window);
+
+                break;
+            }
+
+            case 23:
+            {
+                options_header.setString("Patapon drum chants");
+                options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
+                options_header.setPosition(930, 460);
+                options_header.draw(window);
+
+                for(int i=0; i<switches.size(); i++)
+                {
+                    switches[i].setOrigin(0, switches[i].getGlobalBoundsScaled().height/2);
+                    switches[i].setPosition(810, 520 + 40*i);
+                    switches[i].setColor(sf::Color::White);
+
+                    if((thisConfig->GetInt("enableDrumChants") == !i) && (i != 2))
+                    switches[i].setColor(sf::Color(0,192,0,255));
+
+                    if(mouseY / window.getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height/2 + 8))
+                    {
+                        if(mouseY / window.getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height/2 + 8))
+                        {
+                            switches[i].setColor(sf::Color(255,255,255,192));
+
+                            sel = i;
+                        }
+                    }
+
+                    switches[i].draw(window);
+                }
+
+                sword.draw(window);
+
+                break;
+            }
+
+            case 24:
+            {
+                options_header.setString("Patapon responses");
+                options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
+                options_header.setPosition(930, 460);
+                options_header.draw(window);
+
+                for(int i=0; i<switches.size(); i++)
+                {
+                    switches[i].setOrigin(0, switches[i].getGlobalBoundsScaled().height/2);
+                    switches[i].setPosition(810, 520 + 40*i);
+                    switches[i].setColor(sf::Color::White);
+
+                    if((thisConfig->GetInt("enablePataponChants") == !i) && (i != 2))
+                    switches[i].setColor(sf::Color(0,192,0,255));
+
+                    if(mouseY / window.getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height/2 + 8))
+                    {
+                        if(mouseY / window.getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height/2 + 8))
+                        {
+                            switches[i].setColor(sf::Color(255,255,255,192));
+
+                            sel = i;
+                        }
+                    }
+
+                    switches[i].draw(window);
+                }
+
+                sword.draw(window);
+
+                break;
+            }
+
+            case 25:
+            {
+                state = 0;
+                sel = 0;
+                break;
+            }
+
+            case 121:
+            {
+                thisConfig->SetString("textureQuality","0");
+
+                state = 12;
+                sel = 0;
+                break;
+            }
+
+            case 122:
+            {
+                thisConfig->SetString("textureQuality","1");
+
+                state = 12;
+                sel = 0;
+                break;
+            }
+
+            case 123:
+            {
+                thisConfig->SetString("textureQuality","2");
+
+                state = 12;
+                sel = 0;
+                break;
+            }
+
+            case 124:
+            {
+                thisConfig->SetString("textureQuality","3");
+
+                state = 12;
+                sel = 0;
+                break;
+            }
+
+            case 125:
+            {
+                state = 1;
+                sel = 0;
+                break;
+            }
+
+            case 141:
+            {
+                thisConfig->SetString("enableFullscreen", "1");
+                state = 14;
+                sel = 0;
+                break;
+            }
+
+            case 142:
+            {
+                thisConfig->SetString("enableFullscreen", "0");
+                state = 14;
+                sel = 0;
+                break;
+            }
+
+            case 143:
+            {
+                state = 1;
+                sel = 0;
+                break;
+            }
+
+            case 151:
+            {
+                thisConfig->SetString("enableBorderlessWindow", "1");
+                state = 15;
+                sel = 0;
+                break;
+            }
+
+            case 152:
+            {
+                thisConfig->SetString("enableBorderlessWindow", "0");
+                state = 15;
+                sel = 0;
+                break;
+            }
+
+            case 153:
+            {
+                state = 1;
+                sel = 0;
+                break;
+            }
+
+            case 212:
+            {
+                state = 2;
+                sel = 0;
+                break;
+            }
+
+            case 221:
+            {
+                thisConfig->SetString("enableDrums", "1");
+                state = 22;
+                sel = 0;
+                break;
+            }
+
+            case 222:
+            {
+                thisConfig->SetString("enableDrums", "0");
+                state = 22;
+                sel = 0;
+                break;
+            }
+
+            case 223:
+            {
+                state = 2;
+                sel = 0;
+                break;
+            }
+
+            case 231:
+            {
+                thisConfig->SetString("enableDrumChants", "1");
+                state = 23;
+                sel = 0;
+                break;
+            }
+
+            case 232:
+            {
+                thisConfig->SetString("enableDrumChants", "0");
+                state = 23;
+                sel = 0;
+                break;
+            }
+
+            case 233:
+            {
+                state = 2;
+                sel = 0;
+                break;
+            }
+
+            case 241:
+            {
+                thisConfig->SetString("enablePataponChants", "1");
+                state = 24;
+                sel = 0;
+                break;
+            }
+
+            case 242:
+            {
+                thisConfig->SetString("enablePataponChants", "0");
+                state = 24;
+                sel = 0;
+                break;
+            }
+
+            case 243:
+            {
+                state = 2;
+                sel = 0;
+                break;
+            }
         }
-        sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
-        auto lastView = window.getView();
-        sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos,lastView);
 
-        //t_pressToContinue.setPosition(window.getSize().x/2,300);
-        //window.draw(t_pressToContinue);
+        if((state >= 111) && (state <= 110+resolutions.size()-1))
+        {
+            int resID = state-111;
 
-        buttonList.Update(window, fps, &worldPos);
+            thisConfig->SetString("resX", to_string(float_resolutions[resID].width));
+            thisConfig->SetString("resY", to_string(float_resolutions[resID].height));
+
+            state = 11;
+            sel = 0;
+        }
+
+        if(state == 110+resolutions.size())
+        {
+            state = 1;
+            sel = 0;
+        }
+
+        if((state >= 131) && (state <= 130+framerates.size()-1))
+        {
+            int fpsID = state-131;
+
+            thisConfig->SetString("framerateLimit", to_string(float_framerates[fpsID]));
+
+            state = 13;
+            sel = 0;
+        }
+
+        if(state == 130+framerates.size())
+        {
+            state = 1;
+            sel = 0;
+        }
+
         window.setView(window.getDefaultView());
     }
 
@@ -100,6 +848,7 @@ void OptionsMenu::Back(){
     /// this should go back to the previous menu.
     Hide();
     parentMenu->Show();
+    v4core->ChangeRichPresence("In Main menu", "logo", "");
     OnExit();
 }
 void OptionsMenu::OnExit(){
