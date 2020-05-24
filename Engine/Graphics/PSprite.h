@@ -36,6 +36,7 @@ class PSprite
     sf::FloatRect getGlobalBounds();
     sf::FloatRect getGlobalBoundsScaled();
     void setScale(float s);
+    void setSmooth(bool smooth);
     void draw(sf::RenderWindow& window);
 };
 

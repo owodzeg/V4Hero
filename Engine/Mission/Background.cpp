@@ -134,6 +134,7 @@ void Background::Load(string bg_name,Config &thisConfigs)
             ps_temp.setOrigin(10000,ps_temp.getGlobalBounds().height);
             ps_temp.setColor(sf::Color(atoi(v_params[3].c_str()),atoi(v_params[4].c_str()),atoi(v_params[5].c_str()),255));
             ps_temp.setPosition(-1000,atoi(v_params[1].c_str()));
+            ps_temp.setSmooth(false);
 
             sf::Vector2f tmpp;
 

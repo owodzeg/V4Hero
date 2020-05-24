@@ -172,6 +172,12 @@ sf::FloatRect PSprite::getGlobalBoundsScaled()
     //return s.getGlobalBounds();
 }
 
+void PSprite::setSmooth(bool smooth)
+{
+    t.setSmooth(smooth);
+    s.setTexture(t);
+}
+
 void PSprite::draw(sf::RenderWindow& window)
 {
     switch(qualitySetting)
