@@ -155,6 +155,8 @@ void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     {
         v_background[i].position = vx_pos[i];
         v_background[i].color = vx_color[i];
+
+        cout << "vx_pos: " << vx_pos[i].x << " " << vx_pos[i].y << endl;
     }
 
     g_x[0] = 0;
@@ -264,6 +266,8 @@ void MainMenu::SelectMenuOption()
         // load the options menu
         Hide();
         v4core->ChangeRichPresence("In Options menu", "logo", "");
+        optionsMenu.state = 0;
+        optionsMenu.sel = 0;
         optionsMenu.Show();
         break;
     case 3:
@@ -311,10 +315,10 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
             g_x[i] += abs(g_dest[i] - g_x[i]) / 100;
         }
 
-        grass_1.setPosition(g_x[0], 620);
-        grass_2.setPosition(g_x[1], 690);
-        grass_3.setPosition(g_x[2], 710);
-        grass_4.setPosition(g_x[3], 716);
+        grass_1.setPosition(g_x[0], 630);
+        grass_2.setPosition(g_x[1], 696);
+        grass_3.setPosition(g_x[2], 724);
+        grass_4.setPosition(g_x[3], 724);
 
         grass_1.draw(window);
         grass_2.draw(window);
@@ -427,10 +431,13 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
             }
 
             t_option[i].setString(temp_menu[i]);
-            t_option[i].setOrigin(t_option[i].getGlobalBounds().width/2, t_option[i].getGlobalBounds().height/2);
 
+            //cout << "Text " << i << ": " << t_option[i].orX << " " << t_option[i].orY << " " << t_option[i].getGlobalBounds().width << " " << t_option[i].getGlobalBounds().height << " " << t_option[i].getGlobalBoundsScaled().width << " " << t_option[i].getGlobalBoundsScaled().height << endl;
 
-            cout << "Text " << i << ": " << t_option[i].orX << " " << t_option[i].orY << " " << t_option[i].getGlobalBounds().width << " " << t_option[i].getGlobalBounds().height << " " << t_option[i].getGlobalBoundsScaled().width << " " << t_option[i].getGlobalBoundsScaled().height << endl;
+            //cout << t_option[i].getGlobalBoundsScaled().width/2 << " " << t_option[i].getGlobalBoundsScaled().height/2 << endl;
+            t_option[i].setOrigin(t_option[i].getGlobalBoundsScaled().width/2, t_option[i].getGlobalBoundsScaled().height/2);
+
+            //cout << "Text " << i << ": " << t_option[i].orX << " " << t_option[i].orY << " " << t_option[i].getGlobalBounds().width << " " << t_option[i].getGlobalBounds().height << " " << t_option[i].getGlobalBoundsScaled().width << " " << t_option[i].getGlobalBoundsScaled().height << endl;
 
             if(i == totem_sel)
             t_option[i].setPosition(totem[i].getPosition().x + (totem[i].getGlobalBoundsScaled().width/2), 720 - totem[i].getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height - 35);

@@ -55,6 +55,7 @@ void PText::setPosition(float x, float y)
 void PText::setString(std::string text_string)
 {
     txt = text_string;
+    t.setString(txt);
 }
 
 sf::Vector2f PText::getPosition()
