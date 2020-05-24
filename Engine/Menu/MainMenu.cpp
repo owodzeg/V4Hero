@@ -310,9 +310,9 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
         for(int i=0; i<=3; i++)
         {
             if(g_dest[i] < g_x[i])
-            g_x[i] -= abs(g_dest[i] - g_x[i]) / 100;
+            g_x[i] -= abs(g_dest[i] - g_x[i]) / 100 / fps * 240;
             if(g_dest[i] > g_x[i])
-            g_x[i] += abs(g_dest[i] - g_x[i]) / 100;
+            g_x[i] += abs(g_dest[i] - g_x[i]) / 100 / fps * 240;
         }
 
         grass_1.setPosition(g_x[0], 630);

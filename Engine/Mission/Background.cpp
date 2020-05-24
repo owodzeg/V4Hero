@@ -54,7 +54,10 @@ void Background::Load(string bg_name,Config &thisConfigs)
         }
     }
 
-    cout << ratioX << " " << ratioY << endl;
+    float resRatioX = thisConfig->GetInt("resX") / float(1280);
+    float resRatioY = thisConfig->GetInt("resY") / float(720);
+
+    cout << resRatioX << " " << resRatioY << endl;
 
     v_background.clear();
     vx_pos.clear();
@@ -77,7 +80,7 @@ void Background::Load(string bg_name,Config &thisConfigs)
             string vx_params = buff.substr(buff.find_first_of(":")+1);
             vector<string> v_vxparams = Func::Split(vx_params,';');
 
-            //float ratioY = float(720) / float(720);
+            //float resRatioY = float(720) / float(720);
 
             for(int i=0; i<v_vxparams.size(); i++)
             {
@@ -87,11 +90,11 @@ void Background::Load(string bg_name,Config &thisConfigs)
                 sf::Color tmp_color;
 
                 tmp_vector.x = 0;
-                tmp_vector.y = atof(tmp[0].c_str()) * ratioY;
+                tmp_vector.y = atof(tmp[0].c_str()) * resRatioY;
 
                 if(tmp[0] == "-1")
                 {
-                    tmp_vector.y = float(610) * ratioY;
+                    tmp_vector.y = float(610) * resRatioY;
                 }
 
                 tmp_color.r = atoi(tmp[1].c_str());
@@ -100,12 +103,12 @@ void Background::Load(string bg_name,Config &thisConfigs)
 
                 sf::Vector2f tmp_vector2;
 
-                tmp_vector2.x = float(1280) * ratioX;
-                tmp_vector2.y = atof(tmp[0].c_str()) * ratioY;
+                tmp_vector2.x = float(1280) * resRatioX;
+                tmp_vector2.y = atof(tmp[0].c_str()) * resRatioY;
 
                 if(tmp[0] == "-1")
                 {
-                    tmp_vector2.y = float(610) * ratioY;
+                    tmp_vector2.y = float(610) * resRatioY;
                 }
 
                 vx_pos.push_back(tmp_vector);
@@ -143,7 +146,7 @@ void Background::Load(string bg_name,Config &thisConfigs)
         }
     }
 
-    floor_height = float(110) * ratioY;
+    floor_height = float(110) * resRatioY;
 
     param_file.close();
 }

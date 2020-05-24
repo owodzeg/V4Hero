@@ -159,7 +159,16 @@ sf::FloatRect PSprite::getGlobalBounds()
 
 sf::FloatRect PSprite::getGlobalBoundsScaled()
 {
-    return sf::FloatRect(s.getGlobalBounds().left, s.getGlobalBounds().top, s.getGlobalBounds().width / resRatioX, s.getGlobalBounds().height / resRatioY);
+    float nw = 1;
+    float nh = 1;
+
+    if(s.getGlobalBounds().width > 0)
+    nw = s.getGlobalBounds().width / resRatioX;
+
+    if(s.getGlobalBounds().height > 0)
+    nh = s.getGlobalBounds().height / resRatioY;
+
+    return sf::FloatRect(s.getGlobalBounds().left, s.getGlobalBounds().top, nw, nh);
     //return s.getGlobalBounds();
 }
 

@@ -1,4 +1,7 @@
 #include "PText.h"
+#include <iostream>
+
+using namespace std;
 
 PText::PText()
 {
@@ -7,6 +10,8 @@ PText::PText()
 
 void PText::createText(sf::Font font, float characterSize, sf::Color color, std::string text_string, int q, int r)
 {
+    cout << "[PText] Creating a new PText object: " << characterSize << " " << text_string << " " << q << " " << r << endl;
+
     f = font;
     cS = characterSize;
     c = color;
@@ -40,6 +45,7 @@ void PText::setRotation(float a)
 
 void PText::setColor(sf::Color color)
 {
+    c = color;
     t.setColor(color);
 }
 
@@ -159,6 +165,7 @@ void PText::draw(sf::RenderWindow& window)
     }
 
     t.setFont(f);
+    t.setColor(c);
     t.setCharacterSize(cS);
     t.setString(txt);
     t.setScale(resRatioX*scaleX, resRatioY*scaleY);
