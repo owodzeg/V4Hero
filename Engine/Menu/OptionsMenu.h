@@ -36,6 +36,12 @@ class OptionsMenu : public Menu
             float height;
         };
 
+        struct ConfigValue
+        {
+            string index;
+            string value;
+        };
+
         PText options_header;
         std::vector<PText> options; ///main options
         std::vector<PText> g_options; /// graphics options
@@ -48,14 +54,18 @@ class OptionsMenu : public Menu
         std::vector<PText> qualities;
         std::vector<PText> ms_volume;
         std::vector<PText> switches;
-        PText volume;
-        PText enable, disable;
+        std::vector<ConfigValue> original_config; ///If the changes are reverted, keep the original settings to return them back
+        std::vector<PText> restarts;
+        PText t_restart;
+
+        PSprite dg_restart, dg_select;
 
         Menu *parentMenu;
         OptionsButtonList buttonList;
         void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent,Menu *curParentMenu);
         void Update(sf::RenderWindow &window, float fps);
         void SelectMenuOption();
+        void SetConfigValue(std::string key, std::string value);
         void EventFired(sf::Event event);
         void OnExit();
         void Back();

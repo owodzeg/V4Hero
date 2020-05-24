@@ -1,6 +1,7 @@
 #include "OptionsMenu.h"
 #include "ButtonList.h"
-#include "iostream"
+#include <iostream>
+#include <windows.h>
 #include "../V4Core.h"
 OptionsMenu::OptionsMenu()
 {
@@ -38,16 +39,20 @@ OptionsMenu::OptionsMenu()
     isActive=false;
     madeChanges=false;
 }
-void OptionsMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, Menu *curParentMenu){
+void OptionsMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, Menu *curParentMenu)
+{
+    cout << "Initialize Options menu" << endl;
     Scene::Initialise(thisConfigs,keymap,parent);
-    buttonList.Initialise(&m_font,*thisConfig,keymap,&(v4core->currentController),this);
+    //buttonList.Initialise(&m_font,*thisConfig,keymap,&(v4core->currentController),this);
     parentMenu = curParentMenu;
+    cout << "Initial values loaded, loading assets" << endl;
     /*t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"menu_button_3")));
     t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
     t_disclaimer.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"option_disclaimer")));
     t_disclaimer.setOrigin(t_disclaimer.getGlobalBounds().width/2,t_disclaimer.getGlobalBounds().height/2);*/
 
     int q = thisConfigs->GetInt("textureQuality");
+    cout << "Quality:" << q << endl;
     bg.loadFromFile("resources/graphics/ui/options/options.png", q, 1);
     sword.loadFromFile("resources/graphics/ui/options/sword.png", q, 2);
 
@@ -63,6 +68,11 @@ void OptionsMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Co
     r_fire1.loadFromFile("resources/graphics/ui/options/r_fire1.png", q, 1);
     r_fire2.loadFromFile("resources/graphics/ui/options/r_fire2.png", q, 1);
     r_fire3.loadFromFile("resources/graphics/ui/options/r_fire3.png", q, 1);
+
+    dg_restart.loadFromFile("resources/graphics/ui/options/dg_restart.png", q, 1);
+    dg_select.loadFromFile("resources/graphics/ui/options/dg_select.png", q, 2);
+
+    t_restart.createText(m_font, 26, sf::Color::Black, "You need to restart your game to\napply changes. Restart now?", q, 2);
 
     options_header.createText(m_font, 45, sf::Color::White, "Options", q, 2);
 
@@ -159,6 +169,11 @@ void OptionsMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Co
     switches.push_back(opt);
     opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
     switches.push_back(opt);
+
+    opt.createText(m_font, 25, sf::Color::Black, "Restart game", q, 2);
+    restarts.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::Black, "Revert changes", q, 2);
+    restarts.push_back(opt);
 }
 
 void OptionsMenu::SelectMenuOption()
@@ -180,18 +195,49 @@ void OptionsMenu::SelectMenuOption()
     cout << "State switched to " << state << endl;
 }
 
+void OptionsMenu::SetConfigValue(std::string key, std::string value)
+{
+    if(thisConfig->GetString(key) != value)
+    {
+        cout << "Changing key " << key << " to " << value << endl;
+
+        ///Save the original key first, if not already saved
+        bool found = false;
+
+        for(int v=0; v<original_config.size(); v++)
+        {
+            if(original_config[v].index == key)
+            found = true;
+        }
+
+        if(!found)
+        {
+            cout << "Past changes not found; save original config" << endl;
+
+            ConfigValue tmp;
+            tmp.index = key;
+            tmp.value = thisConfig->GetString(key);
+            original_config.push_back(tmp);
+        }
+
+        ///Make the changes
+        thisConfig->SetString(key,value);
+        madeChanges = true;
+    }
+}
+
 void OptionsMenu::EventFired(sf::Event event){
     if(event.type == sf::Event::KeyPressed)
     {
         // do something here;
-        buttonList.KeyPressedEvent(event);
+        // buttonList.KeyPressedEvent(event);
         if(event.key.code==sf::Keyboard::Escape) {
             thisConfig->debugOut->DebugMessage("Returning to main menu...");
             Back();
         }
     } else if (event.type == sf::Event::MouseButtonReleased){
         // We use mouse released so a user can change their mind by keeping the mouse held and moving away.
-        buttonList.MouseReleasedEvent(event);
+        //buttonList.MouseReleasedEvent(event);
         if (event.mouseButton.button == sf::Mouse::Left)
         {
             SelectMenuOption();
@@ -318,9 +364,42 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
 
             case 5:
             {
-                Back();
-                thisConfig->SaveConfig();
-                sel = 0;
+                if(madeChanges)
+                {
+                    dg_restart.setPosition(474,290);
+                    dg_restart.draw(window);
+
+                    t_restart.setPosition(765,447);
+                    t_restart.draw(window);
+
+                    //dg_select.setOrigin(dg_select.getGlobalBoundsScaled().width/2, dg_select.getGlobalBoundsScaled().height/2);
+                    dg_select.setPosition(711, 536 + 45*sel);
+                    dg_select.draw(window);
+
+                    for(int i=0; i<restarts.size(); i++)
+                    {
+                        restarts[i].setOrigin(restarts[i].getGlobalBoundsScaled().width/2, restarts[i].getGlobalBoundsScaled().height/2);
+                        restarts[i].setPosition(960, 550 + 45*i);
+                        restarts[i].setColor(sf::Color::Black);
+
+                        if(mouseY / window.getSize().y * 1080 >= (restarts[i].getPosition().y - restarts[i].getGlobalBoundsScaled().height/2 + 8))
+                        {
+                            if(mouseY / window.getSize().y * 1080 <= (restarts[i].getPosition().y + restarts[i].getGlobalBoundsScaled().height/2 + 8))
+                            {
+                                sel = i;
+                            }
+                        }
+
+                        restarts[i].draw(window);
+                    }
+                }
+                else
+                {
+                    Back();
+                    //thisConfig->SaveConfig();
+                    sel = 0;
+                }
+
                 break;
             }
 
@@ -405,7 +484,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
                     framerates[i].setPosition(810, 520 + 40*i);
                     framerates[i].setColor(sf::Color::White);
 
-                    if(thisConfig->GetInt("framerateLimit") == float_framerates[i])
+                    if((thisConfig->GetInt("framerateLimit") == float_framerates[i]) && (i != 4))
                     framerates[i].setColor(sf::Color(0,192,0,255));
 
                     if(mouseY / window.getSize().y * 1080 >= (framerates[i].getPosition().y - framerates[i].getGlobalBoundsScaled().height/2 + 8))
@@ -641,9 +720,34 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
                 break;
             }
 
+            case 51:
+            {
+                thisConfig->SaveConfig();
+                v4core->closeWindow = true;
+
+                ///Run the game process again
+                STARTUPINFO info = {sizeof(info)};
+                PROCESS_INFORMATION processInfo;
+                if (CreateProcess("V4Hero.exe", "", NULL, NULL, TRUE, 0, NULL, NULL, &info, &processInfo)) {
+                    CloseHandle(processInfo.hProcess); // Cleanup since you don't need this
+                    CloseHandle(processInfo.hThread); // Cleanup since you don't need this
+                }
+
+                break;
+            }
+
+            case 52:
+            {
+                for(int i=0; i<original_config.size(); i++)
+                thisConfig->SetString(original_config[i].index, original_config[i].value);
+
+                Back();
+                break;
+            }
+
             case 121:
             {
-                thisConfig->SetString("textureQuality","0");
+                SetConfigValue("textureQuality", "0");
 
                 state = 12;
                 sel = 0;
@@ -652,7 +756,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
 
             case 122:
             {
-                thisConfig->SetString("textureQuality","1");
+                SetConfigValue("textureQuality", "1");
 
                 state = 12;
                 sel = 0;
@@ -661,7 +765,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
 
             case 123:
             {
-                thisConfig->SetString("textureQuality","2");
+                SetConfigValue("textureQuality", "2");
 
                 state = 12;
                 sel = 0;
@@ -670,7 +774,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
 
             case 124:
             {
-                thisConfig->SetString("textureQuality","3");
+                SetConfigValue("textureQuality", "3");
 
                 state = 12;
                 sel = 0;
@@ -686,7 +790,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
 
             case 141:
             {
-                thisConfig->SetString("enableFullscreen", "1");
+                SetConfigValue("enableFullscreen", "1");
+
                 state = 14;
                 sel = 0;
                 break;
@@ -694,7 +799,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
 
             case 142:
             {
-                thisConfig->SetString("enableFullscreen", "0");
+                SetConfigValue("enableFullscreen", "0");
+
                 state = 14;
                 sel = 0;
                 break;
@@ -709,7 +815,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
 
             case 151:
             {
-                thisConfig->SetString("enableBorderlessWindow", "1");
+                SetConfigValue("enableBorderlessWindow", "1");
+
                 state = 15;
                 sel = 0;
                 break;
@@ -717,7 +824,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
 
             case 152:
             {
-                thisConfig->SetString("enableBorderlessWindow", "0");
+                SetConfigValue("enableBorderlessWindow", "0");
+
                 state = 15;
                 sel = 0;
                 break;
@@ -739,7 +847,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
 
             case 221:
             {
-                thisConfig->SetString("enableDrums", "1");
+                SetConfigValue("enableDrums", "1");
+
                 state = 22;
                 sel = 0;
                 break;
@@ -747,7 +856,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
 
             case 222:
             {
-                thisConfig->SetString("enableDrums", "0");
+                SetConfigValue("enableDrums", "0");
+
                 state = 22;
                 sel = 0;
                 break;
@@ -762,7 +872,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
 
             case 231:
             {
-                thisConfig->SetString("enableDrumChants", "1");
+                SetConfigValue("enableDrumChants", "1");
+
                 state = 23;
                 sel = 0;
                 break;
@@ -770,7 +881,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
 
             case 232:
             {
-                thisConfig->SetString("enableDrumChants", "0");
+                SetConfigValue("enableDrumChants", "0");
+
                 state = 23;
                 sel = 0;
                 break;
@@ -785,7 +897,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
 
             case 241:
             {
-                thisConfig->SetString("enablePataponChants", "1");
+                SetConfigValue("enablePataponChants", "1");
+
                 state = 24;
                 sel = 0;
                 break;
@@ -793,7 +906,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
 
             case 242:
             {
-                thisConfig->SetString("enablePataponChants", "0");
+                SetConfigValue("enablePataponChants", "0");
+
                 state = 24;
                 sel = 0;
                 break;
@@ -811,9 +925,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
         {
             int resID = state-111;
 
-            thisConfig->SetString("resX", to_string(float_resolutions[resID].width));
-            thisConfig->SetString("resY", to_string(float_resolutions[resID].height));
-
+            SetConfigValue("resX", to_string(float_resolutions[resID].width));
+            SetConfigValue("resY", to_string(float_resolutions[resID].height));
             state = 11;
             sel = 0;
         }
@@ -828,7 +941,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
         {
             int fpsID = state-131;
 
-            thisConfig->SetString("framerateLimit", to_string(float_framerates[fpsID]));
+            SetConfigValue("framerateLimit", to_string(float_framerates[fpsID]));
 
             state = 13;
             sel = 0;
@@ -860,12 +973,13 @@ void OptionsMenu::UpdateButtons(){
     buttonList.UpdateButtons();
 }
 void OptionsMenu::Show(){
-    Menu::Show();
+    isActive = true;
+    /*Menu::Show();
     buttonList.Show();
     t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"menu_button_3")));
     t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
     t_disclaimer.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"option_disclaimer")));
-    t_disclaimer.setOrigin(t_disclaimer.getGlobalBounds().width/2,t_disclaimer.getGlobalBounds().height/2);
+    t_disclaimer.setOrigin(t_disclaimer.getGlobalBounds().width/2,t_disclaimer.getGlobalBounds().height/2);*/
 }
 OptionsMenu::~OptionsMenu()
 {
