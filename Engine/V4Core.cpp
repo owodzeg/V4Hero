@@ -10,6 +10,9 @@ using namespace std;
 
 V4Core::V4Core()
 {
+    const unsigned int maxSize = sf::Texture::getMaximumSize();
+    cout << "[Debug] Max texture size: " << maxSize << endl;
+
     rpc_details = "Running Patafour "+hero_version;
 
     auto result = discord::Core::Create(712761245752623226, DiscordCreateFlags_Default, &core);
@@ -255,12 +258,15 @@ void V4Core::Init()
     // DisableProcessWindowsGhosting();
     srand(time(NULL));
 
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 16;
+
     if(config.GetInt("enableFullscreen"))
-        window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::Fullscreen);
+        window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::Fullscreen, settings);
     else if(config.GetInt("enableBorderlessWindow"))
-        window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::None);
+        window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::None, settings);
     else
-        window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::Titlebar | sf::Style::Close);
+        window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::Titlebar | sf::Style::Close, settings);
 
     window.setFramerateLimit(config.GetInt("framerateLimit"));
     window.setKeyRepeatEnabled(false);

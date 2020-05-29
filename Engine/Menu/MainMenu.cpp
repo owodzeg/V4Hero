@@ -60,43 +60,43 @@ void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     grass_3.setScale(1.05,1.05);
     grass_4.setScale(1.05,1.05);
 
-    grass_1.setOrigin(grass_1.getGlobalBounds().width/float(100),grass_1.getGlobalBounds().height);
-    grass_2.setOrigin(grass_2.getGlobalBounds().width/float(100),grass_2.getGlobalBounds().height);
-    grass_3.setOrigin(grass_3.getGlobalBounds().width/float(100),grass_3.getGlobalBounds().height);
-    grass_4.setOrigin(grass_4.getGlobalBounds().width/float(100),grass_4.getGlobalBounds().height);
+    grass_1.setOrigin(grass_1.getLocalBounds().width/float(100),grass_1.getLocalBounds().height);
+    grass_2.setOrigin(grass_2.getLocalBounds().width/float(100),grass_2.getLocalBounds().height);
+    grass_3.setOrigin(grass_3.getLocalBounds().width/float(100),grass_3.getLocalBounds().height);
+    grass_4.setOrigin(grass_4.getLocalBounds().width/float(100),grass_4.getLocalBounds().height);
 
     logo.loadFromFile("resources/graphics/ui/menu/logo.png", q, r);
-    logo.setOrigin(logo.getGlobalBounds().width/2, logo.getGlobalBounds().height/2);
+    logo.setOrigin(logo.getLocalBounds().width/2, logo.getLocalBounds().height/2);
 
     logo_shadow.loadFromFile("resources/graphics/ui/menu/logo_shadow.png", q, r);
-    logo_shadow.setOrigin(logo_shadow.getGlobalBounds().width/2, logo_shadow.getGlobalBounds().height/2);
+    logo_shadow.setOrigin(logo_shadow.getLocalBounds().width/2, logo_shadow.getLocalBounds().height/2);
 
     totem[0].loadFromFile("resources/graphics/ui/menu/totem_1.png", q, r);
     totem[1].loadFromFile("resources/graphics/ui/menu/totem_2.png", q, r);
     totem[2].loadFromFile("resources/graphics/ui/menu/totem_3.png", q, r);
     totem[3].loadFromFile("resources/graphics/ui/menu/totem_4.png", q, r);
 
-    totem[0].setOrigin(0,totem[0].getGlobalBounds().height);
-    totem[1].setOrigin(0,totem[1].getGlobalBounds().height);
-    totem[2].setOrigin(0,totem[2].getGlobalBounds().height);
-    totem[3].setOrigin(0,totem[3].getGlobalBounds().height);
+    totem[0].setOrigin(0,totem[0].getLocalBounds().height);
+    totem[1].setOrigin(0,totem[1].getLocalBounds().height);
+    totem[2].setOrigin(0,totem[2].getLocalBounds().height);
+    totem[3].setOrigin(0,totem[3].getLocalBounds().height);
 
     fire_1.loadFromFile("resources/graphics/ui/menu/fire_1.png", q, r);
     fire_2.loadFromFile("resources/graphics/ui/menu/fire_2.png", q, r);
     fire_3.loadFromFile("resources/graphics/ui/menu/fire_3.png", q, r);
 
-    fire_1.setOrigin(fire_1.getGlobalBounds().width/2, fire_1.getGlobalBounds().height);
-    fire_2.setOrigin(fire_2.getGlobalBounds().width/2, fire_2.getGlobalBounds().height);
-    fire_3.setOrigin(fire_3.getGlobalBounds().width/2, fire_3.getGlobalBounds().height);
+    fire_1.setOrigin(fire_1.getLocalBounds().width/2, fire_1.getLocalBounds().height);
+    fire_2.setOrigin(fire_2.getLocalBounds().width/2, fire_2.getLocalBounds().height);
+    fire_3.setOrigin(fire_3.getLocalBounds().width/2, fire_3.getLocalBounds().height);
 
     aura.loadFromFile("resources/graphics/ui/menu/aura.png", q, r);
-    aura.setOrigin(aura.getGlobalBounds().width/2, aura.getGlobalBounds().height/2);
+    aura.setOrigin(aura.getLocalBounds().width/2, aura.getLocalBounds().height/2);
 
     sword_1.loadFromFile("resources/graphics/ui/menu/sword.png", q, r);
     sword_2.loadFromFile("resources/graphics/ui/menu/sword.png", q, r);
 
-    sword_1.setOrigin(sword_1.getGlobalBounds().width/2, sword_1.getGlobalBounds().height/2);
-    sword_2.setOrigin(sword_2.getGlobalBounds().width/2, sword_2.getGlobalBounds().height/2);
+    sword_1.setOrigin(sword_1.getLocalBounds().width/2, sword_1.getLocalBounds().height/2);
+    sword_2.setOrigin(sword_2.getLocalBounds().width/2, sword_2.getLocalBounds().height/2);
 
     sword_1.setScale(1, 1);
     sword_2.setScale(-1, 1);
@@ -378,9 +378,9 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
             }
         }
 
-        fire_1.setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getGlobalBoundsScaled().width/2), 720 - totem[totem_sel].getGlobalBoundsScaled().height + fire_shift);
-        fire_2.setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getGlobalBoundsScaled().width/2), 720 - totem[totem_sel].getGlobalBoundsScaled().height + fire_shift);
-        fire_3.setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getGlobalBoundsScaled().width/2), 720 - totem[totem_sel].getGlobalBoundsScaled().height + fire_shift);
+        fire_1.setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getGlobalBounds().width/2), 720 - totem[totem_sel].getGlobalBounds().height + fire_shift);
+        fire_2.setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getGlobalBounds().width/2), 720 - totem[totem_sel].getGlobalBounds().height + fire_shift);
+        fire_3.setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getGlobalBounds().width/2), 720 - totem[totem_sel].getGlobalBounds().height + fire_shift);
 
         //cout << int(floor(fire)) << " " << totem[totem_sel].getGlobalBounds().width << " " << totem[totem_sel].getGlobalBounds().height << " vs " << fire_1.getPosition().x << " " << fire_1.getPosition().y << endl;
 
@@ -435,7 +435,7 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
             //cout << "Text " << i << ": " << t_option[i].orX << " " << t_option[i].orY << " " << t_option[i].getGlobalBounds().width << " " << t_option[i].getGlobalBounds().height << " " << t_option[i].getGlobalBoundsScaled().width << " " << t_option[i].getGlobalBoundsScaled().height << endl;
 
             //cout << t_option[i].getGlobalBoundsScaled().width/2 << " " << t_option[i].getGlobalBoundsScaled().height/2 << endl;
-            t_option[i].setOrigin(t_option[i].getGlobalBoundsScaled().width/2, t_option[i].getGlobalBoundsScaled().height/2);
+            t_option[i].setOrigin(t_option[i].getLocalBounds().width/2, t_option[i].getLocalBounds().height/2);
 
             //cout << "Text " << i << ": " << t_option[i].orX << " " << t_option[i].orY << " " << t_option[i].getGlobalBounds().width << " " << t_option[i].getGlobalBounds().height << " " << t_option[i].getGlobalBoundsScaled().width << " " << t_option[i].getGlobalBoundsScaled().height << endl;
 

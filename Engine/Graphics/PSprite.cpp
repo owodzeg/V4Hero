@@ -98,12 +98,14 @@ void PSprite::setOrigin(float x, float y)
 {
     orX = x;
     orY = y;
+    s.setOrigin(orX, orY);
 }
 
 void PSprite::setScale(float x, float y)
 {
     scaleX = x;
     scaleY = y;
+    s.setScale(ratioX*scaleX, ratioY*scaleY);
 }
 
 void PSprite::setRotation(float a)
@@ -141,10 +143,11 @@ sf::Vector2f PSprite::getPosition()
     return sf::Vector2f(lx,ly);
 }
 
-void PSprite::setScale(float s)
+void PSprite::setScale(float ss)
 {
-    scaleX = s;
-    scaleY = s;
+    scaleX = ss;
+    scaleY = ss;
+    s.setScale(ratioX*scaleX, ratioY*scaleY);
 }
 
 sf::FloatRect PSprite::getLocalBounds()
