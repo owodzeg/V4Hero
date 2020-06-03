@@ -362,33 +362,45 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
             }
         }
 
+        float fire_x=0, fire_y=0;
+
         switch(totem_sel)
         {
             case 0:
             {
                 fire_shift = float(34);
+                fire_x = float(72.333);
+                fire_y = float(320);
                 break;
             }
             case 1:
             {
                 fire_shift = float(40);
+                fire_x = float(59.5);
+                fire_y = float(371);
                 break;
             }
             case 2:
             {
                 fire_shift = float(6);
+                fire_x = float(55);
+                fire_y = float(451.667);
                 break;
             }
             case 3:
             {
                 fire_shift = float(10);
+                fire_x = float(59.3333);
+                fire_y = float(498.667);
                 break;
             }
         }
 
-        fire_1.setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getGlobalBounds().width/2), 720 - totem[totem_sel].getGlobalBounds().height + fire_shift);
-        fire_2.setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getGlobalBounds().width/2), 720 - totem[totem_sel].getGlobalBounds().height + fire_shift);
-        fire_3.setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getGlobalBounds().width/2), 720 - totem[totem_sel].getGlobalBounds().height + fire_shift);
+        cout << "Fire for totem " << totem_sel << " x: " << totem[totem_sel].getGlobalBounds().width/2 << " y: " << 720 - totem[totem_sel].getGlobalBounds().height << endl;
+
+        fire_1.setPosition(totem[totem_sel].getPosition().x + fire_x, fire_y + fire_shift);
+        fire_2.setPosition(totem[totem_sel].getPosition().x + fire_x, fire_y + fire_shift);
+        fire_3.setPosition(totem[totem_sel].getPosition().x + fire_x, fire_y + fire_shift);
 
         //cout << int(floor(fire)) << " " << totem[totem_sel].getGlobalBounds().width << " " << totem[totem_sel].getGlobalBounds().height << " vs " << fire_1.getPosition().x << " " << fire_1.getPosition().y << endl;
 
