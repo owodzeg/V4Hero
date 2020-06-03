@@ -1,4 +1,7 @@
 #include "PText.h"
+#include <iostream>
+
+using namespace std;
 
 PText::PText()
 {
@@ -7,6 +10,8 @@ PText::PText()
 
 void PText::createText(sf::Font font, float characterSize, sf::Color color, std::string text_string, int q, int r)
 {
+    cout << "[PText] Creating a new PText object: " << characterSize << " " << text_string << " " << q << " " << r << endl;
+
     f = font;
     cS = characterSize;
     c = color;
@@ -40,6 +45,7 @@ void PText::setRotation(float a)
 
 void PText::setColor(sf::Color color)
 {
+    c = color;
     t.setColor(color);
 }
 
@@ -55,6 +61,7 @@ void PText::setPosition(float x, float y)
 void PText::setString(std::string text_string)
 {
     txt = text_string;
+    t.setString(txt);
 }
 
 sf::Vector2f PText::getPosition()
@@ -76,6 +83,21 @@ sf::FloatRect PText::getLocalBounds()
 sf::FloatRect PText::getGlobalBounds()
 {
     return t.getGlobalBounds();
+}
+
+sf::FloatRect PText::getGlobalBoundsScaled()
+{
+    float nw = 1;
+    float nh = 1;
+
+    if(t.getGlobalBounds().width > 0)
+    nw = t.getGlobalBounds().width / resRatioX;
+
+    if(t.getGlobalBounds().height > 0)
+    nh = t.getGlobalBounds().height / resRatioY;
+
+    return sf::FloatRect(t.getGlobalBounds().left, t.getGlobalBounds().top, nw, nh);
+    //return t.getGlobalBounds();
 }
 
 void PText::draw(sf::RenderWindow& window)
@@ -143,9 +165,10 @@ void PText::draw(sf::RenderWindow& window)
     }
 
     t.setFont(f);
+    t.setColor(c);
     t.setCharacterSize(cS);
     t.setString(txt);
-    t.setScale(ratioX*scaleX, ratioY*scaleY);
+    t.setScale(resRatioX*scaleX, resRatioY*scaleY);
     t.setOrigin(orX,orY);
     t.setPosition(lx*resRatioX, ly*resRatioY);
     t.setRotation(angle*(180/3.14159265358));

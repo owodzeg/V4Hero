@@ -10,6 +10,9 @@ using namespace std;
 
 V4Core::V4Core()
 {
+    const unsigned int maxSize = sf::Texture::getMaximumSize();
+    cout << "[Debug] Max texture size: " << maxSize << endl;
+
     rpc_details = "Running Patafour "+hero_version;
 
     auto result = discord::Core::Create(712761245752623226, DiscordCreateFlags_Default, &core);
@@ -22,7 +25,7 @@ V4Core::V4Core()
 
     discord::Activity activity{};
     activity.SetDetails(rpc_details.c_str());
-    activity.SetState("In main menu");
+    activity.SetState("In Main menu");
     activity.GetAssets().SetLargeImage("logo");
     activity.SetType(discord::ActivityType::Playing);
     state.core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
@@ -199,6 +202,9 @@ void V4Core::LoadingThread()
     {
         i++;
         window.clear();
+        auto lastView = window.getView();
+        window.setView(window.getDefaultView());
+
         // drawing some text
         if (!pressAnyKey){
             t_version.setPosition(config.GetInt("resX")/2-50-100*sin(i/50.0),config.GetInt("resY")/2-20-100*sin((i+30)/50.0));
@@ -233,6 +239,7 @@ void V4Core::LoadingThread()
             window.draw(t_pressAnyKey);
         }
 
+        window.setView(lastView);
         window.display();
 
     }
@@ -255,12 +262,15 @@ void V4Core::Init()
     // DisableProcessWindowsGhosting();
     srand(time(NULL));
 
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 16;
+
     if(config.GetInt("enableFullscreen"))
-        window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::Fullscreen);
+        window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::Fullscreen, settings);
     else if(config.GetInt("enableBorderlessWindow"))
-        window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::None);
+        window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::None, settings);
     else
-        window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::Titlebar | sf::Style::Close);
+        window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::Titlebar | sf::Style::Close, settings);
 
     window.setFramerateLimit(config.GetInt("framerateLimit"));
     window.setKeyRepeatEnabled(false);

@@ -98,12 +98,14 @@ void PSprite::setOrigin(float x, float y)
 {
     orX = x;
     orY = y;
+    s.setOrigin(orX, orY);
 }
 
 void PSprite::setScale(float x, float y)
 {
     scaleX = x;
     scaleY = y;
+    s.setScale(ratioX*scaleX, ratioY*scaleY);
 }
 
 void PSprite::setRotation(float a)
@@ -130,6 +132,12 @@ void PSprite::setSprite(sf::Sprite& sprite)
 void PSprite::setPosition(float x, float y)
 {
     //s.setPosition(x*ratioX,y*ratioY);
+    if(baseX == -999)
+    baseX = x;
+
+    if(baseY == -999)
+    baseY = y;
+
     lx = x;
     ly = y;
 
@@ -141,10 +149,11 @@ sf::Vector2f PSprite::getPosition()
     return sf::Vector2f(lx,ly);
 }
 
-void PSprite::setScale(float s)
+void PSprite::setScale(float ss)
 {
-    scaleX = s;
-    scaleY = s;
+    scaleX = ss;
+    scaleY = ss;
+    s.setScale(ratioX*scaleX, ratioY*scaleY);
 }
 
 sf::FloatRect PSprite::getLocalBounds()
@@ -155,6 +164,27 @@ sf::FloatRect PSprite::getLocalBounds()
 sf::FloatRect PSprite::getGlobalBounds()
 {
     return s.getGlobalBounds();
+}
+
+sf::FloatRect PSprite::getGlobalBoundsScaled()
+{
+    float nw = 1;
+    float nh = 1;
+
+    if(s.getGlobalBounds().width > 0)
+    nw = s.getGlobalBounds().width / resRatioX;
+
+    if(s.getGlobalBounds().height > 0)
+    nh = s.getGlobalBounds().height / resRatioY;
+
+    return sf::FloatRect(s.getGlobalBounds().left, s.getGlobalBounds().top, nw, nh);
+    //return s.getGlobalBounds();
+}
+
+void PSprite::setSmooth(bool smooth)
+{
+    t.setSmooth(smooth);
+    s.setTexture(t);
 }
 
 void PSprite::draw(sf::RenderWindow& window)

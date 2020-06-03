@@ -31,6 +31,7 @@ void EndFlag::OnCollide(CollidableObject* otherObject)
 
     if (!thisConfig->thisCore->mainMenu.patapolisMenu.initialised){
         /// patapolis might not be initialised because we could be running the pre-patapolis scripted first mission.
+        cout << "[ENDFLAG] Initialize Patapolis for the first time" << endl;
 
         thisConfig->thisCore->continueLoading=true;
         thisConfig->thisCore->window.setActive(false);
@@ -45,6 +46,8 @@ void EndFlag::OnCollide(CollidableObject* otherObject)
         thisConfig->thisCore->continueLoading=false;
 
     } else {
+        cout << "Don't initialize Patapolis, just show it again" << endl;
+
         thisConfig->thisCore->mainMenu.patapolisMenu.Show();
         thisConfig->thisCore->mainMenu.patapolisMenu.isActive = true;
     }
