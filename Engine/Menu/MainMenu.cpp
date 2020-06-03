@@ -248,18 +248,26 @@ void MainMenu::SelectMenuOption()
     case 1:
         // load save and patapolis
         {
+            Hide();
 
-        Hide();
-        sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
-        v4core->continueLoading=true;
-        v4core->window.setActive(false);
-        loadingThreadInstance.launch();
+            if(!patapolisMenu.initialised)
+            {
+                sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+                v4core->continueLoading=true;
+                v4core->window.setActive(false);
+                loadingThreadInstance.launch();
 
-        patapolisMenu.Show();
-        patapolisMenu.isActive = true;
-        patapolisMenu.Initialise(config,keyMapping,v4core,this);
+                patapolisMenu.Show();
+                patapolisMenu.isActive = true;
+                patapolisMenu.Initialise(config,keyMapping,v4core,this);
 
-        v4core->continueLoading=false;
+                v4core->continueLoading=false;
+            }
+            else
+            {
+                patapolisMenu.Show();
+                patapolisMenu.isActive = true;
+            }
         }
         break;
     case 2:

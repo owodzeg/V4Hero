@@ -202,6 +202,9 @@ void V4Core::LoadingThread()
     {
         i++;
         window.clear();
+        auto lastView = window.getView();
+        window.setView(window.getDefaultView());
+
         // drawing some text
         if (!pressAnyKey){
             t_version.setPosition(config.GetInt("resX")/2-50-100*sin(i/50.0),config.GetInt("resY")/2-20-100*sin((i+30)/50.0));
@@ -236,6 +239,7 @@ void V4Core::LoadingThread()
             window.draw(t_pressAnyKey);
         }
 
+        window.setView(lastView);
         window.display();
 
     }

@@ -132,6 +132,12 @@ void PSprite::setSprite(sf::Sprite& sprite)
 void PSprite::setPosition(float x, float y)
 {
     //s.setPosition(x*ratioX,y*ratioY);
+    if(baseX == -999)
+    baseX = x;
+
+    if(baseY == -999)
+    baseY = y;
+
     lx = x;
     ly = y;
 

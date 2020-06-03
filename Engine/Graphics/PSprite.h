@@ -16,6 +16,7 @@ class PSprite
     float resRatioX=1,resRatioY=1;
     float scaleX=1,scaleY=1;
     float orX=0, orY=0;
+    float baseX=-999, baseY=-999;
     float lx=0,ly=0;
     float angle = 0;
     bool DoAutoScale;
