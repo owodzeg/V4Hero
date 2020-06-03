@@ -9,17 +9,6 @@ PatapolisMenu::PatapolisMenu()
     //ctor
     f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
     //f_font.loadFromFile("resources/fonts/arial.ttf");
-    t_title.setFont(f_font);
-
-    t_title.setCharacterSize(38);
-    t_title.setFillColor(sf::Color::White);
-
-    mm_bigBox.setSize(sf::Vector2f(100,10));
-    mm_bigBox.setFillColor(sf::Color(4,0,90));
-
-    mm_titleBox.setSize(sf::Vector2f(100,10));
-    mm_titleBox.setFillColor(sf::Color::Red);
-
 
     isActive=false;
 }
@@ -57,8 +46,41 @@ void PatapolisMenu::addSparkle(float x, float y)
     tmp.curScale = scale;
     tmp.x = x;
     tmp.y = y;
+    tmp.baseX = x;
 
     sparkles.push_back(tmp);
+}
+
+void PatapolisMenu::addParagetSparkle(float x, float y)
+{
+    float scale = ((rand() % 400) + 750) / float(1000);
+    float angle = (rand() % 36000) / float(100);
+
+    ParagetSparkle tmp;
+
+    PSprite sprk;
+
+    int choice = rand() % 3 + 1;
+    string nm = "paraget_sparkle_"+to_string(choice)+".png";
+
+    sprk.loadFromFile("resources/graphics/bg/patapolis/"+nm, quality, 1);
+
+    sprk.setPosition(x, y);
+    sprk.setOrigin(sprk.getLocalBounds().width/2, sprk.getLocalBounds().height/2);
+    sprk.setRotation(angle);
+    sprk.setScale(scale);
+    //sparkles.push_back(sprk);
+
+    tmp.sprk = sprk;
+    tmp.initScale = scale;
+    tmp.curScale = scale;
+    tmp.x = x;
+    tmp.y = y;
+    tmp.angle = angle;
+    tmp.baseX = x;
+    tmp.baseY = y;
+
+    paraget_sparkles.push_back(tmp);
 }
 
 void PatapolisMenu::addRay(float x1, float y1, float x2, float y2)
@@ -73,6 +95,74 @@ void PatapolisMenu::addRay(float x1, float y1, float x2, float y2)
     rs.ox2 = x2;
 
     coords.push_back(rs);
+}
+
+PatapolisMenu::Fire PatapolisMenu::addFire(int type, float x, float y, bool add)
+{
+    Fire tmp;
+
+    string str_type = "";
+
+    switch(type)
+    {
+        case 0:
+        {
+            str_type = "small";
+            break;
+        }
+
+        case 1:
+        {
+            str_type = "med";
+            break;
+        }
+
+        case 2:
+        {
+            str_type = "large";
+            break;
+        }
+
+        case 3:
+        {
+            str_type = "purple";
+            break;
+        }
+
+        case 4:
+        {
+            str_type = "market";
+            break;
+        }
+    }
+
+    tmp.fire[0].loadFromFile("resources/graphics/bg/patapolis/"+str_type+"_fire1.png", quality, 1);
+    tmp.fire[1].loadFromFile("resources/graphics/bg/patapolis/"+str_type+"_fire2.png", quality, 1);
+    tmp.fire[2].loadFromFile("resources/graphics/bg/patapolis/"+str_type+"_fire3.png", quality, 1);
+
+    tmp.glow.loadFromFile("resources/graphics/bg/patapolis/"+str_type+"_glow.png", quality, 1);
+
+    tmp.baseX = x;
+    tmp.baseY = y;
+    tmp.x = x;
+    tmp.y = y;
+
+    if(add)
+    fires.push_back(tmp);
+
+    return tmp;
+}
+
+void PatapolisMenu::addSmokeParticle(float x, float y, PSprite& refer)
+{
+    SmokeParticle tmp;
+    tmp.smk = refer;
+    tmp.x = x;
+    tmp.y = y;
+    tmp.baseX = x;
+    tmp.baseY = y;
+    tmp.curScale = 0.1;
+    smoke.push_back(tmp);
 }
 
 void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, Menu *curParentMenu)
@@ -118,6 +208,10 @@ void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4
 
     float resRatioX = thisConfig->GetInt("resX") / float(1280);
     float resRatioY = thisConfig->GetInt("resY") / float(720);
+
+    t_title.createText(f_font, 38, sf::Color::White, "", quality, 1);
+    t_title.t.setOutlineThickness(2);
+    t_title.t.setOutlineColor(sf::Color::Black);
 
     string vx_params = "0,24,128,238;66,24,128,238;444,184,243,202;591,184,243,202;592,255,255,255;710,171,243,214;720,171,243,214";
 
@@ -353,6 +447,95 @@ void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4
         lightrays.push_back(tmp);
     }
 
+    market.loadFromFile("resources/graphics/bg/patapolis/market.png", quality, 1);
+    market.setPosition(640, 728-floor_height);
+    market.setOrigin(market.getLocalBounds().width/2, market.getLocalBounds().height);
+
+    forge_main.loadFromFile("resources/graphics/bg/patapolis/forge_main.png", quality, 1);
+    forge_main.setPosition(2300, 720-floor_height);
+    forge_main.setOrigin(forge_main.getLocalBounds().width/2, forge_main.getLocalBounds().height);
+
+    forge_back.loadFromFile("resources/graphics/bg/patapolis/blacksmith_forge.png", quality, 1);
+    forge_back.setPosition(2300, 720-floor_height-29);
+    forge_back.setOrigin(forge_back.getLocalBounds().width/2, forge_back.getLocalBounds().height);
+
+    forge_glow.loadFromFile("resources/graphics/bg/patapolis/blacksmith_forge_glow.png", quality, 1);
+    forge_glow.setPosition(2300, 720-floor_height-178);
+    forge_glow.setOrigin(forge_glow.getLocalBounds().width/2, forge_glow.getLocalBounds().height);
+
+    forge_fence.loadFromFile("resources/graphics/bg/patapolis/blacksmith_fence.png", quality, 1);
+    forge_fence.setPosition(2043, 720-floor_height-306);
+    forge_fence.setOrigin(forge_fence.getLocalBounds().width/2, 0);
+
+    forge_slab.loadFromFile("resources/graphics/bg/patapolis/slab.png", quality, 1);
+    forge_slab.setPosition(2300-65, 720-floor_height-84);
+    forge_slab.setOrigin(forge_slab.getLocalBounds().width/2, forge_slab.getLocalBounds().height);
+
+    forge_slab_glow.loadFromFile("resources/graphics/bg/patapolis/slab_glow.png", quality, 1);
+    forge_slab_glow.setPosition(2300-72, 720-floor_height-92);
+    forge_slab_glow.setOrigin(forge_slab_glow.getLocalBounds().width/2, forge_slab_glow.getLocalBounds().height);
+
+    barracks.loadFromFile("resources/graphics/bg/patapolis/barracks.png", quality, 1);
+    barracks.setPosition(3960, 765-floor_height);
+    barracks.setOrigin(barracks.getLocalBounds().width/2, barracks.getLocalBounds().height);
+
+    festival_main.loadFromFile("resources/graphics/bg/patapolis/festival_main.png", quality, 1);
+    festival_main.setPosition(5620, 720-floor_height);
+    festival_main.setOrigin(festival_main.getLocalBounds().width/2, festival_main.getLocalBounds().height);
+
+    altar.loadFromFile("resources/graphics/bg/patapolis/altar.png", quality, 1);
+    altar.setPosition(7280, 720-floor_height);
+    altar.setOrigin(altar.getLocalBounds().width/2, altar.getLocalBounds().height);
+
+    obelisk.loadFromFile("resources/graphics/bg/patapolis/obelisk.png", quality, 1);
+    obelisk.setPosition(8940, 720-floor_height);
+    obelisk.setOrigin(obelisk.getLocalBounds().width/2, obelisk.getLocalBounds().height);
+
+    paraget_main.loadFromFile("resources/graphics/bg/patapolis/paraget_main.png", quality, 1);
+    paraget_main.setPosition(10600, 722-floor_height);
+    paraget_main.setOrigin(paraget_main.getLocalBounds().width/2, paraget_main.getLocalBounds().height);
+
+    paraget_crystal_glow.loadFromFile("resources/graphics/bg/patapolis/paraget_crystal_glow.png", quality, 1);
+    paraget_crystal_glow.setPosition(10600, 430);
+    paraget_crystal_glow.setOrigin(paraget_crystal_glow.getLocalBounds().width/2, paraget_crystal_glow.getLocalBounds().height/2);
+
+    paraget_crystal.loadFromFile("resources/graphics/bg/patapolis/paraget_crystal.png", quality, 1);
+    paraget_crystal.setPosition(10600, 430);
+    paraget_crystal.setOrigin(paraget_crystal.getLocalBounds().width/2, paraget_crystal.getLocalBounds().height/2);
+
+    locations.push_back(market.getPosition().x - 640);
+    locations.push_back(forge_main.getPosition().x - 640);
+    locations.push_back(barracks.getPosition().x - 640);
+    locations.push_back(festival_main.getPosition().x - 640);
+    locations.push_back(altar.getPosition().x - 640);
+    locations.push_back(obelisk.getPosition().x - 640);
+    locations.push_back(paraget_main.getPosition().x - 640);
+    locations.push_back(11290);
+    locations.push_back(11569);
+
+    int range = rand() % 30 + 50;
+    for(int i=0; i<range; i++)
+    {
+        addParagetSparkle(10549 + (rand()%100), 330 + (rand() % 200));
+    }
+
+    addFire(4, 583, 583, true);
+    addFire(4, 697, 583, true);
+
+    addFire(2, 5816, 574, true);
+    addFire(2, 5431, 574, true);
+    addFire(1, 5207, 368, true);
+    addFire(1, 6039, 368, true);
+
+    addFire(0, 8775, 479, true);
+    addFire(0, 9105, 479, true);
+
+    forge_big = addFire(2, 2050, 542, false);
+    forge_purple = addFire(3, 2370, 404, false);
+
+    p_smoke.loadFromFile("resources/graphics/bg/patapolis/smoke.png", quality, 1);
+    p_smoke.setOrigin(p_smoke.getLocalBounds().width/2, p_smoke.getLocalBounds().height/2);
+
     initialised=true;
 
     if (doWaitKeyPress)
@@ -379,125 +562,53 @@ void PatapolisMenu::EventFired(sf::Event event)
     {
         if(event.type == sf::Event::KeyPressed)
         {
-            // do something here;
-            /*if (event.key.code == sf::Keyboard::Num1)
+            if(event.key.code == sf::Keyboard::Left)
             {
-
-                animStartVal=p_background[0].x;
-                animChangeVal=6000-p_background[0].x;
-                anim_timer.restart();
-                totalTime=1;
-                isAnim = true;
-                currentMenuPosition = 0;
-                SetTitle(currentMenuPosition);
-
-            }
-            else if (event.key.code == sf::Keyboard::Num2)
-            {
-
-                animStartVal=p_background[0].x;
-                animChangeVal=4000-p_background[0].x;
-                anim_timer.restart();
-                totalTime=1;
-                isAnim = true;
-                currentMenuPosition = 1;
-                SetTitle(currentMenuPosition);
-
-            }
-            else if (event.key.code == sf::Keyboard::Num3)
-            {
-
-                animStartVal=p_background[0].x;
-                animChangeVal=2880-p_background[0].x;
-                anim_timer.restart();
-                totalTime=1;
-                isAnim = true;
-                currentMenuPosition = 2;
-                SetTitle(currentMenuPosition);
-
-            }
-            else if (event.key.code == sf::Keyboard::Num4)
-            {
-
-                animStartVal=p_background[0].x;
-                animChangeVal=730-p_background[0].x;
-                anim_timer.restart();
-                totalTime=1;
-                isAnim = true;
-                currentMenuPosition = 3;
-                SetTitle(currentMenuPosition);
-
-            }
-            else if (event.key.code == sf::Keyboard::Num5)
-            {
-
-                animStartVal=p_background[0].x;
-                animChangeVal=-p_background[0].x-350;
-                anim_timer.restart();
-                totalTime=1;
-                isAnim = true;
-                currentMenuPosition = 4;
-                SetTitle(currentMenuPosition);
-
-            }
-            else if (event.key.code == thisConfig->GetInt("keybindPon") || event.key.code == thisConfig->GetInt("secondaryKeybindPon"))
-            {
-                currentMenuPosition += 1;
-                if (currentMenuPosition>possibleMenuPositions.size()-1)
+                if(location > 0)
                 {
-                    currentMenuPosition=0;
+                    location--;
+                    left = true;
+
+                    SetTitle(location);
                 }
-                animStartVal=p_background[0].x;
-                animChangeVal=-p_background[0].x-possibleMenuPositions[currentMenuPosition];
-                anim_timer.restart();
-                totalTime=1;
-                isAnim = true;
-                SetTitle(currentMenuPosition);
-
-
             }
-            else if (event.key.code == thisConfig->GetInt("keybindPata") || event.key.code == thisConfig->GetInt("secondaryKeybindPata"))
+            else if(event.key.code == sf::Keyboard::Right)
             {
-                currentMenuPosition -= 1;
-                if (currentMenuPosition<0)
+                if(location < locations.size()-1)
                 {
-                    currentMenuPosition=4;
-                }
-                animStartVal=p_background[0].x;
-                animChangeVal=-p_background[0].x-possibleMenuPositions[currentMenuPosition];
-                anim_timer.restart();
-                totalTime=1;
-                isAnim = true;
-                SetTitle(currentMenuPosition);
+                    location++;
+                    left = false;
 
+                    SetTitle(location);
+                }
             }
             else if (event.key.code == thisConfig->GetInt("keybindDon") || event.key.code == thisConfig->GetInt("secondaryKeybindDon") || event.key.code == thisConfig->GetInt("keybindMenuEnter"))
             {
                 // select the current menu item
-                switch (currentMenuPosition)
+                switch (location)
                 {
                 case 0:
                     /// trader/random
                     // open the world map
                     break;
-                case 1:
+                case 2:
                     /// armoury/barracks
                     barracks_menu.Show();
                     barracks_menu.isActive = true;
                     barracks_menu.OpenBarracksMenu();
                     break;
-                case 2:
+                case 3:
                     /// festival
                     // open barracks screen
                     break;
-                case 3:
+                case 4:
                     /// altar
                     // open mater menu
                     altar_menu.Show();
                     altar_menu.isActive = true;
                     altar_menu.ShowAltar();
                     break;
-                case 4:
+                case 5:
                     /// obelisk
                     // idk?
                     // open inventory menu
@@ -518,7 +629,6 @@ void PatapolisMenu::EventFired(sf::Event event)
                 parentMenu->Show();
                 parentMenu->isActive=true;
             }
-            */
 
         }
         else if (event.type == sf::Event::MouseButtonReleased)
@@ -536,22 +646,34 @@ void PatapolisMenu::SetTitle(int menuPosition)
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_trader")));
         break;
     case 1:
-        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_barracks")));
+        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_blacksmith")));
         break;
     case 2:
-        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_festival")));
+        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_barracks")));
         break;
     case 3:
-        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_altar")));
+        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_festival")));
         break;
     case 4:
+        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_altar")));
+        break;
+    case 5:
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_obelisk")));
+        break;
+    case 6:
+        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_paraget")));
+        break;
+    case 7:
+        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_wakapon")));
+        break;
+    case 8:
+        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_egg")));
         break;
     default:
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis")));
         break;
     }
-    t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
+    t_title.setOrigin(t_title.getLocalBounds().width/2,t_title.getLocalBounds().height/2);
 }
 float EaseIn (float time, float startValue, float change, float duration)
 {
@@ -568,52 +690,69 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
 {
     if(isActive)
     {
+        auto lastView = window.getView();
+        window.setView(window.getDefaultView());
+
         window.draw(v_background);
+
+        camDest = locations[location];
+
+        float camDistance = abs(camDest - camPos);
+        float camSpeed = camDistance * 3;
+
+        if(camPos != camDest)
+        {
+            if(left)
+            {
+                if(camPos < locations[location])
+                camPos += camSpeed / fps;
+                else
+                camPos -= camSpeed / fps;
+            }
+            else
+            {
+                if(camPos > locations[location])
+                camPos -= camSpeed / fps;
+                else
+                camPos += camSpeed / fps;
+            }
+        }
 
         for(int i=0; i<layer_6.size(); i++)
         {
             //cout << "layer_6[" << i << "]: " << layer_6[i].getGlobalBounds().width/2 << " " << layer_6[i].getGlobalBounds().height << " " << layer_6[i].getPosition().x << " " << layer_6[i].getPosition().y << endl;
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-            {
-                layer_6[i].lx += float(8.75) / fps * float(240);
-            }
-
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            {
-                layer_6[i].lx -= float(8.75) / fps * float(240);
-            }
+            layer_6[i].lx = layer_6[i].baseX - (camPos / 1.1428571428571428571428571428571);
 
             layer_6[i].setOrigin(layer_6[i].getLocalBounds().width/2, layer_6[i].getLocalBounds().height);
             layer_6[i].draw(window);
         }
 
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        {
-            L5.lx += float(9) / fps * float(240);
-            L4.lx += float(9.5) / fps * float(240);
-            wakapon.lx += float(10) / fps * float(240);
-            world_egg.lx += float(10) / fps * float(240);
-            light_1.lx += float(10) / fps * float(240);
-            light_2.lx += float(10) / fps * float(240);
-            egg_light.lx += float(10) / fps * float(240);
-            rayX += float(10) / fps * float(240);
+        L5.lx = L5.baseX - (camPos / 1.1111111111111111111);
+        L4.lx = L4.baseX - (camPos / 1.0526315789473684210526315789474);
+        wakapon.lx = wakapon.baseX - camPos;
+        world_egg.lx = world_egg.baseX - camPos;
+        light_1.lx = light_1.baseX - camPos;
+        light_2.lx = light_2.baseX - camPos;
+        egg_light.lx = egg_light.baseX - camPos;
 
-            floor_x += float(10) / fps * float(240);
-        }
+        market.lx = market.baseX - camPos;
+        forge_main.lx = forge_main.baseX - camPos;
+        forge_back.lx = forge_back.baseX - camPos;
+        forge_glow.lx = forge_glow.baseX - camPos;
+        forge_fence.lx = forge_fence.baseX - camPos;
+        forge_slab.lx = forge_slab.baseX - camPos;
+        forge_slab_glow.lx = forge_slab_glow.baseX - camPos;
+        barracks.lx = barracks.baseX - camPos;
+        festival_main.lx = festival_main.baseX - camPos;
+        altar.lx = altar.baseX - camPos;
+        obelisk.lx = obelisk.baseX - camPos;
+        paraget_main.lx = paraget_main.baseX - camPos;
+        paraget_crystal.lx = paraget_crystal.baseX - camPos;
+        paraget_crystal_glow.lx = paraget_crystal_glow.baseX - camPos;
 
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        {
-            L5.lx -= float(9) / fps * float(240);
-            L4.lx -= float(9.5) / fps * float(240);
-            wakapon.lx -= float(10) / fps * float(240);
-            world_egg.lx -= float(10) / fps * float(240);
-            light_1.lx -= float(10) / fps * float(240);
-            light_2.lx -= float(10) / fps * float(240);
-            egg_light.lx -= float(10) / fps * float(240);
-            rayX -= float(10) / fps * float(240);
+        rayX = rayXbase - camPos;
 
-            floor_x -= float(10) / fps * float(240);
-        }
+        floor_x = floor_x_base - camPos;
 
         L5.setOrigin(L5.getLocalBounds().width/2, L5.getLocalBounds().height);
         L4.setOrigin(L4.getLocalBounds().width/2, L4.getLocalBounds().height);
@@ -625,15 +764,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
         for(int i=0; i<layer_2.size(); i++)
         {
             //cout << "layer_6[" << i << "]: " << layer_6[i].getGlobalBounds().width/2 << " " << layer_6[i].getGlobalBounds().height << " " << layer_6[i].getPosition().x << " " << layer_6[i].getPosition().y << endl;
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-            {
-                layer_2[i].lx += float(10) / fps * float(240);
-            }
-
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            {
-                layer_2[i].lx -= float(10) / fps * float(240);
-            }
+            layer_2[i].lx = layer_2[i].baseX - camPos;
 
             layer_2[i].setOrigin(layer_2[i].getLocalBounds().width/2, layer_2[i].getLocalBounds().height);
             layer_2[i].draw(window);
@@ -641,6 +772,207 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
 
         float resRatioX = window.getSize().x / float(1280);
         float resRatioY = window.getSize().y / float(720);
+
+        market.draw(window);
+
+        forge_big.id += float(12) / fps;
+
+        if(round(forge_big.id) >= 3)
+        forge_big.id = 0;
+
+        int id = round(forge_big.id);
+
+        forge_big.glowsize += float(90) / fps;
+
+        if(forge_big.glowsize >= 360)
+        forge_big.glowsize -= 360;
+
+        forge_big.glow.setOrigin(forge_big.glow.getLocalBounds().width/2, forge_big.glow.getLocalBounds().height/2);
+        forge_big.glow.setScale(1.05 + (cos(forge_big.glowsize * 3.141592 / 180) / 10));
+        forge_big.glow.setPosition(forge_big.baseX - camPos, forge_big.baseY);
+
+        forge_big.glow.draw(window);
+
+        forge_big.fire[id].setOrigin(forge_big.fire[id].getLocalBounds().width/2, forge_big.fire[id].getLocalBounds().height/2);
+        forge_big.fire[id].setPosition(forge_big.baseX - camPos, forge_big.baseY);
+
+        forge_big.fire[id].draw(window);
+
+        forge_back.draw(window);
+
+        forge_glowsize += float(90) / fps;
+
+        if(forge_glowsize >= 360)
+        forge_glowsize = 0;
+
+        forge_glow.setOrigin(forge_glow.getLocalBounds().width/2, forge_glow.getLocalBounds().height/2);
+        forge_glow.setScale(1.05 + (cos(forge_glowsize * 3.141592 / 180) / 10));
+        forge_glow.draw(window);
+
+        forge_purple.id += float(12) / fps;
+
+        if(round(forge_purple.id) >= 3)
+        forge_purple.id = 0;
+
+        id = round(forge_purple.id);
+
+        forge_purple.glowsize += float(90) / fps;
+
+        if(forge_purple.glowsize >= 360)
+        forge_purple.glowsize -= 360;
+
+        forge_purple.glow.setOrigin(forge_purple.glow.getLocalBounds().width/2, forge_purple.glow.getLocalBounds().height/2);
+        forge_purple.glow.setScale(1.05 + (cos(forge_purple.glowsize * 3.141592 / 180) / 10));
+        forge_purple.glow.setPosition(forge_purple.baseX - camPos, forge_purple.baseY);
+
+        forge_purple.glow.draw(window);
+
+        forge_purple.fire[id].setOrigin(forge_purple.fire[id].getLocalBounds().width/2, forge_purple.fire[id].getLocalBounds().height/2);
+        forge_purple.fire[id].setPosition(forge_purple.baseX - camPos, forge_purple.baseY);
+
+        forge_purple.fire[id].draw(window);
+
+        forge_slab_glow.setOrigin(forge_slab_glow.getLocalBounds().width/2, forge_slab_glow.getLocalBounds().height/2);
+        forge_slab_glow.setScale(1.05 + (cos(forge_glowsize * 3.141592 / 180) / 10));
+        forge_slab_glow.draw(window);
+
+        forge_main.draw(window);
+
+        forge_slab.draw(window);
+
+        forge_fence.draw(window);
+
+        barracks.draw(window);
+
+        crystal_y += float(90) / fps;
+
+        if(crystal_y >= 360)
+        crystal_y -= 360;
+
+        crystal_y2 += float(30) / fps;
+
+        if(crystal_y2 >= 360)
+        crystal_y2 -= 360;
+
+        paraget_crystal.ly = paraget_crystal.baseY + sin(crystal_y * 3.141592 / 180) * 10;
+        paraget_crystal_glow.ly = paraget_crystal.baseY + sin(crystal_y * 3.141592 / 180) * 10;
+
+        paraget_crystal_glow.setScale(1.05 + (cos(crystal_y2 * 3.141592 / 180) / 10));
+        paraget_crystal_glow.draw(window);
+        paraget_main.draw(window);
+        paraget_crystal.draw(window);
+
+        for(int i=0; i<paraget_sparkles.size(); i++)
+        {
+            paraget_sparkles[i].x = paraget_sparkles[i].baseX - camPos;
+
+            if(paraget_sparkles[i].alpha > 0)
+            {
+                paraget_sparkles[i].alpha -= float(300) / fps;
+            }
+            else
+            {
+                paraget_sparkles[i].alpha = 0;
+            }
+
+            if(paraget_sparkles[i].curScale > 0)
+            {
+                paraget_sparkles[i].curScale -= float(1.35) / fps;
+            }
+            else
+            {
+                paraget_sparkles[i].curScale = 0;
+            }
+
+            if(paraget_sparkles[i].curScale <= 0)
+            {
+                paraget_sparkles[i].timer -= float(1000) / fps;
+            }
+
+            if(paraget_sparkles[i].timer <= 0)
+            {
+                paraget_sparkles[i].curScale = paraget_sparkles[i].initScale;
+                paraget_sparkles[i].alpha = 255;
+                paraget_sparkles[i].timer = 400 + (rand() % 200);
+                paraget_sparkles[i].y = paraget_sparkles[i].baseY + sin(crystal_y * 3.141592 / 180) * 10;
+            }
+
+            paraget_sparkles[i].sprk.setColor(sf::Color(255,255,255,paraget_sparkles[i].alpha));
+            paraget_sparkles[i].sprk.setScale(paraget_sparkles[i].curScale);
+            paraget_sparkles[i].sprk.setOrigin(paraget_sparkles[i].sprk.getLocalBounds().width/2, paraget_sparkles[i].sprk.getLocalBounds().height/2);
+            paraget_sparkles[i].sprk.setPosition(paraget_sparkles[i].x, paraget_sparkles[i].y);
+            paraget_sparkles[i].sprk.draw(window);
+        }
+
+        for(int i=0; i<fires.size(); i++)
+        {
+            fires[i].id += float(10) / fps;
+
+            if(round(fires[i].id) >= 3)
+            fires[i].id = 0;
+
+            int id = round(fires[i].id);
+
+            fires[i].glowsize += float(90) / fps;
+
+            if(fires[i].glowsize >= 360)
+            fires[i].glowsize -= 360;
+
+            fires[i].glow.setOrigin(fires[i].glow.getLocalBounds().width/2, fires[i].glow.getLocalBounds().height/2);
+            fires[i].glow.setScale(1.05 + (cos(fires[i].glowsize * 3.141592 / 180) / 10));
+            fires[i].glow.setPosition(fires[i].baseX - camPos, fires[i].baseY);
+
+            fires[i].glow.draw(window);
+
+            fires[i].fire[id].setOrigin(fires[i].fire[id].getLocalBounds().width/2, fires[i].fire[id].getLocalBounds().height/2);
+            fires[i].fire[id].setPosition(fires[i].baseX - camPos, fires[i].baseY);
+
+            fires[i].fire[id].draw(window);
+        }
+
+        festival_main.draw(window);
+        obelisk.draw(window);
+
+        smokepath1 += float(40) / fps;
+
+        if(smokepath1 >= 360)
+        smokepath1 = 0;
+
+        if(rand() % 100 == 1)
+        addSmokeParticle(altar.baseX - 186 + (cos(smokepath1 * 3.141592 / 180) * 2), 410, p_smoke);
+        if(rand() % 100 == 1)
+        addSmokeParticle(altar.baseX + 186 + (sin(smokepath1 * 3.141592 / 180) * 2), 410, p_smoke);
+
+        //cout << smoke.size() << endl;
+
+        for(auto i=smoke.begin(); i!=smoke.end(); i++)
+        {
+            int s = std::distance(smoke.begin(), i);
+
+            smoke[s].y -= float(20) / fps;
+            smoke[s].x = smoke[s].baseX - camPos;
+
+            smoke[s].alpha -= float(60) / fps;
+
+            if(smoke[s].alpha <= 0)
+            smoke[s].alpha = 0;
+
+            smoke[s].curScale += float(0.14) / fps;
+
+            smoke[s].smk.setPosition(smoke[s].x, smoke[s].y);
+            smoke[s].smk.setColor(sf::Color(255,255,255,smoke[s].alpha));
+            smoke[s].smk.setScale(smoke[s].curScale);
+
+            //cout << "[SMOKE " << i << "] " << smoke[s].smk.lx << " " << smoke[s].smk.ly << endl;
+            smoke[s].smk.draw(window);
+
+            if(smoke[s].alpha <= 0)
+            {
+                smoke.erase(i--);
+            }
+        }
+
+        altar.draw(window);
 
         r_ground.setPosition(floor_x * resRatioX, (float(720) - floor_height) * resRatioY);
         window.draw(r_ground);
@@ -655,15 +987,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
 
         for(int i=0; i<sparkles.size(); i++)
         {
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-            {
-                sparkles[i].x += float(10) / fps * float(240);
-            }
-
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            {
-                sparkles[i].x -= float(10) / fps * float(240);
-            }
+            sparkles[i].x = sparkles[i].baseX - camPos;
 
             if(sparkles[i].alpha > 0)
             {
@@ -766,9 +1090,9 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
                 float x2 = coords[i].x2 + rayX;
                 float y2 = coords[i].y2;
 
-                lightrays[i].triangle[0].position = sf::Vector2f(x1, y1);
-                lightrays[i].triangle[1].position = sf::Vector2f(x2, y2);
-                lightrays[i].triangle[2].position = sf::Vector2f(((x1 + x2) / 2) + (lightrays[i].cur_distance * sin(lightrays[i].angle*3.14159265/180)), ((y1 + y2) / 2) + (lightrays[i].cur_distance * cos(lightrays[i].angle*3.14159265/180)));
+                lightrays[i].triangle[0].position = sf::Vector2f(x1*resRatioX, y1*resRatioY);
+                lightrays[i].triangle[1].position = sf::Vector2f(x2*resRatioX, y2*resRatioY);
+                lightrays[i].triangle[2].position = sf::Vector2f((((x1 + x2) / 2) + (lightrays[i].cur_distance * sin(lightrays[i].angle*3.14159265/180))) * resRatioX, (((y1 + y2) / 2) + (lightrays[i].cur_distance * cos(lightrays[i].angle*3.14159265/180))) * resRatioY);
 
                 //cout << "[coord #" << i << "]" << lightrays[i].triangle[0].position.x << " " << lightrays[i].triangle[0].position.y << " " << lightrays[i].triangle[1].position.x << " " << lightrays[i].triangle[1].position.y << " " << lightrays[i].triangle[2].position.x << " " << lightrays[i].triangle[2].position.y << endl;
 
@@ -782,6 +1106,27 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
 
         wakapon.draw(window);
         world_egg.draw(window);
+
+        if(barracks_menu.isActive)
+        {
+            barracks_menu.Update(window,fps);
+        }
+        else if(altar_menu.isActive)
+        {
+            altar_menu.Update(window,fps);
+        }
+        else if(obelisk_menu.isActive)
+        {
+            obelisk_menu.Update(window,fps);
+        }
+        else
+        {
+        t_title.setPosition(640,80);
+        t_title.draw(window);
+        }
+
+        window.setView(lastView);
+
 
         /**window.setView(window.getDefaultView());
         mm_bigBox.setSize(sf::Vector2f(window.getSize().x,window.getSize().y-200));
@@ -839,8 +1184,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
         }
         else
         {
-            t_title.setPosition(window.getSize().x/2,110);
-            window.draw(t_title);
+
         }*/
     }
 }
