@@ -13,6 +13,9 @@ V4Core::V4Core()
     const unsigned int maxSize = sf::Texture::getMaximumSize();
     cout << "[Debug] Max texture size: " << maxSize << endl;
 
+    sf::RenderTexture rtx;
+    cout << "[Debug] Maximum antialiasing level: " << rtx.getMaximumAntialiasingLevel() << endl;
+
     rpc_details = "Running Patafour "+hero_version;
 
     auto result = discord::Core::Create(712761245752623226, DiscordCreateFlags_Default, &core);

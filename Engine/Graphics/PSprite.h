@@ -29,6 +29,7 @@ class PSprite
     void setScale(float x, float y);
     void setRotation(float a);
     void setColor(sf::Color color);
+    sf::Color getColor();
     void setTexture(sf::Texture& texture);
     void setSprite(sf::Sprite& sprite);
     void setPosition(float x, float y);
@@ -39,6 +40,7 @@ class PSprite
     void setScale(float ss);
     void setSmooth(bool smooth);
     void draw(sf::RenderWindow& window);
+    void update(sf::RenderWindow& window);
 };
 
 #endif // PSPRITE_H
