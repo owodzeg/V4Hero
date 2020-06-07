@@ -3,7 +3,7 @@
 
 PSprite::PSprite()
 {
-DoAutoScale=true;
+
 }
 
 void PSprite::loadFromFile(std::string file, int q)
@@ -41,7 +41,7 @@ void PSprite::loadFromFile(std::string file, int q)
 
     t.loadFromFile(c);
     t.setSmooth(true);
-    s.setTexture(t);
+    s.setTexture(t, true);
 }
 
 void PSprite::loadFromFile(std::string file, int q, int r=1)
@@ -79,7 +79,7 @@ void PSprite::loadFromFile(std::string file, int q, int r=1)
 
     t.loadFromFile(c);
     t.setSmooth(true);
-    s.setTexture(t);
+    s.setTexture(t, true);
 }
 
 void PSprite::setRepeated(bool r)

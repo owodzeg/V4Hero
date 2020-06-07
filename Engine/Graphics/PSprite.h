@@ -19,7 +19,6 @@ class PSprite
     float baseX=-999, baseY=-999;
     float lx=0,ly=0;
     float angle = 0;
-    bool DoAutoScale;
     PSprite();
     void loadFromFile(std::string file, int q);
     void loadFromFile(std::string file, int q, int r);

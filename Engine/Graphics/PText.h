@@ -40,6 +40,7 @@ class PText
     sf::FloatRect getGlobalBoundsScaled();
     void setScale(float s);
     void draw(sf::RenderWindow& window);
+    void update(sf::RenderWindow& window);
 };
 
 #endif // PTEXT_H
