@@ -14,6 +14,7 @@ class Func
     static sf::String ConvertToUtf8String(const std::wstring &s);
     static sf::String ConvertToUtf8String(const std::string &s);
     static std::string trim(const std::string& str, const std::string& whitespace);
+    static std::string wrap_text(std::string input, int box_width, sf::Font font, int character_size);
 
     static std::wstring ConvertToWString(const std::string &s);
     static std::string ConvertToString(const std::wstring &ws);
