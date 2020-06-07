@@ -4,17 +4,47 @@
 #include "../V4Core.h"
 #include "math.h"
 #include <sstream>
+#include <string>
+
 ObeliskMenu::ObeliskMenu()
 {
     isActive=false;
 }
+
+void ObeliskMenu::addMission(string missiondata)
+{
+    vector<string> mission = Func::Split(missiondata, '|');
+
+    Mission tmp;
+    tmp.mis_ID = atoi(mission[0].c_str());
+    tmp.loc_ID = atoi(mission[1].c_str());
+
+    wstring title_key = wstring(mission[2].begin(), mission[2].end());
+    wstring desc_key = wstring(mission[3].begin(), mission[3].end());
+
+    tmp.title = thisConfig->strRepo.GetUnicodeString(title_key);
+    tmp.desc = thisConfig->strRepo.GetUnicodeString(desc_key);
+
+    tmp.mission_file = mission[4];
+
+    PText tm;
+    tm.createText(font, 18, sf::Color::Black, "", quality, 1);
+    tm.setString(Func::ConvertToUtf8String(tmp.title));
+    tm.setOrigin(tm.getLocalBounds().width/2, tm.getLocalBounds().height/2);
+    tmp.p_mis = tm;
+
+    cout << "[WorldMap] Making text " << Func::ConvertToUtf8String(tmp.title).toAnsiString() << " " << endl;
+
+    missions.push_back(tmp);
+}
+
 void ObeliskMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, PatapolisMenu *curParentMenu){
     Scene::Initialise(thisConfigs,keymap,parent);
     parentMenu = curParentMenu;
 
     font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
 
-    int quality = thisConfig->GetInt("textureQuality");
+    quality = thisConfig->GetInt("textureQuality");
 
     float ratioX, ratioY;
 
@@ -101,10 +131,12 @@ void ObeliskMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Co
     missionbox.setPosition(290, 542);
     missionselect.loadFromFile("resources/graphics/ui/worldmap/mission_select.png", quality, 1);
 
-    worldmap_title.createText(font, 34, sf::Color::Black, "Patapon World Map", quality, 1);
-    location_title.createText(font, 27, sf::Color::Black, "~ Mt. Gonrok ~", quality, 1);
-    location_desc.createText(font, 17, sf::Color::Black, "(no translation needed)", quality, 1);
-    select_quest.createText(font, 18, sf::Color::Black, "Select a quest", quality, 1);
+    worldmap_title.createText(font, 34, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"worldmap_header_1")), quality, 1);
+    location_title.createText(font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"worldmap_location_1_title")), quality, 1);
+    string desc = Func::wrap_text(thisConfig->strRepo.GetString(L"worldmap_location_1_description"), 800, font, 18);
+
+    location_desc.createText(font, 17, sf::Color::Black, desc, quality, 1);
+    select_quest.createText(font, 18, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"worldmap_select")), quality, 1);
     mission_title.createText(font, 18, sf::Color::Black, "Hunting Kacheek", quality, 1);
     mission_desc.createText(font, 18, sf::Color::Black, "(no translation needed)", quality, 1);
 
@@ -120,6 +152,11 @@ void ObeliskMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Co
 
     render_map.create(1012*resRatioX, 162*resRatioY);
     cout << "[WorldMap] Creating render_map " << 1012*resRatioX << "x" << 162*resRatioY << endl;
+
+    render_missions_map.create(280*resRatioX, 120*resRatioY);
+    cout << "[WorldMap] Creating render_map " << 280*resRatioX << "x" << 120*resRatioY << endl;
+
+    mission_select.loadFromFile("resources/graphics/ui/worldmap/mission_select.png", quality, 1);
 }
 
 void ObeliskMenu::EventFired(sf::Event event)
@@ -130,58 +167,218 @@ void ObeliskMenu::EventFired(sf::Event event)
         {
             if(event.key.code == thisConfig->GetInt("keybindBack"))
             {
-                this->Hide();
-                this->isActive = false;
+                if(displayMissions)
+                {
+                    displayMissions = false;
+                }
+                else
+                {
+                    this->Hide();
+                    this->isActive = false;
+                }
             }
-            else if(event.key.code == sf::Keyboard::M)
+            else if(event.key.code == sf::Keyboard::Enter)
             {
                 if(!displayMissions)
-                displayMissions = true;
+                {
+                    ///(re)load missions here
+                    cout << "Displaying missions" << endl;
+
+                    missions.clear();
+
+                    ifstream wmap("resources/missions/worldmap.dat");
+                    string buff;
+
+                    while(getline(wmap, buff))
+                    {
+                        cout << "[WorldMap] Read: " << buff << endl;
+
+                        if(buff.find("#") == std::string::npos)
+                        {
+                            vector<string> mission = Func::Split(buff, '|');
+
+                            cout << "[WorldMap] Checking " << atoi(mission[1].c_str()) << " vs " << sel_location << endl;
+                            if(atoi(mission[1].c_str()) == sel_location)
+                            {
+                                cout << "Mission in location " << sel_location << " detected with ID " << mission[0] << endl;
+                                addMission(buff);
+                            }
+                        }
+                    }
+
+                    wmap.close();
+
+                    if(missions.size() > 0)
+                    {
+                        displayMissions = true;
+
+                        mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title));
+                        string desc = Func::wrap_text(Func::ConvertToUtf8String(missions[sel_mission].desc), 633, font, 18);
+                        mission_desc.setString(desc);
+                    }
+                }
                 else
-                displayMissions = false;
+                {
+                    parentMenu->barracks_menu.Show();
+                    parentMenu->barracks_menu.isActive = true;
+                }
             }
-            else if(event.key.code == sf::Keyboard::B)
+            else if(event.key.code == sf::Keyboard::Q)
             {
-                ///swap bg
-                cur_location += 1;
+                mapXdest += float(123) * 6;
 
-                if(cur_location >= location_bgs.size())
-                cur_location = 0;
+                if(mapXdest >= 0)
+                mapXdest = 0;
+            }
+            else if(event.key.code == sf::Keyboard::E)
+            {
+                mapXdest -= float(123) * 6;
 
-                location_bg_a = location_bg_b;
-                location_bg_b = location_bgs[cur_location];
+                int maxBound = (worldmap_fields.size()*123 - 1012) * (-1);
 
-                alphaA = 255;
-                alphaB = 0;
-
-                location_bg_a_destAlpha = 0;
-                location_bg_b_destAlpha = 255;
+                if(mapXdest <= maxBound)
+                mapXdest = maxBound;
             }
             else if(event.key.code == sf::Keyboard::Left)
             {
-                //mapXdest += float(123);
+                if(!displayMissions)
+                {
+                    //mapXdest += float(123);
 
-                //if(mapXdest >= 0)
-                //mapXdest = 0;
+                    //if(mapXdest >= 0)
+                    //mapXdest = 0;
 
-                sel_location--;
+                    sel_location--;
 
-                if(sel_location <= 0)
-                sel_location = 0;
+                    if(sel_location <= 1)
+                    sel_location = 1;
+
+                    //if((sel_location*123 + mapX - 62) < 0)
+                    //{
+                        mapXdest = (sel_location*123 - 615) * (-1);
+
+                        if(mapXdest >= 0)
+                        mapXdest = 0;
+                    //}
+
+                    if(sel_location-1 < location_bgs.size())
+                    {
+                        location_bg_a = location_bg_b;
+                        location_bg_b = location_bgs[sel_location-1];
+
+                        alphaA = 255;
+                        alphaB = 0;
+
+                        location_bg_a_destAlpha = 0;
+                        location_bg_b_destAlpha = 255;
+                    }
+
+                    if(std::find(unlocked.begin(), unlocked.end(), sel_location-1) != unlocked.end())
+                    {
+                        string L1 = "worldmap_location_"+to_string(sel_location)+"_title";
+                        string L2 = "worldmap_location_"+to_string(sel_location)+"_description";
+                        wstring wL1 = wstring(L1.begin(), L1.end());
+                        wstring wL2 = wstring(L2.begin(), L2.end());
+
+                        string desc = Func::wrap_text(thisConfig->strRepo.GetString(wL2), 800, font, 18);
+
+                        location_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(wL1)));
+                        location_desc.setString(desc);
+                    }
+                    else
+                    {
+                        string L1 = "worldmap_location_locked";
+                        wstring wL1 = wstring(L1.begin(), L1.end());
+
+                        location_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(wL1)));
+                        location_desc.setString("");
+                    }
+                }
             }
             else if(event.key.code == sf::Keyboard::Right)
             {
-                //mapXdest -= float(123);
+                if(!displayMissions)
+                {
+                    //mapXdest -= float(123);
 
-                //int maxBound = (worldmap_fields.size()*123 - 1012) * (-1);
+                    //int maxBound = (worldmap_fields.size()*123 - 1012) * (-1);
 
-                //if(mapXdest <= maxBound)
-                //mapXdest = maxBound;
+                    //if(mapXdest <= maxBound)
+                    //mapXdest = maxBound;
 
-                sel_location++;
+                    sel_location++;
 
-                if(sel_location >= worldmap_fields.size()-1)
-                sel_location = worldmap_fields.size()-1;
+                    if(sel_location >= worldmap_fields.size())
+                    sel_location = worldmap_fields.size();
+
+                    //if((sel_location*123 + mapX - 62 + 176 + 246) > 1012)
+                    //{
+                        //mapXdest -= float(123);
+                        mapXdest = (sel_location*123 - 615) * (-1);
+
+                        int maxBound = (worldmap_fields.size()*123 - 1012) * (-1);
+
+                        if(mapXdest <= maxBound)
+                        mapXdest = maxBound;
+                    //}
+
+                    if(sel_location-1 < location_bgs.size())
+                    {
+                        location_bg_a = location_bg_b;
+                        location_bg_b = location_bgs[sel_location-1];
+
+                        alphaA = 255;
+                        alphaB = 0;
+
+                        location_bg_a_destAlpha = 0;
+                        location_bg_b_destAlpha = 255;
+                    }
+
+                    if(std::find(unlocked.begin(), unlocked.end(), sel_location-1) != unlocked.end())
+                    {
+                        string L1 = "worldmap_location_"+to_string(sel_location)+"_title";
+                        string L2 = "worldmap_location_"+to_string(sel_location)+"_description";
+                        wstring wL1 = wstring(L1.begin(), L1.end());
+                        wstring wL2 = wstring(L2.begin(), L2.end());
+
+                        string desc = Func::wrap_text(thisConfig->strRepo.GetString(wL2), 800, font, 18);
+
+                        location_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(wL1)));
+                        location_desc.setString(desc);
+                    }
+                    else
+                    {
+                        string L1 = "worldmap_location_locked";
+                        wstring wL1 = wstring(L1.begin(), L1.end());
+
+                        location_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(wL1)));
+                        location_desc.setString("");
+                    }
+                }
+            }
+            else if(event.key.code == sf::Keyboard::Up)
+            {
+                if(displayMissions)
+                {
+                    if(sel_mission > 0)
+                    sel_mission--;
+
+                    mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title));
+                    string desc = Func::wrap_text(Func::ConvertToUtf8String(missions[sel_mission].desc), 633, font, 18);
+                    mission_desc.setString(desc);
+                }
+            }
+            else if(event.key.code == sf::Keyboard::Down)
+            {
+                if(displayMissions)
+                {
+                    if(sel_mission < missions.size()-1)
+                    sel_mission++;
+
+                    mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title));
+                    string desc = Func::wrap_text(Func::ConvertToUtf8String(missions[sel_mission].desc), 633, font, 18);
+                    mission_desc.setString(desc);
+                }
             }
         }
         else if (event.type == sf::Event::MouseButtonReleased)
@@ -195,6 +392,8 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps)
 {
     if(isActive)
     {
+        //cout << mapX << " " << mapXdest << " " << (sel_location*123) << " " << (sel_location*123) + 176 << endl;
+
         render_map.clear(sf::Color::Transparent);
 
         if(round(mapX) != mapXdest)
@@ -224,7 +423,7 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps)
         }
 
         location_highlight.setOrigin(location_highlight.getLocalBounds().width/2, location_highlight.getLocalBounds().height/2);
-        location_highlight.setPosition(sel_location*123 + mapX - 63, 70);
+        location_highlight.setPosition(sel_location*123 + mapX - 62, 78);
         location_highlight.update(window);
         render_map.draw(location_highlight.s);
 
@@ -279,7 +478,7 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps)
 
         if(round(alphaA) != location_bg_a_destAlpha)
         {
-            float speed = abs(mainbox.ly - mainbox_destY) * 800;
+            float speed = abs(alphaA - location_bg_a_destAlpha) * 8;
 
             if(alphaA > location_bg_a_destAlpha)
             alphaA -= speed / fps;
@@ -330,9 +529,28 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps)
             mission_title.setPosition(descbox.getPosition().x - 315, descbox.getPosition().y - 74);
             mission_title.draw(window);
 
-            mission_desc.setOrigin(0, mission_desc.getLocalBounds().height/2);
-            mission_desc.setPosition(descbox.getPosition().x - 315, descbox.getPosition().y - 41);
+            mission_desc.setOrigin(0, 0);
+            mission_desc.setPosition(descbox.getPosition().x - 315, descbox.getPosition().y - 55);
             mission_desc.draw(window);
+
+            render_missions_map.clear(sf::Color::Transparent);
+
+            for(int i=0; i<missions.size(); i++)
+            {
+                missions[i].p_mis.setPosition(0, i*24);
+                missions[i].p_mis.update(window);
+                render_missions_map.draw(missions[i].p_mis.t);
+            }
+
+            render_missions_map.display();
+
+            mission_select.setPosition(135, missionbox.getPosition().y - 56 + (sel_mission*24));
+            mission_select.draw(window);
+
+            tex_render_missions_map = render_missions_map.getTexture();
+            spr_render_missions_map.setTexture(tex_render_missions_map, true);
+            spr_render_missions_map.setPosition(sf::Vector2f(143*resRatioX, (missionbox.getPosition().y - 53) * resRatioY));
+            window.draw(spr_render_missions_map);
         }
     }
 }

@@ -11,6 +11,7 @@ class ObeliskMenu : public Menu
 {
     public:
         sf::Font font;
+        int quality=1;
 
         ///worldmap contents
         vector<PSprite> location_bgs;
@@ -44,20 +45,39 @@ class ObeliskMenu : public Menu
 
         PSprite unavailable;
         PSprite location_highlight;
+        PSprite mission_select;
 
-        int sel_location = 0;
+        int sel_location = 1;
+        int sel_mission = 0;
 
         vector<int> unlocked = {0, 1, 2};
+
+        struct Mission
+        {
+            PText p_mis;
+            int mis_ID=0; ///mission ID
+            int loc_ID=0; ///location ID
+            std::wstring title;
+            std::wstring desc;
+            std::string mission_file;
+        };
+
+        vector<Mission> missions; ///Missions returned for a specific location
 
         sf::RenderTexture render_map;
         sf::Texture tex_render_map;
         sf::Sprite spr_render_map;
+
+        sf::RenderTexture render_missions_map;
+        sf::Texture tex_render_missions_map;
+        sf::Sprite spr_render_missions_map;
 
         float mapX = 0;
         float mapXdest = 0;
 
         PatapolisMenu *parentMenu;
 
+        void addMission(string missiondata);
         void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent,PatapolisMenu *curParentMenu);
         void Update(sf::RenderWindow &window, float fps);
         void EventFired(sf::Event event);
