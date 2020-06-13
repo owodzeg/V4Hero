@@ -44,29 +44,6 @@ void Patapon::Draw(sf::RenderWindow& window)
         focus = false;
     }
 
-    if((!focus) || (action == WALK))
-    {
-        if(lclosest <= gclosest-5)
-        {
-            local_x -= float(200) / fps;
-            AnimatedObject::setAnimationSegment("walk");
-            AnimatedObject::setLoop(true);
-            getback = true;
-        }
-        else if(lclosest >= gclosest+5)
-        {
-            local_x += float(200) / fps;
-            AnimatedObject::setAnimationSegment("walk");
-            AnimatedObject::setLoop(true);
-            getback = true;
-        }
-        else
-        {
-            //AnimatedObject::setAnimationSegment("idle");
-            getback = false;
-        }
-    }
-
     //cout << "gclosest: " << gclosest << " lclosest: " << lclosest << " global_x: " << global_x << " local_x: " << local_x << endl;
 
     if(action == ATTACK)
@@ -81,7 +58,7 @@ void Patapon::Draw(sf::RenderWindow& window)
                 {
                     if(attack_clock.getElapsedTime().asSeconds() > attack_speed)
                     {
-                        AnimatedObject::setAnimationSegment("attack_yari");
+                        AnimatedObject::setAnimationSegment("attack");
                         attack_clock.restart();
 
                         stopthrew = false;
@@ -89,23 +66,23 @@ void Patapon::Draw(sf::RenderWindow& window)
                 }
                 else
                 {
-                    if(AnimatedObject::getAnimationSegment() != "attack_yari")
+                    if(AnimatedObject::getAnimationSegment() != "attack")
                     {
-                        AnimatedObject::setAnimationSegment("attack_yari");
+                        AnimatedObject::setAnimationSegment("attack");
                         attack_clock.restart();
                     }
                 }
             }
             else if(lclosest > 475)
             {
-                AnimatedObject::setAnimationSegment("walk_focus");
+                AnimatedObject::setAnimationSegment("walk_focused");
                 getback = true;
 
                 local_x += float(200) / fps;
             }
             else if(lclosest < 375)
             {
-                AnimatedObject::setAnimationSegment("walk_focus");
+                AnimatedObject::setAnimationSegment("walk_focused");
                 getback = true;
 
                 local_x -= float(200) / fps;
@@ -119,7 +96,7 @@ void Patapon::Draw(sf::RenderWindow& window)
 
     //cout << current_animation << " " << AnimatedObject::getAnimationPos() << endl;
 
-    if(AnimatedObject::getAnimationSegment() == "attack_yari")
+    if(AnimatedObject::getAnimationSegment() == "attack")
     {
         if((AnimatedObject::getAnimationPos() >= 0.066) && (AnimatedObject::getAnimationPos() <= 0.5))
         {

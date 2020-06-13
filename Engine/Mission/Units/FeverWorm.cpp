@@ -48,8 +48,8 @@ void FeverWorm::Draw(sf::RenderWindow& window)
 
     if(worm_fever)
     {
-        global_x = -250;
-        next_x = 130;
+        global_x = -350;
+        next_x = 30;
         speed = 450;
 
         worm_fever = false;
@@ -71,7 +71,7 @@ void FeverWorm::Draw(sf::RenderWindow& window)
     {
         number.setTexture(tex_number[combo]);
         number.setOrigin(number.getGlobalBounds().width/2,number.getGlobalBounds().height/2);
-        number.setPosition(50,AnimatedObject::getGlobalPosition().y-42);
+        number.setPosition(80,AnimatedObject::getGlobalPosition().y+70);
 
         let_c.setPosition(number.getPosition().x+50,number.getPosition().y+30);
         let_o2.setPosition(let_c.getPosition().x+26,let_c.getPosition().y);

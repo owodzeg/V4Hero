@@ -17,7 +17,7 @@ class FeverWorm : public CollidableObject
     PSprite let_c,let_o1,let_m,let_b,let_o2,let_exc;
     PSprite number;
 
-    float next_x = -250;
+    float next_x = -350;
     float speed = 120;
 
     int combo = 0;

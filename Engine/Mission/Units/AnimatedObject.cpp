@@ -7,6 +7,7 @@
 #include "Object.h"
 #include <sstream>
 #include <cstdlib>
+#include <chrono>
 
 AnimatedObject::AnimatedObject()
 {
@@ -16,6 +17,7 @@ AnimatedObject::AnimatedObject()
 void AnimatedObject::loadAnim(std::string data, P4A handle)
 {
     ///LOADANIM ver from 9.01.2020
+    cout << "Loading animation! Data size " << data.size() << endl;
 
     objects.clear();
 
@@ -28,7 +30,7 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
     {
         if(line.find("V4Mater-ver-") != std::string::npos)
         {
-            version = line.substr(line.find_last_of("-")+1);
+            version = line.substr(line.find("V4Mater-ver-")+12);
             legit = true;
 
             cout << "Anim format legit. Version " << version << endl;
@@ -44,7 +46,169 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
 
         if(legit)
         {
-            if(version == "1.01")
+            if(version == "1.02-experimental")
+            {
+                if(line.find("S:") != std::string::npos)
+                {
+                    max_time = atof(line.substr(line.find_first_of(":")+1).c_str());
+                    cout << "Time: " << max_time << endl;
+                }
+
+                if(line.find("FR:") != std::string::npos)
+                {
+                    animation_framerate = atof(line.substr(line.find_first_of(":")+1).c_str());
+                    cout << "Animation framerate: " << animation_framerate << endl;
+                }
+
+                if(line.find("XB:") != std::string::npos)
+                {
+                    xBound = atoi(line.substr(line.find_first_of(":")+1).c_str());
+                    cout << "Animation X bound: " << xBound << endl;
+                }
+
+                if(line.find("YB:") != std::string::npos)
+                {
+                    yBound = atoi(line.substr(line.find_first_of(":")+1).c_str());
+                    cout << "Animation Y bound: " << yBound << endl;
+                }
+
+                if(line.find("AFB:") != std::string::npos)
+                {
+                    string animdata = line.substr(line.find_first_of(":")+1);
+                    vector<string> anim = Func::Split(animdata,',');
+
+                    int animID = atoi(anim[0].c_str());
+                    int animFrame = atoi(anim[1].c_str());
+                    int x1 = atoi(anim[2].c_str());
+                    int y1 = atoi(anim[3].c_str());
+                    int x2 = atoi(anim[4].c_str());
+                    int y2 = atoi(anim[5].c_str());
+                    int orx = 0;
+                    int ory = 0;
+
+                    if(anim.size() > 6)
+                    {
+                        orx = atoi(anim[6].c_str());
+                        ory = atoi(anim[7].c_str());
+                    }
+
+                    sf::IntRect rect(x1,y1,x2,y2);
+                    sf::Vector2f origin(orx, ory);
+                    animation_bounds[animID][animFrame] = rect;
+                    animation_origins[animID][animFrame] = origin;
+
+                    //cout << "Animation " << animation_names[animID] << " frame " << animFrame << " bounds: " << x1 << " " << y1 << " " << x2 << " " << y2 << endl;
+                }
+
+                if(line.find("A:") != std::string::npos)
+                {
+                    string animdata = line.substr(line.find_first_of(":")+1);
+                    vector<string> anim = Func::Split(animdata,',');
+
+                    /**Animation tmp;
+
+                    tmp.a_begin = atof(anim[0].c_str());
+                    tmp.a_end = atof(anim[1].c_str());
+                    tmp.a_name = anim[2];
+
+                    animations.push_back(tmp);*/
+                    animation_begin.push_back(atof(anim[0].c_str()));
+                    animation_end.push_back(atof(anim[1].c_str()));
+                    animation_names.push_back(anim[2]);
+                    animation_index[anim[2]] = animation_names.size() - 1;
+
+                    ///Go-to anim implementation
+                    if(anim.size() >= 4)
+                    {
+                        animation_goto.push_back(anim[3]);
+                        animation_loop.push_back(atoi(anim[4].c_str()));
+                    }
+                    else
+                    {
+                        animation_goto.push_back("");
+                        animation_loop.push_back(1);
+                    }
+
+                    ///spritesheet implementation
+                    Animation tmp;
+                    sf::Texture spr;
+                    //cout << "Loading " << anim[2] << ".png" << endl;
+                    string mem = handle.ReadToMemory(anim[2]+".png");
+                    vector<char> data(mem.begin(), mem.end());
+                    tmp.spritesheet.loadFromMemory(&data[0], data.size());
+                    tmp.name = anim[2];
+                    animation_spritesheet.push_back(tmp);
+                }
+
+                if(line.find("OI:") != std::string::npos)
+                {
+                    //auto start = std::chrono::high_resolution_clock::now();
+
+                    string tex_file = line.substr(line.find_first_of(":")+1);
+
+                    int parent = 0; ///unused yet
+
+                    objects.emplace_back();
+
+                    //auto elapsed = std::chrono::high_resolution_clock::now() - start;
+                    //cout << "Pushed to vector, took " << std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count() << endl;
+
+                    //cout << "Added new object from " << tex_file << endl;
+                }
+
+                if(line.find("HB:") != std::string::npos)
+                {
+                    string hitboxdata = line.substr(line.find_first_of(":")+1);
+                    vector<string> hitbox = Func::Split(hitboxdata,',');
+
+                    if(hitbox[0] == "rectangle")
+                    {
+                        Hitbox tmp;
+                        hitboxes.push_back(tmp);
+
+                        cout << "Added new hitbox, type " << hitbox[0] << endl;
+                    }
+                }
+
+                if((line.find("F:") != std::string::npos) && (line[0] == 'F'))
+                {
+                    string framedata = line.substr(line.find_first_of(":")+1);
+                    vector<string> frame = Func::Split(framedata,',');
+
+                    float time = atof(frame[0].c_str());
+                    int objectID = atoi(frame[1].c_str());
+
+                    float pos_x = atof(frame[2].c_str());
+                    float pos_y = atof(frame[3].c_str());
+                    float rotation = atof(frame[4].c_str());
+                    float or_x = atof(frame[5].c_str());
+                    float or_y = atof(frame[6].c_str());
+                    float scale_x = atof(frame[7].c_str());
+                    float scale_y = atof(frame[8].c_str());
+                    objects[objectID].SetCustomFrame(time,pos_x,pos_y,or_x,or_y,rotation,scale_x,scale_y);
+                    //objects[objectID*2+1].SetCustomFrame(time,pos_x,pos_y,1,1,rotation,scale_x,scale_y);
+                }
+
+                if(line.find("HBF:") != std::string::npos)
+                {
+                    string hbframedata = line.substr(line.find_first_of(":")+1);
+                    vector<string> hbframe = Func::Split(hbframedata,',');
+
+                    float time = atof(hbframe[0].c_str());
+                    int hitboxID = atoi(hbframe[1].c_str());
+
+                    float g_x = atof(hbframe[2].c_str());
+                    float g_y = atof(hbframe[3].c_str());
+
+                    float width = atof(hbframe[6].c_str());
+                    float height = atof(hbframe[7].c_str());
+                    float x = atof(hbframe[4].c_str())+width/2;
+                    float y = atof(hbframe[5].c_str())+height/2;
+                    float rotation = 0;///3.14159265358/6; /// this needs to be loaded later IN RADIANS
+                    hitboxes[hitboxID].SetCustomFrame(time,g_x,g_y,x,y,rotation,width,height);
+                }
+            }
+            else if(version == "1.01")
             {
                 //cout << "[READ " << version << "]: " << line << endl;
 
@@ -80,25 +244,16 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
 
                 if(line.find("OI:") != std::string::npos)
                 {
-                    string objectdata = line.substr(line.find_first_of(":")+1);
-                    vector<string> object = Func::Split(objectdata,',');
+                    //auto start = std::chrono::high_resolution_clock::now();
 
-                    string tex_file = object[0];
-                    string texture_data = handle.ReadToMemory(tex_file);
-
-                    //cout << "texture data: " << texture_data.size() << endl;
-
-                    sf::Texture obj_texture;
-                    obj_texture.loadFromMemory(texture_data.data(),texture_data.size());
-                    obj_texture.setSmooth(true);
+                    string tex_file = line.substr(line.find_first_of(":")+1);
 
                     int parent = 0; ///unused yet
 
-                    Object tmp;
-                    tmp.Load(obj_texture,0,0);
-                    tmp.layer = objects.size();
-                    tmp.parent = parent;
-                    objects.push_back(tmp);
+                    objects.emplace_back(handle.ReadToMemory(tex_file),0,0,objects.size(),parent);
+
+                    //auto elapsed = std::chrono::high_resolution_clock::now() - start;
+                    //cout << "Pushed to vector, took " << std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count() << endl;
 
                     //cout << "Added new object from " << tex_file << endl;
                 }
@@ -247,6 +402,15 @@ int AnimatedObject::getSegmentIndex(std::string segment_name)
 void AnimatedObject::setAnimationSegment(std::string new_segment_name)
 {
     //cout << "AnimatedObject::setAnimationSegment(" << new_segment_name << ");" << endl;
+    //cout << new_segment_name << " vs " << getAnimationSegment() << endl;
+
+     if(new_segment_name != getAnimationSegment())
+    {
+        //cout << "Changing spritesheet to " << new_segment_name << endl;
+        objects[0].tex_obj = animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet;
+        objects[0].tex_obj.setSmooth(true);
+        objects[0].s_obj.setTexture(objects[0].tex_obj);
+    }
 
     if(animation_begin.size() > 1)
     {
@@ -267,6 +431,16 @@ void AnimatedObject::setAnimationSegment(std::string new_segment_name)
 void AnimatedObject::setAnimationSegment(std::string new_segment_name, bool force_start)
 {
     //cout << "AnimatedObject::setAnimationSegment(" << new_segment_name << ");" << endl;
+    //cout << new_segment_name << " vs " << getAnimationSegment() << endl;
+
+    if(new_segment_name != getAnimationSegment())
+    {
+        //cout << "Changing spritesheet to " << new_segment_name << endl;
+
+        objects[0].tex_obj = animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet;
+        objects[0].tex_obj.setSmooth(true);
+        objects[0].s_obj.setTexture(objects[0].tex_obj);
+    }
 
     if(animation_begin.size() > 1)
     {
@@ -351,6 +525,7 @@ void AnimatedObject::setLoop(bool loop)
 void AnimatedObject::LoadConfig(Config *thisConfigs, std::string unitParamPath)
 {
     P4A handle;
+    anim_path = unitParamPath;
 
     if(unitParamPath != "")
     {
@@ -390,9 +565,12 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
         {
             cout << "Animation go to: " << animation_goto[getSegmentIndex(current_animation)] << " SegmentIndex: " << getSegmentIndex(current_animation) << " current animation: " << current_animation << endl;
             setAnimationSegment(animation_goto[getSegmentIndex(current_animation)], true);
-            setLoop(true);
+
+            setLoop(animation_loop[getSegmentIndex(current_animation)]);
         }
     }
+
+    setLoop(animation_loop[getSegmentIndex(current_animation)]);
 
     /// ////////////////////////////////////////////////////////////////////////////////////////////////// ///
     ///SUPER TEMPORARY WORKAROUND FOR FEVER WORM, add one time animations that transfer to another immediately
@@ -408,11 +586,16 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
         }
     }
 
+    ///calculate current position on the spritesheet
+    int curFrame = floor(getAnimationPos() * animation_framerate);
+    int index = getSegmentIndex(getAnimationSegment());
+
+    //cout << "file " << anim_path << " animation " << getAnimationSegment() << " frame " << curFrame << " col: " << curCol << " row: " << curRow << endl;
+
     for(int i=0; i<hitboxes.size(); i++)
     {
         hitboxes[i].SetPos(cur_pos);
     }
-
 
     for(int i=0; i<objects.size(); i++)
     {
@@ -424,6 +607,7 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
         objects[i].g_sy = scaleY;
 
         objects[i].SetPos(cur_pos);
-        objects[i].Draw(window);
+        cout << "Displaying animation " << getAnimationSegment() << ", time: " << getAnimationPos() << ":" << cur_pos << "/" << anim_end << " frame: " << curFrame+1 << "/" << (getAnimationLength(getAnimationSegment()) * animation_framerate) << " " << getAnimationLength(getAnimationSegment()) << endl;
+        objects[i].Draw(window, animation_bounds[index][curFrame].left, animation_bounds[index][curFrame].top, animation_bounds[index][curFrame].width, animation_bounds[index][curFrame].height, animation_origins[index][curFrame].x, animation_origins[index][curFrame].y);
     }
 }

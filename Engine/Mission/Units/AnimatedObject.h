@@ -17,6 +17,8 @@ class AnimatedObject
     float max_time = 0;
     float cur_pos = 0;
 
+    string anim_path = ""; //identifier
+
     ///OLD
     sf::Sprite s_wall;
     string current_animation = "";
@@ -34,6 +36,8 @@ class AnimatedObject
     float fps = 60;
     float width = 0;
     float scaleX = 1, scaleY = 1; ///TEMPORARY
+
+    float animation_framerate = 30;
 
     enum EntityType
     {
@@ -58,10 +62,24 @@ class AnimatedObject
     vector<float> animation_end;
     vector<string> animation_names;
     vector<string> animation_goto;
+    vector<bool> animation_loop;
 
     ///for getSegmentIndex
     map<string, int> animation_index;
 
+    ///for new spritesheet implementation
+    struct Animation
+    {
+        string name;
+        sf::Texture spritesheet; ///data
+    };
+
+    float xBound=0, yBound=0;
+
+    map<int, map<int, sf::IntRect>> animation_bounds;
+    map<int, map<int, sf::Vector2f>> animation_origins;
+
+    vector<Animation> animation_spritesheet;
 
     vector<int> animation_frames;
     Config *thisConfig;

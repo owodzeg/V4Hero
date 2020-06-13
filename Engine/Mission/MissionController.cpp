@@ -34,7 +34,6 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     ps_temp.setOrigin(ps_temp.t.getSize().x,0);
     ps_temp.setColor(sf::Color(255,255,255,255));
     ps_temp.setPosition(0,0);
-    ps_temp.DoAutoScale = false;
 
     s_proj = ps_temp;
     s_proj.scaleX=0.15f;
@@ -145,10 +144,10 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         }
     }
 
-    pataponY = 720 - 140;
+    pataponY = 720 - 174;
     floorY = 720 - 100;
 
-    hatapon->setGlobalPosition(sf::Vector2f(200, 720 - 200));
+    hatapon->setGlobalPosition(sf::Vector2f(200, 720 - 210));
 
     if(showCutscene)
     {
@@ -198,10 +197,10 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         tangibleLevelObjects.push_back(kacheek);
 
         endFlag1->setGlobalPosition(sf::Vector2f(2500,720 - (180)));
-        feverworm->setGlobalPosition(sf::Vector2f(-250,720 - (450)));
-        kacheek->setGlobalPosition(sf::Vector2f(1000,720 - (175)));
-        kacheek2->setGlobalPosition(sf::Vector2f(1500,720 - (175)));
-        kacheek3->setGlobalPosition(sf::Vector2f(2000,720 - (175)));
+        feverworm->setGlobalPosition(sf::Vector2f(-330,720 - (520)));
+        kacheek->setGlobalPosition(sf::Vector2f(1000,720 - (185)));
+        kacheek2->setGlobalPosition(sf::Vector2f(1500,720 - (185)));
+        kacheek3->setGlobalPosition(sf::Vector2f(2000,720 - (185)));
 
         missionName = "undefined";
         missionImg = "wasteland";
@@ -220,10 +219,10 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         tangibleLevelObjects.push_back(feverworm);
         tangibleLevelObjects.push_back(endFlag1);
 
-        kacheek->setGlobalPosition(sf::Vector2f(1000,720 - (175)));
-        kacheek2->setGlobalPosition(sf::Vector2f(1500,720 - (175)));
-        kacheek3->setGlobalPosition(sf::Vector2f(2000,720 - (175)));
-        feverworm->setGlobalPosition(sf::Vector2f(-250,720 - (450)));
+        kacheek->setGlobalPosition(sf::Vector2f(1000,720 - (185)));
+        kacheek2->setGlobalPosition(sf::Vector2f(1500,720 - (185)));
+        kacheek3->setGlobalPosition(sf::Vector2f(2000,720 - (185)));
+        feverworm->setGlobalPosition(sf::Vector2f(-330,720 - (520)));
         endFlag1->setGlobalPosition(sf::Vector2f(2500,720 - (180)));
 
         missionName = "undefined";
@@ -240,7 +239,7 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         tangibleLevelObjects.push_back(endFlag1);
 
         endFlag1->setGlobalPosition(sf::Vector2f(2500,720 - (250)));
-        feverworm->setGlobalPosition(sf::Vector2f(-250,720 - (450)));
+        feverworm->setGlobalPosition(sf::Vector2f(-330,720 - (520)));
 
         missionName = "Unspecified Mission";
         missionImg = "wasteland";
@@ -643,10 +642,10 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
         units[i].setGlobalPosition(sf::Vector2f(army_X+100+(50*i),pataponY));
         units[i].fps = fps;
 
-        if(rhythm.current_song == "patapata")
-        {
-            units[i].current_animation = "walk";
-        }
+        //if(rhythm.current_song == "patapata")
+        //{
+        //    units[i].current_animation = "walk";
+        //}
     }
 
     /// step 1: all projectiles have gravity applied to them
@@ -766,23 +765,23 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
             if(rhythm.GetRealCombo() < 2)
             {
-                feverworm->global_x = -300;
-                feverworm->next_x = -300;
+                feverworm->global_x = -400;
+                feverworm->next_x = -400;
                 feverworm->speed = 120;
             }
 
             if(rhythm.GetRealCombo() == 2)
             {
-                feverworm->next_x = 30;
+                feverworm->next_x = -70;
                 feverworm->speed = 400;
             }
 
             if((rhythm.GetRealCombo() > 2) && (rhythm.GetCombo() < 11))
             {
                 if(rhythm.advanced_prefever)
-                feverworm->next_x = 50 + (rhythm.GetSatisfaction() / 5.5) + ((rhythm.GetRealCombo() - 2) * 8);
+                feverworm->next_x = -50 + (rhythm.GetSatisfaction() / 5.5) + ((rhythm.GetRealCombo() - 2) * 8);
                 else
-                feverworm->next_x = 30 + ((rhythm.GetRealCombo() - 2) * 8);
+                feverworm->next_x = -70 + ((rhythm.GetRealCombo() - 2) * 8);
 
                 feverworm->speed = 40;
             }
@@ -815,7 +814,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
     }
 
 
-    hatapon->setGlobalPosition(sf::Vector2f(army_X,500));
+    hatapon->setGlobalPosition(sf::Vector2f(army_X,494));
     hatapon->fps = fps;
     DoKeyboardEvents(window,fps,keyMap,keyMapHeld);
     DoMovement(window,fps,keyMap,keyMapHeld);
@@ -869,7 +868,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
             if(!units[i].focus)
             units[i].setAnimationSegment("walk");
             else
-            units[i].setAnimationSegment("walk_focus");
+            units[i].setAnimationSegment("walk_focused");
 
             units[i].setLoop(true);
         }
@@ -880,9 +879,9 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
                 if(!units[i].getback)
                 {
                     if(!units[i].focus)
-                    units[i].setAnimationSegment("idle", true);
-                    else
                     units[i].setAnimationSegment("idle_armed", true);
+                    else
+                    units[i].setAnimationSegment("idle_armed_focused", true);
                 }
             }
         }
@@ -897,8 +896,8 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
             {
                 units[i].action = 0;
 
-                if(units[i].getAnimationSegment() == "attack_yari")
-                units[i].setAnimationSegment("idle", true);
+                if(units[i].getAnimationSegment() == "attack")
+                units[i].setAnimationSegment("idle_armed", true);
             }
         }
 
@@ -909,7 +908,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
             if(!units[i].focus)
             units[i].setAnimationSegment(rhythm.rhythmController.current_drum, true);
             else
-            units[i].setAnimationSegment(rhythm.rhythmController.current_drum+"_focus", true);
+            units[i].setAnimationSegment(rhythm.rhythmController.current_drum+"_focused", true);
         }
 
         vector<float> gdistances;

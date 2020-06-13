@@ -30,6 +30,8 @@ class P4A
     std::vector<int> in_fsizes;
     std::vector<int> in_foffsets;
 
+    std::vector<char> bin_data;
+
     P4A();
 
     ///Packing functions
