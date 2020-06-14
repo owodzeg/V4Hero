@@ -3,10 +3,18 @@
 #include <SFML/Graphics.hpp>
 #include "../Config.h"
 #include "../Graphics/Menu.h"
+#include "../Graphics/PText.h"
+#include "../Mission/MissionController.h"
+
 class V4Core;
 class Barracks : public Menu
 {
     public:
+        MissionController* currentController;
+        Config *config;
+        std::map<int,bool> *keyMap;
+
+        sf::RectangleShape rs_cover;
         sf::RectangleShape mm_bigBox;
         sf::RectangleShape mm_titleBox;
         sf::RectangleShape mm_selected_item_line;
@@ -22,70 +30,65 @@ class Barracks : public Menu
         float pataponY;
         float floorY;
 
+        bool missionStarted = false;
+
         sf::Font f_font;
-        sf::Text t_title;
+        PText t_title;
         int currentItemPosition;
         vector<bool> enabledPositons;
         /// Barracks text
-        sf::Text t_unit_name;
-        sf::Text t_unit_status_text;
+        PText t_unit_name;
+        PText t_unit_status_text;
 
-        sf::Text t_unit_level;
-        sf::Text t_unit_experience;
-        sf::Text t_unit_damage;
+        PText t_unit_level;
+        PText t_unit_experience;
+        PText t_unit_damage;
 
-        sf::Text t_unit_hp;
-        sf::Text t_unit_crit;
-        sf::Text t_unit_attack_speed;
+        PText t_unit_hp;
+        PText t_unit_crit;
+        PText t_unit_attack_speed;
 
 
         /// Barracks stat text
-        sf::Text s_unit_level;
-        sf::Text s_unit_experience;
-        sf::Text s_unit_damage;
+        PText s_unit_level;
+        PText s_unit_experience;
+        PText s_unit_damage;
 
-        sf::Text s_unit_hp;
-        sf::Text s_unit_crit;
-        sf::Text s_unit_attack_speed;
+        PText s_unit_hp;
+        PText s_unit_crit;
+        PText s_unit_attack_speed;
 
         /// Barracks Equipment Text
-        sf::Text t_unit_rarepon_name;
-        sf::Text t_weapon_name;
-        sf::Text t_weapon2_name;
-        sf::Text t_armour_name;
-        sf::Text t_mask_name;
+        PText t_unit_rarepon_name;
+        PText t_weapon_name;
+        PText t_weapon2_name;
+        PText t_armour_name;
+        PText t_mask_name;
 
 
         /// menu background
         PSprite s_menu_bkg;
-        sf::Vector2f p_menu_bkg;
 
         /// highlighted unit
         PSprite s_pon_highlight;
 
         /// class icon
         PSprite s_class_icon;
-        sf::Vector2f p_class_icon;
 
         /// unit icon
         PSprite s_unit_icon;
-        sf::Vector2f p_unit_icon;
 
         /// weapon icon
         PSprite s_weapon_icon;
-        sf::Vector2f p_weapon_icon;
 
         /// weapon2 icon
         PSprite s_weapon2_icon;
-        sf::Vector2f p_weapon2_icon;
 
         /// armour icon
         PSprite s_armour_icon;
-        sf::Vector2f p_armour_icon;
 
         /// mask icon
         PSprite s_mask_icon;
-        sf::Vector2f p_mask_icon;
 
         int current_selected_pon=0;
 
@@ -128,8 +131,8 @@ class Barracks : public Menu
 
         int current_pon=0;
 
-        sf::Text t_itemtitle;
-        std::vector<sf::Text> t_itemdescription;
+        PText t_itemtitle;
+        std::vector<PText> t_itemdescription;
 
         void OnExit();
         void OpenBarracksMenu();
