@@ -407,7 +407,7 @@ void AnimatedObject::setAnimationSegment(std::string new_segment_name)
      if(new_segment_name != getAnimationSegment())
     {
         //cout << "Changing spritesheet to " << new_segment_name << endl;
-        objects[0].tex_obj = animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet;
+        objects[0].tex_obj.loadFromImage(animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet);
         objects[0].tex_obj.setSmooth(true);
         objects[0].s_obj.setTexture(objects[0].tex_obj);
     }
@@ -437,7 +437,7 @@ void AnimatedObject::setAnimationSegment(std::string new_segment_name, bool forc
     {
         //cout << "Changing spritesheet to " << new_segment_name << endl;
 
-        objects[0].tex_obj = animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet;
+        objects[0].tex_obj.loadFromImage(animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet);
         objects[0].tex_obj.setSmooth(true);
         objects[0].s_obj.setTexture(objects[0].tex_obj);
     }
@@ -607,7 +607,7 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
         objects[i].g_sy = scaleY;
 
         objects[i].SetPos(cur_pos);
-        cout << "Displaying animation " << getAnimationSegment() << ", time: " << getAnimationPos() << ":" << cur_pos << "/" << anim_end << " frame: " << curFrame+1 << "/" << (getAnimationLength(getAnimationSegment()) * animation_framerate) << " " << getAnimationLength(getAnimationSegment()) << endl;
+        //cout << "Displaying animation " << getAnimationSegment() << ", time: " << getAnimationPos() << ":" << cur_pos << "/" << anim_end << " frame: " << curFrame+1 << "/" << (getAnimationLength(getAnimationSegment()) * animation_framerate) << " " << getAnimationLength(getAnimationSegment()) << endl;
         objects[i].Draw(window, animation_bounds[index][curFrame].left, animation_bounds[index][curFrame].top, animation_bounds[index][curFrame].width, animation_bounds[index][curFrame].height, animation_origins[index][curFrame].x, animation_origins[index][curFrame].y);
     }
 }

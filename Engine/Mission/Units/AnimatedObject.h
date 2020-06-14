@@ -71,7 +71,7 @@ class AnimatedObject
     struct Animation
     {
         string name;
-        sf::Texture spritesheet; ///data
+        sf::Image spritesheet; ///data
     };
 
     float xBound=0, yBound=0;
