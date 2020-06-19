@@ -90,7 +90,6 @@ void PSprite::setRepeated(bool r)
 
 void PSprite::setTextureRect(sf::IntRect rect)
 {
-    rect.height = rect.height * ratioY;
     s.setTextureRect(rect);
 }
 
