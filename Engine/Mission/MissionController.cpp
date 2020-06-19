@@ -8,6 +8,20 @@
 #include "../Math/PVector.h"
 #include "Units/HitboxFrame.h"
 #include "../V4Core.h"
+
+///move to Func::numDigits later
+template <class T>
+int numDigits(T number) //stolen from stackoverflow
+{
+    int digits = 0;
+    if (number < 0) digits = 1;
+    while (number) {
+        number /= 10;
+        digits++;
+    }
+    return digits;
+}
+
 MissionController::MissionController()
 {
     ///first initialization, fill the buffers
@@ -21,6 +35,79 @@ MissionController::MissionController()
     hatapon = new Hatapon;
 
 }
+
+void MissionController::addDmgCounter(int type, int damage, float baseX, float baseY)
+{
+    DamageCounter tmp;
+    tmp.type = type;
+    tmp.damage = damage;
+
+    cout << "MissionController::addDmgCounter(" << type << ", " << damage << ", " << baseX << ", " << baseY << ")" << endl;
+
+    int digits = numDigits(damage);
+    string sdigits = to_string(damage);
+
+    cout << "Digits: " << digits << " " << sdigits << endl;
+
+    int separator = 0;
+    float init_scale = 1;
+    float dg_scale = 4;
+
+    switch(type)
+    {
+        case 0:
+        {
+            separator = 12;
+            init_scale = 0.8;
+            dg_scale = 2.8;
+            break;
+        }
+
+        case 1:
+        {
+            separator = 16;
+            init_scale = 0.8;
+            dg_scale = 3.5;
+            break;
+        }
+
+        case 2:
+        {
+            separator = 20;
+            init_scale = 0.8;
+            dg_scale = 4.1;
+            break;
+        }
+    }
+
+    for(int i=0; i<digits; i++)
+    {
+        string sdigit = string()+sdigits[i];
+        int digit = atoi(sdigit.c_str());
+
+        PSprite dg_spr;
+        dg_spr.setTexture(dmg_spritesheet.t);
+        dg_spr.setTextureRect(dmg_spritesheet.get_bounds((digit*3)+type)); ///rect of the specific damage digit from spritesheet
+        dg_spr.setOrigin(dg_spr.getLocalBounds().width/2, dg_spr.getLocalBounds().height);
+
+        sf::Vector2f dg_pos(baseX+(i*separator), baseY);
+
+        tmp.spr.push_back(dg_spr);
+        tmp.pos.push_back(dg_pos);
+        tmp.scale.push_back(dg_scale);
+        tmp.scale_goal.push_back(init_scale);
+        tmp.mode.push_back(true);
+        tmp.alpha.push_back(0);
+    }
+
+    dmgCounters.push_back(tmp);
+}
+
+void MissionController::addItemsCounter(int id, float baseX, float baseY)
+{
+
+}
+
 void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,std::string backgroundString,V4Core &v4core_)
 {
     v4core = &v4core_;
@@ -39,6 +126,7 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     s_proj.scaleX=0.15f;
     s_proj.scaleY=0.15f;
 
+    dmg_spritesheet.load("resources/graphics/mission/damagesheet.png", config.GetInt("textureQuality"), 1);
 
     ///THIS DOESN'T WORK. CHANGE TO SMART POINTERS.
 
@@ -280,6 +368,15 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, st
         p.get()->crit = 0;
 
         levelProjectiles.push_back(std::move(p));
+    }
+
+    if(rhythm.rhythmController.keyMap[sf::Keyboard::T])
+    {
+        int a = rand() % 3;
+        int b = rand() % 9999 + 1;
+        int c = rand() % 1280 + 1;
+        int d = rand() % 720 + 1;
+        addDmgCounter(a, b, c, d);
     }
 }
 
@@ -1172,9 +1269,84 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         }
     }
 
+    vector<int> dmg_rm;
+
+    for(int i=0; i<dmgCounters.size(); i++)
+    {
+        float a=0;
+
+        for(int d=0; d<dmgCounters[i].spr.size(); d++)
+        {
+            if(dmgCounters[i].display_timer.getElapsedTime().asMilliseconds() > 70*d)
+            {
+                float curScale = dmgCounters[i].scale[d];
+                float destScale = dmgCounters[i].scale_goal[d];
+
+                if(dmgCounters[i].mode[d])
+                {
+                    curScale -= float(14) / fps;
+                    dmgCounters[i].alpha[d] += float(1800) / fps;
+
+                    if(curScale <= destScale)
+                    {
+                        dmgCounters[i].mode[d] = false;
+                        destScale = 1;
+                    }
+
+                    if(dmgCounters[i].alpha[d] >= 255)
+                    dmgCounters[i].alpha[d] = 255;
+                }
+
+                if(!dmgCounters[i].mode[d])
+                {
+                    if(!dmgCounters[i].mode[d])
+                    {
+                        curScale += float(8) / fps;
+
+                        if(curScale >= destScale)
+                        {
+                            curScale = destScale;
+                        }
+                    }
+                }
+
+                if(dmgCounters[i].display_timer.getElapsedTime().asMilliseconds() > 70*d + 1000)
+                {
+                    if(!dmgCounters[i].mode[d])
+                    {
+                        dmgCounters[i].pos[d].y += float(60) / fps;
+                        dmgCounters[i].alpha[d] -= float(500) / fps;
+
+                        if(dmgCounters[i].alpha[d] <= 0)
+                        dmgCounters[i].alpha[d] = 0;
+                    }
+                }
+
+                dmgCounters[i].scale[d] = curScale;
+                dmgCounters[i].scale_goal[d] = destScale;
+
+                dmgCounters[i].spr[d].setPosition(dmgCounters[i].pos[d].x, dmgCounters[i].pos[d].y-((curScale-1)*10));
+                dmgCounters[i].spr[d].setScale(curScale, curScale);
+                dmgCounters[i].spr[d].setColor(sf::Color(255,255,255,dmgCounters[i].alpha[d]));
+
+                dmgCounters[i].spr[d].draw(window);
+
+                a += dmgCounters[i].alpha[d];
+            }
+        }
+
+        if(a <= 1)
+        dmg_rm.push_back(i);
+    }
+
+    for(int i=0; i<dmg_rm.size(); i++)
+    {
+        cout << "Erased dmgCounter " << dmg_rm[i] << endl;
+        dmgCounters.erase(dmgCounters.begin()+(dmg_rm[i] - i));
+    }
 
     rhythm.fps = fps;
-    ///ugh this is a BAD solution i need to do it differently
+
     if(showTimer)
     {
         auto lastView2 = window.getView();

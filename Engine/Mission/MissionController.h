@@ -19,6 +19,8 @@
 #include "Units/FeverWorm.h"
 #include "Units/Hatapon.h"
 #include "Units/HitboxFrame.h"
+#include "../Graphics/PSpritesheet.h"
+
 class V4Core;
 class MissionController
 {
@@ -74,6 +76,37 @@ class MissionController
     float army_X = 800;
 
     std::vector<Patapon> units; ///temporary until a better solution is possible
+
+    struct DamageCounter
+    {
+        int type=0; ///0 - regular, 1 - high, 2 - crit
+        int damage=0; ///damage to display
+        sf::Clock display_timer; ///timer for displaying later digits
+
+        ///vectors containing texture, pos and scale for every digit
+        vector<PSprite> spr;
+        vector<sf::Vector2f> pos;
+        vector<float> scale;
+        vector<float> scale_goal;
+        vector<float> alpha;
+        vector<bool> mode;
+    };
+
+    struct DroppedItem
+    {
+        int itemID=0; ///id of item
+        float x=0,y=0,scale=1; ///position and scale of the item
+        sf::Sprite spr; ///sprite to display the item
+    };
+
+    PSpritesheet dmg_spritesheet;
+    PSpritesheet item_spritesheet;
+
+    std::vector<DamageCounter> dmgCounters;
+    std::vector<DroppedItem> droppedItems;
+
+    void addDmgCounter(int type, int damage, float baseX, float baseY);
+    void addItemsCounter(int id, float baseX, float baseY);
 
     void StartCutscene(const std::wstring& text,bool isBlackScreen,int TimeToShow);
 
