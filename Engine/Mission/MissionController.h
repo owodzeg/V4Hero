@@ -12,6 +12,7 @@
 #include "Units/AnimatedObject.h"
 #include "Units/Projectile.h"
 #include "Units/CollidableObject.h"
+#include "Units/PlayableUnit.h"
 #include "Units/Wall.h"
 #include <string>
 #include <thread>
@@ -29,15 +30,9 @@ class MissionController
     Rhythm rhythm;
     bool isInitialized=false;
     bool isFinishedLoading=false;
-    Patapon* patapon;
-    Kacheek* kacheek;
-    Kacheek* kacheek2;
-    Kacheek* kacheek3;
-    EndFlag* endFlag1;
-    FeverWorm* feverworm;
-    Hatapon* hatapon;
-        sf::Time startTime;
-        sf::Clock missionTimer;
+
+    sf::Time startTime;
+    sf::Clock missionTimer;
 
     sf::Text t_timerMenu;
     Camera camera;
@@ -65,7 +60,10 @@ class MissionController
         std::vector<bool> cutscene_blackscreens;
     /// this is a list of things in the level that
     /// we need to check against for collision (but not always damage)
-    std::vector<CollidableObject*> tangibleLevelObjects;
+
+
+    std::vector<std::unique_ptr<PlayableUnit>> units; ///temporary until a better solution is possible
+    std::vector<std::unique_ptr<CollidableObject>> tangibleLevelObjects;
     std::vector<std::unique_ptr<Projectile>> levelProjectiles;
 
     float pataponY = 600; ///temp
@@ -74,8 +72,6 @@ class MissionController
     float floorY=200;
 
     float army_X = 800;
-
-    std::vector<Patapon> units; ///temporary until a better solution is possible
 
     struct DamageCounter
     {
@@ -112,7 +108,7 @@ class MissionController
 
     void FinishLastCutscene();
     bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame,AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY);
-    bool DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY);
+    bool DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY,int collisionObjectID,vector<string> collisionData = {});
     bool isMoreCutscenes();
     void StopMission();
     void Initialise(Config &config, std::map<int,bool> &keymap,std::string backgroundName,V4Core &v4core_);
@@ -120,9 +116,9 @@ class MissionController
     void Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
     void DoMovement(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
     void DoKeyboardEvents(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
-    float pataponMaxProjection(float axisAngle);
+    float pataponMaxProjection(float axisAngle, int id);
 
-    float pataponMinProjection(float axisAngle);
+    float pataponMinProjection(float axisAngle, int id);
 
 
     MissionController();
