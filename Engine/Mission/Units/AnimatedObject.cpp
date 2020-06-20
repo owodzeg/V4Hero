@@ -547,6 +547,8 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
     if(cur_pos < anim_begin)
     cur_pos = anim_begin;
 
+    //cout << "Anim: " << anim_path << " Framerate: " << framerate << endl;
+
     cur_pos += framerate / float(fps);
 
     if(cur_pos > anim_end)
@@ -590,7 +592,10 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
     int curFrame = floor(getAnimationPos() * animation_framerate);
     int index = getSegmentIndex(getAnimationSegment());
 
-    //cout << "file " << anim_path << " animation " << getAnimationSegment() << " frame " << curFrame << " col: " << curCol << " row: " << curRow << endl;
+    if(curFrame > floor(getAnimationLength(getAnimationSegment()) * animation_framerate) - 1)
+    curFrame = floor(getAnimationLength(getAnimationSegment()) * animation_framerate) - 1;
+
+    //cout << "file " << anim_path << " animation " << getAnimationSegment() << " frame " << curFrame << "/" << floor(getAnimationLength(getAnimationSegment()) * animation_framerate)-1 << " bounds: " << animation_bounds[index][curFrame].left << " " << animation_bounds[index][curFrame].top << " " << animation_bounds[index][curFrame].width << " " << animation_bounds[index][curFrame].height << endl;
 
     for(int i=0; i<hitboxes.size(); i++)
     {
