@@ -237,7 +237,7 @@ void Object::Draw(sf::RenderWindow& window, int x1, int y1, int x2, int y2, int 
 {
     if(!disable)
     {
-        cout << x1 << " " << y1 << " " << x2 << " " << y2 << endl;
+        //cout << x1 << " " << y1 << " " << x2 << " " << y2 << endl;
         s_obj.setTextureRect(sf::IntRect(x1,y1,x2,y2));
 
         //s_obj.setTexture(tex_obj);
