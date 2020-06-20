@@ -51,6 +51,11 @@ class AnimatedObject
     float framerate = 1;
     sf::Rect<float> hitBox;
 
+    float curHP = 500;
+    float maxHP = 500;
+
+    bool ready_to_erase = false;
+
     ///temporary
     bool worm_fever = false;
 
