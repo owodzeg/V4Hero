@@ -3,18 +3,21 @@
 
 #include <SFML/Graphics.hpp>
 #include "../../Config.h"
-#include "CollidableObject.h"
+#include "PlayableUnit.h"
 
 using namespace std;
 
-class Patapon : public CollidableObject
+class Patapon : public PlayableUnit
 {
     public:
     int action = 0;
-    float attack_speed = 2.00;
+    float attack_speed = 1;
     sf::Clock attack_clock;
     bool threw = false;
     bool stopthrew = false;
+    bool canThrow = true;
+
+    int attackmode = -1;
 
     float vspeed = 0;
     float gravity = 981;
@@ -26,6 +29,7 @@ class Patapon : public CollidableObject
 
     enum Actions
     {
+        IDLE = 0,
         WALK = 1,
         ATTACK = 2
     };
@@ -34,6 +38,8 @@ class Patapon : public CollidableObject
     Patapon();
     void startAttack();
     void LoadConfig(Config *thisConfigs);
+    bool doAttack();
+    void doRhythm(std::string current_song, std::string current_drum);
     void Draw(sf::RenderWindow& window);
 };
 

@@ -27,3 +27,23 @@ void Hatapon::OnCollide(CollidableObject* otherObject)
     /// note we don't call the parent function. It does nothing, it just serves
     /// as an incomplete function to be overridden by child classes.
 }
+
+void Hatapon::doRhythm(std::string current_song, std::string current_drum)
+{
+    if((current_song != "") && ((current_song != "dondon") && (current_song != "ponpata")))
+    {
+        setAnimationSegment("wave");
+    }
+    else if(current_song == "dondon")
+    {
+        setAnimationSegment("jump");
+    }
+    else if(current_song == "ponpata")
+    {
+        setAnimationSegment("flee");
+    }
+    else
+    {
+        setAnimationSegment("idle");
+    }
+}

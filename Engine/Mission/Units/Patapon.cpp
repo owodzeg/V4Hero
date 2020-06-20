@@ -19,8 +19,70 @@ void Patapon::startAttack()
     if(action != ATTACK)
     {
         action = ATTACK;
-        //AnimatedObject::setAnimationSegment("attack_yari");
-        //attack_clock.restart();
+        attackmode = -1;
+    }
+}
+
+bool Patapon::doAttack()
+{
+    if(threw)
+    {
+        threw = false;
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void Patapon::doRhythm(std::string current_song, std::string current_drum)
+{
+    if(current_song == "patapata")
+    {
+        action = WALK;
+
+        if(!focus)
+        setAnimationSegment("walk");
+        else
+        setAnimationSegment("walk_focused");
+
+        setLoop(true);
+    }
+    else
+    {
+        if(getAnimationSegment() == "walk")
+        {
+            if(!getback)
+            {
+                if(!focus)
+                setAnimationSegment("idle_armed", true);
+                else
+                setAnimationSegment("idle_armed_focused", true);
+            }
+        }
+    }
+
+    if(current_song == "ponpon")
+    {
+        ///use attack only once
+        if(attackmode != 2)
+        startAttack();
+    }
+    else
+    {
+        ///refresh attack mode
+        attackmode = -1;
+    }
+
+    if((current_drum == "pata") or (current_drum == "pon") or (current_drum == "chaka") or (current_drum == "don"))
+    {
+        //cout << current_drum << endl;
+
+        if(!focus)
+        setAnimationSegment(current_drum, true);
+        else
+        setAnimationSegment(current_drum+"_focused", true);
     }
 }
 
@@ -48,76 +110,73 @@ void Patapon::Draw(sf::RenderWindow& window)
 
     if(action == ATTACK)
     {
-        if(focus)
+        if(attackmode == -1) ///start the attack
         {
-            if((lclosest >= 375) && (lclosest <= 475))
-            {
-                getback = false;
+            attack_clock.restart();
+            attackmode = 0;
 
-                if(stopthrew)
+            vspeed = -683;
+        }
+
+        if(attackmode == 0) ///begin the attack
+        {
+            canThrow = true;
+
+            AnimatedObject::setAnimationSegment("attack_fever_jump");
+
+            if(attack_clock.getElapsedTime().asMilliseconds() > 500)
+            {
+                AnimatedObject::setAnimationSegment("attack_fever_throw", true);
+                attack_clock.restart();
+                attackmode = 1;
+            }
+        }
+
+        if(attackmode == 1) ///attack continously
+        {
+            float anim_speed_multiplier = float(1) / attack_speed;
+            framerate = float(1) * anim_speed_multiplier;
+
+            cout << getAnimationPos() << endl;
+
+            if(getAnimationPos() > 0.285)
+            {
+                if(canThrow)
                 {
-                    if(attack_clock.getElapsedTime().asSeconds() > attack_speed)
-                    {
-                        AnimatedObject::setAnimationSegment("attack");
-                        attack_clock.restart();
-
-                        stopthrew = false;
-                    }
+                    threw = true;
+                    canThrow = false;
                 }
-                else
+            }
+
+            if(attack_clock.getElapsedTime().asSeconds() > attack_speed)
+            {
+                if(canThrow)
                 {
-                    if(AnimatedObject::getAnimationSegment() != "attack")
-                    {
-                        AnimatedObject::setAnimationSegment("attack");
-                        attack_clock.restart();
-                    }
+                    if(threw == false)
+                    threw = true;
                 }
-            }
-            else if(lclosest > 475)
-            {
-                AnimatedObject::setAnimationSegment("walk_focused");
-                getback = true;
 
-                local_x += float(200) / fps;
-            }
-            else if(lclosest < 375)
-            {
-                AnimatedObject::setAnimationSegment("walk_focused");
-                getback = true;
+                AnimatedObject::setAnimationSegment("attack_fever_throw", true);
+                attack_clock.restart();
 
-                local_x -= float(200) / fps;
+                canThrow = true;
+            }
+
+            if(local_y >= 0)
+            {
+                AnimatedObject::setAnimationSegment("idle_armed_focused", true);
+                attackmode = 2;
             }
         }
-    }
-    else
-    {
-        stopthrew = false;
-    }
 
-    //cout << current_animation << " " << AnimatedObject::getAnimationPos() << endl;
-
-    if(AnimatedObject::getAnimationSegment() == "attack")
-    {
-        if((AnimatedObject::getAnimationPos() >= 0.066) && (AnimatedObject::getAnimationPos() <= 0.5))
+        if(attackmode == 2)
         {
-            vspeed = -433;
-        }
-
-        if(!stopthrew)
-        {
-            if(AnimatedObject::getAnimationPos() >= 0.733)
-            {
-                threw = true;
-                stopthrew = true;
-            }
+            canThrow = true;
+            action = IDLE;
         }
     }
-
-    //cout << "1 local_y: " << local_y << " vspeed: " << vspeed << endl;
 
     vspeed += gravity / fps;
-
-    //cout << "2 local_y: " << local_y << " vspeed: " << vspeed << endl;
 
     if(vspeed >= 0)
     {
@@ -128,11 +187,7 @@ void Patapon::Draw(sf::RenderWindow& window)
         }
     }
 
-    //cout << "3 local_y: " << local_y << " vspeed: " << vspeed << endl;
-
     local_y += vspeed / fps;
-
-    //cout << "4 local_y: " << local_y << " vspeed: " << vspeed << endl;
 
     AnimatedObject::Draw(window);
 }
