@@ -14,7 +14,7 @@ class EndFlag : public CollidableObject
     EndFlag();
     void LoadConfig(Config *thisConfigs);
     void Draw(sf::RenderWindow& window);
-    void OnCollide(CollidableObject* otherObject);
+    void OnCollide(CollidableObject* otherObject, int collidedWith=-1, vector<string> collisionData = {});
 };
 
 #endif // ENDFLAG_H
