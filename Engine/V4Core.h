@@ -8,7 +8,6 @@
 #include "Mission/Camera.h"
 #include "Config.h"
 #include "StringRepository.h"
-#include "Mission/Units/Patapon.h"
 #include "Mission/MissionController.h"
 #include "Menu/MainMenu.h"
 #include "Graphics/Menu.h"

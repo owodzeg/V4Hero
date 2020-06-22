@@ -11,6 +11,7 @@ using namespace std;
 class CollidableObject : public AnimatedObject
 {
     public:
+    bool isCollidable = true;
 
     CollidableObject();
     virtual void OnCollide(CollidableObject* otherObject, int collidedWith=-1, vector<string> collisionData = {});

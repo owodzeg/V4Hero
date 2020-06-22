@@ -2,8 +2,8 @@
 #define PATAPON_H
 
 #include <SFML/Graphics.hpp>
-#include "../../Config.h"
-#include "PlayableUnit.h"
+#include "../../../Config.h"
+#include "../PlayableUnit.h"
 
 using namespace std;
 
@@ -34,12 +34,15 @@ class Patapon : public PlayableUnit
         ATTACK = 2
     };
 
+    sf::Clock partyClock;
+
     Config *thisConfig;
     Patapon();
     void startAttack();
     void LoadConfig(Config *thisConfigs);
     bool doAttack();
     void doRhythm(std::string current_song, std::string current_drum);
+    void doMissionEnd();
     void Draw(sf::RenderWindow& window);
 };
 

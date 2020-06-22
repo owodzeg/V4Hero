@@ -2,7 +2,7 @@
 #include "math.h"
 #include <fstream>
 #include <iostream>
-#include "../../Func.h"
+#include "../../../Func.h"
 #include <sstream>
 
 Hatapon::Hatapon()
@@ -46,4 +46,9 @@ void Hatapon::doRhythm(std::string current_song, std::string current_drum)
     {
         setAnimationSegment("idle");
     }
+}
+
+void Hatapon::doMissionEnd()
+{
+    setAnimationSegment("wave");
 }

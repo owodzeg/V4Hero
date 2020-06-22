@@ -2,13 +2,13 @@
 #define FEVERWORM_H
 
 #include <SFML/Graphics.hpp>
-#include "../../Config.h"
-#include "CollidableObject.h"
-#include "../../Graphics/PSprite.h"
+#include "../../../Config.h"
+#include "../Entity.h"
+#include "../../../Graphics/PSprite.h"
 
 using namespace std;
 
-class FeverWorm : public CollidableObject
+class FeverWorm : public Entity
 {
     public:
     sf::Texture tex_c,tex_o1,tex_m,tex_b,tex_o2,tex_exc;

@@ -1,20 +1,22 @@
-#ifndef ENDFLAG_H
-#define ENDFLAG_H
+#ifndef KACHEEK_H
+#define KACHEEK_H
 
 #include <SFML/Graphics.hpp>
-#include "../../Config.h"
-#include "CollidableObject.h"
+#include "../../../Config.h"
+#include "../Entity.h"
 
 using namespace std;
 
-class EndFlag : public CollidableObject
+class Kacheek : public Entity
 {
     public:
+    bool run = false;
 
-    EndFlag();
+    Kacheek();
     void LoadConfig(Config *thisConfigs);
     void Draw(sf::RenderWindow& window);
     void OnCollide(CollidableObject* otherObject, int collidedWith=-1, vector<string> collisionData = {});
+    sf::Clock walk_timer; ///TEMPORARY FOR SHOWCASE ONLY
 };
 
-#endif // ENDFLAG_H
+#endif // KACHEEK_H

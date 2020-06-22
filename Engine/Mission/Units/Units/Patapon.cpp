@@ -2,7 +2,7 @@
 #include "math.h"
 #include <fstream>
 #include <iostream>
-#include "../../Func.h"
+#include "../../../Func.h"
 #include <sstream>
 Patapon::Patapon()
 {
@@ -83,6 +83,34 @@ void Patapon::doRhythm(std::string current_song, std::string current_drum)
         setAnimationSegment(current_drum, true);
         else
         setAnimationSegment(current_drum+"_focused", true);
+    }
+}
+
+void Patapon::doMissionEnd()
+{
+    if(getAnimationSegment().find("dance") == std::string::npos)
+    {
+        setAnimationSegment("walk");
+
+        if(partyClock.getElapsedTime().asMilliseconds() > 250)
+        {
+            if(rand() % 4 == 1)
+            {
+                int a = rand() % 5 + 1;
+                string anim = "dance_var"+to_string(a);
+
+                setAnimationSegment(anim, true);
+            }
+
+            partyClock.restart();
+        }
+    }
+    else
+    {
+        if(cur_pos > anim_end)
+        {
+            setAnimationSegment("walk");
+        }
     }
 }
 

@@ -23,6 +23,7 @@ class PlayableUnit : public CollidableObject
     virtual int getUnitID();
     virtual bool doAttack();
     virtual void doRhythm(std::string current_song, std::string current_drum);
+    virtual void doMissionEnd();
 };
 
 #endif // PLAYABLEUNIT_H
