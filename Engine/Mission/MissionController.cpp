@@ -3,7 +3,6 @@
 #include <cstdlib>
 #include <time.h>
 #include <string>
-#include "Units/Spear.h"
 #include "Units/Projectile.h"
 #include "../Math/PVector.h"
 #include "Units/HitboxFrame.h"
@@ -188,6 +187,8 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
 }
 void MissionController::StartMission(std::string songName,int missionID,bool showCutscene)
 {
+    missionEnd = false;
+
     cout << "MissionController::StartMission(): 1" << endl;
 
     string missionName = "";
@@ -293,10 +294,16 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         feverworm.get()->LoadConfig(missionConfig);
         kacheek.get()->LoadConfig(missionConfig);
 
+        endFlag1.get()->setEntityID(0);
+        feverworm.get()->setEntityID(1);
+        kacheek.get()->setEntityID(2);
+
         cout << "MissionController::StartMission(): setting positions" << endl;
         endFlag1.get()->setGlobalPosition(sf::Vector2f(2500,720 - (233)));
         feverworm.get()->setGlobalPosition(sf::Vector2f(-330,720 - (520)));
         kacheek.get()->setGlobalPosition(sf::Vector2f(1000,720 - (185)));
+
+        endFlag1.get()->isCollidable = false;
 
         cout << "MissionController::StartMission(): pushing to the table" << endl;
         tangibleLevelObjects.push_back(std::move(endFlag1));
@@ -386,6 +393,10 @@ void MissionController::StopMission()
 void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld)
 {
     /// do the keyboard things
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num5))
+    {
+        missionEnd = true;
+    }
 }
 
 bool MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float currentObjectY,int collisionObjectID,vector<string> collisionData)
@@ -591,7 +602,7 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
     }
     //cout << "camera.walk: " << camera.walk << endl;
 
-    if(camera.walk)
+    if((camera.walk) || (missionEnd))
     {
         int farthest_id = -1;
         float temp_pos = -9999;
@@ -684,16 +695,16 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
                     continue;
                 }
 
-
-
-
-
-
                 /// we have a collision
                 if (isCollision&&isCollision2&&isCollision3&&isCollision4)
                 {
+                    ///check if unit should be prevented from passing through
+                    if(target->isCollidable)
                     foundCollision = true;
+
+                    ///the entity can still react
                     target->OnCollide(target);
+
                     std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
                 }
                 else
@@ -922,10 +933,6 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
     rhythm.rhythmController.config = *missionConfig;
     rhythm.config = *missionConfig;
 
-
-
-
-
     vector<int> tlo_rm;
 
     for (int i=0; i<tangibleLevelObjects.size(); i++)
@@ -957,56 +964,59 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
     {
         PlayableUnit* unit = units[i].get();
 
-        unit->doRhythm(rhythm.current_song, rhythm.rhythmController.current_drum);
-
-        vector<float> gdistances;
-        vector<float> ldistances;
-
-        for (int e=0; e<tangibleLevelObjects.size(); e++)
+        if(!missionEnd)
         {
-            //cout << "tangibleLevelObjects[" << i << "]->Draw(window);" << endl;
-            ///some temporary code for entity in range detection
-            if(tangibleLevelObjects[e]->type == tangibleLevelObjects[e]->HOSTILE)
+            unit->doRhythm(rhythm.current_song, rhythm.rhythmController.current_drum);
+
+            vector<float> gdistances;
+            vector<float> ldistances;
+
+            for (int e=0; e<tangibleLevelObjects.size(); e++)
             {
-                float global_distance = tangibleLevelObjects[e]->getGlobalPosition().x - (farthest_unit->getGlobalPosition().x - farthest_unit->local_x);
-                float local_distance = tangibleLevelObjects[e]->getGlobalPosition().x - farthest_unit->getGlobalPosition().x;
-                gdistances.push_back(global_distance);
-                ldistances.push_back(local_distance);
+                //cout << "tangibleLevelObjects[" << i << "]->Draw(window);" << endl;
+                ///some temporary code for entity in range detection
+                if(tangibleLevelObjects[e]->type == tangibleLevelObjects[e]->HOSTILE)
+                {
+                    float global_distance = tangibleLevelObjects[e]->getGlobalPosition().x - (farthest_unit->getGlobalPosition().x - farthest_unit->local_x);
+                    float local_distance = tangibleLevelObjects[e]->getGlobalPosition().x - farthest_unit->getGlobalPosition().x;
+                    gdistances.push_back(global_distance);
+                    ldistances.push_back(local_distance);
+                }
             }
-        }
 
-        /// patapons (and other enemies) are drawn after level objects like kacheek so they are always on top
-        if(unit->getUnitID() == 1)
-        {
-            if(unit->doAttack())
+            /// patapons (and other enemies) are drawn after level objects like kacheek so they are always on top
+            if(unit->getUnitID() == 1)
             {
-                cout << "Unit " << i << " threw a spear!" << endl;
+                if(unit->doAttack())
+                {
+                    cout << "Unit " << i << " threw a spear!" << endl;
 
-                float rand_hs = (rand() % 1000) / float(10);
-                float rand_vs = (rand() % 1000) / float(10);
+                    float rand_hs = (rand() % 1000) / float(10);
+                    float rand_vs = (rand() % 1000) / float(10);
 
-                float rand_rad = (rand() % 200000000) / float(1000000000);
+                    float rand_rad = (rand() % 200000000) / float(1000000000);
 
-                //cout << "===============================================" << endl;
-                //cout << "rand_hs: " << rand_hs << " rand_vs: " << rand_vs << endl;
-                //cout << "===============================================" << endl;
+                    //cout << "===============================================" << endl;
+                    //cout << "rand_hs: " << rand_hs << " rand_vs: " << rand_vs << endl;
+                    //cout << "===============================================" << endl;
 
-                unique_ptr<Spear> p = make_unique<Spear>(s_proj);
-                p.get()->xPos = unit->getGlobalPosition().x+unit->hitBox.left+unit->hitBox.width/2;
-                p.get()->yPos = unit->getGlobalPosition().y+unit->hitBox.top+unit->hitBox.height/2;
-                p.get()->speed = 800;
-                p.get()->hspeed = 450+rand_hs;
-                p.get()->vspeed = -450+rand_vs;
-                ///-0.523598776 - 30 deg
-                //p.get()->angle = -0.698131701; /// 40 degrees from the floor - pi*4/12
-                p.get()->angle = -0.58 - rand_rad;
-                ///-0.872664626 - 50 deg
-                p.get()->maxdmg = 150;
-                p.get()->mindmg = 50;
-                p.get()->crit = 0;
-                p.get()->crit = 0;
+                    unique_ptr<Spear> p = make_unique<Spear>(s_proj);
+                    p.get()->xPos = unit->getGlobalPosition().x+unit->hitBox.left+unit->hitBox.width/2;
+                    p.get()->yPos = unit->getGlobalPosition().y+unit->hitBox.top+unit->hitBox.height/2;
+                    p.get()->speed = 800;
+                    p.get()->hspeed = 450+rand_hs;
+                    p.get()->vspeed = -450+rand_vs;
+                    ///-0.523598776 - 30 deg
+                    //p.get()->angle = -0.698131701; /// 40 degrees from the floor - pi*4/12
+                    p.get()->angle = -0.58 - rand_rad;
+                    ///-0.872664626 - 50 deg
+                    p.get()->maxdmg = 150;
+                    p.get()->mindmg = 50;
+                    p.get()->crit = 0;
+                    p.get()->crit = 0;
 
-                levelProjectiles.push_back(std::move(p));
+                    levelProjectiles.push_back(std::move(p));
+                }
             }
         }
 
@@ -1015,6 +1025,11 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
             unit->gclosest = *std::min_element(std::begin(gdistances), std::end(gdistances));
             unit->lclosest = *std::min_element(std::begin(ldistances), std::end(ldistances));
         }*/
+
+        if(missionEnd)
+        {
+            unit->doMissionEnd();
+        }
 
         unit->Draw(window);
     }
@@ -1113,7 +1128,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
     window.setView(lastView);
 
     /// here we show the hitbox
-    bool showHitboxes = true;
+    bool showHitboxes = false;
     if(showHitboxes)
     {
         for(int i=0; i<units.size(); i++)
@@ -1267,7 +1282,11 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         window.draw(t_timerMenu);
         window.setView(lastView2);
     }
-    rhythm.Draw(window);
+
+    if(!missionEnd)
+    {
+        rhythm.Draw(window);
+    }
 
     for(int i=0; i<tlo_rm.size(); i++)
     {

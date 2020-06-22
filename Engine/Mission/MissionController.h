@@ -7,19 +7,18 @@
 #include "Background.h"
 #include "Camera.h"
 #include "../Config.h"
-#include "Units/Patapon.h"
-#include "Units/Kacheek.h"
+#include <string>
+#include <thread>
+
+#include "Units/EntityList.h"
+#include "Units/PlayableUnitList.h"
+#include "Units/ProjectileList.h"
+
+#include "Units/HitboxFrame.h"
 #include "Units/AnimatedObject.h"
 #include "Units/Projectile.h"
 #include "Units/CollidableObject.h"
 #include "Units/PlayableUnit.h"
-#include "Units/Wall.h"
-#include <string>
-#include <thread>
-#include "Units/EndFlag.h"
-#include "Units/FeverWorm.h"
-#include "Units/Hatapon.h"
-#include "Units/HitboxFrame.h"
 #include "../Graphics/PSpritesheet.h"
 
 class V4Core;
@@ -62,8 +61,8 @@ class MissionController
     /// we need to check against for collision (but not always damage)
 
 
-    std::vector<std::unique_ptr<PlayableUnit>> units; ///temporary until a better solution is possible
-    std::vector<std::unique_ptr<CollidableObject>> tangibleLevelObjects;
+    std::vector<std::unique_ptr<PlayableUnit>> units;
+    std::vector<std::unique_ptr<Entity>> tangibleLevelObjects;
     std::vector<std::unique_ptr<Projectile>> levelProjectiles;
 
     float pataponY = 600; ///temp
@@ -100,6 +99,8 @@ class MissionController
 
     std::vector<DamageCounter> dmgCounters;
     std::vector<DroppedItem> droppedItems;
+
+    bool missionEnd = false;
 
     void addDmgCounter(int type, int damage, float baseX, float baseY);
     void addItemsCounter(int id, float baseX, float baseY);
