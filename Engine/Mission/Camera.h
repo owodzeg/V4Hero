@@ -14,6 +14,7 @@ class Camera
     float manual_xspeed = 0;
     float camera_xspeed = 0;
     float followobject_x = 400; ///Point at which camera should follow
+    float pataSpeed = 0;
     bool walk = false;
 
     Camera();
