@@ -46,7 +46,18 @@ void PText::setRotation(float a)
 void PText::setColor(sf::Color color)
 {
     c = color;
-    t.setColor(color);
+    t.setFillColor(color);
+}
+
+void PText::setOutlineColor(sf::Color color)
+{
+    c = color;
+    t.setOutlineColor(color);
+}
+
+void PText::setOutlineThickness(int thick)
+{
+    t.setOutlineThickness(thick);
 }
 
 void PText::setPosition(float x, float y)
