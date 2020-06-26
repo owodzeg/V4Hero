@@ -538,6 +538,9 @@ void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4
 
     initialised=true;
 
+    SetTitle(location);
+    camPos = locations[location];
+
     if (doWaitKeyPress)
     {
         v4core->LoadingWaitForKeyPress();
@@ -673,7 +676,6 @@ void PatapolisMenu::SetTitle(int menuPosition)
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis")));
         break;
     }
-    t_title.setOrigin(t_title.getLocalBounds().width/2,t_title.getLocalBounds().height/2);
 }
 float EaseIn (float time, float startValue, float change, float duration)
 {
@@ -1130,12 +1132,31 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
         }
         else
         {
+        t_title.setOrigin(t_title.getLocalBounds().width/2,t_title.getLocalBounds().height/2);
         t_title.setPosition(640,80);
         t_title.draw(window);
         }
 
         window.setView(lastView);
 
+        lastView = window.getView();
+        window.setView(window.getDefaultView());
+
+        if(fade_alpha > 0)
+        {
+            fade_alpha -= float(500) / fps;
+        }
+
+        if(fade_alpha <= 0)
+        {
+            fade_alpha = 0;
+        }
+
+        fade_box.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+        fade_box.setFillColor(sf::Color(0,0,0,fade_alpha));
+        window.draw(fade_box);
+
+        window.setView(lastView);
 
         /**window.setView(window.getDefaultView());
         mm_bigBox.setSize(sf::Vector2f(window.getSize().x,window.getSize().y-200));
@@ -1195,6 +1216,10 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
         {
 
         }*/
+    }
+    else
+    {
+        fade_alpha = 255;
     }
 }
 
