@@ -25,7 +25,23 @@ MissionController::MissionController()
 {
 }
 
-void MissionController::addDmgCounter(int type, int damage, float baseX, float baseY)
+float MissionController::Smoothstep(float time) ///use time from 0.00 to 1.00
+{
+    time = Clamp(time, 0.0, 1.0);
+    return time * time * (3 - 2 * time);
+}
+
+float MissionController::Clamp(float x, float lowerlimit, float upperlimit)
+{
+    if (x < lowerlimit)
+        x = lowerlimit;
+    if (x > upperlimit)
+        x = upperlimit;
+
+    return x;
+}
+
+void MissionController::addDmgCounter(int type, int damage, float baseX, float baseY, int q, int r)
 {
     DamageCounter tmp;
     tmp.type = type;
@@ -99,6 +115,8 @@ void MissionController::addDmgCounter(int type, int damage, float baseX, float b
         dg_spr.setTexture(dmg_spritesheet.t);
         dg_spr.setTextureRect(dmg_spritesheet.get_bounds((digit*5)+type)); ///rect of the specific damage digit from spritesheet
         dg_spr.setOrigin(dg_spr.getLocalBounds().width/2, dg_spr.getLocalBounds().height);
+        dg_spr.qualitySetting = q;
+        dg_spr.resSetting = r;
 
         sf::Vector2f dg_pos(baseX+(i*separator), baseY);
 
@@ -136,7 +154,11 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     s_proj.scaleX=0.15f;
     s_proj.scaleY=0.15f;
 
-    dmg_spritesheet.load("resources/graphics/mission/damagesheet.png", config.GetInt("textureQuality"), 1);
+    int q = config.GetInt("textureQuality");
+    qualitySetting = q;
+    resSetting = 1;
+
+    dmg_spritesheet.load("resources/graphics/mission/damagesheet.png", q, 1);
 
     for(int i=tangibleLevelObjects.size()-1; i>=0; i--)
     {
@@ -156,6 +178,7 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
 
     //ctor
     f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
+    f_moji.loadFromFile("resources/fonts/mojipon.otf");
     //f_font.loadFromFile("resources/fonts/arial.ttf");
     t_timerMenu.setFont(f_font);
     t_timerMenu.setCharacterSize(38);
@@ -183,11 +206,53 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     fade.setSize(sf::Vector2f(800,600));
     currentCutsceneId=0;
 
+    sb_win_jingle.loadFromFile("resources/sfx/level/victory.ogg");
+    //sb_lose_jingle;
+
+    sb_cheer1.loadFromFile("resources/sfx/level/cheer1.ogg");
+    sb_cheer2.loadFromFile("resources/sfx/level/cheer2.ogg");
+    sb_cheer3.loadFromFile("resources/sfx/level/cheer1.ogg");
+
+    t_win.createText(f_moji, 56, sf::Color(222, 83, 0, 255), "MISSION COMPLETE!", q, 1);
+    t_win_outline.createText(f_moji, 56, sf::Color(255, 171, 0, 255), "MISSION COMPLETE!", q, 1);
+    t_win_outline.setOutlineColor(sf::Color(255, 171, 0, 255));
+    t_win_outline.setOutlineThickness(10);
+    t_lose.createText(f_moji, 56, sf::Color(138, 15, 26, 255), "MISSION FAILED!", q, 1);
+    t_lose_outline.createText(f_moji, 56, sf::Color(254, 48, 55, 255), "MISSION FAILED!", q, 1);
+    t_lose_outline.setOutlineColor(sf::Color(254, 48, 55, 255));
+    t_lose_outline.setOutlineThickness(10);
+
+    t_win.setOrigin(t_win.getLocalBounds().width/2, t_win.getLocalBounds().height/2);
+    t_win_outline.setOrigin(t_win_outline.getLocalBounds().width/2, t_win_outline.getLocalBounds().height/2);
+
+    t_lose.setOrigin(t_lose.getLocalBounds().width/2, t_lose.getLocalBounds().height/2);
+    t_lose_outline.setOrigin(t_lose_outline.getLocalBounds().width/2, t_lose_outline.getLocalBounds().height/2);
+
+    bar_win.loadFromFile("resources/graphics/mission/bar_win.png", q, 1);
+    bar_lose.loadFromFile("resources/graphics/mission/bar_lose.png", q, 1);
+
+    bar_win.setOrigin(bar_win.getLocalBounds().width/2, bar_win.getLocalBounds().height/2);
+    bar_lose.setOrigin(bar_lose.getLocalBounds().width/2, bar_lose.getLocalBounds().height/2);
+
     cout << "initialization finished" << endl;
 }
 void MissionController::StartMission(std::string songName,int missionID,bool showCutscene)
 {
+    fade_alpha = 255;
     missionEnd = false;
+    playJingle = false;
+    textBounce = false;
+    textCurX = -1280;
+    barCurX = 1920;
+    textDestX = 640;
+    barDestX = 640;
+    textCurScale = 1;
+    textDestScale = 1;
+    fade_alpha = 255;
+    fadeout_alpha = 0;
+    playCheer[0] = false;
+    playCheer[1] = false;
+    playCheer[2] = false;
 
     cout << "MissionController::StartMission(): 1" << endl;
 
@@ -288,27 +353,53 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         unique_ptr<EndFlag> endFlag1 = make_unique<EndFlag>();
         unique_ptr<FeverWorm> feverworm = make_unique<FeverWorm>();
         unique_ptr<Kacheek> kacheek = make_unique<Kacheek>();
+        unique_ptr<Kacheek> kacheek2 = make_unique<Kacheek>();
+        unique_ptr<Kacheek> kacheek3 = make_unique<Kacheek>();
+        unique_ptr<Kacheek> kacheek4 = make_unique<Kacheek>();
+        unique_ptr<Kacheek> kacheek5 = make_unique<Kacheek>();
 
         cout << "MissionController::StartMission(): loading configs" << endl;
         endFlag1.get()->LoadConfig(missionConfig);
         feverworm.get()->LoadConfig(missionConfig);
         kacheek.get()->LoadConfig(missionConfig);
+        kacheek2.get()->LoadConfig(missionConfig);
+        kacheek3.get()->LoadConfig(missionConfig);
+        kacheek4.get()->LoadConfig(missionConfig);
+        kacheek5.get()->LoadConfig(missionConfig);
 
         endFlag1.get()->setEntityID(0);
         feverworm.get()->setEntityID(1);
         kacheek.get()->setEntityID(2);
+        kacheek2.get()->setEntityID(2);
+        kacheek3.get()->setEntityID(2);
+        kacheek4.get()->setEntityID(2);
+        kacheek5.get()->setEntityID(2);
 
         cout << "MissionController::StartMission(): setting positions" << endl;
-        endFlag1.get()->setGlobalPosition(sf::Vector2f(2500,720 - (233)));
+        endFlag1.get()->setGlobalPosition(sf::Vector2f(4500,720 - (233)));
         feverworm.get()->setGlobalPosition(sf::Vector2f(-330,720 - (520)));
-        kacheek.get()->setGlobalPosition(sf::Vector2f(1000,720 - (185)));
+        kacheek.get()->setGlobalPosition(sf::Vector2f(1000 + (rand() % 500),720 - (185)));
+        kacheek2.get()->setGlobalPosition(sf::Vector2f(1600 + (rand() % 500),720 - (185)));
+        kacheek3.get()->setGlobalPosition(sf::Vector2f(2300 + (rand() % 500),720 - (185)));
+        kacheek4.get()->setGlobalPosition(sf::Vector2f(2900 + (rand() % 500),720 - (185)));
+        kacheek5.get()->setGlobalPosition(sf::Vector2f(3500 + (rand() % 500),720 - (185)));
 
         endFlag1.get()->isCollidable = false;
 
         cout << "MissionController::StartMission(): pushing to the table" << endl;
         tangibleLevelObjects.push_back(std::move(endFlag1));
         tangibleLevelObjects.push_back(std::move(feverworm));
+
+        if(rand() % 10 >= 0)
         tangibleLevelObjects.push_back(std::move(kacheek));
+        if(rand() % 10 >= 1)
+        tangibleLevelObjects.push_back(std::move(kacheek2));
+        if(rand() % 10 >= 2)
+        tangibleLevelObjects.push_back(std::move(kacheek3));
+        if(rand() % 10 >= 3)
+        tangibleLevelObjects.push_back(std::move(kacheek4));
+        if(rand() % 10 >= 4)
+        tangibleLevelObjects.push_back(std::move(kacheek5));
 
         missionName = "undefined";
         missionImg = "wasteland";
@@ -600,6 +691,10 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
     {
         booster=1.2;
     }
+    if(missionEnd)
+    {
+        booster = 1.0;
+    }
     //cout << "camera.walk: " << camera.walk << endl;
 
     if((camera.walk) || (missionEnd))
@@ -620,7 +715,15 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
 
         PlayableUnit* farthest_unit = units[farthest_id].get();
 
-        float proposedXPos = farthest_unit->global_x + (2 * 60 * booster) / fps;
+        float pataDistance = 240 * booster;
+
+        float diff = (Smoothstep(walkClock.getElapsedTime().asSeconds()/2)*pataDistance)-(Smoothstep(prevTime/2)*pataDistance);
+        prevTime = walkClock.getElapsedTime().asSeconds();
+
+        float proposedXPos = farthest_unit->global_x + diff;
+
+        camera.pataSpeed = (2 * 60 * booster);
+
         //cout << "global_x: " << farthest_unit->global_x << endl;
         //cout << "proposedXPos = " << proposedXPos << endl;
         /// use the right hand side of the patapon sprite to check for collisions. This should be changed if the patapon walks to the left
@@ -717,7 +820,10 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
         /// if the new position is inside a kacheek, don't move. If we found anything,
         if (!foundCollision)
         {
-            army_X += proposedXPos - farthest_unit->global_x;
+            if(!missionEnd)
+            army_X += diff;
+            else
+            army_X += 120.0 / fps;
         }
     }
 
@@ -800,22 +906,35 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
             levelProjectiles.erase(levelProjectiles.begin()+i);
 
             ///add damage counter
-            addDmgCounter(0, total, xpos, ypos);
+            addDmgCounter(0, total, xpos, ypos, qualitySetting, resSetting);
         };
     }
 
 }
 void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld)
 {
+    if(!missionEnd)
+    missionEndTimer.restart();
+
     if(rhythm.current_song == "patapata")
     {
         //cout << "set walk true" << endl;
         camera.walk = true;
+
+        if(!startWalking)
+        {
+            walkClock.restart();
+            prevTime = 0;
+
+            startWalking = true;
+        }
     }
     else
     {
         //cout << "set walk false" << endl;
         camera.walk = false;
+
+        startWalking = false;
     }
 
     missionKeyMap = keyMap;
@@ -854,74 +973,57 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         }
     }
 
-    camera.followobject_x = army_X * ratioX;
-    camera.Work(window,fps,keyMapHeld);
-    test_bg.setCamera(camera);
-    test_bg.Draw(window);
-
-    /**if(rhythm.GetCombo() >= 11)
+    if(missionEndTimer.getElapsedTime().asMilliseconds() >= 2500)
     {
-        if(feverworm->getAnimationSegment() == "fever")
+        if(!playCheer[0])
         {
-            feverworm->scaleX = 1+rhythm.r_gui.beatBounce;
-            feverworm->scaleY = 1+rhythm.r_gui.beatBounce;
+            s_cheer.stop();
+            s_cheer.setBuffer(sb_cheer1);
+            s_cheer.play();
+            playCheer[0] = true;
         }
     }
 
-    if(rhythm.updateworm)
+    if(missionEndTimer.getElapsedTime().asMilliseconds() >= 4500)
     {
-        feverworm->combo = rhythm.GetRealCombo();
+        if(!playCheer[1])
+        {
+            s_cheer.stop();
+            s_cheer.setBuffer(sb_cheer2);
+            s_cheer.play();
+            playCheer[1] = true;
+        }
+    }
 
-            if(rhythm.GetRealCombo() < 2)
-            {
-                feverworm->global_x = -400;
-                feverworm->next_x = -400;
-                feverworm->speed = 120;
-            }
+    if(missionEndTimer.getElapsedTime().asMilliseconds() >= 6500)
+    {
+        if(!playCheer[2])
+        {
+            s_cheer.stop();
+            s_cheer.setBuffer(sb_cheer3);
+            s_cheer.play();
+            playCheer[2] = true;
+        }
+    }
 
-            if(rhythm.GetRealCombo() == 2)
-            {
-                feverworm->next_x = -70;
-                feverworm->speed = 400;
-            }
+    if(missionEndTimer.getElapsedTime().asMilliseconds() < 7700)
+    {
+        camera.followobject_x = army_X * ratioX;
+    }
 
-            if((rhythm.GetRealCombo() > 2) && (rhythm.GetCombo() < 11))
-            {
-                if(rhythm.advanced_prefever)
-                feverworm->next_x = -50 + (rhythm.GetSatisfaction() / 5.5) + ((rhythm.GetRealCombo() - 2) * 8);
-                else
-                feverworm->next_x = -70 + ((rhythm.GetRealCombo() - 2) * 8);
+    if((missionEnd) && (missionEndTimer.getElapsedTime().asMilliseconds() >= 8000))
+    {
+        if(!playJingle)
+        {
+            s_jingle.setBuffer(sb_win_jingle);
+            s_jingle.play();
+            playJingle = true;
+        }
+    }
 
-                feverworm->speed = 40;
-            }
-
-            if(rhythm.GetCombo() < 11)
-            {
-                if(rhythm.advanced_prefever)
-                {
-                    feverworm->setAnimationSegment("fast");
-                }
-                else
-                {
-                    feverworm->setAnimationSegment("slow");
-                }
-            }
-
-            if(rhythm.GetCombo() == 11)
-            {
-                feverworm->setAnimationSegment("transform");
-                feverworm->setLoop(false);
-            }
-
-            if(rhythm.GetCombo() >= 12)
-            {
-                feverworm->setAnimationSegment("fever");
-                feverworm->setLoop(true);
-            }
-
-            rhythm.updateworm = false;
-    }*/
-
+    camera.Work(window,fps,keyMapHeld);
+    test_bg.setCamera(camera);
+    test_bg.Draw(window);
 
     //hatapon->setGlobalPosition(sf::Vector2f(army_X,494));
     //hatapon->fps = fps;
@@ -938,7 +1040,18 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
     for (int i=0; i<tangibleLevelObjects.size(); i++)
     {
         tangibleLevelObjects[i].get()->fps = fps;
-        tangibleLevelObjects[i].get()->Draw(window);
+
+        if(tangibleLevelObjects[i].get()->getEntityID() == 1)
+        {
+            tangibleLevelObjects[i].get()->doRhythm(rhythm.current_song, rhythm.rhythmController.current_drum, rhythm.GetCombo(), rhythm.GetRealCombo(), rhythm.advanced_prefever, rhythm.r_gui.beatBounce, rhythm.GetSatisfaction());
+
+            if(!missionEnd)
+            tangibleLevelObjects[i].get()->Draw(window);
+        }
+        else
+        {
+            tangibleLevelObjects[i].get()->Draw(window);
+        }
 
         if(tangibleLevelObjects[i].get()->ready_to_erase)
         tlo_rm.push_back(i);
@@ -966,7 +1079,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
         if(!missionEnd)
         {
-            unit->doRhythm(rhythm.current_song, rhythm.rhythmController.current_drum);
+            unit->doRhythm(rhythm.current_song, rhythm.rhythmController.current_drum, rhythm.GetCombo());
 
             vector<float> gdistances;
             vector<float> ldistances;
@@ -1296,6 +1409,115 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         //delete tangibleLevelObjects[tlo_rm[i]];
         //tangibleLevelObjects.erase(tangibleLevelObjects.begin()+(tlo_rm[i] - i));
     }
+
+    lastView = window.getView();
+    window.setView(window.getDefaultView());
+
+    if(!missionEnd)
+    {
+        if(fade_alpha > 0)
+        {
+            fade_alpha -= float(500) / fps;
+        }
+
+        if(fade_alpha <= 0)
+        {
+            fade_alpha = 0;
+        }
+    }
+    else
+    {
+        if(missionEndTimer.getElapsedTime().asMilliseconds() >= 11000)
+        {
+            if(fade_alpha < 255)
+            {
+                fade_alpha += float(250) / fps;
+            }
+
+            if(fade_alpha >= 255)
+            {
+                fade_alpha = 255;
+            }
+        }
+    }
+
+    fade_box.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+    fade_box.setFillColor(sf::Color(0,0,0,fade_alpha));
+    window.draw(fade_box);
+
+    if(missionEndTimer.getElapsedTime().asMilliseconds() >= 11500)
+    {
+        if(!textBounce)
+        {
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 13050)
+            {
+                textCurScale = 1.4;
+                textBounce = true;
+            }
+        }
+
+        t_win.setOrigin(t_win.getLocalBounds().width/2, t_win.getLocalBounds().height/2);
+        t_win_outline.setOrigin(t_win_outline.getLocalBounds().width/2, t_win_outline.getLocalBounds().height/2);
+
+        t_lose.setOrigin(t_lose.getLocalBounds().width/2, t_lose.getLocalBounds().height/2);
+        t_lose_outline.setOrigin(t_lose_outline.getLocalBounds().width/2, t_lose_outline.getLocalBounds().height/2);
+
+        if(barCurX > barDestX)
+        {
+            barCurX -= (abs(barCurX - barDestX) * 5) / fps;
+        }
+        else
+        {
+            barCurX = barDestX;
+        }
+
+        if(textCurX < textDestX)
+        {
+            textCurX += (abs(textCurX - textDestX) * 5) / fps;
+        }
+        else
+        {
+            textCurX = textDestX;
+        }
+        if(textCurScale > textDestScale)
+        {
+            textCurScale -= (abs(textCurScale - textDestScale) * 5) / fps;
+        }
+        else
+        {
+            textCurScale = textDestScale;
+        }
+
+        t_win.setScale(textCurScale);
+        t_win_outline.setScale(textCurScale);
+
+        bar_win.setPosition(barCurX, 360);
+        t_win.setPosition(textCurX-7, 360-14);
+        t_win_outline.setPosition(textCurX+2, 360-4);
+
+        bar_win.draw(window);
+        t_win_outline.draw(window);
+        t_win.draw(window);
+
+        if(missionEndTimer.getElapsedTime().asMilliseconds() >= 17000)
+        {
+            if(fadeout_alpha < 255)
+            {
+                fadeout_alpha += float(250) / fps;
+            }
+
+            if(fadeout_alpha >= 255)
+            {
+                fadeout_alpha = 255;
+            }
+
+            fadeout_box.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+            fadeout_box.setFillColor(sf::Color(0,0,0,fadeout_alpha));
+            window.draw(fadeout_box);
+        }
+    }
+
+    window.setView(lastView);
 }
 void MissionController::FinishLastCutscene()
 {

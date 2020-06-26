@@ -7,6 +7,7 @@
 #include "Background.h"
 #include "Camera.h"
 #include "../Config.h"
+#include "../Graphics/PText.h"
 #include <string>
 #include <thread>
 
@@ -25,10 +26,35 @@ class V4Core;
 class MissionController
 {
     public:
+    int qualitySetting=1, resSetting=1;
+
     Background test_bg;
     Rhythm rhythm;
     bool isInitialized=false;
     bool isFinishedLoading=false;
+
+    sf::RectangleShape fade_box;
+    float fade_alpha = 255;
+
+    sf::RectangleShape fadeout_box;
+    float fadeout_alpha = 0;
+
+    sf::Clock missionEndTimer;
+    bool playJingle = false;
+
+    sf::SoundBuffer sb_win_jingle;
+    sf::SoundBuffer sb_lose_jingle;
+    sf::Sound s_jingle;
+
+    sf::SoundBuffer sb_cheer1, sb_cheer2, sb_cheer3;
+    sf::Sound s_cheer;
+    bool playCheer[3];
+
+    PSprite bar_win;
+    PSprite bar_lose;
+
+    PText t_win,t_win_outline;
+    PText t_lose,t_lose_outline;
 
     sf::Time startTime;
     sf::Clock missionTimer;
@@ -41,6 +67,7 @@ class MissionController
 
     PSprite s_proj;
     sf::Font f_font;
+    sf::Font f_moji;
     /// Things for the cutscenes
         std::vector<sf::Text> t_cutscene_text;
         int startAlpha;
@@ -71,6 +98,11 @@ class MissionController
     float floorY=200;
 
     float army_X = 800;
+    float army_X_dest = 800;
+
+    float prevTime = 0;
+    sf::Clock walkClock;
+    bool startWalking = false;
 
     struct DamageCounter
     {
@@ -101,8 +133,17 @@ class MissionController
     std::vector<DroppedItem> droppedItems;
 
     bool missionEnd = false;
+    float textCurX = -1280;
+    float barCurX = 1920;
+    float textDestX = 640;
+    float barDestX = 640;
+    float textCurScale = 1;
+    float textDestScale = 1;
+    bool textBounce = false;
 
-    void addDmgCounter(int type, int damage, float baseX, float baseY);
+    float Smoothstep(float time);
+    float Clamp(float x, float lowerlimit, float upperlimit);
+    void addDmgCounter(int type, int damage, float baseX, float baseY, int q, int r);
     void addItemsCounter(int id, float baseX, float baseY);
 
     void StartCutscene(const std::wstring& text,bool isBlackScreen,int TimeToShow);
