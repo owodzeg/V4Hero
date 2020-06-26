@@ -29,45 +29,75 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
     Scene::Initialise(thisConfigs,keymap,parent);
     parentMenu = curParentMenu;
 
+    int quality = thisConfigs->GetInt("textureQuality");
+
+    switch(quality)
+    {
+        case 0: ///low
+        {
+            ratioX = thisConfigs->GetInt("resX") / float(640);
+            ratioY = thisConfigs->GetInt("resY") / float(360);
+            break;
+        }
+
+        case 1: ///med
+        {
+            ratioX = thisConfigs->GetInt("resX") / float(1280);
+            ratioY = thisConfigs->GetInt("resY") / float(720);
+            break;
+        }
+
+        case 2: ///high
+        {
+            ratioX = thisConfigs->GetInt("resX") / float(1920);
+            ratioY = thisConfigs->GetInt("resY") / float(1080);
+            break;
+        }
+
+        case 3: ///ultra
+        {
+            ratioX = thisConfigs->GetInt("resX") / float(3840);
+            ratioY = thisConfigs->GetInt("resY") / float(2160);
+            break;
+        }
+    }
+
+    resRatioX = thisConfigs->GetInt("resX") / float(1920);
+    resRatioY = thisConfigs->GetInt("resY") / float(1080);
+
     thisConfig->debugOut->DebugMessage("Altar menu image loaded: menurect.png");
 
     PSprite ps_temp;
-    ps_temp.loadFromFile("resources/graphics/ui/menurect.png",1);
-    ps_temp.setRepeated(false);
-    ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
+    ps_temp.loadFromFile("resources/graphics/ui/menurect.png",quality,2);
     ps_temp.setOrigin(ps_temp.t.getSize().x,0);
-    ps_temp.setColor(sf::Color(255,255,255,255));
-    ps_temp.setPosition(0,0);
-    ps_temp.DoAutoScale = false;
 
     sf::Vector2f tmpp;
-    tmpp.x = (thisConfig->GetInt("resX")*1920.0)/1920.0 - (100*thisConfig->GetInt("resX"))/1920.0;//(thisConfig->GetInt("resX")*1920.0)/1920.0-1200;
-    tmpp.y = (thisConfig->GetInt("resY")*400.0)/1080.0;//(thisConfig->GetInt("resY")*400.0)/1080.0;
+    tmpp.x = 1880.0;
+    tmpp.y = 110.0;
 
     s_menu_bkg = ps_temp;
     p_menu_bkg = tmpp;
-    s_menu_bkg.scaleX=0.2f;
-    s_menu_bkg.scaleY=0.15f;
+    s_menu_bkg.scaleX=(780.0*resRatioX)/s_menu_bkg.getGlobalBounds().width/ratioX;
+    s_menu_bkg.scaleY=(160.0*resRatioY)/s_menu_bkg.getGlobalBounds().height/ratioY;
 
 
     sf::Vector2f tmpp2;
-    tmpp2.x = (thisConfig->GetInt("resX")*1920.0)/1920.0 - (100*thisConfig->GetInt("resX"))/1920.0;//(thisConfig->GetInt("resX")*1920.0)/1920.0-1200;
-    tmpp2.y = (thisConfig->GetInt("resY")*200.0)/1080.0;//(thisConfig->GetInt("resY")*400.0)/1080.0;
+    tmpp2.x = 1880.0;
+    tmpp2.y = 390.0;
 
     s_titlemenu_bkg = ps_temp;
     p_titlemenu_bkg = tmpp2;
-    s_titlemenu_bkg.scaleX=0.2f;
-    s_titlemenu_bkg.scaleY=0.06f;
-    if(thisConfig->GetInt("resX")>1920){
-        numItemColumns=6;
-    } else if(thisConfig->GetInt("resX")>1600){
-        numItemColumns=5;
-    }
+    s_titlemenu_bkg.scaleX=(780.0*resRatioX)/s_menu_bkg.getGlobalBounds().width/ratioX;
+    s_titlemenu_bkg.scaleY=(400.0*resRatioY)/s_menu_bkg.getGlobalBounds().height/ratioY;
+    numItemColumns=5;
 
     ShowCategory();
-    mm_inventory_background.setSize(sf::Vector2f(p_titlemenu_bkg.x - (s_titlemenu_bkg.t.getSize().x*0.2) - (thisConfig->GetInt("resX")*150)/1920.0,(p_menu_bkg.y+(s_menu_bkg.t.getSize().y*0.15)) - p_titlemenu_bkg.y));
+
+    int inv_bg_x = 920+40;
+
+    mm_inventory_background.setSize(sf::Vector2f(inv_bg_x*resRatioX, 675*resRatioY));
     mm_inventory_background.setFillColor(sf::Color(4,0,90));
-    float singleTileWidth = mm_inventory_background.getSize().x/numItemColumns;
+    float singleTileWidth = ((inv_bg_x-(40*resRatioX))*resRatioX)/numItemColumns;
     float singleTileHeight = mm_inventory_background.getSize().y/5;//(thisConfig->GetInt("resX")*150)/1920.0;
     cout<<singleTileWidth<<" "<<singleTileHeight<<'\n';
     mm_highlighted_tile.setSize(sf::Vector2f(singleTileWidth,singleTileHeight));
@@ -79,65 +109,25 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
     mm_icon_example_tile.setOutlineThickness(2);
 
     ///             ####   MASK ITEM ICON
-    ps_temp.loadFromFile("resources/graphics/item/mask_item.png",1);
-    ps_temp.setRepeated(false);
-    ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
-    ps_temp.setOrigin(0,0);
-    ps_temp.setColor(sf::Color(255,255,255,255));
-    ps_temp.setPosition(0,0);
-    ps_temp.DoAutoScale = false;
-    tmpp.x = (thisConfig->GetInt("resX")*75.0)/1920.0;//(thisConfig->GetInt("resX")*1920.0)/1920.0-1200;
-    tmpp.y = (thisConfig->GetInt("resY")*125.0)/1080.0;//(thisConfig->GetInt("resY")*400.0)/1080.0;
-    mask_icon = ps_temp;
-    p_mask_icon = tmpp;
-    mask_icon.scaleX=singleTileWidth*0.31f/214;
-    mask_icon.scaleY=singleTileHeight*0.22f/110;
+    mask_icon.loadFromFile("resources/graphics/item/mask_item.png",quality,2);
+    mask_icon.scaleX=singleTileWidth/mask_icon.getGlobalBounds().width/ratioX;
+    mask_icon.scaleY=singleTileHeight/mask_icon.getGlobalBounds().height/ratioY;
 
 
     ///             ####   SPEAR ITEM ICON
-    ps_temp.loadFromFile("resources/graphics/item/spear_item.png",1);
-    ps_temp.setRepeated(false);
-    ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
-    ps_temp.setOrigin(0,0);
-    ps_temp.setColor(sf::Color(255,255,255,255));
-    ps_temp.setPosition(0,0);
-    ps_temp.DoAutoScale = false;
-    tmpp.x = (thisConfig->GetInt("resX")*75.0)/1920.0;//(thisConfig->GetInt("resX")*1920.0)/1920.0-1200;
-    tmpp.y = (thisConfig->GetInt("resY")*125.0)/1080.0;//(thisConfig->GetInt("resY")*400.0)/1080.0;
-    spear_icon = ps_temp;
-    p_spear_icon = tmpp;
-    spear_icon.scaleX=singleTileWidth*0.31f/214;
-    spear_icon.scaleY=singleTileHeight*0.22f/110;
+    spear_icon.loadFromFile("resources/graphics/item/spear_item.png",quality,2);
+    spear_icon.scaleX=singleTileWidth/spear_icon.getGlobalBounds().width/ratioX;
+    spear_icon.scaleY=singleTileHeight/spear_icon.getGlobalBounds().height/ratioY;
 
     ///             ####   MISC ITEM ICON
-    ps_temp.loadFromFile("resources/graphics/item/misc_icon.png",1);
-    ps_temp.setRepeated(false);
-    ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
-    ps_temp.setOrigin(0,0);
-    ps_temp.setColor(sf::Color(255,255,255,255));
-    ps_temp.setPosition(0,0);
-    ps_temp.DoAutoScale = false;
-    tmpp.x = (thisConfig->GetInt("resX")*75.0)/1920.0;//(thisConfig->GetInt("resX")*1920.0)/1920.0-1200;
-    tmpp.y = (thisConfig->GetInt("resY")*125.0)/1080.0;//(thisConfig->GetInt("resY")*400.0)/1080.0;
-    misc_icon = ps_temp;
-    p_misc_icon = tmpp;
-    misc_icon.scaleX=singleTileWidth*0.31f/214;
-    misc_icon.scaleY=singleTileHeight*0.22f/110;
+    misc_icon.loadFromFile("resources/graphics/item/misc_icon.png",quality,2);
+    misc_icon.scaleX=singleTileWidth/misc_icon.getGlobalBounds().width/ratioX;
+    misc_icon.scaleY=singleTileHeight/misc_icon.getGlobalBounds().height/ratioY;
 
     ///             ####   ARMOUR ITEM ICON
-    ps_temp.loadFromFile("resources/graphics/item/armour_icon.png",1);
-    ps_temp.setRepeated(false);
-    ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
-    ps_temp.setOrigin(0,0);
-    ps_temp.setColor(sf::Color(255,255,255,255));
-    ps_temp.setPosition(0,0);
-    ps_temp.DoAutoScale = false;
-    tmpp.x = (thisConfig->GetInt("resX")*75.0)/1920.0;//(thisConfig->GetInt("resX")*1920.0)/1920.0-1200;
-    tmpp.y = (thisConfig->GetInt("resY")*125.0)/1080.0;//(thisConfig->GetInt("resY")*400.0)/1080.0;
-    armour_icon = ps_temp;
-    p_armour_icon = tmpp;
-    armour_icon.scaleX=singleTileWidth*0.31f/214;
-    armour_icon.scaleY=singleTileHeight*0.22f/110;
+    armour_icon.loadFromFile("resources/graphics/item/armour_icon.png",quality,2);
+    armour_icon.scaleX=singleTileWidth/armour_icon.getGlobalBounds().width/ratioX;
+    armour_icon.scaleY=singleTileHeight/armour_icon.getGlobalBounds().height/ratioY;
 
     /// initialise text
     /*
@@ -165,12 +155,13 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
     //}
     t_itemcategory.setOrigin(t_itemcategory.getGlobalBounds().width/2,t_itemcategory.getGlobalBounds().height/2);
 
+    float menuSize = ((mm_inventory_background.getPosition().x/resRatioX)+(mm_inventory_background.getSize().x/resRatioX));
 
     /// because the description needs to be able to go over multiple lines, we have to split it into a series of lines
     std::vector<std::wstring> wordsinDesc = Func::Split(thisConfig->strRepo.GetUnicodeString(L"altar_item_description"),' ');
     sf::String oldTotalString;
     sf::String currentTotalString;
-    int maxWidth = s_titlemenu_bkg.t.getSize().x * 0.18;
+    float maxWidth = (1920-menuSize-140)*resRatioX;
     /// we split it into words, then go word by word testing the width of the string
     for (int i=0;i<wordsinDesc.size();i++){
         std::wstring currentWord = wordsinDesc[i];
@@ -243,12 +234,13 @@ void AltarMenu::UpdateAltarDescriptions(){
         }
         t_itemcategory.setOrigin(t_itemcategory.getGlobalBounds().width/2,t_itemcategory.getGlobalBounds().height/2);
 
+        float menuSize = ((mm_inventory_background.getPosition().x/resRatioX)+(mm_inventory_background.getSize().x/resRatioX));
 
         /// because the description needs to be able to go over multiple lines, we have to split it into a series of lines
         std::vector<std::wstring> wordsinDesc = Func::Split(thisConfig->strRepo.GetUnicodeString(starting_item->item_description),' ');
         sf::String oldTotalString;
         sf::String currentTotalString;
-        int maxWidth = s_titlemenu_bkg.t.getSize().x * 0.18;
+        float maxWidth = (1920-menuSize-140)*resRatioX;
         /// we split it into words, then go word by word testing the width of the string
         t_itemdescription.clear();
         for (int i=0;i<wordsinDesc.size();i++){
@@ -291,12 +283,13 @@ void AltarMenu::UpdateAltarDescriptions(){
         t_itemcategory.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_category_nothing")));
         t_itemcategory.setOrigin(t_itemcategory.getGlobalBounds().width/2,t_itemcategory.getGlobalBounds().height/2);
 
+        float menuSize = ((mm_inventory_background.getPosition().x/resRatioX)+(mm_inventory_background.getSize().x/resRatioX));
 
         /// because the description needs to be able to go over multiple lines, we have to split it into a series of lines
         std::vector<std::wstring> wordsinDesc = Func::Split(thisConfig->strRepo.GetUnicodeString(L"desc_none"),' ');
         sf::String oldTotalString;
         sf::String currentTotalString;
-        int maxWidth = s_titlemenu_bkg.t.getSize().x * 0.18;
+        float maxWidth = (1920-menuSize-140)*resRatioX;
         /// we split it into words, then go word by word testing the width of the string
         t_itemdescription.clear();
         for (int i=0;i<wordsinDesc.size();i++){
@@ -422,61 +415,72 @@ void AltarMenu::Update(sf::RenderWindow &window, float fps)
 
 //-(s_titleenu_bkg.t.getSize().x*0.2)/2
         /// draw altar menu text
-        float smallOffset = (thisConfig->GetInt("resX")*100)/1920.0;
-        mm_inventory_background.setPosition(smallOffset-10,p_titlemenu_bkg.y-10);
+        float smallOffset = 100;
+        mm_inventory_background.setPosition(90*resRatioX,125*resRatioY);
         window.draw(mm_inventory_background);
-        float smallTextOffset = 0;
-        t_titlemenu.setPosition(p_titlemenu_bkg.x+smallTextOffset-(s_titlemenu_bkg.t.getSize().x*0.2)/2,p_titlemenu_bkg.y+(s_titlemenu_bkg.t.getSize().y*0.06)*1/3);
-        window.draw(t_titlemenu);
-        int row_start = currentRow;
-        int row_end = row_start+4;
-        for (int y=0;y<numItemRows;y++){
-            for (int x=0;x<numItemColumns;x++){
-                int currentItemId = x+y*numItemColumns;
-                if (currentItemId<v4core->savereader.invdata.items.size() && (currentItemId/numItemColumns)>=row_start && (currentItemId/numItemColumns)<=row_end){
-                    Item* starting_item = v4core->savereader.invdata.GetItemByInvID(currentItemId).item;
-                    switch (starting_item->category_id){
 
-                    case 1:
-                        spear_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
-                        spear_icon.draw(window);
-                        break;
-                    case 2:
-                        mask_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
-                        mask_icon.draw(window);
-                        break;
-                    case 3:
-                        armour_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
-                        armour_icon.draw(window);
-                        break;
-                    case 0:
-                    default:
-                        misc_icon.setPosition(smallOffset+mm_highlighted_tile.getSize().x*x,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*y-mm_highlighted_tile.getSize().y*currentRow);
-                        misc_icon.draw(window);
-                        break;
-                    }
-                }
-            }
-        }
+        float menuSize = ((mm_inventory_background.getPosition().x/resRatioX)+(mm_inventory_background.getSize().x/resRatioX));
+
 
         s_menu_bkg.setPosition(p_menu_bkg.x,p_menu_bkg.y);
         s_menu_bkg.draw(window);
         s_titlemenu_bkg.setPosition(p_titlemenu_bkg.x,p_titlemenu_bkg.y);
         s_titlemenu_bkg.draw(window);
 
-        mm_highlighted_tile.setPosition(smallOffset+mm_highlighted_tile.getSize().x*inventoryGridXPos,p_titlemenu_bkg.y+mm_highlighted_tile.getSize().y*inventoryGridYPos-mm_highlighted_tile.getSize().y*currentRow);
+        float smallTextOffset = 0;
+        t_titlemenu.setPosition((menuSize + ((1920 - menuSize) / 2)) * resRatioX,mm_inventory_background.getPosition().y+20);
+        window.draw(t_titlemenu);
+
+        int row_start = currentRow;
+        int row_end = row_start+4;
+        for (int y=0; y<numItemRows; y++)
+        {
+            for (int x=0; x<numItemColumns; x++)
+            {
+                int currentItemId = x+y*numItemColumns;
+                if (currentItemId<v4core->savereader.invdata.items.size() && (currentItemId/numItemColumns)>=row_start && (currentItemId/numItemColumns)<=row_end)
+                {
+                    Item* starting_item = v4core->savereader.invdata.GetItemByInvID(currentItemId).item;
+                    float xpos = 10+(mm_inventory_background.getPosition().x/resRatioX)+(mm_highlighted_tile.getSize().x/resRatioX+10)*x;
+                    float ypos = 10+(mm_inventory_background.getPosition().y/resRatioY)+(mm_highlighted_tile.getSize().y/resRatioY+10)*y-(mm_highlighted_tile.getSize().y/resRatioY)*currentRow;
+
+                    switch (starting_item->category_id)
+                    {
+                        case 1:
+                            spear_icon.setPosition(xpos,ypos);
+                            spear_icon.draw(window);
+                            break;
+                        case 2:
+                            mask_icon.setPosition(xpos,ypos);
+                            mask_icon.draw(window);
+                            break;
+                        case 3:
+                            armour_icon.setPosition(xpos,ypos);
+                            armour_icon.draw(window);
+                            break;
+                        case 0:
+                        default:
+                            misc_icon.setPosition(xpos,ypos);
+                            misc_icon.draw(window);
+                            break;
+                    }
+                }
+            }
+        }
+
+        mm_highlighted_tile.setPosition((10+(mm_inventory_background.getPosition().x/resRatioX)+(mm_highlighted_tile.getSize().x/resRatioX+10)*inventoryGridXPos)*resRatioX,(10+(mm_inventory_background.getPosition().y/resRatioY)+(mm_highlighted_tile.getSize().y/resRatioY+10)*inventoryGridYPos-(mm_highlighted_tile.getSize().y/resRatioY)*currentRow)*resRatioY);
         window.draw(mm_highlighted_tile);
 
-        t_itemtitle.setPosition(p_titlemenu_bkg.x+smallTextOffset-(s_menu_bkg.t.getSize().x*0.2)/2,p_menu_bkg.y+(s_menu_bkg.t.getSize().y*0.15)*1/8);
+        t_itemtitle.setPosition((menuSize + ((1920 - menuSize) / 2)) * resRatioX, 430 * resRatioY);
         window.draw(t_itemtitle);
 
-        t_itemcategory.setPosition(p_titlemenu_bkg.x+smallTextOffset-(s_menu_bkg.t.getSize().x*0.2)/2,p_menu_bkg.y+((s_menu_bkg.t.getSize().y*0.15)*1/8)+42);
+        t_itemcategory.setPosition((menuSize + ((1920 - menuSize) / 2)) * resRatioX, 470 * resRatioY);
         window.draw(t_itemcategory);
 
         for (int i=0;i<t_itemdescription.size();i++){
             sf::Text currentLine = t_itemdescription[i];
 
-            currentLine.setPosition(p_menu_bkg.x+smallTextOffset-(s_menu_bkg.t.getSize().x*0.2)/2,p_menu_bkg.y+((s_menu_bkg.t.getSize().y*0.15)*1/8)+74 + 22*i);
+            currentLine.setPosition((menuSize + ((1920 - menuSize) / 2)) * resRatioX, (520 + 22*i) * resRatioY);
 
             window.draw(currentLine);
         }

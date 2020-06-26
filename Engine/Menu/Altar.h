@@ -8,6 +8,8 @@ class PatapolisMenu;
 class AltarMenu : public Menu
 {
     public:
+        float ratioX, ratioY;
+        float resRatioX, resRatioY;
 
         sf::RectangleShape mm_inventory_background;
 
