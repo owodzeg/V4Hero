@@ -221,6 +221,7 @@ void ObeliskMenu::EventFired(sf::Event event)
                 {
                     parentMenu->barracks_menu.Show();
                     parentMenu->barracks_menu.isActive = true;
+                    parentMenu->barracks_menu.OpenBarracksMenu();
                 }
             }
             else if(event.key.code == sf::Keyboard::Q)
