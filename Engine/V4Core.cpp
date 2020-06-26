@@ -10,13 +10,47 @@ using namespace std;
 
 V4Core::V4Core()
 {
+    ofstream dbg("V4Hero-"+hero_version+"-latest.log", ios::trunc);
+    dbg.close();
+
+    rpc_details = "Running Patafour "+hero_version;
+    SaveToDebugLog(rpc_details);
+
     const unsigned int maxSize = sf::Texture::getMaximumSize();
     cout << "[Debug] Max texture size: " << maxSize << endl;
+    SaveToDebugLog("[GPU] Max texture size: "+to_string(maxSize));
 
     sf::RenderTexture rtx;
     cout << "[Debug] Maximum antialiasing level: " << rtx.getMaximumAntialiasingLevel() << endl;
+    SaveToDebugLog("[GPU] Maximum antialiasing level: "+to_string(rtx.getMaximumAntialiasingLevel()));
 
-    rpc_details = "Running Patafour "+hero_version;
+    system("systeminfo > syslog.txt");
+    ifstream sl("syslog.txt");
+    string buff;
+
+    while(getline(sl, buff))
+    {
+        if(buff.find("OS Name:") != std::string::npos)
+        SaveToDebugLog(buff);
+        else if(buff.find("OS Version:") != std::string::npos)
+        SaveToDebugLog(buff);
+        else if(buff.find("System Manufacturer:") != std::string::npos)
+        SaveToDebugLog(buff);
+        else if(buff.find("System Model:") != std::string::npos)
+        SaveToDebugLog(buff);
+        else if(buff.find("System Type:") != std::string::npos)
+        SaveToDebugLog(buff);
+        else if(buff.find("Processor(s):") != std::string::npos)
+        SaveToDebugLog(buff);
+        else if((buff.find("Family") != std::string::npos) && (buff.find("Model") != std::string::npos) && (buff.find("Stepping") != std::string::npos))
+        SaveToDebugLog(buff);
+        else if(buff.find("Total Physical Memory:") != std::string::npos)
+        SaveToDebugLog(buff);
+    }
+
+    sl.close();
+
+    system("del syslog.txt");
 
     auto result = discord::Core::Create(712761245752623226, DiscordCreateFlags_Default, &core);
     state.core.reset(core);
@@ -117,6 +151,14 @@ V4Core::V4Core()
     {
         newGameMenu.Hide();
     }
+}
+
+void V4Core::SaveToDebugLog(string data)
+{
+    ofstream dbg("V4Hero-"+hero_version+"-latest.log", ios::app);
+    dbg << data;
+    dbg << "\r\n";
+    dbg.close();
 }
 
 void V4Core::ChangeRichPresence(string title, string bg_image, string sm_image)
@@ -277,6 +319,10 @@ void V4Core::Init()
 
     window.setFramerateLimit(config.GetInt("framerateLimit"));
     window.setKeyRepeatEnabled(false);
+
+    framerateLimit = config.GetInt("framerateLimit");
+    if(framerateLimit == 0)
+    framerateLimit = 1000;
 
     while (window.isOpen())
     {
@@ -469,7 +515,24 @@ void V4Core::Init()
         }
 
         fps = float(1000000) / fpsclock.getElapsedTime().asMicroseconds();
+        float rawFps = fps;
+        frameTimes.push_back(fps);
         fpsclock.restart();
+
+        auto n = frameTimes.size();
+        float average = 0.0f;
+        if(n != 0)
+        {
+             average = accumulate(frameTimes.begin(), frameTimes.end(), 0.0) / n;
+        }
+
+        if(fps <= 1)
+        fps = average;
+        else
+        fps = rawFps;
+
+        while(frameTimes.size() > framerateLimit)
+        frameTimes.erase(frameTimes.begin());
 
         //cout << fps << endl;
 

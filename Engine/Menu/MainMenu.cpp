@@ -323,6 +323,36 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
             g_x[i] += abs(g_dest[i] - g_x[i]) / 100 / fps * 240;
         }
 
+
+        ///dont make it go off bounds
+        if(g_x[0] > 2)
+        g_x[0] = 2;
+
+        if(g_x[0] < -2)
+        g_x[0] = -2;
+
+
+        if(g_x[1] > 6)
+        g_x[1] = 6;
+
+        if(g_x[1] < -6)
+        g_x[1] = -6;
+
+
+        if(g_x[2] > 14)
+        g_x[2] = 14;
+
+        if(g_x[2] < -14)
+        g_x[2] = -14;
+
+
+        if(g_x[3] > 30)
+        g_x[3] = 30;
+
+        if(g_x[3] < -30)
+        g_x[3] = -30;
+
+
         grass_1.setPosition(g_x[0], 630);
         grass_2.setPosition(g_x[1], 696);
         grass_3.setPosition(g_x[2], 724);
@@ -395,8 +425,6 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
                 break;
             }
         }
-
-        cout << "Fire for totem " << totem_sel << " x: " << totem[totem_sel].getGlobalBounds().width/2 << " y: " << 720 - totem[totem_sel].getGlobalBounds().height << endl;
 
         fire_1.setPosition(totem[totem_sel].getPosition().x + fire_x, fire_y + fire_shift);
         fire_2.setPosition(totem[totem_sel].getPosition().x + fire_x, fire_y + fire_shift);
