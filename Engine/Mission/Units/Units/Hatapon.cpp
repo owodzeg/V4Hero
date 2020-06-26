@@ -28,7 +28,7 @@ void Hatapon::OnCollide(CollidableObject* otherObject)
     /// as an incomplete function to be overridden by child classes.
 }
 
-void Hatapon::doRhythm(std::string current_song, std::string current_drum)
+void Hatapon::doRhythm(std::string current_song, std::string current_drum, int combo)
 {
     if((current_song != "") && ((current_song != "dondon") && (current_song != "ponpata")))
     {

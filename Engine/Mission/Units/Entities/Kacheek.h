@@ -11,6 +11,7 @@ class Kacheek : public Entity
 {
     public:
     bool run = false;
+    float walk_time = 2;
 
     Kacheek();
     void LoadConfig(Config *thisConfigs);

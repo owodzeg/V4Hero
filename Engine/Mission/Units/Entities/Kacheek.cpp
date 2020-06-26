@@ -20,7 +20,7 @@ void Kacheek::Draw(sf::RenderWindow& window)
     {
         AnimatedObject::moveGlobalPosition(sf::Vector2f(float(140) / fps, 0));
 
-        if(walk_timer.getElapsedTime().asSeconds() >= 2)
+        if(walk_timer.getElapsedTime().asSeconds() >= walk_time)
         {
             AnimatedObject::setAnimationSegment("idle");
             run = false;
@@ -40,6 +40,7 @@ void Kacheek::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
 
     run = true;
     walk_timer.restart();
+    walk_time = 1.5 + (rand() % 2500) / 1000;
 
     /// don't start the animation again if kacheek is still running
     if(AnimatedObject::getAnimationSegment() != "walk")

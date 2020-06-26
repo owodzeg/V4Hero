@@ -578,7 +578,7 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
     ///SUPER TEMPORARY WORKAROUND FOR FEVER WORM, add one time animations that transfer to another immediately
     /// ////////////////////////////////////////////////////////////////////////////////////////////////// ///
 
-    if(getAnimationSegment() == "transform")
+    /*if(getAnimationSegment() == "transform")
     {
         if(cur_pos == anim_end)
         {
@@ -586,7 +586,7 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
             setLoop(true);
             worm_fever = true;
         }
-    }
+    }*/
 
     ///calculate current position on the spritesheet
     int curFrame = floor(getAnimationPos() * animation_framerate);

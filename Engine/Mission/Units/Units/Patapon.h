@@ -27,6 +27,8 @@ class Patapon : public PlayableUnit
     bool focus = false;
     bool getback = false;
 
+    bool isFever = false;
+
     enum Actions
     {
         IDLE = 0,
@@ -41,7 +43,7 @@ class Patapon : public PlayableUnit
     void startAttack();
     void LoadConfig(Config *thisConfigs);
     bool doAttack();
-    void doRhythm(std::string current_song, std::string current_drum);
+    void doRhythm(std::string current_song="", std::string current_drum="", int combo=0);
     void doMissionEnd();
     void Draw(sf::RenderWindow& window);
 };

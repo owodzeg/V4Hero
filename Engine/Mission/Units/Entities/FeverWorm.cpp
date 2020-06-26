@@ -43,23 +43,99 @@ void FeverWorm::LoadConfig(Config *thisConfigs)
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\fever_worm.p4a");
 }
 
-void FeverWorm::Draw(sf::RenderWindow& window)
+void FeverWorm::doRhythm(std::string current_song, std::string current_drum, int combo, int realcombo, bool advanced_prefever, float beatBounce, float satisfaction)
 {
-
-    if(worm_fever)
+    if(combo >= 11)
     {
-        global_x = -350;
-        next_x = 30;
-        speed = 450;
-
-        worm_fever = false;
+        if(getAnimationSegment() == "fever")
+        {
+            scaleX = 1+beatBounce;
+            scaleY = 1+beatBounce;
+        }
     }
 
-    if(global_x > next_x)
-    global_x -= speed / fps;
+    f_combo = realcombo;
 
-    if(global_x < next_x)
-    global_x += speed / fps;
+    if(f_combo != old_combo)
+    {
+        old_combo = f_combo;
+
+        if(realcombo < 2)
+        {
+            global_x = -400;
+            next_x = -400;
+            speed = 120;
+        }
+
+        if(realcombo == 2)
+        {
+            next_x = -70;
+            speed = 400;
+        }
+
+        if((realcombo > 2) && (combo < 11))
+        {
+            if(advanced_prefever)
+            next_x = -50 + (satisfaction / 5.5) + ((realcombo - 2) * 8);
+            else
+            next_x = -70 + ((realcombo - 2) * 8);
+
+            speed = 40;
+        }
+
+        if(combo < 11)
+        {
+            fever_achieved = false;
+
+            if(advanced_prefever)
+            {
+                setAnimationSegment("fast");
+            }
+            else
+            {
+                setAnimationSegment("slow");
+            }
+        }
+
+        if(combo == 11)
+        {
+            if(!fever_achieved)
+            {
+                worm_fever = true;
+                fever_achieved = true;
+            }
+
+            setAnimationSegment("transform");
+            setLoop(false);
+        }
+
+        if(combo >= 12)
+        {
+            setAnimationSegment("fever");
+            setLoop(true);
+        }
+    }
+}
+
+void FeverWorm::Draw(sf::RenderWindow& window)
+{
+    if(AnimatedObject::getAnimationSegment() != "transform")
+    {
+        if(worm_fever)
+        {
+            global_x = -350;
+            next_x = 30;
+            speed = 450;
+
+            worm_fever = false;
+        }
+
+        if(global_x > next_x)
+        global_x -= speed / fps;
+
+        if(global_x < next_x)
+        global_x += speed / fps;
+    }
 
     auto view = window.getView();
     window.setView(window.getDefaultView());
@@ -67,9 +143,9 @@ void FeverWorm::Draw(sf::RenderWindow& window)
     /// call the parent function to draw the animations
     AnimatedObject::Draw(window);
 
-    if((AnimatedObject::getAnimationSegment() != "fever") && (AnimatedObject::getAnimationSegment() != "transform") && ((combo >= 2) && (combo <= 9)))
+    if((AnimatedObject::getAnimationSegment() != "fever") && (AnimatedObject::getAnimationSegment() != "transform") && ((f_combo >= 2) && (f_combo <= 9)))
     {
-        number.setTexture(tex_number[combo]);
+        number.setTexture(tex_number[f_combo]);
         number.setOrigin(number.getGlobalBounds().width/2,number.getGlobalBounds().height/2);
         number.setPosition(80,AnimatedObject::getGlobalPosition().y+70);
 
@@ -88,6 +164,14 @@ void FeverWorm::Draw(sf::RenderWindow& window)
         let_b.draw(window);
         let_o2.draw(window);
         let_exc.draw(window);
+    }
+
+    if(AnimatedObject::getAnimationSegment() == "transform")
+    {
+        if(AnimatedObject::getAnimationPos() >= 0.30)
+        {
+            global_x -= 1000.0 / fps;
+        }
     }
 
     window.setView(view);

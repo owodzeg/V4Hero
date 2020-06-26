@@ -20,10 +20,14 @@ class FeverWorm : public Entity
     float next_x = -350;
     float speed = 120;
 
-    int combo = 0;
+    int f_combo = 0;
+    int old_combo = 0;
+
+    bool fever_achieved = false;
 
     FeverWorm();
     void LoadConfig(Config *thisConfigs);
+    void doRhythm(std::string current_song, std::string current_drum, int combo, int realcombo, bool advanced_prefever, float beatBounce, float satisfaction);
     void Draw(sf::RenderWindow& window);
 };
 
