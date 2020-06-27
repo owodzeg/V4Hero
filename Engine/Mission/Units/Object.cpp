@@ -43,6 +43,8 @@ void Object::Load(string filename, int xpos, int ypos)
         x = xpos;
         y = ypos;
 
+        exported = false;
+
         //cout << "Object loaded successfully" << endl;
     }
 }
@@ -57,6 +59,8 @@ void Object::Load(sf::Texture& texture, int xpos, int ypos)
 
     x = xpos;
     y = ypos;
+
+    exported = false;
 
     //cout << "Object loaded successfully" << endl;
 }
@@ -74,6 +78,8 @@ void Object::LoadFromMemory(std::string mem, int xpos, int ypos)
 
     x = xpos;
     y = ypos;
+
+    exported = false;
 
     //cout << "Object loaded successfully" << endl;
 }
@@ -246,5 +252,19 @@ void Object::Draw(sf::RenderWindow& window, int x1, int y1, int x2, int y2, int 
         s_obj.setPosition(x+g_x+gl_x,y+g_y+gl_y);
         s_obj.setRotation(r);
         s_obj.draw(window);
+
+
+        if((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
+        {
+            if(!exported)
+            {
+                sf::Image img;
+                img = s_obj.t.copyToImage();
+                int rrr = rand() % 100000000;
+                img.saveToFile("texDump/obj_"+std::to_string(rrr)+".png");
+
+                exported = true;
+            }
+        }
     }
 }

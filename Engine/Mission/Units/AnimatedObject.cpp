@@ -410,6 +410,7 @@ void AnimatedObject::setAnimationSegment(std::string new_segment_name)
         objects[0].tex_obj.loadFromImage(animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet);
         objects[0].tex_obj.setSmooth(true);
         objects[0].s_obj.setTexture(objects[0].tex_obj);
+        objects[0].exported = false;
     }
 
     if(animation_begin.size() > 1)
@@ -440,6 +441,7 @@ void AnimatedObject::setAnimationSegment(std::string new_segment_name, bool forc
         objects[0].tex_obj.loadFromImage(animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet);
         objects[0].tex_obj.setSmooth(true);
         objects[0].s_obj.setTexture(objects[0].tex_obj);
+        objects[0].exported = false;
     }
 
     if(animation_begin.size() > 1)

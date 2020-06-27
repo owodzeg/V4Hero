@@ -1,5 +1,6 @@
 #include "PSprite.h"
 #include <iostream>
+#include <string>
 
 PSprite::PSprite()
 {
@@ -126,6 +127,8 @@ void PSprite::setTexture(sf::Texture& texture)
 {
     t = texture;
     s.setTexture(t,true);
+
+    exported = false;
 }
 
 void PSprite::setSprite(sf::Sprite& sprite)
@@ -261,6 +264,19 @@ void PSprite::draw(sf::RenderWindow& window)
     s.setPosition(lx*resRatioX, ly*resRatioY);
     s.setRotation(angle*(180/3.14159265358));
     window.draw(s);
+
+    if((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
+    {
+        if(!exported)
+        {
+            sf::Image img;
+            img = t.copyToImage();
+            int rrr = rand() % 100000000;
+            img.saveToFile("texDump/"+std::to_string(rrr)+".png");
+
+            exported = true;
+        }
+    }
 }
 
 void PSprite::update(sf::RenderWindow& window)

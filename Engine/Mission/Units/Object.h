@@ -46,6 +46,7 @@ class Object
 
     ///disable drawing object when its out of bounds
     bool disable = true;
+    bool exported = false;
 
     Object();
     Object(std::string mem, int xpos, int ypos, int l, int p);

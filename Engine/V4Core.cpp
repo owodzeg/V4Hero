@@ -8,6 +8,12 @@
 
 using namespace std;
 
+inline bool exists(const std::string& name)
+{
+    struct stat buffer;
+    return (stat (name.c_str(), &buffer) == 0);
+}
+
 V4Core::V4Core()
 {
     ofstream dbg("V4Hero-"+hero_version+"-latest.log", ios::trunc);
@@ -24,51 +30,56 @@ V4Core::V4Core()
     cout << "[Debug] Maximum antialiasing level: " << rtx.getMaximumAntialiasingLevel() << endl;
     SaveToDebugLog("[GPU] Maximum antialiasing level: "+to_string(rtx.getMaximumAntialiasingLevel()));
 
-    system("systeminfo > syslog.txt");
-    ifstream sl("syslog.txt");
-    string buff;
-
-    while(getline(sl, buff))
+    if(!exists("WINE"))
     {
-        if(buff.find("OS Name:") != std::string::npos)
-        SaveToDebugLog(buff);
-        else if(buff.find("OS Version:") != std::string::npos)
-        SaveToDebugLog(buff);
-        else if(buff.find("System Manufacturer:") != std::string::npos)
-        SaveToDebugLog(buff);
-        else if(buff.find("System Model:") != std::string::npos)
-        SaveToDebugLog(buff);
-        else if(buff.find("System Type:") != std::string::npos)
-        SaveToDebugLog(buff);
-        else if(buff.find("Processor(s):") != std::string::npos)
-        SaveToDebugLog(buff);
-        else if((buff.find("Family") != std::string::npos) && (buff.find("Model") != std::string::npos) && (buff.find("Stepping") != std::string::npos))
-        SaveToDebugLog(buff);
-        else if(buff.find("Total Physical Memory:") != std::string::npos)
-        SaveToDebugLog(buff);
+        system("systeminfo > syslog.txt");
+        ifstream sl("syslog.txt");
+        string buff;
+
+        while(getline(sl, buff))
+        {
+            if(buff.find("OS Name:") != std::string::npos)
+            SaveToDebugLog(buff);
+            else if(buff.find("OS Version:") != std::string::npos)
+            SaveToDebugLog(buff);
+            else if(buff.find("System Manufacturer:") != std::string::npos)
+            SaveToDebugLog(buff);
+            else if(buff.find("System Model:") != std::string::npos)
+            SaveToDebugLog(buff);
+            else if(buff.find("System Type:") != std::string::npos)
+            SaveToDebugLog(buff);
+            else if(buff.find("Processor(s):") != std::string::npos)
+            SaveToDebugLog(buff);
+            else if((buff.find("Family") != std::string::npos) && (buff.find("Model") != std::string::npos) && (buff.find("Stepping") != std::string::npos))
+            SaveToDebugLog(buff);
+            else if(buff.find("Total Physical Memory:") != std::string::npos)
+            SaveToDebugLog(buff);
+        }
+
+        sl.close();
+
+        system("del syslog.txt");
     }
 
-    sl.close();
-
-    system("del syslog.txt");
-
-    auto result = discord::Core::Create(712761245752623226, DiscordCreateFlags_Default, &core);
+    auto result = discord::Core::Create(712761245752623226, DiscordCreateFlags_NoRequireDiscord, &core);
     state.core.reset(core);
     if (!state.core) {
         std::cout << "Failed to instantiate discord core! (err " << static_cast<int>(result)
                   << ")\n";
-        std::exit(-1);
     }
 
-    discord::Activity activity{};
-    activity.SetDetails(rpc_details.c_str());
-    activity.SetState("In Main menu");
-    activity.GetAssets().SetLargeImage("logo");
-    activity.SetType(discord::ActivityType::Playing);
-    state.core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
-        std::cout << ((result == discord::Result::Ok) ? "Succeeded" : "Failed")
-                  << " updating activity!\n";
-    });
+    if(state.core)
+    {
+        discord::Activity activity{};
+        activity.SetDetails(rpc_details.c_str());
+        activity.SetState("In Main menu");
+        activity.GetAssets().SetLargeImage("logo");
+        activity.SetType(discord::ActivityType::Playing);
+        state.core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
+            std::cout << ((result == discord::Result::Ok) ? "Succeeded" : "Failed")
+                      << " updating activity!\n";
+        });
+    }
 
     /** Detect when the build was compiled **/
 
@@ -163,20 +174,23 @@ void V4Core::SaveToDebugLog(string data)
 
 void V4Core::ChangeRichPresence(string title, string bg_image, string sm_image)
 {
-    if(rpc_current != title)
+    if(state.core)
     {
-        rpc_current = title;
+        if(rpc_current != title)
+        {
+            rpc_current = title;
 
-        discord::Activity activity{};
-        activity.SetDetails(rpc_details.c_str());
-        activity.SetState(title.c_str());
-        activity.GetAssets().SetLargeImage(bg_image.c_str());
-        activity.GetAssets().SetSmallImage(sm_image.c_str());
-        activity.SetType(discord::ActivityType::Playing);
-        state.core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
-            std::cout << ((result == discord::Result::Ok) ? "Succeeded" : "Failed")
-                      << " updating activity\n";
-        });
+            discord::Activity activity{};
+            activity.SetDetails(rpc_details.c_str());
+            activity.SetState(title.c_str());
+            activity.GetAssets().SetLargeImage(bg_image.c_str());
+            activity.GetAssets().SetSmallImage(sm_image.c_str());
+            activity.SetType(discord::ActivityType::Playing);
+            state.core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
+                std::cout << ((result == discord::Result::Ok) ? "Succeeded" : "Failed")
+                          << " updating activity\n";
+            });
+        }
     }
 }
 
@@ -567,6 +581,7 @@ void V4Core::Init()
             window.close();
         }
 
+        if(state.core)
         state.core->RunCallbacks();
     }
     cout<<"Main game loop exited. Shutting down..."<<endl;
