@@ -17,6 +17,7 @@ Barracks::Barracks()
     isActive=false;
 }
 void Barracks::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, Menu *curParentMenu){
+    parent->SaveToDebugLog("Initializing Barracks...");
     Scene::Initialise(thisConfigs,keymap,parent);
     parentMenu = curParentMenu;
     currentController = &(v4core->currentController);
@@ -222,6 +223,7 @@ void Barracks::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     armour_icon.loadFromFile("resources/graphics/item/armour_icon.png",1,2);
 
     //mm_inventory_background.setSize(sf::Vector2f(mm_inventory_background.getSize().x+(40*resRatioX),mm_inventory_background.getSize().y+(40*resRatioX)));
+    parent->SaveToDebugLog("Initializing Barracks finished.");
 
 }
 void Barracks::EventFired(sf::Event event){
@@ -357,20 +359,23 @@ void Barracks::EventFired(sf::Event event){
             }
             if(event.key.code == sf::Keyboard::Space)
             {
-                cout << "Lets start the mission" << endl;
-                sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
-                v4core->continueLoading=true;
-                v4core->window.setActive(false);
-                loadingThreadInstance.launch();
+                if(obelisk)
+                {
+                    cout << "Lets start the mission" << endl;
+                    sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+                    v4core->continueLoading=true;
+                    v4core->window.setActive(false);
+                    loadingThreadInstance.launch();
 
-                currentController->Initialise(*config,*keyMap,config->GetString("mission1Background"),*v4core);
-                currentController->StartMission(config->GetString("mission1Theme"),1);
-                this->Hide();
-                this->isActive = false;
+                    currentController->Initialise(*config,*keyMap,config->GetString("mission1Background"),*v4core);
+                    currentController->StartMission(mission_file,1);
+                    this->Hide();
+                    this->isActive = false;
 
-                missionStarted = true;
+                    missionStarted = true;
 
-                v4core->continueLoading=false;
+                    v4core->continueLoading=false;
+                }
             }
 
         } else if (event.type == sf::Event::MouseButtonReleased){

@@ -13,6 +13,7 @@ class Barracks : public Menu
         MissionController* currentController;
         Config *config;
         std::map<int,bool> *keyMap;
+        std::string mission_file;
 
         sf::RectangleShape rs_cover;
         sf::RectangleShape mm_bigBox;
@@ -29,6 +30,8 @@ class Barracks : public Menu
 
         float pataponY;
         float floorY;
+
+        bool obelisk = false;
 
         bool missionStarted = false;
 
