@@ -11,7 +11,7 @@ Patapon::Patapon()
 void Patapon::LoadConfig(Config *thisConfigs)
 {
     /// load patapon from p4a file
-    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\patapon.p4a");
+    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\unit\\patapon.p4a");
 }
 
 void Patapon::startAttack()

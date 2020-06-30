@@ -14,6 +14,7 @@ class Entity : public CollidableObject
     virtual void setEntityID(int new_entityID);
     virtual int getEntityID();
     virtual void doRhythm(std::string current_song, std::string current_drum, int combo, int realcombo, bool advanced_prefever, float beatBounce, float satisfaction);
+    virtual void LoadConfig(Config *thisConfigs, std::string unitParamPath);
 };
 
 #endif // ENTITY_H

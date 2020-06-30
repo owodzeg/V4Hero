@@ -40,7 +40,7 @@ FeverWorm::FeverWorm()
 
 void FeverWorm::LoadConfig(Config *thisConfigs)
 {
-    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\fever_worm.p4a");
+    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\fever_worm.p4a");
 }
 
 void FeverWorm::doRhythm(std::string current_song, std::string current_drum, int combo, int realcombo, bool advanced_prefever, float beatBounce, float satisfaction)
