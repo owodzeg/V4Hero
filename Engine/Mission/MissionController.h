@@ -145,6 +145,7 @@ class MissionController
     float Clamp(float x, float lowerlimit, float upperlimit);
     void addDmgCounter(int type, int damage, float baseX, float baseY, int q, int r);
     void addItemsCounter(int id, float baseX, float baseY);
+    void spawnEntity(string entityName, int entityID, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable);
 
     void StartCutscene(const std::wstring& text,bool isBlackScreen,int TimeToShow);
 
@@ -154,7 +155,7 @@ class MissionController
     bool isMoreCutscenes();
     void StopMission();
     void Initialise(Config &config, std::map<int,bool> &keymap,std::string backgroundName,V4Core &v4core_);
-    void StartMission(std::string songName,int missionID,bool showCutscene=false);
+    void StartMission(std::string missionFile, bool showCutscene=false);
     void Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
     void DoMovement(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
     void DoKeyboardEvents(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);

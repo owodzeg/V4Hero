@@ -136,6 +136,157 @@ void MissionController::addItemsCounter(int id, float baseX, float baseY)
 
 }
 
+void MissionController::spawnEntity(string entityName, int entityID, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable)
+{
+    cout << "Spawning entity " << entityName << " (ID: " << entityID << ") " << baseX << " " << randX << " " << baseY << " " << spr_goal << " " << spr_range << " " << statLevel << endl;
+
+    switch(entityID)
+    {
+        case 0:
+        {
+            unique_ptr<EndFlag> entity = make_unique<EndFlag>();
+            entity.get()->LoadConfig(missionConfig);
+
+            if(randX > 0)
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
+            else
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
+
+            entity.get()->setColor(color);
+
+            entity.get()->isCollidable = collidable;
+
+            if(spr_range != 0)
+            {
+                if(rand() % spr_range == spr_goal)
+                {
+                    tangibleLevelObjects.push_back(std::move(entity));
+                }
+            }
+            else
+            {
+                tangibleLevelObjects.push_back(std::move(entity));
+            }
+
+            break;
+        }
+        case 1:
+        {
+            unique_ptr<FeverWorm> entity = make_unique<FeverWorm>();
+            entity.get()->LoadConfig(missionConfig);
+
+            if(randX > 0)
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
+            else
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
+
+            entity.get()->setColor(color);
+
+            entity.get()->isCollidable = collidable;
+
+            if(spr_range != 0)
+            {
+                if(rand() % spr_range == spr_goal)
+                {
+                    tangibleLevelObjects.push_back(std::move(entity));
+                }
+            }
+            else
+            {
+                tangibleLevelObjects.push_back(std::move(entity));
+            }
+
+            break;
+        }
+        case 2:
+        {
+            unique_ptr<Kacheek> entity = make_unique<Kacheek>();
+            entity.get()->LoadConfig(missionConfig);
+
+            if(randX > 0)
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
+            else
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
+
+            entity.get()->setColor(color);
+
+            entity.get()->isCollidable = collidable;
+
+            if(spr_range != 0)
+            {
+                if(rand() % spr_range == spr_goal)
+                {
+                    tangibleLevelObjects.push_back(std::move(entity));
+                }
+            }
+            else
+            {
+                tangibleLevelObjects.push_back(std::move(entity));
+            }
+
+            break;
+        }
+        case 3:
+        {
+            unique_ptr<Grass1> entity = make_unique<Grass1>();
+            entity.get()->LoadConfig(missionConfig);
+
+            if(randX > 0)
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
+            else
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
+
+            entity.get()->setColor(color);
+
+            entity.get()->isCollidable = collidable;
+
+            if(spr_range != 0)
+            {
+                if(rand() % spr_range == spr_goal)
+                {
+                    tangibleLevelObjects.push_back(std::move(entity));
+                }
+            }
+            else
+            {
+                tangibleLevelObjects.push_back(std::move(entity));
+            }
+
+            break;
+        }
+        case 4:
+        {
+            unique_ptr<Grass2> entity = make_unique<Grass2>();
+            entity.get()->LoadConfig(missionConfig);
+
+            if(randX > 0)
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
+            else
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
+
+            entity.get()->setColor(color);
+
+            entity.get()->isCollidable = collidable;
+
+            if(spr_range != 0)
+            {
+                if(rand() % spr_range == spr_goal)
+                {
+                    tangibleLevelObjects.push_back(std::move(entity));
+                }
+            }
+            else
+            {
+                tangibleLevelObjects.push_back(std::move(entity));
+            }
+
+            break;
+        }
+    }
+
+    cout << "Loading finished" << endl;
+}
+
 void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,std::string backgroundString,V4Core &v4core_)
 {
     v4core = &v4core_;
@@ -236,8 +387,10 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
 
     cout << "initialization finished" << endl;
 }
-void MissionController::StartMission(std::string songName,int missionID,bool showCutscene)
+void MissionController::StartMission(std::string missionFile, bool showCutscene)
 {
+    missionConfig->thisCore->SaveToDebugLog("Starting mission");
+
     fade_alpha = 255;
     missionEnd = false;
     playJingle = false;
@@ -254,22 +407,13 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
     playCheer[1] = false;
     playCheer[2] = false;
 
-    cout << "MissionController::StartMission(): 1" << endl;
-
-    string missionName = "";
-    string missionImg = "";
-
     sf::Context context;
     int quality = missionConfig->GetInt("textureQuality");
     float ratioX, ratioY;
 
-    cout << "MissionController::StartMission(): 1a" << endl;
-
     army_X=0;
     camera.camera_x=480;
     showTimer = false;
-
-    cout << "MissionController::StartMission(): b" << endl;
 
     switch(quality)
     {
@@ -305,8 +449,7 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
     pataponY = 720 - 174;
     floorY = 720 - 100;
 
-    cout << "MissionController::StartMission(): 2" << endl;
-
+    /**
     if(showCutscene)
     {
         cutscene_text_identifiers.push_back(L"intro_cutscene_1");
@@ -336,115 +479,133 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         cutscene_lengths.clear();
         cutscene_text_identifiers.clear();
         cutscenesLeft=false;
-    }
+    }*/
 
     tangibleLevelObjects.clear();
     levelProjectiles.clear();
 
-    cout << "MissionController::StartMission(): 3" << endl;
+    string bgName; ///background
+    string songName; ///bgm
+    string missionName; ///rpc_name
+    string missionImg; ///rpc_img
 
-    switch(missionID)
+    string buff;
+
+    ifstream elist("resources/units/entitylist.dat");
+
+    vector<string> entity_list;
+
+    while(getline(elist, buff))
     {
-    case 1:
+        if(buff[0] != '#')
+        {
+            if(buff.size() > 0)
+            {
+                entity_list.push_back(buff.substr(buff.find_last_of(",")+1));
+            }
+        }
+    }
+
+    elist.close();
+
+    ifstream mf("resources/missions/"+missionFile);
+    cout << "Attempting to read a mission " << "resources/missions/" << missionFile << endl;
+
+    bool accepted = false;
+    float ver = 0.0;
+
+    while(getline(mf, buff))
     {
-        showTimer=true;
+        if(buff[0] != '#')
+        {
+            if(buff.size() > 0)
+            {
+                cout << "[P4M] " << buff << endl;
 
-        cout << "MissionController::StartMission(): setting unique pointers" << endl;
-        unique_ptr<EndFlag> endFlag1 = make_unique<EndFlag>();
-        unique_ptr<FeverWorm> feverworm = make_unique<FeverWorm>();
-        unique_ptr<Kacheek> kacheek = make_unique<Kacheek>();
-        unique_ptr<Kacheek> kacheek2 = make_unique<Kacheek>();
-        unique_ptr<Kacheek> kacheek3 = make_unique<Kacheek>();
-        unique_ptr<Kacheek> kacheek4 = make_unique<Kacheek>();
-        unique_ptr<Kacheek> kacheek5 = make_unique<Kacheek>();
+                if(buff.find("Patafour Mission Format v1.0") != std::string::npos)
+                {
+                    cout << "Reading Patafour Mission Format v1.0" << endl;
 
-        cout << "MissionController::StartMission(): loading configs" << endl;
-        endFlag1.get()->LoadConfig(missionConfig);
-        feverworm.get()->LoadConfig(missionConfig);
-        kacheek.get()->LoadConfig(missionConfig);
-        kacheek2.get()->LoadConfig(missionConfig);
-        kacheek3.get()->LoadConfig(missionConfig);
-        kacheek4.get()->LoadConfig(missionConfig);
-        kacheek5.get()->LoadConfig(missionConfig);
+                    accepted = true;
+                    ver = 1.0;
+                }
 
-        endFlag1.get()->setEntityID(0);
-        feverworm.get()->setEntityID(1);
-        kacheek.get()->setEntityID(2);
-        kacheek2.get()->setEntityID(2);
-        kacheek3.get()->setEntityID(2);
-        kacheek4.get()->setEntityID(2);
-        kacheek5.get()->setEntityID(2);
+                if(accepted)
+                {
+                    if(ver == 1.0)
+                    {
+                        if(buff.find("background=") != std::string::npos)
+                        {
+                            bgName = buff.substr(buff.find_first_of("=")+1);
+                        }
 
-        cout << "MissionController::StartMission(): setting positions" << endl;
-        endFlag1.get()->setGlobalPosition(sf::Vector2f(4500,720 - (233)));
-        feverworm.get()->setGlobalPosition(sf::Vector2f(-330,720 - (520)));
-        kacheek.get()->setGlobalPosition(sf::Vector2f(1000 + (rand() % 500),720 - (185)));
-        kacheek2.get()->setGlobalPosition(sf::Vector2f(1600 + (rand() % 500),720 - (185)));
-        kacheek3.get()->setGlobalPosition(sf::Vector2f(2300 + (rand() % 500),720 - (185)));
-        kacheek4.get()->setGlobalPosition(sf::Vector2f(2900 + (rand() % 500),720 - (185)));
-        kacheek5.get()->setGlobalPosition(sf::Vector2f(3500 + (rand() % 500),720 - (185)));
+                        if(buff.find("bgm=") != std::string::npos)
+                        {
+                            songName = buff.substr(buff.find_first_of("=")+1);
+                        }
 
-        endFlag1.get()->isCollidable = false;
+                        if(buff.find("rpc_name=") != std::string::npos)
+                        {
+                            missionName = buff.substr(buff.find_first_of("=")+1);
+                        }
 
-        cout << "MissionController::StartMission(): pushing to the table" << endl;
-        tangibleLevelObjects.push_back(std::move(endFlag1));
-        tangibleLevelObjects.push_back(std::move(feverworm));
+                        if(buff.find("rpc_img=") != std::string::npos)
+                        {
+                            missionImg = buff.substr(buff.find_first_of("=")+1);
+                        }
 
-        if(rand() % 10 >= 0)
-        tangibleLevelObjects.push_back(std::move(kacheek));
-        if(rand() % 10 >= 1)
-        tangibleLevelObjects.push_back(std::move(kacheek2));
-        if(rand() % 10 >= 2)
-        tangibleLevelObjects.push_back(std::move(kacheek3));
-        if(rand() % 10 >= 3)
-        tangibleLevelObjects.push_back(std::move(kacheek4));
-        if(rand() % 10 >= 4)
-        tangibleLevelObjects.push_back(std::move(kacheek5));
+                        if(buff.find("spawn=") != std::string::npos)
+                        {
+                            string sp = buff.substr(buff.find_first_of("=")+1);
+                            vector<string> spawn = Func::Split(sp, ',');
 
-        missionName = "undefined";
-        missionImg = "wasteland";
-        break;
+                            int entityID = atoi(spawn[0].c_str());
+                            int baseY = 0;
+                            bool collidable = false;
+                            bool attackable = false;
+
+                            ifstream entityParam("resources/units/entity/"+entity_list[entityID]+".p4p");
+                            string buff2;
+
+                            while(getline(entityParam, buff2))
+                            {
+                                if(buff2[0] != '#')
+                                {
+                                    if(buff2.size() > 0)
+                                    {
+                                        if(buff2.find("baseY=") != std::string::npos)
+                                        {
+                                            string by = buff2.substr(buff2.find_last_of("=")+1);
+                                            baseY = atoi(by.c_str());
+                                        }
+
+                                        if(buff2.find("collidable=") != std::string::npos)
+                                        {
+                                            string by = buff2.substr(buff2.find_last_of("=")+1);
+                                            collidable = atoi(by.c_str());
+                                        }
+
+                                        if(buff2.find("attackable=") != std::string::npos)
+                                        {
+                                            string by = buff2.substr(buff2.find_last_of("=")+1);
+                                            attackable = atoi(by.c_str());
+                                        }
+                                    }
+                                }
+                            }
+
+                            entityParam.close();
+
+                            cout << "Spawning an entity: " << entity_list[entityID] << endl;
+                            spawnEntity(entity_list[entityID],entityID,atoi(spawn[1].c_str()),atoi(spawn[2].c_str()),baseY,atoi(spawn[3].c_str()),atoi(spawn[4].c_str()),atoi(spawn[5].c_str()),sf::Color(atoi(spawn[6].c_str()),atoi(spawn[7].c_str()),atoi(spawn[8].c_str()),atoi(spawn[9].c_str())), collidable, attackable);
+                        }
+                    }
+                }
+            }
+        }
     }
-    /**
-    case 2:
-    {
-        kacheek->LoadConfig(missionConfig);
-        kacheek2->LoadConfig(missionConfig);
-        kacheek3->LoadConfig(missionConfig);
-        feverworm->LoadConfig(missionConfig);
-        endFlag1->LoadConfig(missionConfig);
-        tangibleLevelObjects.emplace_back(kacheek);
-        tangibleLevelObjects.emplace_back(kacheek2);
-        tangibleLevelObjects.emplace_back(kacheek3);
-        tangibleLevelObjects.emplace_back(feverworm);
-        tangibleLevelObjects.emplace_back(endFlag1);
 
-        kacheek->setGlobalPosition(sf::Vector2f(1000,720 - (185)));
-        kacheek2->setGlobalPosition(sf::Vector2f(1500,720 - (185)));
-        kacheek3->setGlobalPosition(sf::Vector2f(2000,720 - (185)));
-        feverworm->setGlobalPosition(sf::Vector2f(-330,720 - (520)));
-        endFlag1->setGlobalPosition(sf::Vector2f(2500,720 - (233)));
-
-        missionName = "undefined";
-        missionImg = "gonrok";
-        break;
-
-    }
-    default:
-
-        feverworm->LoadConfig(missionConfig);
-        endFlag1->LoadConfig(missionConfig);
-
-        tangibleLevelObjects.emplace_back(feverworm);
-        tangibleLevelObjects.emplace_back(endFlag1);
-
-        endFlag1->setGlobalPosition(sf::Vector2f(2500,720 - (233)));
-        feverworm->setGlobalPosition(sf::Vector2f(-330,720 - (520)));
-
-        missionName = "Unspecified Mission";
-        missionImg = "wasteland";
-        break;*/
-    }
+    mf.close();
 
     unique_ptr<Patapon> p1 = make_unique<Patapon>();
     unique_ptr<Patapon> p2 = make_unique<Patapon>();
@@ -475,6 +636,7 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
     missionTimer.restart();
 
     cout << "MissionController::StartMission(): finished" << endl;
+    missionConfig->thisCore->SaveToDebugLog("Mission loading finished.");
 }
 void MissionController::StopMission()
 {
@@ -973,51 +1135,54 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         }
     }
 
-    if(missionEndTimer.getElapsedTime().asMilliseconds() >= 2500)
+    if(missionEnd)
     {
-        if(!playCheer[0])
+        if(missionEndTimer.getElapsedTime().asMilliseconds() >= 2500)
         {
-            s_cheer.stop();
-            s_cheer.setBuffer(sb_cheer1);
-            s_cheer.play();
-            playCheer[0] = true;
+            if(!playCheer[0])
+            {
+                s_cheer.stop();
+                s_cheer.setBuffer(sb_cheer1);
+                s_cheer.play();
+                playCheer[0] = true;
+            }
         }
-    }
 
-    if(missionEndTimer.getElapsedTime().asMilliseconds() >= 4500)
-    {
-        if(!playCheer[1])
+        if(missionEndTimer.getElapsedTime().asMilliseconds() >= 4500)
         {
-            s_cheer.stop();
-            s_cheer.setBuffer(sb_cheer2);
-            s_cheer.play();
-            playCheer[1] = true;
+            if(!playCheer[1])
+            {
+                s_cheer.stop();
+                s_cheer.setBuffer(sb_cheer2);
+                s_cheer.play();
+                playCheer[1] = true;
+            }
         }
-    }
 
-    if(missionEndTimer.getElapsedTime().asMilliseconds() >= 6500)
-    {
-        if(!playCheer[2])
+        if(missionEndTimer.getElapsedTime().asMilliseconds() >= 6500)
         {
-            s_cheer.stop();
-            s_cheer.setBuffer(sb_cheer3);
-            s_cheer.play();
-            playCheer[2] = true;
+            if(!playCheer[2])
+            {
+                s_cheer.stop();
+                s_cheer.setBuffer(sb_cheer3);
+                s_cheer.play();
+                playCheer[2] = true;
+            }
         }
-    }
 
-    if(missionEndTimer.getElapsedTime().asMilliseconds() < 7700)
-    {
-        camera.followobject_x = army_X * ratioX;
-    }
-
-    if((missionEnd) && (missionEndTimer.getElapsedTime().asMilliseconds() >= 8000))
-    {
-        if(!playJingle)
+        if(missionEndTimer.getElapsedTime().asMilliseconds() < 7700)
         {
-            s_jingle.setBuffer(sb_win_jingle);
-            s_jingle.play();
-            playJingle = true;
+            camera.followobject_x = army_X * ratioX;
+        }
+
+        if(missionEndTimer.getElapsedTime().asMilliseconds() >= 8000)
+        {
+            if(!playJingle)
+            {
+                s_jingle.setBuffer(sb_win_jingle);
+                s_jingle.play();
+                playJingle = true;
+            }
         }
     }
 
@@ -1157,11 +1322,13 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
     {
         levelProjectiles[i].get()->Draw(window,fps);
     }
+
     /// draw static UI elements
     auto lastView = window.getView();
 
     window.setView(window.getDefaultView());
 
+    /**
 
     if(cutscenesLeft && !inCutscene && isMoreCutscenes())
     {
@@ -1237,7 +1404,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
             window.draw(currentLine);
         }
-    }
+    }*/
     window.setView(lastView);
 
     /// here we show the hitbox
