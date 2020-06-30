@@ -39,6 +39,8 @@ class AnimatedObject
 
     float animation_framerate = 30;
 
+    sf::Color color = sf::Color(255,255,255,255);
+
     enum EntityType
     {
         NONE = 0,
@@ -76,7 +78,7 @@ class AnimatedObject
     struct Animation
     {
         string name;
-        sf::Image spritesheet; ///data
+        vector<char> spritesheet; ///data
     };
 
     float xBound=0, yBound=0;
@@ -100,6 +102,7 @@ class AnimatedObject
     sf::Vector2f getGlobalPosition();
     void moveGlobalPosition(sf::Vector2f pos);
     void setLoop(bool loop);
+    void setColor(sf::Color new_color);
     virtual void LoadConfig(Config *thisConfigs,std::string unitParamPath);
     virtual void Draw(sf::RenderWindow& window);
 };

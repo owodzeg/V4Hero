@@ -133,9 +133,8 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     Animation tmp;
                     sf::Texture spr;
                     //cout << "Loading " << anim[2] << ".png" << endl;
-                    string mem = handle.ReadToMemory(anim[2]+".png");
-                    vector<char> data(mem.begin(), mem.end());
-                    tmp.spritesheet.loadFromMemory(&data[0], data.size());
+                    tmp.spritesheet = handle.ReadToMemoryChar(anim[2]+".png");
+                    //tmp.spritesheet.loadFromMemory(&mem[0], mem.size());
                     tmp.name = anim[2];
                     animation_spritesheet.push_back(tmp);
                 }
@@ -407,7 +406,7 @@ void AnimatedObject::setAnimationSegment(std::string new_segment_name)
      if(new_segment_name != getAnimationSegment())
     {
         //cout << "Changing spritesheet to " << new_segment_name << endl;
-        objects[0].tex_obj.loadFromImage(animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet);
+        objects[0].tex_obj.loadFromMemory(&animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet[0], animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet.size());
         objects[0].tex_obj.setSmooth(true);
         objects[0].s_obj.setTexture(objects[0].tex_obj);
         objects[0].exported = false;
@@ -438,7 +437,7 @@ void AnimatedObject::setAnimationSegment(std::string new_segment_name, bool forc
     {
         //cout << "Changing spritesheet to " << new_segment_name << endl;
 
-        objects[0].tex_obj.loadFromImage(animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet);
+        objects[0].tex_obj.loadFromMemory(&animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet[0], animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet.size());
         objects[0].tex_obj.setSmooth(true);
         objects[0].s_obj.setTexture(objects[0].tex_obj);
         objects[0].exported = false;
@@ -522,6 +521,11 @@ void AnimatedObject::moveGlobalPosition(sf::Vector2f pos)
 void AnimatedObject::setLoop(bool loop)
 {
     loopable = loop;
+}
+
+void AnimatedObject::setColor(sf::Color new_color)
+{
+    color = new_color;
 }
 
 void AnimatedObject::LoadConfig(Config *thisConfigs, std::string unitParamPath)
@@ -612,6 +616,7 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
         objects[i].gl_y = local_y;
         objects[i].g_sx = scaleX;
         objects[i].g_sy = scaleY;
+        objects[i].color = color;
 
         objects[i].SetPos(cur_pos);
         //cout << "Displaying animation " << getAnimationSegment() << ", time: " << getAnimationPos() << ":" << cur_pos << "/" << anim_end << " frame: " << curFrame+1 << "/" << (getAnimationLength(getAnimationSegment()) * animation_framerate) << " " << getAnimationLength(getAnimationSegment()) << endl;

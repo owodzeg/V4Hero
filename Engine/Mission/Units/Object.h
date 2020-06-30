@@ -43,6 +43,7 @@ class Object
     vector<Frame> frames; ///frames
 
     sf::Texture spritesheet; ///current spritesheet
+    sf::Color color;
 
     ///disable drawing object when its out of bounds
     bool disable = true;

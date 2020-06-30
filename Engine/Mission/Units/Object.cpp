@@ -251,6 +251,7 @@ void Object::Draw(sf::RenderWindow& window, int x1, int y1, int x2, int y2, int 
         s_obj.setOrigin(or_x+orx, or_y+ory);
         s_obj.setPosition(x+g_x+gl_x,y+g_y+gl_y);
         s_obj.setRotation(r);
+        s_obj.setColor(color);
         s_obj.draw(window);
 
 
