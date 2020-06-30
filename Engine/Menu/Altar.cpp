@@ -26,6 +26,7 @@ AltarMenu::AltarMenu()
     isActive=false;
 }
 void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, PatapolisMenu *curParentMenu){
+    parent->SaveToDebugLog("Initializing Altar...");
     Scene::Initialise(thisConfigs,keymap,parent);
     parentMenu = curParentMenu;
 
@@ -201,6 +202,7 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
 
     mm_inventory_background.setSize(sf::Vector2f(mm_inventory_background.getSize().x+20,mm_inventory_background.getSize().y+20));
 
+    parent->SaveToDebugLog("Initializing Altar finished.");
 }
 void AltarMenu::ShowCategory(){
     int totalItems = v4core->savereader.invdata.items.size();

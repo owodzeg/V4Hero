@@ -45,6 +45,7 @@ class P4A
     ///Unpacking functions
     void ReadDictionary(std::string filename);
     std::string ReadToMemory(std::string name);
+    std::vector<char> ReadToMemoryChar(std::string name);
     void Extract(std::string name);
     void ImageToData();
     void DecryptImage();

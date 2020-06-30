@@ -4,7 +4,6 @@
 #include "../Config.h"
 #include "../Graphics/Menu.h"
 #include "../Graphics/PText.h"
-#include "ButtonLists/ObeliskButtonList.h"
 class V4Core;
 class PatapolisMenu;
 class ObeliskMenu : public Menu

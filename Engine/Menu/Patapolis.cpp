@@ -167,6 +167,8 @@ void PatapolisMenu::addSmokeParticle(float x, float y, PSprite& refer)
 
 void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, Menu *curParentMenu)
 {
+    parent->SaveToDebugLog("Initializing Patapolis...");
+
     sf::Context context;
     Scene::Initialise(thisConfigs,keymap,parent);
     altar_menu.Initialise(thisConfigs,keymap,parent,this);
@@ -546,6 +548,8 @@ void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4
         v4core->LoadingWaitForKeyPress();
         v4core->ChangeRichPresence("In Patapolis", "logo", "");
     }
+
+    parent->SaveToDebugLog("Initializing Patapolis finished.");
 }
 void PatapolisMenu::EventFired(sf::Event event)
 {
@@ -573,6 +577,7 @@ void PatapolisMenu::EventFired(sf::Event event)
                     left = true;
 
                     SetTitle(location);
+                    thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
                 }
             }
             else if(event.key.code == sf::Keyboard::Right)
@@ -583,6 +588,7 @@ void PatapolisMenu::EventFired(sf::Event event)
                     left = false;
 
                     SetTitle(location);
+                    thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
                 }
             }
             else if (event.key.code == thisConfig->GetInt("keybindDon") || event.key.code == thisConfig->GetInt("secondaryKeybindDon") || event.key.code == thisConfig->GetInt("keybindMenuEnter"))
@@ -596,9 +602,12 @@ void PatapolisMenu::EventFired(sf::Event event)
                     break;
                 case 2:
                     /// armoury/barracks
+                    thisConfig->thisCore->SaveToDebugLog("Entering Barracks...");
                     barracks_menu.Show();
                     barracks_menu.isActive = true;
+                    barracks_menu.obelisk = false;
                     barracks_menu.OpenBarracksMenu();
+                    thisConfig->thisCore->SaveToDebugLog("Barracks entered.");
                     break;
                 case 3:
                     /// festival
@@ -607,16 +616,18 @@ void PatapolisMenu::EventFired(sf::Event event)
                 case 4:
                     /// altar
                     // open mater menu
+                    thisConfig->thisCore->SaveToDebugLog("Entering Altar...");
                     altar_menu.Show();
                     altar_menu.isActive = true;
                     altar_menu.ShowAltar();
+                    thisConfig->thisCore->SaveToDebugLog("Altar entered.");
                     break;
                 case 5:
                     /// obelisk
-                    // idk?
-                    // open inventory menu
+                    thisConfig->thisCore->SaveToDebugLog("Entering Obelisk...");
                     obelisk_menu.Show();
                     obelisk_menu.isActive = true;
+                    thisConfig->thisCore->SaveToDebugLog("Obelisk entered.");
                     break;
                 default:
                     /// nothing
@@ -627,6 +638,7 @@ void PatapolisMenu::EventFired(sf::Event event)
             }
             else if (event.key.code == thisConfig->GetInt("keybindBack"))
             {
+                thisConfig->thisCore->SaveToDebugLog("Left from Patapolis to Title screen.");
                 this->Hide();
                 this->isActive = false;
                 parentMenu->Show();

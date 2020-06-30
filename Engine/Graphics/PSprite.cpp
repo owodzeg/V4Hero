@@ -1,6 +1,7 @@
 #include "PSprite.h"
 #include <iostream>
 #include <string>
+#include <fstream>
 
 PSprite::PSprite()
 {
@@ -40,7 +41,14 @@ void PSprite::loadFromFile(std::string file, int q)
 
     std::cout << "[PSPRITE] Loading " << c << std::endl;
 
-    t.loadFromFile(c);
+    if(!t.loadFromFile(c))
+    {
+        std::ofstream dbg("V4Hero-errors.log", std::ios::app);
+        dbg << "Failed to load " << c;
+        dbg << "\r\n";
+        dbg.close();
+    }
+
     t.setSmooth(true);
     s.setTexture(t, true);
 }
@@ -79,6 +87,15 @@ void PSprite::loadFromFile(std::string file, int q, int r=1)
     std::cout << "[PSPRITE] Loading " << c << std::endl;
 
     t.loadFromFile(c);
+
+    if(!t.loadFromFile(c))
+    {
+        std::ofstream dbg("V4Hero-errors.log", std::ios::app);
+        dbg << "Failed to load " << c;
+        dbg << "\r\n";
+        dbg.close();
+    }
+
     t.setSmooth(true);
     s.setTexture(t, true);
 }

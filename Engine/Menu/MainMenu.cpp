@@ -9,6 +9,8 @@ MainMenu::MainMenu()
 }
 void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent)
 {
+    parent->SaveToDebugLog("Initializing Main Menu...");
+
     f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
     config = thisConfigs;
     int q = thisConfigs->GetInt("textureQuality");
@@ -168,6 +170,8 @@ void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     keyMapping=keymap;
 
     optionsMenu.Initialise(config,keyMapping,v4core,this);
+
+    parent->SaveToDebugLog("Main menu initialized.");
 }
 void MainMenu::EventFired(sf::Event event){
     if (patapolisMenu.isActive)

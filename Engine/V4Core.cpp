@@ -350,6 +350,7 @@ void V4Core::Init()
             {
                 ///keyMap[event.key.code] = true/false??? would that do the trick?
                 cout << "[DEBUG] Key pressed: " << event.key.code << endl;
+                SaveToDebugLog("[DEBUG] Key pressed: "+to_string(event.key.code));
 
                 keyMap[event.key.code] = true;
                 keyMapHeld[event.key.code] = true;
@@ -366,6 +367,7 @@ void V4Core::Init()
             if(event.type == sf::Event::KeyReleased)
             {
                 cout << "[DEBUG] Key released: " << event.key.code << endl;
+                SaveToDebugLog("[DEBUG] Key released: "+to_string(event.key.code));
                 keyMapHeld[event.key.code] = false;
             }
 

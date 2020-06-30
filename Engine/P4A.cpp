@@ -130,6 +130,8 @@ void P4A::ReadDictionary(std::string filename)
 {
     p4a_filename = filename;
 
+    cout << "[P4A] Reading " << p4a_filename << endl;
+
     ifstream file(filename, std::ifstream::binary);
 
     char header[3];
@@ -240,6 +242,16 @@ std::string P4A::ReadToMemory(std::string name)
     vector<char> cut_data(first, last);
 
     return string(cut_data.begin(), cut_data.end());
+}
+
+vector<char> P4A::ReadToMemoryChar(std::string name)
+{
+    int i = std::distance(in_fnames.begin(), std::find(in_fnames.begin(), in_fnames.end(), name));
+
+    vector<char>::const_iterator first = bin_data.begin() + in_foffsets[i];
+    vector<char>::const_iterator last = bin_data.begin() + in_foffsets[i] + in_fsizes[i];
+
+    return vector<char>(first, last);
 }
 
 void P4A::Extract(std::string name)

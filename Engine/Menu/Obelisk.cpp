@@ -39,6 +39,8 @@ void ObeliskMenu::addMission(string missiondata)
 }
 
 void ObeliskMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, PatapolisMenu *curParentMenu){
+    parent->SaveToDebugLog("Initializing Obelisk...");
+
     Scene::Initialise(thisConfigs,keymap,parent);
     parentMenu = curParentMenu;
 
@@ -157,6 +159,8 @@ void ObeliskMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Co
     cout << "[WorldMap] Creating render_map " << 280*resRatioX << "x" << 120*resRatioY << endl;
 
     mission_select.loadFromFile("resources/graphics/ui/worldmap/mission_select.png", quality, 1);
+
+    parent->SaveToDebugLog("Initializing Obelisk finished.");
 }
 
 void ObeliskMenu::EventFired(sf::Event event)
@@ -170,17 +174,21 @@ void ObeliskMenu::EventFired(sf::Event event)
                 if(displayMissions)
                 {
                     displayMissions = false;
+                    thisConfig->thisCore->SaveToDebugLog("Exited mission selection.");
                 }
                 else
                 {
                     this->Hide();
                     this->isActive = false;
+                    thisConfig->thisCore->SaveToDebugLog("Exited Obelisk.");
                 }
             }
             else if(event.key.code == sf::Keyboard::Enter)
             {
                 if(!displayMissions)
                 {
+                    thisConfig->thisCore->SaveToDebugLog("Displaying missions on Worldmap for location "+to_string(sel_location)+".");
+
                     ///(re)load missions here
                     cout << "Displaying missions" << endl;
 
@@ -221,11 +229,16 @@ void ObeliskMenu::EventFired(sf::Event event)
                 {
                     parentMenu->barracks_menu.Show();
                     parentMenu->barracks_menu.isActive = true;
+                    parentMenu->barracks_menu.obelisk = true;
+                    parentMenu->barracks_menu.mission_file = missions[sel_mission].mission_file;
                     parentMenu->barracks_menu.OpenBarracksMenu();
+                    thisConfig->thisCore->SaveToDebugLog("Barracks (In Obelisk) entered. Mission file: "+missions[sel_mission].mission_file);
                 }
             }
             else if(event.key.code == sf::Keyboard::Q)
             {
+                thisConfig->thisCore->SaveToDebugLog("Skipping maps to the left (Q key).");
+
                 mapXdest += float(123) * 6;
 
                 if(mapXdest >= 0)
@@ -233,6 +246,8 @@ void ObeliskMenu::EventFired(sf::Event event)
             }
             else if(event.key.code == sf::Keyboard::E)
             {
+                thisConfig->thisCore->SaveToDebugLog("Skipping maps to the right (E key).");
+
                 mapXdest -= float(123) * 6;
 
                 int maxBound = (worldmap_fields.size()*123 - 1012) * (-1);
@@ -252,7 +267,9 @@ void ObeliskMenu::EventFired(sf::Event event)
                     sel_location--;
 
                     if(sel_location <= 1)
+
                     sel_location = 1;
+                    thisConfig->thisCore->SaveToDebugLog("Selecting Obelisk location "+to_string(sel_location)+".");
 
                     //if((sel_location*123 + mapX - 62) < 0)
                     //{
@@ -312,6 +329,8 @@ void ObeliskMenu::EventFired(sf::Event event)
                     if(sel_location >= worldmap_fields.size())
                     sel_location = worldmap_fields.size();
 
+                    thisConfig->thisCore->SaveToDebugLog("Selecting Obelisk location "+to_string(sel_location)+".");
+
                     //if((sel_location*123 + mapX - 62 + 176 + 246) > 1012)
                     //{
                         //mapXdest -= float(123);
@@ -364,6 +383,8 @@ void ObeliskMenu::EventFired(sf::Event event)
                     if(sel_mission > 0)
                     sel_mission--;
 
+                    thisConfig->thisCore->SaveToDebugLog("Selecting Obelisk mission "+to_string(sel_mission)+".");
+
                     mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title));
                     string desc = Func::wrap_text(Func::ConvertToUtf8String(missions[sel_mission].desc), 633, font, 18);
                     mission_desc.setString(desc);
@@ -375,6 +396,8 @@ void ObeliskMenu::EventFired(sf::Event event)
                 {
                     if(sel_mission < missions.size()-1)
                     sel_mission++;
+
+                    thisConfig->thisCore->SaveToDebugLog("Selecting Obelisk mission "+to_string(sel_mission)+".");
 
                     mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title));
                     string desc = Func::wrap_text(Func::ConvertToUtf8String(missions[sel_mission].desc), 633, font, 18);

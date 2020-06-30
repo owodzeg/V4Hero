@@ -1,7 +1,6 @@
 #ifndef OPTIONSMENU_H
 #define OPTIONSMENU_H
 #include <SFML/Graphics.hpp>
-#include "ButtonLists/OptionsButtonList.h"
 #include "../Config.h"
 #include "../Graphics/Menu.h"
 #include "../Mission/MissionController.h"
@@ -61,7 +60,6 @@ class OptionsMenu : public Menu
         PSprite dg_restart, dg_select;
 
         Menu *parentMenu;
-        OptionsButtonList buttonList;
         void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent,Menu *curParentMenu);
         void Update(sf::RenderWindow &window, float fps);
         void SelectMenuOption();

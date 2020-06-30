@@ -1,7 +1,6 @@
 #ifndef MAINMENU_H
 #define MAINMENU_H
 #include <SFML/Graphics.hpp>
-#include "ButtonLists/MainMenuButtonList.h"
 #include "../Config.h"
 #include "../Graphics/Menu.h"
 #include "../Mission/MissionController.h"
