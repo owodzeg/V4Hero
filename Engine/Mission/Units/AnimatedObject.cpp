@@ -550,56 +550,40 @@ void AnimatedObject::LoadConfig(Config *thisConfigs, std::string unitParamPath)
 }
 void AnimatedObject::Draw(sf::RenderWindow& window)
 {
+    cur_pos += framerate / float(fps);
+
     if(cur_pos < anim_begin)
     cur_pos = anim_begin;
-
-    //cout << "Anim: " << anim_path << " Framerate: " << framerate << endl;
-
-    cur_pos += framerate / float(fps);
 
     if(cur_pos > anim_end)
     {
         if(loopable)
-        cur_pos -= (anim_end - anim_begin);
-        else
-        cur_pos = anim_end;
-    }
-
-    if(animation_goto[getSegmentIndex(current_animation)] != "")
-    {
-        setLoop(false);
-
-        if(cur_pos >= anim_end)
         {
-            cout << "Animation go to: " << animation_goto[getSegmentIndex(current_animation)] << " SegmentIndex: " << getSegmentIndex(current_animation) << " current animation: " << current_animation << endl;
-            setAnimationSegment(animation_goto[getSegmentIndex(current_animation)], true);
-
-            setLoop(animation_loop[getSegmentIndex(current_animation)]);
+            cur_pos -= (anim_end - anim_begin);
+        }
+        else
+        {
+            if(animation_goto[getSegmentIndex(current_animation)] != "")
+            {
+                cout << "Animation go to: " << animation_goto[getSegmentIndex(current_animation)] << " SegmentIndex: " << getSegmentIndex(current_animation) << " current animation: " << current_animation << endl;
+                setAnimationSegment(animation_goto[getSegmentIndex(current_animation)], true);
+            }
+            else
+            {
+                cur_pos = anim_end;
+            }
         }
     }
 
     setLoop(animation_loop[getSegmentIndex(current_animation)]);
 
-    /// ////////////////////////////////////////////////////////////////////////////////////////////////// ///
-    ///SUPER TEMPORARY WORKAROUND FOR FEVER WORM, add one time animations that transfer to another immediately
-    /// ////////////////////////////////////////////////////////////////////////////////////////////////// ///
-
-    /*if(getAnimationSegment() == "transform")
-    {
-        if(cur_pos == anim_end)
-        {
-            setAnimationSegment("fever");
-            setLoop(true);
-            worm_fever = true;
-        }
-    }*/
-
     ///calculate current position on the spritesheet
     int curFrame = floor(getAnimationPos() * animation_framerate);
     int index = getSegmentIndex(getAnimationSegment());
+    float bound = floor(getAnimationLength(getAnimationSegment()) * animation_framerate) - 1;
 
-    if(curFrame > floor(getAnimationLength(getAnimationSegment()) * animation_framerate) - 1)
-    curFrame = floor(getAnimationLength(getAnimationSegment()) * animation_framerate) - 1;
+    if(curFrame > bound)
+    curFrame = bound;
 
     //cout << "file " << anim_path << " animation " << getAnimationSegment() << " frame " << curFrame << "/" << floor(getAnimationLength(getAnimationSegment()) * animation_framerate)-1 << " bounds: " << animation_bounds[index][curFrame].left << " " << animation_bounds[index][curFrame].top << " " << animation_bounds[index][curFrame].width << " " << animation_bounds[index][curFrame].height << endl;
 

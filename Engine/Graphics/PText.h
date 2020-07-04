@@ -43,6 +43,7 @@ class PText
     void setScale(float s);
     void draw(sf::RenderWindow& window);
     void update(sf::RenderWindow& window);
+    sf::Text getText();
 };
 
 #endif // PTEXT_H

@@ -131,6 +131,8 @@ void RhythmGUI::doVisuals(sf::RenderWindow& window,int bgm_cycle,sf::Clock *rhyt
     window.draw(r_rhythm);
     window.draw(r_rhythm2);
 
+    std::vector<int> drumsToErase;
+
     for(int i=0; i<drums->size(); i++)
     {
         (*drums)[i].fps = fps;
@@ -138,8 +140,14 @@ void RhythmGUI::doVisuals(sf::RenderWindow& window,int bgm_cycle,sf::Clock *rhyt
 
         if((*drums)[i].alpha <= 0)
         {
-            drums->erase(drums->begin() + i);
+            drumsToErase.push_back(i);
         }
+    }
+
+    for(int i=0; i<drumsToErase.size(); i++)
+    {
+        cout << "Erased drum " << drumsToErase[i] - i << endl;
+        drums->erase(drums->begin() + (drumsToErase[i] - i));
     }
 
     window.setView(lastView);

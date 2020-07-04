@@ -16,6 +16,8 @@ inline bool exists(const std::string& name)
 
 V4Core::V4Core()
 {
+    std::cout << SFML_VERSION_MAJOR << "." << SFML_VERSION_MINOR << "." << SFML_VERSION_PATCH << std::endl;
+
     ofstream dbg("V4Hero-"+hero_version+"-latest.log", ios::trunc);
     dbg.close();
 
@@ -198,8 +200,11 @@ void V4Core::LoadingWaitForKeyPress()
 {
     bool biff = true;
     pressAnyKey = true;
+
     while (biff)
     {
+        Sleep(16); ///force it 60fps
+
         sf::Event event;
         while (window.pollEvent(event))
         {

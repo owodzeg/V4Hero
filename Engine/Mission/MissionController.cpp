@@ -27,7 +27,10 @@ MissionController::MissionController()
 
 float MissionController::Smoothstep(float time) ///use time from 0.00 to 1.00
 {
+    cout << "Smoothstep(" << time << "/" << Clamp(time, 0.0, 1.0) << "): ";
+
     time = Clamp(time, 0.0, 1.0);
+    cout << time * time * (3 - 2 * time) << endl;
     return time * time * (3 - 2 * time);
 }
 
@@ -1007,8 +1010,6 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
                 break;
             }
         }
-
-        unit->fps = fps;
     }
 
     /// step 1: all projectiles have gravity applied to them
@@ -1170,11 +1171,6 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
             }
         }
 
-        if(missionEndTimer.getElapsedTime().asMilliseconds() < 7700)
-        {
-            camera.followobject_x = army_X * ratioX;
-        }
-
         if(missionEndTimer.getElapsedTime().asMilliseconds() >= 8000)
         {
             if(!playJingle)
@@ -1186,12 +1182,15 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         }
     }
 
+    if(missionEndTimer.getElapsedTime().asMilliseconds() < 7700)
+    {
+        camera.followobject_x = army_X * ratioX;
+    }
+
     camera.Work(window,fps,keyMapHeld);
     test_bg.setCamera(camera);
     test_bg.Draw(window);
 
-    //hatapon->setGlobalPosition(sf::Vector2f(army_X,494));
-    //hatapon->fps = fps;
     DoKeyboardEvents(window,fps,keyMap,keyMapHeld);
     DoMovement(window,fps,keyMap,keyMapHeld);
 
@@ -1204,21 +1203,23 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
     for (int i=0; i<tangibleLevelObjects.size(); i++)
     {
-        tangibleLevelObjects[i].get()->fps = fps;
+        Entity* entity = tangibleLevelObjects[i].get();
 
-        if(tangibleLevelObjects[i].get()->getEntityID() == 1)
+        entity->fps = fps;
+
+        if(entity->getEntityID() == 1)
         {
-            tangibleLevelObjects[i].get()->doRhythm(rhythm.current_song, rhythm.rhythmController.current_drum, rhythm.GetCombo(), rhythm.GetRealCombo(), rhythm.advanced_prefever, rhythm.r_gui.beatBounce, rhythm.GetSatisfaction());
+            entity->doRhythm(rhythm.current_song, rhythm.rhythmController.current_drum, rhythm.GetCombo(), rhythm.GetRealCombo(), rhythm.advanced_prefever, rhythm.r_gui.beatBounce, rhythm.GetSatisfaction());
 
             if(!missionEnd)
-            tangibleLevelObjects[i].get()->Draw(window);
+            entity->Draw(window);
         }
         else
         {
-            tangibleLevelObjects[i].get()->Draw(window);
+            entity->Draw(window);
         }
 
-        if(tangibleLevelObjects[i].get()->ready_to_erase)
+        if(entity->ready_to_erase)
         tlo_rm.push_back(i);
     }
 
@@ -1309,6 +1310,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
             unit->doMissionEnd();
         }
 
+        unit->fps = fps;
         unit->Draw(window);
     }
 

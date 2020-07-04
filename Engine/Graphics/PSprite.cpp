@@ -367,4 +367,17 @@ void PSprite::update(sf::RenderWindow& window)
     s.setOrigin(orX,orY);
     s.setPosition(lx*resRatioX, ly*resRatioY);
     s.setRotation(angle*(180/3.14159265358));
+
+    if((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
+    {
+        if(!exported)
+        {
+            sf::Image img;
+            img = t.copyToImage();
+            int rrr = rand() % 100000000;
+            img.saveToFile("texDump/"+std::to_string(rrr)+".png");
+
+            exported = true;
+        }
+    }
 }

@@ -7,10 +7,49 @@ using namespace std;
 
 Rhythm::Rhythm()
 {
-
-
     b_fever_start.loadFromFile("resources/sfx/bgm/fever_start.ogg");
     b_fever_fail.loadFromFile("resources/sfx/bgm/fever_fail.ogg");
+
+    t_drums["pata"].loadFromFile("resources/graphics/rhythm/drums/pata.png");
+    t_drums["pon"].loadFromFile("resources/graphics/rhythm/drums/pon.png");
+    t_drums["don"].loadFromFile("resources/graphics/rhythm/drums/don.png");
+    t_drums["chaka"].loadFromFile("resources/graphics/rhythm/drums/chaka.png");
+
+    t_drums["pata"].setSmooth(true);
+    t_drums["pon"].setSmooth(true);
+    t_drums["don"].setSmooth(true);
+    t_drums["chaka"].setSmooth(true);
+
+    patterns["pata"]["x"] = {135, 100, 80, 95, 100, 135, 80, 95};
+    patterns["pata"]["y"] = {295, 410, 340, 220, 410, 295, 340, 220};
+    patterns["pata"]["angle"] = {-20, -20, 3, -7, -15, -23, 3, -7};
+    patterns["pata"]["xspeed"] = {-8, -8, -40, 20, -8, -8, -40, 20};
+    patterns["pata"]["yspeed"] = {-200, 140, -20, -20, 140, -200, -20, -20};
+    patterns["pata"]["rotateSpeed"] = {40, -40, 60, -60, -40, 40, 60, -60};
+
+    patterns["pon"]["x"] = {1140, 1165, 1110, 1135, 1165, 1140, 1110, 1135};
+    patterns["pon"]["y"] = {290, 410, 340, 220, 410, 290, 340, 220};
+    patterns["pon"]["angle"] = {0, 20, 10, 10, 20, 0, 10, 10};
+    patterns["pon"]["xspeed"] = {-40, -40, 20, 10, -40, -40, 20, 10};
+    patterns["pon"]["yspeed"] = {-10, -40, 20, 100, -40, -10, 20, 100};
+    patterns["pon"]["rotateSpeed"] = {-60, 30, -30, 50, 30, -60, -30, 50};
+
+    patterns["don"]["x"] = {690, 515, 605, 780, 515, 690, 605, 780};
+    patterns["don"]["y"] = {650, 660, 665, 670, 660, 650, 665, 670};
+    patterns["don"]["angle"] = {0, 10, -10, -10, 10, 0, -10, -10};
+    patterns["don"]["xspeed"] = {-30, -50, -50, 90, -50, -30, -50, -90};
+    patterns["don"]["yspeed"] = {-30, -50, -50, -30, -50, -30, -50, -30};
+    patterns["don"]["rotateSpeed"] = {40, 60, -60, -60, 60, 40, -60, -60};
+
+    patterns["chaka"]["x"] = {635, 460, 550, 715, 460, 635, 550, 715};
+    patterns["chaka"]["y"] = {105, 70, 75, 85, 70, 105, 75, 85};
+    patterns["chaka"]["angle"] = {0, 10, -10, -10, 10, 0, -10, -10};
+    patterns["chaka"]["xspeed"] = {10, -70, -40, 40, -70, 10, -40, 40};
+    patterns["chaka"]["yspeed"] = {20, 30, 40, -60, 30, 20, 40, -60};
+    patterns["chaka"]["rotateSpeed"] = {40, -60, 20, 60, -60, 40, 20, 60};
+
+    t_flash.loadFromFile("resources/graphics/rhythm/drums/flash.png");
+    t_flash.setSmooth(true);
 }
 void Rhythm::Stop()
 {
@@ -136,7 +175,7 @@ void Rhythm::checkRhythmController(sf::RenderWindow& window)
     if(rhythmController.checkForInput())
     {
         Drum temp;
-        temp.Load(rhythmController.drumToLoad,rhythmController.drum_perfection,window);
+        temp.Load(rhythmController.drumToLoad,rhythmController.drum_perfection,window,t_drums[rhythmController.drumToLoad], patterns[rhythmController.drumToLoad], t_flash);
         temp.pattern = rhythmController.currentPattern;
         drums.push_back(temp);
 

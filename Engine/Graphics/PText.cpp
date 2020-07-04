@@ -259,3 +259,8 @@ void PText::update(sf::RenderWindow& window)
     t.setPosition(lx*resRatioX, ly*resRatioY);
     t.setRotation(angle*(180/3.14159265358));
 }
+
+sf::Text PText::getText()
+{
+    return t;
+}
