@@ -36,7 +36,9 @@ class Config
     "showDebugMsg",
     "showRhythmDebugMsg",
     "showImportantDebugMsg",
-    "lang"};
+    "lang",
+    "masterVolume",
+    "antiAliasing"};
     std::vector<std::string> configDefaults = {"1280",
     "720",
     "1",
@@ -63,7 +65,9 @@ class Config
     "0",
     "0",
     "1",
-    "1"};
+    "1",
+    "50",
+    "0"};
     std::map<std::string,std::string> configMap;
     int configDebugID=0;
     bool changedLang = false;
