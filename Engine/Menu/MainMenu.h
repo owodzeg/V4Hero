@@ -20,6 +20,9 @@ class MainMenu : public Menu
         PSprite fire_1,fire_2,fire_3,aura,sword;
         PSprite sword_1,sword_2;
 
+        sf::SoundBuffer sb_title_loop;
+        sf::Sound title_loop;
+
         std::vector<std::string> temp_menu = {"New game", "Continue", "Options", "Exit"};
 
         PText t_option[4];

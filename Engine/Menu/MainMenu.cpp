@@ -166,12 +166,20 @@ void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     g_x[2] = 0;
     g_x[3] = 0;
 
+    float volume = thisConfigs->GetInt("masterVolume");
+
+    sb_title_loop.loadFromFile("resources/sfx/menu/menuloop.ogg");
+    title_loop.setBuffer(sb_title_loop);
+    title_loop.setLoop(true);
+    title_loop.setVolume(volume);
+
     Scene::Initialise(thisConfigs,keymap,parent);
     keyMapping=keymap;
 
     optionsMenu.Initialise(config,keyMapping,v4core,this);
 
     parent->SaveToDebugLog("Main menu initialized.");
+    title_loop.play();
 }
 void MainMenu::EventFired(sf::Event event){
     if (patapolisMenu.isActive)
@@ -236,6 +244,8 @@ void MainMenu::SelectMenuOption()
         // load the start game cutscenes and menu
         {
 
+        title_loop.stop();
+
         Hide();
         sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
         v4core->continueLoading=true;
@@ -252,6 +262,8 @@ void MainMenu::SelectMenuOption()
     case 1:
         // load save and patapolis
         {
+
+            title_loop.stop();
             Hide();
 
             if(!patapolisMenu.initialised)
@@ -276,6 +288,7 @@ void MainMenu::SelectMenuOption()
         break;
     case 2:
         // load the options menu
+        title_loop.stop();
         Hide();
         v4core->ChangeRichPresence("In Options menu", "logo", "");
         optionsMenu.state = 0;
