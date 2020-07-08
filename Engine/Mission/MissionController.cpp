@@ -27,10 +27,7 @@ MissionController::MissionController()
 
 float MissionController::Smoothstep(float time) ///use time from 0.00 to 1.00
 {
-    cout << "Smoothstep(" << time << "/" << Clamp(time, 0.0, 1.0) << "): ";
-
     time = Clamp(time, 0.0, 1.0);
-    cout << time * time * (3 - 2 * time) << endl;
     return time * time * (3 - 2 * time);
 }
 
@@ -149,6 +146,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseX, 
         {
             unique_ptr<EndFlag> entity = make_unique<EndFlag>();
             entity.get()->LoadConfig(missionConfig);
+            entity.get()->setEntityID(entityID);
 
             if(randX > 0)
             entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
@@ -158,6 +156,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseX, 
             entity.get()->setColor(color);
 
             entity.get()->isCollidable = collidable;
+            entity.get()->isAttackable = attackable;
 
             if(spr_range != 0)
             {
@@ -177,6 +176,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseX, 
         {
             unique_ptr<FeverWorm> entity = make_unique<FeverWorm>();
             entity.get()->LoadConfig(missionConfig);
+            entity.get()->setEntityID(entityID);
 
             if(randX > 0)
             entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
@@ -186,6 +186,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseX, 
             entity.get()->setColor(color);
 
             entity.get()->isCollidable = collidable;
+            entity.get()->isAttackable = attackable;
 
             if(spr_range != 0)
             {
@@ -205,6 +206,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseX, 
         {
             unique_ptr<Kacheek> entity = make_unique<Kacheek>();
             entity.get()->LoadConfig(missionConfig);
+            entity.get()->setEntityID(entityID);
 
             if(randX > 0)
             entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
@@ -214,6 +216,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseX, 
             entity.get()->setColor(color);
 
             entity.get()->isCollidable = collidable;
+            entity.get()->isAttackable = attackable;
 
             if(spr_range != 0)
             {
@@ -233,6 +236,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseX, 
         {
             unique_ptr<Grass1> entity = make_unique<Grass1>();
             entity.get()->LoadConfig(missionConfig);
+            entity.get()->setEntityID(entityID);
 
             if(randX > 0)
             entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
@@ -242,6 +246,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseX, 
             entity.get()->setColor(color);
 
             entity.get()->isCollidable = collidable;
+            entity.get()->isAttackable = attackable;
 
             if(spr_range != 0)
             {
@@ -261,6 +266,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseX, 
         {
             unique_ptr<Grass2> entity = make_unique<Grass2>();
             entity.get()->LoadConfig(missionConfig);
+            entity.get()->setEntityID(entityID);
 
             if(randX > 0)
             entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
@@ -270,6 +276,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseX, 
             entity.get()->setColor(color);
 
             entity.get()->isCollidable = collidable;
+            entity.get()->isAttackable = attackable;
 
             if(spr_range != 0)
             {
@@ -655,7 +662,7 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, st
     }
 }
 
-bool MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float currentObjectY,int collisionObjectID,vector<string> collisionData)
+MissionController::CollisionEvent MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float currentObjectY,int collisionObjectID,vector<string> collisionData)
 {
     for(int i=0; i<tangibleLevelObjects.size(); i++)
     {
@@ -741,7 +748,14 @@ bool MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFra
             {
                 std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
                 target->OnCollide(target, collisionObjectID, collisionData);
-                return true;
+
+                CollisionEvent cevent;
+                cevent.collided = true;
+                //cevent.collidedEntityID = -1;
+                cevent.isAttackable = target->isAttackable;
+                cevent.isCollidable = target->isCollidable;
+
+                return cevent;
             }
             else
             {
@@ -1064,11 +1078,16 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
         ///sending damage dealt
         vector<string> collisionData = {to_string(total)};
 
-        if (DoCollisionForObject(&tmp,xpos,ypos,0,collisionData)) //0 - spear collision ID
+        ///retrieve collision event
+        CollisionEvent cevent = DoCollisionForObject(&tmp,xpos,ypos,0,collisionData); //0 - spear collision ID
+
+        if(cevent.collided)
         {
+            if(cevent.isCollidable)
             levelProjectiles.erase(levelProjectiles.begin()+i);
 
             ///add damage counter
+            if(cevent.isAttackable)
             addDmgCounter(0, total, xpos, ypos, qualitySetting, resSetting);
         };
     }
@@ -1437,8 +1456,8 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
                     shape.setFillColor(sf::Color(100, 250, 50));
                     shape.setPosition(currentPoint.x-2.5,currentPoint.y-2.5);
                     window.draw(shape);
-                    convex.setPoint(i, currentPoint);
-                    //cout << "convex.setPoint(" << i << ", " << currentPoint.x << " " << currentPoint.y << ");" << endl;
+                    convex.setPoint(j, currentPoint);
+                    //cout << "convex.setPoint(" << j << ", " << currentPoint.x << " " << currentPoint.y << ");" << endl;
                 }
 
                 window.draw(convex);
@@ -1447,9 +1466,12 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
         for(int i=0; i<tangibleLevelObjects.size(); i++)
         {
-            for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
+            Entity* entity = tangibleLevelObjects[i].get();
+
+            for(int h=0; h<entity->hitboxes.size(); h++)
             {
-                HitboxFrame* currentHitbox = &(tangibleLevelObjects[i]->hitboxes[h].hitboxObject);
+                HitboxFrame* currentHitbox = &(entity->hitboxes[h].hitboxObject);
+
                 sf::ConvexShape convex;
                 convex.setFillColor(sf::Color(150, 50, 250));
                 // resize it to 5 points
@@ -1458,16 +1480,18 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
                 for (int j=0; j<currentVertices.size(); j++)
                 {
+
                     sf::Vector2f currentPoint = currentVertices[j];
-                    currentPoint.x = currentPoint.x + currentHitbox->g_x + tangibleLevelObjects[i]->global_x;
-                    currentPoint.y = currentPoint.y + currentHitbox->g_y + tangibleLevelObjects[i]->global_y;
+                    currentPoint.x = currentPoint.x + currentHitbox->g_x + entity->global_x;
+                    currentPoint.y = currentPoint.y + currentHitbox->g_y + entity->global_y;
                     //cout<<"DRAWING POINT: "<<currentVertices.size()<<" x: "<<currentPoint.x<<" y: "<<currentPoint.y<<endl;
                     sf::CircleShape shape(5);
                     shape.setFillColor(sf::Color(100, 250, 50));
                     shape.setPosition(currentPoint.x-2.5,currentPoint.y-2.5);
                     window.draw(shape);
-                    convex.setPoint(i, currentPoint);
-                    //cout << "convex.setPoint(" << i << ", " << currentPoint.x << " " << currentPoint.y << ");" << endl;
+                    convex.setPoint(j, currentPoint);
+                    //cout << "convex.setPoint(" << j << ", " << currentPoint.x << " " << currentPoint.y << ");" << endl;
+
                 }
 
                 window.draw(convex);

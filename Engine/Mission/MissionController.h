@@ -141,6 +141,14 @@ class MissionController
     float textDestScale = 1;
     bool textBounce = false;
 
+    struct CollisionEvent ///used to retrieve more data about the collision between objects
+    {
+        bool collided = false; ///did collision event happen?
+        int collidedEntityID = -1; ///id of entity that has been collided with
+        bool isCollidable = true; ///is the entity collidable?
+        bool isAttackable = true; ///is the entity attackable?
+    };
+
     float Smoothstep(float time);
     float Clamp(float x, float lowerlimit, float upperlimit);
     void addDmgCounter(int type, int damage, float baseX, float baseY, int q, int r);
@@ -151,7 +159,7 @@ class MissionController
 
     void FinishLastCutscene();
     bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame,AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY);
-    bool DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY,int collisionObjectID,vector<string> collisionData = {});
+    CollisionEvent DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY,int collisionObjectID,vector<string> collisionData = {});
     bool isMoreCutscenes();
     void StopMission();
     void Initialise(Config &config, std::map<int,bool> &keymap,std::string backgroundName,V4Core &v4core_);
