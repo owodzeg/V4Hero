@@ -46,11 +46,13 @@ class Drum
     std::vector<float> particle_speed;
 
     int pattern = 0;
+    std::string cur_drum;
 
-    std::map<std::string, std::vector<float>> cur_pattern;
+    ///pattern["pata"]["x"] = vector<float>
+    std::map<std::string, std::map<std::string, std::vector<float>>> patterns;
 
     Drum();
-    void Load(std::string drum, int perfection, sf::RenderWindow& window, sf::Texture& drum_texture, std::map<std::string, std::vector<float>> patterns, sf::Texture& flash_texture);
+    void Load(std::string drum, int perfection, sf::Texture& drum_texture, sf::Texture& flash_texture);
     void Draw(sf::RenderWindow& window);
 };
 

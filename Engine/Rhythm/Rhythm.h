@@ -42,9 +42,6 @@ class Rhythm
     std::map<std::string, sf::Texture> t_drums;
     sf::Texture t_flash;
 
-    ///pattern["pata"]["x"] = vector<float>
-    std::map<std::string, std::map<std::string, vector<float>>> patterns;
-
     /// Initialize clocks ///
     sf::Clock rhythmClock; ///Main clock for Rhythm purposes
     sf::Clock beatCycleClock; ///Clock for proper command inputs and requirements
@@ -112,7 +109,8 @@ class Rhythm
     int GetCombo();
     int GetRealCombo();
     float GetSatisfaction();
-    void checkRhythmController(sf::RenderWindow& window);
+    void checkRhythmController();
+    void doRhythm();
     void Draw(sf::RenderWindow& window);
 
 };

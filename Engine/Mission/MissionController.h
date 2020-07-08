@@ -166,6 +166,7 @@ class MissionController
     void StartMission(std::string missionFile, bool showCutscene=false);
     void Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
     void DoMovement(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
+    void DoRhythm();
     void DoKeyboardEvents(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
     float pataponMaxProjection(float axisAngle, int id);
 

@@ -6,14 +6,41 @@ using namespace std;
 
 Drum::Drum()
 {
+    patterns["pata"]["x"] = {135, 100, 80, 95, 100, 135, 80, 95};
+    patterns["pata"]["y"] = {295, 410, 340, 220, 410, 295, 340, 220};
+    patterns["pata"]["angle"] = {-20, -20, 3, -7, -15, -23, 3, -7};
+    patterns["pata"]["xspeed"] = {-8, -8, -40, 20, -8, -8, -40, 20};
+    patterns["pata"]["yspeed"] = {-200, 140, -20, -20, 140, -200, -20, -20};
+    patterns["pata"]["rotateSpeed"] = {40, -40, 60, -60, -40, 40, 60, -60};
+
+    patterns["pon"]["x"] = {1140, 1165, 1110, 1135, 1165, 1140, 1110, 1135};
+    patterns["pon"]["y"] = {290, 410, 340, 220, 410, 290, 340, 220};
+    patterns["pon"]["angle"] = {0, 20, 10, 10, 20, 0, 10, 10};
+    patterns["pon"]["xspeed"] = {-40, -40, 20, 10, -40, -40, 20, 10};
+    patterns["pon"]["yspeed"] = {-10, -40, 20, 100, -40, -10, 20, 100};
+    patterns["pon"]["rotateSpeed"] = {-60, 30, -30, 50, 30, -60, -30, 50};
+
+    patterns["don"]["x"] = {690, 515, 605, 780, 515, 690, 605, 780};
+    patterns["don"]["y"] = {650, 660, 665, 670, 660, 650, 665, 670};
+    patterns["don"]["angle"] = {0, 10, -10, -10, 10, 0, -10, -10};
+    patterns["don"]["xspeed"] = {-30, -50, -50, 90, -50, -30, -50, -90};
+    patterns["don"]["yspeed"] = {-30, -50, -50, -30, -50, -30, -50, -30};
+    patterns["don"]["rotateSpeed"] = {40, 60, -60, -60, 60, 40, -60, -60};
+
+    patterns["chaka"]["x"] = {635, 460, 550, 715, 460, 635, 550, 715};
+    patterns["chaka"]["y"] = {105, 70, 75, 85, 70, 105, 75, 85};
+    patterns["chaka"]["angle"] = {0, 10, -10, -10, 10, 0, -10, -10};
+    patterns["chaka"]["xspeed"] = {10, -70, -40, 40, -70, 10, -40, 40};
+    patterns["chaka"]["yspeed"] = {20, 30, 40, -60, 30, 20, 40, -60};
+    patterns["chaka"]["rotateSpeed"] = {40, -60, 20, 60, -60, 40, 20, 60};
 }
 
-void Drum::Load(string drum, int perfection, sf::RenderWindow& window, sf::Texture& drum_texture, std::map<std::string, vector<float>> patterns, sf::Texture& flash_texture)
+void Drum::Load(string drum, int perfection, sf::Texture& drum_texture, sf::Texture& flash_texture)
 {
     s_flash.setTexture(flash_texture);
     s_flash.setOrigin(s_flash.getLocalBounds().width/2,s_flash.getLocalBounds().height/2);
 
-    cur_pattern = patterns;
+    cur_drum = drum;
 
     if(drum == "don")
     {
@@ -105,9 +132,9 @@ void Drum::Draw(sf::RenderWindow& window)
         {
             x_scale += 1 / fps;
             y_scale += 1 / fps;
-            rotation += cur_pattern["rotateSpeed"][pattern] / fps;
-            x += cur_pattern["xspeed"][pattern] / fps;
-            y += cur_pattern["yspeed"][pattern] / fps;
+            rotation += patterns[cur_drum]["rotateSpeed"][pattern] / fps;
+            x += patterns[cur_drum]["xspeed"][pattern] / fps;
+            y += patterns[cur_drum]["yspeed"][pattern] / fps;
 
             alpha -= float(510) / fps;
 
@@ -133,9 +160,9 @@ void Drum::Draw(sf::RenderWindow& window)
             {
                 x_scale += 1 / fps;
                 y_scale += 1 / fps;
-                rotation += cur_pattern["rotateSpeed"][pattern] / fps;
-                x += cur_pattern["xspeed"][pattern] / fps;
-                y += cur_pattern["yspeed"][pattern] / fps;
+                rotation += patterns[cur_drum]["rotateSpeed"][pattern] / fps;
+                x += patterns[cur_drum]["xspeed"][pattern] / fps;
+                y += patterns[cur_drum]["yspeed"][pattern] / fps;
             }
 
             alpha -= float(510) / fps;
@@ -174,8 +201,8 @@ void Drum::Draw(sf::RenderWindow& window)
 
     s_drum.setScale(x_scale,y_scale);
     s_drum.setColor(sf::Color(255,255,255,alpha));
-    s_drum.setRotation((rotation+cur_pattern["angle"][pattern]) * 3.1415928 / 180.f);
-    s_drum.setPosition(x+cur_pattern["x"][pattern],y+cur_pattern["y"][pattern]);
+    s_drum.setRotation((rotation+patterns[cur_drum]["angle"][pattern]) * 3.1415928 / 180.f);
+    s_drum.setPosition(x+patterns[cur_drum]["x"][pattern],y+patterns[cur_drum]["y"][pattern]);
 
     if(drumClock.getElapsedTime().asMilliseconds() < 200)
     {
@@ -193,7 +220,7 @@ void Drum::Draw(sf::RenderWindow& window)
 
     s_flash.setColor(sf::Color(255,255,255,flashalpha));
     s_flash.setScale(x_flashscale,y_flashscale);
-    s_flash.setPosition(x+cur_pattern["x"][pattern],y+cur_pattern["y"][pattern]);
+    s_flash.setPosition(x+patterns[cur_drum]["x"][pattern],y+patterns[cur_drum]["y"][pattern]);
 
     if(shockwaveAlpha <= 0)
     {
@@ -220,12 +247,12 @@ void Drum::Draw(sf::RenderWindow& window)
         c_shockwave.setRadius(shockwaveSize);
         c_shockwave.setFillColor(sf::Color(255,255,255,shockwaveAlpha));
         c_shockwave.setOrigin(c_shockwave.getLocalBounds().width/2,c_shockwave.getLocalBounds().height/2);
-        c_shockwave.setPosition(x+cur_pattern["x"][pattern]*ratio_X,y+cur_pattern["y"][pattern]*ratio_Y);
+        c_shockwave.setPosition(x+patterns[cur_drum]["x"][pattern]*ratio_X,y+patterns[cur_drum]["y"][pattern]*ratio_Y);
 
         c_shockwave2.setRadius(shockwave2Size);
         c_shockwave2.setFillColor(sf::Color(255,255,255,shockwave2Alpha));
         c_shockwave2.setOrigin(c_shockwave2.getLocalBounds().width/2,c_shockwave2.getLocalBounds().height/2);
-        c_shockwave2.setPosition(x+cur_pattern["x"][pattern]*ratio_X,y+cur_pattern["y"][pattern]*ratio_Y);
+        c_shockwave2.setPosition(x+patterns[cur_drum]["x"][pattern]*ratio_X,y+patterns[cur_drum]["y"][pattern]*ratio_Y);
     }
 
     s_drum.draw(window);
@@ -238,8 +265,8 @@ void Drum::Draw(sf::RenderWindow& window)
         ///Initialize first position
         if(particle_didStart[i] == false)
         {
-            particle_x[i] = x+cur_pattern["x"][pattern]*ratio_X;
-            particle_y[i] = y+cur_pattern["y"][pattern]*ratio_Y;
+            particle_x[i] = x+patterns[cur_drum]["x"][pattern]*ratio_X;
+            particle_y[i] = y+patterns[cur_drum]["y"][pattern]*ratio_Y;
             particle_didStart[i] = true;
         }
 

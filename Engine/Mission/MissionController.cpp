@@ -456,7 +456,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
         }
     }
 
-    pataponY = 720 - 174;
+    pataponY = 720 - 176;
     floorY = 720 - 100;
 
     /**
@@ -1014,7 +1014,7 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
         {
             case 0: ///Hatapon
             {
-                unit->setGlobalPosition(sf::Vector2f(army_X,494));
+                unit->setGlobalPosition(sf::Vector2f(army_X,492));
                 break;
             }
 
@@ -1093,31 +1093,44 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
     }
 
 }
+void MissionController::DoRhythm()
+{
+        if(rhythm.current_song == "patapata")
+        {
+            //cout << "set walk true" << endl;
+            camera.walk = true;
+
+            if(!startWalking)
+            {
+                walkClock.restart();
+                prevTime = 0;
+
+                startWalking = true;
+            }
+        }
+        else
+        {
+            //cout << "set walk false" << endl;
+            camera.walk = false;
+
+            startWalking = false;
+        }
+
+        if((rhythm.rhythmController.current_drum == "pata") or (rhythm.rhythmController.current_drum == "pon") or (rhythm.rhythmController.current_drum == "chaka") or (rhythm.rhythmController.current_drum == "don"))
+        {
+            rhythm.rhythmController.current_drum = "";
+            rhythm.current_song = "";
+        }
+
+        rhythm.rhythmController.config = *missionConfig;
+        rhythm.config = *missionConfig;
+
+        rhythm.doRhythm();
+}
 void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld)
 {
     if(!missionEnd)
     missionEndTimer.restart();
-
-    if(rhythm.current_song == "patapata")
-    {
-        //cout << "set walk true" << endl;
-        camera.walk = true;
-
-        if(!startWalking)
-        {
-            walkClock.restart();
-            prevTime = 0;
-
-            startWalking = true;
-        }
-    }
-    else
-    {
-        //cout << "set walk false" << endl;
-        camera.walk = false;
-
-        startWalking = false;
-    }
 
     missionKeyMap = keyMap;
 
@@ -1212,11 +1225,6 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
     DoKeyboardEvents(window,fps,keyMap,keyMapHeld);
     DoMovement(window,fps,keyMap,keyMapHeld);
-
-    // TODO: at some point some pointer shenanigans is required to make these be a reference to v4core's ones too.
-    rhythm.rhythmController.keyMap = *missionKeyMap;
-    rhythm.rhythmController.config = *missionConfig;
-    rhythm.config = *missionConfig;
 
     vector<int> tlo_rm;
 
@@ -1333,11 +1341,6 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         unit->Draw(window);
     }
 
-    if((rhythm.rhythmController.current_drum == "pata") or (rhythm.rhythmController.current_drum == "pon") or (rhythm.rhythmController.current_drum == "chaka") or (rhythm.rhythmController.current_drum == "don"))
-    {
-        rhythm.rhythmController.current_drum = "";
-        rhythm.current_song = "";
-    }
 
     for(int i=0; i<levelProjectiles.size(); i++)
     {
@@ -1348,6 +1351,16 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
     auto lastView = window.getView();
 
     window.setView(window.getDefaultView());
+
+    if(!missionEnd)
+    {
+        // TODO: at some point some pointer shenanigans is required to make these be a reference to v4core's ones too.
+        rhythm.rhythmController.keyMap = *missionKeyMap; ///shared object must be used within mutex lock
+
+        rhythm.fps = fps;
+        DoRhythm();
+        rhythm.Draw(window);
+    }
 
     /**
 
@@ -1575,8 +1588,6 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         dmgCounters.erase(dmgCounters.begin()+(dmg_rm[i] - i));
     }
 
-    rhythm.fps = fps;
-
     if(showTimer)
     {
         auto lastView2 = window.getView();
@@ -1587,11 +1598,6 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         t_timerMenu.setPosition(window.getSize().x/2,100);
         window.draw(t_timerMenu);
         window.setView(lastView2);
-    }
-
-    if(!missionEnd)
-    {
-        rhythm.Draw(window);
     }
 
     for(int i=0; i<tlo_rm.size(); i++)
