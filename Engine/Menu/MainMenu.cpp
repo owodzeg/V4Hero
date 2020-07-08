@@ -262,16 +262,21 @@ void MainMenu::EventFired(sf::Event event){
         {
             if(event.type == sf::Event::KeyPressed)
             {
-                if(!keypressed)
+                if(startClock.getElapsedTime().asSeconds() > 2)
                 {
-                    s_smash.play();
-                    logow_bg.setColor(sf::Color::Red);
-                    logow_shadow.setColor(sf::Color::Red);
-                    logow_scale = 1.2;
-                    logow_shscale = 1.2;
-                    dest_y = 360;
-                    keypressed = true;
-                    menuClock.restart();
+                    if(!keypressed)
+                    {
+                        s_smash.play();
+                        logow_bg.setColor(sf::Color(200,0,0,255));
+                        logow_shadow.setColor(sf::Color(200,0,0,255));
+                        logow_text.setColor(sf::Color(255,255,255,255));
+                        ui_alpha = 255;
+                        logow_scale = 1.2;
+                        logow_shscale = 1.2;
+                        dest_y = 360;
+                        keypressed = true;
+                        menuClock.restart();
+                    }
                 }
             }
         }
@@ -438,7 +443,6 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
                     if(menuClock.getElapsedTime().asSeconds() > 4.5)
                     {
                         premenu = false;
-                        title_loop.play();
                     }
                 }
 
@@ -453,6 +457,9 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
         }
         else
         {
+            if(title_loop.getStatus() == sf::Sound::Status::Stopped)
+            title_loop.play();
+
             window.draw(v_background);
 
             if(fade == 0)
