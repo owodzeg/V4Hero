@@ -528,6 +528,11 @@ void AnimatedObject::setColor(sf::Color new_color)
     color = new_color;
 }
 
+sf::Color AnimatedObject::getColor()
+{
+    return color;
+}
+
 void AnimatedObject::LoadConfig(Config *thisConfigs, std::string unitParamPath)
 {
     P4A handle;
@@ -601,6 +606,7 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
         objects[i].g_sx = scaleX;
         objects[i].g_sy = scaleY;
         objects[i].color = color;
+        objects[i].g_r = rotation;
 
         objects[i].SetPos(cur_pos);
         //cout << "Displaying animation " << getAnimationSegment() << ", time: " << getAnimationPos() << ":" << cur_pos << "/" << anim_end << " frame: " << curFrame+1 << "/" << (getAnimationLength(getAnimationSegment()) * animation_framerate) << " " << getAnimationLength(getAnimationSegment()) << endl;

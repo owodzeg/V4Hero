@@ -25,6 +25,9 @@ class Object
     float old_x,old_y,old_r; ///old position
     float or_x,or_y; ///origin (for rotation)
     float s_x=1,s_y=1; ///scale
+
+    float g_r=0; ///global rotation
+
     int layer = 0;
     int parent = 0;
 

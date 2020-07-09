@@ -36,6 +36,7 @@ class AnimatedObject
     float fps = 60;
     float width = 0;
     float scaleX = 1, scaleY = 1; ///TEMPORARY
+    float rotation = 0;
 
     float animation_framerate = 30;
 
@@ -53,7 +54,7 @@ class AnimatedObject
     float framerate = 1;
     sf::Rect<float> hitBox;
 
-    float curHP = 500;
+    float curHP = 10;
     float maxHP = 500;
 
     bool ready_to_erase = false;
@@ -103,6 +104,7 @@ class AnimatedObject
     void moveGlobalPosition(sf::Vector2f pos);
     void setLoop(bool loop);
     void setColor(sf::Color new_color);
+    sf::Color getColor();
     virtual void LoadConfig(Config *thisConfigs,std::string unitParamPath);
     virtual void Draw(sf::RenderWindow& window);
 };
