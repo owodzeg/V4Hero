@@ -43,7 +43,7 @@ void Kacheek::Draw(sf::RenderWindow& window)
                 sf::Color c = AnimatedObject::getColor();
                 float alpha = c.a;
 
-                alpha -= 255.0 / fps;
+                alpha -= 510.0 / fps;
 
                 if(alpha <= 0)
                 {
@@ -56,14 +56,15 @@ void Kacheek::Draw(sf::RenderWindow& window)
         }
         else
         {
+            isCollidable = false;
+            isAttackable = false;
+
             ///Animate the tumble here
             if((getAnimationPos() >= 0.2) && (getAnimationPos() <= 1))
             {
                 ///Make it do a 180 spin based on frames 12 - 60
                 float percentage = (getAnimationPos() - 0.2) / (1 - 0.2);
                 rotation = 190 * percentage;
-
-                cout << "Percentage: " << percentage << " Rotation: " << rotation << endl;
 
                 if(rotation >= 190)
                 rotation = 190;
@@ -79,8 +80,6 @@ void Kacheek::Draw(sf::RenderWindow& window)
                 float percentage = (getAnimationPos() - 0.2) / (0.4 - 0.2);
                 float raise = -60 * percentage;
 
-                cout << "Percentage: " << percentage << " Raise1: " << raise << endl;
-
                 if(raise <= -60)
                 raise = -60;
 
@@ -92,8 +91,6 @@ void Kacheek::Draw(sf::RenderWindow& window)
                 ///Make it do a 180 spin based on frames 12 - 60
                 float percentage = (getAnimationPos() - 0.4) / (0.6 - 0.4);
                 float raise = -60 * (1 - percentage);
-
-                cout << "Percentage: " << percentage << " Raise2: " << raise << endl;
 
                 if(raise >= 0)
                 raise = 0;
@@ -107,8 +104,6 @@ void Kacheek::Draw(sf::RenderWindow& window)
                 float percentage = (getAnimationPos() - 0.6) / (0.8 - 0.6);
                 float raise = -60 * percentage;
 
-                cout << "Percentage: " << percentage << " Raise1: " << raise << endl;
-
                 if(raise <= -60)
                 raise = -60;
 
@@ -120,8 +115,6 @@ void Kacheek::Draw(sf::RenderWindow& window)
                 ///Make it do a 180 spin based on frames 12 - 60
                 float percentage = (getAnimationPos() - 0.8) / (1 - 0.8);
                 float raise = 40 + (-100 * (1 - percentage));
-
-                cout << "Percentage: " << percentage << " Raise2: " << raise << endl;
 
                 if(raise >= 40)
                 raise = 40;
@@ -164,9 +157,6 @@ void Kacheek::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
             {
                 AnimatedObject::setAnimationSegment("death", true);
                 death_timer.restart();
-
-                isCollidable = false;
-                isAttackable = false;
             }
         }
     }

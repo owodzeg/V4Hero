@@ -12,6 +12,7 @@ void Patapon::LoadConfig(Config *thisConfigs)
 {
     /// load patapon from p4a file
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\unit\\patapon.p4a");
+    setAnimationSegment("idle_armed");
 }
 
 void Patapon::startAttack()

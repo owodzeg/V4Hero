@@ -601,7 +601,7 @@ void PatapolisMenu::EventFired(sf::Event event)
                     // open the world map
                     break;
                 case 2:
-                    /// armoury/barracks
+                    /// armory/barracks
                     thisConfig->thisCore->SaveToDebugLog("Entering Barracks...");
                     barracks_menu.Show();
                     barracks_menu.isActive = true;
