@@ -31,6 +31,9 @@ void EndFlag::Draw(sf::RenderWindow& window)
 
             thisConfig->thisCore->currentController.StopMission();
 
+            cout << "Add the picked up items to item repository" << endl;
+            thisConfig->thisCore->currentController.submitPickedItems();
+
             cout << "Go to Patapolis" << endl;
 
             sf::Thread loadingThreadInstance(thisConfig->thisCore->LoadingThread,thisConfig->thisCore);

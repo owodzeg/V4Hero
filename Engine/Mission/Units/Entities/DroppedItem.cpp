@@ -158,7 +158,7 @@ void DroppedItem::Draw(sf::RenderWindow& window)
             if(pickupClock.getElapsedTime().asMilliseconds() >= 380)
             {
                 vspeed2 -= 8 / fps;
-                hspeed2 += (hspeed2*4) / fps;
+                hspeed2 += (hspeed2*4.5) / fps;
 
                 if(vspeed2 <= -8)
                 vspeed2 = -8;
