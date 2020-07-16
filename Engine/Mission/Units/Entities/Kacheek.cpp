@@ -4,6 +4,7 @@
 #include <iostream>
 #include "../../../Func.h"
 #include <sstream>
+#include "../../../V4Core.h"
 Kacheek::Kacheek()
 {
     type = HOSTILE;
@@ -52,6 +53,44 @@ void Kacheek::Draw(sf::RenderWindow& window)
                 }
 
                 AnimatedObject::setColor(sf::Color(c.r,c.g,c.b,alpha));
+
+                if(!dropped_item)
+                {
+                    ///Drop item mechanism! Really cool!
+                    cout << "Look at me! I'm a Kacheek and I'm dropping an item!" << endl;
+                    int rng = rand() % 100 + 1; ///select 1 - 100;
+                    int total_rng = 0;
+                    int id_picked = 0;
+
+                    cout << "Rng: " << rng << endl;
+
+                    for(int i=0; i<loot_table.size(); i++)
+                    {
+                        total_rng += loot_table[i].item_chance;
+
+                        if(rng <= total_rng)
+                        {
+                            id_picked = loot_table[i].item_id;
+                            cout << "Picked id: " << id_picked << endl;
+
+                            break;
+                        }
+                    }
+
+                    if(id_picked != 0)
+                    {
+                        auto item = thisConfig->thisCore->savereader.itemreg.GetItemByID(id_picked);
+                        vector<string> data = {item->spritesheet, to_string(item->spritesheet_id), to_string(id_picked)};
+
+                        thisConfig->thisCore->currentController.spawnEntity("droppeditem",5,getGlobalPosition().x,0,getGlobalPosition().y-60,0,0,1,sf::Color::White,0,0,vector<Entity::Loot>(), data);
+
+                        dropped_item = true;
+                    }
+                    else
+                    {
+                        cout << "No item dropped :(" << endl;
+                    }
+                }
             }
         }
         else

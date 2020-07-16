@@ -35,9 +35,12 @@ void ItemRegistry::ReadItemFiles(){
     }
     conf.close();
     bool quit=false;
-    for (int i=0;i<itemPaths.size()-1;i++){
+    for (int i=0;i<itemPaths.size();i++){
         Item* newItem=new Item();
         ifstream itemStream("resources/data/itemdata/"+itemPaths[i]+".txt");
+
+        cout << "itemStream(" << "resources/data/itemdata/"+itemPaths[i]+".txt)" << endl;
+
         if(itemStream.good())
         {
             string line;
@@ -194,6 +197,10 @@ void ItemRegistry::ReadItemFiles(){
                         newItem->item_description = resws;
                     } else if(key[0]=="icon"){
                         newItem->icon_path = key[1];
+                    } else if(key[0]=="spritesheet"){
+                        newItem->spritesheet = key[1];
+                    } else if(key[0]=="spritesheet_id"){
+                        newItem->spritesheet_id = stoi(key[1]);
                     }
                 }
             }

@@ -10,6 +10,8 @@ class Item
     std::wstring item_name;
     std::wstring item_description;
     std::string icon_path;
+    std::string spritesheet="none";
+    int spritesheet_id=-1;
 };
 
 #endif // ITEM_H

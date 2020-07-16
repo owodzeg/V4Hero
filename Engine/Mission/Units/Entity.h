@@ -10,6 +10,16 @@ class Entity : public CollidableObject
     public:
     int entityID = -1;
 
+    struct Loot
+    {
+        int item_id = 0;
+        int item_chance = 0;
+    };
+
+    std::vector<Loot> loot_table;
+
+    bool dropped_item = false;
+
     Entity();
     virtual void setEntityID(int new_entityID);
     virtual int getEntityID();

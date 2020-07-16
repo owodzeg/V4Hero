@@ -119,15 +119,8 @@ class MissionController
         vector<bool> mode;
     };
 
-    struct DroppedItem
-    {
-        int itemID=0; ///id of item
-        float x=0,y=0,scale=1; ///position and scale of the item
-        sf::Sprite spr; ///sprite to display the item
-    };
-
     PSpritesheet dmg_spritesheet;
-    PSpritesheet item_spritesheet;
+    std::map<std::string,PSpritesheet> droppeditem_spritesheet;
 
     std::vector<DamageCounter> dmgCounters;
     std::vector<DroppedItem> droppedItems;
@@ -149,11 +142,25 @@ class MissionController
         bool isAttackable = true; ///is the entity attackable?
     };
 
+    struct PickedItem
+    {
+        ///data
+        int item_id;
+
+        ///visuals
+        sf::CircleShape circle;
+        PSprite item;
+        sf::Vector2f bounds;
+    };
+
+    vector<PickedItem> pickedItems;
+
     float Smoothstep(float time);
     float Clamp(float x, float lowerlimit, float upperlimit);
     void addDmgCounter(int type, int damage, float baseX, float baseY, int q, int r);
     void addItemsCounter(int id, float baseX, float baseY);
-    void spawnEntity(string entityName, int entityID, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable);
+    void spawnEntity(string entityName, int entityID, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, vector<Entity::Loot> loot_table, vector<string> additional_data={});
+    void addPickedItem(std::string spritesheet, int spritesheet_id, int picked_item);
 
     void StartCutscene(const std::wstring& text,bool isBlackScreen,int TimeToShow);
 

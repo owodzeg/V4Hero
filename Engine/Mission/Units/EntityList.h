@@ -7,5 +7,6 @@
 #include "Entities/Wall.h"
 #include "Entities/Grass1.h"
 #include "Entities/Grass2.h"
+#include "Entities/DroppedItem.h"
 
 #endif // ENTITYLIST_H

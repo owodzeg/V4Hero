@@ -41,6 +41,7 @@ class ObeliskMenu : public Menu
         float location_bg_b_destAlpha = 255;
 
         bool displayMissions = false;
+        bool runonce = false;
 
         PSprite unavailable;
         PSprite location_highlight;
@@ -62,6 +63,9 @@ class ObeliskMenu : public Menu
         };
 
         vector<Mission> missions; ///Missions returned for a specific location
+
+        sf::Texture test_tex;
+        sf::Sprite test_spr;
 
         sf::RenderTexture render_map;
         sf::Texture tex_render_map;

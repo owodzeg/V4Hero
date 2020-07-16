@@ -103,6 +103,9 @@ void ObeliskMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Co
 
     dullpon.loadFromFile("resources/graphics/ui/worldmap/dullpon.png", quality, 1);
 
+    test_tex.loadFromFile("resources/graphics/ui/worldmap/dullpon_M.png");
+    test_spr.setTexture(test_tex);
+
     PSprite fld;
     fld.loadFromFile("resources/graphics/ui/worldmap/location_field.png", quality, 1);
 
@@ -152,11 +155,19 @@ void ObeliskMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Co
     location_highlight.loadFromFile("resources/graphics/ui/worldmap/location_highlight.png", quality, 1);
     location_highlight.setOrigin(location_highlight.getLocalBounds().width/2, location_highlight.getLocalBounds().height/2);
 
-    render_map.create(1012*resRatioX, 162*resRatioY);
     cout << "[WorldMap] Creating render_map " << 1012*resRatioX << "x" << 162*resRatioY << endl;
+    if(!render_map.create(1012*resRatioX, 162*resRatioY))
+    {
+        cout << "[WorldMap] Failed to create render_map!" << endl;
+        thisConfigs->thisCore->SaveToDebugLog("[WorldMap] Failed to create render_map!");
+    }
 
-    render_missions_map.create(280*resRatioX, 120*resRatioY);
     cout << "[WorldMap] Creating render_map " << 280*resRatioX << "x" << 120*resRatioY << endl;
+    if(!render_missions_map.create(280*resRatioX, 120*resRatioY))
+    {
+        cout << "[WorldMap] Failed to create render_map!" << endl;
+        thisConfigs->thisCore->SaveToDebugLog("[WorldMap] Failed to create render_missions_map!");
+    }
 
     mission_select.loadFromFile("resources/graphics/ui/worldmap/mission_select.png", quality, 1);
 
@@ -417,6 +428,11 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps)
     if(isActive)
     {
         //cout << mapX << " " << mapXdest << " " << (sel_location*123) << " " << (sel_location*123) + 176 << endl;
+        if(!runonce)
+        {
+            cout << "[DEBUG] Obelisk is currently open and active." << endl;
+            thisConfig->thisCore->SaveToDebugLog("[DEBUG] Obelisk is currently open and active.");
+        }
 
         render_map.clear(sf::Color::Transparent);
 
@@ -535,8 +551,7 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps)
         float resRatioX = window.getSize().x / float(1280);
         float resRatioY = window.getSize().y / float(720);
 
-        tex_render_map = render_map.getTexture();
-        spr_render_map.setTexture(tex_render_map, true);
+        spr_render_map.setTexture(render_map.getTexture(), true);
         spr_render_map.setPosition(sf::Vector2f(134*resRatioX, (mainbox.getPosition().y - 115) * resRatioY));
         window.draw(spr_render_map);
 
@@ -571,8 +586,7 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps)
             mission_select.setPosition(135, missionbox.getPosition().y - 56 + (sel_mission*24));
             mission_select.draw(window);
 
-            tex_render_missions_map = render_missions_map.getTexture();
-            spr_render_missions_map.setTexture(tex_render_missions_map, true);
+            spr_render_missions_map.setTexture(render_missions_map.getTexture(), true);
             spr_render_missions_map.setPosition(sf::Vector2f(143*resRatioX, (missionbox.getPosition().y - 53) * resRatioY));
             window.draw(spr_render_missions_map);
         }

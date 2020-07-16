@@ -136,8 +136,10 @@ void MissionController::addItemsCounter(int id, float baseX, float baseY)
 
 }
 
-void MissionController::spawnEntity(string entityName, int entityID, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable)
+void MissionController::spawnEntity(string entityName, int entityID, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, vector<Entity::Loot> loot_table, vector<string> additional_data)
 {
+    ///need to somehow optimize this to not copy paste the same code over and over
+
     cout << "Spawning entity " << entityName << " (ID: " << entityID << ") " << baseX << " " << randX << " " << baseY << " " << spr_goal << " " << spr_range << " " << statLevel << endl;
 
     switch(entityID)
@@ -157,6 +159,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseX, 
 
             entity.get()->isCollidable = collidable;
             entity.get()->isAttackable = attackable;
+            entity.get()->loot_table = loot_table;
 
             if(spr_range != 0)
             {
@@ -187,6 +190,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseX, 
 
             entity.get()->isCollidable = collidable;
             entity.get()->isAttackable = attackable;
+            entity.get()->loot_table = loot_table;
 
             if(spr_range != 0)
             {
@@ -217,6 +221,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseX, 
 
             entity.get()->isCollidable = collidable;
             entity.get()->isAttackable = attackable;
+            entity.get()->loot_table = loot_table;
 
             if(spr_range != 0)
             {
@@ -247,6 +252,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseX, 
 
             entity.get()->isCollidable = collidable;
             entity.get()->isAttackable = attackable;
+            entity.get()->loot_table = loot_table;
 
             if(spr_range != 0)
             {
@@ -277,6 +283,67 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseX, 
 
             entity.get()->isCollidable = collidable;
             entity.get()->isAttackable = attackable;
+            entity.get()->loot_table = loot_table;
+
+            if(spr_range != 0)
+            {
+                if(rand() % spr_range == spr_goal)
+                {
+                    tangibleLevelObjects.push_back(std::move(entity));
+                }
+            }
+            else
+            {
+                tangibleLevelObjects.push_back(std::move(entity));
+            }
+
+            break;
+        }
+        case 5:
+        {
+            unique_ptr<DroppedItem> entity = make_unique<DroppedItem>();
+            entity.get()->LoadConfig(missionConfig);
+            entity.get()->setEntityID(entityID);
+            entity.get()->manual_mode = true;
+
+            ///This unique entity needs to be loaded differently, read additional data for spritesheet info to be passed from the item registry.
+            string spritesheet = additional_data[0];
+            int spritesheet_id = stoi(additional_data[1]);
+            int picked_item = stoi(additional_data[2]);
+
+            entity.get()->spritesheet = spritesheet;
+            entity.get()->spritesheet_id = spritesheet_id;
+            entity.get()->picked_item = picked_item;
+
+            cout << "[DroppedItem] Selecting spritesheet " << spritesheet << " with id " << spritesheet_id << endl;
+
+            cout << "[DroppedItem] Loading from memory" << endl;
+            vector<char> di_data = droppeditem_spritesheet[spritesheet].retrieve_char();
+            cout << "[DroppedItem] Vector loaded. Size: " << di_data.size() << endl;
+            entity.get()->objects[0].tex_obj.loadFromMemory(&di_data[0], di_data.size());
+            cout << "[DroppedItem] Setting smooth" << endl;
+            entity.get()->objects[0].tex_obj.setSmooth(true);
+            cout << "[DroppedItem] Setting texture" << endl;
+            entity.get()->objects[0].s_obj.setTexture(entity.get()->objects[0].tex_obj);
+            cout << "[DroppedItem] Marking as unexported" << endl;
+            entity.get()->objects[0].exported = false;
+            cout << "[DroppedItem] Loading done." << endl;
+
+            entity.get()->objects[0].s_obj.qualitySetting = qualitySetting;
+            entity.get()->objects[0].s_obj.resSetting = resSetting;
+
+            //entity.get()->objects[0].s_obj.setOrigin(entity.get()->objects[0].s_obj.getLocalBounds().width/2, entity.get()->objects[0].s_obj.getLocalBounds().height/2);
+
+            entity.get()->cur_pos = float(spritesheet_id-1) / 60.0;
+
+            entity.get()->animation_bounds[0] = droppeditem_spritesheet[spritesheet].retrieve_rect_as_map();
+
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
+
+            entity.get()->setColor(color);
+
+            entity.get()->isCollidable = collidable;
+            entity.get()->isAttackable = attackable;
 
             if(spr_range != 0)
             {
@@ -295,6 +362,33 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseX, 
     }
 
     cout << "Loading finished" << endl;
+}
+
+void MissionController::addPickedItem(std::string spritesheet, int spritesheet_id, int picked_item)
+{
+    cout << "MissionController::addPickedItem(" << spritesheet << ", " << spritesheet_id << ", " << picked_item << ")" << endl;
+
+    PickedItem tmp;
+    tmp.circle.setFillColor(sf::Color(255,255,255,192));
+    //tmp.circle.setRadius(50 * resRatioX);
+    ///set radius in draw loop to get appropriate resratiox size
+    tmp.item_id = picked_item;
+
+    ///This unique entity needs to be loaded differently, read additional data for spritesheet info to be passed from the item registry.
+    vector<char> di_data = droppeditem_spritesheet[spritesheet].retrieve_char();
+
+    sf::Texture tex_obj;
+    tex_obj.loadFromMemory(&di_data[0], di_data.size());
+    tex_obj.setSmooth(true);
+
+    tmp.item.setTexture(tex_obj);
+    tmp.item.setTextureRect(droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id-1]);
+    tmp.bounds = sf::Vector2f(droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id-1].width, droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id-1].height);
+
+    tmp.item.qualitySetting = qualitySetting;
+    tmp.item.resSetting = resSetting;
+
+    pickedItems.push_back(tmp);
 }
 
 void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,std::string backgroundString,V4Core &v4core_)
@@ -394,6 +488,19 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
 
     bar_win.setOrigin(bar_win.getLocalBounds().width/2, bar_win.getLocalBounds().height/2);
     bar_lose.setOrigin(bar_lose.getLocalBounds().width/2, bar_lose.getLocalBounds().height/2);
+
+    ifstream sprdata("resources/graphics/item/itemdata/item_spritesheets.dat");
+    string buff="";
+
+    while(getline(sprdata, buff))
+    {
+        if(buff.find("#") == std::string::npos)
+        {
+            ///Valid spritesheet. Load it
+            cout << "[Item spritesheets] Loading spritesheet " << "resources/graphics/item/itemdata/"+buff+".png" << endl;
+            droppeditem_spritesheet[buff].load("resources/graphics/item/itemdata/"+buff+".png", qualitySetting, resSetting);
+        }
+    }
 
     cout << "initialization finished" << endl;
 }
@@ -573,6 +680,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
                             int baseY = 0;
                             bool collidable = false;
                             bool attackable = false;
+                            vector<Entity::Loot> loot_table;
 
                             ifstream entityParam("resources/units/entity/"+entity_list[entityID]+".p4p");
                             string buff2;
@@ -600,6 +708,24 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
                                             string by = buff2.substr(buff2.find_last_of("=")+1);
                                             attackable = atoi(by.c_str());
                                         }
+
+                                        if(buff2.find("loot=") != std::string::npos)
+                                        {
+                                            string by = buff2.substr(buff2.find_last_of("=")+1);
+                                            vector<string> b = Func::Split(by,';');
+
+                                            for(int e=0; e<b.size(); e++)
+                                            {
+                                                vector<string> bb = Func::Split(b[e], ',');
+
+                                                Entity::Loot tmp;
+                                                tmp.item_id = stoi(bb[0]);
+                                                tmp.item_chance = stoi(bb[1]);
+                                                loot_table.push_back(tmp);
+
+                                                cout << "[Loot table] Item: " << v4core->savereader.itemreg.GetItemByID(tmp.item_id)->icon_path << " with " << tmp.item_chance << "% drop rate" << endl;
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -607,7 +733,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
                             entityParam.close();
 
                             cout << "Spawning an entity: " << entity_list[entityID] << endl;
-                            spawnEntity(entity_list[entityID],entityID,atoi(spawn[1].c_str()),atoi(spawn[2].c_str()),baseY,atoi(spawn[3].c_str()),atoi(spawn[4].c_str()),atoi(spawn[5].c_str()),sf::Color(atoi(spawn[6].c_str()),atoi(spawn[7].c_str()),atoi(spawn[8].c_str()),atoi(spawn[9].c_str())), collidable, attackable);
+                            spawnEntity(entity_list[entityID],entityID,atoi(spawn[1].c_str()),atoi(spawn[2].c_str()),baseY,atoi(spawn[3].c_str()),atoi(spawn[4].c_str()),atoi(spawn[5].c_str()),sf::Color(atoi(spawn[6].c_str()),atoi(spawn[7].c_str()),atoi(spawn[8].c_str()),atoi(spawn[9].c_str())), collidable, attackable, loot_table);
                         }
                     }
                 }
@@ -1611,6 +1737,23 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
     lastView = window.getView();
     window.setView(window.getDefaultView());
+
+    ///draw picked items here
+    for(int i=0; i<pickedItems.size(); i++)
+    {
+        float resRatioX = window.getSize().x / float(1280);
+        float resRatioY = window.getSize().y / float(720);
+
+        pickedItems[i].circle.setRadius(20*resRatioX);
+        pickedItems[i].circle.setOrigin(pickedItems[i].circle.getLocalBounds().width/2,pickedItems[i].circle.getLocalBounds().height/2);
+        pickedItems[i].circle.setPosition((1236 - 48*i)*resRatioX, (44*resRatioY));
+        window.draw(pickedItems[i].circle);
+
+        pickedItems[i].item.setOrigin(pickedItems[i].bounds.x/2, pickedItems[i].bounds.y/2);
+        pickedItems[i].item.setPosition(1236 - 48*i, 44);
+        pickedItems[i].item.setScale(0.7,0.7);
+        pickedItems[i].item.draw(window);
+    }
 
     if(!missionEnd)
     {

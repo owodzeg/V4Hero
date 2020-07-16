@@ -89,6 +89,11 @@ class AnimatedObject
 
     vector<Animation> animation_spritesheet;
 
+    bool manual_mode = false;
+
+    int curFrame, index;
+    bool force_origin_null = false;
+
     vector<int> animation_frames;
     Config *thisConfig;
     AnimatedObject();

@@ -2,6 +2,7 @@
 #include "../Func.h"
 #include <fstream>
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
@@ -44,6 +45,15 @@ void PSpritesheet::load(std::string file, int q, int r)
 
     std::cout << "[PSPRITESHEET] Loading " << c << std::endl;
 
+    std::ifstream file(c, ios::binary);
+    std::ostringstream ss;
+    ss << file.rdbuf();
+    const std::string& s = ss.str();
+    std::vector<char> vec(s.begin(), s.end());
+    t_c = vec;
+
+    cout << "[PSPRITESHEET] Loading the binary buffer from " << c << " size: " << t_c.size() << endl;
+
     t.loadFromFile(c);
     t.setSmooth(true);
 
@@ -63,4 +73,20 @@ void PSpritesheet::load(std::string file, int q, int r)
 sf::IntRect PSpritesheet::get_bounds(int id)
 {
     return rect[id];
+}
+
+std::vector<char> PSpritesheet::retrieve_char()
+{
+    return t_c;
+}
+
+std::map<int, sf::IntRect> PSpritesheet::retrieve_rect_as_map()
+{
+    std::map<int, sf::IntRect> a;
+    for(int i=0; i<rect.size(); i++)
+    {
+        a[i] = rect[i];
+    }
+
+    return a;
 }

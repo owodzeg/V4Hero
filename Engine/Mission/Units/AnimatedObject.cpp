@@ -553,42 +553,50 @@ void AnimatedObject::LoadConfig(Config *thisConfigs, std::string unitParamPath)
 
     thisConfig = thisConfigs;
 }
+
 void AnimatedObject::Draw(sf::RenderWindow& window)
 {
-    cur_pos += framerate / float(fps);
-
-    if(cur_pos < anim_begin)
-    cur_pos = anim_begin;
-
-    if(cur_pos > anim_end)
+    if(!manual_mode) ///manual mode is restricted only to unique entities, never intended for use since it disables the whole animation
     {
-        if(loopable)
+        cur_pos += framerate / float(fps);
+
+        if(cur_pos < anim_begin)
+        cur_pos = anim_begin;
+
+        if(cur_pos > anim_end)
         {
-            cur_pos -= (anim_end - anim_begin);
-        }
-        else
-        {
-            if(animation_goto[getSegmentIndex(current_animation)] != "")
+            if(loopable)
             {
-                cout << "Animation go to: " << animation_goto[getSegmentIndex(current_animation)] << " SegmentIndex: " << getSegmentIndex(current_animation) << " current animation: " << current_animation << endl;
-                setAnimationSegment(animation_goto[getSegmentIndex(current_animation)], true);
+                cur_pos -= (anim_end - anim_begin);
             }
             else
             {
-                cur_pos = anim_end;
+                if(animation_goto[getSegmentIndex(current_animation)] != "")
+                {
+                    cout << "Animation go to: " << animation_goto[getSegmentIndex(current_animation)] << " SegmentIndex: " << getSegmentIndex(current_animation) << " current animation: " << current_animation << endl;
+                    setAnimationSegment(animation_goto[getSegmentIndex(current_animation)], true);
+                }
+                else
+                {
+                    cur_pos = anim_end;
+                }
             }
         }
+
+        setLoop(animation_loop[getSegmentIndex(current_animation)]);
     }
 
-    setLoop(animation_loop[getSegmentIndex(current_animation)]);
-
     ///calculate current position on the spritesheet
-    int curFrame = floor(getAnimationPos() * animation_framerate);
-    int index = getSegmentIndex(getAnimationSegment());
+    curFrame = floor(getAnimationPos() * animation_framerate);
+    index = getSegmentIndex(getAnimationSegment());
+
     float bound = floor(getAnimationLength(getAnimationSegment()) * animation_framerate) - 1;
 
-    if(curFrame > bound)
-    curFrame = bound;
+    if(!manual_mode) ///manual mode disables animation length limitations
+    {
+        if(curFrame > bound)
+        curFrame = bound;
+    }
 
     //cout << "file " << anim_path << " animation " << getAnimationSegment() << " frame " << curFrame << "/" << floor(getAnimationLength(getAnimationSegment()) * animation_framerate)-1 << " bounds: " << animation_bounds[index][curFrame].left << " " << animation_bounds[index][curFrame].top << " " << animation_bounds[index][curFrame].width << " " << animation_bounds[index][curFrame].height << endl;
 
@@ -609,6 +617,13 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
         objects[i].g_r = rotation;
 
         objects[i].SetPos(cur_pos);
+
+        if(force_origin_null) ///nullify the origin when the object is inanimate or you set a custom origin
+        {
+            objects[i].or_x = 0;
+            objects[i].or_y = 0;
+        }
+
         //cout << "Displaying animation " << getAnimationSegment() << ", time: " << getAnimationPos() << ":" << cur_pos << "/" << anim_end << " frame: " << curFrame+1 << "/" << (getAnimationLength(getAnimationSegment()) * animation_framerate) << " " << getAnimationLength(getAnimationSegment()) << endl;
         objects[i].Draw(window, animation_bounds[index][curFrame].left, animation_bounds[index][curFrame].top, animation_bounds[index][curFrame].width, animation_bounds[index][curFrame].height, animation_origins[index][curFrame].x, animation_origins[index][curFrame].y);
     }
