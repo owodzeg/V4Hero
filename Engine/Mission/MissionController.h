@@ -142,7 +142,7 @@ class MissionController
         bool isAttackable = true; ///is the entity attackable?
     };
 
-    struct PickedItem
+    struct PickedItem ///used for item display in the top right corner
     {
         ///data
         int item_id;
@@ -153,7 +153,22 @@ class MissionController
         sf::Vector2f bounds;
     };
 
+    struct UnitThumb ///used for unit display in the top left corner
+    {
+        ///data
+        int unit_id;
+
+        ///visuals
+        sf::CircleShape circle;
+        PSprite thumb;
+        PText unit_count;
+        PText unit_count_shadow;
+        PSprite hpbar_back;
+        PSprite hpbar_ins;
+    };
+
     vector<PickedItem> pickedItems;
+    vector<UnitThumb> unitThumbs;
 
     float Smoothstep(float time);
     float Clamp(float x, float lowerlimit, float upperlimit);
@@ -161,6 +176,8 @@ class MissionController
     void addItemsCounter(int id, float baseX, float baseY);
     void spawnEntity(string entityName, int entityID, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, vector<Entity::Loot> loot_table, vector<string> additional_data={});
     void addPickedItem(std::string spritesheet, int spritesheet_id, int picked_item);
+    void addUnitThumb(int unit_id);
+    void submitPickedItems();
 
     void StartCutscene(const std::wstring& text,bool isBlackScreen,int TimeToShow);
 

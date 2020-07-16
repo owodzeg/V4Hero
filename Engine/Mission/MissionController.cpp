@@ -7,6 +7,7 @@
 #include "../Math/PVector.h"
 #include "Units/HitboxFrame.h"
 #include "../V4Core.h"
+#include "../Item/InventoryItem.h"
 
 ///move to Func::numDigits later
 template <class T>
@@ -391,6 +392,29 @@ void MissionController::addPickedItem(std::string spritesheet, int spritesheet_i
     pickedItems.push_back(tmp);
 }
 
+void MissionController::submitPickedItems()
+{
+    for(int i=0; i<pickedItems.size(); i++)
+    {
+        InventoryItem invItem;
+        invItem.item = v4core->savereader.itemreg.GetItemByID(pickedItems[i].item_id);
+        invItem.inventoryId = v4core->savereader.invdata.items.size();
+        v4core->savereader.invdata.items.push_back(invItem);
+    }
+
+}
+
+void MissionController::addUnitThumb(int unit_id)
+{
+    UnitThumb tmp;
+    tmp.unit_id = unit_id;
+    tmp.hpbar_back.loadFromFile("resources/graphics/mission/hpbar_back.png", qualitySetting, 1);
+    tmp.hpbar_ins.loadFromFile("resources/graphics/mission/hpbar_ins.png", qualitySetting, 1);
+    tmp.unit_count.createText(f_font, 16, sf::Color::White, "", qualitySetting, 1);
+    tmp.unit_count_shadow.createText(f_font, 16, sf::Color::Black, "", qualitySetting, 1);
+    unitThumbs.push_back(tmp);
+}
+
 void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,std::string backgroundString,V4Core &v4core_)
 {
     v4core = &v4core_;
@@ -743,6 +767,8 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
 
     mf.close();
 
+    ///make this unit load based on how the army is built later
+
     unique_ptr<Patapon> p1 = make_unique<Patapon>();
     unique_ptr<Patapon> p2 = make_unique<Patapon>();
     unique_ptr<Patapon> p3 = make_unique<Patapon>();
@@ -762,6 +788,9 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
     units.push_back(std::move(p2));
     units.push_back(std::move(p3));
     units.push_back(std::move(h));
+
+    addUnitThumb(0);
+    addUnitThumb(1);
 
     isFinishedLoading=true;
     v4core->LoadingWaitForKeyPress();
@@ -1737,6 +1766,84 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
     lastView = window.getView();
     window.setView(window.getDefaultView());
+
+    ///draw unit thumbs here
+    for(int i=0; i<unitThumbs.size(); i++)
+    {
+        cout << "unitThumbs[" << i << "] draw Circle" << endl;
+        float resRatioX = window.getSize().x / float(1280);
+        float resRatioY = window.getSize().y / float(720);
+
+        unitThumbs[i].circle.setRadius(20*resRatioX);
+        unitThumbs[i].circle.setOrigin(unitThumbs[i].circle.getLocalBounds().width/2,unitThumbs[i].circle.getLocalBounds().height/2);
+        unitThumbs[i].circle.setPosition((48+(48*i))*resRatioX, (60*resRatioY));
+        window.draw(unitThumbs[i].circle);
+
+        cout << "unitThumbs[" << i << "] get farthest unit with id " << unitThumbs[i].unit_id << endl;
+
+        int farthest_id = -1;
+        float temp_pos = -9999;
+
+        int curunits = 0;
+
+        for(int u=0; u<units.size(); u++)
+        {
+            if(units[u].get()->getUnitID() == unitThumbs[i].unit_id)
+            {
+                curunits++;
+
+                PlayableUnit* unit = units[u].get();
+
+                if(temp_pos <= unit->getGlobalPosition().x)
+                {
+                    temp_pos = unit->getGlobalPosition().x;
+                    farthest_id = u;
+                }
+            }
+        }
+
+        cout << "unitThumbs[" << i << "] draw unit with id " << unitThumbs[i].unit_id << endl;
+
+        PlayableUnit* farthest_unit = units[farthest_id].get();
+        unitThumbs[i].thumb = farthest_unit->objects[0].s_obj;
+        unitThumbs[i].thumb.setScale(0.5,0.5);
+
+        int manual_x,manual_y;
+
+        if(unitThumbs[i].unit_id == 0)
+        {
+            manual_x = -29;
+            manual_y = -44;
+        }
+
+        if(unitThumbs[i].unit_id == 1)
+        {
+            manual_x = -17;
+            manual_y = -20;
+        }
+
+        unitThumbs[i].thumb.setPosition(48+(48*i)+manual_x, 60+manual_y);
+        unitThumbs[i].thumb.draw(window);
+
+        unitThumbs[i].hpbar_back.setOrigin(unitThumbs[i].hpbar_back.getLocalBounds().width/2, unitThumbs[i].hpbar_back.getLocalBounds().height/2);
+        unitThumbs[i].hpbar_back.setPosition(48+(48*i), 29);
+        unitThumbs[i].hpbar_back.draw(window);
+
+        unitThumbs[i].hpbar_ins.setOrigin(unitThumbs[i].hpbar_ins.getLocalBounds().width/2, unitThumbs[i].hpbar_ins.getLocalBounds().height/2);
+        unitThumbs[i].hpbar_ins.setPosition(48+(48*i), 29);
+        unitThumbs[i].hpbar_ins.setColor(sf::Color(0,255,0,255));
+        unitThumbs[i].hpbar_ins.draw(window);
+
+        unitThumbs[i].unit_count_shadow.setString(to_string(curunits));
+        unitThumbs[i].unit_count_shadow.setOrigin(unitThumbs[i].unit_count_shadow.getLocalBounds().width/2, unitThumbs[i].unit_count_shadow.getLocalBounds().height/2);
+        unitThumbs[i].unit_count_shadow.setPosition(48+(48*i)+20, 76);
+        unitThumbs[i].unit_count_shadow.draw(window);
+
+        unitThumbs[i].unit_count.setString(to_string(curunits));
+        unitThumbs[i].unit_count.setOrigin(unitThumbs[i].unit_count.getLocalBounds().width/2, unitThumbs[i].unit_count.getLocalBounds().height/2);
+        unitThumbs[i].unit_count.setPosition(48+(48*i)+18, 74);
+        unitThumbs[i].unit_count.draw(window);
+    }
 
     ///draw picked items here
     for(int i=0; i<pickedItems.size(); i++)
