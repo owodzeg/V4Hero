@@ -170,6 +170,10 @@ class MissionController
     vector<PickedItem> pickedItems;
     vector<UnitThumb> unitThumbs;
 
+    sf::RectangleShape r_floor;
+
+    bool debug_map_drop = false;
+
     float Smoothstep(float time);
     float Clamp(float x, float lowerlimit, float upperlimit);
     void addDmgCounter(int type, int damage, float baseX, float baseY, int q, int r);

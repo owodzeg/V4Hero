@@ -410,8 +410,8 @@ void MissionController::addUnitThumb(int unit_id)
     tmp.unit_id = unit_id;
     tmp.hpbar_back.loadFromFile("resources/graphics/mission/hpbar_back.png", qualitySetting, 1);
     tmp.hpbar_ins.loadFromFile("resources/graphics/mission/hpbar_ins.png", qualitySetting, 1);
-    tmp.unit_count.createText(f_font, 16, sf::Color::White, "", qualitySetting, 1);
-    tmp.unit_count_shadow.createText(f_font, 16, sf::Color::Black, "", qualitySetting, 1);
+    tmp.unit_count.createText(f_font, 26, sf::Color::White, "", qualitySetting, 1);
+    tmp.unit_count_shadow.createText(f_font, 26, sf::Color::Black, "", qualitySetting, 1);
     unitThumbs.push_back(tmp);
 }
 
@@ -814,6 +814,20 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, st
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num5))
     {
         missionEnd = true;
+    }
+
+    /// do the keyboard things
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::M))
+    {
+        if(!debug_map_drop)
+        {
+            auto item = v4core->savereader.itemreg.GetItemByID(23);
+            vector<string> data = {item->spritesheet, to_string(item->spritesheet_id), to_string(23)};
+
+            spawnEntity("droppeditem",5,500,0,600,0,0,1,sf::Color::White,0,0,vector<Entity::Loot>(), data);
+
+            debug_map_drop = true;
+        }
     }
 }
 
@@ -1507,16 +1521,6 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
     window.setView(window.getDefaultView());
 
-    if(!missionEnd)
-    {
-        // TODO: at some point some pointer shenanigans is required to make these be a reference to v4core's ones too.
-        rhythm.rhythmController.keyMap = *missionKeyMap; ///shared object must be used within mutex lock
-
-        rhythm.fps = fps;
-        DoRhythm();
-        rhythm.Draw(window);
-    }
-
     /**
 
     if(cutscenesLeft && !inCutscene && isMoreCutscenes())
@@ -1770,16 +1774,13 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
     ///draw unit thumbs here
     for(int i=0; i<unitThumbs.size(); i++)
     {
-        cout << "unitThumbs[" << i << "] draw Circle" << endl;
         float resRatioX = window.getSize().x / float(1280);
         float resRatioY = window.getSize().y / float(720);
 
-        unitThumbs[i].circle.setRadius(20*resRatioX);
+        unitThumbs[i].circle.setRadius(28*resRatioX);
         unitThumbs[i].circle.setOrigin(unitThumbs[i].circle.getLocalBounds().width/2,unitThumbs[i].circle.getLocalBounds().height/2);
-        unitThumbs[i].circle.setPosition((48+(48*i))*resRatioX, (60*resRatioY));
+        unitThumbs[i].circle.setPosition((52+(64*i))*resRatioX, (72*resRatioY));
         window.draw(unitThumbs[i].circle);
-
-        cout << "unitThumbs[" << i << "] get farthest unit with id " << unitThumbs[i].unit_id << endl;
 
         int farthest_id = -1;
         float temp_pos = -9999;
@@ -1802,47 +1803,48 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
             }
         }
 
-        cout << "unitThumbs[" << i << "] draw unit with id " << unitThumbs[i].unit_id << endl;
-
         PlayableUnit* farthest_unit = units[farthest_id].get();
         unitThumbs[i].thumb = farthest_unit->objects[0].s_obj;
-        unitThumbs[i].thumb.setScale(0.5,0.5);
+        unitThumbs[i].thumb.setScale(0.7,0.7);
 
         int manual_x,manual_y;
 
         if(unitThumbs[i].unit_id == 0)
         {
-            manual_x = -29;
-            manual_y = -44;
+            manual_x = -40;
+            manual_y = -46;
         }
 
         if(unitThumbs[i].unit_id == 1)
         {
-            manual_x = -17;
-            manual_y = -20;
+            manual_x = -22;
+            manual_y = -12;
         }
 
-        unitThumbs[i].thumb.setPosition(48+(48*i)+manual_x, 60+manual_y);
+        unitThumbs[i].thumb.setPosition(52+(64*i)+manual_x, 60+manual_y);
         unitThumbs[i].thumb.draw(window);
 
         unitThumbs[i].hpbar_back.setOrigin(unitThumbs[i].hpbar_back.getLocalBounds().width/2, unitThumbs[i].hpbar_back.getLocalBounds().height/2);
-        unitThumbs[i].hpbar_back.setPosition(48+(48*i), 29);
+        unitThumbs[i].hpbar_back.setPosition(52+(64*i), 32);
         unitThumbs[i].hpbar_back.draw(window);
 
         unitThumbs[i].hpbar_ins.setOrigin(unitThumbs[i].hpbar_ins.getLocalBounds().width/2, unitThumbs[i].hpbar_ins.getLocalBounds().height/2);
-        unitThumbs[i].hpbar_ins.setPosition(48+(48*i), 29);
+        unitThumbs[i].hpbar_ins.setPosition(52+(64*i), 32);
         unitThumbs[i].hpbar_ins.setColor(sf::Color(0,255,0,255));
         unitThumbs[i].hpbar_ins.draw(window);
 
-        unitThumbs[i].unit_count_shadow.setString(to_string(curunits));
-        unitThumbs[i].unit_count_shadow.setOrigin(unitThumbs[i].unit_count_shadow.getLocalBounds().width/2, unitThumbs[i].unit_count_shadow.getLocalBounds().height/2);
-        unitThumbs[i].unit_count_shadow.setPosition(48+(48*i)+20, 76);
-        unitThumbs[i].unit_count_shadow.draw(window);
+        if(unitThumbs[i].unit_id != 0)
+        {
+            unitThumbs[i].unit_count_shadow.setString(to_string(curunits));
+            unitThumbs[i].unit_count_shadow.setOrigin(unitThumbs[i].unit_count_shadow.getLocalBounds().width/2, unitThumbs[i].unit_count_shadow.getLocalBounds().height/2);
+            unitThumbs[i].unit_count_shadow.setPosition(52+(64*i)+28, 98);
+            unitThumbs[i].unit_count_shadow.draw(window);
 
-        unitThumbs[i].unit_count.setString(to_string(curunits));
-        unitThumbs[i].unit_count.setOrigin(unitThumbs[i].unit_count.getLocalBounds().width/2, unitThumbs[i].unit_count.getLocalBounds().height/2);
-        unitThumbs[i].unit_count.setPosition(48+(48*i)+18, 74);
-        unitThumbs[i].unit_count.draw(window);
+            unitThumbs[i].unit_count.setString(to_string(curunits));
+            unitThumbs[i].unit_count.setOrigin(unitThumbs[i].unit_count.getLocalBounds().width/2, unitThumbs[i].unit_count.getLocalBounds().height/2);
+            unitThumbs[i].unit_count.setPosition(52+(64*i)+26, 96);
+            unitThumbs[i].unit_count.draw(window);
+        }
     }
 
     ///draw picked items here
@@ -1851,15 +1853,32 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         float resRatioX = window.getSize().x / float(1280);
         float resRatioY = window.getSize().y / float(720);
 
-        pickedItems[i].circle.setRadius(20*resRatioX);
+        pickedItems[i].circle.setRadius(25*resRatioX);
         pickedItems[i].circle.setOrigin(pickedItems[i].circle.getLocalBounds().width/2,pickedItems[i].circle.getLocalBounds().height/2);
-        pickedItems[i].circle.setPosition((1236 - 48*i)*resRatioX, (44*resRatioY));
+        pickedItems[i].circle.setPosition((1230 - 54*i)*resRatioX, (50*resRatioY));
         window.draw(pickedItems[i].circle);
 
         pickedItems[i].item.setOrigin(pickedItems[i].bounds.x/2, pickedItems[i].bounds.y/2);
-        pickedItems[i].item.setPosition(1236 - 48*i, 44);
-        pickedItems[i].item.setScale(0.7,0.7);
+        pickedItems[i].item.setPosition(1230 - 54*i, 50);
+        pickedItems[i].item.setScale(0.8,0.8);
         pickedItems[i].item.draw(window);
+    }
+
+    float resRatioX = window.getSize().x / float(1280);
+    float resRatioY = window.getSize().y / float(720);
+    r_floor.setSize(sf::Vector2f(1280*resRatioX, 110*resRatioY));
+    r_floor.setFillColor(sf::Color::Black);
+    r_floor.setPosition(0,610*resRatioY);
+    window.draw(r_floor);
+
+    if(!missionEnd)
+    {
+        // TODO: at some point some pointer shenanigans is required to make these be a reference to v4core's ones too.
+        rhythm.rhythmController.keyMap = *missionKeyMap; ///shared object must be used within mutex lock
+
+        rhythm.fps = fps;
+        DoRhythm();
+        rhythm.Draw(window);
     }
 
     if(!missionEnd)
