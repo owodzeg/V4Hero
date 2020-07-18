@@ -412,6 +412,7 @@ void MissionController::addUnitThumb(int unit_id)
     tmp.hpbar_ins.loadFromFile("resources/graphics/mission/hpbar_ins.png", qualitySetting, 1);
     tmp.unit_count.createText(f_font, 26, sf::Color::White, "", qualitySetting, 1);
     tmp.unit_count_shadow.createText(f_font, 26, sf::Color::Black, "", qualitySetting, 1);
+    tmp.width = tmp.hpbar_ins.getLocalBounds().width;
     unitThumbs.push_back(tmp);
 }
 
@@ -486,7 +487,7 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     currentCutsceneId=0;
 
     sb_win_jingle.loadFromFile("resources/sfx/level/victory.ogg");
-    //sb_lose_jingle;
+    sb_lose_jingle.loadFromFile("resources/sfx/level/failure.ogg");
 
     sb_cheer1.loadFromFile("resources/sfx/level/cheer1.ogg");
     sb_cheer2.loadFromFile("resources/sfx/level/cheer2.ogg");
@@ -829,6 +830,20 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, st
             debug_map_drop = true;
         }
     }
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+    {
+        for(int i=0; i<units.size(); i++)
+        {
+
+                units[i].get()->setUnitHP(units[i].get()->getUnitHP() - (25.0/fps));
+
+                if(units[i].get()->getUnitHP() <= 0)
+                {
+                    units[i].get()->setUnitHP(0);
+                }
+        }
+    }
 }
 
 MissionController::CollisionEvent MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float currentObjectY,int collisionObjectID,vector<string> collisionData)
@@ -1045,7 +1060,7 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
     }
     //cout << "camera.walk: " << camera.walk << endl;
 
-    if((camera.walk) || (missionEnd))
+    if((camera.walk) || ((missionEnd) && (!failure)))
     {
         int farthest_id = -1;
         float temp_pos = -9999;
@@ -1061,117 +1076,120 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
             }
         }
 
-        PlayableUnit* farthest_unit = units[farthest_id].get();
-
-        float pataDistance = 240 * booster;
-
-        float diff = (Smoothstep(walkClock.getElapsedTime().asSeconds()/2)*pataDistance)-(Smoothstep(prevTime/2)*pataDistance);
-        prevTime = walkClock.getElapsedTime().asSeconds();
-
-        float proposedXPos = farthest_unit->global_x + diff;
-
-        camera.pataSpeed = (2 * 60 * booster);
-
-        //cout << "global_x: " << farthest_unit->global_x << endl;
-        //cout << "proposedXPos = " << proposedXPos << endl;
-        /// use the right hand side of the patapon sprite to check for collisions. This should be changed if the patapon walks to the left
-        //float proposedXPosRight = proposedXPos + farthest_unit->hitBox.left + farthest_unit->hitBox.width;
-        /// need to have it check for collision and stop if blocked by kacheek here.
-
-        /// right now it is very basic checking only in X axis. Jumping over a
-        /// kacheek will not be possible.
-
-        bool foundCollision = false;
-        for(int i=0; i<tangibleLevelObjects.size(); i++)
+        if(farthest_id != -1)
         {
-            for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
+            PlayableUnit* farthest_unit = units[farthest_id].get();
+
+            float pataDistance = 240 * booster;
+
+            float diff = (Smoothstep(walkClock.getElapsedTime().asSeconds()/2)*pataDistance)-(Smoothstep(prevTime/2)*pataDistance);
+            prevTime = walkClock.getElapsedTime().asSeconds();
+
+            float proposedXPos = farthest_unit->global_x + diff;
+
+            camera.pataSpeed = (2 * 60 * booster);
+
+            //cout << "global_x: " << farthest_unit->global_x << endl;
+            //cout << "proposedXPos = " << proposedXPos << endl;
+            /// use the right hand side of the patapon sprite to check for collisions. This should be changed if the patapon walks to the left
+            //float proposedXPosRight = proposedXPos + farthest_unit->hitBox.left + farthest_unit->hitBox.width;
+            /// need to have it check for collision and stop if blocked by kacheek here.
+
+            /// right now it is very basic checking only in X axis. Jumping over a
+            /// kacheek will not be possible.
+
+            bool foundCollision = false;
+            for(int i=0; i<tangibleLevelObjects.size(); i++)
             {
-                //cout << "tangibleLevelObjects[" << i << "][" << h << "]" << endl;
-
-                /// NEW COLLISION SYSTEM:
-                /// Separating axis theorem
-                /// we check an axis at a time
-                /// 8 axes in total, aligned with the normal of each face of each shape
-                /// thankfully because we are only using rectangles, there are two pairs of parallel sides
-                /// so we only need to check 4 axes, as the other 4 are all parallel.
-                ///
-                /// in each axis we calculate the vector projection onto the axis between the origin and each corner of each box
-                /// and find the maximum projection and minimum projection for each shape
-                /// then we check if min2>max1 or min1>max2 there has been a collision in this axis
-                /// there has to be a collision in ALL axes for actual collision to be confirmed,
-                /// so we can stop checking if we find a single non-collision.
-
-
-
-
-                /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
-
-                float currentAxisAngle = 0;
-                HitboxFrame tmp = farthest_unit->hitboxes[0].getRect();
-
-                CollidableObject* target = tangibleLevelObjects[i].get();
-
-                bool isCollision = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
-                if (!isCollision)
+                for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
                 {
-                    continue;
-                }
-                //cout<<"COLLISION FOUND IN axis 1"<<endl;
+                    //cout << "tangibleLevelObjects[" << i << "][" << h << "]" << endl;
 
-                /// axis 2: obj1 "up"
-                currentAxisAngle = 3.14159265358/2;
-                bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
-                if (!isCollision2)
-                {
-                    continue;
-                }
-                //cout<<"COLLISION FOUND IN axis 2 (up)"<<endl;
+                    /// NEW COLLISION SYSTEM:
+                    /// Separating axis theorem
+                    /// we check an axis at a time
+                    /// 8 axes in total, aligned with the normal of each face of each shape
+                    /// thankfully because we are only using rectangles, there are two pairs of parallel sides
+                    /// so we only need to check 4 axes, as the other 4 are all parallel.
+                    ///
+                    /// in each axis we calculate the vector projection onto the axis between the origin and each corner of each box
+                    /// and find the maximum projection and minimum projection for each shape
+                    /// then we check if min2>max1 or min1>max2 there has been a collision in this axis
+                    /// there has to be a collision in ALL axes for actual collision to be confirmed,
+                    /// so we can stop checking if we find a single non-collision.
 
-                /// axis 3: obj2 "up" (we add the 90 degrees from before to its current rotation)
-                currentAxisAngle = target->hitboxes[h].hitboxObject.rotation + currentAxisAngle;
 
-                bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
-                if (!isCollision3)
-                {
-                    continue;
-                }
-                //cout<<"COLLISION FOUND IN axis 3 (up2)"<<endl;
 
-                /// axis 4: obj2 "sideways"
-                currentAxisAngle = target->hitboxes[h].hitboxObject.rotation;
 
-                bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
-                if (!isCollision4)
-                {
-                    continue;
-                }
+                    /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
 
-                /// we have a collision
-                if (isCollision&&isCollision2&&isCollision3&&isCollision4)
-                {
-                    ///check if unit should be prevented from passing through
-                    if(target->isCollidable)
-                    foundCollision = true;
+                    float currentAxisAngle = 0;
+                    HitboxFrame tmp = farthest_unit->hitboxes[0].getRect();
 
-                    ///the entity can still react
-                    target->OnCollide(target);
+                    CollidableObject* target = tangibleLevelObjects[i].get();
 
-                    std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
-                }
-                else
-                {
-                    cout<<"Something is very wrong"<<endl;
+                    bool isCollision = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
+                    if (!isCollision)
+                    {
+                        continue;
+                    }
+                    //cout<<"COLLISION FOUND IN axis 1"<<endl;
+
+                    /// axis 2: obj1 "up"
+                    currentAxisAngle = 3.14159265358/2;
+                    bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
+                    if (!isCollision2)
+                    {
+                        continue;
+                    }
+                    //cout<<"COLLISION FOUND IN axis 2 (up)"<<endl;
+
+                    /// axis 3: obj2 "up" (we add the 90 degrees from before to its current rotation)
+                    currentAxisAngle = target->hitboxes[h].hitboxObject.rotation + currentAxisAngle;
+
+                    bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
+                    if (!isCollision3)
+                    {
+                        continue;
+                    }
+                    //cout<<"COLLISION FOUND IN axis 3 (up2)"<<endl;
+
+                    /// axis 4: obj2 "sideways"
+                    currentAxisAngle = target->hitboxes[h].hitboxObject.rotation;
+
+                    bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
+                    if (!isCollision4)
+                    {
+                        continue;
+                    }
+
+                    /// we have a collision
+                    if (isCollision&&isCollision2&&isCollision3&&isCollision4)
+                    {
+                        ///check if unit should be prevented from passing through
+                        if(target->isCollidable)
+                        foundCollision = true;
+
+                        ///the entity can still react
+                        target->OnCollide(target);
+
+                        std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
+                    }
+                    else
+                    {
+                        cout<<"Something is very wrong"<<endl;
+                    }
                 }
             }
-        }
 
-        /// if the new position is inside a kacheek, don't move. If we found anything,
-        if (!foundCollision)
-        {
-            if(!missionEnd)
-            army_X += diff;
-            else
-            army_X += 120.0 / fps;
+            /// if the new position is inside a kacheek, don't move. If we found anything,
+            if (!foundCollision)
+            {
+                if(!missionEnd)
+                army_X += diff;
+                else
+                army_X += 120.0 / fps;
+            }
         }
     }
 
@@ -1339,44 +1357,56 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
     if(missionEnd)
     {
-        if(missionEndTimer.getElapsedTime().asMilliseconds() >= 2500)
+        if(!failure)
         {
-            if(!playCheer[0])
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 2500)
             {
-                s_cheer.stop();
-                s_cheer.setBuffer(sb_cheer1);
-                s_cheer.play();
-                playCheer[0] = true;
+                if(!playCheer[0])
+                {
+                    s_cheer.stop();
+                    s_cheer.setBuffer(sb_cheer1);
+                    s_cheer.play();
+                    playCheer[0] = true;
+                }
+            }
+
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 4500)
+            {
+                if(!playCheer[1])
+                {
+                    s_cheer.stop();
+                    s_cheer.setBuffer(sb_cheer2);
+                    s_cheer.play();
+                    playCheer[1] = true;
+                }
+            }
+
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 6500)
+            {
+                if(!playCheer[2])
+                {
+                    s_cheer.stop();
+                    s_cheer.setBuffer(sb_cheer3);
+                    s_cheer.play();
+                    playCheer[2] = true;
+                }
+            }
+
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 8000)
+            {
+                if(!playJingle)
+                {
+                    s_jingle.setBuffer(sb_win_jingle);
+                    s_jingle.play();
+                    playJingle = true;
+                }
             }
         }
-
-        if(missionEndTimer.getElapsedTime().asMilliseconds() >= 4500)
-        {
-            if(!playCheer[1])
-            {
-                s_cheer.stop();
-                s_cheer.setBuffer(sb_cheer2);
-                s_cheer.play();
-                playCheer[1] = true;
-            }
-        }
-
-        if(missionEndTimer.getElapsedTime().asMilliseconds() >= 6500)
-        {
-            if(!playCheer[2])
-            {
-                s_cheer.stop();
-                s_cheer.setBuffer(sb_cheer3);
-                s_cheer.play();
-                playCheer[2] = true;
-            }
-        }
-
-        if(missionEndTimer.getElapsedTime().asMilliseconds() >= 8000)
+        else
         {
             if(!playJingle)
             {
-                s_jingle.setBuffer(sb_win_jingle);
+                s_jingle.setBuffer(sb_lose_jingle);
                 s_jingle.play();
                 playJingle = true;
             }
@@ -1419,8 +1449,13 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         tlo_rm.push_back(i);
     }
 
+    vector<int> units_rm;
+
     int farthest_id = -1;
     float temp_pos = -9999;
+
+    bool hatapon = false;
+    int u = 0;
 
     for(int i=0; i<units.size(); i++)
     {
@@ -1431,85 +1466,104 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
             temp_pos = unit->getGlobalPosition().x;
             farthest_id = i;
         }
+
+        if(unit->getUnitID() == 0)
+        hatapon = true;
+
+        u++;
+
+        if(units[i].get()->ready_to_erase)
+        units_rm.push_back(i);
     }
 
-    PlayableUnit* farthest_unit = units[farthest_id].get();
+    cout << "Does Hatapon exist? " << hatapon << " How many units left? " << u << endl;
 
-    for(int i=0; i<units.size(); i++)
+    if((!hatapon) || ((hatapon) && (u <= 1)))
     {
-        PlayableUnit* unit = units[i].get();
-
-        if(!missionEnd)
-        {
-            unit->doRhythm(rhythm.current_song, rhythm.rhythmController.current_drum, rhythm.GetCombo());
-
-            vector<float> gdistances;
-            vector<float> ldistances;
-
-            for (int e=0; e<tangibleLevelObjects.size(); e++)
-            {
-                //cout << "tangibleLevelObjects[" << i << "]->Draw(window);" << endl;
-                ///some temporary code for entity in range detection
-                if(tangibleLevelObjects[e]->type == tangibleLevelObjects[e]->HOSTILE)
-                {
-                    float global_distance = tangibleLevelObjects[e]->getGlobalPosition().x - (farthest_unit->getGlobalPosition().x - farthest_unit->local_x);
-                    float local_distance = tangibleLevelObjects[e]->getGlobalPosition().x - farthest_unit->getGlobalPosition().x;
-                    gdistances.push_back(global_distance);
-                    ldistances.push_back(local_distance);
-                }
-            }
-
-            /// patapons (and other enemies) are drawn after level objects like kacheek so they are always on top
-            if(unit->getUnitID() == 1)
-            {
-                if(unit->doAttack())
-                {
-                    cout << "Unit " << i << " threw a spear!" << endl;
-
-                    float rand_hs = (rand() % 1000) / float(10);
-                    float rand_vs = (rand() % 1000) / float(10);
-
-                    float rand_rad = (rand() % 200000000) / float(1000000000);
-
-                    //cout << "===============================================" << endl;
-                    //cout << "rand_hs: " << rand_hs << " rand_vs: " << rand_vs << endl;
-                    //cout << "===============================================" << endl;
-
-                    unique_ptr<Spear> p = make_unique<Spear>(s_proj);
-                    p.get()->xPos = unit->getGlobalPosition().x+unit->hitBox.left+unit->hitBox.width/2;
-                    p.get()->yPos = unit->getGlobalPosition().y+unit->hitBox.top+unit->hitBox.height/2;
-                    p.get()->speed = 800;
-                    p.get()->hspeed = 450+rand_hs;
-                    p.get()->vspeed = -450+rand_vs;
-                    ///-0.523598776 - 30 deg
-                    //p.get()->angle = -0.698131701; /// 40 degrees from the floor - pi*4/12
-                    p.get()->angle = -0.58 - rand_rad;
-                    ///-0.872664626 - 50 deg
-                    p.get()->maxdmg = 150;
-                    p.get()->mindmg = 50;
-                    p.get()->crit = 0;
-                    p.get()->crit = 0;
-
-                    levelProjectiles.push_back(std::move(p));
-                }
-            }
-        }
-
-        /*if(gdistances.size() > 0)
-        {
-            unit->gclosest = *std::min_element(std::begin(gdistances), std::end(gdistances));
-            unit->lclosest = *std::min_element(std::begin(ldistances), std::end(ldistances));
-        }*/
-
-        if(missionEnd)
-        {
-            unit->doMissionEnd();
-        }
-
-        unit->fps = fps;
-        unit->Draw(window);
+        missionEnd = true;
+        failure = true;
     }
 
+    if(farthest_id != -1)
+    {
+        PlayableUnit* farthest_unit = units[farthest_id].get();
+
+        for(int i=0; i<units.size(); i++)
+        {
+            PlayableUnit* unit = units[i].get();
+
+            if(!missionEnd)
+            {
+                unit->doRhythm(rhythm.current_song, rhythm.rhythmController.current_drum, rhythm.GetCombo());
+
+                vector<float> gdistances;
+                vector<float> ldistances;
+
+                for (int e=0; e<tangibleLevelObjects.size(); e++)
+                {
+                    //cout << "tangibleLevelObjects[" << i << "]->Draw(window);" << endl;
+                    ///some temporary code for entity in range detection
+                    if(tangibleLevelObjects[e]->type == tangibleLevelObjects[e]->HOSTILE)
+                    {
+                        float global_distance = tangibleLevelObjects[e]->getGlobalPosition().x - (farthest_unit->getGlobalPosition().x - farthest_unit->local_x);
+                        float local_distance = tangibleLevelObjects[e]->getGlobalPosition().x - farthest_unit->getGlobalPosition().x;
+                        gdistances.push_back(global_distance);
+                        ldistances.push_back(local_distance);
+                    }
+                }
+
+                /// patapons (and other enemies) are drawn after level objects like kacheek so they are always on top
+                if(unit->getUnitID() == 1)
+                {
+                    if(unit->doAttack())
+                    {
+                        cout << "Unit " << i << " threw a spear!" << endl;
+
+                        float rand_hs = (rand() % 1000) / float(10);
+                        float rand_vs = (rand() % 1000) / float(10);
+
+                        float rand_rad = (rand() % 200000000) / float(1000000000);
+
+                        //cout << "===============================================" << endl;
+                        //cout << "rand_hs: " << rand_hs << " rand_vs: " << rand_vs << endl;
+                        //cout << "===============================================" << endl;
+
+                        unique_ptr<Spear> p = make_unique<Spear>(s_proj);
+                        p.get()->xPos = unit->getGlobalPosition().x+unit->hitBox.left+unit->hitBox.width/2;
+                        p.get()->yPos = unit->getGlobalPosition().y+unit->hitBox.top+unit->hitBox.height/2;
+                        p.get()->speed = 800;
+                        p.get()->hspeed = 450+rand_hs;
+                        p.get()->vspeed = -450+rand_vs;
+                        ///-0.523598776 - 30 deg
+                        //p.get()->angle = -0.698131701; /// 40 degrees from the floor - pi*4/12
+                        p.get()->angle = -0.58 - rand_rad;
+                        ///-0.872664626 - 50 deg
+                        p.get()->maxdmg = 150;
+                        p.get()->mindmg = 50;
+                        p.get()->crit = 0;
+                        p.get()->crit = 0;
+
+                        levelProjectiles.push_back(std::move(p));
+                    }
+                }
+            }
+
+            /*if(gdistances.size() > 0)
+            {
+                unit->gclosest = *std::min_element(std::begin(gdistances), std::end(gdistances));
+                unit->lclosest = *std::min_element(std::begin(ldistances), std::end(ldistances));
+            }*/
+
+            if(missionEnd)
+            {
+                if(!failure)
+                unit->doMissionEnd();
+            }
+
+            unit->fps = fps;
+            unit->Draw(window);
+        }
+    }
 
     for(int i=0; i<levelProjectiles.size(); i++)
     {
@@ -1777,15 +1831,12 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         float resRatioX = window.getSize().x / float(1280);
         float resRatioY = window.getSize().y / float(720);
 
-        unitThumbs[i].circle.setRadius(28*resRatioX);
-        unitThumbs[i].circle.setOrigin(unitThumbs[i].circle.getLocalBounds().width/2,unitThumbs[i].circle.getLocalBounds().height/2);
-        unitThumbs[i].circle.setPosition((52+(64*i))*resRatioX, (72*resRatioY));
-        window.draw(unitThumbs[i].circle);
-
         int farthest_id = -1;
         float temp_pos = -9999;
 
         int curunits = 0;
+        float maxunithp = 0;
+        float curunithp = 0;
 
         for(int u=0; u<units.size(); u++)
         {
@@ -1800,50 +1851,71 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
                     temp_pos = unit->getGlobalPosition().x;
                     farthest_id = u;
                 }
+
+                maxunithp += unit->getUnitMaxHP();
+                curunithp += unit->getUnitHP();
             }
         }
 
-        PlayableUnit* farthest_unit = units[farthest_id].get();
-        unitThumbs[i].thumb = farthest_unit->objects[0].s_obj;
-        unitThumbs[i].thumb.setScale(0.7,0.7);
-
-        int manual_x,manual_y;
-
-        if(unitThumbs[i].unit_id == 0)
+        if(farthest_id != -1)
         {
-            manual_x = -40;
-            manual_y = -46;
-        }
+            float hp_percentage = curunithp / maxunithp;
 
-        if(unitThumbs[i].unit_id == 1)
-        {
-            manual_x = -22;
-            manual_y = -12;
-        }
+            unitThumbs[i].circle.setRadius(28*resRatioX);
+            unitThumbs[i].circle.setOrigin(unitThumbs[i].circle.getLocalBounds().width/2,unitThumbs[i].circle.getLocalBounds().height/2);
+            unitThumbs[i].circle.setPosition((52+(64*i))*resRatioX, (72*resRatioY));
+            window.draw(unitThumbs[i].circle);
 
-        unitThumbs[i].thumb.setPosition(52+(64*i)+manual_x, 60+manual_y);
-        unitThumbs[i].thumb.draw(window);
+            PlayableUnit* farthest_unit = units[farthest_id].get();
+            unitThumbs[i].thumb = farthest_unit->objects[0].s_obj;
+            unitThumbs[i].thumb.setScale(0.7,0.7);
 
-        unitThumbs[i].hpbar_back.setOrigin(unitThumbs[i].hpbar_back.getLocalBounds().width/2, unitThumbs[i].hpbar_back.getLocalBounds().height/2);
-        unitThumbs[i].hpbar_back.setPosition(52+(64*i), 32);
-        unitThumbs[i].hpbar_back.draw(window);
+            int manual_x,manual_y;
 
-        unitThumbs[i].hpbar_ins.setOrigin(unitThumbs[i].hpbar_ins.getLocalBounds().width/2, unitThumbs[i].hpbar_ins.getLocalBounds().height/2);
-        unitThumbs[i].hpbar_ins.setPosition(52+(64*i), 32);
-        unitThumbs[i].hpbar_ins.setColor(sf::Color(0,255,0,255));
-        unitThumbs[i].hpbar_ins.draw(window);
+            if(unitThumbs[i].unit_id == 0)
+            {
+                manual_x = -40;
+                manual_y = -46;
+            }
 
-        if(unitThumbs[i].unit_id != 0)
-        {
-            unitThumbs[i].unit_count_shadow.setString(to_string(curunits));
-            unitThumbs[i].unit_count_shadow.setOrigin(unitThumbs[i].unit_count_shadow.getLocalBounds().width/2, unitThumbs[i].unit_count_shadow.getLocalBounds().height/2);
-            unitThumbs[i].unit_count_shadow.setPosition(52+(64*i)+28, 98);
-            unitThumbs[i].unit_count_shadow.draw(window);
+            if(unitThumbs[i].unit_id == 1)
+            {
+                manual_x = -22;
+                manual_y = -12;
+            }
 
-            unitThumbs[i].unit_count.setString(to_string(curunits));
-            unitThumbs[i].unit_count.setOrigin(unitThumbs[i].unit_count.getLocalBounds().width/2, unitThumbs[i].unit_count.getLocalBounds().height/2);
-            unitThumbs[i].unit_count.setPosition(52+(64*i)+26, 96);
-            unitThumbs[i].unit_count.draw(window);
+            unitThumbs[i].thumb.setPosition(52+(64*i)+manual_x, 60+manual_y);
+            unitThumbs[i].thumb.draw(window);
+
+            unitThumbs[i].hpbar_back.setOrigin(unitThumbs[i].hpbar_back.getLocalBounds().width/2, unitThumbs[i].hpbar_back.getLocalBounds().height/2);
+            unitThumbs[i].hpbar_back.setPosition(52+(64*i), 32);
+            unitThumbs[i].hpbar_back.draw(window);
+
+            unitThumbs[i].hpbar_ins.setOrigin(0, unitThumbs[i].hpbar_ins.getLocalBounds().height/2);
+            unitThumbs[i].hpbar_ins.setTextureRect(sf::IntRect(0,0,unitThumbs[i].width*hp_percentage,unitThumbs[i].hpbar_ins.getLocalBounds().height));
+            unitThumbs[i].hpbar_ins.setPosition(52+(64*i)-27, 32);
+
+            if(hp_percentage > 0.70)
+            unitThumbs[i].hpbar_ins.setColor(sf::Color(0,255,0,255));
+            else if(hp_percentage > 0.35)
+            unitThumbs[i].hpbar_ins.setColor(sf::Color(245,230,66,255));
+            else
+            unitThumbs[i].hpbar_ins.setColor(sf::Color(212,0,0,255));
+
+            unitThumbs[i].hpbar_ins.draw(window);
+
+            if(unitThumbs[i].unit_id != 0)
+            {
+                unitThumbs[i].unit_count_shadow.setString(to_string(curunits));
+                unitThumbs[i].unit_count_shadow.setOrigin(unitThumbs[i].unit_count_shadow.getLocalBounds().width/2, unitThumbs[i].unit_count_shadow.getLocalBounds().height/2);
+                unitThumbs[i].unit_count_shadow.setPosition(52+(64*i)+28, 98);
+                unitThumbs[i].unit_count_shadow.draw(window);
+
+                unitThumbs[i].unit_count.setString(to_string(curunits));
+                unitThumbs[i].unit_count.setOrigin(unitThumbs[i].unit_count.getLocalBounds().width/2, unitThumbs[i].unit_count.getLocalBounds().height/2);
+                unitThumbs[i].unit_count.setPosition(52+(64*i)+26, 96);
+                unitThumbs[i].unit_count.draw(window);
+            }
         }
     }
 
@@ -1895,16 +1967,34 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
     }
     else
     {
-        if(missionEndTimer.getElapsedTime().asMilliseconds() >= 11000)
+        if(!failure)
         {
-            if(fade_alpha < 255)
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 11000)
             {
-                fade_alpha += float(250) / fps;
-            }
+                if(fade_alpha < 255)
+                {
+                    fade_alpha += float(250) / fps;
+                }
 
-            if(fade_alpha >= 255)
+                if(fade_alpha >= 255)
+                {
+                    fade_alpha = 255;
+                }
+            }
+        }
+        else
+        {
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 1000)
             {
-                fade_alpha = 255;
+                if(fade_alpha < 255)
+                {
+                    fade_alpha += float(250) / fps;
+                }
+
+                if(fade_alpha >= 255)
+                {
+                    fade_alpha = 255;
+                }
             }
         }
     }
@@ -1913,79 +2003,189 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
     fade_box.setFillColor(sf::Color(0,0,0,fade_alpha));
     window.draw(fade_box);
 
-    if(missionEndTimer.getElapsedTime().asMilliseconds() >= 11500)
+    if(!failure)
     {
-        if(!textBounce)
+        if(missionEndTimer.getElapsedTime().asMilliseconds() >= 11500)
         {
-            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 13050)
+            if(!textBounce)
             {
-                textCurScale = 1.4;
-                textBounce = true;
-            }
-        }
-
-        t_win.setOrigin(t_win.getLocalBounds().width/2, t_win.getLocalBounds().height/2);
-        t_win_outline.setOrigin(t_win_outline.getLocalBounds().width/2, t_win_outline.getLocalBounds().height/2);
-
-        t_lose.setOrigin(t_lose.getLocalBounds().width/2, t_lose.getLocalBounds().height/2);
-        t_lose_outline.setOrigin(t_lose_outline.getLocalBounds().width/2, t_lose_outline.getLocalBounds().height/2);
-
-        if(barCurX > barDestX)
-        {
-            barCurX -= (abs(barCurX - barDestX) * 5) / fps;
-        }
-        else
-        {
-            barCurX = barDestX;
-        }
-
-        if(textCurX < textDestX)
-        {
-            textCurX += (abs(textCurX - textDestX) * 5) / fps;
-        }
-        else
-        {
-            textCurX = textDestX;
-        }
-        if(textCurScale > textDestScale)
-        {
-            textCurScale -= (abs(textCurScale - textDestScale) * 5) / fps;
-        }
-        else
-        {
-            textCurScale = textDestScale;
-        }
-
-        t_win.setScale(textCurScale);
-        t_win_outline.setScale(textCurScale);
-
-        bar_win.setPosition(barCurX, 360);
-        t_win.setPosition(textCurX-7, 360-14);
-        t_win_outline.setPosition(textCurX+2, 360-4);
-
-        bar_win.draw(window);
-        t_win_outline.draw(window);
-        t_win.draw(window);
-
-        if(missionEndTimer.getElapsedTime().asMilliseconds() >= 17000)
-        {
-            if(fadeout_alpha < 255)
-            {
-                fadeout_alpha += float(250) / fps;
+                if(missionEndTimer.getElapsedTime().asMilliseconds() >= 13050)
+                {
+                    textCurScale = 1.4;
+                    textBounce = true;
+                }
             }
 
-            if(fadeout_alpha >= 255)
+            t_win.setOrigin(t_win.getLocalBounds().width/2, t_win.getLocalBounds().height/2);
+            t_win_outline.setOrigin(t_win_outline.getLocalBounds().width/2, t_win_outline.getLocalBounds().height/2);
+
+            if(barCurX > barDestX)
             {
-                fadeout_alpha = 255;
+                barCurX -= (abs(barCurX - barDestX) * 5) / fps;
+            }
+            else
+            {
+                barCurX = barDestX;
             }
 
-            fadeout_box.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
-            fadeout_box.setFillColor(sf::Color(0,0,0,fadeout_alpha));
-            window.draw(fadeout_box);
+            if(textCurX < textDestX)
+            {
+                textCurX += (abs(textCurX - textDestX) * 5) / fps;
+            }
+            else
+            {
+                textCurX = textDestX;
+            }
+            if(textCurScale > textDestScale)
+            {
+                textCurScale -= (abs(textCurScale - textDestScale) * 5) / fps;
+            }
+            else
+            {
+                textCurScale = textDestScale;
+            }
+
+            t_win.setScale(textCurScale);
+            t_win_outline.setScale(textCurScale);
+
+            bar_win.setPosition(barCurX, 360);
+            t_win.setPosition(textCurX-7, 360-14);
+            t_win_outline.setPosition(textCurX+2, 360-4);
+
+            bar_win.draw(window);
+            t_win_outline.draw(window);
+            t_win.draw(window);
+
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 17000)
+            {
+                if(fadeout_alpha < 255)
+                {
+                    fadeout_alpha += float(250) / fps;
+                }
+
+                if(fadeout_alpha >= 255)
+                {
+                    fadeout_alpha = 255;
+                }
+
+                fadeout_box.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+                fadeout_box.setFillColor(sf::Color(0,0,0,fadeout_alpha));
+                window.draw(fadeout_box);
+            }
+        }
+    }
+    else
+    {
+        if(missionEndTimer.getElapsedTime().asMilliseconds() >= 2500)
+        {
+            t_lose.setOrigin(t_lose.getLocalBounds().width/2, t_lose.getLocalBounds().height/2);
+            t_lose_outline.setOrigin(t_lose_outline.getLocalBounds().width/2, t_lose_outline.getLocalBounds().height/2);
+
+            if(barCurX > barDestX)
+            {
+                barCurX -= (abs(barCurX - barDestX) * 5) / fps;
+            }
+            else
+            {
+                barCurX = barDestX;
+            }
+
+            if(textCurX < textDestX)
+            {
+                textCurX += (abs(textCurX - textDestX) * 5) / fps;
+            }
+            else
+            {
+                textCurX = textDestX;
+            }
+
+            t_lose.setScale(textCurScale);
+            t_lose_outline.setScale(textCurScale);
+
+            bar_lose.setPosition(barCurX, 360);
+            t_lose.setPosition(textCurX-7, 360-14);
+            t_lose_outline.setPosition(textCurX+2, 360-4);
+
+            bar_lose.draw(window);
+            t_lose_outline.draw(window);
+            t_lose.draw(window);
+
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 6000)
+            {
+                if(fadeout_alpha < 255)
+                {
+                    fadeout_alpha += float(250) / fps;
+                }
+
+                if(fadeout_alpha >= 255)
+                {
+                    fadeout_alpha = 255;
+                }
+
+                fadeout_box.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+                fadeout_box.setFillColor(sf::Color(0,0,0,fadeout_alpha));
+                window.draw(fadeout_box);
+            }
+
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 8000)
+            {
+                cout << "End mission" << endl;
+
+                StopMission();
+
+                cout << "Go to Patapolis" << endl;
+
+                sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+                v4core->continueLoading=true;
+                v4core->window.setActive(false);
+                loadingThreadInstance.launch();
+
+                v4core->mainMenu.patapolisMenu.doWaitKeyPress = false;
+                v4core->mainMenu.patapolisMenu.Show();
+                v4core->mainMenu.patapolisMenu.isActive = true;
+
+                if (!v4core->mainMenu.patapolisMenu.initialised)
+                {
+                    /// patapolis might not be initialised because we could be running the pre-patapolis scripted first mission.
+                    cout << "[ENDFLAG] Initialize Patapolis for the first time" << endl;
+                    v4core->mainMenu.patapolisMenu.Initialise(missionConfig,v4core->mainMenu.keyMapping,v4core,&v4core->mainMenu);
+                }
+                else
+                {
+                    cout << "Don't initialize Patapolis, just show it again" << endl;
+                }
+
+                v4core->mainMenu.patapolisMenu.location = 3;
+                v4core->mainMenu.patapolisMenu.SetTitle(3);
+                v4core->mainMenu.patapolisMenu.camPos = v4core->mainMenu.patapolisMenu.locations[3];
+                v4core->mainMenu.patapolisMenu.fade_alpha = 255;
+
+                while(missionEndTimer.getElapsedTime().asMilliseconds() < 10000)
+                {
+                    ///halt loading for a second
+                }
+
+                v4core->LoadingWaitForKeyPress();
+
+                v4core->continueLoading=false;
+
+                v4core->ChangeRichPresence("In Patapolis", "logo", "");
+            }
         }
     }
 
     window.setView(lastView);
+
+    /// remove units at the very end
+
+    for(int i=0; i<units_rm.size(); i++)
+    {
+        units.erase(units.begin()+(units_rm[i]-i));//remove it from vector
+
+        cout << "Erased unit " << units_rm[i] << endl;
+        //delete tangibleLevelObjects[tlo_rm[i]];
+        //tangibleLevelObjects.erase(tangibleLevelObjects.begin()+(tlo_rm[i] - i));
+    }
 }
 void MissionController::FinishLastCutscene()
 {

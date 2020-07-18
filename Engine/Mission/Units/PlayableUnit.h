@@ -18,9 +18,18 @@ class PlayableUnit : public CollidableObject
 
     int unitID = DUMMY;
 
+    float current_hp = 100;
+    float max_hp = 100;
+
+    bool dead = false;
+    sf::Clock deathClock;
+
     PlayableUnit();
     virtual void setUnitID(int new_unitID);
     virtual int getUnitID();
+    virtual float getUnitHP();
+    virtual float getUnitMaxHP();
+    virtual void setUnitHP(float hp);
     virtual bool doAttack();
     virtual void doRhythm(std::string current_song="", std::string current_drum="", int combo=0);
     virtual void doMissionEnd();

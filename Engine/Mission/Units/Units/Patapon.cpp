@@ -143,57 +143,60 @@ bool Patapon::doAttack()
 
 void Patapon::doRhythm(std::string current_song, std::string current_drum, int combo)
 {
-    if(current_song == "patapata")
+    if(!dead)
     {
-        action = WALK;
-
-        if(!focus)
-        setAnimationSegment("walk");
-        else
-        setAnimationSegment("walk_focused");
-
-        setLoop(true);
-    }
-    else
-    {
-        if(getAnimationSegment() == "walk")
+        if(current_song == "patapata")
         {
-            if(!getback)
+            action = WALK;
+
+            if(!focus)
+            setAnimationSegment("walk");
+            else
+            setAnimationSegment("walk_focused");
+
+            setLoop(true);
+        }
+        else
+        {
+            if(getAnimationSegment() == "walk")
             {
-                if(!focus)
-                setAnimationSegment("idle_armed", true);
-                else
-                setAnimationSegment("idle_armed_focused", true);
+                if(!getback)
+                {
+                    if(!focus)
+                    setAnimationSegment("idle_armed", true);
+                    else
+                    setAnimationSegment("idle_armed_focused", true);
+                }
             }
         }
-    }
 
-    if(current_song == "ponpon")
-    {
-        ///use attack only once
-        if(attackmode != 2)
-        startAttack();
-    }
-    else
-    {
-        ///refresh attack mode
-        attackmode = -1;
-    }
-
-    if((current_drum == "pata") or (current_drum == "pon") or (current_drum == "chaka") or (current_drum == "don"))
-    {
-        //cout << current_drum << endl;
-
-        if(!focus)
-        setAnimationSegment(current_drum, true);
+        if(current_song == "ponpon")
+        {
+            ///use attack only once
+            if(attackmode != 2)
+            startAttack();
+        }
         else
-        setAnimationSegment(current_drum+"_focused", true);
-    }
+        {
+            ///refresh attack mode
+            attackmode = -1;
+        }
 
-    if(combo >= 11)
-    isFever = true;
-    else
-    isFever = false;
+        if((current_drum == "pata") or (current_drum == "pon") or (current_drum == "chaka") or (current_drum == "don"))
+        {
+            //cout << current_drum << endl;
+
+            if(!focus)
+            setAnimationSegment(current_drum, true);
+            else
+            setAnimationSegment(current_drum+"_focused", true);
+        }
+
+        if(combo >= 11)
+        isFever = true;
+        else
+        isFever = false;
+    }
 }
 
 void Patapon::doMissionEnd()
@@ -244,9 +247,63 @@ void Patapon::Draw(sf::RenderWindow& window)
         focus = false;
     }
 
+    if(getUnitHP() <= 0)
+    {
+        if(!dead)
+        {
+            dead = true;
+            deathClock.restart();
+            hspeed = -400;
+            vspeed = -250;
+
+            setAnimationSegment("stagger_var5", true);
+        }
+    }
+
+    if(dead)
+    {
+        cout << "I'm dead now" << endl;
+
+        if(getAnimationSegment() == "stagger_var5")
+        {
+            cout << "Animation segment is stagger_var5 " << cur_pos << " " << anim_end << endl;
+
+            if(cur_pos >= anim_end)
+            {
+                cout << "Setting death animation" << endl;
+
+                setAnimationSegment("death", true);
+            }
+        }
+
+        if(deathClock.getElapsedTime().asSeconds() > 5)
+        {
+            cout << "Death clock passed 3 seconds. Time to bury into the ground" << endl;
+
+            if(getAnimationSegment() == "death_corpse")
+            {
+                cout << "I am despawning" << endl;
+                setAnimationSegment("death_despawn", true);
+            }
+
+            if(getAnimationSegment() == "death_despawn")
+            {
+                if(cur_pos >= anim_end)
+                {
+                    ready_to_erase = true;
+                }
+            }
+        }
+    }
+
     //cout << "gclosest: " << gclosest << " lclosest: " << lclosest << " global_x: " << global_x << " local_x: " << local_x << endl;
 
     vspeed += gravity / fps;
+
+    if(hspeed < 0)
+    hspeed += 230.0 / fps;
+    else
+    hspeed = 0;
 
     if(vspeed >= 0)
     {
@@ -257,6 +314,7 @@ void Patapon::Draw(sf::RenderWindow& window)
         }
     }
 
+    local_x += hspeed / fps;
     local_y += vspeed / fps;
 
     AnimatedObject::Draw(window);

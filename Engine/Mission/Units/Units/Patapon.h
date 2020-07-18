@@ -19,6 +19,7 @@ class Patapon : public PlayableUnit
 
     int attackmode = -1;
 
+    float hspeed = 0;
     float vspeed = 0;
     float gravity = 981;
     float gclosest = 9999;

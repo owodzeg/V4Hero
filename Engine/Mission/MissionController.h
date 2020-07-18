@@ -165,6 +165,7 @@ class MissionController
         PText unit_count_shadow;
         PSprite hpbar_back;
         PSprite hpbar_ins;
+        int width;
     };
 
     vector<PickedItem> pickedItems;
@@ -173,6 +174,7 @@ class MissionController
     sf::RectangleShape r_floor;
 
     bool debug_map_drop = false;
+    bool failure = false;
 
     float Smoothstep(float time);
     float Clamp(float x, float lowerlimit, float upperlimit);

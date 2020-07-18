@@ -15,6 +15,21 @@ int PlayableUnit::getUnitID()
     return unitID;
 }
 
+float PlayableUnit::getUnitHP()
+{
+    return current_hp;
+}
+
+float PlayableUnit::getUnitMaxHP()
+{
+    return max_hp;
+}
+
+void PlayableUnit::setUnitHP(float hp)
+{
+    current_hp = hp;
+}
+
 bool PlayableUnit::doAttack()
 {
     cout << "PlayableUnit::doAttack() was not overriden by child class" << endl;
