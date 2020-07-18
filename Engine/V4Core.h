@@ -33,7 +33,7 @@ class V4Core
 
     bool leftkey=false,rightkey=false,upkey=false,downkey=false;
     public:
-        std::string hero_version = "v1.1-pre-release-1";
+        std::string hero_version = "v1.1-pre-release-2";
         sf::RenderWindow window;
 
         NewGameMenu newGameMenu;

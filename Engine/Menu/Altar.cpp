@@ -99,7 +99,7 @@ void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core
     mm_inventory_background.setSize(sf::Vector2f(inv_bg_x*resRatioX, 675*resRatioY));
     mm_inventory_background.setFillColor(sf::Color(4,0,90));
     float singleTileWidth = ((inv_bg_x-(40*resRatioX))*resRatioX)/numItemColumns;
-    float singleTileHeight = mm_inventory_background.getSize().y/5;//(thisConfig->GetInt("resX")*150)/1920.0;
+    float singleTileHeight = (mm_inventory_background.getSize().y-(5*4))/5;//(thisConfig->GetInt("resX")*150)/1920.0;
     cout<<singleTileWidth<<" "<<singleTileHeight<<'\n';
     mm_highlighted_tile.setSize(sf::Vector2f(singleTileWidth,singleTileHeight));
     mm_highlighted_tile.setFillColor(sf::Color(255,255,255,80));
@@ -444,7 +444,7 @@ void AltarMenu::Update(sf::RenderWindow &window, float fps)
                 {
                     Item* starting_item = v4core->savereader.invdata.GetItemByInvID(currentItemId).item;
                     float xpos = 10+(mm_inventory_background.getPosition().x/resRatioX)+(mm_highlighted_tile.getSize().x/resRatioX+10)*x;
-                    float ypos = 10+(mm_inventory_background.getPosition().y/resRatioY)+(mm_highlighted_tile.getSize().y/resRatioY+10)*y-(mm_highlighted_tile.getSize().y/resRatioY)*currentRow;
+                    float ypos = 10+(mm_inventory_background.getPosition().y/resRatioY)+(mm_highlighted_tile.getSize().y/resRatioY+10)*y-(mm_highlighted_tile.getSize().y/resRatioY+10)*currentRow;
 
                     switch (starting_item->category_id)
                     {
@@ -470,7 +470,7 @@ void AltarMenu::Update(sf::RenderWindow &window, float fps)
             }
         }
 
-        mm_highlighted_tile.setPosition((10+(mm_inventory_background.getPosition().x/resRatioX)+(mm_highlighted_tile.getSize().x/resRatioX+10)*inventoryGridXPos)*resRatioX,(10+(mm_inventory_background.getPosition().y/resRatioY)+(mm_highlighted_tile.getSize().y/resRatioY+10)*inventoryGridYPos-(mm_highlighted_tile.getSize().y/resRatioY)*currentRow)*resRatioY);
+        mm_highlighted_tile.setPosition((10+(mm_inventory_background.getPosition().x/resRatioX)+(mm_highlighted_tile.getSize().x/resRatioX+10)*inventoryGridXPos)*resRatioX,(10+(mm_inventory_background.getPosition().y/resRatioY)+(mm_highlighted_tile.getSize().y/resRatioY+10)*inventoryGridYPos-(mm_highlighted_tile.getSize().y/resRatioY+10)*currentRow)*resRatioY);
         window.draw(mm_highlighted_tile);
 
         t_itemtitle.setPosition((menuSize + ((1920 - menuSize) / 2)) * resRatioX, 430 * resRatioY);

@@ -131,7 +131,7 @@ void Camera::Work(sf::RenderWindow& window,float fps, std::map<int,bool> *keyMap
     /** Move camera **/
 
     //camera_x += camera_xspeed / fps;
-    camera_x = followobject_x+600;
+    camera_x = followobject_x+(600*resRatioX);
 
     /** Manual camera movement (L/R in Patapon) **/
     manual_x += ((manual_x_dest - manual_x) * 5) / fps;
