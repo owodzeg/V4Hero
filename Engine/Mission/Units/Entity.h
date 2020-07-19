@@ -20,6 +20,9 @@ class Entity : public CollidableObject
 
     bool dropped_item = false;
 
+    float curHP = 500;
+    float maxHP = 500;
+
     Entity();
     virtual void setEntityID(int new_entityID);
     virtual int getEntityID();

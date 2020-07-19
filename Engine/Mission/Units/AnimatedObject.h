@@ -54,9 +54,6 @@ class AnimatedObject
     float framerate = 1;
     sf::Rect<float> hitBox;
 
-    float curHP = 10;
-    float maxHP = 500;
-
     bool ready_to_erase = false;
 
     ///temporary

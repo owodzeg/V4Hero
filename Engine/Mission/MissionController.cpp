@@ -137,11 +137,11 @@ void MissionController::addItemsCounter(int id, float baseX, float baseY)
 
 }
 
-void MissionController::spawnEntity(string entityName, int entityID, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, vector<Entity::Loot> loot_table, vector<string> additional_data)
+void MissionController::spawnEntity(string entityName, int entityID, int baseHP, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, vector<Entity::Loot> loot_table, vector<string> additional_data)
 {
     ///need to somehow optimize this to not copy paste the same code over and over
 
-    cout << "Spawning entity " << entityName << " (ID: " << entityID << ") " << baseX << " " << randX << " " << baseY << " " << spr_goal << " " << spr_range << " " << statLevel << endl;
+    cout << "Spawning entity " << entityName << " (ID: " << entityID << ") " << baseHP << " " << baseX << " " << randX << " " << baseY << " " << spr_goal << " " << spr_range << " " << statLevel << endl;
 
     switch(entityID)
     {
@@ -223,6 +223,8 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseX, 
             entity.get()->isCollidable = collidable;
             entity.get()->isAttackable = attackable;
             entity.get()->loot_table = loot_table;
+            entity.get()->curHP = baseHP;
+            entity.get()->maxHP = baseHP;
 
             if(spr_range != 0)
             {
@@ -453,8 +455,16 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     }
 
     units.clear();
-
     levelProjectiles.clear();
+
+    droppeditem_spritesheet.clear();
+    dmgCounters.clear();
+    droppedItems.clear();
+    pickedItems.clear();
+    unitThumbs.clear();
+
+    missionEnd = false;
+    failure = false;
 
     //ctor
     f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
@@ -703,6 +713,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
 
                             int entityID = atoi(spawn[0].c_str());
                             int baseY = 0;
+                            int baseHP = 0;
                             bool collidable = false;
                             bool attackable = false;
                             vector<Entity::Loot> loot_table;
@@ -720,6 +731,12 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
                                         {
                                             string by = buff2.substr(buff2.find_last_of("=")+1);
                                             baseY = atoi(by.c_str());
+                                        }
+
+                                        if(buff2.find("baseHP=") != std::string::npos)
+                                        {
+                                            string by = buff2.substr(buff2.find_last_of("=")+1);
+                                            baseHP = atoi(by.c_str());
                                         }
 
                                         if(buff2.find("collidable=") != std::string::npos)
@@ -758,7 +775,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
                             entityParam.close();
 
                             cout << "Spawning an entity: " << entity_list[entityID] << endl;
-                            spawnEntity(entity_list[entityID],entityID,atoi(spawn[1].c_str()),atoi(spawn[2].c_str()),baseY,atoi(spawn[3].c_str()),atoi(spawn[4].c_str()),atoi(spawn[5].c_str()),sf::Color(atoi(spawn[6].c_str()),atoi(spawn[7].c_str()),atoi(spawn[8].c_str()),atoi(spawn[9].c_str())), collidable, attackable, loot_table);
+                            spawnEntity(entity_list[entityID],entityID,baseHP,atoi(spawn[1].c_str()),atoi(spawn[2].c_str()),baseY,atoi(spawn[3].c_str()),atoi(spawn[4].c_str()),atoi(spawn[5].c_str()),sf::Color(atoi(spawn[6].c_str()),atoi(spawn[7].c_str()),atoi(spawn[8].c_str()),atoi(spawn[9].c_str())), collidable, attackable, loot_table);
                         }
                     }
                 }
@@ -784,6 +801,16 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
     p2.get()->setUnitID(1);
     p3.get()->setUnitID(1);
     h.get()->setUnitID(0);
+
+    ///Apply the stats
+    p1.get()->mindmg = v4core->savereader.ponreg.GetPonByID(1)->pon_min_dmg;
+    p1.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(1)->pon_max_dmg;
+
+    p2.get()->mindmg = v4core->savereader.ponreg.GetPonByID(2)->pon_min_dmg;
+    p2.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(2)->pon_max_dmg;
+
+    p3.get()->mindmg = v4core->savereader.ponreg.GetPonByID(3)->pon_min_dmg;
+    p3.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(3)->pon_max_dmg;
 
     units.push_back(std::move(p1));
     units.push_back(std::move(p2));
@@ -825,7 +852,7 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, st
             auto item = v4core->savereader.itemreg.GetItemByID(23);
             vector<string> data = {item->spritesheet, to_string(item->spritesheet_id), to_string(23)};
 
-            spawnEntity("droppeditem",5,500,0,600,0,0,1,sf::Color::White,0,0,vector<Entity::Loot>(), data);
+            spawnEntity("droppeditem",5,0,500,0,600,0,0,1,sf::Color::White,0,0,vector<Entity::Loot>(), data);
 
             debug_map_drop = true;
         }
@@ -1015,36 +1042,45 @@ float MissionController::pataponMinProjection(float axisAngle, int id)
 bool MissionController::DoCollisionStepInAxis(float currentAxisAngle,HitboxFrame* currentHitboxFrame,AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float currentObjectY)
 {
     std::vector<sf::Vector2f> currentVertices = currentObjectHitBoxFrame->getCurrentVertices();
-    PVector pv1 = PVector::getVectorCartesian(0,0,currentVertices[0].x+currentObjectX,currentVertices[0].y+currentObjectY);
-    PVector pv2 = PVector::getVectorCartesian(0,0,currentVertices[1].x+currentObjectX,currentVertices[1].y+currentObjectY);
-    PVector pv3 = PVector::getVectorCartesian(0,0,currentVertices[2].x+currentObjectX,currentVertices[2].y+currentObjectY);
-    PVector pv4 = PVector::getVectorCartesian(0,0,currentVertices[3].x+currentObjectX,currentVertices[3].y+currentObjectY);
-    pv1.angle =-atan2(currentVertices[0].y+currentObjectY, currentVertices[0].x+currentObjectX);
-    pv2.angle =-atan2(currentVertices[1].y+currentObjectY, currentVertices[1].x+currentObjectX);
-    pv3.angle =-atan2(currentVertices[2].y+currentObjectY, currentVertices[2].x+currentObjectX);
-    pv4.angle =-atan2(currentVertices[3].y+currentObjectY, currentVertices[3].x+currentObjectX);
 
-    float proj1 = pv1.GetScalarProjectionOntoAxis(currentAxisAngle);
-    float proj2 = pv2.GetScalarProjectionOntoAxis(currentAxisAngle);
-    float proj3 = pv3.GetScalarProjectionOntoAxis(currentAxisAngle);
-    float proj4 = pv4.GetScalarProjectionOntoAxis(currentAxisAngle);
+    if(currentVertices.size() < 4)
+    cout << "Vertices alert!!! " << currentVertices.size() << endl;
 
-
-    float maxProjectionObj1 = max(max(max(proj1,proj2),proj3),proj4);
-    float minProjectionObj1 = min(min(min(proj1,proj2),proj3),proj4);
-
-    float maxProjectionObj2 = currentHitboxFrame->maxProjection(currentAxisAngle, targetObject->global_x,targetObject->global_y);
-    float minProjectionObj2 = currentHitboxFrame->minProjection(currentAxisAngle, targetObject->global_x,targetObject->global_y);
-    if(maxProjectionObj1>minProjectionObj2 && minProjectionObj1<maxProjectionObj2)
+    if(currentVertices.size() >= 4)
     {
-        return true;
+        PVector pv1 = PVector::getVectorCartesian(0,0,currentVertices[0].x+currentObjectX,currentVertices[0].y+currentObjectY);
+        PVector pv2 = PVector::getVectorCartesian(0,0,currentVertices[1].x+currentObjectX,currentVertices[1].y+currentObjectY);
+        PVector pv3 = PVector::getVectorCartesian(0,0,currentVertices[2].x+currentObjectX,currentVertices[2].y+currentObjectY);
+        PVector pv4 = PVector::getVectorCartesian(0,0,currentVertices[3].x+currentObjectX,currentVertices[3].y+currentObjectY);
+        pv1.angle =-atan2(currentVertices[0].y+currentObjectY, currentVertices[0].x+currentObjectX);
+        pv2.angle =-atan2(currentVertices[1].y+currentObjectY, currentVertices[1].x+currentObjectX);
+        pv3.angle =-atan2(currentVertices[2].y+currentObjectY, currentVertices[2].x+currentObjectX);
+        pv4.angle =-atan2(currentVertices[3].y+currentObjectY, currentVertices[3].x+currentObjectX);
+
+        float proj1 = pv1.GetScalarProjectionOntoAxis(currentAxisAngle);
+        float proj2 = pv2.GetScalarProjectionOntoAxis(currentAxisAngle);
+        float proj3 = pv3.GetScalarProjectionOntoAxis(currentAxisAngle);
+        float proj4 = pv4.GetScalarProjectionOntoAxis(currentAxisAngle);
+
+
+        float maxProjectionObj1 = max(max(max(proj1,proj2),proj3),proj4);
+        float minProjectionObj1 = min(min(min(proj1,proj2),proj3),proj4);
+
+        float maxProjectionObj2 = currentHitboxFrame->maxProjection(currentAxisAngle, targetObject->global_x,targetObject->global_y);
+        float minProjectionObj2 = currentHitboxFrame->minProjection(currentAxisAngle, targetObject->global_x,targetObject->global_y);
+        if(maxProjectionObj1>minProjectionObj2 && minProjectionObj1<maxProjectionObj2)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     else
     {
         return false;
     }
-
-
 }
 void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld)
 {
@@ -1476,7 +1512,7 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
         units_rm.push_back(i);
     }
 
-    cout << "Does Hatapon exist? " << hatapon << " How many units left? " << u << endl;
+    //cout << "Does Hatapon exist? " << hatapon << " How many units left? " << u << endl;
 
     if((!hatapon) || ((hatapon) && (u <= 1)))
     {
@@ -1528,6 +1564,24 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
                         //cout << "rand_hs: " << rand_hs << " rand_vs: " << rand_vs << endl;
                         //cout << "===============================================" << endl;
 
+                        int rhythm_acc = rhythm.current_perfect; ///Check how many perfect measures has been done to improve the spears throwing
+                        float fever_boost = 0.8;
+
+                        if(rhythm.GetCombo() >= 11) ///Check for fever to boost the spears damage
+                        fever_boost = 1.0;
+
+                        float mindmg = unit->mindmg * (0.8 + (rhythm_acc*0.05)) * fever_boost;
+                        float maxdmg = unit->maxdmg * (0.8 + (rhythm_acc*0.05)) * fever_boost;
+
+                        ///Make the spears be thrown with worse velocity when player is drumming bad (10% punishment)
+                        rand_hs *= 0.9 + (rhythm_acc*0.025);
+                        rand_vs *= 0.9 + (rhythm_acc*0.025);
+
+                        ///This way, the lowest damage is dmg * 0.64 (36% punishment) and highest damage is 100% of the values
+
+                        cout << "Command boost: " << ((0.8 + (rhythm_acc*0.05)) * fever_boost)*100 << "%" << endl;
+                        cout << "Velocity boost: " << (0.9+(rhythm_acc*0.025))*100 << "%" << endl;
+
                         unique_ptr<Spear> p = make_unique<Spear>(s_proj);
                         p.get()->xPos = unit->getGlobalPosition().x+unit->hitBox.left+unit->hitBox.width/2;
                         p.get()->yPos = unit->getGlobalPosition().y+unit->hitBox.top+unit->hitBox.height/2;
@@ -1538,8 +1592,8 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
                         //p.get()->angle = -0.698131701; /// 40 degrees from the floor - pi*4/12
                         p.get()->angle = -0.58 - rand_rad;
                         ///-0.872664626 - 50 deg
-                        p.get()->maxdmg = 150;
-                        p.get()->mindmg = 50;
+                        p.get()->maxdmg = maxdmg;
+                        p.get()->mindmg = mindmg;
                         p.get()->crit = 0;
                         p.get()->crit = 0;
 

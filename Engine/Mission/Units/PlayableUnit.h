@@ -18,8 +18,13 @@ class PlayableUnit : public CollidableObject
 
     int unitID = DUMMY;
 
+    ///Individual unit stats
     float current_hp = 100;
     float max_hp = 100;
+
+    int mindmg = 1;
+    int maxdmg = 1;
+
 
     bool dead = false;
     sf::Clock deathClock;
