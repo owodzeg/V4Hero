@@ -204,14 +204,17 @@ void DroppedItem::OnCollide(CollidableObject* otherObject, int collidedWith, vec
     /// Animate the item obtaining and save the obtained item to a temporary list in MissionController
     /// Then, when the mission is properly passed, add the items from the list to the save data.
 
-    if(!pickedup)
+    if(collisionData.size() == 0) ///collision data needs to be empty so it will not be executed when spears touch items
     {
-        ///add to the missioncontroller list so it can be displayed in the upper right corner VERY COOL!
-        thisConfig->thisCore->currentController.addPickedItem(spritesheet, spritesheet_id, picked_item);
+        if(!pickedup)
+        {
+            ///add to the missioncontroller list so it can be displayed in the upper right corner VERY COOL!
+            thisConfig->thisCore->currentController.addPickedItem(spritesheet, spritesheet_id, picked_item);
 
-        ///do visuals
-        pickedup = true;
-        anim_state = 0;
-        pickupClock.restart();
+            ///do visuals
+            pickedup = true;
+            anim_state = 0;
+            pickupClock.restart();
+        }
     }
 }
