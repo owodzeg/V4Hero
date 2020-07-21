@@ -615,7 +615,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
         }
     }
 
-    pataponY = 720 - 176;
+    pataponY = 720 - 141;
     floorY = 720 - 100;
 
     /**
@@ -1258,7 +1258,7 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
         {
             case 0: ///Hatapon
             {
-                unit->setGlobalPosition(sf::Vector2f(army_X,492));
+                unit->setGlobalPosition(sf::Vector2f(army_X,500));
                 break;
             }
 
@@ -1748,14 +1748,14 @@ void MissionController::DrawUnitThumbs(sf::RenderWindow& window)
 
             if(unitThumbs[i].unit_id == 0)
             {
-                manual_x = -40;
-                manual_y = -46;
+                manual_x = 6;
+                manual_y = -40;
             }
 
             if(unitThumbs[i].unit_id == 1)
             {
-                manual_x = -22;
-                manual_y = -12;
+                manual_x = 0;
+                manual_y = 14;
             }
 
             unitThumbs[i].thumb.setPosition(52+(64*i)+manual_x, 60+manual_y);

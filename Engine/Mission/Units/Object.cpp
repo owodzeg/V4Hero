@@ -86,12 +86,31 @@ void Object::LoadFromMemory(std::string mem, int xpos, int ypos)
 
 void Object::swapTexture(sf::Image img)
 {
-    //cout << "[Object] Object::swapTexture()" << endl;
+    //cout << "[Object] Object::swapTexture(): " << texture_path << endl;
+
+    sf::Clock c;
+    s_obj.t.loadFromImage(img);
+    //cout << c.getElapsedTime().asMicroseconds() << "us ";
+    s_obj.t.setSmooth(true);
+    //cout << c.getElapsedTime().asMicroseconds() << "us ";
+    s_obj.applyTexture();
+    //cout << c.getElapsedTime().asMicroseconds() << "us" << endl;;
+}
+
+void Object::swapTexture(sf::Image first, vector<Pixel> px)
+{
+    //cout << "[Object] Object::swapTexture(): " << texture_path << endl;
 
     //sf::Clock c;
-    //sf::Image nw = img;
+
+    sf::Image nw = first;
     //cout << c.getElapsedTime().asMicroseconds() << "us ";
-    s_obj.t.loadFromImage(img);
+    for(int i=0; i<px.size(); i++)
+    {
+        nw.setPixel(px[i].x, px[i].y, px[i].color);
+    }
+    //cout << c.getElapsedTime().asMicroseconds() << "us ";
+    s_obj.t.loadFromImage(nw);
     //cout << c.getElapsedTime().asMicroseconds() << "us ";
     s_obj.t.setSmooth(true);
     //cout << c.getElapsedTime().asMicroseconds() << "us ";

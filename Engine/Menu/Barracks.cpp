@@ -66,7 +66,7 @@ void Barracks::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     float resRatioX = thisConfigs->GetInt("resX") / float(1920);
     float resRatioY = thisConfigs->GetInt("resY") / float(1080);
 
-    pataponY = 572;
+    pataponY = 607;
     floorY = 980;
 
     mm_bigBox.setSize(sf::Vector2f(100*resRatioX,10*resRatioY));

@@ -12,6 +12,8 @@ using namespace std;
 class AnimatedObject
 {
     public:
+    int ao_version = 0;
+
     vector<Object> objects;
     vector<Hitbox> hitboxes;
     float max_time = 0;
@@ -89,6 +91,8 @@ class AnimatedObject
         sf::IntRect rect;
         sf::Vector2f origin;
     };
+
+    vector<vector<vector<Object::Pixel>>> all_swaps;
 
     float xBound=0, yBound=0;
 
