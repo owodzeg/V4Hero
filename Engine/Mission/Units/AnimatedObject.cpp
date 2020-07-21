@@ -97,6 +97,18 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     animation_bounds[animID][animFrame] = rect;
                     animation_origins[animID][animFrame] = origin;
 
+                    //cout << "Creating AnimationFrameBound... " << endl;
+
+                    AnimationFrameBound tmp;
+                    tmp.image.create(rect.width, rect.height, sf::Color::Transparent);
+                    tmp.image.copy(animation_spritesheet[animID].spritesheet, 0, 0, rect);
+                    tmp.rect = rect;
+                    tmp.origin = origin;
+
+                    afb[animID][animFrame] = tmp;
+
+                    //cout << "created." << endl;
+
                     //cout << "Animation " << animation_names[animID] << " frame " << animFrame << " bounds: " << x1 << " " << y1 << " " << x2 << " " << y2 << endl;
                 }
 
@@ -130,13 +142,19 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     }
 
                     ///spritesheet implementation
+
+                    cout << "Loading the spritesheet" << endl;
+
                     Animation tmp;
                     sf::Texture spr;
                     //cout << "Loading " << anim[2] << ".png" << endl;
-                    tmp.spritesheet = handle.ReadToMemoryChar(anim[2]+".png");
+                    vector<char> h = handle.ReadToMemoryChar(anim[2]+".png");
+                    tmp.spritesheet.loadFromMemory(&h[0], h.size());
                     //tmp.spritesheet.loadFromMemory(&mem[0], mem.size());
                     tmp.name = anim[2];
                     animation_spritesheet.push_back(tmp);
+
+                    cout << "Loaded spritesheet " << anim[2] << endl;
                 }
 
                 if(line.find("OI:") != std::string::npos)
@@ -403,13 +421,14 @@ void AnimatedObject::setAnimationSegment(std::string new_segment_name)
     //cout << "AnimatedObject::setAnimationSegment(" << new_segment_name << ");" << endl;
     //cout << new_segment_name << " vs " << getAnimationSegment() << endl;
 
+    sf::Clock c;
+
      if(new_segment_name != getAnimationSegment())
     {
         //cout << "Changing spritesheet to " << new_segment_name << endl;
-        objects[0].tex_obj.loadFromMemory(&animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet[0], animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet.size());
-        objects[0].tex_obj.setSmooth(true);
-        objects[0].s_obj.setTexture(objects[0].tex_obj);
-        objects[0].exported = false;
+        //objects[0].tex_obj.loadFromMemory(&animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet[0], animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet.size());
+        //objects[0].swapSpritesheet(getSegmentIndex(new_segment_name));
+        //cout << "Swapped spritesheet. Took " << c.restart().asMicroseconds() << "microseconds" << endl;
     }
 
     if(animation_begin.size() > 1)
@@ -433,14 +452,15 @@ void AnimatedObject::setAnimationSegment(std::string new_segment_name, bool forc
     //cout << "AnimatedObject::setAnimationSegment(" << new_segment_name << ");" << endl;
     //cout << new_segment_name << " vs " << getAnimationSegment() << endl;
 
+    sf::Clock c;
+
     if(new_segment_name != getAnimationSegment())
     {
         //cout << "Changing spritesheet to " << new_segment_name << endl;
 
-        objects[0].tex_obj.loadFromMemory(&animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet[0], animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet.size());
-        objects[0].tex_obj.setSmooth(true);
-        objects[0].s_obj.setTexture(objects[0].tex_obj);
-        objects[0].exported = false;
+        //objects[0].tex_obj.loadFromMemory(&animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet[0], animation_spritesheet[getSegmentIndex(new_segment_name)].spritesheet.size());
+        //objects[0].swapSpritesheet(getSegmentIndex(new_segment_name));
+        //cout << "Swapped spritesheet. Took " << c.restart().asMicroseconds() << "microseconds" << endl;
     }
 
     if(animation_begin.size() > 1)
@@ -600,31 +620,53 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
 
     //cout << "file " << anim_path << " animation " << getAnimationSegment() << " frame " << curFrame << "/" << floor(getAnimationLength(getAnimationSegment()) * animation_framerate)-1 << " bounds: " << animation_bounds[index][curFrame].left << " " << animation_bounds[index][curFrame].top << " " << animation_bounds[index][curFrame].width << " " << animation_bounds[index][curFrame].height << endl;
 
-    for(int i=0; i<hitboxes.size(); i++)
+    if(!offbounds)
     {
-        hitboxes[i].SetPos(cur_pos);
-    }
-
-    for(int i=0; i<objects.size(); i++)
-    {
-        objects[i].g_x = global_x;
-        objects[i].g_y = global_y;
-        objects[i].gl_x = local_x;
-        objects[i].gl_y = local_y;
-        objects[i].g_sx = scaleX;
-        objects[i].g_sy = scaleY;
-        objects[i].color = color;
-        objects[i].g_r = rotation;
-
-        objects[i].SetPos(cur_pos);
-
-        if(force_origin_null) ///nullify the origin when the object is inanimate or you set a custom origin
+        for(int i=0; i<hitboxes.size(); i++)
         {
-            objects[i].or_x = 0;
-            objects[i].or_y = 0;
+            hitboxes[i].SetPos(cur_pos);
         }
 
-        //cout << "Displaying animation " << getAnimationSegment() << ", time: " << getAnimationPos() << ":" << cur_pos << "/" << anim_end << " frame: " << curFrame+1 << "/" << (getAnimationLength(getAnimationSegment()) * animation_framerate) << " " << getAnimationLength(getAnimationSegment()) << endl;
-        objects[i].Draw(window, animation_bounds[index][curFrame].left, animation_bounds[index][curFrame].top, animation_bounds[index][curFrame].width, animation_bounds[index][curFrame].height, animation_origins[index][curFrame].x, animation_origins[index][curFrame].y);
+        for(int i=0; i<objects.size(); i++)
+        {
+            objects[i].g_x = global_x;
+            objects[i].g_y = global_y;
+            objects[i].gl_x = local_x;
+            objects[i].gl_y = local_y;
+            objects[i].g_sx = scaleX;
+            objects[i].g_sy = scaleY;
+            objects[i].color = color;
+            objects[i].g_r = rotation;
+
+            objects[i].SetPos(cur_pos);
+
+            if(force_origin_null) ///nullify the origin when the object is inanimate or you set a custom origin
+            {
+                objects[i].or_x = 0;
+                objects[i].or_y = 0;
+            }
+
+            //cout << "Displaying animation " << getAnimationSegment() << ", time: " << getAnimationPos() << ":" << cur_pos << "/" << anim_end << " frame: " << curFrame+1 << "/" << (getAnimationLength(getAnimationSegment()) * animation_framerate) << " " << getAnimationLength(getAnimationSegment()) << endl;
+            if(!manual_spritesheet)
+            {
+                if(curFrame != lastFrame)
+                objects[i].swapTexture(afb[index][curFrame].image);
+
+                if(force_origin_null) ///nullify the origin when the object is inanimate or you set a custom origin
+                {
+                    objects[i].Draw(window, 0, 0);
+                }
+                else
+                {
+                    objects[i].Draw(window, afb[index][curFrame].origin.x, afb[index][curFrame].origin.y);
+                }
+            }
+            else
+            {
+                objects[i].Draw(window, animation_bounds[index][curFrame].left, animation_bounds[index][curFrame].top, animation_bounds[index][curFrame].width, animation_bounds[index][curFrame].height, animation_origins[index][curFrame].x, animation_origins[index][curFrame].y);
+            }
+        }
     }
+
+    lastFrame = curFrame;
 }

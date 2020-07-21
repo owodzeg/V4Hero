@@ -31,6 +31,7 @@ class PSprite
     void setColor(sf::Color color);
     sf::Color getColor();
     void setTexture(sf::Texture& texture);
+    void applyTexture();
     void setSprite(sf::Sprite& sprite);
     void setPosition(float x, float y);
     sf::Vector2f getPosition();

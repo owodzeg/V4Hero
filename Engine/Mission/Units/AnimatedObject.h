@@ -61,6 +61,10 @@ class AnimatedObject
 
     bool loopable = true;
 
+    bool offbounds = false;
+
+    bool manual_spritesheet = false;
+
     map<string,vector<sf::Texture>> animation_textures;
 
     vector<float> animation_begin;
@@ -76,7 +80,14 @@ class AnimatedObject
     struct Animation
     {
         string name;
-        vector<char> spritesheet; ///data
+        sf::Image spritesheet; ///data
+    };
+
+    struct AnimationFrameBound
+    {
+        sf::Image image;
+        sf::IntRect rect;
+        sf::Vector2f origin;
     };
 
     float xBound=0, yBound=0;
@@ -86,9 +97,11 @@ class AnimatedObject
 
     vector<Animation> animation_spritesheet;
 
+    map<int, map<int, AnimationFrameBound>> afb;
+
     bool manual_mode = false;
 
-    int curFrame, index;
+    int curFrame, lastFrame, index;
     bool force_origin_null = false;
 
     vector<int> animation_frames;

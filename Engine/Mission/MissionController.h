@@ -28,6 +28,8 @@ class MissionController
     public:
     int qualitySetting=1, resSetting=1;
 
+    float fps = 60;
+
     Background test_bg;
     Rhythm rhythm;
     bool isInitialized=false;
@@ -176,31 +178,56 @@ class MissionController
     bool debug_map_drop = false;
     bool failure = false;
 
+    /** Collisions **/
+    bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame,AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY);
+    CollisionEvent DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY,int collisionObjectID,vector<string> collisionData = {});
+    float pataponMaxProjection(float axisAngle, int id);
+    float pataponMinProjection(float axisAngle, int id);
+
+    /** Cutscenes **/
+    void StartCutscene(const std::wstring& text,bool isBlackScreen,int TimeToShow);
+    void FinishLastCutscene();
+    bool isMoreCutscenes();
+
+    /** Utils **/
     float Smoothstep(float time);
     float Clamp(float x, float lowerlimit, float upperlimit);
+
+    /** Item management **/
+    void submitPickedItems();
+
+    /** Load up the assets **/
     void addDmgCounter(int type, int damage, float baseX, float baseY, int q, int r);
     void addItemsCounter(int id, float baseX, float baseY);
     void spawnEntity(string entityName, int entityID, int baseHP, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, vector<Entity::Loot> loot_table, vector<string> additional_data={});
     void addPickedItem(std::string spritesheet, int spritesheet_id, int picked_item);
     void addUnitThumb(int unit_id);
-    void submitPickedItems();
+    void spawnProjectile(float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit);
 
-    void StartCutscene(const std::wstring& text,bool isBlackScreen,int TimeToShow);
-
-    void FinishLastCutscene();
-    bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame,AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY);
-    CollisionEvent DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY,int collisionObjectID,vector<string> collisionData = {});
-    bool isMoreCutscenes();
-    void StopMission();
+    /** Load up the mission **/
     void Initialise(Config &config, std::map<int,bool> &keymap,std::string backgroundName,V4Core &v4core_);
     void StartMission(std::string missionFile, bool showCutscene=false);
-    void Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
+
+    /** Stop the mission **/
+    void StopMission();
+
+    /** Mission update stuff **/
     void DoMovement(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
     void DoRhythm();
-    void DoKeyboardEvents(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
-    float pataponMaxProjection(float axisAngle, int id);
+    void DoMissionEnd(sf::RenderWindow& window, float fps);
+    void DoVectorCleanup(std::vector<int> units_rm, std::vector<int> dmg_rm, std::vector<int> tlo_rm);
+    void DrawUnitThumbs(sf::RenderWindow& window);
+    void DrawPickedItems(sf::RenderWindow& window);
+    void DrawHitboxes(sf::RenderWindow& window);
+    std::vector<int> DrawDamageCounters(sf::RenderWindow& window);
+    std::vector<int> DrawEntities(sf::RenderWindow& window);
+    std::vector<int> DrawUnits(sf::RenderWindow& window);
 
-    float pataponMinProjection(float axisAngle, int id);
+    /** Main update function **/
+    void Update(sf::RenderWindow &window, float cfps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
+
+    /** Events **/
+    void DoKeyboardEvents(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
 
 
     MissionController();

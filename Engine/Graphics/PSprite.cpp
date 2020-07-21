@@ -148,6 +148,12 @@ void PSprite::setTexture(sf::Texture& texture)
     exported = false;
 }
 
+void PSprite::applyTexture()
+{
+    s.setTexture(t, true);
+    exported = false;
+}
+
 void PSprite::setSprite(sf::Sprite& sprite)
 {
     s = sprite;

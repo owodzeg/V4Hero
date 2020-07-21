@@ -15,6 +15,8 @@ void DroppedItem::LoadConfig(Config *thisConfigs)
 
     hspeed = -200+rand_hs;
     vspeed = -600+rand_vs;
+
+    manual_spritesheet = true;
 }
 void DroppedItem::Draw(sf::RenderWindow& window)
 {
