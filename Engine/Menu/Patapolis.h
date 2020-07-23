@@ -1,7 +1,6 @@
 #ifndef PATAPOLISMENU_H
 #define PATAPOLISMENU_H
 #include <SFML/Graphics.hpp>
-#include "ButtonLists/MainMenuButtonList.h"
 #include "../Config.h"
 #include "../Graphics/Menu.h"
 #include "../Mission/MissionController.h"
@@ -15,6 +14,9 @@ class PatapolisMenu : public Menu
     public:
         sf::RectangleShape mm_bigBox;
         sf::RectangleShape mm_titleBox;
+        sf::RectangleShape fade_box;
+        float fade_alpha = 255;
+
         int quality = 0;
 
         sf::Font f_font;
@@ -118,7 +120,7 @@ class PatapolisMenu : public Menu
         float smokepath1 = 0;
 
         std::vector<int> locations;
-        int location = 0;
+        int location = 3;
         bool left = false;
 
         PSprite market;

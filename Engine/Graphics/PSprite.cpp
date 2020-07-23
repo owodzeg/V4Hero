@@ -1,9 +1,11 @@
 #include "PSprite.h"
 #include <iostream>
+#include <string>
+#include <fstream>
 
 PSprite::PSprite()
 {
-DoAutoScale=true;
+
 }
 
 void PSprite::loadFromFile(std::string file, int q)
@@ -39,9 +41,16 @@ void PSprite::loadFromFile(std::string file, int q)
 
     std::cout << "[PSPRITE] Loading " << c << std::endl;
 
-    t.loadFromFile(c);
+    if(!t.loadFromFile(c))
+    {
+        std::ofstream dbg("V4Hero-errors.log", std::ios::app);
+        dbg << "Failed to load " << c;
+        dbg << "\r\n";
+        dbg.close();
+    }
+
     t.setSmooth(true);
-    s.setTexture(t);
+    s.setTexture(t, true);
 }
 
 void PSprite::loadFromFile(std::string file, int q, int r=1)
@@ -78,8 +87,17 @@ void PSprite::loadFromFile(std::string file, int q, int r=1)
     std::cout << "[PSPRITE] Loading " << c << std::endl;
 
     t.loadFromFile(c);
+
+    if(!t.loadFromFile(c))
+    {
+        std::ofstream dbg("V4Hero-errors.log", std::ios::app);
+        dbg << "Failed to load " << c;
+        dbg << "\r\n";
+        dbg.close();
+    }
+
     t.setSmooth(true);
-    s.setTexture(t);
+    s.setTexture(t, true);
 }
 
 void PSprite::setRepeated(bool r)
@@ -90,7 +108,6 @@ void PSprite::setRepeated(bool r)
 
 void PSprite::setTextureRect(sf::IntRect rect)
 {
-    rect.height = rect.height * ratioY;
     s.setTextureRect(rect);
 }
 
@@ -118,10 +135,23 @@ void PSprite::setColor(sf::Color color)
     s.setColor(color);
 }
 
+sf::Color PSprite::getColor()
+{
+    return s.getColor();
+}
+
 void PSprite::setTexture(sf::Texture& texture)
 {
     t = texture;
     s.setTexture(t,true);
+
+    exported = false;
+}
+
+void PSprite::applyTexture()
+{
+    s.setTexture(t, true);
+    exported = false;
 }
 
 void PSprite::setSprite(sf::Sprite& sprite)
@@ -257,4 +287,103 @@ void PSprite::draw(sf::RenderWindow& window)
     s.setPosition(lx*resRatioX, ly*resRatioY);
     s.setRotation(angle*(180/3.14159265358));
     window.draw(s);
+
+    if((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
+    {
+        if(!exported)
+        {
+            sf::Image img;
+            img = t.copyToImage();
+            int rrr = rand() % 100000000;
+            img.saveToFile("texDump/"+std::to_string(rrr)+".png");
+
+            exported = true;
+        }
+    }
+}
+
+void PSprite::update(sf::RenderWindow& window)
+{
+    ///Update updates the sprite without drawing it on screen. Useful for RenderTexture
+
+    switch(qualitySetting)
+    {
+        case 0: ///low
+        {
+            ratioX = window.getSize().x / float(640);
+            ratioY = window.getSize().y / float(360);
+            break;
+        }
+
+        case 1: ///med
+        {
+            ratioX = window.getSize().x / float(1280);
+            ratioY = window.getSize().y / float(720);
+            break;
+        }
+
+        case 2: ///high
+        {
+            ratioX = window.getSize().x / float(1920);
+            ratioY = window.getSize().y / float(1080);
+            break;
+        }
+
+        case 3: ///ultra
+        {
+            ratioX = window.getSize().x / float(3840);
+            ratioY = window.getSize().y / float(2160);
+            break;
+        }
+    }
+
+    switch(resSetting)
+    {
+        case 0: ///low
+        {
+            resRatioX = window.getSize().x / float(640);
+            resRatioY = window.getSize().y / float(360);
+            break;
+        }
+
+        case 1: ///med
+        {
+            resRatioX = window.getSize().x / float(1280);
+            resRatioY = window.getSize().y / float(720);
+            break;
+        }
+
+        case 2: ///high
+        {
+            resRatioX = window.getSize().x / float(1920);
+            resRatioY = window.getSize().y / float(1080);
+            break;
+        }
+
+        case 3: ///ultra
+        {
+            resRatioX = window.getSize().x / float(3840);
+            resRatioY = window.getSize().y / float(2160);
+            break;
+        }
+    }
+
+    s.setTexture(t);
+    s.setScale(ratioX*scaleX, ratioY*scaleY);
+    s.setOrigin(orX,orY);
+    s.setPosition(lx*resRatioX, ly*resRatioY);
+    s.setRotation(angle*(180/3.14159265358));
+
+    if((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
+    {
+        if(!exported)
+        {
+            sf::Image img;
+            img = t.copyToImage();
+            int rrr = rand() % 100000000;
+            img.saveToFile("texDump/"+std::to_string(rrr)+".png");
+
+            exported = true;
+        }
+    }
 }

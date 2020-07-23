@@ -25,6 +25,9 @@ void Camera::zoomViewAt(sf::Vector2i pixel, sf::RenderWindow& window, float zoom
 
 void Camera::Work(sf::RenderWindow& window,float fps, std::map<int,bool> *keyMap)
 {
+    float resRatioX = window.getSize().x / float(1280);
+    float resRatioY = window.getSize().y / float(720);
+
     camera_y = window.getSize().y/2;
 
     std::map<int,bool> cameraKeyMap = *keyMap;
@@ -102,53 +105,54 @@ void Camera::Work(sf::RenderWindow& window,float fps, std::map<int,bool> *keyMap
 
     /** Temporary movement code **/
 
-    if(camera_x > followobject_x + 500)
+    /*if(camera_x > followobject_x + 500)
     {
-        camera_xspeed = (-(camera_x - followobject_x - 400) / 20);
+        camera_xspeed -= 200.0 / fps;
     }
     else if(camera_x < followobject_x + 400)
     {
-        camera_xspeed = (-(camera_x - followobject_x - 400) / 20);
+        camera_xspeed += 200.0 / fps;
     }
     else
     {
         camera_xspeed = 0;
     }
 
-    if(camera_xspeed >= 2)
+    if(camera_xspeed >= pataSpeed * resRatioX)
     {
-        camera_xspeed = 2;
+        camera_xspeed = pataSpeed * resRatioX;
     }
 
     if(fabs(camera_xspeed) <= 0.05)
     {
         camera_xspeed = 0;
-    }
+    }*/
 
     /** Move camera **/
 
-    camera_x += camera_xspeed / fps * float(60);
+    //camera_x += camera_xspeed / fps;
+    camera_x = followobject_x+(600*resRatioX);
 
     /** Manual camera movement (L/R in Patapon) **/
-    manual_x += ((manual_x_dest - manual_x) / 20) / fps * float(60);
+    manual_x += ((manual_x_dest - manual_x) * 5) / fps;
 
     /** Debug camera movement **/
-    debug_x += ((debug_x_dest - debug_x) / 20) / fps * float(60);
+    debug_x += ((debug_x_dest - debug_x) * 5) / fps;
 
     /** Apply zoom **/
-    zoom += ((dest_zoom - zoom) / 20) / fps * float(60);
+    zoom += ((dest_zoom - zoom) * 5) / fps;
 
     if(dest_zoom == 1)
     {
         float zoomLower, zoomUpper;
 
         if(fps >= 120)
-        zoomLower = 0.9995 + (0.0005 / (fps / float(60)));
+        zoomLower = 0.9995 + (0.03 / (fps));
         else
         zoomLower = 0.9995;
 
         if(fps >= 120)
-        zoomUpper = 1.0005 - (0.0005 / (fps / float(60)));
+        zoomUpper = 1.0005 - (0.03 / (fps));
         else
         zoomUpper = 1.0005;
 

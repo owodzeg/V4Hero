@@ -7,9 +7,6 @@
 class Drum
 {
     public:
-    sf::Texture t_drum;
-    sf::Texture t_flash;
-
     PSprite s_drum;
     PSprite s_flash;
 
@@ -37,13 +34,6 @@ class Drum
     bool isBest = false;
     bool isDon = false;
 
-    std::vector<float> pattern_X;
-    std::vector<float> pattern_Y;
-    std::vector<float> pattern_Angle;
-    std::vector<float> pattern_Xspeed;
-    std::vector<float> pattern_Yspeed;
-    std::vector<float> pattern_rotateSpeed;
-
     std::vector<sf::CircleShape> c_particle;
     int max_radius = 12;
     std::vector<bool> particle_didStart;
@@ -56,9 +46,13 @@ class Drum
     std::vector<float> particle_speed;
 
     int pattern = 0;
+    std::string cur_drum;
+
+    ///pattern["pata"]["x"] = vector<float>
+    std::map<std::string, std::map<std::string, std::vector<float>>> patterns;
 
     Drum();
-    void Load(std::string drum, int perfection, sf::RenderWindow& window);
+    void Load(std::string drum, int perfection, sf::Texture& drum_texture, sf::Texture& flash_texture);
     void Draw(sf::RenderWindow& window);
 };
 

@@ -1,7 +1,6 @@
 #ifndef MAINMENU_H
 #define MAINMENU_H
 #include <SFML/Graphics.hpp>
-#include "ButtonLists/MainMenuButtonList.h"
 #include "../Config.h"
 #include "../Graphics/Menu.h"
 #include "../Mission/MissionController.h"
@@ -21,6 +20,9 @@ class MainMenu : public Menu
         PSprite fire_1,fire_2,fire_3,aura,sword;
         PSprite sword_1,sword_2;
 
+        sf::SoundBuffer sb_title_loop;
+        sf::Sound title_loop;
+
         std::vector<std::string> temp_menu = {"New game", "Continue", "Options", "Exit"};
 
         PText t_option[4];
@@ -38,6 +40,32 @@ class MainMenu : public Menu
         float fire = 0;
         bool UsingMouseSelection = true;
         float g_x[4], g_dest[4];
+
+        ///Pre-menu screen
+        sf::RectangleShape rs_cover;
+        sf::RectangleShape rs_cover2;
+        PSprite logow_bg, logow_text, logow_shadow;
+        PText t_pressanykey;
+
+        sf::SoundBuffer sb_smash;
+        sf::Sound s_smash;
+
+        bool premenu = true;
+        bool keypressed = false;
+
+        float logow_scale = 1.0;
+        float logow_shscale = 1.0;
+        float t_alpha = 0;
+        float cv_alpha = 0;
+
+        float ui_alpha = 0;
+
+        float cur_y = 300;
+        float dest_y = 300;
+
+        sf::Clock menuClock;
+        sf::Clock startClock;
+
         Config *config;
         PatapolisMenu patapolisMenu;
         NewGameNameEntryMenu nameEntryMenu;

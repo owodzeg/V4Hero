@@ -12,10 +12,14 @@ using namespace std;
 class AnimatedObject
 {
     public:
+    int ao_version = 0;
+
     vector<Object> objects;
     vector<Hitbox> hitboxes;
     float max_time = 0;
     float cur_pos = 0;
+
+    string anim_path = ""; //identifier
 
     ///OLD
     sf::Sprite s_wall;
@@ -34,6 +38,11 @@ class AnimatedObject
     float fps = 60;
     float width = 0;
     float scaleX = 1, scaleY = 1; ///TEMPORARY
+    float rotation = 0;
+
+    float animation_framerate = 30;
+
+    sf::Color color = sf::Color(255,255,255,255);
 
     enum EntityType
     {
@@ -47,10 +56,16 @@ class AnimatedObject
     float framerate = 1;
     sf::Rect<float> hitBox;
 
+    bool ready_to_erase = false;
+
     ///temporary
     bool worm_fever = false;
 
     bool loopable = true;
+
+    bool offbounds = false;
+
+    bool manual_spritesheet = false;
 
     map<string,vector<sf::Texture>> animation_textures;
 
@@ -58,10 +73,40 @@ class AnimatedObject
     vector<float> animation_end;
     vector<string> animation_names;
     vector<string> animation_goto;
+    vector<bool> animation_loop;
 
     ///for getSegmentIndex
     map<string, int> animation_index;
 
+    ///for new spritesheet implementation
+    struct Animation
+    {
+        string name;
+        sf::Image spritesheet; ///data
+    };
+
+    struct AnimationFrameBound
+    {
+        sf::Image image;
+        sf::IntRect rect;
+        sf::Vector2f origin;
+    };
+
+    vector<vector<vector<Object::Pixel>>> all_swaps;
+
+    float xBound=0, yBound=0;
+
+    map<int, map<int, sf::IntRect>> animation_bounds;
+    map<int, map<int, sf::Vector2f>> animation_origins;
+
+    vector<Animation> animation_spritesheet;
+
+    map<int, map<int, AnimationFrameBound>> afb;
+
+    bool manual_mode = false;
+
+    int curFrame, lastFrame, index;
+    bool force_origin_null = false;
 
     vector<int> animation_frames;
     Config *thisConfig;
@@ -77,6 +122,8 @@ class AnimatedObject
     sf::Vector2f getGlobalPosition();
     void moveGlobalPosition(sf::Vector2f pos);
     void setLoop(bool loop);
+    void setColor(sf::Color new_color);
+    sf::Color getColor();
     virtual void LoadConfig(Config *thisConfigs,std::string unitParamPath);
     virtual void Draw(sf::RenderWindow& window);
 };

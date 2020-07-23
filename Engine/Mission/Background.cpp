@@ -154,6 +154,9 @@ void Background::Load(string bg_name,Config &thisConfigs)
 
 void Background::Draw(sf::RenderWindow& window)
 {
+    float resRatioX = window.getSize().x / float(1280);
+    float resRatioY = window.getSize().y / float(720);
+
     for(int i=0; i<vx_pos.size(); i++)
     {
         v_background[i].position = vx_pos[i];
@@ -172,7 +175,7 @@ void Background::Draw(sf::RenderWindow& window)
     {
         //s_background[i].setTexture(t_background[i]);
 
-        s_background[i].setPosition(-(background_xspeed[i]*camera.camera_x)-(background_xspeed[i]*camera.manual_x)-(background_xspeed[i]*camera.debug_x),p_background[i].y);
+        s_background[i].setPosition((-(background_xspeed[i]*camera.camera_x)-(background_xspeed[i]*camera.manual_x)-(background_xspeed[i]*camera.debug_x))/resRatioX,p_background[i].y);
         //cout << s_background[i].ly << endl;
         s_background[i].draw(window);
     }

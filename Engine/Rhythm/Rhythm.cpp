@@ -7,10 +7,21 @@ using namespace std;
 
 Rhythm::Rhythm()
 {
-
-
     b_fever_start.loadFromFile("resources/sfx/bgm/fever_start.ogg");
     b_fever_fail.loadFromFile("resources/sfx/bgm/fever_fail.ogg");
+
+    t_drums["pata"].loadFromFile("resources/graphics/rhythm/drums/pata.png");
+    t_drums["pon"].loadFromFile("resources/graphics/rhythm/drums/pon.png");
+    t_drums["don"].loadFromFile("resources/graphics/rhythm/drums/don.png");
+    t_drums["chaka"].loadFromFile("resources/graphics/rhythm/drums/chaka.png");
+
+    t_drums["pata"].setSmooth(true);
+    t_drums["pon"].setSmooth(true);
+    t_drums["don"].setSmooth(true);
+    t_drums["chaka"].setSmooth(true);
+
+    t_flash.loadFromFile("resources/graphics/rhythm/drums/flash.png");
+    t_flash.setSmooth(true);
 }
 void Rhythm::Stop()
 {
@@ -122,7 +133,7 @@ float Rhythm::GetSatisfaction()
     return last_satisfaction;
 }
 
-void Rhythm::checkRhythmController(sf::RenderWindow& window)
+void Rhythm::checkRhythmController()
 {
     ///RHYTHM CONTROLLER SETUP
     rhythmController.combo = combo;
@@ -136,7 +147,7 @@ void Rhythm::checkRhythmController(sf::RenderWindow& window)
     if(rhythmController.checkForInput())
     {
         Drum temp;
-        temp.Load(rhythmController.drumToLoad,rhythmController.drum_perfection,window);
+        temp.Load(rhythmController.drumToLoad,rhythmController.drum_perfection,t_drums[rhythmController.drumToLoad], t_flash);
         temp.pattern = rhythmController.currentPattern;
         drums.push_back(temp);
 
@@ -148,15 +159,10 @@ void Rhythm::checkRhythmController(sf::RenderWindow& window)
 
     rhythmController.resetValues();
 }
-void Rhythm::Draw(sf::RenderWindow& window)
-{
-    checkRhythmController(window);
-    r_gui.doVisuals(window,bgm_cycle,&rhythmClock,combo,&flicker,fps,&drums);
 
-    /*if(sf::Keyboard::isKeyPressed(sf::Keyboard::R))
-    {
-        LoadTheme(config.GetString("debugTheme"));
-    }*/
+void Rhythm::doRhythm()
+{
+    checkRhythmController();
 
     if(rhythmClock.getElapsedTime().asMilliseconds() > (beat_timer/float(2)))
     {
@@ -438,4 +444,9 @@ void Rhythm::Draw(sf::RenderWindow& window)
             }
         }
     }
+}
+
+void Rhythm::Draw(sf::RenderWindow& window)
+{
+    r_gui.doVisuals(window,bgm_cycle,&rhythmClock,combo,&flicker,fps,&drums);
 }

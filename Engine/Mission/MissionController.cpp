@@ -3,24 +3,438 @@
 #include <cstdlib>
 #include <time.h>
 #include <string>
-#include "Units/Spear.h"
 #include "Units/Projectile.h"
 #include "../Math/PVector.h"
 #include "Units/HitboxFrame.h"
 #include "../V4Core.h"
+#include "../Item/InventoryItem.h"
+
+///move to Func::numDigits later
+template <class T>
+int numDigits(T number) //stolen from stackoverflow
+{
+    int digits = 0;
+    if (number < 0) digits = 1;
+    while (number) {
+        number /= 10;
+        digits++;
+    }
+    return digits;
+}
+
 MissionController::MissionController()
 {
-    ///first initialization, fill the buffers
+}
 
-    patapon = new Patapon;
-    kacheek = new Kacheek;
-    kacheek2 = new Kacheek;
-    kacheek3 = new Kacheek;
-    endFlag1 = new EndFlag;
-    feverworm = new FeverWorm;
-    hatapon = new Hatapon;
+float MissionController::Smoothstep(float time) ///use time from 0.00 to 1.00
+{
+    time = Clamp(time, 0.0, 1.0);
+    return time * time * (3 - 2 * time);
+}
+
+float MissionController::Clamp(float x, float lowerlimit, float upperlimit)
+{
+    if (x < lowerlimit)
+        x = lowerlimit;
+    if (x > upperlimit)
+        x = upperlimit;
+
+    return x;
+}
+
+void MissionController::addDmgCounter(int type, int damage, float baseX, float baseY, int q, int r)
+{
+    DamageCounter tmp;
+    tmp.type = type;
+    tmp.damage = damage;
+
+    cout << "MissionController::addDmgCounter(" << type << ", " << damage << ", " << baseX << ", " << baseY << ")" << endl;
+
+    int digits = numDigits(damage);
+    string sdigits = to_string(damage);
+
+    cout << "Digits: " << digits << " " << sdigits << endl;
+
+    int separator = 0;
+    float init_scale = 1;
+    float dg_scale = 4;
+
+    if(damage < 100)
+    type = 2;
+    else
+    type = 3;
+
+    switch(type)
+    {
+        case 0:
+        {
+            separator = 12;
+            init_scale = 0.8;
+            dg_scale = 2.8;
+            break;
+        }
+
+        case 1:
+        {
+            separator = 12;
+            init_scale = 0.8;
+            dg_scale = 2.8;
+            break;
+        }
+
+        case 2:
+        {
+            separator = 16;
+            init_scale = 0.8;
+            dg_scale = 3.5;
+            break;
+        }
+
+        case 3:
+        {
+            separator = 18;
+            init_scale = 0.8;
+            dg_scale = 3.9;
+            break;
+        }
+
+        case 4:
+        {
+            separator = 20;
+            init_scale = 0.8;
+            dg_scale = 4.1;
+            break;
+        }
+    }
+
+    for(int i=0; i<digits; i++)
+    {
+        string sdigit = string()+sdigits[i];
+        int digit = atoi(sdigit.c_str());
+
+        PSprite dg_spr;
+        dg_spr.setTexture(dmg_spritesheet.t);
+        dg_spr.setTextureRect(dmg_spritesheet.get_bounds((digit*5)+type)); ///rect of the specific damage digit from spritesheet
+        dg_spr.setOrigin(dg_spr.getLocalBounds().width/2, dg_spr.getLocalBounds().height);
+        dg_spr.qualitySetting = q;
+        dg_spr.resSetting = r;
+
+        sf::Vector2f dg_pos(baseX+(i*separator), baseY);
+
+        tmp.spr.push_back(dg_spr);
+        tmp.pos.push_back(dg_pos);
+        tmp.scale.push_back(dg_scale);
+        tmp.scale_goal.push_back(init_scale);
+        tmp.mode.push_back(true);
+        tmp.alpha.push_back(0);
+    }
+
+    dmgCounters.push_back(tmp);
+}
+
+void MissionController::addItemsCounter(int id, float baseX, float baseY)
+{
 
 }
+
+void MissionController::spawnEntity(string entityName, int entityID, int baseHP, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, vector<Entity::Loot> loot_table, vector<string> additional_data)
+{
+    ///need to somehow optimize this to not copy paste the same code over and over
+
+    cout << "Spawning entity " << entityName << " (ID: " << entityID << ") " << baseHP << " " << baseX << " " << randX << " " << baseY << " " << spr_goal << " " << spr_range << " " << statLevel << endl;
+
+    switch(entityID)
+    {
+        case 0:
+        {
+            unique_ptr<EndFlag> entity = make_unique<EndFlag>();
+            entity.get()->LoadConfig(missionConfig);
+            entity.get()->setEntityID(entityID);
+
+            if(randX > 0)
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
+            else
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
+
+            entity.get()->setColor(color);
+
+            entity.get()->isCollidable = collidable;
+            entity.get()->isAttackable = attackable;
+            entity.get()->loot_table = loot_table;
+
+            if(spr_range != 0)
+            {
+                if(rand() % spr_range == spr_goal)
+                {
+                    tangibleLevelObjects.push_back(std::move(entity));
+                }
+            }
+            else
+            {
+                tangibleLevelObjects.push_back(std::move(entity));
+            }
+
+            break;
+        }
+        case 1:
+        {
+            unique_ptr<FeverWorm> entity = make_unique<FeverWorm>();
+            entity.get()->LoadConfig(missionConfig);
+            entity.get()->setEntityID(entityID);
+
+            if(randX > 0)
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
+            else
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
+
+            entity.get()->setColor(color);
+
+            entity.get()->isCollidable = collidable;
+            entity.get()->isAttackable = attackable;
+            entity.get()->loot_table = loot_table;
+
+            if(spr_range != 0)
+            {
+                if(rand() % spr_range == spr_goal)
+                {
+                    tangibleLevelObjects.push_back(std::move(entity));
+                }
+            }
+            else
+            {
+                tangibleLevelObjects.push_back(std::move(entity));
+            }
+
+            break;
+        }
+        case 2:
+        {
+            unique_ptr<Kacheek> entity = make_unique<Kacheek>();
+            entity.get()->LoadConfig(missionConfig);
+            entity.get()->setEntityID(entityID);
+
+            if(randX > 0)
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
+            else
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
+
+            entity.get()->setColor(color);
+
+            entity.get()->isCollidable = collidable;
+            entity.get()->isAttackable = attackable;
+            entity.get()->loot_table = loot_table;
+            entity.get()->curHP = baseHP;
+            entity.get()->maxHP = baseHP;
+
+            if(spr_range != 0)
+            {
+                if(rand() % spr_range == spr_goal)
+                {
+                    tangibleLevelObjects.push_back(std::move(entity));
+                }
+            }
+            else
+            {
+                tangibleLevelObjects.push_back(std::move(entity));
+            }
+
+            break;
+        }
+        case 3:
+        {
+            unique_ptr<Grass1> entity = make_unique<Grass1>();
+            entity.get()->LoadConfig(missionConfig);
+            entity.get()->setEntityID(entityID);
+
+            if(randX > 0)
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
+            else
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
+
+            entity.get()->setColor(color);
+
+            entity.get()->isCollidable = collidable;
+            entity.get()->isAttackable = attackable;
+            entity.get()->loot_table = loot_table;
+
+            if(spr_range != 0)
+            {
+                if(rand() % spr_range == spr_goal)
+                {
+                    tangibleLevelObjects.push_back(std::move(entity));
+                }
+            }
+            else
+            {
+                tangibleLevelObjects.push_back(std::move(entity));
+            }
+
+            break;
+        }
+        case 4:
+        {
+            unique_ptr<Grass2> entity = make_unique<Grass2>();
+            entity.get()->LoadConfig(missionConfig);
+            entity.get()->setEntityID(entityID);
+
+            if(randX > 0)
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
+            else
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
+
+            entity.get()->setColor(color);
+
+            entity.get()->isCollidable = collidable;
+            entity.get()->isAttackable = attackable;
+            entity.get()->loot_table = loot_table;
+
+            if(spr_range != 0)
+            {
+                if(rand() % spr_range == spr_goal)
+                {
+                    tangibleLevelObjects.push_back(std::move(entity));
+                }
+            }
+            else
+            {
+                tangibleLevelObjects.push_back(std::move(entity));
+            }
+
+            break;
+        }
+        case 5:
+        {
+            unique_ptr<DroppedItem> entity = make_unique<DroppedItem>();
+            entity.get()->LoadConfig(missionConfig);
+            entity.get()->setEntityID(entityID);
+            entity.get()->manual_mode = true;
+
+            ///This unique entity needs to be loaded differently, read additional data for spritesheet info to be passed from the item registry.
+            string spritesheet = additional_data[0];
+            int spritesheet_id = stoi(additional_data[1]);
+            int picked_item = stoi(additional_data[2]);
+
+            entity.get()->spritesheet = spritesheet;
+            entity.get()->spritesheet_id = spritesheet_id;
+            entity.get()->picked_item = picked_item;
+
+            cout << "[DroppedItem] Selecting spritesheet " << spritesheet << " with id " << spritesheet_id << endl;
+
+            cout << "[DroppedItem] Loading from memory" << endl;
+            vector<char> di_data = droppeditem_spritesheet[spritesheet].retrieve_char();
+            cout << "[DroppedItem] Vector loaded. Size: " << di_data.size() << endl;
+            entity.get()->objects[0].tex_obj.loadFromMemory(&di_data[0], di_data.size());
+            cout << "[DroppedItem] Setting smooth" << endl;
+            entity.get()->objects[0].tex_obj.setSmooth(true);
+            cout << "[DroppedItem] Setting texture" << endl;
+            entity.get()->objects[0].s_obj.setTexture(entity.get()->objects[0].tex_obj);
+            cout << "[DroppedItem] Marking as unexported" << endl;
+            entity.get()->objects[0].exported = false;
+            cout << "[DroppedItem] Loading done." << endl;
+
+            entity.get()->objects[0].s_obj.qualitySetting = qualitySetting;
+            entity.get()->objects[0].s_obj.resSetting = resSetting;
+
+            //entity.get()->objects[0].s_obj.setOrigin(entity.get()->objects[0].s_obj.getLocalBounds().width/2, entity.get()->objects[0].s_obj.getLocalBounds().height/2);
+
+            entity.get()->cur_pos = float(spritesheet_id-1) / 60.0;
+
+            entity.get()->animation_bounds[0] = droppeditem_spritesheet[spritesheet].retrieve_rect_as_map();
+
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
+
+            entity.get()->setColor(color);
+
+            entity.get()->isCollidable = collidable;
+            entity.get()->isAttackable = attackable;
+
+            if(spr_range != 0)
+            {
+                if(rand() % spr_range == spr_goal)
+                {
+                    tangibleLevelObjects.push_back(std::move(entity));
+                }
+            }
+            else
+            {
+                tangibleLevelObjects.push_back(std::move(entity));
+            }
+
+            break;
+        }
+    }
+
+    cout << "Loading finished" << endl;
+}
+
+void MissionController::spawnProjectile(float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit)
+{
+    unique_ptr<Spear> p = make_unique<Spear>(s_proj);
+
+    p.get()->xPos = xPos;
+    p.get()->yPos = yPos;
+    p.get()->speed = speed;
+    p.get()->hspeed = hspeed;
+    p.get()->vspeed = vspeed;
+    p.get()->angle = angle;
+    p.get()->maxdmg = maxdmg;
+    p.get()->mindmg = mindmg;
+    p.get()->crit = crit;
+
+    levelProjectiles.push_back(std::move(p));
+}
+
+void MissionController::addPickedItem(std::string spritesheet, int spritesheet_id, int picked_item)
+{
+    cout << "MissionController::addPickedItem(" << spritesheet << ", " << spritesheet_id << ", " << picked_item << ")" << endl;
+
+    PickedItem tmp;
+    tmp.circle.setFillColor(sf::Color(255,255,255,192));
+    //tmp.circle.setRadius(50 * resRatioX);
+    ///set radius in draw loop to get appropriate resratiox size
+    tmp.item_id = picked_item;
+
+    ///This unique entity needs to be loaded differently, read additional data for spritesheet info to be passed from the item registry.
+    vector<char> di_data = droppeditem_spritesheet[spritesheet].retrieve_char();
+
+    sf::Texture tex_obj;
+    tex_obj.loadFromMemory(&di_data[0], di_data.size());
+    tex_obj.setSmooth(true);
+
+    tmp.item.setTexture(tex_obj);
+    tmp.item.setTextureRect(droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id-1]);
+    tmp.bounds = sf::Vector2f(droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id-1].width, droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id-1].height);
+
+    tmp.item.qualitySetting = qualitySetting;
+    tmp.item.resSetting = resSetting;
+
+    pickedItems.push_back(tmp);
+}
+
+void MissionController::submitPickedItems()
+{
+    for(int i=0; i<pickedItems.size(); i++)
+    {
+        InventoryItem invItem;
+        invItem.item = v4core->savereader.itemreg.GetItemByID(pickedItems[i].item_id);
+        invItem.inventoryId = v4core->savereader.invdata.items.size();
+        v4core->savereader.invdata.items.push_back(invItem);
+    }
+
+}
+
+void MissionController::addUnitThumb(int unit_id)
+{
+    UnitThumb tmp;
+    tmp.unit_id = unit_id;
+    tmp.hpbar_back.loadFromFile("resources/graphics/mission/hpbar_back.png", qualitySetting, 1);
+    tmp.hpbar_ins.loadFromFile("resources/graphics/mission/hpbar_ins.png", qualitySetting, 1);
+    tmp.unit_count.createText(f_font, 26, sf::Color::White, "", qualitySetting, 1);
+    tmp.unit_count_shadow.createText(f_font, 26, sf::Color::Black, "", qualitySetting, 1);
+    tmp.width = tmp.hpbar_ins.getLocalBounds().width;
+    unitThumbs.push_back(tmp);
+}
+
 void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,std::string backgroundString,V4Core &v4core_)
 {
     v4core = &v4core_;
@@ -34,44 +448,44 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     ps_temp.setOrigin(ps_temp.t.getSize().x,0);
     ps_temp.setColor(sf::Color(255,255,255,255));
     ps_temp.setPosition(0,0);
-    ps_temp.DoAutoScale = false;
 
     s_proj = ps_temp;
     s_proj.scaleX=0.15f;
     s_proj.scaleY=0.15f;
 
+    int q = config.GetInt("textureQuality");
+    qualitySetting = q;
+    resSetting = 1;
 
-    ///THIS DOESN'T WORK. CHANGE TO SMART POINTERS.
+    dmg_spritesheet.load("resources/graphics/mission/damagesheet.png", q, 1);
 
-    ///clean the taken up memory
-    delete patapon;
-    delete kacheek;
-    delete kacheek2;
-    delete kacheek3;
-    delete endFlag1;
-    delete feverworm;
-    delete hatapon;
-
-    ///redeclare all objects
-    patapon = new Patapon;
-    kacheek = new Kacheek;
-    kacheek2 = new Kacheek;
-    kacheek3 = new Kacheek;
-    endFlag1 = new EndFlag;
-    feverworm = new FeverWorm;
-    hatapon = new Hatapon;
-
-    ///THIS DOESN'T WORK. CHANGE TO SMART POINTERS.
-
-
+    for(int i=tangibleLevelObjects.size()-1; i>=0; i--)
+    {
+        tangibleLevelObjects.erase(tangibleLevelObjects.begin()+i);
+    }
 
     tangibleLevelObjects.clear();
-    units.clear();
 
+    for(int i=units.size()-1; i>=0; i--)
+    {
+        units.erase(units.begin()+i);
+    }
+
+    units.clear();
     levelProjectiles.clear();
+
+    droppeditem_spritesheet.clear();
+    dmgCounters.clear();
+    droppedItems.clear();
+    pickedItems.clear();
+    unitThumbs.clear();
+
+    missionEnd = false;
+    failure = false;
 
     //ctor
     f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
+    f_moji.loadFromFile("resources/fonts/mojipon.otf");
     //f_font.loadFromFile("resources/fonts/arial.ttf");
     t_timerMenu.setFont(f_font);
     t_timerMenu.setCharacterSize(38);
@@ -98,17 +512,73 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     fade.setFillColor(sf::Color(0,0,0,0));
     fade.setSize(sf::Vector2f(800,600));
     currentCutsceneId=0;
+
+    sb_win_jingle.loadFromFile("resources/sfx/level/victory.ogg");
+    sb_lose_jingle.loadFromFile("resources/sfx/level/failure.ogg");
+
+    sb_cheer1.loadFromFile("resources/sfx/level/cheer1.ogg");
+    sb_cheer2.loadFromFile("resources/sfx/level/cheer2.ogg");
+    sb_cheer3.loadFromFile("resources/sfx/level/cheer1.ogg");
+
+    t_win.createText(f_moji, 56, sf::Color(222, 83, 0, 255), "MISSION COMPLETE!", q, 1);
+    t_win_outline.createText(f_moji, 56, sf::Color(255, 171, 0, 255), "MISSION COMPLETE!", q, 1);
+    t_win_outline.setOutlineColor(sf::Color(255, 171, 0, 255));
+    t_win_outline.setOutlineThickness(10);
+    t_lose.createText(f_moji, 56, sf::Color(138, 15, 26, 255), "MISSION FAILED!", q, 1);
+    t_lose_outline.createText(f_moji, 56, sf::Color(254, 48, 55, 255), "MISSION FAILED!", q, 1);
+    t_lose_outline.setOutlineColor(sf::Color(254, 48, 55, 255));
+    t_lose_outline.setOutlineThickness(10);
+
+    t_win.setOrigin(t_win.getLocalBounds().width/2, t_win.getLocalBounds().height/2);
+    t_win_outline.setOrigin(t_win_outline.getLocalBounds().width/2, t_win_outline.getLocalBounds().height/2);
+
+    t_lose.setOrigin(t_lose.getLocalBounds().width/2, t_lose.getLocalBounds().height/2);
+    t_lose_outline.setOrigin(t_lose_outline.getLocalBounds().width/2, t_lose_outline.getLocalBounds().height/2);
+
+    bar_win.loadFromFile("resources/graphics/mission/bar_win.png", q, 1);
+    bar_lose.loadFromFile("resources/graphics/mission/bar_lose.png", q, 1);
+
+    bar_win.setOrigin(bar_win.getLocalBounds().width/2, bar_win.getLocalBounds().height/2);
+    bar_lose.setOrigin(bar_lose.getLocalBounds().width/2, bar_lose.getLocalBounds().height/2);
+
+    ifstream sprdata("resources/graphics/item/itemdata/item_spritesheets.dat");
+    string buff="";
+
+    while(getline(sprdata, buff))
+    {
+        if(buff.find("#") == std::string::npos)
+        {
+            ///Valid spritesheet. Load it
+            cout << "[Item spritesheets] Loading spritesheet " << "resources/graphics/item/itemdata/"+buff+".png" << endl;
+            droppeditem_spritesheet[buff].load("resources/graphics/item/itemdata/"+buff+".png", qualitySetting, resSetting);
+        }
+    }
+
+    cout << "initialization finished" << endl;
 }
-void MissionController::StartMission(std::string songName,int missionID,bool showCutscene)
+void MissionController::StartMission(std::string missionFile, bool showCutscene)
 {
-    string missionName = "";
-    string missionImg = "";
+    missionConfig->thisCore->SaveToDebugLog("Starting mission");
+
+    fade_alpha = 255;
+    missionEnd = false;
+    playJingle = false;
+    textBounce = false;
+    textCurX = -1280;
+    barCurX = 1920;
+    textDestX = 640;
+    barDestX = 640;
+    textCurScale = 1;
+    textDestScale = 1;
+    fade_alpha = 255;
+    fadeout_alpha = 0;
+    playCheer[0] = false;
+    playCheer[1] = false;
+    playCheer[2] = false;
 
     sf::Context context;
     int quality = missionConfig->GetInt("textureQuality");
     float ratioX, ratioY;
-    patapon->LoadConfig(missionConfig);
-    hatapon->LoadConfig(missionConfig);
 
     army_X=0;
     camera.camera_x=480;
@@ -145,11 +615,10 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         }
     }
 
-    pataponY = 720 - 140;
+    pataponY = 720 - 141;
     floorY = 720 - 100;
 
-    hatapon->setGlobalPosition(sf::Vector2f(200, 720 - 200));
-
+    /**
     if(showCutscene)
     {
         cutscene_text_identifiers.push_back(L"intro_cutscene_1");
@@ -179,77 +648,194 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
         cutscene_lengths.clear();
         cutscene_text_identifiers.clear();
         cutscenesLeft=false;
-    }
+    }*/
 
     tangibleLevelObjects.clear();
     levelProjectiles.clear();
 
-    switch(missionID)
+    string bgName; ///background
+    string songName; ///bgm
+    string missionName; ///rpc_name
+    string missionImg; ///rpc_img
+
+    string buff;
+
+    ifstream elist("resources/units/entitylist.dat");
+
+    vector<string> entity_list;
+
+    while(getline(elist, buff))
     {
-    case 1:
-    {
-        showTimer=true;
-        endFlag1->LoadConfig(missionConfig);
-        feverworm->LoadConfig(missionConfig);
-        kacheek->LoadConfig(missionConfig);
-
-        tangibleLevelObjects.push_back(endFlag1);
-        tangibleLevelObjects.push_back(feverworm);
-        tangibleLevelObjects.push_back(kacheek);
-
-        endFlag1->setGlobalPosition(sf::Vector2f(2500,720 - (180)));
-        feverworm->setGlobalPosition(sf::Vector2f(-250,720 - (450)));
-        kacheek->setGlobalPosition(sf::Vector2f(1000,720 - (175)));
-        kacheek2->setGlobalPosition(sf::Vector2f(1500,720 - (175)));
-        kacheek3->setGlobalPosition(sf::Vector2f(2000,720 - (175)));
-
-        missionName = "undefined";
-        missionImg = "wasteland";
-        break;
-    }
-    case 2:
-    {
-        kacheek->LoadConfig(missionConfig);
-        kacheek2->LoadConfig(missionConfig);
-        kacheek3->LoadConfig(missionConfig);
-        feverworm->LoadConfig(missionConfig);
-        endFlag1->LoadConfig(missionConfig);
-        tangibleLevelObjects.push_back(kacheek);
-        tangibleLevelObjects.push_back(kacheek2);
-        tangibleLevelObjects.push_back(kacheek3);
-        tangibleLevelObjects.push_back(feverworm);
-        tangibleLevelObjects.push_back(endFlag1);
-
-        kacheek->setGlobalPosition(sf::Vector2f(1000,720 - (175)));
-        kacheek2->setGlobalPosition(sf::Vector2f(1500,720 - (175)));
-        kacheek3->setGlobalPosition(sf::Vector2f(2000,720 - (175)));
-        feverworm->setGlobalPosition(sf::Vector2f(-250,720 - (450)));
-        endFlag1->setGlobalPosition(sf::Vector2f(2500,720 - (180)));
-
-        missionName = "undefined";
-        missionImg = "gonrok";
-        break;
-
-    }
-    default:
-
-        feverworm->LoadConfig(missionConfig);
-        endFlag1->LoadConfig(missionConfig);
-
-        tangibleLevelObjects.push_back(feverworm);
-        tangibleLevelObjects.push_back(endFlag1);
-
-        endFlag1->setGlobalPosition(sf::Vector2f(2500,720 - (250)));
-        feverworm->setGlobalPosition(sf::Vector2f(-250,720 - (450)));
-
-        missionName = "Unspecified Mission";
-        missionImg = "wasteland";
-        break;
+        if(buff[0] != '#')
+        {
+            if(buff.size() > 0)
+            {
+                entity_list.push_back(buff.substr(buff.find_last_of(",")+1));
+            }
+        }
     }
 
-    units.push_back(*patapon);
-    units.push_back(*patapon);
-    units.push_back(*patapon);
+    elist.close();
+
+    ifstream mf("resources/missions/"+missionFile);
+    cout << "Attempting to read a mission " << "resources/missions/" << missionFile << endl;
+
+    bool accepted = false;
+    float ver = 0.0;
+
+    while(getline(mf, buff))
+    {
+        if(buff[0] != '#')
+        {
+            if(buff.size() > 0)
+            {
+                cout << "[P4M] " << buff << endl;
+
+                if(buff.find("Patafour Mission Format v1.0") != std::string::npos)
+                {
+                    cout << "Reading Patafour Mission Format v1.0" << endl;
+
+                    accepted = true;
+                    ver = 1.0;
+                }
+
+                if(accepted)
+                {
+                    if(ver == 1.0)
+                    {
+                        if(buff.find("background=") != std::string::npos)
+                        {
+                            bgName = buff.substr(buff.find_first_of("=")+1);
+                        }
+
+                        if(buff.find("bgm=") != std::string::npos)
+                        {
+                            songName = buff.substr(buff.find_first_of("=")+1);
+                        }
+
+                        if(buff.find("rpc_name=") != std::string::npos)
+                        {
+                            missionName = buff.substr(buff.find_first_of("=")+1);
+                        }
+
+                        if(buff.find("rpc_img=") != std::string::npos)
+                        {
+                            missionImg = buff.substr(buff.find_first_of("=")+1);
+                        }
+
+                        if(buff.find("spawn=") != std::string::npos)
+                        {
+                            string sp = buff.substr(buff.find_first_of("=")+1);
+                            vector<string> spawn = Func::Split(sp, ',');
+
+                            int entityID = atoi(spawn[0].c_str());
+                            int baseY = 0;
+                            int baseHP = 0;
+                            bool collidable = false;
+                            bool attackable = false;
+                            vector<Entity::Loot> loot_table;
+
+                            ifstream entityParam("resources/units/entity/"+entity_list[entityID]+".p4p");
+                            string buff2;
+
+                            while(getline(entityParam, buff2))
+                            {
+                                if(buff2[0] != '#')
+                                {
+                                    if(buff2.size() > 0)
+                                    {
+                                        if(buff2.find("baseY=") != std::string::npos)
+                                        {
+                                            string by = buff2.substr(buff2.find_last_of("=")+1);
+                                            baseY = atoi(by.c_str());
+                                        }
+
+                                        if(buff2.find("baseHP=") != std::string::npos)
+                                        {
+                                            string by = buff2.substr(buff2.find_last_of("=")+1);
+                                            baseHP = atoi(by.c_str());
+                                        }
+
+                                        if(buff2.find("collidable=") != std::string::npos)
+                                        {
+                                            string by = buff2.substr(buff2.find_last_of("=")+1);
+                                            collidable = atoi(by.c_str());
+                                        }
+
+                                        if(buff2.find("attackable=") != std::string::npos)
+                                        {
+                                            string by = buff2.substr(buff2.find_last_of("=")+1);
+                                            attackable = atoi(by.c_str());
+                                        }
+
+                                        if(buff2.find("loot=") != std::string::npos)
+                                        {
+                                            string by = buff2.substr(buff2.find_last_of("=")+1);
+                                            vector<string> b = Func::Split(by,';');
+
+                                            for(int e=0; e<b.size(); e++)
+                                            {
+                                                vector<string> bb = Func::Split(b[e], ',');
+
+                                                Entity::Loot tmp;
+                                                tmp.item_id = stoi(bb[0]);
+                                                tmp.item_chance = stoi(bb[1]);
+                                                loot_table.push_back(tmp);
+
+                                                cout << "[Loot table] Item: " << v4core->savereader.itemreg.GetItemByID(tmp.item_id)->icon_path << " with " << tmp.item_chance << "% drop rate" << endl;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            entityParam.close();
+
+                            cout << "Spawning an entity: " << entity_list[entityID] << endl;
+                            spawnEntity(entity_list[entityID],entityID,baseHP,atoi(spawn[1].c_str()),atoi(spawn[2].c_str()),baseY,atoi(spawn[3].c_str()),atoi(spawn[4].c_str()),atoi(spawn[5].c_str()),sf::Color(atoi(spawn[6].c_str()),atoi(spawn[7].c_str()),atoi(spawn[8].c_str()),atoi(spawn[9].c_str())), collidable, attackable, loot_table);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    mf.close();
+
+    ///make this unit load based on how the army is built later
+
+    unique_ptr<Patapon> p1 = make_unique<Patapon>();
+    unique_ptr<Patapon> p2 = make_unique<Patapon>();
+    unique_ptr<Patapon> p3 = make_unique<Patapon>();
+    unique_ptr<Hatapon> h = make_unique<Hatapon>();
+
+    p1.get()->LoadConfig(missionConfig);
+    p2.get()->LoadConfig(missionConfig);
+    p3.get()->LoadConfig(missionConfig);
+    h.get()->LoadConfig(missionConfig);
+
+    p1.get()->setUnitID(1);
+    p2.get()->setUnitID(1);
+    p3.get()->setUnitID(1);
+    h.get()->setUnitID(0);
+
+    ///Apply the stats
+    p1.get()->mindmg = v4core->savereader.ponreg.GetPonByID(1)->pon_min_dmg;
+    p1.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(1)->pon_max_dmg;
+
+    p2.get()->mindmg = v4core->savereader.ponreg.GetPonByID(2)->pon_min_dmg;
+    p2.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(2)->pon_max_dmg;
+
+    p3.get()->mindmg = v4core->savereader.ponreg.GetPonByID(3)->pon_min_dmg;
+    p3.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(3)->pon_max_dmg;
+
+    units.push_back(std::move(p1));
+    units.push_back(std::move(p2));
+    units.push_back(std::move(p3));
+    units.push_back(std::move(h));
+
+    addUnitThumb(0);
+    addUnitThumb(1);
 
     isFinishedLoading=true;
     v4core->LoadingWaitForKeyPress();
@@ -258,6 +844,9 @@ void MissionController::StartMission(std::string songName,int missionID,bool sho
     v4core->ChangeRichPresence(fm.c_str(), missionImg.c_str(), "logo");
     rhythm.LoadTheme(songName); // missionConfig->GetString("debugTheme")
     missionTimer.restart();
+
+    cout << "MissionController::StartMission(): finished" << endl;
+    missionConfig->thisCore->SaveToDebugLog("Mission loading finished.");
 }
 void MissionController::StopMission()
 {
@@ -267,24 +856,41 @@ void MissionController::StopMission()
 void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld)
 {
     /// do the keyboard things
-    if(rhythm.rhythmController.keyMap[missionConfig->GetInt("keybindSpace")])
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num5))
     {
-        //cout<<"created new projectile. Now there are "<<levelProjectiles.size()+1<<endl;
-        unique_ptr<Spear> p = make_unique<Spear>(s_proj);
-        p.get()->xPos = patapon->getGlobalPosition().x+patapon->hitBox.left+patapon->hitBox.width/2;
-        p.get()->yPos = patapon->getGlobalPosition().y+patapon->hitBox.top+patapon->hitBox.height/2;
-        p.get()->speed=1050;
-        p.get()->angle=-3.14159*4.0/12; /// 60 degrees from the floor - pi*4/12
-        p.get()->maxdmg = 3;
-        p.get()->mindmg = 2;
-        p.get()->crit = 0;
-        p.get()->crit = 0;
+        missionEnd = true;
+    }
 
-        levelProjectiles.push_back(std::move(p));
+    /// do the keyboard things
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::M))
+    {
+        if(!debug_map_drop)
+        {
+            auto item = v4core->savereader.itemreg.GetItemByID(23);
+            vector<string> data = {item->spritesheet, to_string(item->spritesheet_id), to_string(23)};
+
+            spawnEntity("droppeditem",5,0,500,0,600,0,0,1,sf::Color::White,0,0,vector<Entity::Loot>(), data);
+
+            debug_map_drop = true;
+        }
+    }
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+    {
+        for(int i=0; i<units.size(); i++)
+        {
+
+                units[i].get()->setUnitHP(units[i].get()->getUnitHP() - (25.0/fps));
+
+                if(units[i].get()->getUnitHP() <= 0)
+                {
+                    units[i].get()->setUnitHP(0);
+                }
+        }
     }
 }
 
-bool MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float currentObjectY)
+MissionController::CollisionEvent MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float currentObjectY,int collisionObjectID,vector<string> collisionData)
 {
     for(int i=0; i<tangibleLevelObjects.size(); i++)
     {
@@ -328,7 +934,9 @@ bool MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFra
             float proj3 = pv3.GetScalarProjectionOntoAxis(currentAxisAngle);
             float proj4 = pv4.GetScalarProjectionOntoAxis(currentAxisAngle);
 
-            bool isCollision = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],currentObjectHitBoxFrame,currentObjectX,currentObjectY);
+            CollidableObject* target = tangibleLevelObjects[i].get();
+
+            bool isCollision = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,currentObjectHitBoxFrame,currentObjectX,currentObjectY);
             if (!isCollision)
             {
                 continue;
@@ -337,7 +945,7 @@ bool MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFra
 
             /// axis 2: obj1 "up"
             currentAxisAngle = 3.14159265358/2+currentObjectHitBoxFrame->rotation;
-            bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],currentObjectHitBoxFrame,currentObjectX,currentObjectY);
+            bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,currentObjectHitBoxFrame,currentObjectX,currentObjectY);
             if (!isCollision2)
             {
                 continue;
@@ -345,9 +953,9 @@ bool MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFra
             //cout<<"COLLISION FOUND IN axis 2 (up)"<<endl;
 
             /// axis 3: obj2 "up" (we add the 90 degrees from before to its current rotation)
-            currentAxisAngle = tangibleLevelObjects[i]->hitboxes[h].hitboxObject.rotation + 3.14159265358/2;
+            currentAxisAngle = target->hitboxes[h].hitboxObject.rotation + 3.14159265358/2;
 
-            bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],currentObjectHitBoxFrame,currentObjectX,currentObjectY);
+            bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,currentObjectHitBoxFrame,currentObjectX,currentObjectY);
             if (!isCollision3)
             {
                 continue;
@@ -355,9 +963,9 @@ bool MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFra
             //cout<<"COLLISION FOUND IN axis 3 (up2)"<<endl;
 
             /// axis 4: obj2 "sideways"
-            currentAxisAngle = tangibleLevelObjects[i]->hitboxes[h].hitboxObject.rotation;
+            currentAxisAngle = target->hitboxes[h].hitboxObject.rotation;
 
-            bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],currentObjectHitBoxFrame,currentObjectX,currentObjectY);
+            bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,currentObjectHitBoxFrame,currentObjectX,currentObjectY);
             if (!isCollision4)
             {
                 continue;
@@ -367,8 +975,15 @@ bool MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFra
             if (isCollision&&isCollision2&&isCollision3&&isCollision4)
             {
                 std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
-                tangibleLevelObjects[i]->OnCollide(tangibleLevelObjects[i]);
-                return true;
+                target->OnCollide(target, collisionObjectID, collisionData);
+
+                CollisionEvent cevent;
+                cevent.collided = true;
+                //cevent.collidedEntityID = -1;
+                cevent.isAttackable = target->isAttackable;
+                cevent.isCollidable = target->isCollidable;
+
+                return cevent;
             }
             else
             {
@@ -377,37 +992,24 @@ bool MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFra
         }
     }
 }
-float MissionController::pataponMaxProjection(float axisAngle){
+float MissionController::pataponMaxProjection(float axisAngle, int id)
+{
+    PlayableUnit* target = units[id].get();
+
     float currentAxisAngle = 0;
-    sf::Vector2f movingObjC1 = sf::Vector2f(patapon->hitBox.left,patapon->hitBox.top); /// "top left"
-    sf::Vector2f movingObjC2 = sf::Vector2f(patapon->hitBox.left+patapon->hitBox.width,patapon->hitBox.top); /// "top right"
-    sf::Vector2f movingObjC3 = sf::Vector2f(patapon->hitBox.left,patapon->hitBox.top+patapon->hitBox.height); /// "bottom left"
-    sf::Vector2f movingObjC4 = sf::Vector2f(patapon->hitBox.left+patapon->hitBox.width,patapon->hitBox.top+patapon->hitBox.height); /// "bottom right"
-
-
-
-    HitboxFrame tmp;
-    tmp.time = 0;
-    tmp.g_x = 0;
-    tmp.g_y = 0;
-    tmp.clearVertices();
-    tmp.addVertex(movingObjC1.x,movingObjC1.y); /// "top left"
-    tmp.addVertex(movingObjC2.x,movingObjC2.y); /// "top right"
-    tmp.addVertex(movingObjC3.x,movingObjC3.y); /// "bottom left"
-    tmp.addVertex(movingObjC4.x,movingObjC4.y); /// "bottom right"
-    tmp.rotation = 0;
+    HitboxFrame tmp = target->hitboxes[0].getRect();
 
     std::vector<sf::Vector2f> currentVertices = tmp.getCurrentVertices();
 
-    PVector pv1 = PVector::getVectorCartesian(0,0,currentVertices[0].x+patapon->getGlobalPosition().x,currentVertices[0].y+patapon->getGlobalPosition().y);
-    PVector pv2 = PVector::getVectorCartesian(0,0,currentVertices[1].x+patapon->getGlobalPosition().x,currentVertices[1].y+patapon->getGlobalPosition().y);
-    PVector pv3 = PVector::getVectorCartesian(0,0,currentVertices[2].x+patapon->getGlobalPosition().x,currentVertices[2].y+patapon->getGlobalPosition().y);
-    PVector pv4 = PVector::getVectorCartesian(0,0,currentVertices[3].x+patapon->getGlobalPosition().x,currentVertices[3].y+patapon->getGlobalPosition().y);
+    PVector pv1 = PVector::getVectorCartesian(0,0,currentVertices[0].x+target->getGlobalPosition().x,currentVertices[0].y+target->getGlobalPosition().y);
+    PVector pv2 = PVector::getVectorCartesian(0,0,currentVertices[1].x+target->getGlobalPosition().x,currentVertices[1].y+target->getGlobalPosition().y);
+    PVector pv3 = PVector::getVectorCartesian(0,0,currentVertices[2].x+target->getGlobalPosition().x,currentVertices[2].y+target->getGlobalPosition().y);
+    PVector pv4 = PVector::getVectorCartesian(0,0,currentVertices[3].x+target->getGlobalPosition().x,currentVertices[3].y+target->getGlobalPosition().y);
 
-    pv1.angle =-atan2(currentVertices[0].y+patapon->getGlobalPosition().y, currentVertices[0].x+patapon->getGlobalPosition().x);
-    pv2.angle =-atan2(currentVertices[1].y+patapon->getGlobalPosition().y, currentVertices[1].x+patapon->getGlobalPosition().x);
-    pv3.angle =-atan2(currentVertices[2].y+patapon->getGlobalPosition().y, currentVertices[2].x+patapon->getGlobalPosition().x);
-    pv4.angle =-atan2(currentVertices[3].y+patapon->getGlobalPosition().y, currentVertices[3].x+patapon->getGlobalPosition().x);
+    pv1.angle =-atan2(currentVertices[0].y+target->getGlobalPosition().y, currentVertices[0].x+target->getGlobalPosition().x);
+    pv2.angle =-atan2(currentVertices[1].y+target->getGlobalPosition().y, currentVertices[1].x+target->getGlobalPosition().x);
+    pv3.angle =-atan2(currentVertices[2].y+target->getGlobalPosition().y, currentVertices[2].x+target->getGlobalPosition().x);
+    pv4.angle =-atan2(currentVertices[3].y+target->getGlobalPosition().y, currentVertices[3].x+target->getGlobalPosition().x);
 
     float proj1 = pv1.GetScalarProjectionOntoAxis(axisAngle);
     float proj2 = pv2.GetScalarProjectionOntoAxis(axisAngle);
@@ -416,45 +1018,33 @@ float MissionController::pataponMaxProjection(float axisAngle){
 
     /*if(axisAngle!=0){
         cout<<"NEW MAX TEST"<<endl;
-        cout<<"Angle: "<<pv1.angle<<" distance: "<<pv1.distance<<" current X: "<<currentVertices[0].x+patapon->x<<" current Y: "<<currentVertices[0].y+patapon->y<<" proj: "<<proj1<<endl;
-        cout<<"Angle: "<<pv2.angle<<" distance: "<<pv2.distance<<" current X: "<<currentVertices[1].x+patapon->x<<" current Y: "<<currentVertices[1].y+patapon->y<<" proj: "<<proj2<<endl;
-        cout<<"Angle: "<<pv3.angle<<" distance: "<<pv3.distance<<" current X: "<<currentVertices[2].x+patapon->x<<" current Y: "<<currentVertices[2].y+patapon->y<<" proj: "<<proj3<<endl;
-        cout<<"Angle: "<<pv4.angle<<" distance: "<<pv4.distance<<" current X: "<<currentVertices[3].x+patapon->x<<" current Y: "<<currentVertices[3].y+patapon->y<<" proj: "<<proj4<<endl;
+        cout<<"Angle: "<<pv1.angle<<" distance: "<<pv1.distance<<" current X: "<<currentVertices[0].x+target->x<<" current Y: "<<currentVertices[0].y+target->y<<" proj: "<<proj1<<endl;
+        cout<<"Angle: "<<pv2.angle<<" distance: "<<pv2.distance<<" current X: "<<currentVertices[1].x+target->x<<" current Y: "<<currentVertices[1].y+target->y<<" proj: "<<proj2<<endl;
+        cout<<"Angle: "<<pv3.angle<<" distance: "<<pv3.distance<<" current X: "<<currentVertices[2].x+target->x<<" current Y: "<<currentVertices[2].y+target->y<<" proj: "<<proj3<<endl;
+        cout<<"Angle: "<<pv4.angle<<" distance: "<<pv4.distance<<" current X: "<<currentVertices[3].x+target->x<<" current Y: "<<currentVertices[3].y+target->y<<" proj: "<<proj4<<endl;
     }*/
     float maxProjectionObj1 = max(max(max(proj1,proj2),proj3),proj4);
     float minProjectionObj1 = min(min(min(proj1,proj2),proj3),proj4);
     return maxProjectionObj1;
 }
-float MissionController::pataponMinProjection(float axisAngle){
+
+float MissionController::pataponMinProjection(float axisAngle, int id)
+{
+    PlayableUnit* target = units[id].get();
+
     float currentAxisAngle = 0;
-    sf::Vector2f movingObjC1 = sf::Vector2f(patapon->hitBox.left,patapon->hitBox.top); /// "top left"
-    sf::Vector2f movingObjC2 = sf::Vector2f(patapon->hitBox.left+patapon->hitBox.width,patapon->hitBox.top); /// "top right"
-    sf::Vector2f movingObjC3 = sf::Vector2f(patapon->hitBox.left,patapon->hitBox.top+patapon->hitBox.height); /// "bottom left"
-    sf::Vector2f movingObjC4 = sf::Vector2f(patapon->hitBox.left+patapon->hitBox.width,patapon->hitBox.top+patapon->hitBox.height); /// "bottom right"
-
-
-
-    HitboxFrame tmp;
-    tmp.time = 0;
-    tmp.g_x = 0;
-    tmp.g_y = 0;
-    tmp.clearVertices();
-    tmp.addVertex(movingObjC1.x,movingObjC1.y); /// "top left"
-    tmp.addVertex(movingObjC2.x,movingObjC2.y); /// "top right"
-    tmp.addVertex(movingObjC3.x,movingObjC3.y); /// "bottom left"
-    tmp.addVertex(movingObjC4.x,movingObjC4.y); /// "bottom right"
-    tmp.rotation = 0;
+    HitboxFrame tmp = target->hitboxes[0].getRect();
 
     std::vector<sf::Vector2f> currentVertices = tmp.getCurrentVertices();
 
-    PVector pv1 = PVector::getVectorCartesian(0,0,currentVertices[0].x+patapon->getGlobalPosition().x,currentVertices[0].y+patapon->getGlobalPosition().y);
-    PVector pv2 = PVector::getVectorCartesian(0,0,currentVertices[1].x+patapon->getGlobalPosition().x,currentVertices[1].y+patapon->getGlobalPosition().y);
-    PVector pv3 = PVector::getVectorCartesian(0,0,currentVertices[2].x+patapon->getGlobalPosition().x,currentVertices[2].y+patapon->getGlobalPosition().y);
-    PVector pv4 = PVector::getVectorCartesian(0,0,currentVertices[3].x+patapon->getGlobalPosition().x,currentVertices[3].y+patapon->getGlobalPosition().y);
-    pv1.angle =-atan2(currentVertices[0].y+patapon->getGlobalPosition().y, currentVertices[0].x+patapon->getGlobalPosition().x);
-    pv2.angle =-atan2(currentVertices[1].y+patapon->getGlobalPosition().y, currentVertices[1].x+patapon->getGlobalPosition().x);
-    pv3.angle =-atan2(currentVertices[2].y+patapon->getGlobalPosition().y, currentVertices[2].x+patapon->getGlobalPosition().x);
-    pv4.angle =-atan2(currentVertices[3].y+patapon->getGlobalPosition().y, currentVertices[3].x+patapon->getGlobalPosition().x);
+    PVector pv1 = PVector::getVectorCartesian(0,0,currentVertices[0].x+target->getGlobalPosition().x,currentVertices[0].y+target->getGlobalPosition().y);
+    PVector pv2 = PVector::getVectorCartesian(0,0,currentVertices[1].x+target->getGlobalPosition().x,currentVertices[1].y+target->getGlobalPosition().y);
+    PVector pv3 = PVector::getVectorCartesian(0,0,currentVertices[2].x+target->getGlobalPosition().x,currentVertices[2].y+target->getGlobalPosition().y);
+    PVector pv4 = PVector::getVectorCartesian(0,0,currentVertices[3].x+target->getGlobalPosition().x,currentVertices[3].y+target->getGlobalPosition().y);
+    pv1.angle =-atan2(currentVertices[0].y+target->getGlobalPosition().y, currentVertices[0].x+target->getGlobalPosition().x);
+    pv2.angle =-atan2(currentVertices[1].y+target->getGlobalPosition().y, currentVertices[1].x+target->getGlobalPosition().x);
+    pv3.angle =-atan2(currentVertices[2].y+target->getGlobalPosition().y, currentVertices[2].x+target->getGlobalPosition().x);
+    pv4.angle =-atan2(currentVertices[3].y+target->getGlobalPosition().y, currentVertices[3].x+target->getGlobalPosition().x);
 
     float proj1 = pv1.GetScalarProjectionOntoAxis(axisAngle);
     float proj2 = pv2.GetScalarProjectionOntoAxis(axisAngle);
@@ -469,36 +1059,45 @@ float MissionController::pataponMinProjection(float axisAngle){
 bool MissionController::DoCollisionStepInAxis(float currentAxisAngle,HitboxFrame* currentHitboxFrame,AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float currentObjectY)
 {
     std::vector<sf::Vector2f> currentVertices = currentObjectHitBoxFrame->getCurrentVertices();
-    PVector pv1 = PVector::getVectorCartesian(0,0,currentVertices[0].x+currentObjectX,currentVertices[0].y+currentObjectY);
-    PVector pv2 = PVector::getVectorCartesian(0,0,currentVertices[1].x+currentObjectX,currentVertices[1].y+currentObjectY);
-    PVector pv3 = PVector::getVectorCartesian(0,0,currentVertices[2].x+currentObjectX,currentVertices[2].y+currentObjectY);
-    PVector pv4 = PVector::getVectorCartesian(0,0,currentVertices[3].x+currentObjectX,currentVertices[3].y+currentObjectY);
-    pv1.angle =-atan2(currentVertices[0].y+currentObjectY, currentVertices[0].x+currentObjectX);
-    pv2.angle =-atan2(currentVertices[1].y+currentObjectY, currentVertices[1].x+currentObjectX);
-    pv3.angle =-atan2(currentVertices[2].y+currentObjectY, currentVertices[2].x+currentObjectX);
-    pv4.angle =-atan2(currentVertices[3].y+currentObjectY, currentVertices[3].x+currentObjectX);
 
-    float proj1 = pv1.GetScalarProjectionOntoAxis(currentAxisAngle);
-    float proj2 = pv2.GetScalarProjectionOntoAxis(currentAxisAngle);
-    float proj3 = pv3.GetScalarProjectionOntoAxis(currentAxisAngle);
-    float proj4 = pv4.GetScalarProjectionOntoAxis(currentAxisAngle);
+    if(currentVertices.size() < 4)
+    cout << "Vertices alert!!! " << currentVertices.size() << endl;
 
-
-    float maxProjectionObj1 = max(max(max(proj1,proj2),proj3),proj4);
-    float minProjectionObj1 = min(min(min(proj1,proj2),proj3),proj4);
-
-    float maxProjectionObj2 = currentHitboxFrame->maxProjection(currentAxisAngle, targetObject->global_x,targetObject->global_y);
-    float minProjectionObj2 = currentHitboxFrame->minProjection(currentAxisAngle, targetObject->global_x,targetObject->global_y);
-    if(maxProjectionObj1>minProjectionObj2 && minProjectionObj1<maxProjectionObj2)
+    if(currentVertices.size() >= 4)
     {
-        return true;
+        PVector pv1 = PVector::getVectorCartesian(0,0,currentVertices[0].x+currentObjectX,currentVertices[0].y+currentObjectY);
+        PVector pv2 = PVector::getVectorCartesian(0,0,currentVertices[1].x+currentObjectX,currentVertices[1].y+currentObjectY);
+        PVector pv3 = PVector::getVectorCartesian(0,0,currentVertices[2].x+currentObjectX,currentVertices[2].y+currentObjectY);
+        PVector pv4 = PVector::getVectorCartesian(0,0,currentVertices[3].x+currentObjectX,currentVertices[3].y+currentObjectY);
+        pv1.angle =-atan2(currentVertices[0].y+currentObjectY, currentVertices[0].x+currentObjectX);
+        pv2.angle =-atan2(currentVertices[1].y+currentObjectY, currentVertices[1].x+currentObjectX);
+        pv3.angle =-atan2(currentVertices[2].y+currentObjectY, currentVertices[2].x+currentObjectX);
+        pv4.angle =-atan2(currentVertices[3].y+currentObjectY, currentVertices[3].x+currentObjectX);
+
+        float proj1 = pv1.GetScalarProjectionOntoAxis(currentAxisAngle);
+        float proj2 = pv2.GetScalarProjectionOntoAxis(currentAxisAngle);
+        float proj3 = pv3.GetScalarProjectionOntoAxis(currentAxisAngle);
+        float proj4 = pv4.GetScalarProjectionOntoAxis(currentAxisAngle);
+
+
+        float maxProjectionObj1 = max(max(max(proj1,proj2),proj3),proj4);
+        float minProjectionObj1 = min(min(min(proj1,proj2),proj3),proj4);
+
+        float maxProjectionObj2 = currentHitboxFrame->maxProjection(currentAxisAngle, targetObject->global_x,targetObject->global_y);
+        float minProjectionObj2 = currentHitboxFrame->minProjection(currentAxisAngle, targetObject->global_x,targetObject->global_y);
+        if(maxProjectionObj1>minProjectionObj2 && minProjectionObj1<maxProjectionObj2)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     else
     {
         return false;
     }
-
-
 }
 void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld)
 {
@@ -508,146 +1107,170 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
     {
         booster=1.2;
     }
-    //cout << "camera.walk: " << camera.walk << endl;
-
-    if(camera.walk)
+    if(missionEnd)
     {
-        int farthest_id = -1;
-        float temp_pos = -9999;
-        for(int i=0; i<units.size(); i++)
-        {
-            if(temp_pos <= units[i].getGlobalPosition().x)
-            {
-                temp_pos = units[i].getGlobalPosition().x;
-                farthest_id = i;
-            }
-        }
-
-        float proposedXPos = units[farthest_id].global_x + (2 * 60 * booster) / fps;
-        //cout << "global_x: " << units[farthest_id].global_x << endl;
-        //cout << "proposedXPos = " << proposedXPos << endl;
-        /// use the right hand side of the patapon sprite to check for collisions. This should be changed if the patapon walks to the left
-        //float proposedXPosRight = proposedXPos + units[farthest_id].hitBox.left + units[farthest_id].hitBox.width;
-        /// need to have it check for collision and stop if blocked by kacheek here.
-
-        /// right now it is very basic checking only in X axis. Jumping over a
-        /// kacheek will not be possible.
-
-        bool foundCollision = false;
-        for(int i=0; i<tangibleLevelObjects.size(); i++)
-        {
-            for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
-            {
-                //cout << "tangibleLevelObjects[" << i << "][" << h << "]" << endl;
-
-                /// NEW COLLISION SYSTEM:
-                /// Separating axis theorem
-                /// we check an axis at a time
-                /// 8 axes in total, aligned with the normal of each face of each shape
-                /// thankfully because we are only using rectangles, there are two pairs of parallel sides
-                /// so we only need to check 4 axes, as the other 4 are all parallel.
-                ///
-                /// in each axis we calculate the vector projection onto the axis between the origin and each corner of each box
-                /// and find the maximum projection and minimum projection for each shape
-                /// then we check if min2>max1 or min1>max2 there has been a collision in this axis
-                /// there has to be a collision in ALL axes for actual collision to be confirmed,
-                /// so we can stop checking if we find a single non-collision.
-
-
-
-
-                /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
-                float currentAxisAngle = 0;
-                sf::Vector2f movingObjC1 = sf::Vector2f(units[farthest_id].hitBox.left,units[farthest_id].hitBox.top); /// "top left"
-                sf::Vector2f movingObjC2 = sf::Vector2f(units[farthest_id].hitBox.left+units[farthest_id].hitBox.width,units[farthest_id].hitBox.top); /// "top right"
-                sf::Vector2f movingObjC3 = sf::Vector2f(units[farthest_id].hitBox.left,units[farthest_id].hitBox.top+units[farthest_id].hitBox.height); /// "bottom left"
-                sf::Vector2f movingObjC4 = sf::Vector2f(units[farthest_id].hitBox.left+units[farthest_id].hitBox.width,units[farthest_id].hitBox.top+units[farthest_id].hitBox.height); /// "bottom right"
-
-
-
-                HitboxFrame tmp;
-                tmp.time = 0;
-                tmp.g_x = 0;
-                tmp.g_y = 0;
-                tmp.clearVertices();
-                tmp.addVertex(movingObjC1.x,movingObjC1.y); /// "top left"
-                tmp.addVertex(movingObjC2.x,movingObjC2.y); /// "top right"
-                tmp.addVertex(movingObjC3.x,movingObjC3.y); /// "bottom left"
-                tmp.addVertex(movingObjC4.x,movingObjC4.y); /// "bottom right"
-                tmp.rotation = 0;
-
-
-                bool isCollision = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],&tmp,proposedXPos,units[farthest_id].getGlobalPosition().y);
-                if (!isCollision)
-                {
-                    continue;
-                }
-                //cout<<"COLLISION FOUND IN axis 1"<<endl;
-
-                /// axis 2: obj1 "up"
-                currentAxisAngle = 3.14159265358/2;
-                bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],&tmp,proposedXPos,units[farthest_id].getGlobalPosition().y);
-                if (!isCollision2)
-                {
-                    continue;
-                }
-                //cout<<"COLLISION FOUND IN axis 2 (up)"<<endl;
-
-                /// axis 3: obj2 "up" (we add the 90 degrees from before to its current rotation)
-                currentAxisAngle = tangibleLevelObjects[i]->hitboxes[h].hitboxObject.rotation + currentAxisAngle;
-
-                bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],&tmp,proposedXPos,units[farthest_id].getGlobalPosition().y);
-                if (!isCollision3)
-                {
-                    continue;
-                }
-                //cout<<"COLLISION FOUND IN axis 3 (up2)"<<endl;
-
-                /// axis 4: obj2 "sideways"
-                currentAxisAngle = tangibleLevelObjects[i]->hitboxes[h].hitboxObject.rotation;
-
-                bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle,&(tangibleLevelObjects[i]->hitboxes[h].hitboxObject),tangibleLevelObjects[i],&tmp,proposedXPos,units[farthest_id].getGlobalPosition().y);
-                if (!isCollision4)
-                {
-                    continue;
-                }
-
-
-
-
-
-
-                /// we have a collision
-                if (isCollision&&isCollision2&&isCollision3&&isCollision4)
-                {
-                    foundCollision = true;
-                    tangibleLevelObjects[i]->OnCollide(tangibleLevelObjects[i]);
-                    std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
-                }
-                else
-                {
-                    cout<<"Something is very wrong"<<endl;
-                }
-            }
-        }
-
-        /// if the new position is inside a kacheek, don't move. If we found anything,
-        if (!foundCollision)
-        {
-            army_X += proposedXPos - units[farthest_id].global_x;
-        }
+        booster = 1.0;
     }
+
+    /** Find the farthest unit in your army (for calculations) **/
+    int farthest_id = -1;
+    float temp_pos = -9999;
 
     for(int i=0; i<units.size(); i++)
     {
-        units[i].setGlobalPosition(sf::Vector2f(army_X+100+(50*i),pataponY));
-        units[i].fps = fps;
+        PlayableUnit* unit = units[i].get();
 
-        if(rhythm.current_song == "patapata")
+        if(temp_pos <= unit->getGlobalPosition().x)
         {
-            units[i].current_animation = "walk";
+            temp_pos = unit->getGlobalPosition().x;
+            farthest_id = i;
         }
     }
+
+    /** Patapon movement **/
+
+    if((camera.walk) || ((missionEnd) && (!failure)))
+    {
+        if(farthest_id != -1)
+        {
+            PlayableUnit* farthest_unit = units[farthest_id].get();
+
+            float pataDistance = 240 * booster;
+
+            float diff = (Smoothstep(walkClock.getElapsedTime().asSeconds()/2)*pataDistance)-(Smoothstep(prevTime/2)*pataDistance);
+            prevTime = walkClock.getElapsedTime().asSeconds();
+
+            float proposedXPos = farthest_unit->global_x + diff;
+
+            camera.pataSpeed = (2 * 60 * booster);
+
+            //cout << "global_x: " << farthest_unit->global_x << endl;
+            //cout << "proposedXPos = " << proposedXPos << endl;
+            /// use the right hand side of the patapon sprite to check for collisions. This should be changed if the patapon walks to the left
+            //float proposedXPosRight = proposedXPos + farthest_unit->hitBox.left + farthest_unit->hitBox.width;
+            /// need to have it check for collision and stop if blocked by kacheek here.
+
+            /// right now it is very basic checking only in X axis. Jumping over a
+            /// kacheek will not be possible.
+
+            bool foundCollision = false;
+            for(int i=0; i<tangibleLevelObjects.size(); i++)
+            {
+                for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
+                {
+                    //cout << "tangibleLevelObjects[" << i << "][" << h << "]" << endl;
+
+                    /// NEW COLLISION SYSTEM:
+                    /// Separating axis theorem
+                    /// we check an axis at a time
+                    /// 8 axes in total, aligned with the normal of each face of each shape
+                    /// thankfully because we are only using rectangles, there are two pairs of parallel sides
+                    /// so we only need to check 4 axes, as the other 4 are all parallel.
+                    ///
+                    /// in each axis we calculate the vector projection onto the axis between the origin and each corner of each box
+                    /// and find the maximum projection and minimum projection for each shape
+                    /// then we check if min2>max1 or min1>max2 there has been a collision in this axis
+                    /// there has to be a collision in ALL axes for actual collision to be confirmed,
+                    /// so we can stop checking if we find a single non-collision.
+
+
+
+
+                    /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
+
+                    float currentAxisAngle = 0;
+                    HitboxFrame tmp = farthest_unit->hitboxes[0].getRect();
+
+                    CollidableObject* target = tangibleLevelObjects[i].get();
+
+                    bool isCollision = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
+                    if (!isCollision)
+                    {
+                        continue;
+                    }
+                    //cout<<"COLLISION FOUND IN axis 1"<<endl;
+
+                    /// axis 2: obj1 "up"
+                    currentAxisAngle = 3.14159265358/2;
+                    bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
+                    if (!isCollision2)
+                    {
+                        continue;
+                    }
+                    //cout<<"COLLISION FOUND IN axis 2 (up)"<<endl;
+
+                    /// axis 3: obj2 "up" (we add the 90 degrees from before to its current rotation)
+                    currentAxisAngle = target->hitboxes[h].hitboxObject.rotation + currentAxisAngle;
+
+                    bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
+                    if (!isCollision3)
+                    {
+                        continue;
+                    }
+                    //cout<<"COLLISION FOUND IN axis 3 (up2)"<<endl;
+
+                    /// axis 4: obj2 "sideways"
+                    currentAxisAngle = target->hitboxes[h].hitboxObject.rotation;
+
+                    bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
+                    if (!isCollision4)
+                    {
+                        continue;
+                    }
+
+                    /// we have a collision
+                    if (isCollision&&isCollision2&&isCollision3&&isCollision4)
+                    {
+                        ///check if unit should be prevented from passing through
+                        if(target->isCollidable)
+                        foundCollision = true;
+
+                        ///the entity can still react
+                        target->OnCollide(target);
+
+                        std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
+                    }
+                    else
+                    {
+                        cout<<"Something is very wrong"<<endl;
+                    }
+                }
+            }
+
+            /// if the new position is inside a kacheek, don't move. If we found anything,
+            if (!foundCollision)
+            {
+                if(!missionEnd)
+                army_X += diff;
+                else
+                army_X += 120.0 / fps;
+            }
+        }
+    }
+
+    /** Set global positions for the units **/
+
+    for(int i=0; i<units.size(); i++)
+    {
+        PlayableUnit* unit = units[i].get();
+
+        switch(unit->getUnitID())
+        {
+            case 0: ///Hatapon
+            {
+                unit->setGlobalPosition(sf::Vector2f(army_X,500));
+                break;
+            }
+
+            case 1: ///Yaripon
+            {
+                unit->setGlobalPosition(sf::Vector2f(army_X+100+(50*i),pataponY));
+                break;
+            }
+        }
+    }
+
+    /** Projectile management **/
 
     /// step 1: all projectiles have gravity applied to them
     for(int i=0; i<levelProjectiles.size(); i++)
@@ -685,304 +1308,861 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
         tmp.addVertex(-3,1); /// "bottom left"
         tmp.addVertex(3,1); /// "bottom right"
         tmp.rotation = -p->angle;
-        if (DoCollisionForObject(&tmp,xpos,ypos)){
+
+        ///calculate projectile damage
+        ///and pass it to a special vector called collisionData
+        ///which passes whatever you'd like to the collided animation object
+        ///so you can put anything and react with it in the individual entity classes
+        ///in projectiles' case, im transferring the damage dealt
+
+        int minDmg = p->mindmg;
+        int maxDmg = p->maxdmg;
+        int bound = maxDmg-minDmg+1;
+        int ranDmg = rand() % bound;
+        int total = minDmg + ranDmg;
+
+        ///sending damage dealt
+        vector<string> collisionData = {to_string(total)};
+
+        ///retrieve collision event
+        CollisionEvent cevent = DoCollisionForObject(&tmp,xpos,ypos,0,collisionData); //0 - spear collision ID
+
+        if(cevent.collided)
+        {
+            if(cevent.isCollidable)
             levelProjectiles.erase(levelProjectiles.begin()+i);
+
+            ///add damage counter
+            if(cevent.isAttackable)
+            addDmgCounter(0, total, xpos, ypos, qualitySetting, resSetting);
         };
     }
 
 }
-void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld)
+void MissionController::DoRhythm()
 {
-    if(rhythm.current_song == "patapata")
-    {
-        //cout << "set walk true" << endl;
-        camera.walk = true;
-    }
-    else
-    {
-        //cout << "set walk false" << endl;
-        camera.walk = false;
-    }
+    /** Call Rhythm functions **/
 
-    missionKeyMap = keyMap;
-
-    int quality = 1;
-    float ratioX=1,ratioY=1;
-
-    switch(quality)
-    {
-        case 0: ///low
-        {
-            ratioX = window.getSize().x / float(640);
-            ratioY = window.getSize().y / float(360);
-            break;
-        }
-
-        case 1: ///med
-        {
-            ratioX = window.getSize().x / float(1280);
-            ratioY = window.getSize().y / float(720);
-            break;
-        }
-
-        case 2: ///high
-        {
-            ratioX = window.getSize().x / float(1920);
-            ratioY = window.getSize().y / float(1080);
-            break;
-        }
-
-        case 3: ///ultra
-        {
-            ratioX = window.getSize().x / float(3840);
-            ratioY = window.getSize().y / float(2160);
-            break;
-        }
-    }
-
-    camera.followobject_x = hatapon->getGlobalPosition().x * ratioX;
-    camera.Work(window,fps,keyMapHeld);
-    test_bg.setCamera(camera);
-    test_bg.Draw(window);
-
-    kacheek->fps = fps;
-    kacheek2->fps = fps;
-    kacheek3->fps = fps;
-    endFlag1->fps = fps;
-    feverworm->fps = fps;
-
-    if(rhythm.GetCombo() >= 11)
-    {
-        if(feverworm->getAnimationSegment() == "fever")
-        {
-            feverworm->scaleX = 1+rhythm.r_gui.beatBounce;
-            feverworm->scaleY = 1+rhythm.r_gui.beatBounce;
-        }
-    }
-
-    if(rhythm.updateworm)
-    {
-        feverworm->combo = rhythm.GetRealCombo();
-
-            if(rhythm.GetRealCombo() < 2)
-            {
-                feverworm->global_x = -300;
-                feverworm->next_x = -300;
-                feverworm->speed = 120;
-            }
-
-            if(rhythm.GetRealCombo() == 2)
-            {
-                feverworm->next_x = 30;
-                feverworm->speed = 400;
-            }
-
-            if((rhythm.GetRealCombo() > 2) && (rhythm.GetCombo() < 11))
-            {
-                if(rhythm.advanced_prefever)
-                feverworm->next_x = 50 + (rhythm.GetSatisfaction() / 5.5) + ((rhythm.GetRealCombo() - 2) * 8);
-                else
-                feverworm->next_x = 30 + ((rhythm.GetRealCombo() - 2) * 8);
-
-                feverworm->speed = 40;
-            }
-
-            if(rhythm.GetCombo() < 11)
-            {
-                if(rhythm.advanced_prefever)
-                {
-                    feverworm->setAnimationSegment("fast");
-                }
-                else
-                {
-                    feverworm->setAnimationSegment("slow");
-                }
-            }
-
-            if(rhythm.GetCombo() == 11)
-            {
-                feverworm->setAnimationSegment("transform");
-                feverworm->setLoop(false);
-            }
-
-            if(rhythm.GetCombo() >= 12)
-            {
-                feverworm->setAnimationSegment("fever");
-                feverworm->setLoop(true);
-            }
-
-            rhythm.updateworm = false;
-    }
-
-
-    hatapon->setGlobalPosition(sf::Vector2f(army_X,500));
-    hatapon->fps = fps;
-    DoKeyboardEvents(window,fps,keyMap,keyMapHeld);
-    DoMovement(window,fps,keyMap,keyMapHeld);
-
-    // TODO: at some point some pointer shenanigans is required to make these be a reference to v4core's ones too.
-    rhythm.rhythmController.keyMap = *missionKeyMap;
-    rhythm.rhythmController.config = *missionConfig;
-    rhythm.config = *missionConfig;
-
-
-
-    if((rhythm.current_song != "") && ((rhythm.current_song != "dondon") && (rhythm.current_song != "ponpata")))
-    {
-        hatapon->setAnimationSegment("wave");
-    }
-    else if(rhythm.current_song == "dondon")
-    {
-        hatapon->setAnimationSegment("jump");
-    }
-    else if(rhythm.current_song == "ponpata")
-    {
-        hatapon->setAnimationSegment("flee");
-    }
-    else
-    {
-        hatapon->setAnimationSegment("idle");
-    }
-
-    for (int i=0; i<tangibleLevelObjects.size(); i++)
-    {
-        tangibleLevelObjects[i]->Draw(window);
-    }
-
-    int farthest_id = -1;
-    float temp_pos = -9999;
-    for(int i=0; i<units.size(); i++)
-    {
-        if(temp_pos <= units[i].getGlobalPosition().x)
-        {
-            temp_pos = units[i].getGlobalPosition().x;
-            farthest_id = i;
-        }
-    }
-
-    for(int i=0; i<units.size(); i++)
-    {
         if(rhythm.current_song == "patapata")
         {
-            units[i].action = units[i].WALK;
+            //cout << "set walk true" << endl;
+            camera.walk = true;
 
-            if(!units[i].focus)
-            units[i].setAnimationSegment("walk");
-            else
-            units[i].setAnimationSegment("walk_focus");
+            if(!startWalking)
+            {
+                walkClock.restart();
+                prevTime = 0;
 
-            units[i].setLoop(true);
+                startWalking = true;
+            }
         }
         else
         {
-            if(units[i].getAnimationSegment() == "walk")
-            {
-                if(!units[i].getback)
-                {
-                    if(!units[i].focus)
-                    units[i].setAnimationSegment("idle", true);
-                    else
-                    units[i].setAnimationSegment("idle_armed", true);
-                }
-            }
-        }
+            //cout << "set walk false" << endl;
+            camera.walk = false;
 
-        if(rhythm.current_song == "ponpon")
-        {
-            units[i].startAttack();
-        }
-        else
-        {
-            if(units[i].action == units[i].ATTACK)
-            {
-                units[i].action = 0;
-
-                if(units[i].getAnimationSegment() == "attack_yari")
-                units[i].setAnimationSegment("idle", true);
-            }
+            startWalking = false;
         }
 
         if((rhythm.rhythmController.current_drum == "pata") or (rhythm.rhythmController.current_drum == "pon") or (rhythm.rhythmController.current_drum == "chaka") or (rhythm.rhythmController.current_drum == "don"))
         {
-            //cout << rhythm.rhythmController.current_drum << endl;
-
-            if(!units[i].focus)
-            units[i].setAnimationSegment(rhythm.rhythmController.current_drum, true);
-            else
-            units[i].setAnimationSegment(rhythm.rhythmController.current_drum+"_focus", true);
+            rhythm.rhythmController.current_drum = "";
+            rhythm.current_song = "";
         }
 
-        vector<float> gdistances;
+        rhythm.rhythmController.config = *missionConfig;
+        rhythm.config = *missionConfig;
+
+        rhythm.doRhythm();
+}
+
+void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
+{
+    /** Make the missionEndTimer unusable until the mission is not finished **/
+    if(!missionEnd)
+    missionEndTimer.restart();
+
+    /** Mission end cheering **/
+
+    if(missionEnd)
+    {
+        if(!failure)
+        {
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 2500)
+            {
+                if(!playCheer[0])
+                {
+                    s_cheer.stop();
+                    s_cheer.setBuffer(sb_cheer1);
+                    s_cheer.play();
+                    playCheer[0] = true;
+                }
+            }
+
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 4500)
+            {
+                if(!playCheer[1])
+                {
+                    s_cheer.stop();
+                    s_cheer.setBuffer(sb_cheer2);
+                    s_cheer.play();
+                    playCheer[1] = true;
+                }
+            }
+
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 6500)
+            {
+                if(!playCheer[2])
+                {
+                    s_cheer.stop();
+                    s_cheer.setBuffer(sb_cheer3);
+                    s_cheer.play();
+                    playCheer[2] = true;
+                }
+            }
+
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 8000)
+            {
+                if(!playJingle)
+                {
+                    s_jingle.setBuffer(sb_win_jingle);
+                    s_jingle.play();
+                    playJingle = true;
+                }
+            }
+        }
+        else
+        {
+            if(!playJingle)
+            {
+                s_jingle.setBuffer(sb_lose_jingle);
+                s_jingle.play();
+                playJingle = true;
+            }
+        }
+    }
+
+    /** Make the camera follow Patapons until the jingle is played **/
+
+    if(missionEndTimer.getElapsedTime().asMilliseconds() < 7700)
+    {
+        camera.followobject_x = army_X * (window.getSize().x / float(1280));
+    }
+
+    /** Mission fade in and fade out **/
+
+    if(!missionEnd)
+    {
+        if(fade_alpha > 0)
+        {
+            fade_alpha -= float(500) / fps;
+        }
+
+        if(fade_alpha <= 0)
+        {
+            fade_alpha = 0;
+        }
+    }
+    else
+    {
+        if(!failure)
+        {
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 11000)
+            {
+                if(fade_alpha < 255)
+                {
+                    fade_alpha += float(250) / fps;
+                }
+
+                if(fade_alpha >= 255)
+                {
+                    fade_alpha = 255;
+                }
+            }
+        }
+        else
+        {
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 1000)
+            {
+                if(fade_alpha < 255)
+                {
+                    fade_alpha += float(250) / fps;
+                }
+
+                if(fade_alpha >= 255)
+                {
+                    fade_alpha = 255;
+                }
+            }
+        }
+    }
+
+    fade_box.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+    fade_box.setFillColor(sf::Color(0,0,0,fade_alpha));
+    window.draw(fade_box);
+
+    /** Mission end event (Mission complete/Mission failed screen + transition to Patapolis **/
+
+    if(!failure)
+    {
+        if(missionEndTimer.getElapsedTime().asMilliseconds() >= 11500)
+        {
+            if(!textBounce)
+            {
+                if(missionEndTimer.getElapsedTime().asMilliseconds() >= 13050)
+                {
+                    textCurScale = 1.4;
+                    textBounce = true;
+                }
+            }
+
+            t_win.setOrigin(t_win.getLocalBounds().width/2, t_win.getLocalBounds().height/2);
+            t_win_outline.setOrigin(t_win_outline.getLocalBounds().width/2, t_win_outline.getLocalBounds().height/2);
+
+            if(barCurX > barDestX)
+            {
+                barCurX -= (abs(barCurX - barDestX) * 5) / fps;
+            }
+            else
+            {
+                barCurX = barDestX;
+            }
+
+            if(textCurX < textDestX)
+            {
+                textCurX += (abs(textCurX - textDestX) * 5) / fps;
+            }
+            else
+            {
+                textCurX = textDestX;
+            }
+            if(textCurScale > textDestScale)
+            {
+                textCurScale -= (abs(textCurScale - textDestScale) * 5) / fps;
+            }
+            else
+            {
+                textCurScale = textDestScale;
+            }
+
+            t_win.setScale(textCurScale);
+            t_win_outline.setScale(textCurScale);
+
+            bar_win.setPosition(barCurX, 360);
+            t_win.setPosition(textCurX-7, 360-14);
+            t_win_outline.setPosition(textCurX+2, 360-4);
+
+            bar_win.draw(window);
+            t_win_outline.draw(window);
+            t_win.draw(window);
+
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 17000)
+            {
+                if(fadeout_alpha < 255)
+                {
+                    fadeout_alpha += float(250) / fps;
+                }
+
+                if(fadeout_alpha >= 255)
+                {
+                    fadeout_alpha = 255;
+                }
+
+                fadeout_box.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+                fadeout_box.setFillColor(sf::Color(0,0,0,fadeout_alpha));
+                window.draw(fadeout_box);
+            }
+        }
+    }
+    else
+    {
+        if(missionEndTimer.getElapsedTime().asMilliseconds() >= 2500)
+        {
+            t_lose.setOrigin(t_lose.getLocalBounds().width/2, t_lose.getLocalBounds().height/2);
+            t_lose_outline.setOrigin(t_lose_outline.getLocalBounds().width/2, t_lose_outline.getLocalBounds().height/2);
+
+            if(barCurX > barDestX)
+            {
+                barCurX -= (abs(barCurX - barDestX) * 5) / fps;
+            }
+            else
+            {
+                barCurX = barDestX;
+            }
+
+            if(textCurX < textDestX)
+            {
+                textCurX += (abs(textCurX - textDestX) * 5) / fps;
+            }
+            else
+            {
+                textCurX = textDestX;
+            }
+
+            t_lose.setScale(textCurScale);
+            t_lose_outline.setScale(textCurScale);
+
+            bar_lose.setPosition(barCurX, 360);
+            t_lose.setPosition(textCurX-7, 360-14);
+            t_lose_outline.setPosition(textCurX+2, 360-4);
+
+            bar_lose.draw(window);
+            t_lose_outline.draw(window);
+            t_lose.draw(window);
+
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 6000)
+            {
+                if(fadeout_alpha < 255)
+                {
+                    fadeout_alpha += float(250) / fps;
+                }
+
+                if(fadeout_alpha >= 255)
+                {
+                    fadeout_alpha = 255;
+                }
+
+                fadeout_box.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+                fadeout_box.setFillColor(sf::Color(0,0,0,fadeout_alpha));
+                window.draw(fadeout_box);
+            }
+
+            if(missionEndTimer.getElapsedTime().asMilliseconds() >= 8000)
+            {
+                /** End flag executes the mission victory code, so mission failed code needs to be executed separately here. **/
+
+                cout << "End mission" << endl;
+
+                StopMission();
+
+                cout << "Go to Patapolis" << endl;
+
+                sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+                v4core->continueLoading=true;
+                v4core->window.setActive(false);
+                loadingThreadInstance.launch();
+
+                v4core->mainMenu.patapolisMenu.doWaitKeyPress = false;
+                v4core->mainMenu.patapolisMenu.Show();
+                v4core->mainMenu.patapolisMenu.isActive = true;
+
+                if (!v4core->mainMenu.patapolisMenu.initialised)
+                {
+                    /// patapolis might not be initialised because we could be running the pre-patapolis scripted first mission.
+                    cout << "[ENDFLAG] Initialize Patapolis for the first time" << endl;
+                    v4core->mainMenu.patapolisMenu.Initialise(missionConfig,v4core->mainMenu.keyMapping,v4core,&v4core->mainMenu);
+                }
+                else
+                {
+                    cout << "Don't initialize Patapolis, just show it again" << endl;
+                }
+
+                v4core->mainMenu.patapolisMenu.location = 3;
+                v4core->mainMenu.patapolisMenu.SetTitle(3);
+                v4core->mainMenu.patapolisMenu.camPos = v4core->mainMenu.patapolisMenu.locations[3];
+                v4core->mainMenu.patapolisMenu.fade_alpha = 255;
+
+                while(missionEndTimer.getElapsedTime().asMilliseconds() < 10000)
+                {
+                    ///halt loading for a second
+                }
+
+                v4core->LoadingWaitForKeyPress();
+
+                v4core->continueLoading=false;
+
+                v4core->ChangeRichPresence("In Patapolis", "logo", "");
+            }
+        }
+    }
+}
+
+void MissionController::DoVectorCleanup(vector<int> units_rm, vector<int> dmg_rm, vector<int> tlo_rm)
+{
+    for(int i=0; i<units_rm.size(); i++)
+    {
+        units.erase(units.begin()+(units_rm[i]-i));
+        cout << "Erased unit " << units_rm[i] << endl;
+    }
+
+    for(int i=0; i<dmg_rm.size(); i++)
+    {
+        dmgCounters.erase(dmgCounters.begin()+(dmg_rm[i] - i));
+        cout << "Erased dmgCounter " << dmg_rm[i] << endl;
+    }
+
+    for(int i=0; i<tlo_rm.size(); i++)
+    {
+        tangibleLevelObjects.erase(tangibleLevelObjects.begin()+(tlo_rm[i]-i));
+        cout << "Erased tangibleLevelObject " << tlo_rm[i] << endl;
+    }
+}
+
+void MissionController::DrawUnitThumbs(sf::RenderWindow& window)
+{
+    for(int i=0; i<unitThumbs.size(); i++)
+    {
+        float resRatioX = window.getSize().x / float(1280);
+        float resRatioY = window.getSize().y / float(720);
+
+        int farthest_id = -1;
+        float temp_pos = -9999;
+
+        int curunits = 0;
+        float maxunithp = 0;
+        float curunithp = 0;
+
+        for(int u=0; u<units.size(); u++)
+        {
+            if(units[u].get()->getUnitID() == unitThumbs[i].unit_id)
+            {
+                curunits++;
+
+                PlayableUnit* unit = units[u].get();
+
+                if(temp_pos <= unit->getGlobalPosition().x)
+                {
+                    temp_pos = unit->getGlobalPosition().x;
+                    farthest_id = u;
+                }
+
+                maxunithp += unit->getUnitMaxHP();
+                curunithp += unit->getUnitHP();
+            }
+        }
+
+        if(farthest_id != -1)
+        {
+            float hp_percentage = curunithp / maxunithp;
+
+            unitThumbs[i].circle.setRadius(28*resRatioX);
+            unitThumbs[i].circle.setOrigin(unitThumbs[i].circle.getLocalBounds().width/2,unitThumbs[i].circle.getLocalBounds().height/2);
+            unitThumbs[i].circle.setPosition((52+(64*i))*resRatioX, (72*resRatioY));
+            window.draw(unitThumbs[i].circle);
+
+            PlayableUnit* farthest_unit = units[farthest_id].get();
+            unitThumbs[i].thumb = farthest_unit->objects[0].s_obj;
+            unitThumbs[i].thumb.setScale(0.7,0.7);
+
+            int manual_x,manual_y;
+
+            if(unitThumbs[i].unit_id == 0)
+            {
+                manual_x = 6;
+                manual_y = -40;
+            }
+
+            if(unitThumbs[i].unit_id == 1)
+            {
+                manual_x = 0;
+                manual_y = 14;
+            }
+
+            unitThumbs[i].thumb.setPosition(52+(64*i)+manual_x, 60+manual_y);
+            unitThumbs[i].thumb.draw(window);
+
+            unitThumbs[i].hpbar_back.setOrigin(unitThumbs[i].hpbar_back.getLocalBounds().width/2, unitThumbs[i].hpbar_back.getLocalBounds().height/2);
+            unitThumbs[i].hpbar_back.setPosition(52+(64*i), 32);
+            unitThumbs[i].hpbar_back.draw(window);
+
+            unitThumbs[i].hpbar_ins.setOrigin(0, unitThumbs[i].hpbar_ins.getLocalBounds().height/2);
+            unitThumbs[i].hpbar_ins.setTextureRect(sf::IntRect(0,0,unitThumbs[i].width*hp_percentage,unitThumbs[i].hpbar_ins.getLocalBounds().height));
+            unitThumbs[i].hpbar_ins.setPosition(52+(64*i)-27, 32);
+
+            if(hp_percentage > 0.70)
+            unitThumbs[i].hpbar_ins.setColor(sf::Color(0,255,0,255));
+            else if(hp_percentage > 0.35)
+            unitThumbs[i].hpbar_ins.setColor(sf::Color(245,230,66,255));
+            else
+            unitThumbs[i].hpbar_ins.setColor(sf::Color(212,0,0,255));
+
+            unitThumbs[i].hpbar_ins.draw(window);
+
+            if(unitThumbs[i].unit_id != 0)
+            {
+                unitThumbs[i].unit_count_shadow.setString(to_string(curunits));
+                unitThumbs[i].unit_count_shadow.setOrigin(unitThumbs[i].unit_count_shadow.getLocalBounds().width/2, unitThumbs[i].unit_count_shadow.getLocalBounds().height/2);
+                unitThumbs[i].unit_count_shadow.setPosition(52+(64*i)+28, 98);
+                unitThumbs[i].unit_count_shadow.draw(window);
+
+                unitThumbs[i].unit_count.setString(to_string(curunits));
+                unitThumbs[i].unit_count.setOrigin(unitThumbs[i].unit_count.getLocalBounds().width/2, unitThumbs[i].unit_count.getLocalBounds().height/2);
+                unitThumbs[i].unit_count.setPosition(52+(64*i)+26, 96);
+                unitThumbs[i].unit_count.draw(window);
+            }
+        }
+    }
+}
+
+void MissionController::DrawPickedItems(sf::RenderWindow& window)
+{
+    for(int i=0; i<pickedItems.size(); i++)
+    {
+        float resRatioX = window.getSize().x / float(1280);
+        float resRatioY = window.getSize().y / float(720);
+
+        pickedItems[i].circle.setRadius(25*resRatioX);
+        pickedItems[i].circle.setOrigin(pickedItems[i].circle.getLocalBounds().width/2,pickedItems[i].circle.getLocalBounds().height/2);
+        pickedItems[i].circle.setPosition((1230 - 54*i)*resRatioX, (50*resRatioY));
+        window.draw(pickedItems[i].circle);
+
+        pickedItems[i].item.setOrigin(pickedItems[i].bounds.x/2, pickedItems[i].bounds.y/2);
+        pickedItems[i].item.setPosition(1230 - 54*i, 50);
+        pickedItems[i].item.setScale(0.8,0.8);
+        pickedItems[i].item.draw(window);
+    }
+}
+
+void MissionController::DrawHitboxes(sf::RenderWindow& window)
+{
+    for(int i=0; i<units.size(); i++)
+        {
+            PlayableUnit* unit = units[i].get();
+
+            for(int h=0; h<unit->hitboxes.size(); h++)
+            {
+                HitboxFrame* currentHitbox = &(unit->hitboxes[h].hitboxObject);
+
+                sf::ConvexShape convex;
+                convex.setFillColor(sf::Color(150, 50, 250));
+                // resize it to 5 points
+                std::vector<sf::Vector2f> currentVertices = currentHitbox->getCurrentVertices();
+                convex.setPointCount(currentVertices.size());
+
+                for (int j=0; j<currentVertices.size(); j++)
+                {
+                    sf::Vector2f currentPoint = currentVertices[j];
+                    currentPoint.x = currentPoint.x + currentHitbox->g_x + unit->global_x;
+                    currentPoint.y = currentPoint.y + currentHitbox->g_y + unit->global_y;
+                    //cout<<"DRAWING POINT: "<<currentVertices.size()<<" x: "<<currentPoint.x<<" y: "<<currentPoint.y<<endl;
+                    sf::CircleShape shape(5);
+                    shape.setFillColor(sf::Color(100, 250, 50));
+                    shape.setPosition(currentPoint.x-2.5,currentPoint.y-2.5);
+                    window.draw(shape);
+                    convex.setPoint(j, currentPoint);
+                    //cout << "convex.setPoint(" << j << ", " << currentPoint.x << " " << currentPoint.y << ");" << endl;
+                }
+
+                window.draw(convex);
+            }
+        }
+
+        for(int i=0; i<tangibleLevelObjects.size(); i++)
+        {
+            Entity* entity = tangibleLevelObjects[i].get();
+
+            for(int h=0; h<entity->hitboxes.size(); h++)
+            {
+                HitboxFrame* currentHitbox = &(entity->hitboxes[h].hitboxObject);
+
+                sf::ConvexShape convex;
+                convex.setFillColor(sf::Color(150, 50, 250));
+                // resize it to 5 points
+                std::vector<sf::Vector2f> currentVertices = currentHitbox->getCurrentVertices();
+                convex.setPointCount(currentVertices.size());
+
+                for (int j=0; j<currentVertices.size(); j++)
+                {
+
+                    sf::Vector2f currentPoint = currentVertices[j];
+                    currentPoint.x = currentPoint.x + currentHitbox->g_x + entity->global_x;
+                    currentPoint.y = currentPoint.y + currentHitbox->g_y + entity->global_y;
+                    //cout<<"DRAWING POINT: "<<currentVertices.size()<<" x: "<<currentPoint.x<<" y: "<<currentPoint.y<<endl;
+                    sf::CircleShape shape(5);
+                    shape.setFillColor(sf::Color(100, 250, 50));
+                    shape.setPosition(currentPoint.x-2.5,currentPoint.y-2.5);
+                    window.draw(shape);
+                    convex.setPoint(j, currentPoint);
+                    //cout << "convex.setPoint(" << j << ", " << currentPoint.x << " " << currentPoint.y << ");" << endl;
+
+                }
+
+                window.draw(convex);
+            }
+        }
+}
+
+std::vector<int> MissionController::DrawDamageCounters(sf::RenderWindow& window)
+{
+    vector<int> dmg_rm;
+
+    for(int i=0; i<dmgCounters.size(); i++)
+    {
+        float a=0;
+
+        for(int d=0; d<dmgCounters[i].spr.size(); d++)
+        {
+            if(dmgCounters[i].display_timer.getElapsedTime().asMilliseconds() > 70*d)
+            {
+                float curScale = dmgCounters[i].scale[d];
+                float destScale = dmgCounters[i].scale_goal[d];
+
+                if(dmgCounters[i].mode[d])
+                {
+                    curScale -= float(14) / fps;
+                    dmgCounters[i].alpha[d] += float(1800) / fps;
+
+                    if(curScale <= destScale)
+                    {
+                        dmgCounters[i].mode[d] = false;
+                        destScale = 1;
+                    }
+
+                    if(dmgCounters[i].alpha[d] >= 255)
+                    dmgCounters[i].alpha[d] = 255;
+                }
+
+                if(!dmgCounters[i].mode[d])
+                {
+                    if(!dmgCounters[i].mode[d])
+                    {
+                        curScale += float(8) / fps;
+
+                        if(curScale >= destScale)
+                        {
+                            curScale = destScale;
+                        }
+                    }
+                }
+
+                if(dmgCounters[i].display_timer.getElapsedTime().asMilliseconds() > 70*d + 1000)
+                {
+                    if(!dmgCounters[i].mode[d])
+                    {
+                        dmgCounters[i].pos[d].y += float(60) / fps;
+                        dmgCounters[i].alpha[d] -= float(500) / fps;
+
+                        if(dmgCounters[i].alpha[d] <= 0)
+                        dmgCounters[i].alpha[d] = 0;
+                    }
+                }
+
+                dmgCounters[i].scale[d] = curScale;
+                dmgCounters[i].scale_goal[d] = destScale;
+
+                dmgCounters[i].spr[d].setPosition(dmgCounters[i].pos[d].x, dmgCounters[i].pos[d].y-((curScale-1)*10));
+                dmgCounters[i].spr[d].setScale(curScale, curScale);
+                dmgCounters[i].spr[d].setColor(sf::Color(255,255,255,dmgCounters[i].alpha[d]));
+
+                dmgCounters[i].spr[d].draw(window);
+
+                a += dmgCounters[i].alpha[d];
+            }
+        }
+
+        if(a <= 1)
+        dmg_rm.push_back(i);
+    }
+
+    return dmg_rm;
+}
+
+std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
+{
+    vector<int> tlo_rm;
+
+    for (int i=0; i<tangibleLevelObjects.size(); i++)
+    {
+        Entity* entity = tangibleLevelObjects[i].get();
+
+        entity->fps = fps;
+
+        if(entity->getEntityID() == 1)
+        {
+            entity->doRhythm(rhythm.current_song, rhythm.rhythmController.current_drum, rhythm.GetCombo(), rhythm.GetRealCombo(), rhythm.advanced_prefever, rhythm.r_gui.beatBounce, rhythm.GetSatisfaction());
+
+            if(!missionEnd)
+            entity->Draw(window);
+        }
+        else
+        {
+            entity->offbounds = false;
+
+            if(entity->getGlobalPosition().x > camera.followobject_x+1600)
+            entity->offbounds = true;
+
+            if(entity->getGlobalPosition().x < camera.followobject_x-600)
+            entity->offbounds = true;
+
+            entity->Draw(window);
+        }
+
+        if(entity->ready_to_erase)
+        tlo_rm.push_back(i);
+    }
+
+    return tlo_rm;
+}
+
+std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
+{
+    vector<int> units_rm;
+
+    int farthest_id = -1;
+    float temp_pos = -9999;
+
+    bool hatapon = false;
+    int u = 0;
+
+    auto max_distance = std::max_element( units.begin(), units.end(),
+                             []( unique_ptr<PlayableUnit> &a, unique_ptr<PlayableUnit> &b )
+                             {
+                                 return a->global_x < b->global_x;
+                             } );
+
+    farthest_id = distance(units.begin(), max_distance);
+
+    /** Units draw loop and entity range detection **/
+
+    if(farthest_id != -1)
+    {
+        PlayableUnit* farthest_unit = units[farthest_id].get();
+
+        /** Detect how far the entity is **/
+        /*vector<float> gdistances;
         vector<float> ldistances;
 
-        for (int e=0; e<tangibleLevelObjects.size(); e++)
+        for(int e=0; e<tangibleLevelObjects.size(); e++)
         {
-            //cout << "tangibleLevelObjects[" << i << "]->Draw(window);" << endl;
-            ///some temporary code for entity in range detection
             if(tangibleLevelObjects[e]->type == tangibleLevelObjects[e]->HOSTILE)
             {
-                float global_distance = tangibleLevelObjects[e]->getGlobalPosition().x - (units[farthest_id].getGlobalPosition().x - units[farthest_id].local_x);
-                float local_distance = tangibleLevelObjects[e]->getGlobalPosition().x - units[farthest_id].getGlobalPosition().x;
+                float global_distance = tangibleLevelObjects[e]->getGlobalPosition().x - (farthest_unit->getGlobalPosition().x - farthest_unit->local_x);
+                float local_distance = tangibleLevelObjects[e]->getGlobalPosition().x - farthest_unit->getGlobalPosition().x;
                 gdistances.push_back(global_distance);
                 ldistances.push_back(local_distance);
             }
         }
 
-        /// patapons (and other enemies) are drawn after level objects like kacheek so they are always on top
-        if(units[i].threw)
+        if(gdistances.size() > 0)
         {
-            float rand_hs = (rand() % 1000) / float(10);
-            float rand_vs = (rand() % 1000) / float(10);
+            unit->gclosest = *std::min_element(std::begin(gdistances), std::end(gdistances));
+            unit->lclosest = *std::min_element(std::begin(ldistances), std::end(ldistances));
+        }*/
 
-            float rand_rad = (rand() % 200000000) / float(1000000000);
+        /** Draw the units **/
+        for(int i=0; i<units.size(); i++)
+        {
+            PlayableUnit* unit = units[i].get();
 
-            //cout << "===============================================" << endl;
-            //cout << "rand_hs: " << rand_hs << " rand_vs: " << rand_vs << endl;
-            //cout << "===============================================" << endl;
+            /** Verify if Hatapon exists **/
+            if(unit->getUnitID() == 0)
+            hatapon = true;
 
-            unique_ptr<Spear> p = make_unique<Spear>(s_proj);
-            p.get()->xPos = units[i].getGlobalPosition().x+units[i].hitBox.left+units[i].hitBox.width/2-26;
-            p.get()->yPos = units[i].getGlobalPosition().y+units[i].hitBox.top+units[i].hitBox.height/2-35;
-            p.get()->speed = 800;
-            p.get()->hspeed = 450+rand_hs;
-            p.get()->vspeed = -450+rand_vs;
-            ///-0.523598776 - 30 deg
-            //p.get()->angle = -0.698131701; /// 40 degrees from the floor - pi*4/12
-            p.get()->angle = -0.58 - rand_rad;
-            ///-0.872664626 - 50 deg
-            p.get()->maxdmg = 3;
-            p.get()->mindmg = 2;
-            p.get()->crit = 0;
-            p.get()->crit = 0;
+            /** Execute unit features when mission is not over **/
+            if(!missionEnd)
+            {
+                unit->doRhythm(rhythm.current_song, rhythm.rhythmController.current_drum, rhythm.GetCombo());
 
-            levelProjectiles.push_back(std::move(p));
+                if(unit->getUnitID() == 1) /// Yaripon
+                {
+                    if(unit->doAttack())
+                    {
+                        cout << "Unit " << i << " threw a spear!" << endl;
 
-            units[i].threw = false;
+                        float rand_hs = (rand() % 1000) / float(10);
+                        float rand_vs = (rand() % 1000) / float(10);
+
+                        float rand_rad = (rand() % 200000000) / float(1000000000);
+
+                        int rhythm_acc = rhythm.current_perfect; ///Check how many perfect measures has been done to improve the spears throwing
+                        float fever_boost = 0.8;
+
+                        if(rhythm.GetCombo() >= 11) ///Check for fever to boost the spears damage
+                        fever_boost = 1.0;
+
+                        float mindmg = unit->mindmg * (0.8 + (rhythm_acc*0.05)) * fever_boost;
+                        float maxdmg = unit->maxdmg * (0.8 + (rhythm_acc*0.05)) * fever_boost;
+
+                        ///Make the spears be thrown with worse velocity when player is drumming bad (10% punishment)
+                        rand_hs *= 0.9 + (rhythm_acc*0.025);
+                        rand_vs *= 0.9 + (rhythm_acc*0.025);
+
+                        ///This way, the lowest damage is dmg * 0.64 (36% punishment) and highest damage is 100% of the values
+
+                        float xpos = unit->getGlobalPosition().x+unit->hitBox.left+unit->hitBox.width/2;
+                        float ypos = unit->getGlobalPosition().y+unit->hitBox.top+unit->hitBox.height/2;
+
+                        spawnProjectile(xpos, ypos, 800, 450+rand_hs, -450+rand_vs, -0.58 - rand_rad, maxdmg, mindmg, 0);
+                    }
+                }
+            }
+
+            if(missionEnd)
+            {
+                if(!failure)
+                unit->doMissionEnd();
+            }
+
+            unit->fps = fps;
+            unit->Draw(window);
+
+            if(unit->ready_to_erase)
+            units_rm.push_back(i);
         }
-
-        units[i].gclosest = *std::min_element(std::begin(gdistances), std::end(gdistances));
-        units[i].lclosest = *std::min_element(std::begin(ldistances), std::end(ldistances));
-
-        units[i].Draw(window);
     }
 
-    if((rhythm.rhythmController.current_drum == "pata") or (rhythm.rhythmController.current_drum == "pon") or (rhythm.rhythmController.current_drum == "chaka") or (rhythm.rhythmController.current_drum == "don"))
+    /** Fail the mission if Hatapon is dead or when Hatapon is the only unit remaining **/
+
+    if((!hatapon) || ((hatapon) && (units.size() <= 1)))
     {
-        rhythm.rhythmController.current_drum = "";
-        rhythm.current_song = "";
+        missionEnd = true;
+        failure = true;
     }
 
-    hatapon->Draw(window);
+    return units_rm;
+}
+
+void MissionController::Update(sf::RenderWindow &window, float cfps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld)
+{
+    /** Update loop, everything here happens per each frame of the game **/
+    fps = cfps;
+
+    /** Apply the keyMap from parent class **/
+    missionKeyMap = keyMap;
+
+    /** Execute camera and background **/
+
+    camera.Work(window,fps,keyMapHeld);
+    test_bg.setCamera(camera);
+    test_bg.Draw(window);
+
+    /** Execute Keyboard events and Movement **/
+
+    DoKeyboardEvents(window,fps,keyMap,keyMapHeld);
+    DoMovement(window,fps,keyMap,keyMapHeld);
+
+    /** Draw all Entities **/
+
+    vector<int> tlo_rm = DrawEntities(window);
+
+    /** Draw all Units **/
+
+    vector<int> units_rm = DrawUnits(window);
+
+    /** Draw projectiles **/
 
     for(int i=0; i<levelProjectiles.size(); i++)
     {
         levelProjectiles[i].get()->Draw(window,fps);
     }
-    /// draw static UI elements
-    auto lastView = window.getView();
 
+    /** Draw hitboxes **/
+
+    bool showHitboxes = false;
+    if(showHitboxes)
+    {
+        DrawHitboxes(window);
+    }
+
+    /** Draw damage counters **/
+    vector<int> dmg_rm = DrawDamageCounters(window);
+
+    /**  Draw static UI elements **/
+
+    auto lastView = window.getView();
     window.setView(window.getDefaultView());
 
+    /**
 
     if(cutscenesLeft && !inCutscene && isMoreCutscenes())
     {
@@ -1058,137 +2238,50 @@ void MissionController::Update(sf::RenderWindow &window, float fps, std::map<int
 
             window.draw(currentLine);
         }
-    }
-    window.setView(lastView);
+    }*/
 
-    /// here we show the hitbox
-    bool showHitboxes = false;
-    if(showHitboxes)
-    {
-        sf::RectangleShape hitboxRect(sf::Vector2f(patapon->hitBox.width, patapon->hitBox.height));
-        hitboxRect.setPosition(patapon->getGlobalPosition().x+patapon->hitBox.left,patapon->getGlobalPosition().y+patapon->hitBox.top);
-        //window.draw(hitboxRect);
+    /** Draw the timer (Static UI element) **/
 
-        float minProjectionObj2 = pataponMinProjection(0);
-        sf::CircleShape markerr(5);
-        markerr.setFillColor(sf::Color(250, 250, 50));
-        markerr.setPosition(0-2.5,0-2.5);
-        window.draw(markerr);
-        markerr.setFillColor(sf::Color(250, 250, 50));
-        markerr.setPosition(minProjectionObj2-2.5,patapon->getGlobalPosition().y-2.5+patapon->hitBox.top+patapon->hitBox.height/2);
-        window.draw(markerr);
-
-        float maxProjectionObj2 = pataponMaxProjection(0);
-        markerr.setFillColor(sf::Color(150, 50, 250));
-        markerr.setPosition(maxProjectionObj2-2.5,patapon->getGlobalPosition().y-2.5+patapon->hitBox.top+patapon->hitBox.height/2);
-        window.draw(markerr);
-
-        float angled = 3.14159265358/2;
-        float minProjectionObj22 = pataponMinProjection(angled);
-
-        markerr.setFillColor(sf::Color(250, 250, 50));
-        markerr.setPosition(patapon->getGlobalPosition().x-2.5+patapon->hitBox.left+patapon->hitBox.width/2,minProjectionObj22-2.5);
-        window.draw(markerr);
-
-
-        float maxProjectionObj22 = pataponMaxProjection(angled);
-        markerr.setFillColor(sf::Color(150, 50, 250));
-        markerr.setPosition(patapon->getGlobalPosition().x-2.5+patapon->hitBox.left+patapon->hitBox.width/2,maxProjectionObj22-2.5);
-        window.draw(markerr);
-
-        /*
-        sf::Vector2f movingObjC1 = sf::Vector2f(patapon->x+patapon->hitBox.left,patapon->y+patapon->hitBox.top); /// "top left"
-        sf::CircleShape shape(5);
-        shape.setFillColor(sf::Color(100, 250, 50));
-        shape.setPosition(movingObjC1.x-2.5,movingObjC1.y-2.5);
-        window.draw(shape);
-        sf::Vector2f movingObjC2 = sf::Vector2f(patapon->x+patapon->hitBox.left+patapon->hitBox.width,patapon->y+patapon->hitBox.top); /// "top right"
-        shape.setPosition(movingObjC2.x-2.5,movingObjC2.y-2.5);
-        window.draw(shape);
-        sf::Vector2f movingObjC3 = sf::Vector2f(patapon->x+patapon->hitBox.left,patapon->y+patapon->hitBox.top+patapon->hitBox.height); /// "bottom left"
-        shape.setPosition(movingObjC3.x-2.5,movingObjC3.y-2.5);
-        window.draw(shape);
-        sf::Vector2f movingObjC4 = sf::Vector2f(patapon->x+patapon->hitBox.left+patapon->hitBox.width,patapon->y+patapon->hitBox.top+patapon->hitBox.height); /// "bottom right"
-        shape.setPosition(movingObjC4.x-2.5,movingObjC4.y-2.5);
-        window.draw(shape);*/
-
-        for(int i=0; i<tangibleLevelObjects.size(); i++)
-        {
-            for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
-            {
-                //cout << "hitbox " << h << " pos: " << tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x << " " << tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().y << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().top << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().left << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().width << " " << tangibleLevelObjects[i]->hitboxes[h].getRect().height << endl;
-                // create an empty shape
-
-                HitboxFrame* currentHitbox = &(tangibleLevelObjects[i]->hitboxes[h].hitboxObject);
-                sf::ConvexShape convex;
-                convex.setFillColor(sf::Color(150, 50, 250));
-                // resize it to 5 points
-                std::vector<sf::Vector2f> currentVertices = currentHitbox->getCurrentVertices();
-                convex.setPointCount(currentVertices.size());
-
-                for (int j=0; j<currentVertices.size(); j++)
-                {
-                    sf::Vector2f currentPoint = currentVertices[j];
-                    currentPoint.x = currentPoint.x + currentHitbox->g_x + tangibleLevelObjects[i]->global_x;
-                    currentPoint.y = currentPoint.y + currentHitbox->g_y + tangibleLevelObjects[i]->global_y;
-                    //cout<<"DRAWING POINT: "<<currentVertices.size()<<" x: "<<currentPoint.x<<" y: "<<currentPoint.y<<endl;
-                    sf::CircleShape shape(5);
-                    shape.setFillColor(sf::Color(100, 250, 50));
-                    shape.setPosition(currentPoint.x-2.5,currentPoint.y-2.5);
-                    window.draw(shape);
-                    convex.setPoint(i, currentPoint);
-                    //cout << "convex.setPoint(" << i << ", " << currentPoint.x << " " << currentPoint.y << ");" << endl;
-                }
-
-                float minProjectionObj2 = currentHitbox->minProjection(0, tangibleLevelObjects[i]->global_x,tangibleLevelObjects[i]->global_y);
-                sf::CircleShape marker(5);
-                marker.setFillColor(sf::Color(250, 50, 150));
-                marker.setPosition(minProjectionObj2-2.5,tangibleLevelObjects[i]->global_y-2.5);
-                window.draw(marker);
-
-
-                float maxProjectionObj2 = currentHitbox->maxProjection(0, tangibleLevelObjects[i]->global_x,tangibleLevelObjects[i]->global_y);
-                marker.setFillColor(sf::Color(150, 50, 250));
-                marker.setPosition(maxProjectionObj2-2.5,tangibleLevelObjects[i]->global_y-2.5);
-                window.draw(marker);
-
-                float angled = 3.14159265358/2;
-                float minProjectionObj22 = currentHitbox->minProjection(angled, tangibleLevelObjects[i]->global_x,tangibleLevelObjects[i]->global_y);
-
-                marker.setFillColor(sf::Color(250, 50, 150));
-                marker.setPosition(tangibleLevelObjects[i]->global_x-2.5,minProjectionObj22-2.5);
-                window.draw(marker);
-
-
-                float maxProjectionObj22 = currentHitbox->maxProjection(angled, tangibleLevelObjects[i]->global_x,tangibleLevelObjects[i]->global_y);
-                marker.setFillColor(sf::Color(150, 50, 250));
-                marker.setPosition(tangibleLevelObjects[i]->global_x-2.5,maxProjectionObj22-2.5);
-                window.draw(marker);
-
-                window.draw(convex);
-                ///sf::RectangleShape kacheekHitboxRect(sf::Vector2f(tangibleLevelObjects[i]->hitboxes[h].getRect().width, tangibleLevelObjects[i]->hitboxes[h].getRect().height));
-                ///kacheekHitboxRect.setPosition(tangibleLevelObjects[i]->getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().x+tangibleLevelObjects[i]->hitboxes[h].getRect().left,tangibleLevelObjects[i]->getGlobalPosition().y+tangibleLevelObjects[i]->hitboxes[h].getGlobalPosition().y+tangibleLevelObjects[i]->hitboxes[h].getRect().top);
-                ///window.draw(kacheekHitboxRect);
-            }
-        }
-    }
-
-
-    rhythm.fps = fps;
-    ///ugh this is a BAD solution i need to do it differently
     if(showTimer)
     {
-        auto lastView2 = window.getView();
-
-        window.setView(window.getDefaultView());
         t_timerMenu.setString(Func::ConvertToUtf8String(std::to_string(missionTimer.getElapsedTime().asSeconds())+" Seconds"));
         t_timerMenu.setOrigin(t_timerMenu.getGlobalBounds().width/2,t_timerMenu.getGlobalBounds().height/2);
         t_timerMenu.setPosition(window.getSize().x/2,100);
         window.draw(t_timerMenu);
-        window.setView(lastView2);
     }
-    rhythm.Draw(window);
 
+    /** Draw floor **/
+
+    float resRatioX = window.getSize().x / float(1280);
+    float resRatioY = window.getSize().y / float(720);
+    r_floor.setSize(sf::Vector2f(1280*resRatioX, 110*resRatioY));
+    r_floor.setFillColor(sf::Color::Black);
+    r_floor.setPosition(0,610*resRatioY);
+    window.draw(r_floor);
+
+    DrawUnitThumbs(window);
+    DrawPickedItems(window);
+
+    /** If mission isn't finished, execute and draw Rhythm **/
+
+    if(!missionEnd)
+    {
+        // TODO: at some point some pointer shenanigans is required to make these be a reference to v4core's ones too.
+        rhythm.rhythmController.keyMap = *missionKeyMap;
+
+        rhythm.fps = fps;
+        DoRhythm();
+        rhythm.Draw(window);
+    }
+
+    /** Execute all mission end related things **/
+    DoMissionEnd(window, fps);
+
+    window.setView(lastView);
+
+    /** Remove vector objects that are no longer in use **/
+
+    DoVectorCleanup(units_rm, dmg_rm, tlo_rm);
 }
 void MissionController::FinishLastCutscene()
 {

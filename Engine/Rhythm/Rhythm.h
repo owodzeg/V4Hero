@@ -21,7 +21,7 @@ class Rhythm
 
     /// Low and high range for BAD, GOOD and BEST hits (in milliseconds, 250 is the center point, 250-range = ms gap) ///
     int low_range = 135; ///Anything below that range will be treated as BAD hit
-    int high_range = 225; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
+    int high_range = 210; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
     int beat_timer = 500; ///Amount of milliseconds for each beat to be made
     /// Check if it's possible to replace cycles with one (max 2) values based on a clock, would make things more reliable
     int cycle = 0;
@@ -39,7 +39,8 @@ class Rhythm
     sf::Sound s_fever_start; ///FEVER!
     sf::Sound s_chant; ///For playing chants
 
-
+    std::map<std::string, sf::Texture> t_drums;
+    sf::Texture t_flash;
 
     /// Initialize clocks ///
     sf::Clock rhythmClock; ///Main clock for Rhythm purposes
@@ -108,7 +109,8 @@ class Rhythm
     int GetCombo();
     int GetRealCombo();
     float GetSatisfaction();
-    void checkRhythmController(sf::RenderWindow& window);
+    void checkRhythmController();
+    void doRhythm();
     void Draw(sf::RenderWindow& window);
 
 };

@@ -1,8 +1,8 @@
 #include "Spear.h"
-#include "Projectile.h"
-#include "../../Item/Item.h"
-#include "../../Item/Weapon.h"
-#include "../../Graphics/PSprite.h"
+#include "../Projectile.h"
+#include "../../../Item/Item.h"
+#include "../../../Item/Weapon.h"
+#include "../../../Graphics/PSprite.h"
 
 
 using namespace std;

@@ -41,6 +41,7 @@ OptionsMenu::OptionsMenu()
 }
 void OptionsMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, Menu *curParentMenu)
 {
+    parent->SaveToDebugLog("Initializing Options menu...");
     cout << "Initialize Options menu" << endl;
     Scene::Initialise(thisConfigs,keymap,parent);
     //buttonList.Initialise(&m_font,*thisConfig,keymap,&(v4core->currentController),this);
@@ -174,6 +175,8 @@ void OptionsMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Co
     restarts.push_back(opt);
     opt.createText(m_font, 25, sf::Color::Black, "Revert changes", q, 2);
     restarts.push_back(opt);
+
+    parent->SaveToDebugLog("Options menu initialized.");
 }
 
 void OptionsMenu::SelectMenuOption()
@@ -970,7 +973,6 @@ void OptionsMenu::OnExit(){
 }
 void OptionsMenu::UpdateButtons(){
     /// this should update the text on all the buttons
-    buttonList.UpdateButtons();
 }
 void OptionsMenu::Show(){
     isActive = true;

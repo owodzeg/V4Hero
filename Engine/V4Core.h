@@ -8,7 +8,6 @@
 #include "Mission/Camera.h"
 #include "Config.h"
 #include "StringRepository.h"
-#include "Mission/Units/Patapon.h"
 #include "Mission/MissionController.h"
 #include "Menu/MainMenu.h"
 #include "Graphics/Menu.h"
@@ -34,7 +33,7 @@ class V4Core
 
     bool leftkey=false,rightkey=false,upkey=false,downkey=false;
     public:
-        std::string hero_version = "v1.1";
+        std::string hero_version = "v1.1-pre-release-2";
         sf::RenderWindow window;
 
         NewGameMenu newGameMenu;
@@ -44,6 +43,7 @@ class V4Core
         SaveReader savereader;
         MissionController currentController;
         V4Core();
+        void SaveToDebugLog(string data);
         void ChangeRichPresence(string title, string bg_image, string sm_image);
         std::vector<Menu*> menus;
         bool closeWindow=false;
@@ -52,7 +52,9 @@ class V4Core
         void LoadingThread();
         void LoadingWaitForKeyPress();
         bool continueLoading;
-        bool pressAnyKey;
+        bool pressAnyKey = false;
+        int framerateLimit = 60;
+        vector<float> frameTimes;
 
         struct DiscordState {
             discord::User currentUser;

@@ -167,6 +167,8 @@ void PatapolisMenu::addSmokeParticle(float x, float y, PSprite& refer)
 
 void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, Menu *curParentMenu)
 {
+    parent->SaveToDebugLog("Initializing Patapolis...");
+
     sf::Context context;
     Scene::Initialise(thisConfigs,keymap,parent);
     altar_menu.Initialise(thisConfigs,keymap,parent,this);
@@ -538,11 +540,16 @@ void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4
 
     initialised=true;
 
+    SetTitle(location);
+    camPos = locations[location];
+
     if (doWaitKeyPress)
     {
         v4core->LoadingWaitForKeyPress();
         v4core->ChangeRichPresence("In Patapolis", "logo", "");
     }
+
+    parent->SaveToDebugLog("Initializing Patapolis finished.");
 }
 void PatapolisMenu::EventFired(sf::Event event)
 {
@@ -570,6 +577,7 @@ void PatapolisMenu::EventFired(sf::Event event)
                     left = true;
 
                     SetTitle(location);
+                    thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
                 }
             }
             else if(event.key.code == sf::Keyboard::Right)
@@ -580,6 +588,7 @@ void PatapolisMenu::EventFired(sf::Event event)
                     left = false;
 
                     SetTitle(location);
+                    thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
                 }
             }
             else if (event.key.code == thisConfig->GetInt("keybindDon") || event.key.code == thisConfig->GetInt("secondaryKeybindDon") || event.key.code == thisConfig->GetInt("keybindMenuEnter"))
@@ -592,10 +601,13 @@ void PatapolisMenu::EventFired(sf::Event event)
                     // open the world map
                     break;
                 case 2:
-                    /// armoury/barracks
+                    /// armory/barracks
+                    thisConfig->thisCore->SaveToDebugLog("Entering Barracks...");
                     barracks_menu.Show();
                     barracks_menu.isActive = true;
+                    barracks_menu.obelisk = false;
                     barracks_menu.OpenBarracksMenu();
+                    thisConfig->thisCore->SaveToDebugLog("Barracks entered.");
                     break;
                 case 3:
                     /// festival
@@ -604,16 +616,18 @@ void PatapolisMenu::EventFired(sf::Event event)
                 case 4:
                     /// altar
                     // open mater menu
+                    thisConfig->thisCore->SaveToDebugLog("Entering Altar...");
                     altar_menu.Show();
                     altar_menu.isActive = true;
                     altar_menu.ShowAltar();
+                    thisConfig->thisCore->SaveToDebugLog("Altar entered.");
                     break;
                 case 5:
                     /// obelisk
-                    // idk?
-                    // open inventory menu
+                    thisConfig->thisCore->SaveToDebugLog("Entering Obelisk...");
                     obelisk_menu.Show();
                     obelisk_menu.isActive = true;
+                    thisConfig->thisCore->SaveToDebugLog("Obelisk entered.");
                     break;
                 default:
                     /// nothing
@@ -624,6 +638,7 @@ void PatapolisMenu::EventFired(sf::Event event)
             }
             else if (event.key.code == thisConfig->GetInt("keybindBack"))
             {
+                thisConfig->thisCore->SaveToDebugLog("Left from Patapolis to Title screen.");
                 this->Hide();
                 this->isActive = false;
                 parentMenu->Show();
@@ -673,7 +688,6 @@ void PatapolisMenu::SetTitle(int menuPosition)
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis")));
         break;
     }
-    t_title.setOrigin(t_title.getLocalBounds().width/2,t_title.getLocalBounds().height/2);
 }
 float EaseIn (float time, float startValue, float change, float duration)
 {
@@ -1107,6 +1121,15 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
         wakapon.draw(window);
         world_egg.draw(window);
 
+        if(barracks_menu.missionStarted)
+        {
+            obelisk_menu.displayMissions = false;
+            obelisk_menu.sel_location = 1;
+            obelisk_menu.sel_mission = 0;
+            obelisk_menu.Hide();
+            barracks_menu.missionStarted = false;
+        }
+
         if(barracks_menu.isActive)
         {
             barracks_menu.Update(window,fps);
@@ -1121,12 +1144,31 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
         }
         else
         {
+        t_title.setOrigin(t_title.getLocalBounds().width/2,t_title.getLocalBounds().height/2);
         t_title.setPosition(640,80);
         t_title.draw(window);
         }
 
         window.setView(lastView);
 
+        lastView = window.getView();
+        window.setView(window.getDefaultView());
+
+        if(fade_alpha > 0)
+        {
+            fade_alpha -= float(500) / fps;
+        }
+
+        if(fade_alpha <= 0)
+        {
+            fade_alpha = 0;
+        }
+
+        fade_box.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+        fade_box.setFillColor(sf::Color(0,0,0,fade_alpha));
+        window.draw(fade_box);
+
+        window.setView(lastView);
 
         /**window.setView(window.getDefaultView());
         mm_bigBox.setSize(sf::Vector2f(window.getSize().x,window.getSize().y-200));
@@ -1186,6 +1228,10 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
         {
 
         }*/
+    }
+    else
+    {
+        fade_alpha = 255;
     }
 }
 

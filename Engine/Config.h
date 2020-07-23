@@ -36,7 +36,9 @@ class Config
     "showDebugMsg",
     "showRhythmDebugMsg",
     "showImportantDebugMsg",
-    "lang"};
+    "lang",
+    "masterVolume",
+    "antiAliasing"};
     std::vector<std::string> configDefaults = {"1280",
     "720",
     "1",
@@ -56,14 +58,16 @@ class Config
     std::to_string(sf::Keyboard::W),
     std::to_string(sf::Keyboard::Enter),
     std::to_string(sf::Keyboard::Escape),
-    "Hey Whazzat Rock Theme",
-    "nanjarohills",
+    "Pokkurimakka Rock Theme",
+    "shidavalley",
     "Pokkurimakka Rock Theme",
     "evilmass",
     "0",
     "0",
     "1",
-    "1"};
+    "1",
+    "50",
+    "0"};
     std::map<std::string,std::string> configMap;
     int configDebugID=0;
     bool changedLang = false;

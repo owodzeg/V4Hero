@@ -46,7 +46,18 @@ void PText::setRotation(float a)
 void PText::setColor(sf::Color color)
 {
     c = color;
-    t.setColor(color);
+    t.setFillColor(color);
+}
+
+void PText::setOutlineColor(sf::Color color)
+{
+    c = color;
+    t.setOutlineColor(color);
+}
+
+void PText::setOutlineThickness(int thick)
+{
+    t.setOutlineThickness(thick);
 }
 
 void PText::setPosition(float x, float y)
@@ -173,4 +184,83 @@ void PText::draw(sf::RenderWindow& window)
     t.setPosition(lx*resRatioX, ly*resRatioY);
     t.setRotation(angle*(180/3.14159265358));
     window.draw(t);
+}
+
+void PText::update(sf::RenderWindow& window)
+{
+    switch(qualitySetting)
+    {
+        case 0: ///low
+        {
+            ratioX = window.getSize().x / float(640);
+            ratioY = window.getSize().y / float(360);
+            break;
+        }
+
+        case 1: ///med
+        {
+            ratioX = window.getSize().x / float(1280);
+            ratioY = window.getSize().y / float(720);
+            break;
+        }
+
+        case 2: ///high
+        {
+            ratioX = window.getSize().x / float(1920);
+            ratioY = window.getSize().y / float(1080);
+            break;
+        }
+
+        case 3: ///ultra
+        {
+            ratioX = window.getSize().x / float(3840);
+            ratioY = window.getSize().y / float(2160);
+            break;
+        }
+    }
+
+    switch(resSetting)
+    {
+        case 0: ///low
+        {
+            resRatioX = window.getSize().x / float(640);
+            resRatioY = window.getSize().y / float(360);
+            break;
+        }
+
+        case 1: ///med
+        {
+            resRatioX = window.getSize().x / float(1280);
+            resRatioY = window.getSize().y / float(720);
+            break;
+        }
+
+        case 2: ///high
+        {
+            resRatioX = window.getSize().x / float(1920);
+            resRatioY = window.getSize().y / float(1080);
+            break;
+        }
+
+        case 3: ///ultra
+        {
+            resRatioX = window.getSize().x / float(3840);
+            resRatioY = window.getSize().y / float(2160);
+            break;
+        }
+    }
+
+    t.setFont(f);
+    t.setColor(c);
+    t.setCharacterSize(cS);
+    t.setString(txt);
+    t.setScale(resRatioX*scaleX, resRatioY*scaleY);
+    t.setOrigin(orX,orY);
+    t.setPosition(lx*resRatioX, ly*resRatioY);
+    t.setRotation(angle*(180/3.14159265358));
+}
+
+sf::Text PText::getText()
+{
+    return t;
 }

@@ -6,273 +6,45 @@ using namespace std;
 
 Drum::Drum()
 {
-    t_flash.loadFromFile("resources/graphics/rhythm/drums/flash.png");
-    s_flash.setTexture(t_flash);
+    patterns["pata"]["x"] = {135, 100, 80, 95, 100, 135, 80, 95};
+    patterns["pata"]["y"] = {295, 410, 340, 220, 410, 295, 340, 220};
+    patterns["pata"]["angle"] = {-20, -20, 3, -7, -15, -23, 3, -7};
+    patterns["pata"]["xspeed"] = {-8, -8, -40, 20, -8, -8, -40, 20};
+    patterns["pata"]["yspeed"] = {-200, 140, -20, -20, 140, -200, -20, -20};
+    patterns["pata"]["rotateSpeed"] = {40, -40, 60, -60, -40, 40, 60, -60};
 
+    patterns["pon"]["x"] = {1140, 1165, 1110, 1135, 1165, 1140, 1110, 1135};
+    patterns["pon"]["y"] = {290, 410, 340, 220, 410, 290, 340, 220};
+    patterns["pon"]["angle"] = {0, 20, 10, 10, 20, 0, 10, 10};
+    patterns["pon"]["xspeed"] = {-40, -40, 20, 10, -40, -40, 20, 10};
+    patterns["pon"]["yspeed"] = {-10, -40, 20, 100, -40, -10, 20, 100};
+    patterns["pon"]["rotateSpeed"] = {-60, 30, -30, 50, 30, -60, -30, 50};
+
+    patterns["don"]["x"] = {690, 515, 605, 780, 515, 690, 605, 780};
+    patterns["don"]["y"] = {650, 660, 665, 670, 660, 650, 665, 670};
+    patterns["don"]["angle"] = {0, 10, -10, -10, 10, 0, -10, -10};
+    patterns["don"]["xspeed"] = {-30, -50, -50, 90, -50, -30, -50, -90};
+    patterns["don"]["yspeed"] = {-30, -50, -50, -30, -50, -30, -50, -30};
+    patterns["don"]["rotateSpeed"] = {40, 60, -60, -60, 60, 40, -60, -60};
+
+    patterns["chaka"]["x"] = {635, 460, 550, 715, 460, 635, 550, 715};
+    patterns["chaka"]["y"] = {105, 70, 75, 85, 70, 105, 75, 85};
+    patterns["chaka"]["angle"] = {0, 10, -10, -10, 10, 0, -10, -10};
+    patterns["chaka"]["xspeed"] = {10, -70, -40, 40, -70, 10, -40, 40};
+    patterns["chaka"]["yspeed"] = {20, 30, 40, -60, 30, 20, 40, -60};
+    patterns["chaka"]["rotateSpeed"] = {40, -60, 20, 60, -60, 40, 20, 60};
 }
 
-void Drum::Load(string drum, int perfection, sf::RenderWindow& window)
+void Drum::Load(string drum, int perfection, sf::Texture& drum_texture, sf::Texture& flash_texture)
 {
-    if(drum == "pata")
-    {
-        t_drum.loadFromFile("resources/graphics/rhythm/drums/pata.png");
+    s_flash.setTexture(flash_texture);
+    s_flash.setOrigin(s_flash.getLocalBounds().width/2,s_flash.getLocalBounds().height/2);
 
-        ///Describe the pattern of the drums being placed on the screen
-        pattern_X.push_back(135); ///Drum 2
-        pattern_Y.push_back(295);
-        pattern_Angle.push_back(-20);
-        pattern_Xspeed.push_back(-8);
-        pattern_Yspeed.push_back(-200);
-        pattern_rotateSpeed.push_back(40);
-
-        pattern_X.push_back(100); ///Drum 4
-        pattern_Y.push_back(410);
-        pattern_Angle.push_back(-20);
-        pattern_Xspeed.push_back(-8);
-        pattern_Yspeed.push_back(140);
-        pattern_rotateSpeed.push_back(-40);
-
-
-        pattern_X.push_back(80); ///Drum 3
-        pattern_Y.push_back(340);
-        pattern_Angle.push_back(3);
-        pattern_Xspeed.push_back(-40);
-        pattern_Yspeed.push_back(-20);
-        pattern_rotateSpeed.push_back(60);
-
-        pattern_X.push_back(95); ///Drum 1
-        pattern_Y.push_back(220);
-        pattern_Angle.push_back(-7);
-        pattern_Xspeed.push_back(20);
-        pattern_Yspeed.push_back(-20);
-        pattern_rotateSpeed.push_back(-60);
-
-
-        pattern_X.push_back(100); ///Drum 4
-        pattern_Y.push_back(410);
-        pattern_Angle.push_back(-15);
-        pattern_Xspeed.push_back(-8);
-        pattern_Yspeed.push_back(140);
-        pattern_rotateSpeed.push_back(-40);
-
-        pattern_X.push_back(135); ///Drum 2
-        pattern_Y.push_back(295);
-        pattern_Angle.push_back(-23);
-        pattern_Xspeed.push_back(-8);
-        pattern_Yspeed.push_back(-200);
-        pattern_rotateSpeed.push_back(40);
-
-
-        pattern_X.push_back(80); ///Drum 3
-        pattern_Y.push_back(340);
-        pattern_Angle.push_back(3);
-        pattern_Xspeed.push_back(-40);
-        pattern_Yspeed.push_back(-20);
-        pattern_rotateSpeed.push_back(60);
-
-        pattern_X.push_back(95); ///Drum 1
-        pattern_Y.push_back(220);
-        pattern_Angle.push_back(-7);
-        pattern_Xspeed.push_back(20);
-        pattern_Yspeed.push_back(-20);
-        pattern_rotateSpeed.push_back(-60);
-    }
-
-    if(drum == "pon")
-    {
-        t_drum.loadFromFile("resources/graphics/rhythm/drums/pon.png");
-
-        ///Describe the pattern of the drums being placed on the screen
-        pattern_X.push_back(1140); ///Drum 2
-        pattern_Y.push_back(290);
-        pattern_Angle.push_back(0);
-        pattern_Xspeed.push_back(-40);
-        pattern_Yspeed.push_back(-10);
-        pattern_rotateSpeed.push_back(-60);
-
-        pattern_X.push_back(1165); ///Drum 4
-        pattern_Y.push_back(410);
-        pattern_Angle.push_back(20);
-        pattern_Xspeed.push_back(-40);
-        pattern_Yspeed.push_back(-40);
-        pattern_rotateSpeed.push_back(30);
-
-
-        pattern_X.push_back(1110); ///Drum 3
-        pattern_Y.push_back(340);
-        pattern_Angle.push_back(10);
-        pattern_Xspeed.push_back(20);
-        pattern_Yspeed.push_back(20);
-        pattern_rotateSpeed.push_back(-30);
-
-        pattern_X.push_back(1135); ///Drum 1
-        pattern_Y.push_back(220);
-        pattern_Angle.push_back(10);
-        pattern_Xspeed.push_back(10);
-        pattern_Yspeed.push_back(100);
-        pattern_rotateSpeed.push_back(50);
-
-
-        pattern_X.push_back(1165); ///Drum 4
-        pattern_Y.push_back(410);
-        pattern_Angle.push_back(20);
-        pattern_Xspeed.push_back(-40);
-        pattern_Yspeed.push_back(-40);
-        pattern_rotateSpeed.push_back(30);
-
-        pattern_X.push_back(1140); ///Drum 2
-        pattern_Y.push_back(290);
-        pattern_Angle.push_back(0);
-        pattern_Xspeed.push_back(-40);
-        pattern_Yspeed.push_back(-10);
-        pattern_rotateSpeed.push_back(-60);
-
-
-        pattern_X.push_back(1110); ///Drum 3
-        pattern_Y.push_back(340);
-        pattern_Angle.push_back(10);
-        pattern_Xspeed.push_back(20);
-        pattern_Yspeed.push_back(20);
-        pattern_rotateSpeed.push_back(-30);
-
-        pattern_X.push_back(1135); ///Drum 1
-        pattern_Y.push_back(220);
-        pattern_Angle.push_back(10);
-        pattern_Xspeed.push_back(10);
-        pattern_Yspeed.push_back(100);
-        pattern_rotateSpeed.push_back(50);
-    }
+    cur_drum = drum;
 
     if(drum == "don")
     {
-        t_drum.loadFromFile("resources/graphics/rhythm/drums/don.png");
-
-        ///Describe the pattern of the drums being placed on the screen
-        pattern_X.push_back(690); ///Drum 3
-        pattern_Y.push_back(650);
-        pattern_Angle.push_back(0);
-        pattern_Xspeed.push_back(-30);
-        pattern_Yspeed.push_back(-30);
-        pattern_rotateSpeed.push_back(40);
-
-        pattern_X.push_back(515); ///Drum 1
-        pattern_Y.push_back(660);
-        pattern_Angle.push_back(10);
-        pattern_Xspeed.push_back(-50);
-        pattern_Yspeed.push_back(-50);
-        pattern_rotateSpeed.push_back(60);
-
-
-        pattern_X.push_back(605); ///Drum 2
-        pattern_Y.push_back(665);
-        pattern_Angle.push_back(-10);
-        pattern_Xspeed.push_back(-50);
-        pattern_Yspeed.push_back(-50);
-        pattern_rotateSpeed.push_back(-60);
-
-        pattern_X.push_back(780); ///Drum 4
-        pattern_Y.push_back(670);
-        pattern_Angle.push_back(-10);
-        pattern_Xspeed.push_back(90);
-        pattern_Yspeed.push_back(-30);
-        pattern_rotateSpeed.push_back(-60);
-
-
-        pattern_X.push_back(515); ///Drum 1
-        pattern_Y.push_back(660);
-        pattern_Angle.push_back(10);
-        pattern_Xspeed.push_back(-50);
-        pattern_Yspeed.push_back(-50);
-        pattern_rotateSpeed.push_back(60);
-
-        pattern_X.push_back(690); ///Drum 3
-        pattern_Y.push_back(650);
-        pattern_Angle.push_back(0);
-        pattern_Xspeed.push_back(-30);
-        pattern_Yspeed.push_back(-30);
-        pattern_rotateSpeed.push_back(40);
-
-
-        pattern_X.push_back(605); ///Drum 2
-        pattern_Y.push_back(665);
-        pattern_Angle.push_back(-10);
-        pattern_Xspeed.push_back(-50);
-        pattern_Yspeed.push_back(-50);
-        pattern_rotateSpeed.push_back(-60);
-
-        pattern_X.push_back(780); ///Drum 4
-        pattern_Y.push_back(670);
-        pattern_Angle.push_back(-10);
-        pattern_Xspeed.push_back(90);
-        pattern_Yspeed.push_back(-30);
-        pattern_rotateSpeed.push_back(-60);
-
         isDon = true;
-    }
-
-    if(drum == "chaka")
-    {
-        t_drum.loadFromFile("resources/graphics/rhythm/drums/chaka.png");
-
-        ///Describe the pattern of the drums being placed on the screen
-        pattern_X.push_back(635); ///Drum 3
-        pattern_Y.push_back(105);
-        pattern_Angle.push_back(0);
-        pattern_Xspeed.push_back(10);
-        pattern_Yspeed.push_back(20);
-        pattern_rotateSpeed.push_back(40);
-
-        pattern_X.push_back(460); ///Drum 1
-        pattern_Y.push_back(70);
-        pattern_Angle.push_back(10);
-        pattern_Xspeed.push_back(-70);
-        pattern_Yspeed.push_back(30);
-        pattern_rotateSpeed.push_back(-60);
-
-
-        pattern_X.push_back(550); ///Drum 2
-        pattern_Y.push_back(75);
-        pattern_Angle.push_back(-10);
-        pattern_Xspeed.push_back(-40);
-        pattern_Yspeed.push_back(40);
-        pattern_rotateSpeed.push_back(20);
-
-        pattern_X.push_back(715); ///Drum 4
-        pattern_Y.push_back(85);
-        pattern_Angle.push_back(-10);
-        pattern_Xspeed.push_back(40);
-        pattern_Yspeed.push_back(-60);
-        pattern_rotateSpeed.push_back(60);
-
-
-        pattern_X.push_back(460); ///Drum 1
-        pattern_Y.push_back(70);
-        pattern_Angle.push_back(10);
-        pattern_Xspeed.push_back(-70);
-        pattern_Yspeed.push_back(30);
-        pattern_rotateSpeed.push_back(-60);
-
-        pattern_X.push_back(635); ///Drum 3
-        pattern_Y.push_back(105);
-        pattern_Angle.push_back(0);
-        pattern_Xspeed.push_back(10);
-        pattern_Yspeed.push_back(20);
-        pattern_rotateSpeed.push_back(40);
-
-
-        pattern_X.push_back(550); ///Drum 2
-        pattern_Y.push_back(75);
-        pattern_Angle.push_back(-10);
-        pattern_Xspeed.push_back(-40);
-        pattern_Yspeed.push_back(40);
-        pattern_rotateSpeed.push_back(20);
-
-        pattern_X.push_back(715); ///Drum 4
-        pattern_Y.push_back(85);
-        pattern_Angle.push_back(-10);
-        pattern_Xspeed.push_back(40);
-        pattern_Yspeed.push_back(-60);
-        pattern_rotateSpeed.push_back(60);
     }
 
     if(perfection == 0) ///BEST beat
@@ -286,7 +58,8 @@ void Drum::Load(string drum, int perfection, sf::RenderWindow& window)
         isBest = true;
     }
 
-    t_drum.setSmooth(true);
+    s_drum.setTexture(drum_texture);
+    s_drum.setOrigin(s_drum.getLocalBounds().width/2,s_drum.getLocalBounds().height/2);
 
     int particle_amount = 14;
 
@@ -359,9 +132,9 @@ void Drum::Draw(sf::RenderWindow& window)
         {
             x_scale += 1 / fps;
             y_scale += 1 / fps;
-            rotation += pattern_rotateSpeed[pattern] / fps;
-            x += pattern_Xspeed[pattern] / fps;
-            y += pattern_Yspeed[pattern] / fps;
+            rotation += patterns[cur_drum]["rotateSpeed"][pattern] / fps;
+            x += patterns[cur_drum]["xspeed"][pattern] / fps;
+            y += patterns[cur_drum]["yspeed"][pattern] / fps;
 
             alpha -= float(510) / fps;
 
@@ -387,9 +160,9 @@ void Drum::Draw(sf::RenderWindow& window)
             {
                 x_scale += 1 / fps;
                 y_scale += 1 / fps;
-                rotation += pattern_rotateSpeed[pattern] / fps;
-                x += pattern_Xspeed[pattern] / fps;
-                y += pattern_Yspeed[pattern] / fps;
+                rotation += patterns[cur_drum]["rotateSpeed"][pattern] / fps;
+                x += patterns[cur_drum]["xspeed"][pattern] / fps;
+                y += patterns[cur_drum]["yspeed"][pattern] / fps;
             }
 
             alpha -= float(510) / fps;
@@ -426,14 +199,10 @@ void Drum::Draw(sf::RenderWindow& window)
         }
     }
 
-    s_drum.setTexture(t_drum);
     s_drum.setScale(x_scale,y_scale);
     s_drum.setColor(sf::Color(255,255,255,alpha));
-    s_drum.setRotation((rotation+pattern_Angle[pattern]) * 3.1415928 / 180.f);
-
-    s_drum.setOrigin(s_drum.getLocalBounds().width/2,s_drum.getLocalBounds().height/2);
-
-    s_drum.setPosition(x+pattern_X[pattern],y+pattern_Y[pattern]);
+    s_drum.setRotation((rotation+patterns[cur_drum]["angle"][pattern]) * 3.1415928 / 180.f);
+    s_drum.setPosition(x+patterns[cur_drum]["x"][pattern],y+patterns[cur_drum]["y"][pattern]);
 
     if(drumClock.getElapsedTime().asMilliseconds() < 200)
     {
@@ -449,34 +218,42 @@ void Drum::Draw(sf::RenderWindow& window)
     if(flashalpha <= 0)
     flashalpha = 0;
 
-    s_flash.setTexture(t_flash);
     s_flash.setColor(sf::Color(255,255,255,flashalpha));
     s_flash.setScale(x_flashscale,y_flashscale);
-    s_flash.setOrigin(s_flash.getLocalBounds().width/2,s_flash.getLocalBounds().height/2);
-    s_flash.setPosition(x+pattern_X[pattern],y+pattern_Y[pattern]);
-
-    shockwaveSize += float(1300) / fps;
-    shockwaveAlpha -= float(100) / fps;
+    s_flash.setPosition(x+patterns[cur_drum]["x"][pattern],y+patterns[cur_drum]["y"][pattern]);
 
     if(shockwaveAlpha <= 0)
-    shockwaveAlpha = 0;
-
-
-    shockwave2Size += float(1300) / fps;
-    shockwave2Alpha -= float(200) / fps;
+    {
+        shockwaveAlpha = 0;
+    }
+    else
+    {
+        shockwaveSize += float(1300) / fps;
+        shockwaveAlpha -= float(100) / fps;
+    }
 
     if(shockwave2Alpha <= 0)
-    shockwave2Alpha = 0;
+    {
+        shockwave2Alpha = 0;
+    }
+    else
+    {
+        shockwave2Size += float(1300) / fps;
+        shockwave2Alpha -= float(200) / fps;
+    }
 
-    c_shockwave.setRadius(shockwaveSize);
-    c_shockwave.setFillColor(sf::Color(255,255,255,shockwaveAlpha));
-    c_shockwave.setOrigin(c_shockwave.getLocalBounds().width/2,c_shockwave.getLocalBounds().height/2);
-    c_shockwave.setPosition(x+pattern_X[pattern]*ratio_X,y+pattern_Y[pattern]*ratio_Y);
+    if((shockwaveAlpha > 0) && (shockwave2Alpha > 0))
+    {
+        c_shockwave.setRadius(shockwaveSize);
+        c_shockwave.setFillColor(sf::Color(255,255,255,shockwaveAlpha));
+        c_shockwave.setOrigin(c_shockwave.getLocalBounds().width/2,c_shockwave.getLocalBounds().height/2);
+        c_shockwave.setPosition(x+patterns[cur_drum]["x"][pattern]*ratio_X,y+patterns[cur_drum]["y"][pattern]*ratio_Y);
 
-    c_shockwave2.setRadius(shockwave2Size);
-    c_shockwave2.setFillColor(sf::Color(255,255,255,shockwave2Alpha));
-    c_shockwave2.setOrigin(c_shockwave2.getLocalBounds().width/2,c_shockwave2.getLocalBounds().height/2);
-    c_shockwave2.setPosition(x+pattern_X[pattern]*ratio_X,y+pattern_Y[pattern]*ratio_Y);
+        c_shockwave2.setRadius(shockwave2Size);
+        c_shockwave2.setFillColor(sf::Color(255,255,255,shockwave2Alpha));
+        c_shockwave2.setOrigin(c_shockwave2.getLocalBounds().width/2,c_shockwave2.getLocalBounds().height/2);
+        c_shockwave2.setPosition(x+patterns[cur_drum]["x"][pattern]*ratio_X,y+patterns[cur_drum]["y"][pattern]*ratio_Y);
+    }
 
     s_drum.draw(window);
     s_flash.draw(window);
@@ -488,8 +265,8 @@ void Drum::Draw(sf::RenderWindow& window)
         ///Initialize first position
         if(particle_didStart[i] == false)
         {
-            particle_x[i] = x+pattern_X[pattern]*ratio_X;
-            particle_y[i] = y+pattern_Y[pattern]*ratio_Y;
+            particle_x[i] = x+patterns[cur_drum]["x"][pattern]*ratio_X;
+            particle_y[i] = y+patterns[cur_drum]["y"][pattern]*ratio_Y;
             particle_didStart[i] = true;
         }
 

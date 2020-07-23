@@ -32,6 +32,8 @@ class PText
     void setScale(float x, float y);
     void setRotation(float a);
     void setColor(sf::Color color);
+    void setOutlineColor(sf::Color color);
+    void setOutlineThickness(int thick);
     void setPosition(float x, float y);
     void setString(std::string text_string);
     sf::Vector2f getPosition();
@@ -40,6 +42,8 @@ class PText
     sf::FloatRect getGlobalBoundsScaled();
     void setScale(float s);
     void draw(sf::RenderWindow& window);
+    void update(sf::RenderWindow& window);
+    sf::Text getText();
 };
 
 #endif // PTEXT_H

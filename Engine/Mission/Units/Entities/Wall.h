@@ -2,12 +2,12 @@
 #define WALL_H
 
 #include <SFML/Graphics.hpp>
-#include "../../Config.h"
-#include "CollidableObject.h"
+#include "../../../Config.h"
+#include "../Entity.h"
 
 using namespace std;
 
-class Wall : public CollidableObject
+class Wall : public Entity
 {
     public:
 

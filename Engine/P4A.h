@@ -30,6 +30,8 @@ class P4A
     std::vector<int> in_fsizes;
     std::vector<int> in_foffsets;
 
+    std::vector<char> bin_data;
+
     P4A();
 
     ///Packing functions
@@ -43,6 +45,7 @@ class P4A
     ///Unpacking functions
     void ReadDictionary(std::string filename);
     std::string ReadToMemory(std::string name);
+    std::vector<char> ReadToMemoryChar(std::string name);
     void Extract(std::string name);
     void ImageToData();
     void DecryptImage();

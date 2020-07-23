@@ -19,7 +19,7 @@ class PSprite
     float baseX=-999, baseY=-999;
     float lx=0,ly=0;
     float angle = 0;
-    bool DoAutoScale;
+    bool exported = false;
     PSprite();
     void loadFromFile(std::string file, int q);
     void loadFromFile(std::string file, int q, int r);
@@ -29,7 +29,9 @@ class PSprite
     void setScale(float x, float y);
     void setRotation(float a);
     void setColor(sf::Color color);
+    sf::Color getColor();
     void setTexture(sf::Texture& texture);
+    void applyTexture();
     void setSprite(sf::Sprite& sprite);
     void setPosition(float x, float y);
     sf::Vector2f getPosition();
@@ -39,6 +41,7 @@ class PSprite
     void setScale(float ss);
     void setSmooth(bool smooth);
     void draw(sf::RenderWindow& window);
+    void update(sf::RenderWindow& window);
 };
 
 #endif // PSPRITE_H
