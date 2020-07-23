@@ -44,15 +44,6 @@ class AnimatedObject
 
     sf::Color color = sf::Color(255,255,255,255);
 
-    enum EntityType
-    {
-        NONE = 0,
-        HOSTILE = 1,
-        PASSIVE = 2
-    };
-
-    int type = NONE;
-
     float framerate = 1;
     sf::Rect<float> hitBox;
 

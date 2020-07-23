@@ -7,7 +7,7 @@
 #include "../../../V4Core.h"
 Kacheek::Kacheek()
 {
-    type = HOSTILE;
+
 }
 void Kacheek::LoadConfig(Config *thisConfigs)
 {

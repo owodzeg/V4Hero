@@ -10,6 +10,16 @@ class Entity : public CollidableObject
     public:
     int entityID = -1;
 
+    enum EntityTypes
+    {
+        DUMMY = -1,
+        PASSIVE = 0,
+        HOSTILE = 1,
+        NEUTRAL = 2
+    };
+
+    int entityType = DUMMY;
+
     struct Loot
     {
         int item_id = 0;

@@ -20,7 +20,9 @@ void Patapon::startAttack()
     if(action != ATTACK)
     {
         action = ATTACK;
-        attackmode = -1;
+        attackmode = -2;
+        walkClock.restart();
+        dest_set = false;
     }
 }
 
@@ -28,105 +30,145 @@ bool Patapon::doAttack()
 {
     if(action == ATTACK)
     {
-        if(attackmode == -1) ///start the attack
+        if(enemy_in_range)
         {
-            attack_clock.restart();
-            attackmode = 0;
-
-            if(isFever)
-            vspeed = -683;
-        }
-
-        if(attackmode == 0) ///begin the attack
-        {
-            canThrow = true;
-
-            if(isFever)
+            if(attackmode == -2) ///prepare the attack (move around)
             {
-                if(AnimatedObject::getAnimationSegment() != "attack_fever_jump")
-                AnimatedObject::setAnimationSegment("attack_fever_jump", true);
-
-                if(attack_clock.getElapsedTime().asMilliseconds() > 500)
+                ///Calculate the local x
+                if(!dest_set)
                 {
-                    AnimatedObject::setAnimationSegment("attack_fever_throw", true);
-                    attack_clock.restart();
-                    attackmode = 1;
-                }
-            }
-            else
-            {
-                if(AnimatedObject::getAnimationSegment() != "attack_prefever_focused_start")
-                AnimatedObject::setAnimationSegment("attack_prefever_focused_start", true);
-
-                if(attack_clock.getElapsedTime().asMilliseconds() > 400)
-                {
-                    AnimatedObject::setAnimationSegment("attack_prefever_focused_throw", true);
-                    attack_clock.restart();
-                    attackmode = 1;
-                }
-            }
-        }
-
-        if(attackmode == 1) ///attack continously
-        {
-            if(isFever)
-            {
-                float anim_speed_multiplier = float(1) / attack_speed;
-                framerate = float(1) * anim_speed_multiplier;
-
-                if(getAnimationPos() > 0.285)
-                {
-                    if(canThrow)
+                    if(entity_distance < 150) ///unit is too close, go back
                     {
-                        threw = true;
-                        canThrow = false;
+                        dest_local_x = -(rand() % (250)); ///take a random position farther from the enemy
                     }
-                }
-
-                if(attack_clock.getElapsedTime().asSeconds() > attack_speed)
-                {
-                    if(canThrow)
+                    else if((entity_distance >= 150) && (entity_distance <= 250)) ///perfect spot, make some tiny adjustments and start attacking
                     {
-                        if(threw == false)
-                        threw = true;
+                        dest_local_x += rand() % 50 - 25;
+                    }
+                    else if(entity_distance > 250) ///unit is too far, get closer
+                    {
+                        dest_local_x = rand() % (int(entity_distance)-250); ///take a random position farther from the enemy
                     }
 
-                    AnimatedObject::setAnimationSegment("attack_fever_throw", true);
-                    attack_clock.restart();
+                    dest_set = true;
 
-                    canThrow = true;
+                    cout << "Setting dest_local_x to " << dest_local_x << " (prev: " << prev_dest_local_x << ") (entity_distance: " << entity_distance << ")" << endl;
                 }
 
-                if(local_y >= 0)
+                //dest_local_x = entity_distance;
+
+                if((local_x >= dest_local_x-5) && (local_x >= dest_local_x+5)) ///When you are set at your position, start the attack
+                attackmode = -1;
+
+                if(walkClock.getElapsedTime().asMilliseconds() >= 500) ///If walking takes you too long, stop and start the attack
                 {
-                    AnimatedObject::setAnimationSegment("idle_armed_focused", true);
-                    attackmode = 2;
+                    attackmode = -1;
+                    dest_local_x = local_x;
                 }
             }
-            else
-            {
-                framerate = 1;
 
-                if(getAnimationPos() > 0.066)
+            if(attackmode == -1) ///start the attack
+            {
+                prev_dest_local_x = dest_local_x;
+
+                attack_clock.restart();
+                attackmode = 0;
+
+                if(isFever)
+                vspeed = -683;
+            }
+
+            if(attackmode == 0) ///begin the attack
+            {
+                canThrow = true;
+
+                if(isFever)
                 {
-                    if(canThrow)
+                    if(AnimatedObject::getAnimationSegment() != "attack_fever_jump")
+                    AnimatedObject::setAnimationSegment("attack_fever_jump", true);
+
+                    if(attack_clock.getElapsedTime().asMilliseconds() > 500)
                     {
-                        threw = true;
-                        canThrow = false;
+                        AnimatedObject::setAnimationSegment("attack_fever_throw", true);
+                        attack_clock.restart();
+                        attackmode = 1;
                     }
                 }
-
-                if(AnimatedObject::getAnimationSegment() == "attack_prefever_focused_end")
+                else
                 {
-                    attackmode = 2;
+                    if(AnimatedObject::getAnimationSegment() != "attack_prefever_focused_start")
+                    AnimatedObject::setAnimationSegment("attack_prefever_focused_start", true);
+
+                    if(attack_clock.getElapsedTime().asMilliseconds() > 400)
+                    {
+                        AnimatedObject::setAnimationSegment("attack_prefever_focused_throw", true);
+                        attack_clock.restart();
+                        attackmode = 1;
+                    }
                 }
             }
-        }
 
-        if(attackmode == 2)
-        {
-            canThrow = true;
-            action = IDLE;
+            if(attackmode == 1) ///attack continously
+            {
+                if(isFever)
+                {
+                    float anim_speed_multiplier = float(1) / attack_speed;
+                    framerate = float(1) * anim_speed_multiplier;
+
+                    if(getAnimationPos() > 0.285)
+                    {
+                        if(canThrow)
+                        {
+                            threw = true;
+                            canThrow = false;
+                        }
+                    }
+
+                    if(attack_clock.getElapsedTime().asSeconds() > attack_speed)
+                    {
+                        if(canThrow)
+                        {
+                            if(threw == false)
+                            threw = true;
+                        }
+
+                        AnimatedObject::setAnimationSegment("attack_fever_throw", true);
+                        attack_clock.restart();
+
+                        canThrow = true;
+                    }
+
+                    if(local_y >= 0)
+                    {
+                        AnimatedObject::setAnimationSegment("idle_armed_focused", true);
+                        attackmode = 2;
+                    }
+                }
+                else
+                {
+                    framerate = 1;
+
+                    if(getAnimationPos() > 0.066)
+                    {
+                        if(canThrow)
+                        {
+                            threw = true;
+                            canThrow = false;
+                        }
+                    }
+
+                    if(AnimatedObject::getAnimationSegment() == "attack_prefever_focused_end")
+                    {
+                        attackmode = 2;
+                    }
+                }
+            }
+
+            if(attackmode == 2)
+            {
+                canThrow = true;
+                action = IDLE;
+            }
         }
     }
 
@@ -148,6 +190,8 @@ void Patapon::doRhythm(std::string current_song, std::string current_drum, int c
         if(current_song == "patapata")
         {
             action = WALK;
+
+            dest_local_x = 0;
 
             if(!focus)
             setAnimationSegment("walk");

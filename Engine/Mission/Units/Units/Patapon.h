@@ -17,7 +17,7 @@ class Patapon : public PlayableUnit
     bool stopthrew = false;
     bool canThrow = true;
 
-    int attackmode = -1;
+    int attackmode = -2;
 
     float hspeed = 0;
     float vspeed = 0;
@@ -27,6 +27,7 @@ class Patapon : public PlayableUnit
 
     bool focus = false;
     bool getback = false;
+    bool dest_set = false;
 
     bool isFever = false;
 

@@ -62,23 +62,23 @@ void FeverWorm::doRhythm(std::string current_song, std::string current_drum, int
 
         if(realcombo < 2)
         {
-            global_x = -400;
-            next_x = -400;
+            global_x = -310;
+            next_x = -310;
             speed = 120;
         }
 
         if(realcombo == 2)
         {
-            next_x = -70;
+            next_x = 20;
             speed = 400;
         }
 
         if((realcombo > 2) && (combo < 11))
         {
             if(advanced_prefever)
-            next_x = -50 + (satisfaction / 5.5) + ((realcombo - 2) * 8);
+            next_x = 40 + (satisfaction / 5.5) + ((realcombo - 2) * 8);
             else
-            next_x = -70 + ((realcombo - 2) * 8);
+            next_x = 20 + ((realcombo - 2) * 8);
 
             speed = 40;
         }
@@ -123,8 +123,8 @@ void FeverWorm::Draw(sf::RenderWindow& window)
     {
         if(worm_fever)
         {
-            global_x = -350;
-            next_x = 30;
+            global_x = -260;
+            next_x = 120;
             speed = 450;
 
             worm_fever = false;
@@ -147,7 +147,7 @@ void FeverWorm::Draw(sf::RenderWindow& window)
     {
         number.setTexture(tex_number[f_combo]);
         number.setOrigin(number.getGlobalBounds().width/2,number.getGlobalBounds().height/2);
-        number.setPosition(80,AnimatedObject::getGlobalPosition().y+70);
+        number.setPosition(80,AnimatedObject::getGlobalPosition().y-20);
 
         let_c.setPosition(number.getPosition().x+50,number.getPosition().y+30);
         let_o2.setPosition(let_c.getPosition().x+26,let_c.getPosition().y);

@@ -150,6 +150,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             unique_ptr<EndFlag> entity = make_unique<EndFlag>();
             entity.get()->LoadConfig(missionConfig);
             entity.get()->setEntityID(entityID);
+            entity.get()->entityType = Entity::EntityTypes::PASSIVE;
 
             if(randX > 0)
             entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
@@ -181,6 +182,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             unique_ptr<FeverWorm> entity = make_unique<FeverWorm>();
             entity.get()->LoadConfig(missionConfig);
             entity.get()->setEntityID(entityID);
+            entity.get()->entityType = Entity::EntityTypes::PASSIVE;
 
             if(randX > 0)
             entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
@@ -212,6 +214,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             unique_ptr<Kacheek> entity = make_unique<Kacheek>();
             entity.get()->LoadConfig(missionConfig);
             entity.get()->setEntityID(entityID);
+            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
 
             if(randX > 0)
             entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
@@ -245,6 +248,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             unique_ptr<Grass1> entity = make_unique<Grass1>();
             entity.get()->LoadConfig(missionConfig);
             entity.get()->setEntityID(entityID);
+            entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
 
             if(randX > 0)
             entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
@@ -276,6 +280,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             unique_ptr<Grass2> entity = make_unique<Grass2>();
             entity.get()->LoadConfig(missionConfig);
             entity.get()->setEntityID(entityID);
+            entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
 
             if(randX > 0)
             entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
@@ -307,6 +312,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             unique_ptr<DroppedItem> entity = make_unique<DroppedItem>();
             entity.get()->LoadConfig(missionConfig);
             entity.get()->setEntityID(entityID);
+            entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
             entity.get()->manual_mode = true;
 
             ///This unique entity needs to be loaded differently, read additional data for spritesheet info to be passed from the item registry.
@@ -1140,7 +1146,7 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
             float diff = (Smoothstep(walkClock.getElapsedTime().asSeconds()/2)*pataDistance)-(Smoothstep(prevTime/2)*pataDistance);
             prevTime = walkClock.getElapsedTime().asSeconds();
 
-            float proposedXPos = farthest_unit->global_x + diff;
+            float proposedXPos = farthest_unit->getGlobalPosition().x + diff;
 
             camera.pataSpeed = (2 * 60 * booster);
 
@@ -1253,6 +1259,11 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
     for(int i=0; i<units.size(); i++)
     {
         PlayableUnit* unit = units[i].get();
+
+        if(unit->local_x < unit->dest_local_x)
+        unit->local_x += 200.0 / fps;
+        if(unit->local_x > unit->dest_local_x)
+        unit->local_x -= 200.0 / fps;
 
         switch(unit->getUnitID())
         {
@@ -1999,10 +2010,10 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
     vector<int> units_rm;
 
     int farthest_id = -1;
-    float temp_pos = -9999;
+    int closest_entity_id = -1;
+    int closest_entity_pos = 9999;
 
     bool hatapon = false;
-    int u = 0;
 
     auto max_distance = std::max_element( units.begin(), units.end(),
                              []( unique_ptr<PlayableUnit> &a, unique_ptr<PlayableUnit> &b )
@@ -2014,35 +2025,102 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
 
     /** Units draw loop and entity range detection **/
 
-    if(farthest_id != -1)
+    for(int i=0; i<tangibleLevelObjects.size(); i++)
     {
-        PlayableUnit* farthest_unit = units[farthest_id].get();
-
-        /** Detect how far the entity is **/
-        /*vector<float> gdistances;
-        vector<float> ldistances;
-
-        for(int e=0; e<tangibleLevelObjects.size(); e++)
+        if(tangibleLevelObjects[i].get()->entityType == Entity::EntityTypes::HOSTILE)
         {
-            if(tangibleLevelObjects[e]->type == tangibleLevelObjects[e]->HOSTILE)
+            if(tangibleLevelObjects[i].get()->getGlobalPosition().x < closest_entity_pos)
             {
-                float global_distance = tangibleLevelObjects[e]->getGlobalPosition().x - (farthest_unit->getGlobalPosition().x - farthest_unit->local_x);
-                float local_distance = tangibleLevelObjects[e]->getGlobalPosition().x - farthest_unit->getGlobalPosition().x;
-                gdistances.push_back(global_distance);
-                ldistances.push_back(local_distance);
+                closest_entity_pos = tangibleLevelObjects[i].get()->getGlobalPosition().x;
+                closest_entity_id = i;
             }
         }
+    }
 
-        if(gdistances.size() > 0)
+    if(farthest_id != -1)
+    {
+        bool inRange = true;
+
+        if(closest_entity_id == -1)
         {
-            unit->gclosest = *std::min_element(std::begin(gdistances), std::end(gdistances));
-            unit->lclosest = *std::min_element(std::begin(ldistances), std::end(ldistances));
-        }*/
+            inRange = false;
+        }
+        else
+        {
+            Entity* closest_entity = tangibleLevelObjects[closest_entity_id].get();
+
+            cout << "Check if entity is in range" << endl;
+
+            for(int i=0; i<units.size(); i++)
+            {
+                if(units[i].get()->getUnitID() != 0)
+                {
+                    if(closest_entity->entityType == Entity::EntityTypes::HOSTILE)
+                    {
+                        cout << "Range of unit " << i << ": " << abs((units[i].get()->getGlobalPosition().x) - closest_entity->getGlobalPosition().x) - 110 << endl;
+                        cout << "Dest local x: " << units[i].get()->dest_local_x << endl;
+
+                        if(abs((units[i].get()->getGlobalPosition().x) - closest_entity->getGlobalPosition().x) - 110 > 800)
+                        inRange = false;
+                    }
+                }
+            }
+
+            cout << "In range: " << inRange << endl;
+        }
 
         /** Draw the units **/
         for(int i=0; i<units.size(); i++)
         {
             PlayableUnit* unit = units[i].get();
+
+            if(closest_entity_id != -1)
+            {
+                Entity* closest_entity = tangibleLevelObjects[closest_entity_id].get();
+
+                unit->entity_distance = abs((unit->getGlobalPosition().x) - closest_entity->getGlobalPosition().x) - 110;
+
+                if((closest_entity->entityType == Entity::EntityTypes::HOSTILE) && (inRange))
+                {
+                    unit->enemy_in_range = true;
+                    //cout << "Unit " << i << " distance to closest enemy is " << unit->entity_distance << " pixels" << endl;
+                }
+                else
+                {
+                    unit->enemy_in_range = false;
+                    unit->dest_local_x = 0;
+                }
+            }
+            else
+            {
+                unit->enemy_in_range = false;
+            }
+
+            if(unit->getUnitID() != 0)
+            {
+                float unit_distance = 9999;
+
+                for(int a=0; a<units.size(); a++)
+                {
+                    if(a != i)
+                    {
+                        if(units[a].get()->getUnitID() == 1)
+                        {
+                            float gx = units[a].get()->getGlobalPosition().x;
+                            float my_gx = unit->getGlobalPosition().x;
+
+                            float dis = abs(gx-my_gx);
+
+                            if(dis < unit_distance)
+                            unit_distance = dis;
+                        }
+                    }
+                }
+
+                unit->unit_distance = unit_distance;
+
+                //cout << "Unit " << i << " distance to another unit is " << unit_distance << " pixels" << endl;
+            }
 
             /** Verify if Hatapon exists **/
             if(unit->getUnitID() == 0)
