@@ -21,6 +21,8 @@ class SaveReader
     int yariponsUnlocked;
     int heroUnlocked;
 
+    std::vector<int> missionsUnlocked = {1};
+    int locationsUnlocked=1;
 
     SaveReader();
     void LoadSave(Config& tconfig);

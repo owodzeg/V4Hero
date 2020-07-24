@@ -147,6 +147,10 @@ void ObeliskMenu::Reload()
     worldmap_fields.clear();
     worldmap_icons.clear();
 
+    ///Access the save data
+    field_unlocked = v4core->savereader.locationsUnlocked;
+    missions_unlocked = v4core->savereader.missionsUnlocked;
+
     PSprite fld;
     fld.loadFromFile("resources/graphics/ui/worldmap/location_field.png", quality, 1);
 

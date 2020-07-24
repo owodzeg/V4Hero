@@ -93,7 +93,14 @@ void SaveReader::LoadSave(Config& tconfig)
 
                     ponreg.pons.push_back(newPon);
                 }
-
+                else if(key[0] == "MISSION")
+                {
+                    missionsUnlocked.push_back(stoi(key[1]));
+                }
+                else if(key[0] == "LOCATIONS")
+                {
+                    locationsUnlocked = stoi(key[1]);
+                }
             }
         }
     }
@@ -129,6 +136,14 @@ void SaveReader::Save()
 
             conf2 << "PON:" << current_pon.pon_id<<'|' <<current_pon.pon_class<<'|' <<current_pon.pon_squad_position<<'|' <<current_pon.pon_exp<<'|' <<current_pon.pon_level<<'|' <<current_pon.weapon_invItem_id<<'|' <<current_pon.armour_invItem_id<<'|' <<current_pon.weapon2_invItem_id<<'|' <<current_pon.mask_invItem_id<<'|' <<'\n';
         }
+
+        conf2 << "# missions unlock" <<'\n';
+        conf2 << "# MISSION:id" <<'\n';
+        conf2 << "# LOCATIONS:number of locations unlocked" <<'\n';
+        for (int i=0; i<missionsUnlocked.size(); i++){
+            conf2 << "MISSION:" << to_string(missionsUnlocked[i]) <<'\n';
+        }
+        conf2 << "LOCATIONS:" << to_string(locationsUnlocked) <<'\n';
 
             /*for(int i=0; i<configMap.size(); i++)
         {
