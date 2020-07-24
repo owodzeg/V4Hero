@@ -81,18 +81,6 @@ void ObeliskMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Co
         }
     }
 
-    ///worldmap contents
-    for(int i=1; i<=3; i++)
-    {
-        PSprite bg;
-        bg.loadFromFile("resources/graphics/ui/worldmap/locationbg_"+to_string(i)+".png", quality, 1);
-        PSprite loc;
-        loc.loadFromFile("resources/graphics/ui/worldmap/location_"+to_string(i)+".png", quality, 1);
-
-        location_bgs.push_back(bg);
-        location_icons.push_back(loc);
-    }
-
     PSprite i_hunt;
     i_hunt.loadFromFile("resources/graphics/ui/worldmap/hunting_icon.png", quality, 1);
     PSprite i_fortress;
@@ -102,26 +90,6 @@ void ObeliskMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Co
     mission_icons.push_back(i_fortress);
 
     dullpon.loadFromFile("resources/graphics/ui/worldmap/dullpon.png", quality, 1);
-
-    test_tex.loadFromFile("resources/graphics/ui/worldmap/dullpon_M.png");
-    test_spr.setTexture(test_tex);
-
-    PSprite fld;
-    fld.loadFromFile("resources/graphics/ui/worldmap/location_field.png", quality, 1);
-
-    for(int i=1; i<=20; i++)
-    {
-        worldmap_fields.push_back(fld);
-
-        if(i <= location_icons.size())
-        {
-            worldmap_icons.push_back(location_icons[i-1]);
-        }
-        else
-        {
-            worldmap_icons.push_back(dullpon);
-        }
-    }
 
     ///boxes
     mainbox.loadFromFile("resources/graphics/ui/worldmap/main_box.png", quality, 1);
@@ -144,9 +112,6 @@ void ObeliskMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Co
     select_quest.createText(font, 18, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"worldmap_select")), quality, 1);
     mission_title.createText(font, 18, sf::Color::Black, "Hunting Kacheek", quality, 1);
     mission_desc.createText(font, 18, sf::Color::Black, "(no translation needed)", quality, 1);
-
-    location_bg_a = location_bgs[cur_location];
-    location_bg_b = location_bgs[cur_location];
 
     float resRatioX = thisConfigs->GetInt("resX") / float(1280);
     float resRatioY = thisConfigs->GetInt("resY") / float(720);
@@ -172,6 +137,54 @@ void ObeliskMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Co
     mission_select.loadFromFile("resources/graphics/ui/worldmap/mission_select.png", quality, 1);
 
     parent->SaveToDebugLog("Initializing Obelisk finished.");
+}
+
+void ObeliskMenu::Reload()
+{
+    location_bgs.clear();
+    location_icons.clear();
+
+    worldmap_fields.clear();
+    worldmap_icons.clear();
+
+    PSprite fld;
+    fld.loadFromFile("resources/graphics/ui/worldmap/location_field.png", quality, 1);
+
+    ///worldmap contents
+    for(int i=1; i<=field_unlocked; i++)
+    {
+        PSprite bg;
+        bg.loadFromFile("resources/graphics/ui/worldmap/locationbg_"+to_string(i)+".png", quality, 1);
+        PSprite loc;
+        loc.loadFromFile("resources/graphics/ui/worldmap/location_"+to_string(i)+".png", quality, 1);
+
+        location_bgs.push_back(bg);
+        location_icons.push_back(loc);
+    }
+
+    for(int i=1; i<=20; i++)
+    {
+        worldmap_fields.push_back(fld);
+
+        if(i <= location_icons.size())
+        {
+            worldmap_icons.push_back(location_icons[i-1]);
+        }
+        else
+        {
+            worldmap_icons.push_back(dullpon);
+        }
+    }
+
+    location_bg_a = location_bgs[cur_location];
+    location_bg_b = location_bgs[cur_location];
+
+    unlocked.clear();
+
+    for(int i=0; i<field_unlocked; i++)
+    unlocked.push_back(i);
+
+    //vector<int> unlocked = {0};
 }
 
 void ObeliskMenu::EventFired(sf::Event event)
@@ -219,8 +232,11 @@ void ObeliskMenu::EventFired(sf::Event event)
                             cout << "[WorldMap] Checking " << atoi(mission[1].c_str()) << " vs " << sel_location << endl;
                             if(atoi(mission[1].c_str()) == sel_location)
                             {
-                                cout << "Mission in location " << sel_location << " detected with ID " << mission[0] << endl;
-                                addMission(buff);
+                                if(std::find(missions_unlocked.begin(), missions_unlocked.end(), atoi(mission[0].c_str())) != missions_unlocked.end())
+                                {
+                                    cout << "Mission in location " << sel_location << " detected with ID " << mission[0] << endl;
+                                    addMission(buff);
+                                }
                             }
                         }
                     }

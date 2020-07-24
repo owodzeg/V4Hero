@@ -50,7 +50,10 @@ class ObeliskMenu : public Menu
         int sel_location = 1;
         int sel_mission = 0;
 
-        vector<int> unlocked = {0, 1, 2};
+        vector<int> unlocked = {0};
+        vector<int> missions_unlocked = {1,2,3,6};
+
+        int field_unlocked = 1;
 
         struct Mission
         {
@@ -82,6 +85,7 @@ class ObeliskMenu : public Menu
 
         void addMission(string missiondata);
         void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent,PatapolisMenu *curParentMenu);
+        void Reload();
         void Update(sf::RenderWindow &window, float fps);
         void EventFired(sf::Event event);
         void OnExit();

@@ -625,6 +625,7 @@ void PatapolisMenu::EventFired(sf::Event event)
                 case 5:
                     /// obelisk
                     thisConfig->thisCore->SaveToDebugLog("Entering Obelisk...");
+                    obelisk_menu.Reload();
                     obelisk_menu.Show();
                     obelisk_menu.isActive = true;
                     thisConfig->thisCore->SaveToDebugLog("Obelisk entered.");
