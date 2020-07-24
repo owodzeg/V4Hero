@@ -425,6 +425,12 @@ void MissionController::submitPickedItems()
         invItem.item = v4core->savereader.itemreg.GetItemByID(pickedItems[i].item_id);
         invItem.inventoryId = v4core->savereader.invdata.items.size();
         v4core->savereader.invdata.items.push_back(invItem);
+
+        if(pickedItems[i].item_id == 23)
+        {
+            v4core->savereader.missionsUnlocked.push_back(6);
+            v4core->savereader.locationsUnlocked = 2;
+        }
     }
 
 }
@@ -445,7 +451,6 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
 {
     v4core = &v4core_;
     sf::Context context;
-    test_bg.Load(backgroundString, config);//config.GetString("debugBackground"));
 
     PSprite ps_temp;
     ps_temp.loadFromFile("resources/graphics/item/icon/spear.png",1);
@@ -845,6 +850,9 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
 
     isFinishedLoading=true;
     v4core->LoadingWaitForKeyPress();
+
+    cout << "Loading background " << bgName << endl;
+    test_bg.Load(bgName, *missionConfig);//config.GetString("debugBackground"));
 
     string fm = "Playing mission: "+missionName;
     v4core->ChangeRichPresence(fm.c_str(), missionImg.c_str(), "logo");
