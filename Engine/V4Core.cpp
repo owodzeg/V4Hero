@@ -139,11 +139,6 @@ V4Core::V4Core()
     t_version.setFillColor(sf::Color(255,255,255,32));
     t_version.setString("V4Hero Client "+hero_version);
 
-    t_pressAnyKey.setFont(f_font);
-    t_pressAnyKey.setCharacterSize(42);
-    t_pressAnyKey.setFillColor(sf::Color(255,255,255,255));
-    t_pressAnyKey.setString("Press any key to continue...");
-
     /** Initialize main menu **/
     tipsUtil.LoadBackgrounds(config);
     tipsUtil.LoadIcons(config);
@@ -232,75 +227,110 @@ void V4Core::LoadingThread()
     window.draw(t_version);
     window.clear();
     window.display();
-    int i=0;
-    srand (time(NULL));
+
+    srand(time(NULL));
+
+    float resRatioX = window.getSize().x / float(1280);
+    float resRatioY = window.getSize().y / float(720);
+
+    sf::RectangleShape box_1,box_2;
+    box_1.setSize(sf::Vector2f(1280*resRatioX, 80*resRatioY));
+    box_2.setSize(sf::Vector2f(1280*resRatioX, 514*resRatioY));
+
+    PSprite tip_logo;
+    tip_logo.loadFromFile("resources/graphics/ui/tips/tip-logo.png", config.GetInt("textureQuality"), 1);
+
+    PSprite loading_head, loading_eye1, loading_eye2;
+    loading_head.loadFromFile("resources/graphics/ui/tips/loading_head.png", config.GetInt("textureQuality"), 1);
+    loading_eye1.loadFromFile("resources/graphics/ui/tips/loading_eye.png", config.GetInt("textureQuality"), 1);
+    loading_eye2.loadFromFile("resources/graphics/ui/tips/loading_eye.png", config.GetInt("textureQuality"), 1);
+
+    loading_eye1.setOrigin(loading_eye1.getLocalBounds().width*0.85, loading_eye1.getLocalBounds().height*0.85);
+    loading_eye2.setOrigin(loading_eye2.getLocalBounds().width*0.85, loading_eye2.getLocalBounds().height*0.85);
+
+    ///20 from top
+    ///80 box1
+    ///20 gap
+    ///480 box2
+    ///20 from bottom
+    ///66 for floor
+
+    box_1.setPosition(0,20*resRatioY);
+    box_2.setPosition(0,120*resRatioY);
+
+    box_1.setFillColor(sf::Color(0,0,0,192));
+    box_2.setFillColor(sf::Color(0,0,0,192));
+
     int tipBackground = rand() % tipsUtil.t_backgrounds.size();
     int tipIcon = rand() % tipsUtil.t_icons.size();
     int tipText = rand() % tipsUtil.tipTitles.size();
-    int ScrWidth = 3840;
-    int ScrHeight = 2160;
 
-    int WScrWidth = config.GetInt("resX");
-    int WScrHeight = config.GetInt("resY");
+    PText t_tipTitle;
+    t_tipTitle.createText(f_font, 48, sf::Color(255,255,255,255), tipsUtil.tipTitles[tipText], config.GetInt("textureQuality"), 1);
 
-
-    sf::Text t_tipTitle = sf::Text();
-    t_tipTitle.setFont(f_font);
-    t_tipTitle.setCharacterSize(42*config.GetInt("resX")/1280);
-    t_tipTitle.setFillColor(sf::Color(255,255,255,255));
-    t_tipTitle.setString(tipsUtil.tipTitles[tipText]);
-    std::vector<std::string> lines = Func::Split(tipsUtil.tipTexts[tipText],'\\');
-    std::vector<sf::Text> t_tipTextLines;
-    int textSize = 28*config.GetInt("resX")/1280;
-    for (auto it = lines.begin();it<lines.end();++it){
-        sf::Text t_tipText = sf::Text();
-        t_tipText.setFont(f_font);
-        t_tipText.setCharacterSize(textSize);
-        t_tipText.setFillColor(sf::Color(255,255,255,255));
-        t_tipText.setString(*it);
-        t_tipTextLines.push_back(t_tipText);
+    std::string str_tipText = tipsUtil.tipTexts[tipText];
+    for(int t=0; t<str_tipText.size(); t++)
+    {
+        if(str_tipText[t] == '\\')
+        str_tipText[t] = '\n';
     }
 
+    PText t_tipText;
+    t_tipText.createText(f_font, 32, sf::Color(255,255,255,255), str_tipText, config.GetInt("textureQuality"), 1);
+
+    PText t_pressAnyKey;
+    t_pressAnyKey.createText(f_font, 46, sf::Color(255,255,255,255), "Press any key to continue", config.GetInt("textureQuality"), 1);
+
+    PText t_nowLoading;
+    t_nowLoading.createText(f_font, 46, sf::Color(255,255,255,255), "Now loading", config.GetInt("textureQuality"), 1);
 
     while (continueLoading)
     {
-        i++;
         window.clear();
         auto lastView = window.getView();
         window.setView(window.getDefaultView());
 
+        tipsUtil.t_backgrounds[tipBackground].setPosition(0,0);
+        tipsUtil.t_backgrounds[tipBackground].draw(window);
+
+        window.draw(box_1);
+        window.draw(box_2);
+
+        tip_logo.setPosition(1060,20);
+        tip_logo.draw(window);
+
+        tipsUtil.t_icons[tipIcon].setOrigin(tipsUtil.t_icons[tipIcon].getLocalBounds().width/2, tipsUtil.t_icons[tipIcon].getLocalBounds().height/2);
+        tipsUtil.t_icons[tipIcon].setPosition(1040,380);
+        tipsUtil.t_icons[tipIcon].draw(window);
+
+        t_tipTitle.setPosition(24,32);
+        t_tipTitle.draw(window);
+
+        t_tipText.setPosition(24,130);
+        t_tipText.draw(window);
+
         // drawing some text
-        if (!pressAnyKey){
-            t_version.setPosition(config.GetInt("resX")/2-50-100*sin(i/50.0),config.GetInt("resY")/2-20-100*sin((i+30)/50.0));
-            tipsUtil.t_backgrounds[tipBackground].setPosition(0,0);
-            tipsUtil.t_backgrounds[tipBackground].draw(window);
+        if(pressAnyKey)
+        {
+            t_pressAnyKey.setPosition(722,658);
+            t_pressAnyKey.draw(window);
+        }
+        else
+        {
+            loading_head.setPosition(670+230,656);
+            loading_eye1.setPosition(689+230,699);
+            loading_eye1.setRotation(loading_eye1.angle+(5.0 / fps));
+            loading_head.draw(window);
+            loading_eye1.draw(window);
 
-            tipsUtil.t_icons[tipIcon].setPosition((ScrWidth*3)/4,ScrHeight/4);
-            tipsUtil.t_icons[tipIcon].draw(window);
-            t_tipTitle.setPosition(24,42*WScrWidth/1280);
-            window.draw(t_tipTitle);
-            for (int i = 0;i<t_tipTextLines.size();++i){
-                t_tipTextLines[i].setPosition(24,152*WScrWidth/1280+(textSize+4)*i);
-                window.draw(t_tipTextLines[i]);
-            }
-            window.draw(t_version);
-        } else {
-            t_pressAnyKey.setPosition(12,config.GetInt("resY")-54);
-            tipsUtil.t_backgrounds[tipBackground].setPosition(0,0);
-            tipsUtil.t_backgrounds[tipBackground].draw(window);
+            loading_head.setPosition(985+230,656);
+            loading_eye2.setPosition(1004+230,699);
+            loading_eye2.setRotation(loading_eye2.angle-(5.0 / fps));
+            loading_head.draw(window);
+            loading_eye2.draw(window);
 
-            tipsUtil.t_icons[tipIcon].setPosition((ScrWidth*3)/4,ScrHeight/4);
-            tipsUtil.t_icons[tipIcon].draw(window);
-
-            t_tipTitle.setPosition(24,42*WScrWidth/1280);
-            window.draw(t_tipTitle);
-
-            for (int i = 0;i<t_tipTextLines.size();++i){
-                t_tipTextLines[i].setPosition(24,152*WScrWidth/1280+(textSize+4)*i);
-                window.draw(t_tipTextLines[i]);
-            }
-            window.draw(t_version);
-            window.draw(t_pressAnyKey);
+            t_nowLoading.setPosition(722+230,658);
+            t_nowLoading.draw(window);
         }
 
         window.setView(lastView);
@@ -309,10 +339,8 @@ void V4Core::LoadingThread()
     }
 
     window.setActive(false);
-
-
-
 }
+
 void V4Core::ShowTip()
 {
     //loadingThreadInstance = sf::Thread(LoadingThread);
@@ -320,6 +348,7 @@ void V4Core::ShowTip()
     continueLoading=true;
 
 }
+
 void V4Core::Init()
 {
     /// turned off because it doesn't work for owocek
