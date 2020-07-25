@@ -368,7 +368,7 @@ void Barracks::EventFired(sf::Event event){
                     loadingThreadInstance.launch();
 
                     currentController->Initialise(*config,*keyMap,config->GetString("mission1Background"),*v4core);
-                    currentController->StartMission(mission_file,1);
+                    currentController->StartMission(mission_file,1,missionID);
                     this->Hide();
                     this->isActive = false;
 

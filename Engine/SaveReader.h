@@ -30,6 +30,7 @@ class SaveReader
     Config* config;
     bool isNewSave;
     void Save();
+    bool isMissionUnlocked(int mission);
 };
 
 #endif // SAVEREADER_H

@@ -428,11 +428,36 @@ void MissionController::submitPickedItems()
 
         if(pickedItems[i].item_id == 23)
         {
-            v4core->savereader.missionsUnlocked.push_back(6);
-            v4core->savereader.locationsUnlocked = 2;
+            if((!v4core->savereader.isMissionUnlocked(3)) && (!v4core->savereader.isMissionUnlocked(2)) && (v4core->savereader.locationsUnlocked == 1))
+            {
+                v4core->savereader.missionsUnlocked.push_back(2);
+                v4core->savereader.locationsUnlocked = 2;
+            }
         }
     }
 
+}
+
+void MissionController::updateMissions()
+{
+    ///When this function is called, the mission has been completed successfully
+    cout << "MissionController::updateMissions(): " << curMissionID << endl;
+
+    switch(curMissionID)
+    {
+        case 2:
+        {
+            if(!v4core->savereader.isMissionUnlocked(3))
+            {
+                v4core->savereader.missionsUnlocked.push_back(3);
+
+                auto it = std::find(v4core->savereader.missionsUnlocked.begin(), v4core->savereader.missionsUnlocked.end(), 2);
+                v4core->savereader.missionsUnlocked.erase(it);
+            }
+
+            break;
+        }
+    }
 }
 
 void MissionController::addUnitThumb(int unit_id)
@@ -567,9 +592,11 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
 
     cout << "initialization finished" << endl;
 }
-void MissionController::StartMission(std::string missionFile, bool showCutscene)
+void MissionController::StartMission(std::string missionFile, bool showCutscene, int missionID)
 {
     missionConfig->thisCore->SaveToDebugLog("Starting mission");
+
+    curMissionID = missionID;
 
     fade_alpha = 255;
     missionEnd = false;
@@ -1591,6 +1618,60 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 fadeout_box.setFillColor(sf::Color(0,0,0,fadeout_alpha));
                 window.draw(fadeout_box);
             }
+
+            if(missionEndTimer.getElapsedTime().asMilliseconds() > 19000)
+            {
+                cout << "End mission" << endl;
+                /// A wall is unyielding, so it does nothing when collided with.
+
+                /// note we don't call the parent function. It does nothing, it just serves
+                /// as an incomplete function to be overridden by child classes.
+                /// end the mission
+
+                StopMission();
+
+                cout << "Add the picked up items to item repository" << endl;
+                submitPickedItems();
+                updateMissions();
+
+                cout << "Go to Patapolis" << endl;
+
+                sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+                v4core->continueLoading=true;
+                v4core->window.setActive(false);
+                loadingThreadInstance.launch();
+
+                v4core->mainMenu.patapolisMenu.doWaitKeyPress = false;
+                v4core->mainMenu.patapolisMenu.Show();
+                v4core->mainMenu.patapolisMenu.isActive = true;
+
+                if (!v4core->mainMenu.patapolisMenu.initialised)
+                {
+                    /// patapolis might not be initialised because we could be running the pre-patapolis scripted first mission.
+                    cout << "[ENDFLAG] Initialize Patapolis for the first time" << endl;
+                    v4core->mainMenu.patapolisMenu.Initialise(missionConfig,v4core->mainMenu.keyMapping,v4core,&v4core->mainMenu);
+                }
+                else
+                {
+                    cout << "Don't initialize Patapolis, just show it again" << endl;
+                }
+
+                v4core->mainMenu.patapolisMenu.location = 3;
+                v4core->mainMenu.patapolisMenu.SetTitle(3);
+                v4core->mainMenu.patapolisMenu.camPos = v4core->mainMenu.patapolisMenu.locations[3];
+                v4core->mainMenu.patapolisMenu.fade_alpha = 255;
+
+                while(missionEndTimer.getElapsedTime().asMilliseconds() < 21000)
+                {
+                    ///halt loading for a second
+                }
+
+                v4core->LoadingWaitForKeyPress();
+
+                v4core->continueLoading=false;
+
+                v4core->ChangeRichPresence("In Patapolis", "logo", "");
+            }
         }
     }
     else
@@ -2057,7 +2138,7 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
         {
             Entity* closest_entity = tangibleLevelObjects[closest_entity_id].get();
 
-            cout << "Check if entity is in range" << endl;
+            //cout << "Check if entity is in range" << endl;
 
             for(int i=0; i<units.size(); i++)
             {
@@ -2065,8 +2146,8 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
                 {
                     if(closest_entity->entityType == Entity::EntityTypes::HOSTILE)
                     {
-                        cout << "Range of unit " << i << ": " << abs((units[i].get()->getGlobalPosition().x) - closest_entity->getGlobalPosition().x) - 110 << endl;
-                        cout << "Dest local x: " << units[i].get()->dest_local_x << endl;
+                        //cout << "Range of unit " << i << ": " << abs((units[i].get()->getGlobalPosition().x) - closest_entity->getGlobalPosition().x) - 110 << endl;
+                        //cout << "Dest local x: " << units[i].get()->dest_local_x << endl;
 
                         if(abs((units[i].get()->getGlobalPosition().x) - closest_entity->getGlobalPosition().x) - 110 > 800)
                         inRange = false;
@@ -2074,7 +2155,7 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
                 }
             }
 
-            cout << "In range: " << inRange << endl;
+            //cout << "In range: " << inRange << endl;
         }
 
         /** Draw the units **/

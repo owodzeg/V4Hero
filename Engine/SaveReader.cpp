@@ -165,3 +165,14 @@ void SaveReader::Save()
     conf2.close();
 }
 
+bool SaveReader::isMissionUnlocked(int mission)
+{
+    if(std::find(missionsUnlocked.begin(), missionsUnlocked.end(), mission) != missionsUnlocked.end())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}

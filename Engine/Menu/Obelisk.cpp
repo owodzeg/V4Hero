@@ -261,8 +261,10 @@ void ObeliskMenu::EventFired(sf::Event event)
                     parentMenu->barracks_menu.Show();
                     parentMenu->barracks_menu.isActive = true;
                     parentMenu->barracks_menu.obelisk = true;
+                    parentMenu->barracks_menu.missionID = missions[sel_mission].mis_ID;
                     parentMenu->barracks_menu.mission_file = missions[sel_mission].mission_file;
                     parentMenu->barracks_menu.OpenBarracksMenu();
+                    cout << "Set barracks mission to ID " << missions[sel_mission].mis_ID << endl;
                     thisConfig->thisCore->SaveToDebugLog("Barracks (In Obelisk) entered. Mission file: "+missions[sel_mission].mission_file);
                 }
             }

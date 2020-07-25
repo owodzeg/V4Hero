@@ -35,7 +35,7 @@ void SaveFileCreatedMenuButtonList::SelectButton(int index){
                 svCrtMnu->nameEntryMenu->Hide();
 
                 currentController->Initialise(*config,*keyMap,config->GetString("mission1Background"),*parentMenu->v4core);
-                currentController->StartMission(config->GetString("mission1Theme"),1);
+                currentController->StartMission(config->GetString("mission1Theme"),1,1);
 
                 break;
 

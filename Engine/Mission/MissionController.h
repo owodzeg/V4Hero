@@ -178,6 +178,8 @@ class MissionController
     bool debug_map_drop = false;
     bool failure = false;
 
+    int curMissionID = 0;
+
     /** Collisions **/
     bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame,AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY);
     CollisionEvent DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY,int collisionObjectID,vector<string> collisionData = {});
@@ -193,8 +195,9 @@ class MissionController
     float Smoothstep(float time);
     float Clamp(float x, float lowerlimit, float upperlimit);
 
-    /** Item management **/
+    /** Save data management **/
     void submitPickedItems();
+    void updateMissions();
 
     /** Load up the assets **/
     void addDmgCounter(int type, int damage, float baseX, float baseY, int q, int r);
@@ -206,7 +209,7 @@ class MissionController
 
     /** Load up the mission **/
     void Initialise(Config &config, std::map<int,bool> &keymap,std::string backgroundName,V4Core &v4core_);
-    void StartMission(std::string missionFile, bool showCutscene=false);
+    void StartMission(std::string missionFile, bool showCutscene=false, int missionID=0);
 
     /** Stop the mission **/
     void StopMission();
