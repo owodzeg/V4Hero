@@ -7,6 +7,7 @@
 #include "../Graphics/PSprite.h"
 #include "../Graphics/PText.h"
 #include "../Dialog/DialogBox.h"
+#include "../Input/InputController.h"
 
 class V4Core;
 class OptionsMenu : public Menu
@@ -28,8 +29,10 @@ class OptionsMenu : public Menu
         PSprite handle, aura1, aura2, l_fire1, l_fire2, l_fire3, r_fire1, r_fire2, r_fire3;
 
         float mouseX=0, mouseY=0;
+        vector<int> prevStates;
         int state = 0;
         int sel = -1;
+        int maxSel = 0;
 
         struct Resolution
         {
@@ -65,8 +68,9 @@ class OptionsMenu : public Menu
 
         Menu *parentMenu;
         void Initialise(Config *thisConfig,V4Core *parent,Menu *curParentMenu);
-        void Update(sf::RenderWindow &window, float fps);
+        void Update(sf::RenderWindow &window, float fps, InputController& inputCtrl);
         void SelectMenuOption();
+        void GoBackMenuOption();
         void SetConfigValue(std::string key, std::string value);
         void EventFired(sf::Event event);
         void OnExit();

@@ -346,7 +346,7 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
     }
     else if(optionsMenu.isActive)
     {
-        optionsMenu.Update(window,fps);
+        optionsMenu.Update(window,fps,inputCtrl);
     }
     else if(isActive)
     {

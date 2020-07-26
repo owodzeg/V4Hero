@@ -139,7 +139,7 @@ void NewGameMenu::Update(sf::RenderWindow &window, float fps, InputController& i
         if (v4core->currentController.isInitialized && v4core->currentController.isFinishedLoading){
             v4core->currentController.Update(window, fps, inputCtrl);
         } else if (optionsMenu.isActive){
-            optionsMenu.Update(window,fps);
+            optionsMenu.Update(window,fps,inputCtrl);
         } else if (newGameNameEntryMenu.isActive){
             newGameNameEntryMenu.Update(window,fps);
         } else if (newGameNameEntryMenu.savefilecreated.isActive){

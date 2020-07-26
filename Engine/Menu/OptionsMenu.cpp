@@ -185,6 +185,8 @@ void OptionsMenu::SelectMenuOption()
 {
     if(sel != -1)
     {
+        prevStates.push_back(state);
+
         if(state == 0)
         {
             state = sel+1;
@@ -193,6 +195,19 @@ void OptionsMenu::SelectMenuOption()
         {
             state = state*10 + (sel+1);
         }
+    }
+
+    sel = 0;
+
+    cout << "State switched to " << state << endl;
+}
+
+void OptionsMenu::GoBackMenuOption()
+{
+    if(prevStates.size() > 0)
+    {
+        state = prevStates[prevStates.size()-1];
+        prevStates.erase(prevStates.begin()+prevStates.size()-1);
     }
 
     sel = 0;
@@ -234,12 +249,7 @@ void OptionsMenu::SetConfigValue(std::string key, std::string value)
 void OptionsMenu::EventFired(sf::Event event){
     if(event.type == sf::Event::KeyPressed)
     {
-        // do something here;
-        // buttonList.KeyPressedEvent(event);
-        if(event.key.code==sf::Keyboard::Escape) {
-            thisConfig->debugOut->DebugMessage("Returning to main menu...");
-            Back();
-        }
+
     } else if (event.type == sf::Event::MouseButtonReleased){
         // We use mouse released so a user can change their mind by keeping the mouse held and moving away.
         //buttonList.MouseReleasedEvent(event);
@@ -254,7 +264,7 @@ void OptionsMenu::EventFired(sf::Event event){
         mouseY = event.mouseMove.y;
     }
 }
-void OptionsMenu::Update(sf::RenderWindow &window, float fps)
+void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& inputCtrl)
 {
     if(isActive)
     {
@@ -278,6 +288,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
+
+                maxSel = options.size();
 
                 for(int i=0; i<options.size(); i++)
                 {
@@ -312,6 +324,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
 
+                maxSel = g_options.size();
+
                 for(int i=0; i<g_options.size(); i++)
                 {
                     g_options[i].setOrigin(0, g_options[i].getGlobalBoundsScaled().height/2);
@@ -343,6 +357,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
 
+                maxSel = a_options.size();
+
                 for(int i=0; i<a_options.size(); i++)
                 {
                     a_options[i].setOrigin(0, a_options[i].getGlobalBoundsScaled().height/2);
@@ -371,37 +387,10 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
             {
                 if(madeChanges)
                 {
-                    /**dg_restart.setPosition(474,290);
-                    dg_restart.draw(window);
-
-                    t_restart.setPosition(765,447);
-                    t_restart.draw(window);
-
-                    //dg_select.setOrigin(dg_select.getGlobalBoundsScaled().width/2, dg_select.getGlobalBoundsScaled().height/2);
-                    dg_select.setPosition(711, 536 + 45*sel);
-                    dg_select.draw(window);
-
-                    for(int i=0; i<restarts.size(); i++)
-                    {
-                        restarts[i].setOrigin(restarts[i].getGlobalBoundsScaled().width/2, restarts[i].getGlobalBoundsScaled().height/2);
-                        restarts[i].setPosition(960, 550 + 45*i);
-                        restarts[i].setColor(sf::Color::Black);
-
-                        if(mouseY / window.getSize().y * 1080 >= (restarts[i].getPosition().y - restarts[i].getGlobalBoundsScaled().height/2 + 8))
-                        {
-                            if(mouseY / window.getSize().y * 1080 <= (restarts[i].getPosition().y + restarts[i].getGlobalBoundsScaled().height/2 + 8))
-                            {
-                                sel = i;
-                            }
-                        }
-
-                        restarts[i].draw(window);
-                    }**/
-
-                    /*if(&keyMap[sf::Keyboard::Up])
+                    if(inputCtrl.isKeyPressed(InputController::Keys::UP))
                     restart_prompt.MoveUp();
-                    if(&keyMap[sf::Keyboard::Down])
-                    restart_prompt.MoveDown();*/
+                    if(inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+                    restart_prompt.MoveDown();
 
                     sel = restart_prompt.CheckSelectedOption();
 
@@ -425,6 +414,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
+
+                maxSel = resolutions.size();
 
                 for(int i=0; i<resolutions.size(); i++)
                 {
@@ -460,6 +451,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
 
+                maxSel = qualities.size();
+
                 for(int i=0; i<qualities.size(); i++)
                 {
                     qualities[i].setOrigin(0, qualities[i].getGlobalBoundsScaled().height/2);
@@ -493,6 +486,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
+
+                maxSel = framerates.size();
 
                 for(int i=0; i<framerates.size(); i++)
                 {
@@ -528,6 +523,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
 
+                maxSel = switches.size();
+
                 for(int i=0; i<switches.size(); i++)
                 {
                     switches[i].setOrigin(0, switches[i].getGlobalBoundsScaled().height/2);
@@ -561,6 +558,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
+
+                maxSel = switches.size();
 
                 for(int i=0; i<switches.size(); i++)
                 {
@@ -603,6 +602,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
 
+                maxSel = ms_volume.size();
+
                 for(int i=0; i<ms_volume.size(); i++)
                 {
                     ms_volume[i].setOrigin(0, ms_volume[i].getGlobalBoundsScaled().height/2);
@@ -633,6 +634,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
+
+                maxSel = switches.size();
 
                 for(int i=0; i<switches.size(); i++)
                 {
@@ -668,6 +671,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
 
+                maxSel = switches.size();
+
                 for(int i=0; i<switches.size(); i++)
                 {
                     switches[i].setOrigin(0, switches[i].getGlobalBoundsScaled().height/2);
@@ -701,6 +706,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
+
+                maxSel = switches.size();
 
                 for(int i=0; i<switches.size(); i++)
                 {
@@ -970,6 +977,28 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
         }
 
         window.setView(window.getDefaultView());
+
+        if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+        {
+            SelectMenuOption();
+        }
+
+        if(inputCtrl.isKeyPressed(InputController::Keys::CIRCLE))
+        {
+            GoBackMenuOption();
+        }
+
+        if(inputCtrl.isKeyPressed(InputController::Keys::UP))
+        {
+            if(sel > 0)
+            sel--;
+        }
+
+        if(inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+        {
+            if(sel < maxSel-1)
+            sel++;
+        }
     }
 
 }
