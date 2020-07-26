@@ -1294,10 +1294,13 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, InputCon
     {
         PlayableUnit* unit = units[i].get();
 
-        if(unit->local_x < unit->dest_local_x)
-        unit->local_x += 200.0 / fps;
-        if(unit->local_x > unit->dest_local_x)
-        unit->local_x -= 200.0 / fps;
+        if(!unit->dead)
+        {
+            if(unit->local_x < unit->dest_local_x)
+            unit->local_x += 200.0 / fps;
+            if(unit->local_x > unit->dest_local_x)
+            unit->local_x -= 200.0 / fps;
+        }
 
         switch(unit->getUnitID())
         {
@@ -2077,10 +2080,10 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
         {
             entity->offbounds = false;
 
-            if(entity->getGlobalPosition().x > camera.followobject_x+1600)
+            if(entity->getGlobalPosition().x > (camera.followobject_x)/(window.getSize().x / float(1280))+1600)
             entity->offbounds = true;
 
-            if(entity->getGlobalPosition().x < camera.followobject_x-600)
+            if(entity->getGlobalPosition().x < (camera.followobject_x)/(window.getSize().x / float(1280))-600)
             entity->offbounds = true;
 
             entity->Draw(window);
