@@ -133,7 +133,7 @@ float Rhythm::GetSatisfaction()
     return last_satisfaction;
 }
 
-void Rhythm::checkRhythmController()
+void Rhythm::checkRhythmController(InputController& inputCtrl)
 {
     ///RHYTHM CONTROLLER SETUP
     rhythmController.combo = combo;
@@ -144,7 +144,7 @@ void Rhythm::checkRhythmController()
     rhythmController.low_range = low_range;
     rhythmController.high_range = high_range;
 
-    if(rhythmController.checkForInput())
+    if(rhythmController.checkForInput(inputCtrl))
     {
         Drum temp;
         temp.Load(rhythmController.drumToLoad,rhythmController.drum_perfection,t_drums[rhythmController.drumToLoad], t_flash);
@@ -160,9 +160,9 @@ void Rhythm::checkRhythmController()
     rhythmController.resetValues();
 }
 
-void Rhythm::doRhythm()
+void Rhythm::doRhythm(InputController& inputCtrl)
 {
-    checkRhythmController();
+    checkRhythmController(inputCtrl);
 
     if(rhythmClock.getElapsedTime().asMilliseconds() > (beat_timer/float(2)))
     {

@@ -143,13 +143,13 @@ V4Core::V4Core()
     tipsUtil.LoadBackgrounds(config);
     tipsUtil.LoadIcons(config);
     tipsUtil.LoadStrings(config);
-    mainMenu.Initialise(&config,&keyMap,this);
+    mainMenu.Initialise(&config,this);
 
     menus.push_back(&mainMenu);
     config.configDebugID = 10;
 
     /// If this is a new save (no previous save data) we load up the new game menu
-    newGameMenu.Initialise(&config,&keyMap,this);
+    newGameMenu.Initialise(&config,this);
     menus.push_back(&newGameMenu);
     if(savereader.isNewSave)
     {
@@ -206,10 +206,8 @@ void V4Core::LoadingWaitForKeyPress()
             if (event.type == sf::Event::Closed)
                 window.close();
 
-            if(event.type == sf::Event::KeyPressed)
+            if((event.type == sf::Event::KeyPressed) || (event.type == sf::Event::JoystickButtonPressed))
             {
-                cout << "[DEBUG] Key released: " << event.key.code << endl;
-                //keyMapHeld[event.key.code] = false;
                 biff=false;
                 pressAnyKey = false;
                 continueLoading = false;
@@ -372,6 +370,11 @@ void V4Core::Init()
     if(framerateLimit == 0)
     framerateLimit = 1000;
 
+    inputCtrl.LoadKeybinds(config);
+
+    vector<string> aaa = {"Understood", "I quit"};
+    dbox.Create(f_font, "Patafour is still in development.\nExpect a lot of bugs and glitches.", aaa, config.GetInt("textureQuality"), window.getSize().x / float(1280));
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -386,23 +389,89 @@ void V4Core::Init()
                 cout << "[DEBUG] Key pressed: " << event.key.code << endl;
                 SaveToDebugLog("[DEBUG] Key pressed: "+to_string(event.key.code));
 
-                keyMap[event.key.code] = true;
-                keyMapHeld[event.key.code] = true;
-
-                //if (!inMission){
-                //inMission=true;
-                //currentController.StartMission();
-                //} else if(event.key.code==59) {
-                //    cout<<"Returning to main menu...";
-                //    inMission=false;
-                //}
+                inputCtrl.keyMap[event.key.code] = true;
+                inputCtrl.keyMapHeld[event.key.code] = true;
             }
 
             if(event.type == sf::Event::KeyReleased)
             {
                 cout << "[DEBUG] Key released: " << event.key.code << endl;
                 SaveToDebugLog("[DEBUG] Key released: "+to_string(event.key.code));
-                keyMapHeld[event.key.code] = false;
+
+                inputCtrl.keyMapHeld[event.key.code] = false;
+            }
+
+            if (event.type == sf::Event::JoystickButtonPressed)
+            {
+                if(event.joystickButton.joystickId == 0)
+                {
+                    std::cout << "[DEBUG] Joystick (" << event.joystickButton.joystickId << ") key pressed: " << event.joystickButton.button << std::endl;
+
+                    inputCtrl.keyMap[1000+event.joystickButton.button] = true;
+                    inputCtrl.keyMapHeld[1000+event.joystickButton.button] = true;
+                }
+            }
+
+            if(event.type == sf::Event::JoystickButtonReleased)
+            {
+                if(event.joystickButton.joystickId == 0)
+                {
+                    std::cout << "[DEBUG] Joystick (" << event.joystickButton.joystickId << ") key pressed: " << event.joystickButton.button << std::endl;
+
+                    inputCtrl.keyMapHeld[1000+event.joystickButton.button] = false;
+                }
+            }
+
+            if(event.type == sf::Event::JoystickMoved)
+            {
+                if(event.joystickMove.joystickId == 0)
+                {
+                    if (event.joystickMove.axis == sf::Joystick::PovX)
+                    {
+                        if(event.joystickMove.position == -100) ///left
+                        {
+                            inputCtrl.keyMap[1100] = true;
+                            inputCtrl.keyMapHeld[1100] = true;
+                        }
+                        else
+                        {
+                            inputCtrl.keyMapHeld[1100] = false;
+                        }
+
+                        if(event.joystickMove.position == 100) ///right
+                        {
+                            inputCtrl.keyMap[1101] = true;
+                            inputCtrl.keyMapHeld[1101] = true;
+                        }
+                        else
+                        {
+                            inputCtrl.keyMapHeld[1101] = false;
+                        }
+                    }
+
+                    if (event.joystickMove.axis == sf::Joystick::PovY)
+                    {
+                        if(event.joystickMove.position == -100) ///down
+                        {
+                            inputCtrl.keyMap[1102] = true;
+                            inputCtrl.keyMapHeld[1102] = true;
+                        }
+                        else
+                        {
+                            inputCtrl.keyMapHeld[1102] = false;
+                        }
+
+                        if(event.joystickMove.position == 100) ///up
+                        {
+                            inputCtrl.keyMap[1103] = true;
+                            inputCtrl.keyMapHeld[1103] = true;
+                        }
+                        else
+                        {
+                            inputCtrl.keyMapHeld[1103] = false;
+                        }
+                    }
+                }
             }
 
             /**
@@ -423,6 +492,7 @@ void V4Core::Init()
             13 - DS4 touchpad
             **/
 
+            /*
             if (event.type == sf::Event::JoystickButtonPressed)
             {
                 if(event.joystickButton.joystickId == 0)
@@ -556,6 +626,7 @@ void V4Core::Init()
                     }
                 }
             }
+            */
 
             if (savereader.isNewSave)
             {
@@ -595,7 +666,7 @@ void V4Core::Init()
         //if (savereader.isNewSave){
         //    newGameMenu.Update(window,fps,&keyMap,&keyMapHeld);
         //} else {
-        mainMenu.Update(window,fps,&keyMap,&keyMapHeld);
+        mainMenu.Update(window,fps,inputCtrl);
         //}
         //}
 
@@ -607,11 +678,31 @@ void V4Core::Init()
 
         t_version.setPosition(4,4);
         window.draw(t_version);
+
+        /** TESTING **/
+        if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+        {
+            if(dbox.CheckSelectedOption() == 0)
+            dbox.Close();
+            else
+            closeWindow = true;
+        }
+        if(inputCtrl.isKeyPressed(InputController::Keys::UP))
+        dbox.MoveUp();
+        if(inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+        dbox.MoveDown();
+
+        dbox.x = 640;
+        dbox.y = 360;
+        dbox.Draw(window,fps);
+
         window.display();
 
         window.setView(lastView);
 
-        keyMap.clear();
+        ///Clear the key inputs
+        inputCtrl.Flush();
+
         if(closeWindow)
         {
             window.close();

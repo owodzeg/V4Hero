@@ -11,6 +11,9 @@
 #include "SongController.h"
 #include "RhythmController.h"
 #include "RhythmGUI.h"
+
+#include "../Input/InputController.h"
+
 class Rhythm
 {
     private:
@@ -109,8 +112,8 @@ class Rhythm
     int GetCombo();
     int GetRealCombo();
     float GetSatisfaction();
-    void checkRhythmController();
-    void doRhythm();
+    void checkRhythmController(InputController& inputCtrl);
+    void doRhythm(InputController& inputCtrl);
     void Draw(sf::RenderWindow& window);
 
 };

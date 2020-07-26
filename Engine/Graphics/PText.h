@@ -26,7 +26,7 @@ class PText
     float angle=0;
 
     PText();
-    void createText(sf::Font font, float characterSize, sf::Color color, std::string text_string, int q, int r);
+    void createText(sf::Font& font, float characterSize, sf::Color color, std::string text_string, int q, int r);
     void setOrigin(float x, float y);
     sf::Vector2f getScale();
     void setScale(float x, float y);

@@ -6,6 +6,7 @@
 #include <map>
 
 #include "../Config.h"
+#include "../Input/InputController.h"
 
 #include <SFML/Audio.hpp>
 
@@ -55,7 +56,7 @@ class RhythmController
     std::vector<string> av_commands;
 
     RhythmController();
-    bool checkForInput();
+    bool checkForInput(InputController& inputCtrl);
     void resetValues();
 };
 

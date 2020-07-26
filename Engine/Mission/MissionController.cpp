@@ -472,7 +472,7 @@ void MissionController::addUnitThumb(int unit_id)
     unitThumbs.push_back(tmp);
 }
 
-void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,std::string backgroundString,V4Core &v4core_)
+void MissionController::Initialise(Config &config,std::string backgroundString,V4Core &v4core_)
 {
     v4core = &v4core_;
     sf::Context context;
@@ -534,7 +534,6 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     //t_cutscene_text.setString(Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"intro_cutscene_1")));
     //t_cutscene_text.setOrigin(t_cutscene_text.getGlobalBounds().width/2,t_cutscene_text.getGlobalBounds().height/2);
 
-    missionKeyMap = &keyMap;
     missionConfig = &config;
 
     isInitialized = true;
@@ -894,7 +893,7 @@ void MissionController::StopMission()
     rhythm.Stop();
     isInitialized = false;
 }
-void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld)
+void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, InputController& inputCtrl)
 {
     /// do the keyboard things
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num5))
@@ -1140,7 +1139,7 @@ bool MissionController::DoCollisionStepInAxis(float currentAxisAngle,HitboxFrame
         return false;
     }
 }
-void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld)
+void MissionController::DoMovement(sf::RenderWindow &window, float fps, InputController& inputCtrl)
 {
     /** Make Patapon walk (temporary) **/
     float booster=1.0;
@@ -1385,7 +1384,7 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
     }
 
 }
-void MissionController::DoRhythm()
+void MissionController::DoRhythm(InputController& inputCtrl)
 {
     /** Call Rhythm functions **/
 
@@ -1419,7 +1418,7 @@ void MissionController::DoRhythm()
         rhythm.rhythmController.config = *missionConfig;
         rhythm.config = *missionConfig;
 
-        rhythm.doRhythm();
+        rhythm.doRhythm(inputCtrl);
 }
 
 void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
@@ -1649,7 +1648,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 {
                     /// patapolis might not be initialised because we could be running the pre-patapolis scripted first mission.
                     cout << "[ENDFLAG] Initialize Patapolis for the first time" << endl;
-                    v4core->mainMenu.patapolisMenu.Initialise(missionConfig,v4core->mainMenu.keyMapping,v4core,&v4core->mainMenu);
+                    v4core->mainMenu.patapolisMenu.Initialise(missionConfig,v4core,&v4core->mainMenu);
                 }
                 else
                 {
@@ -1750,7 +1749,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 {
                     /// patapolis might not be initialised because we could be running the pre-patapolis scripted first mission.
                     cout << "[ENDFLAG] Initialize Patapolis for the first time" << endl;
-                    v4core->mainMenu.patapolisMenu.Initialise(missionConfig,v4core->mainMenu.keyMapping,v4core,&v4core->mainMenu);
+                    v4core->mainMenu.patapolisMenu.Initialise(missionConfig,v4core,&v4core->mainMenu);
                 }
                 else
                 {
@@ -2279,24 +2278,23 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
     return units_rm;
 }
 
-void MissionController::Update(sf::RenderWindow &window, float cfps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld)
+void MissionController::Update(sf::RenderWindow &window, float cfps, InputController& inputCtrl)
 {
     /** Update loop, everything here happens per each frame of the game **/
     fps = cfps;
 
     /** Apply the keyMap from parent class **/
-    missionKeyMap = keyMap;
 
     /** Execute camera and background **/
 
-    camera.Work(window,fps,keyMapHeld);
+    camera.Work(window,fps,inputCtrl);
     test_bg.setCamera(camera);
     test_bg.Draw(window);
 
     /** Execute Keyboard events and Movement **/
 
-    DoKeyboardEvents(window,fps,keyMap,keyMapHeld);
-    DoMovement(window,fps,keyMap,keyMapHeld);
+    DoKeyboardEvents(window,fps,inputCtrl);
+    DoMovement(window,fps,inputCtrl);
 
     /** Draw all Entities **/
 
@@ -2433,11 +2431,8 @@ void MissionController::Update(sf::RenderWindow &window, float cfps, std::map<in
 
     if(!missionEnd)
     {
-        // TODO: at some point some pointer shenanigans is required to make these be a reference to v4core's ones too.
-        rhythm.rhythmController.keyMap = *missionKeyMap;
-
         rhythm.fps = fps;
-        DoRhythm();
+        DoRhythm(inputCtrl);
         rhythm.Draw(window);
     }
 

@@ -9,12 +9,12 @@ ButtonList::ButtonList()
 {
 
 }
-void ButtonList::Initialise(sf::Font *font,Config &newConfig,  std::map<int,bool> *thisKeymap,MissionController *controller,Menu *mainMenu)
+void ButtonList::Initialise(sf::Font *font, Config &newConfig, MissionController *controller, Menu *mainMenu)
 {
     config = &newConfig;
     currentController = controller;
     parentMenu = mainMenu;
-    keyMap = thisKeymap;
+    //keyMap = thisKeymap;
     currentIndex = 0;
 }
 void ButtonList::Update(sf::RenderWindow &window, float fps, sf::Vector2f *mousePos)

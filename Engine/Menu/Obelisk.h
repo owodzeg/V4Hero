@@ -84,9 +84,9 @@ class ObeliskMenu : public Menu
         PatapolisMenu *parentMenu;
 
         void addMission(string missiondata);
-        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent,PatapolisMenu *curParentMenu);
+        void Initialise(Config *thisConfig, V4Core *parent,PatapolisMenu *curParentMenu);
         void Reload();
-        void Update(sf::RenderWindow &window, float fps);
+        void Update(sf::RenderWindow &window, float fps, InputController& inputCtrl);
         void EventFired(sf::Event event);
         void OnExit();
         void UpdateButtons();

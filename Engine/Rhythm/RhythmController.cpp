@@ -45,14 +45,19 @@ RhythmController::RhythmController()
     patterns["chaka"] = 0;
 }
 
-bool RhythmController::checkForInput()
+bool RhythmController::checkForInput(InputController& inputCtrl)
 {
     ///Set initial values for Drum quality check
     int drum_quality = 2;
     bool add_to_commandtable = false;
 
+    bool pata = inputCtrl.isKeyPressed(InputController::Keys::SQUARE);
+    bool pon = inputCtrl.isKeyPressed(InputController::Keys::CIRCLE);
+    bool don = inputCtrl.isKeyPressed(InputController::Keys::CROSS);
+    bool chaka = inputCtrl.isKeyPressed(InputController::Keys::TRIANGLE);
+
     ///Determine the quality of given drum input
-    if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")] || keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")] || keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")] || keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
+    if(pata || pon || don || chaka)
     {
         if(masterTimer < low_range) ///BAD hit
         {
@@ -77,7 +82,7 @@ bool RhythmController::checkForInput()
     }
 
     ///Keybind for PATA drum
-    if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")])
+    if(pata)
     {
         ///Add PATA drum sound effect to the buffer
         drum_nc.setBuffer(b_pata[drum_quality]);
@@ -96,7 +101,7 @@ bool RhythmController::checkForInput()
     }
 
     ///Keybind for PON drum
-    if(keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")])
+    if(pon)
     {
         ///Add PON drum sound effect to the buffer
         drum_nc.setBuffer(b_pon[drum_quality]);
@@ -115,7 +120,7 @@ bool RhythmController::checkForInput()
     }
 
     ///Keybind for CHAKA drum
-    if(keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
+    if(chaka)
     {
         ///Add CHAKA drum sound effect to the buffer
         drum_nc.setBuffer(b_chaka[drum_quality]);
@@ -134,7 +139,7 @@ bool RhythmController::checkForInput()
     }
 
     ///Keybind for DON drum
-    if(keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")])
+    if(don)
     {
         ///Add DON drum sound effect to the buffer
         drum_nc.setBuffer(b_don[drum_quality]);
@@ -153,7 +158,7 @@ bool RhythmController::checkForInput()
     }
 
     ///IF statement that applies to all drum keybinds (to not repeat the same code over and over)
-    if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")] || keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")] || keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")] || keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
+    if(pata || pon || don || chaka)
     {
         //cout<<"Input registered"<<endl;
         config.debugOut->RhythmnDebugMessage(current_drum + " " + std::to_string(masterTimer) + " ms \n");
@@ -243,16 +248,6 @@ bool RhythmController::checkForInput()
 
         if(patterns["chaka"] >= 8)
         patterns["chaka"] = 0;
-
-        ///Reset all keybindings
-        keyMap[config.GetInt("keybindPata")] = false;
-        keyMap[config.GetInt("secondaryKeybindPata")] = false;
-        keyMap[config.GetInt("keybindPon")] = false;
-        keyMap[config.GetInt("secondaryKeybindPon")] = false;
-        keyMap[config.GetInt("keybindChaka")] = false;
-        keyMap[config.GetInt("secondaryKeybindChaka")] = false;
-        keyMap[config.GetInt("keybindDon")] = false;
-        keyMap[config.GetInt("secondaryKeybindDon")] = false;
 
         drum_perfection = drum_quality;
 

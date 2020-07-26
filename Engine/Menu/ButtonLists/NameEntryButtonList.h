@@ -9,12 +9,13 @@
 #include "../../Graphics/Menu.h"
 #include "../ButtonList.h"
 #include "../Patapolis.h"
+
 class Menu;
 class NewGameNameEntryMenu;
 class NameEntryButtonList : public ButtonList
 {
     public:
-        void Initialise(sf::Font *font,Config &newConfig, std::map<int,bool> *keymap,MissionController *controller,NewGameNameEntryMenu *parentMenu);
+        void Initialise(sf::Font *font,Config &newConfig, MissionController *controller, NewGameNameEntryMenu *parentMenu);
         void SelectButton(int index);
         NewGameNameEntryMenu* savMenu;
         NameEntryButtonList();

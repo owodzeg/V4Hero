@@ -15,13 +15,15 @@
 #include "Menu/NewGameMenu.h"
 #include "TipsUtil.h"
 #include "../discord-cpp/discord.h"
+
+#include "Dialog/DialogBox.h"
+#include "Input/InputController.h"
+
 class V4Core
 {
     private:
     //MissionController currentController;
         std::vector<float> tot_fps;
-        std::map<int,bool> keyMap;
-        std::map<int,bool> keyMapHeld;
         sf::Thread* loadingThreadInstance;
 
         sf::Font f_font;
@@ -54,6 +56,10 @@ class V4Core
         bool pressAnyKey = false;
         int framerateLimit = 60;
         vector<float> frameTimes;
+
+        PataDialogBox dbox;
+
+        InputController inputCtrl;
 
         struct DiscordState {
             discord::User currentUser;

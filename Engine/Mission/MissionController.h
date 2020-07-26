@@ -63,7 +63,6 @@ class MissionController
 
     sf::Text t_timerMenu;
     Camera camera;
-    std::map<int,bool>* missionKeyMap;
     Config* missionConfig;
     V4Core* v4core;
 
@@ -208,15 +207,15 @@ class MissionController
     void spawnProjectile(float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit);
 
     /** Load up the mission **/
-    void Initialise(Config &config, std::map<int,bool> &keymap,std::string backgroundName,V4Core &v4core_);
+    void Initialise(Config &config,std::string backgroundName,V4Core &v4core_);
     void StartMission(std::string missionFile, bool showCutscene=false, int missionID=0);
 
     /** Stop the mission **/
     void StopMission();
 
     /** Mission update stuff **/
-    void DoMovement(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
-    void DoRhythm();
+    void DoMovement(sf::RenderWindow &window, float fps, InputController& inputCtrl);
+    void DoRhythm(InputController& inputCtrl);
     void DoMissionEnd(sf::RenderWindow& window, float fps);
     void DoVectorCleanup(std::vector<int> units_rm, std::vector<int> dmg_rm, std::vector<int> tlo_rm);
     void DrawUnitThumbs(sf::RenderWindow& window);
@@ -227,10 +226,10 @@ class MissionController
     std::vector<int> DrawUnits(sf::RenderWindow& window);
 
     /** Main update function **/
-    void Update(sf::RenderWindow &window, float cfps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
+    void Update(sf::RenderWindow &window, float cfps, InputController& inputCtrl);
 
     /** Events **/
-    void DoKeyboardEvents(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
+    void DoKeyboardEvents(sf::RenderWindow &window, float fps, InputController& inputCtrl);
 
 
     MissionController();

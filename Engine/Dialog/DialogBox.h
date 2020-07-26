@@ -23,10 +23,15 @@ class PataDialogBox
     float width=0, height=0;
     float x=0, y=0;
 
+    bool closed = false;
+
     PataDialogBox();
     void Create(sf::Font font, std::string text, std::vector<std::string> options, int qualitySetting, float resRatio);
     void Readjust();
     int CheckSelectedOption();
+    void MoveUp();
+    void MoveDown();
+    void Close();
     void Draw(sf::RenderWindow& window, float fps);
 };
 

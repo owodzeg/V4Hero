@@ -5,6 +5,7 @@
 #include "../Graphics/Menu.h"
 #include "../Graphics/PText.h"
 #include "../Mission/MissionController.h"
+#include "../Input/InputController.h"
 
 class V4Core;
 class Barracks : public Menu
@@ -12,7 +13,6 @@ class Barracks : public Menu
     public:
         MissionController* currentController;
         Config *config;
-        std::map<int,bool> *keyMap;
         std::string mission_file;
 
         sf::RectangleShape rs_cover;
@@ -127,8 +127,8 @@ class Barracks : public Menu
         Menu *parentMenu;
         int currentMenuPosition;
         std::vector<float> possibleMenuPositions;
-        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent,Menu *curParentMenu);
-        void Update(sf::RenderWindow &window, float fps);
+        void Initialise(Config *thisConfig, V4Core *parent, Menu *curParentMenu);
+        void Update(sf::RenderWindow &window, float fps, InputController& inputCtrl);
         void EventFired(sf::Event event);
         void SetTitle(int menuPosition);
         sf::RectangleShape mm_description_background;

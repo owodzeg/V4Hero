@@ -2,6 +2,7 @@
 #define CAMERA_H
 
 #include <SFML/Graphics.hpp>
+#include "../Input/InputController.h"
 
 class Camera
 {
@@ -19,7 +20,7 @@ class Camera
 
     Camera();
     void zoomViewAt(sf::Vector2i pixel, sf::RenderWindow& window, float zoom,float fps);
-    void Work(sf::RenderWindow& window,float fps, std::map<int,bool> *keyMap);
+    void Work(sf::RenderWindow& window,float fps, InputController& inputCtrl);
 };
 
 

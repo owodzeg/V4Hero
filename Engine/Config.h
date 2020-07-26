@@ -85,6 +85,7 @@ class Config
     void SetString(std::string key,std::string val);
     std::wstring GetLanguageName();
     void SaveConfig();
+    bool keyExists(std::string key);
 };
 
 #endif // CONFIG_H

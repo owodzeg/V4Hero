@@ -7,7 +7,7 @@ MainMenu::MainMenu()
     //ctor
     isActive=true;
 }
-void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent)
+void MainMenu::Initialise(Config *thisConfigs, V4Core *parent)
 {
     parent->SaveToDebugLog("Initializing Main Menu...");
 
@@ -192,16 +192,17 @@ void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     title_loop.setLoop(true);
     title_loop.setVolume(volume);
 
-    Scene::Initialise(thisConfigs,keymap,parent);
-    keyMapping=keymap;
+    Scene::Initialise(thisConfigs,parent);
 
-    optionsMenu.Initialise(config,keyMapping,v4core,this);
+    optionsMenu.Initialise(config,v4core,this);
 
     parent->SaveToDebugLog("Main menu initialized.");
     //title_loop.play();
     startClock.restart();
 }
-void MainMenu::EventFired(sf::Event event){
+
+void MainMenu::EventFired(sf::Event event)
+{
     if (patapolisMenu.isActive)
     {
         patapolisMenu.EventFired(event);
@@ -225,29 +226,10 @@ void MainMenu::EventFired(sf::Event event){
     {
         if(!premenu)
         {
-            if(event.type == sf::Event::KeyPressed)
+            if(event.type == sf::Event::MouseButtonReleased)
             {
-                UsingMouseSelection=false;
-                if (event.key.code == config->GetInt("keybindPata") || event.key.code == config->GetInt("keybindChaka") || event.key.code == config->GetInt("secondaryKeybindPata") || event.key.code == config->GetInt("secondaryKeybindChaka")){
-                    totem_sel-=1;
-                    if (totem_sel<0)
-                        totem_sel=3;
-                    old_sel = totem_sel;
-                }
-                if (event.key.code == config->GetInt("keybindPon") || event.key.code == config->GetInt("keybindDon") || event.key.code == config->GetInt("secondaryKeybindPon") || event.key.code == config->GetInt("secondaryKeybindDon")){
-                    totem_sel+=1;
-                    if (totem_sel>3)
-                        totem_sel=0;
-                    old_sel = totem_sel;
-                }
-                if (event.key.code == config->GetInt("keybindMenuEnter"))
+                if(event.mouseButton.button == sf::Mouse::Left)
                 {
-                    SelectMenuOption();
-                }
-            }
-            else if (event.type == sf::Event::MouseButtonReleased)
-            {
-            if (event.mouseButton.button == sf::Mouse::Left){
                     SelectMenuOption();
                 }
             }
@@ -260,7 +242,7 @@ void MainMenu::EventFired(sf::Event event){
         }
         else
         {
-            if(event.type == sf::Event::KeyPressed)
+            if((event.type == sf::Event::KeyPressed) || (event.type == sf::Event::JoystickButtonPressed))
             {
                 if(startClock.getElapsedTime().asSeconds() > 2)
                 {
@@ -284,30 +266,27 @@ void MainMenu::EventFired(sf::Event event){
 }
 void MainMenu::SelectMenuOption()
 {
-    switch (totem_sel){
-    case 0:
-        // load the start game cutscenes and menu
+    switch (totem_sel)
+    {
+        case 0: // load the start game cutscenes and menu
         {
+            title_loop.stop();
 
-        title_loop.stop();
+            Hide();
+            sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+            v4core->continueLoading=true;
+            v4core->window.setActive(false);
+            loadingThreadInstance.launch();
 
-        Hide();
-        sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
-        v4core->continueLoading=true;
-        v4core->window.setActive(false);
-        loadingThreadInstance.launch();
+            nameEntryMenu.Show();
+            nameEntryMenu.isActive = true;
+            nameEntryMenu.Initialise(config,v4core,this);
 
-        nameEntryMenu.Show();
-        nameEntryMenu.isActive = true;
-        nameEntryMenu.Initialise(config,keyMapping,v4core,this);
-
-        v4core->continueLoading=false;
+            v4core->continueLoading=false;
+            break;
         }
-        break;
-    case 1:
-        // load save and patapolis
+        case 1: // load save and patapolis
         {
-
             title_loop.stop();
             Hide();
 
@@ -320,7 +299,7 @@ void MainMenu::SelectMenuOption()
 
                 patapolisMenu.Show();
                 patapolisMenu.isActive = true;
-                patapolisMenu.Initialise(config,keyMapping,v4core,this);
+                patapolisMenu.Initialise(config,v4core,this);
 
                 v4core->continueLoading=false;
             }
@@ -329,31 +308,45 @@ void MainMenu::SelectMenuOption()
                 patapolisMenu.Show();
                 patapolisMenu.isActive = true;
             }
+
+            break;
         }
-        break;
-    case 2:
-        // load the options menu
-        title_loop.stop();
-        Hide();
-        v4core->ChangeRichPresence("In Options menu", "logo", "");
-        optionsMenu.state = 0;
-        optionsMenu.sel = 0;
-        optionsMenu.Show();
-        break;
-    case 3:
-        // quit the game probably
-        v4core->closeWindow=true;
-        break;
-    default:
-        cout<<"WTF happened? you probably added more menu buttons but messed it up"<<endl;
-        break;
+        case 2:
+        {
+            // load the options menu
+            title_loop.stop();
+            Hide();
+            v4core->ChangeRichPresence("In Options menu", "logo", "");
+            optionsMenu.state = 0;
+            optionsMenu.sel = 0;
+            optionsMenu.Show();
+            break;
+        }
+        case 3:
+        {
+            // quit the game probably
+            v4core->closeWindow=true;
+            break;
+        }
     }
 }
-void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld)
+void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inputCtrl)
 {
     if (v4core->currentController.isInitialized)
     {
-        v4core->currentController.Update(window, fps, keyMap,keyMapHeld);
+        v4core->currentController.Update(window, fps, inputCtrl);
+    }
+    else if(patapolisMenu.isActive)
+    {
+        patapolisMenu.Update(window,fps,inputCtrl);
+    }
+    else if(nameEntryMenu.isActive)
+    {
+        nameEntryMenu.Update(window,fps);
+    }
+    else if(optionsMenu.isActive)
+    {
+        optionsMenu.Update(window,fps);
     }
     else if(isActive)
     {
@@ -458,7 +451,10 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
         else
         {
             if(title_loop.getStatus() == sf::Sound::Status::Stopped)
-            title_loop.play();
+            {
+                cout << "I am playing" << endl;
+                title_loop.play();
+            }
 
             window.draw(v_background);
 
@@ -682,24 +678,36 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
             window.draw(rs_cover2);
 
             window.setView(window.getDefaultView());
-        }
-    }
-    else
-    {
-        if (patapolisMenu.isActive)
-        {
-            patapolisMenu.Update(window,fps);
-        }
-        else if (nameEntryMenu.isActive)
-        {
-            nameEntryMenu.Update(window,fps);
-        }
-        else if (optionsMenu.isActive)
-        {
-            optionsMenu.Update(window,fps);
-        }
-    }
 
+            if(inputCtrl.isKeyPressed(InputController::Keys::LEFT))
+            {
+                UsingMouseSelection=false;
+
+                totem_sel-=1;
+                if (totem_sel<0)
+                    totem_sel=3;
+                old_sel = totem_sel;
+            }
+
+            if(inputCtrl.isKeyPressed(InputController::Keys::RIGHT))
+            {
+                UsingMouseSelection=false;
+
+                totem_sel+=1;
+                if (totem_sel>3)
+                    totem_sel=0;
+                old_sel = totem_sel;
+            }
+
+            if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+            {
+                UsingMouseSelection=false;
+
+                SelectMenuOption();
+                title_loop.stop();
+            }
+        }
+    }
 }
 void MainMenu::UpdateButtons(){
     /// this should update the text on all the buttons

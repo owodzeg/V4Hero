@@ -6,6 +6,8 @@
 #include "../Mission/MissionController.h"
 #include "../Graphics/PSprite.h"
 #include "../Graphics/PText.h"
+#include "../Dialog/DialogBox.h"
+
 class V4Core;
 class OptionsMenu : public Menu
 {
@@ -59,8 +61,10 @@ class OptionsMenu : public Menu
 
         PSprite dg_restart, dg_select;
 
+        PataDialogBox restart_prompt;
+
         Menu *parentMenu;
-        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent,Menu *curParentMenu);
+        void Initialise(Config *thisConfig,V4Core *parent,Menu *curParentMenu);
         void Update(sf::RenderWindow &window, float fps);
         void SelectMenuOption();
         void SetConfigValue(std::string key, std::string value);

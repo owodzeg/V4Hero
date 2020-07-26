@@ -8,6 +8,8 @@
 #include "Altar.h"
 #include "Barracks.h"
 #include "Obelisk.h"
+#include "../Input/InputController.h"
+
 class V4Core;
 class PatapolisMenu : public Menu
 {
@@ -161,8 +163,8 @@ class PatapolisMenu : public Menu
         void addRay(float x1, float y1, float x2, float y2);
         Fire addFire(int type, float x, float y, bool add);
         void addSmokeParticle(float x, float y, PSprite& refer);
-        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent,Menu *curParentMenu);
-        void Update(sf::RenderWindow &window, float fps);
+        void Initialise(Config *thisConfig, V4Core *parent,Menu *curParentMenu);
+        void Update(sf::RenderWindow &window, float fps, InputController& inputCtrl);
         void EventFired(sf::Event event);
         void SetTitle(int menuPosition);
         void OnExit();

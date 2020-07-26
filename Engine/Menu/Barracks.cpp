@@ -4,6 +4,7 @@
 #include "../V4Core.h"
 #include <sstream>
 #include "Altar.h"
+
 Barracks::Barracks()
 {
     //ctor
@@ -16,12 +17,12 @@ Barracks::Barracks()
 
     isActive=false;
 }
-void Barracks::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, Menu *curParentMenu){
+void Barracks::Initialise(Config *thisConfigs, V4Core *parent, Menu *curParentMenu)
+{
     parent->SaveToDebugLog("Initializing Barracks...");
-    Scene::Initialise(thisConfigs,keymap,parent);
+    Scene::Initialise(thisConfigs, parent);
     parentMenu = curParentMenu;
     currentController = &(v4core->currentController);
-    keyMap = keymap;
     config = thisConfigs;
 
     patapon->LoadConfig(thisConfigs);
@@ -231,152 +232,7 @@ void Barracks::EventFired(sf::Event event){
     {
         if(event.type == sf::Event::KeyPressed)
         {
-            int keyCode = event.key.code;
-            if (!MenuMode)
-            {
-                if(keyCode == thisConfig->GetInt("keybindChaka") || keyCode == thisConfig->GetInt("secondaryKeybindChaka"))
-                {
-                    currentItemPosition -=1;
-                    if (currentItemPosition<0){
-                        currentItemPosition = enabledPositons.size()-1;
-                    }
-                    while(!enabledPositons[currentItemPosition]){
-                        currentItemPosition -=1;
-                    }
 
-                }
-                if(keyCode == thisConfig->GetInt("keybindDon") || keyCode == thisConfig->GetInt("secondaryKeybindDon"))
-                {
-                    currentItemPosition +=1;
-                    if (currentItemPosition>enabledPositons.size()-1){
-                        currentItemPosition = 0;
-                    }
-                    while(!enabledPositons[currentItemPosition]){
-                        currentItemPosition +=1;
-                    }
-                }
-
-            }
-            else
-            {
-                if (event.key.code == thisConfig->GetInt("keybindPon") || event.key.code == thisConfig->GetInt("secondaryKeybindPon")){
-
-                    /// we need to move to the right
-                    if (inventoryGridXPos<numItemColumns-1){
-                        inventoryGridXPos+=1;
-                    } else {
-                        inventoryGridXPos = 0;
-                    }
-
-                } else if (event.key.code == thisConfig->GetInt("keybindPata") || event.key.code == thisConfig->GetInt("secondaryKeybindPata")){
-                    /// we need to move to the left
-                    if (inventoryGridXPos>0){
-                        inventoryGridXPos-=1;
-                    } else {
-                        inventoryGridXPos = numItemColumns-1;
-                    }
-
-                } else if (event.key.code == thisConfig->GetInt("keybindChaka") || event.key.code == thisConfig->GetInt("secondaryKeybindChaka")){
-                    /// we need to move up
-                    if (inventoryGridYPos>0){
-
-                        inventoryGridYPos-=1;
-                        if (inventoryGridYPos - currentRow<0){
-                                /// the position is above the top of the grid so we scroll up
-                                currentRow-=1;
-                        }
-                    } else {
-                        inventoryGridYPos = numItemRows-1;
-                        if (numItemRows<5){
-                            currentRow=inventoryGridYPos-numItemRows+1;
-                        } else {
-                            currentRow=inventoryGridYPos-4;
-                        }
-                    }
-
-                } else if (event.key.code == thisConfig->GetInt("keybindDon") || event.key.code == thisConfig->GetInt("secondaryKeybindDon")){
-                    /// we need to move down
-                    if (inventoryGridYPos<numItemRows-1){
-                        inventoryGridYPos+=1;
-                        if (inventoryGridYPos - currentRow>=5){
-                            /// the position is below the bottom of the grid so we scroll down
-                            currentRow+=1;
-                        }
-                    } else {
-                        inventoryGridYPos = 0;
-                        currentRow=0;
-                    }
-
-                }
-
-                RefreshStats();
-            }
-            if(keyCode == thisConfig->GetInt("keybindMenuEnter"))
-            {
-                if (!MenuMode)
-                {
-                    MenuMode=true;
-
-                    if (currentItemPosition==1 || currentItemPosition==2)
-                    {
-                        activeCategory=1;
-                    }
-                    else if(currentItemPosition==4)
-                    {
-                        activeCategory=2;
-                    }
-                    else if(currentItemPosition==3)
-                    {
-                        activeCategory=3;
-                    }
-                    OpenBarracksMenu();
-
-                }
-                else
-                {
-                    InventoryItem currentItem = v4core->savereader.invdata.ItemsByType(activeCategory)[inventoryGridXPos+inventoryGridYPos/numItemColumns];
-                    v4core->savereader.ponreg.pons[current_pon].GiveItem(currentItem.inventoryId);
-                    RefreshStats();
-                    MenuMode=false;
-                }
-            }
-            if(keyCode == thisConfig->GetInt("keybindBack"))
-            {
-                if (MenuMode)
-                {
-                    MenuMode=false;
-
-                    RefreshStats();
-                }
-                else
-                {
-                    this->Hide();
-                    this->isActive = false;
-                    parentMenu->Show();
-                    parentMenu->isActive=true;
-                    v4core->savereader.Save();
-                }
-            }
-            if(event.key.code == sf::Keyboard::Space)
-            {
-                if(obelisk)
-                {
-                    cout << "Lets start the mission" << endl;
-                    sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
-                    v4core->continueLoading=true;
-                    v4core->window.setActive(false);
-                    loadingThreadInstance.launch();
-
-                    currentController->Initialise(*config,*keyMap,config->GetString("mission1Background"),*v4core);
-                    currentController->StartMission(mission_file,1,missionID);
-                    this->Hide();
-                    this->isActive = false;
-
-                    missionStarted = true;
-
-                    v4core->continueLoading=false;
-                }
-            }
 
         } else if (event.type == sf::Event::MouseButtonReleased){
             // We use mouse released so a user can change their mind by keeping the mouse held and moving away.
@@ -525,7 +381,7 @@ void Barracks::RefreshStats(){
         }*/
     }
 }
-void Barracks::Update(sf::RenderWindow &window, float fps)
+void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inputCtrl)
 {
     if(isActive)
     {
@@ -722,6 +578,156 @@ void Barracks::Update(sf::RenderWindow &window, float fps)
         window.draw(mm_selected_item_line);
 
         window.setView(lastView);
+
+            if (!MenuMode)
+            {
+                if(inputCtrl.isKeyPressed(InputController::Keys::UP))
+                {
+                    currentItemPosition -=1;
+                    if (currentItemPosition<0){
+                        currentItemPosition = enabledPositons.size()-1;
+                    }
+                    while(!enabledPositons[currentItemPosition]){
+                        currentItemPosition -=1;
+                    }
+                }
+
+                if(inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+                {
+                    currentItemPosition +=1;
+                    if (currentItemPosition>enabledPositons.size()-1){
+                        currentItemPosition = 0;
+                    }
+                    while(!enabledPositons[currentItemPosition]){
+                        currentItemPosition +=1;
+                    }
+                }
+
+            }
+            else
+            {
+                if(inputCtrl.isKeyPressed(InputController::Keys::RIGHT))
+                {
+                    /// we need to move to the right
+                    if (inventoryGridXPos<numItemColumns-1){
+                        inventoryGridXPos+=1;
+                    } else {
+                        inventoryGridXPos = 0;
+                    }
+                }
+                else if(inputCtrl.isKeyPressed(InputController::Keys::LEFT))
+                {
+                    /// we need to move to the left
+                    if (inventoryGridXPos>0){
+                        inventoryGridXPos-=1;
+                    } else {
+                        inventoryGridXPos = numItemColumns-1;
+                    }
+
+                }
+                else if(inputCtrl.isKeyPressed(InputController::Keys::UP))
+                {
+                    /// we need to move up
+                    if (inventoryGridYPos>0){
+
+                        inventoryGridYPos-=1;
+                        if (inventoryGridYPos - currentRow<0){
+                                /// the position is above the top of the grid so we scroll up
+                                currentRow-=1;
+                        }
+                    } else {
+                        inventoryGridYPos = numItemRows-1;
+                        if (numItemRows<5){
+                            currentRow=inventoryGridYPos-numItemRows+1;
+                        } else {
+                            currentRow=inventoryGridYPos-4;
+                        }
+                    }
+
+                }
+                else if(inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+                {
+                    /// we need to move down
+                    if (inventoryGridYPos<numItemRows-1){
+                        inventoryGridYPos+=1;
+                        if (inventoryGridYPos - currentRow>=5){
+                            /// the position is below the bottom of the grid so we scroll down
+                            currentRow+=1;
+                        }
+                    } else {
+                        inventoryGridYPos = 0;
+                        currentRow=0;
+                    }
+                }
+
+                RefreshStats();
+            }
+            if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+            {
+                if (!MenuMode)
+                {
+                    MenuMode=true;
+
+                    if (currentItemPosition==1 || currentItemPosition==2)
+                    {
+                        activeCategory=1;
+                    }
+                    else if(currentItemPosition==4)
+                    {
+                        activeCategory=2;
+                    }
+                    else if(currentItemPosition==3)
+                    {
+                        activeCategory=3;
+                    }
+                    OpenBarracksMenu();
+
+                }
+                else
+                {
+                    InventoryItem currentItem = v4core->savereader.invdata.ItemsByType(activeCategory)[inventoryGridXPos+inventoryGridYPos/numItemColumns];
+                    v4core->savereader.ponreg.pons[current_pon].GiveItem(currentItem.inventoryId);
+                    RefreshStats();
+                    MenuMode=false;
+                }
+            }
+            if(inputCtrl.isKeyPressed(InputController::Keys::CIRCLE))
+            {
+                if (MenuMode)
+                {
+                    MenuMode=false;
+
+                    RefreshStats();
+                }
+                else
+                {
+                    this->Hide();
+                    this->isActive = false;
+                    parentMenu->Show();
+                    parentMenu->isActive=true;
+                    v4core->savereader.Save();
+                }
+            }
+            if(inputCtrl.isKeyPressed(InputController::Keys::START))
+            {
+                if(obelisk)
+                {
+                    cout << "Lets start the mission" << endl;
+                    sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+                    v4core->continueLoading=true;
+                    v4core->window.setActive(false);
+                    loadingThreadInstance.launch();
+
+                    currentController->Initialise(*config,config->GetString("mission1Background"),*v4core);
+                    currentController->StartMission(mission_file,1,missionID);
+                    this->Hide();
+                    this->isActive = false;
+
+                    missionStarted = true;
+
+                    v4core->continueLoading=false;
+                }
+            }
     }
 }
 

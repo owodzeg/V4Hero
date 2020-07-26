@@ -11,9 +11,9 @@ SaveFileCreatedMenuButtonList::SaveFileCreatedMenuButtonList()
 {
 
 }
-void SaveFileCreatedMenuButtonList::Initialise(sf::Font *font,Config &newConfig,  std::map<int,bool> *thisKeymap,MissionController *controller,SaveFileCreatedMenu *parMenu)
+void SaveFileCreatedMenuButtonList::Initialise(sf::Font *font,Config &newConfig,MissionController *controller,SaveFileCreatedMenu *parMenu)
 {
-    ButtonList::Initialise(font,newConfig,thisKeymap,controller,parMenu);
+    ButtonList::Initialise(font,newConfig,controller,parMenu);
     MenuButton* level1Button = new MenuButton(L"menu_button_confirm",font,42,550,this,0);
     buttons.push_back(*level1Button);
     buttons[0].SetSelected(false);
@@ -34,7 +34,7 @@ void SaveFileCreatedMenuButtonList::SelectButton(int index){
                 parentMenu->isActive = false;
                 svCrtMnu->nameEntryMenu->Hide();
 
-                currentController->Initialise(*config,*keyMap,config->GetString("mission1Background"),*parentMenu->v4core);
+                currentController->Initialise(*config,config->GetString("mission1Background"),*parentMenu->v4core);
                 currentController->StartMission(config->GetString("mission1Theme"),1,1);
 
                 break;

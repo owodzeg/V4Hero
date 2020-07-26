@@ -9,6 +9,7 @@
 #include "../../Graphics/Menu.h"
 #include "../ButtonList.h"
 #include "../Patapolis.h"
+
 class Menu;
 class PatapolisMenu;
 class NewGameMenuButtonList : public ButtonList
@@ -17,7 +18,7 @@ class NewGameMenuButtonList : public ButtonList
 
         Menu* optionsMenu;
         Menu* nameEntryMenu;
-        void Initialise(sf::Font *font,Config &newConfig, std::map<int,bool> *keymap,MissionController *controller,Menu *parentMenu,Menu *CurOptionsMenu, Menu *CurNameEntryMenu);
+        void Initialise(sf::Font *font, Config &newConfig, MissionController *controller, Menu *parentMenu, Menu *CurOptionsMenu, Menu *CurNameEntryMenu);
         void SelectButton(int index);
 
         NewGameMenuButtonList();

@@ -165,15 +165,15 @@ void PatapolisMenu::addSmokeParticle(float x, float y, PSprite& refer)
     smoke.push_back(tmp);
 }
 
-void PatapolisMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, Menu *curParentMenu)
+void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParentMenu)
 {
     parent->SaveToDebugLog("Initializing Patapolis...");
 
     sf::Context context;
-    Scene::Initialise(thisConfigs,keymap,parent);
-    altar_menu.Initialise(thisConfigs,keymap,parent,this);
-    barracks_menu.Initialise(thisConfigs,keymap,parent,this);
-    obelisk_menu.Initialise(thisConfigs,keymap,parent,this);
+    Scene::Initialise(thisConfigs,parent);
+    altar_menu.Initialise(thisConfigs,parent,this);
+    barracks_menu.Initialise(thisConfigs,parent,this);
+    obelisk_menu.Initialise(thisConfigs,parent,this);
     parentMenu = curParentMenu;
     quality = thisConfig->GetInt("textureQuality");
     float ratioX, ratioY;
@@ -569,75 +569,7 @@ void PatapolisMenu::EventFired(sf::Event event)
     {
         if(event.type == sf::Event::KeyPressed)
         {
-            if(event.key.code == sf::Keyboard::Left)
-            {
-                if(location > 0)
-                {
-                    location--;
-                    left = true;
-
-                    SetTitle(location);
-                    thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
-                }
-            }
-            else if(event.key.code == sf::Keyboard::Right)
-            {
-                if(location < locations.size()-1)
-                {
-                    location++;
-                    left = false;
-
-                    SetTitle(location);
-                    thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
-                }
-            }
-            else if (event.key.code == thisConfig->GetInt("keybindDon") || event.key.code == thisConfig->GetInt("secondaryKeybindDon") || event.key.code == thisConfig->GetInt("keybindMenuEnter"))
-            {
-                // select the current menu item
-                switch (location)
-                {
-                case 0:
-                    /// trader/random
-                    // open the world map
-                    break;
-                case 2:
-                    /// armory/barracks
-                    thisConfig->thisCore->SaveToDebugLog("Entering Barracks...");
-                    barracks_menu.Show();
-                    barracks_menu.isActive = true;
-                    barracks_menu.obelisk = false;
-                    barracks_menu.OpenBarracksMenu();
-                    thisConfig->thisCore->SaveToDebugLog("Barracks entered.");
-                    break;
-                case 3:
-                    /// festival
-                    // open barracks screen
-                    break;
-                case 4:
-                    /// altar
-                    // open mater menu
-                    thisConfig->thisCore->SaveToDebugLog("Entering Altar...");
-                    altar_menu.Show();
-                    altar_menu.isActive = true;
-                    altar_menu.ShowAltar();
-                    thisConfig->thisCore->SaveToDebugLog("Altar entered.");
-                    break;
-                case 5:
-                    /// obelisk
-                    thisConfig->thisCore->SaveToDebugLog("Entering Obelisk...");
-                    obelisk_menu.Reload();
-                    obelisk_menu.Show();
-                    obelisk_menu.isActive = true;
-                    thisConfig->thisCore->SaveToDebugLog("Obelisk entered.");
-                    break;
-                default:
-                    /// nothing
-
-                    break;
-                }
-
-            }
-            else if (event.key.code == thisConfig->GetInt("keybindBack"))
+            if (event.key.code == thisConfig->GetInt("keybindBack"))
             {
                 thisConfig->thisCore->SaveToDebugLog("Left from Patapolis to Title screen.");
                 this->Hide();
@@ -701,7 +633,7 @@ float EaseIn (float time, float startValue, float change, float duration)
     time--;
     return -change / 2 * (time * (time - 2) - 1) + startValue;
 };
-void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
+void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController& inputCtrl)
 {
     if(isActive)
     {
@@ -1133,15 +1065,15 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
 
         if(barracks_menu.isActive)
         {
-            barracks_menu.Update(window,fps);
+            barracks_menu.Update(window,fps,inputCtrl);
         }
         else if(altar_menu.isActive)
         {
-            altar_menu.Update(window,fps);
+            altar_menu.Update(window,fps, inputCtrl);
         }
         else if(obelisk_menu.isActive)
         {
-            obelisk_menu.Update(window,fps);
+            obelisk_menu.Update(window,fps,inputCtrl);
         }
         else
         {
@@ -1171,64 +1103,72 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps)
 
         window.setView(lastView);
 
-        /**window.setView(window.getDefaultView());
-        mm_bigBox.setSize(sf::Vector2f(window.getSize().x,window.getSize().y-200));
-        //mm_smallerBox.setSize(sf::Vector2f(100,10));
-        //mm_titleBox.setSize(sf::Vector2f(100,10));
-
-        mm_bigBox.setPosition(0,85);
-        //mm_smallerBox.setPosition(100,10);
-        //mm_titleBox.setPosition(100,10);
-
-
-        window.draw(mm_bigBox);
-        //window.draw(mm_smallerBox);
-        //window.draw(mm_titleBox);
-
-
-
-
-        sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
-        auto lastView = window.getView();
-        sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos,lastView);
-
-        //t_pressToContinue.setPosition(window.getSize().x/2,300);
-        //window.draw(t_pressToContinue);
-
-
-        window.setView(window.getDefaultView());
-        if(anim_timer.getElapsedTime().asSeconds() >= totalTime)
+        if((inputCtrl.isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl.isKeyPressed(InputController::Keys::LTRIGGER)))
         {
-            isAnim = false;
+            if(location > 0)
+            {
+                location--;
+                left = true;
+
+                SetTitle(location);
+                thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
+            }
         }
-        if (isAnim)
+        else if((inputCtrl.isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl.isKeyPressed(InputController::Keys::RTRIGGER)))
         {
-            p_background[0].x = EaseIn(anim_timer.getElapsedTime().asSeconds(),animStartVal,animChangeVal,totalTime);
-        }
-        for(int i=0; i<s_background.size(); i++)
-        {
-            //s_background[i].setTexture(t_background[i]);
+            if(location < locations.size()-1)
+            {
+                location++;
+                left = false;
 
-            s_background[i].setPosition(p_background[i].x,p_background[i].y);
-            //cout << s_background[i].y << endl;
-            s_background[i].draw(window);
+                SetTitle(location);
+                thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
+            }
         }
-        if (barracks_menu.isActive)
+        else if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
         {
-            barracks_menu.Update(window,fps);
+            // select the current menu item
+            switch (location)
+            {
+            case 0:
+                /// trader/random
+                // open the world map
+                break;
+            case 2:
+                /// armory/barracks
+                thisConfig->thisCore->SaveToDebugLog("Entering Barracks...");
+                barracks_menu.Show();
+                barracks_menu.isActive = true;
+                barracks_menu.obelisk = false;
+                barracks_menu.OpenBarracksMenu();
+                thisConfig->thisCore->SaveToDebugLog("Barracks entered.");
+                break;
+            case 3:
+                /// festival
+                // open barracks screen
+                break;
+            case 4:
+                /// altar
+                // open mater menu
+                thisConfig->thisCore->SaveToDebugLog("Entering Altar...");
+                altar_menu.Show();
+                altar_menu.isActive = true;
+                altar_menu.ShowAltar();
+                thisConfig->thisCore->SaveToDebugLog("Altar entered.");
+                break;
+            case 5:
+                /// obelisk
+                thisConfig->thisCore->SaveToDebugLog("Entering Obelisk...");
+                obelisk_menu.Reload();
+                obelisk_menu.Show();
+                obelisk_menu.isActive = true;
+                thisConfig->thisCore->SaveToDebugLog("Obelisk entered.");
+                break;
+            default:
+                /// nothing
+                break;
+            }
         }
-        else if(altar_menu.isActive)
-        {
-            altar_menu.Update(window,fps);
-        }
-        else if(obelisk_menu.isActive)
-        {
-            obelisk_menu.Update(window,fps);
-        }
-        else
-        {
-
-        }*/
     }
     else
     {

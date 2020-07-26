@@ -170,3 +170,11 @@ std::wstring Config::GetLanguageName(){
     return resws;
 }
 
+bool Config::keyExists(std::string key)
+{
+    if(configMap.count(key) == 0)
+    return false;
+    else
+    return true;
+}
+

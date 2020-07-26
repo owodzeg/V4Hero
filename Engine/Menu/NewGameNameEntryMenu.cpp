@@ -38,12 +38,12 @@ NewGameNameEntryMenu::NewGameNameEntryMenu()
     mm_titleBox.setSize(sf::Vector2f(100,10));
     mm_titleBox.setFillColor(sf::Color::Red);
 }
-void NewGameNameEntryMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent,Menu* parentMenu){
-    Scene::Initialise(thisConfigs,keymap,parent);
+void NewGameNameEntryMenu::Initialise(Config *thisConfigs,V4Core *parent,Menu* parentMenu){
+    Scene::Initialise(thisConfigs,parent);
     v4core->menus.push_back(&optionsMenu);
-    savefilecreated.Initialise(thisConfigs,keymap,parent,this);
+    savefilecreated.Initialise(thisConfigs,parent,this);
     savefilecreated.Hide();
-    buttonList.Initialise(&f_font,*thisConfig,keymap,&(v4core->currentController),this);
+    buttonList.Initialise(&f_font,*thisConfig,&(v4core->currentController),this);
 
 
     t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_what_is_your_name")));

@@ -70,10 +70,9 @@ class MainMenu : public Menu
         PatapolisMenu patapolisMenu;
         NewGameNameEntryMenu nameEntryMenu;
         OptionsMenu optionsMenu;
-        std::map<int,bool> *keyMapping;
 
-        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent);
-        void Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld);
+        void Initialise(Config *thisConfig, V4Core *parent);
+        void Update(sf::RenderWindow &window, float fps, InputController& inputCtrl);
         void EventFired(sf::Event event);
         void OnExit();
         void SelectMenuOption();

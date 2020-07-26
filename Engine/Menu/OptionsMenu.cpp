@@ -39,11 +39,11 @@ OptionsMenu::OptionsMenu()
     isActive=false;
     madeChanges=false;
 }
-void OptionsMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, Menu *curParentMenu)
+void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParentMenu)
 {
     parent->SaveToDebugLog("Initializing Options menu...");
     cout << "Initialize Options menu" << endl;
-    Scene::Initialise(thisConfigs,keymap,parent);
+    Scene::Initialise(thisConfigs,parent);
     //buttonList.Initialise(&m_font,*thisConfig,keymap,&(v4core->currentController),this);
     parentMenu = curParentMenu;
     cout << "Initial values loaded, loading assets" << endl;
@@ -75,6 +75,8 @@ void OptionsMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Co
 
     t_restart.createText(m_font, 26, sf::Color::Black, "You need to restart your game to\napply changes. Restart now?", q, 2);
 
+    vector<string> restart_opt = {"Restart game now", "Revert changes"};
+    restart_prompt.Create(m_font, "You need to restart your game to\napply changes. Restart now?", restart_opt, q, thisConfigs->GetInt("resX") / float(1280));
     options_header.createText(m_font, 45, sf::Color::White, "Options", q, 2);
 
     PText opt;
@@ -369,7 +371,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
             {
                 if(madeChanges)
                 {
-                    dg_restart.setPosition(474,290);
+                    /**dg_restart.setPosition(474,290);
                     dg_restart.draw(window);
 
                     t_restart.setPosition(765,447);
@@ -394,7 +396,18 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps)
                         }
 
                         restarts[i].draw(window);
-                    }
+                    }**/
+
+                    /*if(&keyMap[sf::Keyboard::Up])
+                    restart_prompt.MoveUp();
+                    if(&keyMap[sf::Keyboard::Down])
+                    restart_prompt.MoveDown();*/
+
+                    sel = restart_prompt.CheckSelectedOption();
+
+                    restart_prompt.x = 640;
+                    restart_prompt.y = 360;
+                    restart_prompt.Draw(window, fps);
                 }
                 else
                 {

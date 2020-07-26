@@ -25,9 +25,10 @@ AltarMenu::AltarMenu()
 
     isActive=false;
 }
-void AltarMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent, PatapolisMenu *curParentMenu){
+void AltarMenu::Initialise(Config *thisConfigs, V4Core *parent, PatapolisMenu *curParentMenu)
+{
     parent->SaveToDebugLog("Initializing Altar...");
-    Scene::Initialise(thisConfigs,keymap,parent);
+    Scene::Initialise(thisConfigs, parent);
     parentMenu = curParentMenu;
 
     int quality = thisConfigs->GetInt("textureQuality");
@@ -329,79 +330,8 @@ void AltarMenu::EventFired(sf::Event event){
         if(event.type == sf::Event::KeyPressed)
         {
             // do something here;
-            if (event.key.code == sf::Keyboard::Num1){
-
-
-            } else if (event.key.code == sf::Keyboard::Num2){
-
-
-
-            } else if (event.key.code == sf::Keyboard::Num3){
-
-
-
-            } else if (event.key.code == sf::Keyboard::Num4){
-
-
-
-            } else if (event.key.code == sf::Keyboard::Num5){
-
-
-            } else if (event.key.code == thisConfig->GetInt("keybindPon") || event.key.code == thisConfig->GetInt("secondaryKeybindPon")){
-
-                /// we need to move to the right
-                if (inventoryGridXPos<numItemColumns-1){
-                    inventoryGridXPos+=1;
-                } else {
-                    inventoryGridXPos = 0;
-                }
-
-            } else if (event.key.code == thisConfig->GetInt("keybindPata") || event.key.code == thisConfig->GetInt("secondaryKeybindPata")){
-                /// we need to move to the left
-                if (inventoryGridXPos>0){
-                    inventoryGridXPos-=1;
-                } else {
-                    inventoryGridXPos = numItemColumns-1;
-                }
-
-            } else if (event.key.code == thisConfig->GetInt("keybindChaka") || event.key.code == thisConfig->GetInt("secondaryKeybindChaka")){
-                /// we need to move up
-                if (inventoryGridYPos>0){
-
-                    inventoryGridYPos-=1;
-                    if (inventoryGridYPos - currentRow<0){
-                            /// the position is above the top of the grid so we scroll up
-                            currentRow-=1;
-                    }
-                } else {
-                    inventoryGridYPos = numItemRows-1;
-                    if (numItemRows<5){
-                        currentRow=inventoryGridYPos-numItemRows+1;
-                    } else {
-                        currentRow=inventoryGridYPos-4;
-                    }
-                }
-
-            } else if (event.key.code == thisConfig->GetInt("keybindDon") || event.key.code == thisConfig->GetInt("secondaryKeybindDon")){
-                /// we need to move down
-                if (inventoryGridYPos<numItemRows-1){
-                    inventoryGridYPos+=1;
-                    if (inventoryGridYPos - currentRow>=5){
-                        /// the position is below the bottom of the grid so we scroll down
-                        currentRow+=1;
-                    }
-                } else {
-                    inventoryGridYPos = 0;
-                    currentRow=0;
-                }
-
-            } else if (event.key.code == thisConfig->GetInt("keybindBack")){
-                this->Hide();
-                this->isActive = false;
-            }
-            UpdateAltarDescriptions();
-
-        } else if (event.type == sf::Event::MouseButtonReleased){
+        }
+        else if (event.type == sf::Event::MouseButtonReleased){
             // We use mouse released so a user can change their mind by keeping the mouse held and moving away.
                 std::ostringstream ss2;
                 ss2 << numItemRows;
@@ -411,9 +341,10 @@ void AltarMenu::EventFired(sf::Event event){
     }
 }
 
-void AltarMenu::Update(sf::RenderWindow &window, float fps)
+void AltarMenu::Update(sf::RenderWindow &window, float fps, InputController& inputCtrl)
 {
-    if(isActive){
+    if(isActive)
+    {
 
 //-(s_titleenu_bkg.t.getSize().x*0.2)/2
         /// draw altar menu text
@@ -494,6 +425,82 @@ void AltarMenu::Update(sf::RenderWindow &window, float fps)
             //window.draw(mm_icon_example_tile);
         }
 
+        UpdateAltarDescriptions();
+
+        if(inputCtrl.isKeyPressed(InputController::Keys::RIGHT))
+            {
+                /// we need to move to the right
+                if (inventoryGridXPos<numItemColumns-1)
+                {
+                    inventoryGridXPos+=1;
+                }
+                else
+                {
+                    inventoryGridXPos = 0;
+                }
+            }
+            else if(inputCtrl.isKeyPressed(InputController::Keys::LEFT))
+            {
+                /// we need to move to the left
+                if (inventoryGridXPos>0)
+                {
+                    inventoryGridXPos-=1;
+                }
+                else
+                {
+                    inventoryGridXPos = numItemColumns-1;
+                }
+            }
+            else if(inputCtrl.isKeyPressed(InputController::Keys::UP))
+            {
+                /// we need to move up
+                if (inventoryGridYPos>0)
+                {
+                    inventoryGridYPos-=1;
+                    if (inventoryGridYPos - currentRow<0)
+                    {
+                        /// the position is above the top of the grid so we scroll up
+                        currentRow-=1;
+                    }
+                }
+                else
+                {
+                    inventoryGridYPos = numItemRows-1;
+                    if (numItemRows<5)
+                    {
+                        currentRow=inventoryGridYPos-numItemRows+1;
+                    }
+                    else
+                    {
+                        currentRow=inventoryGridYPos-4;
+                    }
+                }
+
+            }
+            else if(inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+            {
+                /// we need to move down
+                if (inventoryGridYPos<numItemRows-1)
+                {
+                    inventoryGridYPos+=1;
+                    if (inventoryGridYPos - currentRow>=5)
+                    {
+                        /// the position is below the bottom of the grid so we scroll down
+                        currentRow+=1;
+                    }
+                }
+                else
+                {
+                    inventoryGridYPos = 0;
+                    currentRow=0;
+                }
+
+            }
+            else if(inputCtrl.isKeyPressed(InputController::Keys::CIRCLE))
+            {
+                this->Hide();
+                this->isActive = false;
+            }
     }
 }
 

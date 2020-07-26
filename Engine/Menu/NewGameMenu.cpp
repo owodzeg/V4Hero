@@ -41,12 +41,12 @@ NewGameMenu::NewGameMenu()
     fade.setFillColor(sf::Color(0,0,0,0));
     fade.setSize(sf::Vector2f(800,600));
 }
-void NewGameMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent){
-    Scene::Initialise(thisConfigs,keymap,parent);
-    optionsMenu.Initialise(thisConfigs,keymap,parent,this);
-    newGameNameEntryMenu.Initialise(thisConfigs,keymap,parent,this);
+void NewGameMenu::Initialise(Config *thisConfigs,V4Core *parent){
+    Scene::Initialise(thisConfigs,parent);
+    optionsMenu.Initialise(thisConfigs,parent,this);
+    newGameNameEntryMenu.Initialise(thisConfigs,parent,this);
     v4core->menus.push_back(&optionsMenu);
-    buttonList.Initialise(&f_font,*thisConfig,keymap,&(v4core->currentController),this,&optionsMenu,&newGameNameEntryMenu);
+    buttonList.Initialise(&f_font,*thisConfig,&(v4core->currentController),this,&optionsMenu,&newGameNameEntryMenu);
 }
 void NewGameMenu::EventFired(sf::Event event){
     if (v4core->currentController.isInitialized){
@@ -83,7 +83,7 @@ void NewGameMenu::EventFired(sf::Event event){
         newGameNameEntryMenu.savefilecreated.EventFired(event);
     }
 }
-void NewGameMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld)
+void NewGameMenu::Update(sf::RenderWindow &window, float fps, InputController& inputCtrl, InputController& inputCtrlHeld)
 {
 
     if(isActive){
@@ -137,7 +137,7 @@ void NewGameMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool>
 
     } else {
         if (v4core->currentController.isInitialized && v4core->currentController.isFinishedLoading){
-            v4core->currentController.Update(window, fps, keyMap,keyMapHeld);
+            v4core->currentController.Update(window, fps, inputCtrl);
         } else if (optionsMenu.isActive){
             optionsMenu.Update(window,fps);
         } else if (newGameNameEntryMenu.isActive){

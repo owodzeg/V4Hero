@@ -35,10 +35,10 @@ SaveFileCreatedMenu::SaveFileCreatedMenu()
     mm_titleBox.setFillColor(sf::Color::Red);
     isActive=true;
 }
-void SaveFileCreatedMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent,NewGameNameEntryMenu* parentMenu_){
-    Scene::Initialise(thisConfigs,keymap,parent);
+void SaveFileCreatedMenu::Initialise(Config *thisConfigs,V4Core *parent,NewGameNameEntryMenu* parentMenu_){
+    Scene::Initialise(thisConfigs,parent);
     //v4core->menus.push_back(&optionsMenu);
-    buttonList.Initialise(&f_font,*thisConfig,keymap,&(v4core->currentController),this);
+    buttonList.Initialise(&f_font,*thisConfig,&(v4core->currentController),this);
 
     t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_game_save_created")));
     t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
