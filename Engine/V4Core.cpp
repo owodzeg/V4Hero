@@ -680,7 +680,7 @@ void V4Core::Init()
         window.draw(t_version);
 
         /** TESTING **/
-        if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+        /*if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
         {
             if(dbox.CheckSelectedOption() == 0)
             dbox.Close();
@@ -694,7 +694,7 @@ void V4Core::Init()
 
         dbox.x = 640;
         dbox.y = 360;
-        dbox.Draw(window,fps);
+        dbox.Draw(window,fps);*/
 
         window.display();
 
