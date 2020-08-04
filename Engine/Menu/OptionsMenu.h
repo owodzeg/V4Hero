@@ -60,6 +60,7 @@ class OptionsMenu : public Menu
         std::vector<PText> switches;
         std::vector<ConfigValue> original_config; ///If the changes are reverted, keep the original settings to return them back
         std::vector<PText> restarts;
+        std::vector<PText> inputs;
         PText t_restart;
 
         PSprite dg_restart, dg_select;
@@ -70,7 +71,7 @@ class OptionsMenu : public Menu
         void Initialise(Config *thisConfig,V4Core *parent,Menu *curParentMenu);
         void Update(sf::RenderWindow &window, float fps, InputController& inputCtrl);
         void SelectMenuOption();
-        void GoBackMenuOption();
+        void GoBackMenuOption(int a=2);
         void SetConfigValue(std::string key, std::string value);
         void EventFired(sf::Event event);
         void OnExit();

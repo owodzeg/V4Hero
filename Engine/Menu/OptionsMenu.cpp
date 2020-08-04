@@ -178,6 +178,14 @@ void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParent
     opt.createText(m_font, 25, sf::Color::Black, "Revert changes", q, 2);
     restarts.push_back(opt);
 
+    opt.createText(m_font, 25, sf::Color::White, "Keyboard bindings", q, 2);
+    inputs.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Controller setup", q, 2);
+    inputs.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+    inputs.push_back(opt);
+
+
     parent->SaveToDebugLog("Options menu initialized.");
 }
 
@@ -185,34 +193,45 @@ void OptionsMenu::SelectMenuOption()
 {
     if(sel != -1)
     {
-        prevStates.push_back(state);
+        int newState = 0;
 
         if(state == 0)
         {
-            state = sel+1;
+            newState = sel+1;
         }
         else
         {
-            state = state*10 + (sel+1);
+            newState = state*10 + (sel+1);
         }
+
+        if(newState > state)
+        prevStates.push_back(state);
+
+        state = newState;
     }
 
     sel = 0;
 
-    cout << "State switched to " << state << endl;
+    cout << "OptionsMenu::SelectMenuOption(): State switched to " << state << endl;
 }
 
-void OptionsMenu::GoBackMenuOption()
+void OptionsMenu::GoBackMenuOption(int a)
 {
-    if(prevStates.size() > 0)
+    if(prevStates.size() > a-1)
     {
-        state = prevStates[prevStates.size()-1];
-        prevStates.erase(prevStates.begin()+prevStates.size()-1);
+        state = prevStates[prevStates.size()-a];
+
+        for(int i=0; i<a; i++)
+        prevStates.pop_back();
+    }
+    else
+    {
+        state = 0;
     }
 
     sel = 0;
 
-    cout << "State switched to " << state << endl;
+    cout << "OptionsMenu::GoBackMenuOption(): State switched to " << state << endl;
 }
 
 void OptionsMenu::SetConfigValue(std::string key, std::string value)
@@ -243,6 +262,9 @@ void OptionsMenu::SetConfigValue(std::string key, std::string value)
         ///Make the changes
         thisConfig->SetString(key,value);
         madeChanges = true;
+
+        ///Change the state
+        SelectMenuOption();
     }
 }
 
@@ -268,8 +290,6 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 {
     if(isActive)
     {
-        cout << "state: " << state << endl;
-
         bg.setPosition(0,0);
         bg.draw(window);
 
@@ -277,8 +297,6 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
         sword.setPosition(-999, -999);
         else
         sword.setPosition(725, 507 + 40*sel);
-
-        cout << "MouseY: " << mouseY / window.getSize().y * 1080 << endl;
 
         switch(state)
         {
@@ -376,6 +394,39 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                     }
 
                     a_options[i].draw(window);
+                }
+
+                sword.draw(window);
+
+                break;
+            }
+
+            case 3:
+            {
+                options_header.setString("Input settings");
+                options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
+                options_header.setPosition(930, 460);
+                options_header.draw(window);
+
+                maxSel = inputs.size();
+
+                for(int i=0; i<inputs.size(); i++)
+                {
+                    inputs[i].setOrigin(0, inputs[i].getGlobalBoundsScaled().height/2);
+                    inputs[i].setPosition(810, 520 + 40*i);
+                    inputs[i].setColor(sf::Color::White);
+
+                    if(mouseY / window.getSize().y * 1080 >= (inputs[i].getPosition().y - inputs[i].getGlobalBoundsScaled().height/2 + 8))
+                    {
+                        if(mouseY / window.getSize().y * 1080 <= (inputs[i].getPosition().y + inputs[i].getGlobalBoundsScaled().height/2 + 8))
+                        {
+                            inputs[i].setColor(sf::Color(255,255,255,192));
+
+                            sel = i;
+                        }
+                    }
+
+                    inputs[i].draw(window);
                 }
 
                 sword.draw(window);
@@ -590,8 +641,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
             case 16:
             {
-                state = 0;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
@@ -738,8 +788,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
             case 25:
             {
-                state = 0;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
@@ -772,8 +821,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
             {
                 SetConfigValue("textureQuality", "0");
 
-                state = 12;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
@@ -781,8 +829,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
             {
                 SetConfigValue("textureQuality", "1");
 
-                state = 12;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
@@ -790,8 +837,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
             {
                 SetConfigValue("textureQuality", "2");
 
-                state = 12;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
@@ -799,15 +845,13 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
             {
                 SetConfigValue("textureQuality", "3");
 
-                state = 12;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
             case 125:
             {
-                state = 1;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
@@ -815,8 +859,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
             {
                 SetConfigValue("enableFullscreen", "1");
 
-                state = 14;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
@@ -824,15 +867,13 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
             {
                 SetConfigValue("enableFullscreen", "0");
 
-                state = 14;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
             case 143:
             {
-                state = 1;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
@@ -840,8 +881,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
             {
                 SetConfigValue("enableBorderlessWindow", "1");
 
-                state = 15;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
@@ -849,22 +889,19 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
             {
                 SetConfigValue("enableBorderlessWindow", "0");
 
-                state = 15;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
             case 153:
             {
-                state = 1;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
             case 212:
             {
-                state = 2;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
@@ -872,8 +909,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
             {
                 SetConfigValue("enableDrums", "1");
 
-                state = 22;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
@@ -881,15 +917,13 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
             {
                 SetConfigValue("enableDrums", "0");
 
-                state = 22;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
             case 223:
             {
-                state = 2;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
@@ -897,8 +931,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
             {
                 SetConfigValue("enableDrumChants", "1");
 
-                state = 23;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
@@ -906,15 +939,13 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
             {
                 SetConfigValue("enableDrumChants", "0");
 
-                state = 23;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
             case 233:
             {
-                state = 2;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
@@ -922,8 +953,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
             {
                 SetConfigValue("enablePataponChants", "1");
 
-                state = 24;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
@@ -931,33 +961,33 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
             {
                 SetConfigValue("enablePataponChants", "0");
 
-                state = 24;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
 
             case 243:
             {
-                state = 2;
-                sel = 0;
+                GoBackMenuOption();
                 break;
             }
         }
 
         if((state >= 111) && (state <= 110+resolutions.size()-1))
         {
+            cout << "Apply the resolution" << endl;
+
             int resID = state-111;
 
             SetConfigValue("resX", to_string(float_resolutions[resID].width));
             SetConfigValue("resY", to_string(float_resolutions[resID].height));
-            state = 11;
-            sel = 0;
+            GoBackMenuOption(3);
         }
 
         if(state == 110+resolutions.size())
         {
-            state = 1;
-            sel = 0;
+            cout << "Leave the resolution options" << endl;
+
+            GoBackMenuOption();
         }
 
         if((state >= 131) && (state <= 130+framerates.size()-1))
@@ -966,14 +996,12 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
             SetConfigValue("framerateLimit", to_string(float_framerates[fpsID]));
 
-            state = 13;
-            sel = 0;
+            GoBackMenuOption();
         }
 
         if(state == 130+framerates.size())
         {
-            state = 1;
-            sel = 0;
+            GoBackMenuOption();
         }
 
         window.setView(window.getDefaultView());
@@ -985,6 +1013,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
         if(inputCtrl.isKeyPressed(InputController::Keys::CIRCLE))
         {
+            sel = 9999;
+            SelectMenuOption();
             GoBackMenuOption();
         }
 
