@@ -240,28 +240,6 @@ void MainMenu::EventFired(sf::Event event)
                 UsingMouseSelection=true;
             }
         }
-        else
-        {
-            if((event.type == sf::Event::KeyPressed) || (event.type == sf::Event::JoystickButtonPressed))
-            {
-                if(startClock.getElapsedTime().asSeconds() > 2)
-                {
-                    if(!keypressed)
-                    {
-                        s_smash.play();
-                        logow_bg.setColor(sf::Color(200,0,0,255));
-                        logow_shadow.setColor(sf::Color(200,0,0,255));
-                        logow_text.setColor(sf::Color(255,255,255,255));
-                        ui_alpha = 255;
-                        logow_scale = 1.2;
-                        logow_shscale = 1.2;
-                        dest_y = 360;
-                        keypressed = true;
-                        menuClock.restart();
-                    }
-                }
-            }
-        }
     }
 }
 void MainMenu::SelectMenuOption()
@@ -379,6 +357,20 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
                     logow_bg.setColor(sf::Color(120,0,0,ui_alpha));
                     logow_text.setColor(sf::Color(255,255,255,ui_alpha));
                     logow_shadow.setColor(sf::Color(64,0,0,ui_alpha));
+
+                    if(inputCtrl.isAnyKeyPressed())
+                    {
+                        s_smash.play();
+                        logow_bg.setColor(sf::Color(200,0,0,255));
+                        logow_shadow.setColor(sf::Color(200,0,0,255));
+                        logow_text.setColor(sf::Color(255,255,255,255));
+                        ui_alpha = 255;
+                        logow_scale = 1.2;
+                        logow_shscale = 1.2;
+                        dest_y = 360;
+                        keypressed = true;
+                        menuClock.restart();
+                    }
                 }
 
                 logow_bg.setOrigin(logow_bg.getLocalBounds().width/2, logow_bg.getLocalBounds().height/2);

@@ -31,10 +31,16 @@ class InputController
 
     std::map<int, std::vector<int>> keybinds;
 
+    ///For Any Key presses
+    bool keyRegistered = false; //checks if any key is pressed
+    int currentKey = -1; //reads what key has been pressed
+
     InputController();
 
     void LoadKeybinds(Config& config);
     int translateKeybind(int keyID);
+    bool isAnyKeyPressed();
+    int whatKeyPressed();
     bool isKeyPressed(int keyID);
     bool isKeyHeld(int keyID);
     void Flush(); ///Flush the currently pressed controls

@@ -41,6 +41,29 @@ int translateKeybind(int keyID)
 
 }
 
+///Returns true if any key has been pressed
+bool InputController::isAnyKeyPressed()
+{
+    bool r = keyRegistered;
+    keyRegistered = false;
+
+    return r;
+}
+
+///Returns what key is being currently pressed (for input detection)
+int InputController::whatKeyPressed()
+{
+    if(keyRegistered)
+    {
+        keyRegistered = false;
+        return currentKey;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 bool InputController::isKeyPressed(int keyID)
 {
     for(int i=0; i<keybinds[keyID].size(); i++)
@@ -75,4 +98,6 @@ bool InputController::isKeyHeld(int keyID)
 void InputController::Flush()
 {
     keyMap.clear();
+    keyRegistered = false;
+    currentKey = -1;
 }
