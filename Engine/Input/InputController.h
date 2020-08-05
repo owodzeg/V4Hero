@@ -24,6 +24,13 @@ class InputController
         SELECT = 11
     };
 
+    enum RestrictMode
+    {
+        OFF = 0,
+        ONLYKEYBOARD = 1,
+        ONLYJOYSTICK = 2
+    };
+
     std::vector<std::string> keyLabels = {"Square", "Circle", "Cross", "Triangle", "Left", "Right", "Down", "Up", "LTrigger", "RTrigger", "Start", "Select"};
 
     std::map<int,bool> keyMap;
@@ -40,9 +47,9 @@ class InputController
     void LoadKeybinds(Config& config);
     int translateKeybind(int keyID);
     bool isAnyKeyPressed();
-    int whatKeyPressed();
-    bool isKeyPressed(int keyID);
-    bool isKeyHeld(int keyID);
+    int whatKeyPressed(int restrictMode=0);
+    bool isKeyPressed(int keyID, int restrictMode=0);
+    bool isKeyHeld(int keyID, int restrictMode=0);
     void Flush(); ///Flush the currently pressed controls
 };
 

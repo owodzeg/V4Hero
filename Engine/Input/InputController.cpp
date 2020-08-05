@@ -51,11 +51,28 @@ bool InputController::isAnyKeyPressed()
 }
 
 ///Returns what key is being currently pressed (for input detection)
-int InputController::whatKeyPressed()
+int InputController::whatKeyPressed(int restrictMode)
 {
     if(keyRegistered)
     {
         keyRegistered = false;
+
+        if(restrictMode == 1)
+        {
+            if(currentKey >= 1000)
+            {
+                return -2;
+            }
+        }
+
+        if(restrictMode == 2)
+        {
+            if(currentKey < 1000)
+            {
+                return -2;
+            }
+        }
+
         return currentKey;
     }
     else
@@ -64,11 +81,32 @@ int InputController::whatKeyPressed()
     }
 }
 
-bool InputController::isKeyPressed(int keyID)
+bool InputController::isKeyPressed(int keyID, int restrictMode)
 {
+    ///RestrictMode is for checking ONLY keyboard/joystick presses.
+    ///RestrictMode = 0 - off
+    ///RestrictMode = 1 - only keyboard
+    ///RestrictMode = 2 - only joystick
+
     for(int i=0; i<keybinds[keyID].size(); i++)
     {
         int realKey = keybinds[keyID][i];
+
+        if(restrictMode == 1)
+        {
+            if(realKey >= 1000)
+            {
+                return false;
+            }
+        }
+
+        if(restrictMode == 2)
+        {
+            if(realKey < 1000)
+            {
+                return false;
+            }
+        }
 
         if(keyMap[realKey] == true)
         {
@@ -80,11 +118,27 @@ bool InputController::isKeyPressed(int keyID)
     return false;
 }
 
-bool InputController::isKeyHeld(int keyID)
+bool InputController::isKeyHeld(int keyID, int restrictMode)
 {
     for(int i=0; i<keybinds[keyID].size(); i++)
     {
         int realKey = keybinds[keyID][i];
+
+        if(restrictMode == 1)
+        {
+            if(realKey >= 1000)
+            {
+                return false;
+            }
+        }
+
+        if(restrictMode == 2)
+        {
+            if(realKey < 1000)
+            {
+                return false;
+            }
+        }
 
         if(keyMapHeld[realKey] == true)
         {
