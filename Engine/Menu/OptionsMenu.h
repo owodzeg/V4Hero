@@ -85,6 +85,8 @@ class OptionsMenu : public Menu
 
         ///Controller setup
         PText t_cs_title, t_cs_desc, t_cs_bigbutton, t_cs_tip;
+        int setup_stage = 1;
+        int setup_key = -2;
 
         Menu *parentMenu;
         void Initialise(Config *thisConfig,V4Core *parent,Menu *curParentMenu);

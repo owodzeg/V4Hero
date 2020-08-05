@@ -209,10 +209,10 @@ void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParent
     t_change_anykey.createText(m_font, 28, sf::Color::White, "Press any key to assign it to the in-game button", q, 1); ///change dialog
 
     ///Controller setup
-    t_cs_title.createText(m_font, 18, sf::Color::Black, "Controller setup", q, 1);
-    t_cs_desc.createText(m_font, 18, sf::Color::Black, "Make sure your controller is connected to your PC.\nPress any button on your controller and it should appear in the middle of the screen.", q, 1);
-    t_cs_bigbutton.createText(m_font, 18, sf::Color::Black, "big button", q, 1);
-    t_cs_tip.createText(m_font, 18, sf::Color::Black, "Tip: Press any key to return to the options menu.", q, 1);
+    t_cs_title.createText(m_font, 26, sf::Color::White, "Controller setup", q, 1);
+    t_cs_desc.createText(m_font, 16, sf::Color::White, "Make sure your controller is connected to your PC.\nPress any button on your controller and it should appear in the middle of the screen.", q, 1);
+    t_cs_bigbutton.createText(m_font, 30, sf::Color::White, "big button", q, 1);
+    t_cs_tip.createText(m_font, 15, sf::Color::White, "Tip: Press any key to return to the options menu.", q, 1);
 
     parent->SaveToDebugLog("Options menu initialized.");
 }
@@ -907,6 +907,113 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                 break;
             }
 
+            case 32:
+            {
+                ///Controller setup
+
+                block.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+                block.setFillColor(sf::Color(0,0,0,96));
+                window.draw(block);
+
+                if(setup_stage == 1)
+                {
+                    t_cs_title.setString("Controller setup");
+                    t_cs_title.setOrigin(t_cs_title.getLocalBounds().width/2, t_cs_title.getLocalBounds().height/2);
+                    t_cs_title.setPosition(640, 240);
+                    t_cs_title.draw(window);
+
+                    string key = "options_input_setup"+to_string(setup_stage);
+                    t_cs_desc.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(key)));
+                    t_cs_desc.setOrigin(t_cs_desc.getLocalBounds().width/2, t_cs_desc.getLocalBounds().height/2);
+                    t_cs_desc.setPosition(640, 280);
+                    t_cs_desc.draw(window);
+
+                    int checkKey = inputCtrl.whatKeyPressed(InputController::RestrictMode::ONLYJOYSTICK);
+
+                    if(checkKey != -2)
+                    setup_key = checkKey+1;
+
+                    if(setup_key >= 1000)
+                    {
+                        t_cs_bigbutton.setString("Joystick "+to_string(setup_key-1000));
+                    }
+                    else if(setup_key >= 0)
+                    {
+                        t_cs_bigbutton.setString(assigned_names[setup_key]);
+                    }
+                    else
+                    {
+                        t_cs_bigbutton.setString("");
+                    }
+
+                    t_cs_bigbutton.setOrigin(t_cs_bigbutton.getLocalBounds().width/2, t_cs_bigbutton.getLocalBounds().height/2);
+                    t_cs_bigbutton.setPosition(640, 340);
+                    t_cs_bigbutton.draw(window);
+
+                    t_cs_tip.setString("Tip: Press the Start button on your keyboard to continue.\nPress the Circle button to exit controller setup.");
+                    t_cs_tip.setOrigin(t_cs_tip.getLocalBounds().width/2, t_cs_tip.getLocalBounds().height/2);
+                    t_cs_tip.setPosition(640, 440);
+                    t_cs_tip.draw(window);
+                }
+                else if(setup_stage != 14)
+                {
+                    t_cs_title.setString("Controller setup");
+                    t_cs_title.setOrigin(t_cs_title.getLocalBounds().width/2, t_cs_title.getLocalBounds().height/2);
+                    t_cs_title.setPosition(640, 320);
+                    t_cs_title.draw(window);
+
+                    string key = "options_input_setup"+to_string(setup_stage);
+                    t_cs_desc.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(key)));
+                    t_cs_desc.setOrigin(t_cs_desc.getLocalBounds().width/2, t_cs_desc.getLocalBounds().height/2);
+                    t_cs_desc.setPosition(640, 360);
+                    t_cs_desc.draw(window);
+
+                    int checkKey = inputCtrl.whatKeyPressed(InputController::RestrictMode::ONLYJOYSTICK);
+
+                    if(checkKey != -2)
+                    {
+                        setup_key = checkKey;
+
+                        ///Key has been pressed, save and go back
+                        string key = "keybind"+ingame_buttons[setup_stage-2]+"2";
+                        SetConfigValue(key, to_string(setup_key), false);
+
+                        setup_stage++;
+                    }
+                }
+                else
+                {
+                    int checkKey = inputCtrl.whatKeyPressed(InputController::RestrictMode::ONLYKEYBOARD);
+
+                    if(checkKey != -2)
+                    {
+                        setup_stage = 1;
+
+                        sel = 9999;
+                        SelectMenuOption();
+                        GoBackMenuOption();
+                    }
+
+                    t_cs_title.setString("Controller setup");
+                    t_cs_title.setOrigin(t_cs_title.getLocalBounds().width/2, t_cs_title.getLocalBounds().height/2);
+                    t_cs_title.setPosition(640, 320);
+                    t_cs_title.draw(window);
+
+                    string key = "options_input_setup"+to_string(setup_stage);
+                    t_cs_desc.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(key)));
+                    t_cs_desc.setOrigin(t_cs_desc.getLocalBounds().width/2, t_cs_desc.getLocalBounds().height/2);
+                    t_cs_desc.setPosition(640, 360);
+                    t_cs_desc.draw(window);
+
+                    t_cs_tip.setString("Tip: Press any key to return to the options menu.");
+                    t_cs_tip.setOrigin(t_cs_tip.getLocalBounds().width/2, t_cs_tip.getLocalBounds().height/2);
+                    t_cs_tip.setPosition(640, 440);
+                    t_cs_tip.draw(window);
+                }
+
+                break;
+            }
+
             case 33:
             {
                 GoBackMenuOption();
@@ -1178,6 +1285,24 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                     SetConfigValue(key, to_string(keyID), false);
 
                     changeInput = false;
+                }
+            }
+        }
+        else if(state == 32)
+        {
+            if(setup_stage == 1)
+            {
+                ///Only keyboard inputs here
+                if(inputCtrl.isKeyPressed(InputController::Keys::CIRCLE, InputController::RestrictMode::ONLYKEYBOARD))
+                {
+                    sel = 9999;
+                    SelectMenuOption();
+                    GoBackMenuOption();
+                }
+
+                if(inputCtrl.isKeyPressed(InputController::Keys::START, InputController::RestrictMode::ONLYKEYBOARD))
+                {
+                    setup_stage = 2;
                 }
             }
         }
