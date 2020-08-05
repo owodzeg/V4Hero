@@ -185,6 +185,34 @@ void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParent
     opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
     inputs.push_back(opt);
 
+    ///Input manager (change keybinds)
+    input_manager.loadFromFile("resources/graphics/ui/options/inputmenu.png", q, 1); ///sprite
+
+    for(int i=0; i<9; i++)
+    {
+        t_presets[i].createText(m_font, 18, sf::Color::Black, to_string(i+1), q, 1);
+    }
+
+    t_igbutton.createText(m_font, 18, sf::Color::Black, "In-game button", q, 1);
+    t_assigned.createText(m_font, 18, sf::Color::Black, "Assigned key", q, 1);
+
+    for(int i=0; i<12; i++)
+    {
+        t_igkey[i].createText(m_font, 18, sf::Color::Black, "key", q, 1);
+        t_askey[i].createText(m_font, 18, sf::Color::Black, "", q, 1);
+    }
+
+    t_im_tip.createText(m_font, 18, sf::Color::White, "Tip: Hover the assigned key with mouse or select it with arrow keys,\nthen press the Cross button to change it.\nPress the Triangle button to remove the assigned key.\nUse the numbers on the top of the menu to switch between keybind presets.", q, 1); ///input manager's tip
+
+    t_change_title.createText(m_font, 28, sf::Color::White, "Changing assigned key for in-game button:", q, 1);
+    t_change_button.createText(m_font, 62, sf::Color::White, "button", q, 1);
+    t_change_anykey.createText(m_font, 28, sf::Color::White, "Press any key to assign it to the in-game button", q, 1); ///change dialog
+
+    ///Controller setup
+    t_cs_title.createText(m_font, 18, sf::Color::Black, "Controller setup", q, 1);
+    t_cs_desc.createText(m_font, 18, sf::Color::Black, "Make sure your controller is connected to your PC.\nPress any button on your controller and it should appear in the middle of the screen.", q, 1);
+    t_cs_bigbutton.createText(m_font, 18, sf::Color::Black, "big button", q, 1);
+    t_cs_tip.createText(m_font, 18, sf::Color::Black, "Tip: Press any key to return to the options menu.", q, 1);
 
     parent->SaveToDebugLog("Options menu initialized.");
 }
@@ -234,7 +262,7 @@ void OptionsMenu::GoBackMenuOption(int a)
     cout << "OptionsMenu::GoBackMenuOption(): State switched to " << state << endl;
 }
 
-void OptionsMenu::SetConfigValue(std::string key, std::string value)
+void OptionsMenu::SetConfigValue(std::string key, std::string value, bool selectmenu)
 {
     if(thisConfig->GetString(key) != value)
     {
@@ -264,6 +292,7 @@ void OptionsMenu::SetConfigValue(std::string key, std::string value)
         madeChanges = true;
 
         ///Change the state
+        if(selectmenu)
         SelectMenuOption();
     }
 }
@@ -277,6 +306,7 @@ void OptionsMenu::EventFired(sf::Event event){
         //buttonList.MouseReleasedEvent(event);
         if (event.mouseButton.button == sf::Mouse::Left)
         {
+            if(state != 31)
             SelectMenuOption();
         }
     }
@@ -792,6 +822,97 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                 break;
             }
 
+            case 31:
+            {
+                ///Input manager (change keybinds)
+                input_manager.setOrigin(input_manager.getLocalBounds().width/2, input_manager.getLocalBounds().height/2);
+                input_manager.setPosition(640, 360);
+                input_manager.draw(window); ///sprite
+
+                for(int i=0; i<9; i++)
+                {
+                    t_presets[i].setColor(sf::Color::Black);
+                    t_presets[currentPreset].setColor(sf::Color(0,192,0,255));
+
+                    t_presets[i].setOrigin(t_presets[i].getLocalBounds().width/2, t_presets[i].getLocalBounds().height/2);
+                    t_presets[i].setPosition(input_manager.getPosition().x-158 + (39*i), input_manager.getPosition().y-248);
+                    t_presets[i].draw(window);
+                }
+
+                t_igbutton.setPosition(input_manager.getPosition().x-168, input_manager.getPosition().y-217);
+                t_igbutton.draw(window);
+                t_assigned.setPosition(input_manager.getPosition().x+18, input_manager.getPosition().y-217);
+                t_assigned.draw(window);
+
+                for(int i=0; i<12; i++)
+                {
+                    t_igkey[i].setColor(sf::Color(64,64,64,255));
+                    t_igkey[i].setPosition(input_manager.getPosition().x-168, input_manager.getPosition().y-181+(i*37.5));
+                    t_igkey[i].setString(ingame_buttons[i]);
+                    t_igkey[i].draw(window);
+
+                    t_askey[i].setColor(sf::Color(0,0,0,255));
+                    t_askey[currentOption].setColor(sf::Color(0,192,0,255));
+                    t_askey[i].setPosition(input_manager.getPosition().x+18, input_manager.getPosition().y-181+(i*37.5));
+
+                    string key = "keybind"+ingame_buttons[i]+to_string(currentPreset+1);
+                    //cout << key << endl;
+
+                    if(thisConfig->keyExists(key))
+                    {
+                        int keyID = (thisConfig->GetInt(key)+1);
+
+                        if(keyID >= 1000)
+                        {
+                            keyID -= 1000;
+                            t_askey[i].setString("Joystick "+to_string(keyID));
+                        }
+                        else
+                        {
+                            t_askey[i].setString(assigned_names[keyID]);
+                        }
+                    }
+                    else
+                    {
+                        t_askey[i].setString("unassigned");
+                    }
+
+                    t_askey[i].draw(window);
+                }
+
+                t_im_tip.setOrigin(t_im_tip.getLocalBounds().width/2, 0);
+                t_im_tip.setPosition(input_manager.getPosition().x,input_manager.getPosition().y+273);
+                t_im_tip.draw(window);
+
+                if(changeInput)
+                {
+                    block.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+                    block.setFillColor(sf::Color(0,0,0,192));
+                    window.draw(block);
+
+                    t_change_title.setOrigin(t_change_title.getLocalBounds().width/2, t_change_title.getLocalBounds().height/2);
+                    t_change_title.setPosition(640, 200);
+                    t_change_title.draw(window);
+
+                    t_change_button.setString(ingame_buttons[currentOption]);
+                    t_change_button.setOrigin(t_change_button.getLocalBounds().width/2, t_change_button.getLocalBounds().height/2);
+                    t_change_button.setPosition(640, 300);
+                    t_change_button.draw(window);
+
+                    t_change_anykey.setOrigin(t_change_anykey.getLocalBounds().width/2, t_change_anykey.getLocalBounds().height/2);
+                    t_change_anykey.setPosition(640, 500);
+                    t_change_anykey.draw(window);
+                }
+
+                break;
+            }
+
+            case 33:
+            {
+                GoBackMenuOption();
+                break;
+            }
+
             case 51:
             {
                 thisConfig->SaveConfig();
@@ -1006,33 +1127,91 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
         window.setView(window.getDefaultView());
 
-        if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+        if(state == 31)
         {
-            SelectMenuOption();
-        }
+            if(!changeInput)
+            {
+                if(inputCtrl.isKeyPressed(InputController::Keys::UP))
+                {
+                    if(currentOption > 0)
+                    currentOption--;
+                }
 
-        if(inputCtrl.isKeyPressed(InputController::Keys::CIRCLE))
-        {
-            sel = 9999;
-            SelectMenuOption();
-            GoBackMenuOption();
-        }
+                if(inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+                {
+                    if(currentOption < 11)
+                    currentOption++;
+                }
 
-        if(inputCtrl.isKeyPressed(InputController::Keys::UP))
-        {
-            if(sel > 0)
-            sel--;
-        }
+                if(inputCtrl.isKeyPressed(InputController::Keys::LEFT))
+                {
+                    if(currentPreset > 0)
+                    currentPreset--;
+                }
 
-        if(inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+                if(inputCtrl.isKeyPressed(InputController::Keys::RIGHT))
+                {
+                    if(currentPreset < 8)
+                    currentPreset++;
+                }
+
+                if(inputCtrl.isKeyPressed(InputController::Keys::CIRCLE))
+                {
+                    sel = 9999;
+                    SelectMenuOption();
+                    GoBackMenuOption();
+                }
+
+                if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+                {
+                    changeInput = true;
+                }
+            }
+            else
+            {
+                int keyID = inputCtrl.whatKeyPressed();
+
+                if(keyID != -2)
+                {
+                    ///Key has been pressed, save and go back
+                    string key = "keybind"+ingame_buttons[currentOption]+to_string(currentPreset+1);
+                    SetConfigValue(key, to_string(keyID), false);
+
+                    changeInput = false;
+                }
+            }
+        }
+        else
         {
-            if(sel < maxSel-1)
-            sel++;
+            if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+            {
+                SelectMenuOption();
+            }
+
+            if(inputCtrl.isKeyPressed(InputController::Keys::CIRCLE))
+            {
+                sel = 9999;
+                SelectMenuOption();
+                GoBackMenuOption();
+            }
+
+            if(inputCtrl.isKeyPressed(InputController::Keys::UP))
+            {
+                if(sel > 0)
+                sel--;
+            }
+
+            if(inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+            {
+                if(sel < maxSel-1)
+                sel++;
+            }
         }
     }
-
 }
-void OptionsMenu::Back(){
+
+void OptionsMenu::Back()
+{
     /// this should go back to the previous menu.
     Hide();
     parentMenu->Show();

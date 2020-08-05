@@ -67,12 +67,31 @@ class OptionsMenu : public Menu
 
         PataDialogBox restart_prompt;
 
+        ///Input manager (change keybinds)
+        PSprite input_manager; ///sprite
+        PText t_presets[9]; ///preset numbers
+        PText t_igbutton,t_assigned; ///titles
+        PText t_igkey[12],t_askey[12]; ///keys
+        PText t_im_tip; ///input manager's tip
+        PText t_change_title, t_change_button, t_change_anykey; ///change dialog
+        sf::RectangleShape block;
+
+        int currentPreset = 0;
+        int currentOption = 0;
+        bool changeInput = false;
+
+        vector<string> ingame_buttons = {"Square", "Circle", "Cross", "Triangle", "LTrigger", "RTrigger", "Left", "Right", "Down", "Up", "Start", "Select"};
+        vector<string> assigned_names = {"Unknown", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Num0", "Num1", "Num2", "Num3", "Num4", "Num5", "Num6", "Num7", "Num8", "Num9", "Escape", "LControl", "LShift", "LAlt", "LSystem", "RControl", "RShift", "RAlt", "RSystem", "Menu", "LBracket", "RBracket", "Semicolon", "Comma", "Period", "Quote", "Slash", "Backslash", "Tilde", "Equal", "Hyphen", "Space", "Enter", "Backspace", "Tab", "PageUp", "PageDown", "End", "Home", "Insert", "Delete", "Add", "Subtract", "Multiply", "Divide", "Left", "Right", "Up", "Down", "Numpad0", "Numpad1", "Numpad2", "Numpad3", "Numpad4", "Numpad5", "Numpad6", "Numpad7", "Numpad8", "Numpad9", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "F13", "F14", "F15", "Pause"};
+
+        ///Controller setup
+        PText t_cs_title, t_cs_desc, t_cs_bigbutton, t_cs_tip;
+
         Menu *parentMenu;
         void Initialise(Config *thisConfig,V4Core *parent,Menu *curParentMenu);
         void Update(sf::RenderWindow &window, float fps, InputController& inputCtrl);
         void SelectMenuOption();
         void GoBackMenuOption(int a=2);
-        void SetConfigValue(std::string key, std::string value);
+        void SetConfigValue(std::string key, std::string value, bool selectmenu=true);
         void EventFired(sf::Event event);
         void OnExit();
         void Back();

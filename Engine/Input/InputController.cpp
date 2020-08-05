@@ -60,7 +60,7 @@ int InputController::whatKeyPressed()
     }
     else
     {
-        return false;
+        return -2;
     }
 }
 
