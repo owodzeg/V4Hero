@@ -6,6 +6,7 @@
 #include "../Graphics/PText.h"
 #include "../Mission/MissionController.h"
 #include "../Input/InputController.h"
+#include "../Dialog/ControlTips.h"
 
 class V4Core;
 class Barracks : public Menu
@@ -14,6 +15,8 @@ class Barracks : public Menu
         MissionController* currentController;
         Config *config;
         std::string mission_file;
+
+        ControlTips ctrlTips;
 
         sf::RectangleShape rs_cover;
         sf::RectangleShape mm_bigBox;
@@ -36,6 +39,8 @@ class Barracks : public Menu
         bool obelisk = false;
 
         bool missionStarted = false;
+
+        int qualitySetting = 0;
 
         sf::Font f_font;
         PText t_title;
@@ -129,6 +134,7 @@ class Barracks : public Menu
         std::vector<float> possibleMenuPositions;
         void Initialise(Config *thisConfig, V4Core *parent, Menu *curParentMenu);
         void Update(sf::RenderWindow &window, float fps, InputController& inputCtrl);
+        void UpdateInputControls();
         void EventFired(sf::Event event);
         void SetTitle(int menuPosition);
         sf::RectangleShape mm_description_background;

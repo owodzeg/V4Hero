@@ -4,6 +4,8 @@
 #include "../Config.h"
 #include "../Graphics/Menu.h"
 #include "../Graphics/PText.h"
+#include "../Dialog/ControlTips.h"
+
 class V4Core;
 class PatapolisMenu;
 class ObeliskMenu : public Menu
@@ -11,6 +13,8 @@ class ObeliskMenu : public Menu
     public:
         sf::Font font;
         int quality=1;
+
+        ControlTips ctrlTips;
 
         ///worldmap contents
         vector<PSprite> location_bgs;

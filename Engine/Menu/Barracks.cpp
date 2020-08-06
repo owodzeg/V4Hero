@@ -223,6 +223,8 @@ void Barracks::Initialise(Config *thisConfigs, V4Core *parent, Menu *curParentMe
     ///             ####   ARMOUR ITEM ICON
     armour_icon.loadFromFile("resources/graphics/item/armour_icon.png",1,2);
 
+    qualitySetting = quality;
+
     //mm_inventory_background.setSize(sf::Vector2f(mm_inventory_background.getSize().x+(40*resRatioX),mm_inventory_background.getSize().y+(40*resRatioX)));
     parent->SaveToDebugLog("Initializing Barracks finished.");
 
@@ -577,6 +579,10 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
 
         window.draw(mm_selected_item_line);
 
+        ctrlTips.x = 0;
+        ctrlTips.y = (720-ctrlTips.ySize);
+        ctrlTips.draw(window);
+
         window.setView(lastView);
 
             if (!MenuMode)
@@ -729,6 +735,14 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
                 }
             }
     }
+}
+
+void Barracks::UpdateInputControls()
+{
+    if(!obelisk)
+    ctrlTips.create(82, f_font, 20, sf::String(L"Left/Right: Navigate      ×: Change class      △: Equip      〇: Return to Patapolis"), qualitySetting);
+    else
+    ctrlTips.create(82, f_font, 20, sf::String(L"Left/Right: Navigate      ×: Change class      △: Equip      〇: Return to World map      Start: Start mission"), qualitySetting);
 }
 
 void Barracks::UpdateButtons(){

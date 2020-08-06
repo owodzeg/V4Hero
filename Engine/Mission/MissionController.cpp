@@ -589,6 +589,8 @@ void MissionController::Initialise(Config &config,std::string backgroundString,V
         }
     }
 
+    ctrlTips.create(110, f_font, 28, sf::String(L"Onward: □-□-□-〇       Attack: 〇-〇-□-〇        Defend: △-△-□-〇              Charge: 〇-〇-△-△\nRetreat: 〇-□-〇-□          Jump: ×-×-△-△          Party: □-〇-×-△          Summon: ×-××-××") ,q, sf::Color(128,128,128,255));
+
     cout << "initialization finished" << endl;
 }
 void MissionController::StartMission(std::string missionFile, bool showCutscene, int missionID)
@@ -2434,6 +2436,10 @@ void MissionController::Update(sf::RenderWindow &window, float cfps, InputContro
 
     if(!missionEnd)
     {
+        ctrlTips.x = 0;
+        ctrlTips.y = (720-ctrlTips.ySize);
+        ctrlTips.draw(window);
+
         rhythm.fps = fps;
         DoRhythm(inputCtrl);
         rhythm.Draw(window);

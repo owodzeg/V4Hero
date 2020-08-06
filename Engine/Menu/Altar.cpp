@@ -203,6 +203,8 @@ void AltarMenu::Initialise(Config *thisConfigs, V4Core *parent, PatapolisMenu *c
 
     mm_inventory_background.setSize(sf::Vector2f(mm_inventory_background.getSize().x+20,mm_inventory_background.getSize().y+20));
 
+    ctrlTips.create(54, f_font, 20, sf::String(L"Left/Right/Up/Down: Navigate      〇: Exit to Patapolis"), quality);
+
     parent->SaveToDebugLog("Initializing Altar finished.");
 }
 void AltarMenu::ShowCategory(){
@@ -501,6 +503,11 @@ void AltarMenu::Update(sf::RenderWindow &window, float fps, InputController& inp
                 this->Hide();
                 this->isActive = false;
             }
+
+
+        ctrlTips.x = 0;
+        ctrlTips.y = (720-ctrlTips.ySize);
+        ctrlTips.draw(window);
     }
 }
 

@@ -136,6 +136,8 @@ void ObeliskMenu::Initialise(Config *thisConfigs,V4Core *parent, PatapolisMenu *
 
     mission_select.loadFromFile("resources/graphics/ui/worldmap/mission_select.png", quality, 1);
 
+    ctrlTips.create(66, font, 20, sf::String(L"Left/Right: Select field      ×: View missions      〇: Exit to Patapolis"), quality);
+
     parent->SaveToDebugLog("Initializing Obelisk finished.");
 }
 
@@ -378,6 +380,8 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
         {
             if(displayMissions)
             {
+                ctrlTips.create(66, font, 20, sf::String(L"Left/Right: Select field      ×: View missions      〇: Exit to Patapolis"), quality);
+
                 displayMissions = false;
                 thisConfig->thisCore->SaveToDebugLog("Exited mission selection.");
             }
@@ -392,6 +396,8 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
         {
             if(!displayMissions)
             {
+                ctrlTips.create(66, font, 20, sf::String(L"Up/Down: Select mission      ×: Enter mission      〇: Return to field select"), quality);
+
                 thisConfig->thisCore->SaveToDebugLog("Displaying missions on Worldmap for location "+to_string(sel_location)+".");
 
                 ///(re)load missions here
@@ -441,6 +447,7 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                 parentMenu->barracks_menu.missionID = missions[sel_mission].mis_ID;
                 parentMenu->barracks_menu.mission_file = missions[sel_mission].mission_file;
                 parentMenu->barracks_menu.OpenBarracksMenu();
+                parentMenu->barracks_menu.UpdateInputControls();
                 cout << "Set barracks mission to ID " << missions[sel_mission].mis_ID << endl;
                 thisConfig->thisCore->SaveToDebugLog("Barracks (In Obelisk) entered. Mission file: "+missions[sel_mission].mission_file);
             }
@@ -614,6 +621,10 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                 mission_desc.setString(desc);
             }
         }
+
+        ctrlTips.x = 0;
+        ctrlTips.y = (720-ctrlTips.ySize);
+        ctrlTips.draw(window);
     }
 }
 

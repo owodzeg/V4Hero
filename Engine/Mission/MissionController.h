@@ -7,7 +7,10 @@
 #include "Background.h"
 #include "Camera.h"
 #include "../Config.h"
+
 #include "../Graphics/PText.h"
+#include "../Graphics/PSpritesheet.h"
+
 #include <string>
 #include <thread>
 
@@ -20,7 +23,9 @@
 #include "Units/Projectile.h"
 #include "Units/CollidableObject.h"
 #include "Units/PlayableUnit.h"
-#include "../Graphics/PSpritesheet.h"
+
+#include "../Dialog/ControlTips.h"
+
 
 class V4Core;
 class MissionController
@@ -29,6 +34,8 @@ class MissionController
     int qualitySetting=1, resSetting=1;
 
     float fps = 60;
+
+    ControlTips ctrlTips;
 
     Background test_bg;
     Rhythm rhythm;

@@ -4,6 +4,7 @@
 #include "../Config.h"
 #include "../Graphics/Menu.h"
 #include "../Input/InputController.h"
+#include "../Dialog/ControlTips.h"
 
 class V4Core;
 class PatapolisMenu;
@@ -12,6 +13,8 @@ class AltarMenu : public Menu
     public:
         float ratioX, ratioY;
         float resRatioX, resRatioY;
+
+        ControlTips ctrlTips;
 
         sf::RectangleShape mm_inventory_background;
 

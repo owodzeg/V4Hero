@@ -538,6 +538,8 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     p_smoke.loadFromFile("resources/graphics/bg/patapolis/smoke.png", quality, 1);
     p_smoke.setOrigin(p_smoke.getLocalBounds().width/2, p_smoke.getLocalBounds().height/2);
 
+    ctrlTips.create(54, f_font, 20, sf::String(L"L/R: Move      ×: Interact      Select: Save      Start: Title screen"), quality);
+
     initialised=true;
 
     SetTitle(location);
@@ -588,6 +590,8 @@ void PatapolisMenu::EventFired(sf::Event event)
 }
 void PatapolisMenu::SetTitle(int menuPosition)
 {
+    sf::String a = L"L/R: Move      ";
+
     switch(menuPosition)
     {
     case 0:
@@ -598,15 +602,18 @@ void PatapolisMenu::SetTitle(int menuPosition)
         break;
     case 2:
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_barracks")));
+        a += L"×: Interact      ";
         break;
     case 3:
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_festival")));
         break;
     case 4:
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_altar")));
+        a += L"×: Interact      ";
         break;
     case 5:
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_obelisk")));
+        a += L"×: Interact      ";
         break;
     case 6:
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_paraget")));
@@ -621,6 +628,10 @@ void PatapolisMenu::SetTitle(int menuPosition)
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis")));
         break;
     }
+
+    a += L"Select: Save      Start: Title screen";
+
+    ctrlTips.create(54, f_font, 20, a, quality);
 }
 float EaseIn (float time, float startValue, float change, float duration)
 {
@@ -1087,6 +1098,13 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         lastView = window.getView();
         window.setView(window.getDefaultView());
 
+        if((!barracks_menu.isActive) && (!altar_menu.isActive) && (!obelisk_menu.isActive))
+        {
+            ctrlTips.x = 0;
+            ctrlTips.y = (720-ctrlTips.ySize);
+            ctrlTips.draw(window);
+        }
+
         if(fade_alpha > 0)
         {
             fade_alpha -= float(500) / fps;
@@ -1141,6 +1159,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                 barracks_menu.isActive = true;
                 barracks_menu.obelisk = false;
                 barracks_menu.OpenBarracksMenu();
+                barracks_menu.UpdateInputControls();
                 thisConfig->thisCore->SaveToDebugLog("Barracks entered.");
                 break;
             case 3:

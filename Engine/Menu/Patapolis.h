@@ -9,6 +9,7 @@
 #include "Barracks.h"
 #include "Obelisk.h"
 #include "../Input/InputController.h"
+#include "../Dialog/ControlTips.h"
 
 class V4Core;
 class PatapolisMenu : public Menu
@@ -149,6 +150,8 @@ class PatapolisMenu : public Menu
         bool isAnim = false;
         bool initialised=false;
         bool doWaitKeyPress=true;
+
+        ControlTips ctrlTips;
 
         AltarMenu altar_menu;
         Barracks barracks_menu;
