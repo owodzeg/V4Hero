@@ -868,6 +868,19 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     p3.get()->mindmg = v4core->savereader.ponreg.GetPonByID(3)->pon_min_dmg;
     p3.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(3)->pon_max_dmg;
 
+    p1.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->weapon_invItem_id).item->equip_id);
+    p2.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->weapon_invItem_id).item->equip_id);
+    p3.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(3)->weapon_invItem_id).item->equip_id);
+
+
+    p1.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->weapon_invItem_id).item->equip_id);
+    p2.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->weapon_invItem_id).item->equip_id);
+    p3.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(3)->weapon_invItem_id).item->equip_id);
+
+    p1.get()->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->armour_invItem_id).item->equip_id);
+    p2.get()->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->armour_invItem_id).item->equip_id);
+    p3.get()->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(3)->armour_invItem_id).item->equip_id);
+
     units.push_back(std::move(p1));
     units.push_back(std::move(p2));
     units.push_back(std::move(p3));

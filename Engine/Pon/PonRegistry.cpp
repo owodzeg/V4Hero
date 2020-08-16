@@ -6,21 +6,31 @@
 #include<iostream>
 using namespace std;
 
-PonRegistry::PonRegistry(){
+PonRegistry::PonRegistry()
+{
 
 }
-void PonRegistry::ReadPonFiles(){
+
+void PonRegistry::ReadPonFiles()
+{
 
 }
-PonRegistry::~PonRegistry(){
+
+PonRegistry::~PonRegistry()
+{
 
 }
-Pon* PonRegistry::GetPonByID(int id){
 
-    for (int i=0;i<pons.size()-1;i++){
+Pon* PonRegistry::GetPonByID(int id)
+{
+    for(int i=0; i<pons.size(); i++)
+    {
         Pon currentItem = pons[i];
-        if (currentItem.pon_id==id)
+        if(currentItem.pon_id == id)
+        {
             return &pons[i];
+        }
     }
-    cout<<"A stupid happened"<<'\n';
+
+    cout<< "PonRegistry could not find the appropriate Pon" << endl;
 }

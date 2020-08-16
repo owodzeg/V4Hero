@@ -7,6 +7,7 @@ class Item
     int item_id;
     int category_id;
     int subcategory_id;
+    int equip_id;
     std::wstring item_name;
     std::wstring item_description;
     std::string icon_path;

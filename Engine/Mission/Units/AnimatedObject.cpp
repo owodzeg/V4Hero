@@ -234,6 +234,7 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     int parent = 0; ///unused yet
 
                     objects.emplace_back();
+                    objects[objects.size()-1].object_name = tex_file;
 
                     //auto elapsed = std::chrono::high_resolution_clock::now() - start;
                     //cout << "Pushed to vector, took " << std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count() << endl;
@@ -270,7 +271,12 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     float or_y = atof(frame[6].c_str());
                     float scale_x = atof(frame[7].c_str());
                     float scale_y = atof(frame[8].c_str());
+
+                    if(objectID == 0)
                     objects[objectID].SetCustomFrame(time,pos_x,pos_y,or_x,or_y,rotation,scale_x,scale_y);
+                    else
+                    objects[objectID].SetCustomFrame(time,pos_x,pos_y,0,0,rotation,scale_x,scale_y);
+
                     //objects[objectID*2+1].SetCustomFrame(time,pos_x,pos_y,1,1,rotation,scale_x,scale_y);
                 }
 
@@ -800,6 +806,58 @@ sf::Color AnimatedObject::getColor()
     return color;
 }
 
+void AnimatedObject::applySpear(int id)
+{
+    cout << "Applying spear ID " << id << endl;
+
+    objects[1].tex_obj.loadFromFile("resources/graphics/item/weapon/spear/spear_"+to_string(id)+"_M.png");
+    objects[1].s_obj.setTexture(objects[1].tex_obj);
+
+    sf::Vector2f a;
+
+    int counter = 0;
+    ifstream file("resources/graphics/item/weapon/spear/spear_"+to_string(id)+".spr");
+    string buff;
+    while(getline(file, buff))
+    {
+        counter++;
+
+        if(counter == 2)
+        {
+            a.x = atof(buff.substr(0, buff.find_first_of(",")).c_str());
+            a.y = atof(buff.substr(buff.find_first_of(",")+1).c_str());
+        }
+    }
+
+    spear_origin = a;
+}
+
+void AnimatedObject::applyHelm(int id)
+{
+    cout << "Applying helm ID " << id << endl;
+
+    objects[2].tex_obj.loadFromFile("resources/graphics/item/armor/helm/helm_"+to_string(id)+"_M.png");
+    objects[2].s_obj.setTexture(objects[2].tex_obj);
+
+    sf::Vector2f a;
+
+    int counter = 0;
+    ifstream file("resources/graphics/item/armor/helm/helm_"+to_string(id)+".spr");
+    string buff;
+    while(getline(file, buff))
+    {
+        counter++;
+
+        if(counter == 2)
+        {
+            a.x = atof(buff.substr(0, buff.find_first_of(",")).c_str());
+            a.y = atof(buff.substr(buff.find_first_of(",")+1).c_str());
+        }
+    }
+
+    helm_origin = a;
+}
+
 void AnimatedObject::LoadConfig(Config *thisConfigs, std::string unitParamPath)
 {
     P4A handle;
@@ -892,58 +950,69 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
 
             objects[i].SetPos(cur_pos);
 
-            if(force_origin_null) ///nullify the origin when the object is inanimate or you set a custom origin
+            if(objects[i].object_name == "main")
             {
-                objects[i].or_x = 0;
-                objects[i].or_y = 0;
-            }
-
-            //cout << "Displaying animation " << getAnimationSegment() << ", time: " << getAnimationPos() << ":" << cur_pos << "/" << anim_end << " frame: " << curFrame+1 << "/" << (getAnimationLength(getAnimationSegment()) * animation_framerate) << " " << getAnimationLength(getAnimationSegment()) << endl;
-            if(!manual_spritesheet)
-            {
-                if(ao_version != 3)
-                {
-                    if(curFrame != lastFrame)
-                    objects[i].swapTexture(afb[index][curFrame].image);
-                }
-                else
-                {
-                    if(curFrame == 0)
-                    {
-                        objects[i].swapTexture(animation_spritesheet[index].spritesheet);
-                    }
-                    else if(curFrame != lastFrame)
-                    {
-                        //cout << "Version 3 index " << index << " curFrame " << curFrame << " lastFrame " << lastFrame << endl;
-                        //cout << "Bounds width: " << animation_bounds[index][curFrame].width << endl;
-                        //cout << "Bounds height: " << animation_bounds[index][curFrame].height << endl;
-
-                        if(curFrame < all_swaps[index].size())
-                        objects[i].swapTexture(animation_spritesheet[index].spritesheet, all_swaps[index][curFrame]);
-                    }
-                }
-
-                //cout << "[Object] Draw" << endl;
-
                 if(force_origin_null) ///nullify the origin when the object is inanimate or you set a custom origin
                 {
-                    objects[i].Draw(window, 0, 0);
+                    objects[i].or_x = 0;
+                    objects[i].or_y = 0;
                 }
-                else
+
+                //cout << "Displaying animation " << getAnimationSegment() << ", time: " << getAnimationPos() << ":" << cur_pos << "/" << anim_end << " frame: " << curFrame+1 << "/" << (getAnimationLength(getAnimationSegment()) * animation_framerate) << " " << getAnimationLength(getAnimationSegment()) << endl;
+                if(!manual_spritesheet)
                 {
                     if(ao_version != 3)
                     {
-                        objects[i].Draw(window, afb[index][curFrame].origin.x, afb[index][curFrame].origin.y);
+                        if(curFrame != lastFrame)
+                        objects[i].swapTexture(afb[index][curFrame].image);
                     }
                     else
                     {
-                        objects[i].Draw(window, animation_spritesheet[index].spritesheet.getSize().x/2, animation_spritesheet[index].spritesheet.getSize().y/2);
+                        if(curFrame == 0)
+                        {
+                            objects[i].swapTexture(animation_spritesheet[index].spritesheet);
+                        }
+                        else if(curFrame != lastFrame)
+                        {
+                            //cout << "Version 3 index " << index << " curFrame " << curFrame << " lastFrame " << lastFrame << endl;
+                            //cout << "Bounds width: " << animation_bounds[index][curFrame].width << endl;
+                            //cout << "Bounds height: " << animation_bounds[index][curFrame].height << endl;
+
+                            if(curFrame < all_swaps[index].size())
+                            objects[i].swapTexture(animation_spritesheet[index].spritesheet, all_swaps[index][curFrame]);
+                        }
+                    }
+
+                    //cout << "[Object] Draw" << endl;
+
+                    if(force_origin_null) ///nullify the origin when the object is inanimate or you set a custom origin
+                    {
+                        objects[i].Draw(window, 0, 0);
+                    }
+                    else
+                    {
+                        if(ao_version != 3)
+                        {
+                            objects[i].Draw(window, afb[index][curFrame].origin.x, afb[index][curFrame].origin.y);
+                        }
+                        else
+                        {
+                            objects[i].Draw(window, animation_spritesheet[index].spritesheet.getSize().x/2, animation_spritesheet[index].spritesheet.getSize().y/2);
+                        }
                     }
                 }
+                else
+                {
+                    objects[i].Draw(window, animation_bounds[index][curFrame].left, animation_bounds[index][curFrame].top, animation_bounds[index][curFrame].width, animation_bounds[index][curFrame].height, animation_origins[index][curFrame].x, animation_origins[index][curFrame].y);
+                }
             }
-            else
+            else if(objects[i].object_name == "spear")
             {
-                objects[i].Draw(window, animation_bounds[index][curFrame].left, animation_bounds[index][curFrame].top, animation_bounds[index][curFrame].width, animation_bounds[index][curFrame].height, animation_origins[index][curFrame].x, animation_origins[index][curFrame].y);
+                objects[i].Draw(window, spear_origin.x, spear_origin.y);
+            }
+            else if(objects[i].object_name == "helm")
+            {
+                objects[i].Draw(window, helm_origin.x, helm_origin.y);
             }
         }
     }

@@ -31,6 +31,15 @@ void Barracks::Initialise(Config *thisConfigs, V4Core *parent, Menu *curParentMe
     patapon2->setAnimationSegment("idle_armed");
     patapon3->LoadConfig(thisConfigs);
     patapon3->setAnimationSegment("idle_armed");
+
+    patapon->applySpear(parent->savereader.invdata.GetItemByInvID(parent->savereader.ponreg.GetPonByID(1)->weapon_invItem_id).item->equip_id);
+    patapon2->applySpear(parent->savereader.invdata.GetItemByInvID(parent->savereader.ponreg.GetPonByID(2)->weapon_invItem_id).item->equip_id);
+    patapon3->applySpear(parent->savereader.invdata.GetItemByInvID(parent->savereader.ponreg.GetPonByID(3)->weapon_invItem_id).item->equip_id);
+
+    patapon->applyHelm(parent->savereader.invdata.GetItemByInvID(parent->savereader.ponreg.GetPonByID(1)->armour_invItem_id).item->equip_id);
+    patapon2->applyHelm(parent->savereader.invdata.GetItemByInvID(parent->savereader.ponreg.GetPonByID(2)->armour_invItem_id).item->equip_id);
+    patapon3->applyHelm(parent->savereader.invdata.GetItemByInvID(parent->savereader.ponreg.GetPonByID(3)->armour_invItem_id).item->equip_id);
+
     int quality = thisConfigs->GetInt("textureQuality");
 
     switch(quality)
@@ -261,7 +270,15 @@ void Barracks::OpenBarracksMenu(){
     numItemRows = ceil(totalItems/(numItemColumns+0.0));
     RefreshStats();
 }
-void Barracks::RefreshStats(){
+void Barracks::RefreshStats()
+{
+    patapon->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->weapon_invItem_id).item->equip_id);
+    patapon2->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->weapon_invItem_id).item->equip_id);
+    patapon3->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(3)->weapon_invItem_id).item->equip_id);
+
+    patapon->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->armour_invItem_id).item->equip_id);
+    patapon2->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->armour_invItem_id).item->equip_id);
+    patapon3->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(3)->armour_invItem_id).item->equip_id);
 
     Pon* currentPon = parentMenu->v4core->savereader.ponreg.GetPonByID(current_selected_pon);
 
