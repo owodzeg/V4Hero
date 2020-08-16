@@ -64,10 +64,12 @@ void SaveReader::LoadSave(Config& tconfig)
                     InventoryItem invItem;
                     invItem.item = itemreg.GetItemByID(stoi(key[1]));
                     invItem.inventoryId =invdata.items.size();
+                    cout << "ITEM: " << invItem.item->category_id << endl;
                     invdata.items.push_back(invItem);
                 } else if(key[0]=="heroUnlocked"){
                     heroUnlocked = stoi(key[1]);
                 } else if(key[0]=="PON"){
+                    cout << "PON reading: " << line << endl;
                     vector<string> ponData = Func::Split(key[1],'|');
                     Pon newPon = Pon(this);
                     newPon.pon_id=stoi(ponData[0]);
