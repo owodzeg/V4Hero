@@ -100,7 +100,7 @@ class Barracks : public Menu
         /// mask icon
         PSprite s_mask_icon;
 
-        int current_selected_pon=0;
+        int current_selected_pon=1;
 
         bool MenuMode = false;
 
@@ -140,13 +140,14 @@ class Barracks : public Menu
         sf::RectangleShape mm_description_background;
         sf::RectangleShape mm_highlighted_tile;
 
-        int current_pon=0;
+        PSprite highlighted_pon;
 
         PText t_itemtitle;
         std::vector<PText> t_itemdescription;
 
         void OnExit();
         void OpenBarracksMenu();
+        void ApplyEquipment();
         void RefreshStats();
         void UpdateButtons();
         Barracks();

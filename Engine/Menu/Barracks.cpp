@@ -207,7 +207,7 @@ void Barracks::Initialise(Config *thisConfigs, V4Core *parent, Menu *curParentMe
     enabledPositons.push_back(true);
     enabledPositons.push_back(false);
     enabledPositons.push_back(true);
-    enabledPositons.push_back(true);
+    enabledPositons.push_back(false);
     mm_inventory_background.setSize(sf::Vector2f(496*resRatioX,360*resRatioY));
     mm_inventory_background.setFillColor(sf::Color(0,0,0));
 
@@ -233,6 +233,9 @@ void Barracks::Initialise(Config *thisConfigs, V4Core *parent, Menu *curParentMe
     armour_icon.loadFromFile("resources/graphics/item/armour_icon.png",1,2);
 
     qualitySetting = quality;
+    highlighted_pon.loadFromFile("resources/graphics/ui/highlighted_pon.png", qualitySetting, 1);
+
+    ApplyEquipment();
 
     //mm_inventory_background.setSize(sf::Vector2f(mm_inventory_background.getSize().x+(40*resRatioX),mm_inventory_background.getSize().y+(40*resRatioX)));
     parent->SaveToDebugLog("Initializing Barracks finished.");
@@ -269,8 +272,10 @@ void Barracks::OpenBarracksMenu(){
     int totalItems = v4core->savereader.invdata.CountItemsByType(activeCategory);
     numItemRows = ceil(totalItems/(numItemColumns+0.0));
     RefreshStats();
+    ApplyEquipment();
 }
-void Barracks::RefreshStats()
+
+void Barracks::ApplyEquipment()
 {
     patapon->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->weapon_invItem_id).item->equip_id);
     patapon2->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->weapon_invItem_id).item->equip_id);
@@ -279,7 +284,10 @@ void Barracks::RefreshStats()
     patapon->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->armour_invItem_id).item->equip_id);
     patapon2->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->armour_invItem_id).item->equip_id);
     patapon3->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(3)->armour_invItem_id).item->equip_id);
+}
 
+void Barracks::RefreshStats()
+{
     Pon* currentPon = parentMenu->v4core->savereader.ponreg.GetPonByID(current_selected_pon);
 
     t_unit_rarepon_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"rarepon_normal"))+" "+Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_lvl"))+" "+std::to_string(currentPon->pon_level));
@@ -421,12 +429,14 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
 
         //window.draw(mm_bigBox);
 
-
         s_background.setPosition(0,0);
         s_background.draw(window);
 
         int highlightWidth=225;
         int ponwidth=75;
+
+        highlighted_pon.setPosition((468 + (75*(current_selected_pon-1))), 530);
+        highlighted_pon.draw(window);
 
         patapon->setGlobalPosition(sf::Vector2f((highlightWidth*2+ponwidth*0.7),pataponY));
         patapon->fps = fps;
@@ -618,14 +628,38 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
                 if(inputCtrl.isKeyPressed(InputController::Keys::DOWN))
                 {
                     currentItemPosition +=1;
-                    if (currentItemPosition>enabledPositons.size()-1){
+
+                    if(currentItemPosition > enabledPositons.size()-1)
+                    {
                         currentItemPosition = 0;
                     }
-                    while(!enabledPositons[currentItemPosition]){
+
+                    while(!enabledPositons[currentItemPosition])
+                    {
                         currentItemPosition +=1;
+                    }
+
+                    if(currentItemPosition > enabledPositons.size()-1)
+                    {
+                        currentItemPosition = 0;
                     }
                 }
 
+                if(inputCtrl.isKeyPressed(InputController::Keys::LEFT))
+                {
+                    if(current_selected_pon > 1)
+                    current_selected_pon--;
+
+                    RefreshStats();
+                }
+
+                if(inputCtrl.isKeyPressed(InputController::Keys::RIGHT))
+                {
+                    if(current_selected_pon < 3)
+                    current_selected_pon++;
+
+                    RefreshStats();
+                }
             }
             else
             {
@@ -709,8 +743,9 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
                 else
                 {
                     InventoryItem currentItem = v4core->savereader.invdata.ItemsByType(activeCategory)[inventoryGridXPos+inventoryGridYPos/numItemColumns];
-                    v4core->savereader.ponreg.pons[current_pon].GiveItem(currentItem.inventoryId);
+                    v4core->savereader.ponreg.pons[current_selected_pon].GiveItem(currentItem.inventoryId);
                     RefreshStats();
+                    ApplyEquipment();
                     MenuMode=false;
                 }
             }
