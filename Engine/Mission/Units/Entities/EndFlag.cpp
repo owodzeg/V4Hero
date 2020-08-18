@@ -15,6 +15,7 @@ void EndFlag::LoadConfig(Config *thisConfigs)
     current_animation = "idle";
     end_sound.loadFromFile("resources\\sfx\\level\\endflag.ogg");
     s_end.setBuffer(end_sound);
+    s_end.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
 }
 void EndFlag::Draw(sf::RenderWindow& window)
 {

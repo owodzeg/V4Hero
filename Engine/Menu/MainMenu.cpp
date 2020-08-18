@@ -69,7 +69,7 @@ void MainMenu::Initialise(Config *thisConfigs, V4Core *parent)
 
     sb_smash.loadFromFile("resources/sfx/menu/smash.ogg");
     s_smash.setBuffer(sb_smash);
-    s_smash.setVolume(thisConfigs->GetInt("masterVolume"));
+    s_smash.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
 
     grass_1.loadFromFile("resources/graphics/ui/menu/grass_1.png", q, r);
     grass_2.loadFromFile("resources/graphics/ui/menu/grass_2.png", q, r);
@@ -185,7 +185,7 @@ void MainMenu::Initialise(Config *thisConfigs, V4Core *parent)
     g_x[2] = 0;
     g_x[3] = 0;
 
-    float volume = thisConfigs->GetInt("masterVolume");
+    float volume = (float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("bgmVolume"))/100.f));
 
     sb_title_loop.loadFromFile("resources/sfx/menu/menuloop.ogg");
     title_loop.setBuffer(sb_title_loop);

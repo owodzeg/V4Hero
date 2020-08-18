@@ -5,37 +5,23 @@ using namespace std;
 
 RhythmController::RhythmController()
 {
-    b_pata[0].loadFromFile("resources/sfx/drums/pata.ogg");
-    b_pata[1].loadFromFile("resources/sfx/drums/pata_2.ogg");
-    b_pata[2].loadFromFile("resources/sfx/drums/pata_3.ogg");
+    for(int i=0; i<=2; i++)
+    {
+        string num = "_"+to_string(i);
 
-    b_pon[0].loadFromFile("resources/sfx/drums/pon.ogg");
-    b_pon[1].loadFromFile("resources/sfx/drums/pon_2.ogg");
-    b_pon[2].loadFromFile("resources/sfx/drums/pon_3.ogg");
+        if(i==0)
+        num = "";
 
-    b_chaka[0].loadFromFile("resources/sfx/drums/chaka.ogg");
-    b_chaka[1].loadFromFile("resources/sfx/drums/chaka_2.ogg");
-    b_chaka[2].loadFromFile("resources/sfx/drums/chaka_3.ogg");
+        b_pata[i].loadFromFile("resources/sfx/drums/pata"+num+".ogg");
+        b_pon[i].loadFromFile("resources/sfx/drums/pon"+num+".ogg");
+        b_don[i].loadFromFile("resources/sfx/drums/don"+num+".ogg");
+        b_chaka[i].loadFromFile("resources/sfx/drums/chaka"+num+".ogg");
 
-    b_don[0].loadFromFile("resources/sfx/drums/don.ogg");
-    b_don[1].loadFromFile("resources/sfx/drums/don_2.ogg");
-    b_don[2].loadFromFile("resources/sfx/drums/don_3.ogg");
-
-    b_chpata[0].loadFromFile("resources/sfx/drums/ch_pata.ogg");
-    b_chpata[1].loadFromFile("resources/sfx/drums/ch_pata_2.ogg");
-    b_chpata[2].loadFromFile("resources/sfx/drums/ch_pata_3.ogg");
-
-    b_chpon[0].loadFromFile("resources/sfx/drums/ch_pon.ogg");
-    b_chpon[1].loadFromFile("resources/sfx/drums/ch_pon_2.ogg");
-    b_chpon[2].loadFromFile("resources/sfx/drums/ch_pon_3.ogg");
-
-    b_chchaka[0].loadFromFile("resources/sfx/drums/ch_chaka.ogg");
-    b_chchaka[1].loadFromFile("resources/sfx/drums/ch_chaka_2.ogg");
-    b_chchaka[2].loadFromFile("resources/sfx/drums/ch_chaka_3.ogg");
-
-    b_chdon[0].loadFromFile("resources/sfx/drums/ch_don.ogg");
-    b_chdon[1].loadFromFile("resources/sfx/drums/ch_don_2.ogg");
-    b_chdon[2].loadFromFile("resources/sfx/drums/ch_don_3.ogg");
+        b_chpata[i].loadFromFile("resources/sfx/drums/ch_pata"+num+".ogg");
+        b_chpon[i].loadFromFile("resources/sfx/drums/ch_pon"+num+".ogg");
+        b_chdon[i].loadFromFile("resources/sfx/drums/ch_don"+num+".ogg");
+        b_chchaka[i].loadFromFile("resources/sfx/drums/ch_chaka"+num+".ogg");
+    }
 
     b_perfect.loadFromFile("resources/sfx/drums/perfect.ogg");
 
@@ -88,6 +74,9 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         drum_nc.setBuffer(b_pata[drum_quality]);
         drum_c.setBuffer(b_chpata[drum_quality]);
 
+        drum_nc.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
+        drum_c.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
+
         ///Add PATA drum to user input table
         if(add_to_commandtable)
         commandInput.push_back("PATA");
@@ -106,6 +95,9 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         ///Add PON drum sound effect to the buffer
         drum_nc.setBuffer(b_pon[drum_quality]);
         drum_c.setBuffer(b_chpon[drum_quality]);
+
+        drum_nc.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
+        drum_c.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
 
         ///Add PON drum to user input table
         if(add_to_commandtable)
@@ -126,6 +118,9 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         drum_nc.setBuffer(b_chaka[drum_quality]);
         drum_c.setBuffer(b_chchaka[drum_quality]);
 
+        drum_nc.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
+        drum_c.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
+
         ///Add CHAKA drum to user input table
         if(add_to_commandtable)
         commandInput.push_back("CHAKA");
@@ -144,6 +139,9 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         ///Add DON drum sound effect to the buffer
         drum_nc.setBuffer(b_don[drum_quality]);
         drum_c.setBuffer(b_chdon[drum_quality]);
+
+        drum_nc.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
+        drum_c.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
 
         ///Add DON drum to user input table
         if(add_to_commandtable)
@@ -232,6 +230,7 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
                 {
                     s_perfect.stop();
                     s_perfect.setBuffer(b_perfect);
+                    s_perfect.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
                     s_perfect.play();
                 }
             }

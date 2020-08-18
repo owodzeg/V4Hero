@@ -897,6 +897,8 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 
     string fm = "Playing mission: "+missionName;
     v4core->ChangeRichPresence(fm.c_str(), missionImg.c_str(), "logo");
+
+    rhythm.config = *missionConfig;
     rhythm.LoadTheme(songName); // missionConfig->GetString("debugTheme")
     missionTimer.restart();
 
@@ -1457,6 +1459,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 {
                     s_cheer.stop();
                     s_cheer.setBuffer(sb_cheer1);
+                    s_cheer.setVolume(float(missionConfig->GetInt("masterVolume"))*(float(missionConfig->GetInt("sfxVolume"))/100.f));
                     s_cheer.play();
                     playCheer[0] = true;
                 }
@@ -1468,6 +1471,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 {
                     s_cheer.stop();
                     s_cheer.setBuffer(sb_cheer2);
+                    s_cheer.setVolume(float(missionConfig->GetInt("masterVolume"))*(float(missionConfig->GetInt("sfxVolume"))/100.f));
                     s_cheer.play();
                     playCheer[1] = true;
                 }
@@ -1479,6 +1483,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 {
                     s_cheer.stop();
                     s_cheer.setBuffer(sb_cheer3);
+                    s_cheer.setVolume(float(missionConfig->GetInt("masterVolume"))*(float(missionConfig->GetInt("sfxVolume"))/100.f));
                     s_cheer.play();
                     playCheer[2] = true;
                 }
@@ -1489,6 +1494,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 if(!playJingle)
                 {
                     s_jingle.setBuffer(sb_win_jingle);
+                    s_jingle.setVolume(float(missionConfig->GetInt("masterVolume"))*(float(missionConfig->GetInt("sfxVolume"))/100.f));
                     s_jingle.play();
                     playJingle = true;
                 }
@@ -1499,6 +1505,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
             if(!playJingle)
             {
                 s_jingle.setBuffer(sb_lose_jingle);
+                s_jingle.setVolume(float(missionConfig->GetInt("masterVolume"))*(float(missionConfig->GetInt("sfxVolume"))/100.f));
                 s_jingle.play();
                 playJingle = true;
             }

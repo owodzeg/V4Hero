@@ -12,9 +12,9 @@ void Menu::Back(){
 }
 void Menu::Show(){
     isActive=true;
-    s_menu_enter.setBuffer(b_menu_enter);
-    s_menu_enter.setVolume(10.4f);
-    s_menu_enter.play();
+    //s_menu_enter.setBuffer(b_menu_enter);
+    //s_menu_enter.setVolume(float(thisConfig->GetInt("masterVolume"))*(float(thisConfig->GetInt("sfxVolume"))/100.f));
+    //s_menu_enter.play();
 }
 void Menu::Hide(){
     isActive=false;

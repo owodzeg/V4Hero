@@ -150,7 +150,7 @@ void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParent
     opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
     qualities.push_back(opt);
 
-    opt.createText(m_font, 25, sf::Color::White, "Master volume", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, "Volume settings", q, 2);
     a_options.push_back(opt);
     opt.createText(m_font, 25, sf::Color::White, "Drum sounds", q, 2);
     a_options.push_back(opt);
@@ -161,7 +161,11 @@ void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParent
     opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
     a_options.push_back(opt);
 
-    opt.createText(m_font, 25, sf::Color::White, "Volume: 100%", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, "Master volume: 100%", q, 2);
+    ms_volume.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "SFX: 100%", q, 2);
+    ms_volume.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, "Music: 100%", q, 2);
     ms_volume.push_back(opt);
     opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
     ms_volume.push_back(opt);
@@ -684,8 +688,67 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
                 maxSel = ms_volume.size();
 
+                string key = "";
+
+                switch(sel)
+                {
+                    case 0:
+                    key = "masterVolume";
+                    break;
+
+                    case 1:
+                    key = "sfxVolume";
+                    break;
+
+                    case 2:
+                    key = "bgmVolume";
+                    break;
+                }
+
+                if(inputCtrl.isKeyPressed(InputController::Keys::LEFT))
+                {
+                    int newVolume = thisConfig->GetInt(key) - 10;
+
+                    if(newVolume <= 0)
+                    newVolume = 0;
+
+                    SetConfigValue(key, to_string(newVolume), false);
+                }
+                else if(inputCtrl.isKeyPressed(InputController::Keys::RIGHT))
+                {
+                    int newVolume = thisConfig->GetInt(key) + 10;
+
+                    if(newVolume >= 100)
+                    newVolume = 100;
+
+                    SetConfigValue(key, to_string(newVolume), false);
+                }
+
                 for(int i=0; i<ms_volume.size(); i++)
                 {
+                    string key = "";
+                    string str = "";
+
+                    switch(i)
+                    {
+                        case 0:
+                        key = "masterVolume";
+                        str = "Master volume: ";
+                        break;
+
+                        case 1:
+                        key = "sfxVolume";
+                        str = "Sound volume: ";
+                        break;
+
+                        case 2:
+                        key = "bgmVolume";
+                        str = "Music volume: ";
+                        break;
+                    }
+
+                    if(i<=2)
+                    ms_volume[i].setString(str+to_string(thisConfig->GetInt(key))+"%");
                     ms_volume[i].setOrigin(0, ms_volume[i].getGlobalBoundsScaled().height/2);
                     ms_volume[i].setPosition(810, 520 + 40*i);
                     ms_volume[i].setColor(sf::Color::White);
@@ -1127,7 +1190,25 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                 break;
             }
 
+            case 211:
+            {
+                GoBackMenuOption(1);
+                break;
+            }
+
             case 212:
+            {
+                GoBackMenuOption(1);
+                break;
+            }
+
+            case 213:
+            {
+                GoBackMenuOption(1);
+                break;
+            }
+
+            case 214:
             {
                 GoBackMenuOption();
                 break;
