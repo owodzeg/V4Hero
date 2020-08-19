@@ -189,6 +189,48 @@ void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParent
     opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
     inputs.push_back(opt);
 
+    ifstream langfile("resources/lang/lang.txt");
+    string buf;
+    int langcount = 0;
+    int page = 0;
+
+    while(getline(langfile, buf))
+    {
+        vector<string> param = Func::Split(buf, '|');
+
+        opt.createText(m_font, 25, sf::Color::White, param[0], q, 2);
+        langs[page].push_back(opt);
+
+        langcount++;
+
+        if(langcount >= 5)
+        {
+            opt.createText(m_font, 25, sf::Color::White, "Next page", q, 2);
+            langs[page].push_back(opt);
+
+            opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+            langs[page].push_back(opt);
+
+            langcount = 0;
+            page++;
+        }
+    }
+
+    if(langcount != 0)
+    {
+        opt.createText(m_font, 25, sf::Color::White, "Next page", q, 2);
+        langs[page].push_back(opt);
+
+        opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+        langs[page].push_back(opt);
+
+        page++;
+    }
+
+    langfile.close();
+
+    lang_pages = page;
+
     ///Input manager (change keybinds)
     input_manager.loadFromFile("resources/graphics/ui/options/inputmenu.png", q, 1); ///sprite
 
@@ -336,6 +378,8 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
         {
             case 0:
             {
+                lang_current = 0;
+
                 options_header.setString("Options");
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
@@ -461,6 +505,45 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                     }
 
                     inputs[i].draw(window);
+                }
+
+                sword.draw(window);
+
+                break;
+            }
+
+            case 4:
+            {
+                options_header.setString("Language settings");
+                options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
+                options_header.setPosition(930, 460);
+                options_header.draw(window);
+
+                maxSel = langs[lang_current].size();
+
+                for(int i=0; i<langs[lang_current].size(); i++)
+                {
+                    langs[lang_current][i].setOrigin(0, langs[lang_current][i].getGlobalBoundsScaled().height/2);
+                    langs[lang_current][i].setPosition(810, 520 + 40*i);
+                    langs[lang_current][i].setColor(sf::Color::White);
+
+                    if(lang_current*5+i+1 == thisConfig->GetInt("lang"))
+                    {
+                        if(i < 5)
+                        langs[lang_current][i].setColor(sf::Color(0,192,0,255));
+                    }
+
+                    if(mouseY / window.getSize().y * 1080 >= (langs[lang_current][i].getPosition().y - langs[lang_current][i].getGlobalBoundsScaled().height/2 + 8))
+                    {
+                        if(mouseY / window.getSize().y * 1080 <= (langs[lang_current][i].getPosition().y + langs[lang_current][i].getGlobalBoundsScaled().height/2 + 8))
+                        {
+                            langs[lang_current][i].setColor(sf::Color(255,255,255,192));
+
+                            sel = i;
+                        }
+                    }
+
+                    langs[lang_current][i].draw(window);
                 }
 
                 sword.draw(window);
@@ -1279,6 +1362,29 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                 GoBackMenuOption();
                 break;
             }
+        }
+
+        if((state >= 40) && (state <= 40+langs[lang_current].size()-2))
+        {
+            cout << "Select lang ID: " << lang_current*5+(state-40) << endl;
+            SetConfigValue("lang", to_string(lang_current*5+(state-40)), false);
+
+            GoBackMenuOption(1);
+        }
+
+        if(state == 40+langs[lang_current].size()-1)
+        {
+            lang_current++;
+
+            if(lang_current >= lang_pages)
+            lang_current = 0;
+
+            GoBackMenuOption(1);
+        }
+
+        if(state == 40+langs[lang_current].size())
+        {
+            GoBackMenuOption();
         }
 
         if((state >= 111) && (state <= 110+resolutions.size()-1))

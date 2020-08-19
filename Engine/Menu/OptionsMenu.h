@@ -50,7 +50,7 @@ class OptionsMenu : public Menu
         std::vector<PText> options; ///main options
         std::vector<PText> g_options; /// graphics options
         std::vector<PText> a_options; /// audio options
-        std::vector<PText> langs;
+        std::map<int, std::vector<PText>> langs; ///languages (with pages)
         std::vector<Resolution> float_resolutions;
         std::vector<PText> resolutions;
         std::vector<float> float_framerates;
@@ -87,6 +87,10 @@ class OptionsMenu : public Menu
         PText t_cs_title, t_cs_desc, t_cs_bigbutton, t_cs_tip;
         int setup_stage = 1;
         int setup_key = -2;
+
+        ///Languages
+        int lang_pages = 0;
+        int lang_current = 0;
 
         Menu *parentMenu;
         void Initialise(Config *thisConfig,V4Core *parent,Menu *curParentMenu);
