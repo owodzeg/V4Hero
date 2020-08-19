@@ -65,7 +65,7 @@ void MainMenu::Initialise(Config *thisConfigs, V4Core *parent)
     logow_shadow.setColor(sf::Color(64,64,64,ui_alpha));
     logow_text.setColor(sf::Color(255,255,255,ui_alpha));
 
-    t_pressanykey.createText(f_font, 26, sf::Color(255,255,255,t_alpha), "Press any key to start", q, r);
+    t_pressanykey.createText(f_font, 26, sf::Color(255,255,255,t_alpha), Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"menu_pressanykey")), q, r);
 
     sb_smash.loadFromFile("resources/sfx/menu/smash.ogg");
     s_smash.setBuffer(sb_smash);

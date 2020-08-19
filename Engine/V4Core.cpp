@@ -278,10 +278,10 @@ void V4Core::LoadingThread()
     t_tipText.createText(f_font, 32, sf::Color(255,255,255,255), str_tipText, config.GetInt("textureQuality"), 1);
 
     PText t_pressAnyKey;
-    t_pressAnyKey.createText(f_font, 46, sf::Color(255,255,255,255), "Press any key to continue", config.GetInt("textureQuality"), 1);
+    t_pressAnyKey.createText(f_font, 46, sf::Color(255,255,255,255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"tips_anykey")), config.GetInt("textureQuality"), 1);
 
     PText t_nowLoading;
-    t_nowLoading.createText(f_font, 46, sf::Color(255,255,255,255), "Now loading", config.GetInt("textureQuality"), 1);
+    t_nowLoading.createText(f_font, 46, sf::Color(255,255,255,255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"tips_loading")), config.GetInt("textureQuality"), 1);
 
     while (continueLoading)
     {

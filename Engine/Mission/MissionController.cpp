@@ -555,12 +555,12 @@ void MissionController::Initialise(Config &config,std::string backgroundString,V
     sb_cheer2.loadFromFile("resources/sfx/level/cheer2.ogg");
     sb_cheer3.loadFromFile("resources/sfx/level/cheer1.ogg");
 
-    t_win.createText(f_moji, 56, sf::Color(222, 83, 0, 255), "MISSION COMPLETE!", q, 1);
-    t_win_outline.createText(f_moji, 56, sf::Color(255, 171, 0, 255), "MISSION COMPLETE!", q, 1);
+    t_win.createText(f_moji, 56, sf::Color(222, 83, 0, 255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"mission_complete")), q, 1);
+    t_win_outline.createText(f_moji, 56, sf::Color(255, 171, 0, 255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"mission_complete")), q, 1);
     t_win_outline.setOutlineColor(sf::Color(255, 171, 0, 255));
     t_win_outline.setOutlineThickness(10);
-    t_lose.createText(f_moji, 56, sf::Color(138, 15, 26, 255), "MISSION FAILED!", q, 1);
-    t_lose_outline.createText(f_moji, 56, sf::Color(254, 48, 55, 255), "MISSION FAILED!", q, 1);
+    t_lose.createText(f_moji, 56, sf::Color(138, 15, 26, 255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"mission_failed")), q, 1);
+    t_lose_outline.createText(f_moji, 56, sf::Color(254, 48, 55, 255),Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"mission_failed")), q, 1);
     t_lose_outline.setOutlineColor(sf::Color(254, 48, 55, 255));
     t_lose_outline.setOutlineThickness(10);
 

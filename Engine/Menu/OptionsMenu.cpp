@@ -73,35 +73,35 @@ void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParent
     dg_restart.loadFromFile("resources/graphics/ui/options/dg_restart.png", q, 1);
     dg_select.loadFromFile("resources/graphics/ui/options/dg_select.png", q, 2);
 
-    t_restart.createText(m_font, 26, sf::Color::Black, "You need to restart your game to\napply changes. Restart now?", q, 2);
+    t_restart.createText(m_font, 26, sf::Color::Black, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_restart_notice")), q, 2);
 
-    vector<string> restart_opt = {"Restart game now", "Revert changes"};
-    restart_prompt.Create(m_font, "You need to restart your game to\napply changes. Restart now?", restart_opt, q, thisConfigs->GetInt("resX") / float(1280));
-    options_header.createText(m_font, 45, sf::Color::White, "Options", q, 2);
+    vector<string> restart_opt = {Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_restart_button1")), Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_restart_button2"))};
+    restart_prompt.Create(m_font, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_restart_notice")), restart_opt, q, thisConfigs->GetInt("resX") / float(1280));
+    options_header.createText(m_font, 45, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_options")), q, 2);
 
     PText opt;
-    opt.createText(m_font, 25, sf::Color::White, "Graphics settings", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_graphics")), q, 2);
     options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Audio settings", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_audio")), q, 2);
     options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Input settings", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_input")), q, 2);
     options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Language settings", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_language")), q, 2);
     options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Back to Main menu", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_backtomain")), q, 2);
     options.push_back(opt);
 
-    opt.createText(m_font, 25, sf::Color::White, "Game resolution", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_graphics1")), q, 2);
     g_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Texture quality", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_graphics2")), q, 2);
     g_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Framerate limit", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_graphics4")), q, 2);
     g_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Switch fullscreen", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_graphics5")), q, 2);
     g_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Borderless window", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_graphics6")), q, 2);
     g_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_back")), q, 2);
     g_options.push_back(opt);
 
     vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes();
@@ -121,10 +121,10 @@ void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParent
             float_resolutions.push_back(tmp);
         }
     }
-    opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_back")), q, 2);
     resolutions.push_back(opt);
 
-    opt.createText(m_font, 25, sf::Color::White, "0 (unlimited)", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, "0 "+Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_unlimited")), q, 2);
     framerates.push_back(opt);
     float_framerates.push_back(0);
     opt.createText(m_font, 25, sf::Color::White, "240", q, 2);
@@ -136,45 +136,45 @@ void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParent
     opt.createText(m_font, 25, sf::Color::White, "60", q, 2);
     framerates.push_back(opt);
     float_framerates.push_back(60);
-    opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_back")), q, 2);
     framerates.push_back(opt);
 
-    opt.createText(m_font, 25, sf::Color::White, "Low", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_quality_low")), q, 2);
     qualities.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Medium", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_quality_medium")), q, 2);
     qualities.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "High", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_quality_high")), q, 2);
     qualities.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Ultra", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_quality_ultra")), q, 2);
     qualities.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_back")), q, 2);
     qualities.push_back(opt);
 
-    opt.createText(m_font, 25, sf::Color::White, "Volume settings", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_audio1")), q, 2);
     a_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Drum sounds", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_audio2")), q, 2);
     a_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Patapon drum chants", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_audio3")), q, 2);
     a_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Patapon responses", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_audio4")), q, 2);
     a_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_back")), q, 2);
     a_options.push_back(opt);
 
-    opt.createText(m_font, 25, sf::Color::White, "Master volume: 100%", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_volume1")), q, 2);
     ms_volume.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "SFX: 100%", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_volume2")), q, 2);
     ms_volume.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Music: 100%", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_volume3")), q, 2);
     ms_volume.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_back")), q, 2);
     ms_volume.push_back(opt);
 
-    opt.createText(m_font, 25, sf::Color::White, "Enable", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_enable")), q, 2);
     switches.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Disable", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_disable")), q, 2);
     switches.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_back")), q, 2);
     switches.push_back(opt);
 
     opt.createText(m_font, 25, sf::Color::Black, "Restart game", q, 2);
@@ -182,11 +182,11 @@ void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParent
     opt.createText(m_font, 25, sf::Color::Black, "Revert changes", q, 2);
     restarts.push_back(opt);
 
-    opt.createText(m_font, 25, sf::Color::White, "Keyboard bindings", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_input2")), q, 2);
     inputs.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Controller setup", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_input1")), q, 2);
     inputs.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_back")), q, 2);
     inputs.push_back(opt);
 
     ifstream langfile("resources/lang/lang.txt");
@@ -205,10 +205,10 @@ void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParent
 
         if(langcount >= 5)
         {
-            opt.createText(m_font, 25, sf::Color::White, "Next page", q, 2);
+            opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"nav_nextpage")), q, 2);
             langs[page].push_back(opt);
 
-            opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+            opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_back")), q, 2);
             langs[page].push_back(opt);
 
             langcount = 0;
@@ -218,10 +218,10 @@ void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParent
 
     if(langcount != 0)
     {
-        opt.createText(m_font, 25, sf::Color::White, "Next page", q, 2);
+        opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"nav_nextpage")), q, 2);
         langs[page].push_back(opt);
 
-        opt.createText(m_font, 25, sf::Color::White, "Go back", q, 2);
+        opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_back")), q, 2);
         langs[page].push_back(opt);
 
         page++;
@@ -239,26 +239,26 @@ void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParent
         t_presets[i].createText(m_font, 18, sf::Color::Black, to_string(i+1), q, 1);
     }
 
-    t_igbutton.createText(m_font, 18, sf::Color::Black, "In-game button", q, 1);
-    t_assigned.createText(m_font, 18, sf::Color::Black, "Assigned key", q, 1);
+    t_igbutton.createText(m_font, 18, sf::Color::Black, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_ingame_btn")), q, 1);
+    t_assigned.createText(m_font, 18, sf::Color::Black, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_assign_key")), q, 1);
 
     for(int i=0; i<12; i++)
     {
-        t_igkey[i].createText(m_font, 18, sf::Color::Black, "key", q, 1);
+        t_igkey[i].createText(m_font, 18, sf::Color::Black, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_key")), q, 1);
         t_askey[i].createText(m_font, 18, sf::Color::Black, "", q, 1);
     }
 
-    t_im_tip.createText(m_font, 18, sf::Color::White, "Tip: Hover the assigned key with mouse or select it with arrow keys,\nthen press the Cross button to change it.\nPress the Triangle button to remove the assigned key.\nUse the numbers on the top of the menu to switch between keybind presets.", q, 1); ///input manager's tip
+    t_im_tip.createText(m_font, 18, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_tip1")), q, 1); ///input manager's tip
 
-    t_change_title.createText(m_font, 28, sf::Color::White, "Changing assigned key for in-game button:", q, 1);
-    t_change_button.createText(m_font, 62, sf::Color::White, "button", q, 1);
-    t_change_anykey.createText(m_font, 28, sf::Color::White, "Press any key to assign it to the in-game button", q, 1); ///change dialog
+    t_change_title.createText(m_font, 28, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_change_title")), q, 1);
+    t_change_button.createText(m_font, 62, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_change_button")), q, 1);
+    t_change_anykey.createText(m_font, 28, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_change_anykey")), q, 1); ///change dialog
 
     ///Controller setup
-    t_cs_title.createText(m_font, 26, sf::Color::White, "Controller setup", q, 1);
-    t_cs_desc.createText(m_font, 16, sf::Color::White, "Make sure your controller is connected to your PC.\nPress any button on your controller and it should appear in the middle of the screen.", q, 1);
-    t_cs_bigbutton.createText(m_font, 30, sf::Color::White, "big button", q, 1);
-    t_cs_tip.createText(m_font, 15, sf::Color::White, "Tip: Press any key to return to the options menu.", q, 1);
+    t_cs_title.createText(m_font, 26, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_input1")), q, 1);
+    t_cs_desc.createText(m_font, 16, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_input_setup1")), q, 1);
+    t_cs_bigbutton.createText(m_font, 30, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_bigbutton")), q, 1);
+    t_cs_tip.createText(m_font, 15, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_tip2")), q, 1);
 
     parent->SaveToDebugLog("Options menu initialized.");
 }
@@ -380,7 +380,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
             {
                 lang_current = 0;
 
-                options_header.setString("Options");
+                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_options")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -415,7 +415,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
             case 1:
             {
-                options_header.setString("Graphics settings");
+                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_graphics")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -448,7 +448,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
             case 2:
             {
-                options_header.setString("Audio settings");
+                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_audio")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -481,7 +481,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
             case 3:
             {
-                options_header.setString("Input settings");
+                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_input")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -514,7 +514,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
             case 4:
             {
-                options_header.setString("Language settings");
+                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_language")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -578,7 +578,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
             case 11:
             {
-                options_header.setString("Screen resolution");
+                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_graphics1")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -614,7 +614,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
             case 12:
             {
-                options_header.setString("Texture quality");
+                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_graphics2")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -650,7 +650,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
             case 13:
             {
-                options_header.setString("Framerate limit");
+                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_graphics4")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -686,7 +686,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
             case 14:
             {
-                options_header.setString("Switch fullscreen");
+                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_graphics5")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -722,7 +722,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
             case 15:
             {
-                options_header.setString("Borderless window");
+                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_graphics6")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -764,7 +764,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
             case 21:
             {
-                options_header.setString("Master volume");
+                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_audio1")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -816,17 +816,17 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                     {
                         case 0:
                         key = "masterVolume";
-                        str = "Master volume: ";
+                        str = Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_volume1"));
                         break;
 
                         case 1:
                         key = "sfxVolume";
-                        str = "Sound volume: ";
+                        str = Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_volume2"));
                         break;
 
                         case 2:
                         key = "bgmVolume";
-                        str = "Music volume: ";
+                        str = Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_volume3"));
                         break;
                     }
 
@@ -856,7 +856,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
             case 22:
             {
-                options_header.setString("Drum sounds");
+                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_audio2")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -892,7 +892,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
             case 23:
             {
-                options_header.setString("Patapon drum chants");
+                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_audio3")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -928,7 +928,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
             case 24:
             {
-                options_header.setString("Patapon responses");
+                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_audio4")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width/2, options_header.getGlobalBoundsScaled().height/2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -1063,7 +1063,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
                 if(setup_stage == 1)
                 {
-                    t_cs_title.setString("Controller setup");
+                    t_cs_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_input1")));
                     t_cs_title.setOrigin(t_cs_title.getLocalBounds().width/2, t_cs_title.getLocalBounds().height/2);
                     t_cs_title.setPosition(640, 240);
                     t_cs_title.draw(window);
@@ -1096,14 +1096,14 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                     t_cs_bigbutton.setPosition(640, 340);
                     t_cs_bigbutton.draw(window);
 
-                    t_cs_tip.setString("Tip: Press the Start button on your keyboard to continue.\nPress the Circle button to exit controller setup.");
+                    t_cs_tip.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_tip3")));
                     t_cs_tip.setOrigin(t_cs_tip.getLocalBounds().width/2, t_cs_tip.getLocalBounds().height/2);
                     t_cs_tip.setPosition(640, 440);
                     t_cs_tip.draw(window);
                 }
                 else if(setup_stage != 14)
                 {
-                    t_cs_title.setString("Controller setup");
+                    t_cs_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_input1")));
                     t_cs_title.setOrigin(t_cs_title.getLocalBounds().width/2, t_cs_title.getLocalBounds().height/2);
                     t_cs_title.setPosition(640, 320);
                     t_cs_title.draw(window);
@@ -1140,7 +1140,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                         GoBackMenuOption();
                     }
 
-                    t_cs_title.setString("Controller setup");
+                    t_cs_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_input1")));
                     t_cs_title.setOrigin(t_cs_title.getLocalBounds().width/2, t_cs_title.getLocalBounds().height/2);
                     t_cs_title.setPosition(640, 320);
                     t_cs_title.draw(window);
@@ -1151,7 +1151,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                     t_cs_desc.setPosition(640, 360);
                     t_cs_desc.draw(window);
 
-                    t_cs_tip.setString("Tip: Press any key to return to the options menu.");
+                    t_cs_tip.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_tip2")));
                     t_cs_tip.setOrigin(t_cs_tip.getLocalBounds().width/2, t_cs_tip.getLocalBounds().height/2);
                     t_cs_tip.setPosition(640, 440);
                     t_cs_tip.draw(window);
