@@ -88,16 +88,19 @@ void MessageCloud::AddDialog(sf::String text, bool nextdialog)
 
 void MessageCloud::Show()
 {
-    cout << "MessageCloud::Show()" << endl;
+    if(!active)
+    {
+        cout << "MessageCloud::Show()" << endl;
 
-    active = true;
+        active = true;
 
-    dest_xsize = ptext[cur_dialog].getLocalBounds().width+64+(ptext[cur_dialog].getLocalBounds().width / 10);
-    dest_ysize = ptext[cur_dialog].getLocalBounds().height+64+(ptext[cur_dialog].getLocalBounds().height / 1.5);
+        dest_xsize = ptext[cur_dialog].getLocalBounds().width+64+(ptext[cur_dialog].getLocalBounds().width / 10);
+        dest_ysize = ptext[cur_dialog].getLocalBounds().height+64+(ptext[cur_dialog].getLocalBounds().height / 1.5);
 
-    text_timeout.restart();
+        text_timeout.restart();
 
-    cout << "MessageCloud::Show(): finished" << endl;
+        cout << "MessageCloud::Show(): finished" << endl;
+    }
 }
 
 void MessageCloud::Hide()
@@ -137,8 +140,25 @@ void MessageCloud::SpeedUp()
     speedup = true;
 }
 
-void MessageCloud::Draw(sf::RenderWindow& window, float fps)
+void MessageCloud::Draw(sf::RenderWindow& window, float fps, InputController& inputCtrl)
 {
+    if(!firstrender)
+    firstrender = true;
+
+    if(inputCtrl.isKeyPressed(InputController::Keys::START))
+    Show();
+
+    if(inputCtrl.isKeyHeld(InputController::Keys::CIRCLE))
+    SpeedUp();
+
+    if(ready)
+    {
+        if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+        {
+            NextDialog();
+        }
+    }
+
     for(int i=0; i<ptext.size(); i++)
     ptext[i].update(window);
 

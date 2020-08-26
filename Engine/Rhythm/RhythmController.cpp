@@ -7,7 +7,7 @@ RhythmController::RhythmController()
 {
     for(int i=0; i<=2; i++)
     {
-        string num = "_"+to_string(i);
+        string num = "_"+to_string(i+1);
 
         if(i==0)
         num = "";

@@ -5,6 +5,7 @@
 
 #include "../Graphics/PSprite.h"
 #include "../Graphics/PText.h"
+#include "../Input/InputController.h"
 
 class MessageCloud
 {
@@ -48,6 +49,7 @@ class MessageCloud
     bool ready = false;
     bool done = false;
     bool canwrite = false;
+    bool firstrender = false;
 
     sf::Vector2f startpos;
 
@@ -59,7 +61,7 @@ class MessageCloud
     void SpeedUp();
     void Show();
     void Hide();
-    void Draw(sf::RenderWindow& window, float fps);
+    void Draw(sf::RenderWindow& window, float fps, InputController& inputCtrl);
 };
 
 #endif // MESSAGECLOUD_H

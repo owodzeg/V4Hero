@@ -808,7 +808,7 @@ sf::Color AnimatedObject::getColor()
 
 void AnimatedObject::applySpear(int id)
 {
-    cout << "Applying spear ID " << id << endl;
+    //cout << "Applying spear ID " << id << endl;
 
     objects[1].tex_obj.loadFromFile("resources/graphics/item/weapon/spear/spear_"+to_string(id)+"_M.png");
     objects[1].s_obj.setTexture(objects[1].tex_obj);
@@ -834,7 +834,7 @@ void AnimatedObject::applySpear(int id)
 
 void AnimatedObject::applyHelm(int id)
 {
-    cout << "Applying helm ID " << id << endl;
+    //cout << "Applying helm ID " << id << endl;
 
     objects[2].tex_obj.loadFromFile("resources/graphics/item/armor/helm/helm_"+to_string(id)+"_M.png");
     objects[2].s_obj.setTexture(objects[2].tex_obj);

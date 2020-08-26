@@ -7,7 +7,7 @@ PataDialogBox::PataDialogBox()
 {
 }
 
-void PataDialogBox::Create(sf::Font font, std::string text, std::vector<std::string> options, int qualitySetting, float resRatio)
+void PataDialogBox::Create(sf::Font font, std::string text, std::vector<std::string> options, int qualitySetting)
 {
     t_dialogType.createText(font, 16, sf::Color::Red, "Information", qualitySetting, 1);
     t_dialogText.createText(font, 30, sf::Color::Black, text, qualitySetting, 1);
@@ -65,10 +65,16 @@ void PataDialogBox::Close()
     closed = true;
 }
 
-void PataDialogBox::Draw(sf::RenderWindow& window, float fps)
+void PataDialogBox::Draw(sf::RenderWindow& window, float fps, InputController& inputCtrl)
 {
     if(!closed)
     {
+        if(inputCtrl.isKeyPressed(InputController::Keys::UP))
+        MoveUp();
+
+        if(inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+        MoveDown();
+
         float resRatio = window.getSize().x / float(1280);
 
         Readjust();

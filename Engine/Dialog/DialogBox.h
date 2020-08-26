@@ -5,6 +5,7 @@
 #include "RoundedRect.h"
 #include "../Graphics/PText.h"
 #include "../Graphics/PSprite.h"
+#include "../Input/InputController.h"
 
 class PataDialogBox
 {
@@ -26,13 +27,13 @@ class PataDialogBox
     bool closed = false;
 
     PataDialogBox();
-    void Create(sf::Font font, std::string text, std::vector<std::string> options, int qualitySetting, float resRatio);
+    void Create(sf::Font font, std::string text, std::vector<std::string> options, int qualitySetting);
     void Readjust();
     int CheckSelectedOption();
     void MoveUp();
     void MoveDown();
     void Close();
-    void Draw(sf::RenderWindow& window, float fps);
+    void Draw(sf::RenderWindow& window, float fps, InputController& inputCtrl);
 };
 
 #endif // DIALOGBOX_H

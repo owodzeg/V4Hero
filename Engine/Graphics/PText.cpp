@@ -17,6 +17,11 @@ void PText::createText(sf::Font& font, float characterSize, sf::Color color, sf:
     c = color;
     txt = text_string;
 
+    //t.setFont(f);
+    //t.setCharacterSize(cS);
+    //t.setFillColor(c);
+    //t.setString(txt);
+
     qualitySetting = q;
     resSetting = r;
 }
