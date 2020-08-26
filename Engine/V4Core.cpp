@@ -147,18 +147,6 @@ V4Core::V4Core()
 
     menus.push_back(&mainMenu);
     config.configDebugID = 10;
-
-    /// If this is a new save (no previous save data) we load up the new game menu
-    newGameMenu.Initialise(&config,this);
-    menus.push_back(&newGameMenu);
-    if(savereader.isNewSave)
-    {
-        mainMenu.Hide();
-    }
-    else
-    {
-        newGameMenu.Hide();
-    }
 }
 
 void V4Core::SaveToDebugLog(string data)
@@ -373,9 +361,6 @@ void V4Core::Init()
 
     inputCtrl.LoadKeybinds(config);
 
-    vector<string> aaa = {"Understood", "I quit"};
-    dbox.Create(f_font, "Patafour is still in development.\nExpect a lot of bugs and glitches.", aaa, config.GetInt("textureQuality"), window.getSize().x / float(1280));
-
     while (window.isOpen())
     {
         sf::Event event;
@@ -489,10 +474,6 @@ void V4Core::Init()
                 }
             }
 
-            if (savereader.isNewSave)
-            {
-                newGameMenu.EventFired(event);
-            }
             mainMenu.EventFired(event);
         }
 

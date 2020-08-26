@@ -16,7 +16,6 @@
 #include "TipsUtil.h"
 #include "../discord-cpp/discord.h"
 
-#include "Dialog/DialogBox.h"
 #include "Input/InputController.h"
 
 class V4Core
@@ -34,7 +33,7 @@ class V4Core
 
     bool leftkey=false,rightkey=false,upkey=false,downkey=false;
     public:
-        std::string hero_version = "v1.1-pre-release-2";
+        std::string hero_version = "v1.1";
         sf::RenderWindow window;
 
         NewGameMenu newGameMenu;
@@ -56,8 +55,6 @@ class V4Core
         bool pressAnyKey = false;
         int framerateLimit = 60;
         vector<float> frameTimes;
-
-        PataDialogBox dbox;
 
         InputController inputCtrl;
 
