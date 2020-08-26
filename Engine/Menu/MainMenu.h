@@ -6,13 +6,17 @@
 #include "../Mission/MissionController.h"
 #include "OptionsMenu.h"
 #include "NewGameNameEntryMenu.h"
+#include "IntroductionMenu.h"
 #include "Patapolis.h"
 #include "../Graphics/PSprite.h"
 #include "../Graphics/PText.h"
+#include "../Dialog/DialogBox.h"
 class V4Core;
 class MainMenu : public Menu
 {
     public:
+        int quality = 0;
+
         sf::Font f_font;
         PSprite grass_1,grass_2,grass_3,grass_4;
         PSprite logo,logo_shadow;
@@ -66,10 +70,13 @@ class MainMenu : public Menu
         sf::Clock menuClock;
         sf::Clock startClock;
 
+        vector<PataDialogBox> dialogboxes;
+
         Config *config;
         PatapolisMenu patapolisMenu;
         NewGameNameEntryMenu nameEntryMenu;
         OptionsMenu optionsMenu;
+        IntroductionMenu introductionMenu;
 
         void Initialise(Config *thisConfig, V4Core *parent);
         void Update(sf::RenderWindow &window, float fps, InputController& inputCtrl);

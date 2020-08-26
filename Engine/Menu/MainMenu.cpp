@@ -16,6 +16,8 @@ void MainMenu::Initialise(Config *thisConfigs, V4Core *parent)
     int q = thisConfigs->GetInt("textureQuality");
     int r = 1;
 
+    quality = q;
+
     float ratioX, ratioY;
 
     switch(q)
@@ -226,18 +228,21 @@ void MainMenu::EventFired(sf::Event event)
     {
         if(!premenu)
         {
-            if(event.type == sf::Event::MouseButtonReleased)
+            if(dialogboxes.size() <= 0)
             {
-                if(event.mouseButton.button == sf::Mouse::Left)
+                if(event.type == sf::Event::MouseButtonReleased)
                 {
-                    SelectMenuOption();
+                    if(event.mouseButton.button == sf::Mouse::Left)
+                    {
+                        SelectMenuOption();
+                    }
                 }
-            }
-            else if (event.type == sf::Event::MouseMoved)
-            {
-                mouseX = event.mouseMove.x;
-                mouseY = event.mouseMove.y;
-                UsingMouseSelection=true;
+                else if (event.type == sf::Event::MouseMoved)
+                {
+                    mouseX = event.mouseMove.x;
+                    mouseY = event.mouseMove.y;
+                    UsingMouseSelection=true;
+                }
             }
         }
     }
@@ -248,7 +253,7 @@ void MainMenu::SelectMenuOption()
     {
         case 0: // load the start game cutscenes and menu
         {
-            title_loop.stop();
+            /*title_loop.stop();
 
             Hide();
             sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
@@ -260,7 +265,29 @@ void MainMenu::SelectMenuOption()
             nameEntryMenu.isActive = true;
             nameEntryMenu.Initialise(config,v4core,this);
 
-            v4core->continueLoading=false;
+            v4core->continueLoading=false;*/
+
+            if(v4core->savereader.isNewSave)
+            {
+                cout << "There is no save. Start new game!" << endl;
+
+                title_loop.stop();
+
+                introductionMenu.Show();
+                introductionMenu.isActive = true;
+                introductionMenu.Initialise(config,v4core,this);
+            }
+            else
+            {
+                cout << "There is an existing save data. Ask if overwrite" << endl;
+
+                std::vector<std::string> a = {Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_no"))};
+
+                PataDialogBox db;
+                db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"menu_saveexists")), a, config->GetInt("textureQuality"));
+                dialogboxes.push_back(db);
+            }
+
             break;
         }
         case 1: // load save and patapolis
@@ -318,9 +345,9 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
     {
         patapolisMenu.Update(window,fps,inputCtrl);
     }
-    else if(nameEntryMenu.isActive)
+    else if(introductionMenu.isActive)
     {
-        nameEntryMenu.Update(window,fps);
+        introductionMenu.Update(window,fps,inputCtrl);
     }
     else if(optionsMenu.isActive)
     {
@@ -671,32 +698,82 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
 
             window.setView(window.getDefaultView());
 
-            if(inputCtrl.isKeyPressed(InputController::Keys::LEFT))
-            {
-                UsingMouseSelection=false;
+            vector<int> db_e; ///dialog box erase
 
-                totem_sel-=1;
-                if (totem_sel<0)
-                    totem_sel=3;
-                old_sel = totem_sel;
+            for(int i=0; i<dialogboxes.size(); i++)
+            {
+                dialogboxes[i].x = 640;
+                dialogboxes[i].y = 360;
+                dialogboxes[i].Draw(window, fps, inputCtrl);
+
+                if(dialogboxes[i].closed)
+                db_e.push_back(i);
             }
 
-            if(inputCtrl.isKeyPressed(InputController::Keys::RIGHT))
+            for(int i=0; i<db_e.size(); i++)
             {
-                UsingMouseSelection=false;
-
-                totem_sel+=1;
-                if (totem_sel>3)
-                    totem_sel=0;
-                old_sel = totem_sel;
+                dialogboxes.erase(dialogboxes.begin()+db_e[i]-i);
             }
 
-            if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+            if(dialogboxes.size() <= 0)
             {
-                UsingMouseSelection=false;
+                if(inputCtrl.isKeyPressed(InputController::Keys::LEFT))
+                {
+                    UsingMouseSelection=false;
 
-                SelectMenuOption();
-                title_loop.stop();
+                    totem_sel-=1;
+                    if (totem_sel<0)
+                        totem_sel=3;
+                    old_sel = totem_sel;
+                }
+
+                if(inputCtrl.isKeyPressed(InputController::Keys::RIGHT))
+                {
+                    UsingMouseSelection=false;
+
+                    totem_sel+=1;
+                    if (totem_sel>3)
+                        totem_sel=0;
+                    old_sel = totem_sel;
+                }
+
+                if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+                {
+                    UsingMouseSelection=false;
+
+                    SelectMenuOption();
+                    //title_loop.stop();
+                }
+            }
+            else
+            {
+                if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+                {
+                    switch(dialogboxes[dialogboxes.size()-1].CheckSelectedOption())
+                    {
+                        case 0:
+                        {
+                            cout << "Starting new game!" << endl;
+                            dialogboxes[dialogboxes.size()-1].Close();
+
+                            title_loop.stop();
+
+                            introductionMenu.Show();
+                            introductionMenu.isActive = true;
+                            introductionMenu.Initialise(config,v4core,this);
+
+                            break;
+                        }
+
+                        case 1:
+                        {
+                            cout << "Returning to title screen!" << endl;
+                            dialogboxes[dialogboxes.size()-1].Close();
+
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
