@@ -3,8 +3,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include "../../../Config.h"
-#include "../Entity.h"
+#include "../../../../Config.h"
+#include "../../Entity.h"
 
 using namespace std;
 

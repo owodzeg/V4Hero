@@ -2,9 +2,9 @@
 #include "math.h"
 #include <fstream>
 #include <iostream>
-#include "../../../Func.h"
+#include "../../../../Func.h"
 #include <sstream>
-#include "../../../V4Core.h"
+#include "../../../../V4Core.h"
 Kacheek::Kacheek()
 {
 

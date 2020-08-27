@@ -2,7 +2,7 @@
 #include "math.h"
 #include <fstream>
 #include <iostream>
-#include "../../../Func.h"
+#include "../../../../Func.h"
 #include <sstream>
 
 FeverWorm::FeverWorm()

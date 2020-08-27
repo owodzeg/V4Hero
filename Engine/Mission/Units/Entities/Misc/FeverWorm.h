@@ -2,9 +2,9 @@
 #define FEVERWORM_H
 
 #include <SFML/Graphics.hpp>
-#include "../../../Config.h"
-#include "../Entity.h"
-#include "../../../Graphics/PSprite.h"
+#include "../../../../Config.h"
+#include "../../Entity.h"
+#include "../../../../Graphics/PSprite.h"
 
 using namespace std;
 

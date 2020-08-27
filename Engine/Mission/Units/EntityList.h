@@ -1,12 +1,15 @@
 #ifndef ENTITYLIST_H
 #define ENTITYLIST_H
 
-#include "Entities/EndFlag.h"
-#include "Entities/FeverWorm.h"
-#include "Entities/Kacheek.h"
-#include "Entities/Wall.h"
-#include "Entities/Grass1.h"
-#include "Entities/Grass2.h"
-#include "Entities/DroppedItem.h"
+#include "Entities/Misc/EndFlag.h"
+#include "Entities/Misc/FeverWorm.h"
+#include "Entities/Misc/DroppedItem.h"
+
+#include "Entities/Animals/Kacheek.h"
+
+#include "Entities/Obstacles/Wall.h"
+
+#include "Entities/Nature/Grass1.h"
+#include "Entities/Nature/Grass2.h"
 
 #endif // ENTITYLIST_H
