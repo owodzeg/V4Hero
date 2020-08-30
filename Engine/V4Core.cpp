@@ -207,7 +207,7 @@ void V4Core::LoadingWaitForKeyPress()
 }
 void V4Core::LoadingThread()
 {
-    ChangeRichPresence("Watching tips", "logo", "");
+    ChangeRichPresence("Reading tips", "logo", "");
 
     sf::Context context;
     window.setActive(true);
@@ -271,8 +271,15 @@ void V4Core::LoadingThread()
     PText t_nowLoading;
     t_nowLoading.createText(f_font, 46, sf::Color(255,255,255,255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"tips_loading")), config.GetInt("textureQuality"), 1);
 
+    float maxFps = config.GetInt("framerateLimit");
+
+    if(maxFps == 0)
+    maxFps = 240;
+
     while (continueLoading)
     {
+        Sleep(1000/maxFps);
+
         window.clear();
         auto lastView = window.getView();
         window.setView(window.getDefaultView());
@@ -306,13 +313,13 @@ void V4Core::LoadingThread()
         {
             loading_head.setPosition(670+230,656);
             loading_eye1.setPosition(689+230,699);
-            loading_eye1.setRotation(loading_eye1.angle+(5.0 / fps));
+            loading_eye1.setRotation(loading_eye1.angle+(5.0 / maxFps));
             loading_head.draw(window);
             loading_eye1.draw(window);
 
             loading_head.setPosition(985+230,656);
             loading_eye2.setPosition(1004+230,699);
-            loading_eye2.setRotation(loading_eye2.angle-(5.0 / fps));
+            loading_eye2.setRotation(loading_eye2.angle-(5.0 / maxFps));
             loading_head.draw(window);
             loading_eye2.draw(window);
 
