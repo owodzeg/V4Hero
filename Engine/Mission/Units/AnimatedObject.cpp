@@ -419,6 +419,7 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     int parent = 0; ///unused yet
 
                     objects.emplace_back();
+                    objects[objects.size()-1].object_name = tex_file;
 
                     //auto elapsed = std::chrono::high_resolution_clock::now() - start;
                     //cout << "Pushed to vector, took " << std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count() << endl;

@@ -192,6 +192,7 @@ void DroppedItem::Draw(sf::RenderWindow& window)
     }
 
     force_origin_null = true;
+    manual_spritesheet = true;
 
     animation_origins[index][curFrame].x = animation_bounds[index][curFrame].width/2;
     animation_origins[index][curFrame].y = animation_bounds[index][curFrame].height/2;
