@@ -368,6 +368,41 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
             break;
         }
+
+        case 6:
+        {
+            unique_ptr<Kirajin_Yari_1> entity = make_unique<Kirajin_Yari_1>();
+            entity.get()->LoadConfig(missionConfig);
+            entity.get()->setEntityID(entityID);
+            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+            if(randX > 0)
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
+            else
+            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
+
+            entity.get()->setColor(color);
+
+            entity.get()->isCollidable = collidable;
+            entity.get()->isAttackable = attackable;
+            entity.get()->loot_table = loot_table;
+            entity.get()->curHP = baseHP;
+            entity.get()->maxHP = baseHP;
+
+            if(spr_range != 0)
+            {
+                if(rand() % spr_range == spr_goal)
+                {
+                    tangibleLevelObjects.push_back(std::move(entity));
+                }
+            }
+            else
+            {
+                tangibleLevelObjects.push_back(std::move(entity));
+            }
+
+            break;
+        }
     }
 
     cout << "Loading finished" << endl;
@@ -764,8 +799,12 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 
                         if(buff.find("spawn=") != std::string::npos)
                         {
+                            cout << "Found a spawn registry. Spawning entity" << endl;
+
                             string sp = buff.substr(buff.find_first_of("=")+1);
                             vector<string> spawn = Func::Split(sp, ',');
+
+                            cout << "Entity ID: " << spawn[0] << endl;
 
                             int entityID = atoi(spawn[0].c_str());
                             int baseY = 0;
@@ -947,8 +986,11 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, In
     }
 }
 
-MissionController::CollisionEvent MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float currentObjectY,int collisionObjectID,vector<string> collisionData)
+vector<MissionController::CollisionEvent> MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float currentObjectY,int collisionObjectID,vector<string> collisionData)
 {
+    ///Added vector because there can be more than just one collision events! Like colliding with grass AND with opponent
+    vector<MissionController::CollisionEvent> collisionEvents;
+
     for(int i=0; i<tangibleLevelObjects.size(); i++)
     {
         for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
@@ -1040,7 +1082,7 @@ MissionController::CollisionEvent MissionController::DoCollisionForObject(Hitbox
                 cevent.isAttackable = target->isAttackable;
                 cevent.isCollidable = target->isCollidable;
 
-                return cevent;
+                collisionEvents.push_back(cevent);
             }
             else
             {
@@ -1048,6 +1090,8 @@ MissionController::CollisionEvent MissionController::DoCollisionForObject(Hitbox
             }
         }
     }
+
+    return collisionEvents;
 }
 float MissionController::pataponMaxProjection(float axisAngle, int id)
 {
@@ -1337,6 +1381,8 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, InputCon
 
     /** Projectile management **/
 
+    vector<int> pr_e; ///projectiles to erase
+
     /// step 1: all projectiles have gravity applied to them
     for(int i=0; i<levelProjectiles.size(); i++)
     {
@@ -1390,19 +1436,24 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, InputCon
         vector<string> collisionData = {to_string(total)};
 
         ///retrieve collision event
-        CollisionEvent cevent = DoCollisionForObject(&tmp,xpos,ypos,0,collisionData); //0 - spear collision ID
+        vector<CollisionEvent> cevent = DoCollisionForObject(&tmp,xpos,ypos,0,collisionData); //0 - spear collision ID
 
-        if(cevent.collided)
+        for(int e=0; e<cevent.size(); e++)
         {
-            if(cevent.isCollidable)
-            levelProjectiles.erase(levelProjectiles.begin()+i);
+            if(cevent[e].collided)
+            {
+                if(cevent[e].isCollidable)
+                pr_e.push_back(i);
 
-            ///add damage counter
-            if(cevent.isAttackable)
-            addDmgCounter(0, total, xpos, ypos, qualitySetting, resSetting);
-        };
+                ///add damage counter
+                if(cevent[e].isAttackable)
+                addDmgCounter(0, total, xpos, ypos, qualitySetting, resSetting);
+            }
+        }
     }
 
+    for(int i=0; i<pr_e.size(); i++)
+    levelProjectiles.erase(levelProjectiles.begin()+pr_e[i]-i);
 }
 void MissionController::DoRhythm(InputController& inputCtrl)
 {
