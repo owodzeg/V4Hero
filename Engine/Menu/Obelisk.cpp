@@ -396,8 +396,6 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
         {
             if(!displayMissions)
             {
-                ctrlTips.create(66, font, 20, sf::String(L"Up/Down: Select mission      ×: Enter mission      〇: Return to field select"), quality);
-
                 thisConfig->thisCore->SaveToDebugLog("Displaying missions on Worldmap for location "+to_string(sel_location)+".");
 
                 ///(re)load missions here
@@ -432,6 +430,8 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
                 if(missions.size() > 0)
                 {
+                    ctrlTips.create(66, font, 20, sf::String(L"Up/Down: Select mission      ×: Enter mission      〇: Return to field select"), quality);
+
                     displayMissions = true;
 
                     mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title));
