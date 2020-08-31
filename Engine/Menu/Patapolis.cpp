@@ -1191,7 +1191,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
                 PataDialogBox db;
                 db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_save")), a, thisConfig->GetInt("textureQuality"));
-                db.id = 0;
+                db.id = 2;
                 dialogboxes.push_back(db);
             }
         }
