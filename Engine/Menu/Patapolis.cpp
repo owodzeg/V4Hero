@@ -1176,23 +1176,27 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     break;
                 }
             }
-            else if(inputCtrl.isKeyPressed(InputController::Keys::START))
-            {
-                std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
 
-                PataDialogBox db;
-                db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_returntomain")), a, thisConfig->GetInt("textureQuality"));
-                db.id = 0;
-                dialogboxes.push_back(db);
-            }
-            else if(inputCtrl.isKeyPressed(InputController::Keys::SELECT))
+            if((!barracks_menu.isActive) && (!altar_menu.isActive) && (!obelisk_menu.isActive))
             {
-                std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
+                if(inputCtrl.isKeyPressed(InputController::Keys::START))
+                {
+                    std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
 
-                PataDialogBox db;
-                db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_save")), a, thisConfig->GetInt("textureQuality"));
-                db.id = 2;
-                dialogboxes.push_back(db);
+                    PataDialogBox db;
+                    db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_returntomain")), a, thisConfig->GetInt("textureQuality"));
+                    db.id = 0;
+                    dialogboxes.push_back(db);
+                }
+                else if(inputCtrl.isKeyPressed(InputController::Keys::SELECT))
+                {
+                    std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
+
+                    PataDialogBox db;
+                    db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_save")), a, thisConfig->GetInt("textureQuality"));
+                    db.id = 2;
+                    dialogboxes.push_back(db);
+                }
             }
         }
         else
