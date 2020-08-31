@@ -10,6 +10,7 @@
 #include "Obelisk.h"
 #include "../Input/InputController.h"
 #include "../Dialog/ControlTips.h"
+#include "../Dialog/DialogBox.h"
 
 class V4Core;
 class PatapolisMenu : public Menu
@@ -159,6 +160,9 @@ class PatapolisMenu : public Menu
         Menu *parentMenu;
         int currentMenuPosition;
         std::vector<float> possibleMenuPositions;
+
+        vector<PataDialogBox> dialogboxes;
+
         void addL6(std::string variant, float x, float y, int q, int r);
         void addL2(std::string variant, float x, float y, int q, int r);
         void addSparkle(float x, float y);

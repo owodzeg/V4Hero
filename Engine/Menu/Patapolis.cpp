@@ -176,37 +176,6 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     obelisk_menu.Initialise(thisConfigs,parent,this);
     parentMenu = curParentMenu;
     quality = thisConfig->GetInt("textureQuality");
-    float ratioX, ratioY;
-    switch(quality)
-    {
-        case 0: ///low
-        {
-            ratioX = thisConfig->GetInt("resX") / float(640);
-            ratioY = thisConfig->GetInt("resY") / float(360);
-            break;
-        }
-
-        case 1: ///med
-        {
-            ratioX = thisConfig->GetInt("resX") / float(1280);
-            ratioY = thisConfig->GetInt("resY") / float(720);
-            break;
-        }
-
-        case 2: ///high
-        {
-            ratioX = thisConfig->GetInt("resX") / float(1920);
-            ratioY = thisConfig->GetInt("resY") / float(1080);
-            break;
-        }
-
-        case 3: ///ultra
-        {
-            ratioX = thisConfig->GetInt("resX") / float(3840);
-            ratioY = thisConfig->GetInt("resY") / float(2160);
-            break;
-        }
-    }
 
     float resRatioX = thisConfig->GetInt("resX") / float(1280);
     float resRatioY = thisConfig->GetInt("resY") / float(720);
@@ -571,14 +540,14 @@ void PatapolisMenu::EventFired(sf::Event event)
     {
         if(event.type == sf::Event::KeyPressed)
         {
-            if (event.key.code == thisConfig->GetInt("keybindBack"))
+            /*if (event.key.code == thisConfig->GetInt("keybindBack"))
             {
                 thisConfig->thisCore->SaveToDebugLog("Left from Patapolis to Title screen.");
                 this->Hide();
                 this->isActive = false;
                 parentMenu->Show();
                 parentMenu->isActive=true;
-            }
+            }*/
 
         }
         else if (event.type == sf::Event::MouseButtonReleased)
@@ -1093,6 +1062,23 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         t_title.draw(window);
         }
 
+        vector<int> db_e; ///dialog box erase
+
+        for(int i=0; i<dialogboxes.size(); i++)
+        {
+            dialogboxes[i].x = 640;
+            dialogboxes[i].y = 360;
+            dialogboxes[i].Draw(window, fps, inputCtrl);
+
+            if(dialogboxes[i].closed)
+            db_e.push_back(i);
+        }
+
+        for(int i=0; i<db_e.size(); i++)
+        {
+            dialogboxes.erase(dialogboxes.begin()+db_e[i]-i);
+        }
+
         window.setView(lastView);
 
         lastView = window.getView();
@@ -1121,71 +1107,139 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
         window.setView(lastView);
 
-        if((inputCtrl.isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl.isKeyPressed(InputController::Keys::LTRIGGER)))
+        if(dialogboxes.size() <= 0)
         {
-            if(location > 0)
+            if((inputCtrl.isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl.isKeyPressed(InputController::Keys::LTRIGGER)))
             {
-                location--;
-                left = true;
+                if(location > 0)
+                {
+                    location--;
+                    left = true;
 
-                SetTitle(location);
-                thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
+                    SetTitle(location);
+                    thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
+                }
+            }
+            else if((inputCtrl.isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl.isKeyPressed(InputController::Keys::RTRIGGER)))
+            {
+                if(location < locations.size()-1)
+                {
+                    location++;
+                    left = false;
+
+                    SetTitle(location);
+                    thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
+                }
+            }
+            else if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+            {
+                // select the current menu item
+                switch (location)
+                {
+                case 0:
+                    /// trader/random
+                    // open the world map
+                    break;
+                case 2:
+                    /// armory/barracks
+                    thisConfig->thisCore->SaveToDebugLog("Entering Barracks...");
+                    barracks_menu.Show();
+                    barracks_menu.isActive = true;
+                    barracks_menu.obelisk = false;
+                    barracks_menu.OpenBarracksMenu();
+                    barracks_menu.UpdateInputControls();
+                    thisConfig->thisCore->SaveToDebugLog("Barracks entered.");
+                    break;
+                case 3:
+                    /// festival
+                    // open barracks screen
+                    break;
+                case 4:
+                    /// altar
+                    // open mater menu
+                    thisConfig->thisCore->SaveToDebugLog("Entering Altar...");
+                    altar_menu.Show();
+                    altar_menu.isActive = true;
+                    altar_menu.ShowAltar();
+                    thisConfig->thisCore->SaveToDebugLog("Altar entered.");
+                    break;
+                case 5:
+                    /// obelisk
+                    thisConfig->thisCore->SaveToDebugLog("Entering Obelisk...");
+                    obelisk_menu.Reload();
+                    obelisk_menu.Show();
+                    obelisk_menu.isActive = true;
+                    thisConfig->thisCore->SaveToDebugLog("Obelisk entered.");
+                    break;
+                default:
+                    /// nothing
+                    break;
+                }
+            }
+            else if(inputCtrl.isKeyPressed(InputController::Keys::START))
+            {
+                std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
+
+                PataDialogBox db;
+                db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_returntomain")), a, thisConfig->GetInt("textureQuality"));
+                db.id = 0;
+                dialogboxes.push_back(db);
+            }
+            else if(inputCtrl.isKeyPressed(InputController::Keys::SELECT))
+            {
+                std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
+
+                PataDialogBox db;
+                db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_save")), a, thisConfig->GetInt("textureQuality"));
+                db.id = 0;
+                dialogboxes.push_back(db);
             }
         }
-        else if((inputCtrl.isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl.isKeyPressed(InputController::Keys::RTRIGGER)))
+        else
         {
-            if(location < locations.size()-1)
+            if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
             {
-                location++;
-                left = false;
+                switch(dialogboxes[dialogboxes.size()-1].CheckSelectedOption())
+                {
+                    case 0:
+                    {
+                        if(dialogboxes[dialogboxes.size()-1].id == 0)
+                        {
+                            cout << "Open second dialogbox" << endl;
+                            dialogboxes[dialogboxes.size()-1].Close();
 
-                SetTitle(location);
-                thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
-            }
-        }
-        else if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
-        {
-            // select the current menu item
-            switch (location)
-            {
-            case 0:
-                /// trader/random
-                // open the world map
-                break;
-            case 2:
-                /// armory/barracks
-                thisConfig->thisCore->SaveToDebugLog("Entering Barracks...");
-                barracks_menu.Show();
-                barracks_menu.isActive = true;
-                barracks_menu.obelisk = false;
-                barracks_menu.OpenBarracksMenu();
-                barracks_menu.UpdateInputControls();
-                thisConfig->thisCore->SaveToDebugLog("Barracks entered.");
-                break;
-            case 3:
-                /// festival
-                // open barracks screen
-                break;
-            case 4:
-                /// altar
-                // open mater menu
-                thisConfig->thisCore->SaveToDebugLog("Entering Altar...");
-                altar_menu.Show();
-                altar_menu.isActive = true;
-                altar_menu.ShowAltar();
-                thisConfig->thisCore->SaveToDebugLog("Altar entered.");
-                break;
-            case 5:
-                /// obelisk
-                thisConfig->thisCore->SaveToDebugLog("Entering Obelisk...");
-                obelisk_menu.Reload();
-                obelisk_menu.Show();
-                obelisk_menu.isActive = true;
-                thisConfig->thisCore->SaveToDebugLog("Obelisk entered.");
-                break;
-            default:
-                /// nothing
-                break;
+                            std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
+
+                            PataDialogBox db;
+                            db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_returntomainsave")), a, thisConfig->GetInt("textureQuality"));
+                            db.id = 1;
+                            dialogboxes.push_back(db);
+
+                            break;
+                        }
+                        else if(dialogboxes[dialogboxes.size()-1].id == 1)
+                        {
+                            thisConfig->thisCore->SaveToDebugLog("Left from Patapolis to Title screen.");
+                            this->Hide();
+                            this->isActive = false;
+                            parentMenu->Show();
+                            parentMenu->isActive=true;
+                        }
+                        else if(dialogboxes[dialogboxes.size()-1].id == 2)
+                        {
+                            cout << "Saving game should happen here. Game not saving yet." << endl;
+                            dialogboxes[dialogboxes.size()-1].Close();
+                        }
+                    }
+
+                    case 1:
+                    {
+                        cout << "Back to Patapolis" << endl;
+                        dialogboxes[dialogboxes.size()-1].Close();
+
+                        break;
+                    }
+                }
             }
         }
     }
