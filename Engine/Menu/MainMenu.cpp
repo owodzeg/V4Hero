@@ -241,6 +241,9 @@ void MainMenu::EventFired(sf::Event event)
                 {
                     mouseX = event.mouseMove.x;
                     mouseY = event.mouseMove.y;
+
+                    cout << mouseX << " " << mouseY << endl;
+
                     UsingMouseSelection=true;
                 }
             }
@@ -717,7 +720,7 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
 
             if(dialogboxes.size() <= 0)
             {
-                if(inputCtrl.isKeyPressed(InputController::Keys::LEFT))
+                if((inputCtrl.isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl.isKeyPressed(InputController::Keys::LTRIGGER)))
                 {
                     UsingMouseSelection=false;
 
@@ -725,9 +728,11 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
                     if (totem_sel<0)
                         totem_sel=3;
                     old_sel = totem_sel;
+
+                    mouseX = totem_sel_pos[totem_sel];
                 }
 
-                if(inputCtrl.isKeyPressed(InputController::Keys::RIGHT))
+                if((inputCtrl.isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl.isKeyPressed(InputController::Keys::RTRIGGER)))
                 {
                     UsingMouseSelection=false;
 
@@ -735,6 +740,8 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
                     if (totem_sel>3)
                         totem_sel=0;
                     old_sel = totem_sel;
+
+                    mouseX = totem_sel_pos[totem_sel];
                 }
 
                 if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
