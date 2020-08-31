@@ -1074,13 +1074,13 @@ vector<MissionController::CollisionEvent> MissionController::DoCollisionForObjec
             if (isCollision&&isCollision2&&isCollision3&&isCollision4)
             {
                 std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
-                target->OnCollide(target, collisionObjectID, collisionData);
-
                 CollisionEvent cevent;
                 cevent.collided = true;
                 //cevent.collidedEntityID = -1;
                 cevent.isAttackable = target->isAttackable;
                 cevent.isCollidable = target->isCollidable;
+
+                target->OnCollide(target, collisionObjectID, collisionData);
 
                 collisionEvents.push_back(cevent);
             }
