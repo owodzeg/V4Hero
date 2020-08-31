@@ -610,9 +610,28 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
         ctrlTips.y = (720-ctrlTips.ySize);
         ctrlTips.draw(window);
 
+        vector<int> db_e; ///dialog box erase
+
+        for(int i=0; i<dialogboxes.size(); i++)
+        {
+            dialogboxes[i].x = 640;
+            dialogboxes[i].y = 360;
+            dialogboxes[i].Draw(window, fps, inputCtrl);
+
+            if(dialogboxes[i].closed)
+            db_e.push_back(i);
+        }
+
+        for(int i=0; i<db_e.size(); i++)
+        {
+            dialogboxes.erase(dialogboxes.begin()+db_e[i]-i);
+        }
+
         window.setView(lastView);
 
-            if (!MenuMode)
+        if(dialogboxes.size() <= 0)
+        {
+            if(!MenuMode)
             {
                 if(inputCtrl.isKeyPressed(InputController::Keys::UP))
                 {
@@ -770,22 +789,56 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
             {
                 if(obelisk)
                 {
-                    cout << "Lets start the mission" << endl;
-                    sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
-                    v4core->continueLoading=true;
-                    v4core->window.setActive(false);
-                    loadingThreadInstance.launch();
+                    std::vector<std::string> a = {Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_no"))};
 
-                    currentController->Initialise(*config,config->GetString("mission1Background"),*v4core);
-                    currentController->StartMission(mission_file,1,missionID);
-                    this->Hide();
-                    this->isActive = false;
-
-                    missionStarted = true;
-
-                    v4core->continueLoading=false;
+                    PataDialogBox db;
+                    db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"barracks_depart")), a, config->GetInt("textureQuality"));
+                    db.id = 0;
+                    dialogboxes.push_back(db);
                 }
             }
+        }
+        else
+        {
+            if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+            {
+                switch(dialogboxes[dialogboxes.size()-1].CheckSelectedOption())
+                {
+                    case 0:
+                    {
+                        if(dialogboxes[dialogboxes.size()-1].id == 0)
+                        {
+                            cout << "Go on mission!" << endl;
+                            dialogboxes[dialogboxes.size()-1].Close();
+
+                            sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+                            v4core->continueLoading=true;
+                            v4core->window.setActive(false);
+                            loadingThreadInstance.launch();
+
+                            currentController->Initialise(*config,config->GetString("mission1Background"),*v4core);
+                            currentController->StartMission(mission_file,1,missionID);
+                            this->Hide();
+                            this->isActive = false;
+
+                            missionStarted = true;
+
+                            v4core->continueLoading=false;
+
+                            break;
+                        }
+                    }
+
+                    case 1:
+                    {
+                        cout << "Back to Barracks" << endl;
+                        dialogboxes[dialogboxes.size()-1].Close();
+
+                        break;
+                    }
+                }
+            }
+        }
     }
 }
 

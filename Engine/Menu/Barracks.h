@@ -7,6 +7,7 @@
 #include "../Mission/MissionController.h"
 #include "../Input/InputController.h"
 #include "../Dialog/ControlTips.h"
+#include "../Dialog/DialogBox.h"
 
 class V4Core;
 class Barracks : public Menu
@@ -144,6 +145,8 @@ class Barracks : public Menu
 
         PText t_itemtitle;
         std::vector<PText> t_itemdescription;
+
+        vector<PataDialogBox> dialogboxes;
 
         void OnExit();
         void OpenBarracksMenu();
