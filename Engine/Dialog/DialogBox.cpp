@@ -79,6 +79,12 @@ void PataDialogBox::Draw(sf::RenderWindow& window, float fps, InputController& i
 
         Readjust();
 
+        rr_shadow.Create(width+2, height+2, 20, window.getSize().x / float(1280), sf::Color(0,0,0,96));
+        rr_shadow.x = x-1;
+        rr_shadow.y = y-1;
+        rr_shadow.setOrigin(sf::Vector2f((width+40)/2, (height+40)/2));
+        rr_shadow.Draw(window);
+
         rr_main.Create(width, height, 20, window.getSize().x / float(1280));
         rr_main.x = x;
         rr_main.y = y;

@@ -5,13 +5,13 @@ RoundedRect::RoundedRect()
 
 }
 
-void RoundedRect::Create(float nwidth, float nheight, float nedge_size, float resRatio)
+void RoundedRect::Create(float nwidth, float nheight, float nedge_size, float resRatio, sf::Color rectColor)
 {
     for(int i=0; i<4; i++)
     {
         edges[i].setRadius(nedge_size*resRatio);
-        edges[i].setFillColor(sf::Color(255,237,210,255));
-        connections[i].setFillColor(sf::Color(255,237,210,255));
+        edges[i].setFillColor(rectColor);
+        connections[i].setFillColor(rectColor);
     }
 
     connections[0].setSize(sf::Vector2f(nwidth*resRatio, nedge_size*2*resRatio)); ///top
@@ -20,7 +20,7 @@ void RoundedRect::Create(float nwidth, float nheight, float nedge_size, float re
     connections[3].setSize(sf::Vector2f(nedge_size*2*resRatio, nheight*resRatio)); ///right
 
     contents.setSize(sf::Vector2f((nwidth-nedge_size*2)*resRatio, (nheight-nedge_size*2)*resRatio));
-    contents.setFillColor(sf::Color(255,237,210,255));
+    contents.setFillColor(rectColor);
 
     width = nwidth;
     height = nheight;

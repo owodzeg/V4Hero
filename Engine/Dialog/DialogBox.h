@@ -13,6 +13,7 @@ class PataDialogBox
     int id = 0; ///for finding what dialog box is what
 
     RoundedRect rr_main;
+    RoundedRect rr_shadow;
     PText t_dialogType, t_dialogText;
     std::vector<PText> t_options;
 
