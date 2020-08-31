@@ -25,6 +25,7 @@
 #include "Units/PlayableUnit.h"
 
 #include "../Dialog/ControlTips.h"
+#include "../Dialog/DialogBox.h"
 
 
 class V4Core;
@@ -185,6 +186,8 @@ class MissionController
     bool failure = false;
 
     int curMissionID = 0;
+
+    vector<PataDialogBox> dialogboxes;
 
     /** Collisions **/
     bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame,AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY);

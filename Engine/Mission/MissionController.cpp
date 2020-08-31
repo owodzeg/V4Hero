@@ -951,13 +951,12 @@ void MissionController::StopMission()
 }
 void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, InputController& inputCtrl)
 {
-    /// do the keyboard things
+    /**
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num5))
     {
         missionEnd = true;
     }
 
-    /// do the keyboard things
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::M))
     {
         if(!debug_map_drop)
@@ -983,6 +982,15 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, In
                     units[i].get()->setUnitHP(0);
                 }
         }
+    }**/
+
+    if(inputCtrl.isKeyPressed(InputController::Keys::START))
+    {
+        std::vector<std::string> a = {Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"nav_no"))};
+
+        PataDialogBox db;
+        db.Create(f_font, Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"mission_backtopatapolis")), a, missionConfig->GetInt("textureQuality"));
+        dialogboxes.push_back(db);
     }
 }
 
@@ -2356,6 +2364,20 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
 
 void MissionController::Update(sf::RenderWindow &window, float cfps, InputController& inputCtrl)
 {
+    ///Globally disable the controls when Dialogbox is opened, but preserve original controller for controlling the DialogBoxes later
+    InputController o_inputCtrl;
+    InputController cur_inputCtrl;
+
+    cur_inputCtrl = inputCtrl;
+
+    if(dialogboxes.size() > 0)
+    {
+        o_inputCtrl = inputCtrl;
+
+        InputController a;
+        cur_inputCtrl = a;
+    }
+
     /** Update loop, everything here happens per each frame of the game **/
     fps = cfps;
 
@@ -2363,14 +2385,14 @@ void MissionController::Update(sf::RenderWindow &window, float cfps, InputContro
 
     /** Execute camera and background **/
 
-    camera.Work(window,fps,inputCtrl);
+    camera.Work(window,fps,cur_inputCtrl);
     test_bg.setCamera(camera);
     test_bg.Draw(window);
 
     /** Execute Keyboard events and Movement **/
 
-    DoKeyboardEvents(window,fps,inputCtrl);
-    DoMovement(window,fps,inputCtrl);
+    DoKeyboardEvents(window,fps,cur_inputCtrl);
+    DoMovement(window,fps,cur_inputCtrl);
 
     /** Draw all Entities **/
 
@@ -2512,12 +2534,60 @@ void MissionController::Update(sf::RenderWindow &window, float cfps, InputContro
         ctrlTips.draw(window);
 
         rhythm.fps = fps;
-        DoRhythm(inputCtrl);
+        DoRhythm(cur_inputCtrl);
         rhythm.Draw(window);
     }
 
     /** Execute all mission end related things **/
     DoMissionEnd(window, fps);
+
+    if(dialogboxes.size() > 0)
+    {
+        if(o_inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+        {
+            switch(dialogboxes[dialogboxes.size()-1].CheckSelectedOption())
+            {
+                case 0:
+                {
+                    if(dialogboxes[dialogboxes.size()-1].id == 0)
+                    {
+                        cout << "Return to Patapolis" << endl;
+                        dialogboxes[dialogboxes.size()-1].Close();
+
+                        missionEnd = true;
+                        failure = true;
+
+                        break;
+                    }
+                }
+
+                case 1:
+                {
+                    cout << "Back to Mission" << endl;
+                    dialogboxes[dialogboxes.size()-1].Close();
+
+                    break;
+                }
+            }
+        }
+    }
+
+    vector<int> db_e; ///dialog box erase
+
+    for(int i=0; i<dialogboxes.size(); i++)
+    {
+        dialogboxes[i].x = 640;
+        dialogboxes[i].y = 360;
+        dialogboxes[i].Draw(window, fps, o_inputCtrl);
+
+        if(dialogboxes[i].closed)
+        db_e.push_back(i);
+    }
+
+    for(int i=0; i<db_e.size(); i++)
+    {
+        dialogboxes.erase(dialogboxes.begin()+db_e[i]-i);
+    }
 
     window.setView(lastView);
 
