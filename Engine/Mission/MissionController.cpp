@@ -143,37 +143,32 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
     cout << "Spawning entity " << entityName << " (ID: " << entityID << ") " << baseHP << " " << baseX << " " << randX << " " << baseY << " " << spr_goal << " " << spr_range << " " << statLevel << endl;
 
+    bool spawn = false;
+
+    if(spr_range != 0)
+    {
+        if(rand() % spr_range == spr_goal)
+        {
+            spawn = true;
+        }
+    }
+    else
+    {
+        spawn = true;
+    }
+
     switch(entityID)
     {
         case 0:
         {
             unique_ptr<EndFlag> entity = make_unique<EndFlag>();
             entity.get()->LoadConfig(missionConfig);
-            entity.get()->setEntityID(entityID);
+
+            ///To be replaced with param file
             entity.get()->entityType = Entity::EntityTypes::PASSIVE;
 
-            if(randX > 0)
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
-            else
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
-
-            entity.get()->setColor(color);
-
-            entity.get()->isCollidable = collidable;
-            entity.get()->isAttackable = attackable;
-            entity.get()->loot_table = loot_table;
-
-            if(spr_range != 0)
-            {
-                if(rand() % spr_range == spr_goal)
-                {
-                    tangibleLevelObjects.push_back(std::move(entity));
-                }
-            }
-            else
-            {
-                tangibleLevelObjects.push_back(std::move(entity));
-            }
+            if(spawn)
+            tangibleLevelObjects.push_back(std::move(entity));
 
             break;
         }
@@ -181,31 +176,12 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         {
             unique_ptr<FeverWorm> entity = make_unique<FeverWorm>();
             entity.get()->LoadConfig(missionConfig);
-            entity.get()->setEntityID(entityID);
+
+            ///To be replaced with param file
             entity.get()->entityType = Entity::EntityTypes::PASSIVE;
 
-            if(randX > 0)
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
-            else
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
-
-            entity.get()->setColor(color);
-
-            entity.get()->isCollidable = collidable;
-            entity.get()->isAttackable = attackable;
-            entity.get()->loot_table = loot_table;
-
-            if(spr_range != 0)
-            {
-                if(rand() % spr_range == spr_goal)
-                {
-                    tangibleLevelObjects.push_back(std::move(entity));
-                }
-            }
-            else
-            {
-                tangibleLevelObjects.push_back(std::move(entity));
-            }
+            if(spawn)
+            tangibleLevelObjects.push_back(std::move(entity));
 
             break;
         }
@@ -213,33 +189,12 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         {
             unique_ptr<Kacheek> entity = make_unique<Kacheek>();
             entity.get()->LoadConfig(missionConfig);
-            entity.get()->setEntityID(entityID);
+
+            ///To be replaced with param file
             entity.get()->entityType = Entity::EntityTypes::HOSTILE;
 
-            if(randX > 0)
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
-            else
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
-
-            entity.get()->setColor(color);
-
-            entity.get()->isCollidable = collidable;
-            entity.get()->isAttackable = attackable;
-            entity.get()->loot_table = loot_table;
-            entity.get()->curHP = baseHP;
-            entity.get()->maxHP = baseHP;
-
-            if(spr_range != 0)
-            {
-                if(rand() % spr_range == spr_goal)
-                {
-                    tangibleLevelObjects.push_back(std::move(entity));
-                }
-            }
-            else
-            {
-                tangibleLevelObjects.push_back(std::move(entity));
-            }
+            if(spawn)
+            tangibleLevelObjects.push_back(std::move(entity));
 
             break;
         }
@@ -247,31 +202,12 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         {
             unique_ptr<Grass1> entity = make_unique<Grass1>();
             entity.get()->LoadConfig(missionConfig);
-            entity.get()->setEntityID(entityID);
+
+            ///To be replaced with param file
             entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
 
-            if(randX > 0)
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
-            else
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
-
-            entity.get()->setColor(color);
-
-            entity.get()->isCollidable = collidable;
-            entity.get()->isAttackable = attackable;
-            entity.get()->loot_table = loot_table;
-
-            if(spr_range != 0)
-            {
-                if(rand() % spr_range == spr_goal)
-                {
-                    tangibleLevelObjects.push_back(std::move(entity));
-                }
-            }
-            else
-            {
-                tangibleLevelObjects.push_back(std::move(entity));
-            }
+            if(spawn)
+            tangibleLevelObjects.push_back(std::move(entity));
 
             break;
         }
@@ -279,31 +215,12 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         {
             unique_ptr<Grass2> entity = make_unique<Grass2>();
             entity.get()->LoadConfig(missionConfig);
-            entity.get()->setEntityID(entityID);
+
+            ///To be replaced with param file
             entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
 
-            if(randX > 0)
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
-            else
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
-
-            entity.get()->setColor(color);
-
-            entity.get()->isCollidable = collidable;
-            entity.get()->isAttackable = attackable;
-            entity.get()->loot_table = loot_table;
-
-            if(spr_range != 0)
-            {
-                if(rand() % spr_range == spr_goal)
-                {
-                    tangibleLevelObjects.push_back(std::move(entity));
-                }
-            }
-            else
-            {
-                tangibleLevelObjects.push_back(std::move(entity));
-            }
+            if(spawn)
+            tangibleLevelObjects.push_back(std::move(entity));
 
             break;
         }
@@ -311,98 +228,107 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         {
             unique_ptr<DroppedItem> entity = make_unique<DroppedItem>();
             entity.get()->LoadConfig(missionConfig);
-            entity.get()->setEntityID(entityID);
-            entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
-            entity.get()->manual_mode = true;
 
-            ///This unique entity needs to be loaded differently, read additional data for spritesheet info to be passed from the item registry.
+            ///To be replaced with param file
+            entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
+
             string spritesheet = additional_data[0];
             int spritesheet_id = stoi(additional_data[1]);
             int picked_item = stoi(additional_data[2]);
 
-            entity.get()->spritesheet = spritesheet;
-            entity.get()->spritesheet_id = spritesheet_id;
-            entity.get()->picked_item = picked_item;
+            entity->spritesheet = spritesheet;
+            entity->spritesheet_id = spritesheet_id;
+            entity->picked_item = picked_item;
 
-            cout << "[DroppedItem] Selecting spritesheet " << spritesheet << " with id " << spritesheet_id << endl;
-
-            cout << "[DroppedItem] Loading from memory" << endl;
-            vector<char> di_data = droppeditem_spritesheet[spritesheet].retrieve_char();
-            cout << "[DroppedItem] Vector loaded. Size: " << di_data.size() << endl;
-            entity.get()->objects[0].tex_obj.loadFromMemory(&di_data[0], di_data.size());
-            cout << "[DroppedItem] Setting smooth" << endl;
-            entity.get()->objects[0].tex_obj.setSmooth(true);
-            cout << "[DroppedItem] Setting texture" << endl;
-            entity.get()->objects[0].s_obj.setTexture(entity.get()->objects[0].tex_obj);
-            cout << "[DroppedItem] Marking as unexported" << endl;
-            entity.get()->objects[0].exported = false;
-            cout << "[DroppedItem] Loading done." << endl;
-
-            entity.get()->objects[0].s_obj.qualitySetting = qualitySetting;
-            entity.get()->objects[0].s_obj.resSetting = resSetting;
-
-            //entity.get()->objects[0].s_obj.setOrigin(entity.get()->objects[0].s_obj.getLocalBounds().width/2, entity.get()->objects[0].s_obj.getLocalBounds().height/2);
-
-            entity.get()->cur_pos = float(spritesheet_id-1) / 60.0;
-
-            entity.get()->animation_bounds[0] = droppeditem_spritesheet[spritesheet].retrieve_rect_as_map();
-
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
-
-            entity.get()->setColor(color);
-
-            entity.get()->isCollidable = collidable;
-            entity.get()->isAttackable = attackable;
-
-            if(spr_range != 0)
-            {
-                if(rand() % spr_range == spr_goal)
-                {
-                    tangibleLevelObjects.push_back(std::move(entity));
-                }
-            }
-            else
-            {
-                tangibleLevelObjects.push_back(std::move(entity));
-            }
+            if(spawn)
+            tangibleLevelObjects.push_back(std::move(entity));
 
             break;
         }
-
         case 6:
         {
             unique_ptr<Kirajin_Yari_1> entity = make_unique<Kirajin_Yari_1>();
             entity.get()->LoadConfig(missionConfig);
-            entity.get()->setEntityID(entityID);
+
+            ///To be replaced with param file
             entity.get()->entityType = Entity::EntityTypes::HOSTILE;
 
-            if(randX > 0)
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
-            else
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
-
-            entity.get()->setColor(color);
-
-            entity.get()->isCollidable = collidable;
-            entity.get()->isAttackable = attackable;
-            entity.get()->loot_table = loot_table;
-            entity.get()->curHP = baseHP;
-            entity.get()->maxHP = baseHP;
-
-            if(spr_range != 0)
-            {
-                if(rand() % spr_range == spr_goal)
-                {
-                    tangibleLevelObjects.push_back(std::move(entity));
-                }
-            }
-            else
-            {
-                tangibleLevelObjects.push_back(std::move(entity));
-            }
+            if(spawn)
+            tangibleLevelObjects.push_back(std::move(entity));
 
             break;
         }
+        case 7:
+        {
+            unique_ptr<TreasureChest> entity = make_unique<TreasureChest>();
+            entity.get()->LoadConfig(missionConfig);
+
+            ///To be replaced with param file
+            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+            if(spawn)
+            tangibleLevelObjects.push_back(std::move(entity));
+
+            break;
+        }
+    }
+
+    Entity* entity = tangibleLevelObjects[tangibleLevelObjects.size()-1].get();
+
+    if(entityID != 5) ///ID 5 = dropped item, it has an exclusive loading type
+    {
+        entity->setEntityID(entityID);
+
+        if(randX > 0)
+        entity->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
+        else
+        entity->setGlobalPosition(sf::Vector2f(baseX,baseY));
+
+        entity->setColor(color);
+
+        entity->isCollidable = collidable;
+        entity->isAttackable = attackable;
+        entity->loot_table = loot_table;
+    }
+    else
+    {
+        entity->setEntityID(entityID);
+        entity->manual_mode = true;
+
+        ///This unique entity needs to be loaded differently, read additional data for spritesheet info to be passed from the item registry.
+        string spritesheet = additional_data[0];
+        int spritesheet_id = stoi(additional_data[1]);
+        int picked_item = stoi(additional_data[2]);
+
+        cout << "[DroppedItem] Selecting spritesheet " << spritesheet << " with id " << spritesheet_id << endl;
+
+        cout << "[DroppedItem] Loading from memory" << endl;
+        vector<char> di_data = droppeditem_spritesheet[spritesheet].retrieve_char();
+        cout << "[DroppedItem] Vector loaded. Size: " << di_data.size() << endl;
+        entity->objects[0].tex_obj.loadFromMemory(&di_data[0], di_data.size());
+        cout << "[DroppedItem] Setting smooth" << endl;
+        entity->objects[0].tex_obj.setSmooth(true);
+        cout << "[DroppedItem] Setting texture" << endl;
+        entity->objects[0].s_obj.setTexture(entity->objects[0].tex_obj);
+        cout << "[DroppedItem] Marking as unexported" << endl;
+        entity->objects[0].exported = false;
+        cout << "[DroppedItem] Loading done." << endl;
+
+        entity->objects[0].s_obj.qualitySetting = qualitySetting;
+        entity->objects[0].s_obj.resSetting = resSetting;
+
+        //entity->objects[0].s_obj.setOrigin(entity->objects[0].s_obj.getLocalBounds().width/2, entity->objects[0].s_obj.getLocalBounds().height/2);
+
+        entity->cur_pos = float(spritesheet_id-1) / 60.0;
+
+        entity->animation_bounds[0] = droppeditem_spritesheet[spritesheet].retrieve_rect_as_map();
+
+        entity->setGlobalPosition(sf::Vector2f(baseX,baseY));
+
+        entity->setColor(color);
+
+        entity->isCollidable = collidable;
+        entity->isAttackable = attackable;
     }
 
     cout << "Loading finished" << endl;
