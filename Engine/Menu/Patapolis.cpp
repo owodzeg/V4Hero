@@ -418,9 +418,9 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
         lightrays.push_back(tmp);
     }
 
-    market.loadFromFile("resources/graphics/bg/patapolis/market.png", quality, 1);
-    market.setPosition(640, 728-floor_height);
-    market.setOrigin(market.getLocalBounds().width/2, market.getLocalBounds().height);
+    barracks.loadFromFile("resources/graphics/bg/patapolis/barracks.png", quality, 1);
+    barracks.setPosition(640, 765-floor_height);
+    barracks.setOrigin(barracks.getLocalBounds().width/2, barracks.getLocalBounds().height);
 
     forge_main.loadFromFile("resources/graphics/bg/patapolis/forge_main.png", quality, 1);
     forge_main.setPosition(2300, 720-floor_height);
@@ -446,9 +446,9 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     forge_slab_glow.setPosition(2300-72, 720-floor_height-92);
     forge_slab_glow.setOrigin(forge_slab_glow.getLocalBounds().width/2, forge_slab_glow.getLocalBounds().height);
 
-    barracks.loadFromFile("resources/graphics/bg/patapolis/barracks.png", quality, 1);
-    barracks.setPosition(3960, 765-floor_height);
-    barracks.setOrigin(barracks.getLocalBounds().width/2, barracks.getLocalBounds().height);
+    market.loadFromFile("resources/graphics/bg/patapolis/market.png", quality, 1);
+    market.setPosition(3960, 728-floor_height);
+    market.setOrigin(market.getLocalBounds().width/2, market.getLocalBounds().height);
 
     festival_main.loadFromFile("resources/graphics/bg/patapolis/festival_main.png", quality, 1);
     festival_main.setPosition(5620, 720-floor_height);
@@ -474,9 +474,9 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     paraget_crystal.setPosition(10600, 430);
     paraget_crystal.setOrigin(paraget_crystal.getLocalBounds().width/2, paraget_crystal.getLocalBounds().height/2);
 
-    locations.push_back(market.getPosition().x - 640);
-    locations.push_back(forge_main.getPosition().x - 640);
     locations.push_back(barracks.getPosition().x - 640);
+    locations.push_back(forge_main.getPosition().x - 640);
+    locations.push_back(market.getPosition().x - 640);
     locations.push_back(festival_main.getPosition().x - 640);
     locations.push_back(altar.getPosition().x - 640);
     locations.push_back(obelisk.getPosition().x - 640);
@@ -490,8 +490,8 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
         addParagetSparkle(10549 + (rand()%100), 330 + (rand() % 200));
     }
 
-    addFire(4, 583, 583, true);
-    addFire(4, 697, 583, true);
+    addFire(4, 3903, 583, true);
+    addFire(4, 4017, 583, true);
 
     addFire(2, 5816, 574, true);
     addFire(2, 5431, 574, true);
