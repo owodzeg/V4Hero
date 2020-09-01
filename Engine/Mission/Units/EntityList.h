@@ -8,6 +8,7 @@
 #include "Entities/Animals/Kacheek.h"
 
 #include "Entities/Obstacles/Wall.h"
+#include "Entities/Obstacles/TreasureChest.h"
 
 #include "Entities/Nature/Grass1.h"
 #include "Entities/Nature/Grass2.h"
