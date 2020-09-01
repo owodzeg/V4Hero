@@ -16,6 +16,8 @@ void DroppedItem::LoadConfig(Config *thisConfigs)
     hspeed = -200+rand_hs;
     vspeed = -600+rand_vs;
 
+    cout << "DroppedItem spawned with hspeed " << hspeed << " and vspeed " << vspeed << endl;
+
     manual_spritesheet = true;
 }
 void DroppedItem::Draw(sf::RenderWindow& window)
@@ -59,10 +61,13 @@ void DroppedItem::Draw(sf::RenderWindow& window)
 
         int ground = 610 - (animation_bounds[index][curFrame].height / 2 / multiplier);
 
-        if(global_y >= ground)
+        if(vspeed > 0)
         {
-            vspeed = 0;
-            global_y = ground;
+            if(global_y >= ground)
+            {
+                vspeed = 0;
+                global_y = ground;
+            }
         }
 
         if(hspeed >= 0)
@@ -171,9 +176,9 @@ void DroppedItem::Draw(sf::RenderWindow& window)
                 if(alpha <= 0)
                 alpha = 0;
 
-                local_y += vspeed2;
+                local_y += vspeed2 / fps * 60;
 
-                local_x += hspeed2;
+                local_x += hspeed2 / fps * 60;
 
                 curXscale -= 0.1 / fps;
                 curYscale -= 0.1 / fps;
