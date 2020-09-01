@@ -289,6 +289,8 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         entity->isCollidable = collidable;
         entity->isAttackable = attackable;
         entity->loot_table = loot_table;
+        entity->curHP = baseHP;
+        entity->maxHP = baseHP;
     }
     else
     {
