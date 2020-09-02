@@ -92,6 +92,10 @@ void TreasureChest::OnCollide(CollidableObject* otherObject, int collidedWith, v
 
                 if(id_picked != 0)
                 {
+                    ///check if grubby map was obtained, if not, force drop it
+                    if(!thisConfig->thisCore->savereader.invdata.CheckItemObtained(23)) ///check for grubby map
+                    id_picked = 23; ///override drop if grubby map not achieved
+
                     auto item = thisConfig->thisCore->savereader.itemreg.GetItemByID(id_picked);
                     vector<string> data = {item->spritesheet, to_string(item->spritesheet_id), to_string(id_picked)};
 
