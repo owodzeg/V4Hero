@@ -15,7 +15,7 @@ void IntroductionMenu::Initialise(Config *thisConfig, V4Core *parent, Menu *curP
     parentMenu = curParentMenu;
     cout << "Initial values loaded, loading assets" << endl;
 
-    msgcloud.Create(45, sf::Vector2f(640,480), thisConfig->GetInt("textureQuality"));
+    msgcloud.Create(45, sf::Vector2f(640,480), sf::Color::White, thisConfig->GetInt("textureQuality"));
     msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_intro_1")), true);
     msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_intro_2")), true);
     msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_intro_3")), true);
@@ -67,7 +67,7 @@ void IntroductionMenu::Update(sf::RenderWindow& window, float fps, InputControll
         isActive = false;
 
         v4core->currentController.Initialise(*thisConfig,thisConfig->GetString("mission1Background"),*v4core);
-        v4core->currentController.StartMission("mis1.p4m",false,1);
+        v4core->currentController.StartMission("mis1_0.p4m",false,1);
     }
 }
 

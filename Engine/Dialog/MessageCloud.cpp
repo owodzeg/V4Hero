@@ -31,7 +31,7 @@ void MessageCloud::setSize(float new_x, float new_y)
     ysize = new_y;
 }
 
-void MessageCloud::Create(int speed, sf::Vector2f start_pos, int q)
+void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, int q)
 {
     cout << "MessageCloud::Create()" << endl;
 
@@ -55,11 +55,17 @@ void MessageCloud::Create(int speed, sf::Vector2f start_pos, int q)
     cloud[2].setScale(1,-1);
     cloud[3].setScale(-1,-1);
 
+    for(int i=0; i<4; i++)
+    cloud[i].setColor(color);
+
+    cur_color = color;
+
     cross.loadFromFile("resources/graphics/ui/dialog/cross.png", q, 1);
     cross_highlight.loadFromFile("resources/graphics/ui/dialog/crosshighlight.png", q, 1);
     cross_arrow.loadFromFile("resources/graphics/ui/dialog/crossarrow.png", q, 1);
 
     triangle.setPointCount(3);
+    triangle.setFillColor(cur_color);
 
     startpos = start_pos;
 
@@ -189,6 +195,7 @@ void MessageCloud::Draw(sf::RenderWindow& window, float fps, InputController& in
 
         for(int i=0; i<4; i++)
         {
+            cloud[i].setColor(cur_color);
             cloud[i].setPosition(x,y);
             cloud[i].draw(window);
         }
@@ -229,7 +236,7 @@ void MessageCloud::Draw(sf::RenderWindow& window, float fps, InputController& in
         triangle.setPoint(1, sf::Vector2f((x-(xsize/25))*rX,y*rY));
         triangle.setPoint(2, sf::Vector2f((x+(xsize/25))*rX,y*rY));
 
-        triangle.setFillColor(sf::Color::White);
+        triangle.setFillColor(cur_color);
         window.draw(triangle);
 
         if(!done)
