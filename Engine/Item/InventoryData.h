@@ -13,6 +13,7 @@ class InventoryData
         std::vector<InventoryItem> ItemsByType(int type);
         int CountItemsByType(int type);
         int InvItemIdFromType(int type,int itemId);
+        bool CheckItemObtained(int itemID);
         InventoryData();
         ~InventoryData();
 };

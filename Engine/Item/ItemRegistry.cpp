@@ -253,13 +253,15 @@ void ItemRegistry::ReadItemFiles(){
 ItemRegistry::~ItemRegistry(){
 
 }
-Item* ItemRegistry::GetItemByID(int id){
-
-    for (int i=0;i<items.size()-1;i++){
+Item* ItemRegistry::GetItemByID(int id)
+{
+    for (int i=0; i<items.size(); i++)
+    {
         Item* currentItem = items[i];
-        ///cout<<currentItem->item_id<<"|"<<id<<'\n';
+
         if (currentItem->item_id==id)
             return items[i];
     }
-    cout<<"A stupid happened: "<<id<<'\n';
+
+    cout << "A stupid happened: " << id <<'\n';
 }
