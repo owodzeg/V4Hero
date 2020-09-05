@@ -271,6 +271,19 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
             break;
         }
+        case 8:
+        {
+            unique_ptr<RockBig> entity = make_unique<RockBig>();
+            entity.get()->LoadConfig(missionConfig);
+
+            ///To be replaced with param file
+            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+            if(spawn)
+            tangibleLevelObjects.push_back(std::move(entity));
+
+            break;
+        }
     }
 
     Entity* entity = tangibleLevelObjects[tangibleLevelObjects.size()-1].get();
@@ -2484,6 +2497,7 @@ void MissionController::Update(sf::RenderWindow &window, float cfps, InputContro
 
                         missionEnd = true;
                         failure = true;
+                        rhythm.Stop();
 
                         break;
                     }
