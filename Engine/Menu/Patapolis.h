@@ -44,6 +44,9 @@ class PatapolisMenu : public Menu
         PSprite bridge;
         PSprite rainbow;
 
+        PSprite back_layer[4];
+        vector<float> back_pos = {0, 3900, 7400, 9560};
+
         struct Sparkle ///for rainbow
         {
             PSprite sprk;
@@ -102,6 +105,19 @@ class PatapolisMenu : public Menu
             float alpha = 255;
         };
 
+        struct CloudA
+        {
+            PSprite cloud;
+            float x=0, y=0;
+        };
+
+        struct CloudB
+        {
+            sf::CircleShape cloud;
+            float base_x=0, base_y=0;
+            float x=0, y=0;
+        };
+
         vector<RayStart> coords;
         float rayXbase = 12215;
         float rayX = 12215;
@@ -119,6 +135,8 @@ class PatapolisMenu : public Menu
         std::vector<LightRay> lightrays;
         std::vector<Fire> fires;
         std::vector<SmokeParticle> smoke;
+        std::vector<CloudA> clouds_A;
+        std::vector<CloudB> clouds_B;
 
         PSprite p_smoke;
         float smokepath1 = 0;
@@ -170,6 +188,7 @@ class PatapolisMenu : public Menu
         void addRay(float x1, float y1, float x2, float y2);
         Fire addFire(int type, float x, float y, bool add);
         void addSmokeParticle(float x, float y, PSprite& refer);
+        void addCloud(std::string type, float x, float y, float xsize, float ysize, int q, int r);
         void Initialise(Config *thisConfig, V4Core *parent,Menu *curParentMenu);
         void Update(sf::RenderWindow &window, float fps, InputController& inputCtrl);
         void EventFired(sf::Event event);

@@ -165,6 +165,41 @@ void PatapolisMenu::addSmokeParticle(float x, float y, PSprite& refer)
     smoke.push_back(tmp);
 }
 
+void PatapolisMenu::addCloud(std::string type, float x, float y, float xsize, float ysize, int q, int r)
+{
+    cout << "Adding cloud " << type << " " << x << " " << y << " " << xsize << " " << ysize << endl;
+
+    if(type == "A")
+    {
+        CloudA cloud;
+        cloud.cloud.loadFromFile("resources/graphics/bg/patapolis/1a.png", q, r);
+        cloud.cloud.baseX = x;
+        cloud.cloud.baseY = y;
+        cloud.x = x;
+        cloud.y = y;
+
+        clouds_A.push_back(cloud);
+    }
+    else if(type == "B")
+    {
+        float resRatio = float(thisConfig->GetInt("resX")) / float(1280);
+
+        CloudB cloud;
+        cloud.cloud.setFillColor(sf::Color::White);
+        cloud.cloud.setRadius(640*resRatio);
+
+        float scale_x = xsize / 640.f;
+        float scale_y = ysize / 640.f;
+
+        cloud.cloud.setScale(scale_x*resRatio, scale_y*resRatio);
+
+        cloud.base_x = x;
+        cloud.base_y = y;
+
+        clouds_B.push_back(cloud);
+    }
+}
+
 void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParentMenu)
 {
     parent->SaveToDebugLog("Initializing Patapolis...");
@@ -334,6 +369,13 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     edge.loadFromFile("resources/graphics/bg/patapolis/edge.png", quality, 1);
     bridge.loadFromFile("resources/graphics/bg/patapolis/bridge.png", quality, 1);
     rainbow.loadFromFile("resources/graphics/bg/patapolis/rainbow.png", quality, 1);
+
+    for(int i=0; i<4; i++)
+    {
+        back_layer[i].loadFromFile("resources/graphics/bg/patapolis/back_"+to_string(i+1)+".png", quality, 1);
+        back_layer[i].setOrigin(0, back_layer[i].getLocalBounds().height);
+        back_layer[i].setPosition(back_pos[i], 715);
+    }
 
     addSparkle(11620 + 25, 400);
     addSparkle(11620 + 170, 380);
@@ -507,6 +549,10 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     p_smoke.loadFromFile("resources/graphics/bg/patapolis/smoke.png", quality, 1);
     p_smoke.setOrigin(p_smoke.getLocalBounds().width/2, p_smoke.getLocalBounds().height/2);
 
+    addCloud("A", 9500, 140, 0, 0, quality, 1);
+    addCloud("A", 8800, 240, 0, 0, quality, 1);
+    addCloud("A", 8000, 170, 0, 0, quality, 1);
+
     ctrlTips.create(54, f_font, 20, sf::String(L"L/R: Move      ×: Interact      Select: Save      Start: Title screen"), quality);
 
     initialised=true;
@@ -643,6 +689,32 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                 else
                 camPos += camSpeed / fps;
             }
+        }
+
+        for(int i=0; i<clouds_A.size(); i++)
+        {
+            clouds_A[i].cloud.lx = clouds_A[i].cloud.baseX - (camPos / 1.3);
+            clouds_A[i].cloud.ly = clouds_A[i].cloud.baseY;
+            clouds_A[i].cloud.draw(window);
+        }
+
+        for(int i=0; i<clouds_B.size(); i++)
+        {
+            float resRatio = window.getSize().x / float(1280);
+
+            clouds_B[i].x = clouds_B[i].base_x - (camPos / 1.3);
+            clouds_B[i].cloud.setPosition(clouds_B[i].x*resRatio, clouds_B[i].y*resRatio);
+            window.draw(clouds_B[i].cloud);
+        }
+
+        rainbow.setOrigin(0, rainbow.getLocalBounds().height);
+        rainbow.setPosition(9000 - (camPos / 1.3), 592);
+        rainbow.draw(window);
+
+        for(int i=0; i<4; i++)
+        {
+            back_layer[i].lx = back_layer[i].baseX - (camPos / 1.3);
+            back_layer[i].draw(window);
         }
 
         for(int i=0; i<layer_6.size(); i++)
@@ -907,10 +979,6 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         edge.setOrigin(0, edge.getLocalBounds().height);
         edge.setPosition(floor_x + 11500, 720);
         edge.draw(window);
-
-        rainbow.setOrigin(0, rainbow.getLocalBounds().height);
-        rainbow.setPosition(floor_x + 11620, 592);
-        rainbow.draw(window);
 
         for(int i=0; i<sparkles.size(); i++)
         {
