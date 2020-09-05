@@ -139,6 +139,13 @@ V4Core::V4Core()
     t_version.setFillColor(sf::Color(255,255,255,32));
     t_version.setString("V4Hero Client "+hero_version);
 
+    t_fps.setFont(f_font);
+    t_fps.setCharacterSize(24);
+    t_fps.setFillColor(sf::Color(255,255,255,96));
+    t_fps.setOutlineColor(sf::Color(0,0,0,96));
+    t_fps.setOutlineThickness(1);
+    t_fps.setString("FPS: ");
+
     /** Initialize main menu **/
     tipsUtil.LoadBackgrounds(config);
     tipsUtil.LoadIcons(config);
@@ -361,6 +368,7 @@ void V4Core::Init()
 
     window.setFramerateLimit(config.GetInt("framerateLimit"));
     window.setKeyRepeatEnabled(false);
+    window.setVerticalSyncEnabled(config.GetInt("verticalSync"));
 
     framerateLimit = config.GetInt("framerateLimit");
     if(framerateLimit == 0)
@@ -493,7 +501,7 @@ void V4Core::Init()
         float average = 0.0f;
         if(n != 0)
         {
-             average = accumulate(frameTimes.begin(), frameTimes.end(), 0.0) / n;
+             average = accumulate(frameTimes.begin(), frameTimes.end(), 0.0) / (n-1);
         }
 
         if(fps <= 1)
@@ -515,6 +523,14 @@ void V4Core::Init()
 
         t_version.setPosition(4,4);
         window.draw(t_version);
+
+        if(config.GetInt("showFPS"))
+        {
+            t_fps.setString("FPS: "+to_string(int(ceil(rawFps))));
+            t_fps.setOrigin(t_fps.getLocalBounds().width, 0);
+            t_fps.setPosition(window.getSize().x-4, 4);
+            window.draw(t_fps);
+        }
 
         window.display();
 

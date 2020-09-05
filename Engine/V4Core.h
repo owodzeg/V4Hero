@@ -28,6 +28,7 @@ class V4Core
         sf::Font f_font;
         sf::Text t_debug;
         sf::Text t_version;
+        sf::Text t_fps;
         float fps = 60;
         sf::Clock fpsclock;
 
