@@ -11,6 +11,7 @@
 #include "Entities/Obstacles/TreasureChest.h"
 #include "Entities/Obstacles/RockBig.h"
 #include "Entities/Obstacles/RockSmall.h"
+#include "Entities/Obstacles/WoodenSpikes.h"
 
 #include "Entities/Nature/Grass1.h"
 #include "Entities/Nature/Grass2.h"

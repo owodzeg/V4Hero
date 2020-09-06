@@ -297,6 +297,19 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
             break;
         }
+        case 10:
+        {
+            unique_ptr<WoodenSpikes> entity = make_unique<WoodenSpikes>();
+            entity.get()->LoadConfig(missionConfig);
+
+            ///To be replaced with param file
+            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+            if(spawn)
+            tangibleLevelObjects.push_back(std::move(entity));
+
+            break;
+        }
     }
 
     Entity* entity = tangibleLevelObjects[tangibleLevelObjects.size()-1].get();
