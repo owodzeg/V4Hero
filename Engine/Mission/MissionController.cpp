@@ -310,6 +310,19 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
             break;
         }
+        case 11:
+        {
+            unique_ptr<RockPile> entity = make_unique<RockPile>();
+            entity.get()->LoadConfig(missionConfig);
+
+            ///To be replaced with param file
+            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+            if(spawn)
+            tangibleLevelObjects.push_back(std::move(entity));
+
+            break;
+        }
     }
 
     Entity* entity = tangibleLevelObjects[tangibleLevelObjects.size()-1].get();
