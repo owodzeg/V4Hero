@@ -47,7 +47,7 @@ bool Patapon::doAttack()
                     }
                     else if(entity_distance > 250) ///unit is too far, get closer
                     {
-                        dest_local_x = rand() % (int(entity_distance)-250); ///take a random position farther from the enemy
+                        dest_local_x = rand() % (int(entity_distance)-250+1); ///take a random position farther from the enemy
                     }
 
                     dest_set = true;
