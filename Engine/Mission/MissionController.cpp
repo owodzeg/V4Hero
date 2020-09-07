@@ -323,6 +323,58 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
             break;
         }
+        case 12:
+        {
+            unique_ptr<KirajinHut> entity = make_unique<KirajinHut>();
+            entity.get()->LoadConfig(missionConfig);
+
+            ///To be replaced with param file
+            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+            if(spawn)
+            tangibleLevelObjects.push_back(std::move(entity));
+
+            break;
+        }
+        case 13:
+        {
+            unique_ptr<KirajinGuardTower> entity = make_unique<KirajinGuardTower>();
+            entity.get()->LoadConfig(missionConfig);
+
+            ///To be replaced with param file
+            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+            if(spawn)
+            tangibleLevelObjects.push_back(std::move(entity));
+
+            break;
+        }
+        case 14:
+        {
+            unique_ptr<KirajinPoweredTowerSmall> entity = make_unique<KirajinPoweredTowerSmall>();
+            entity.get()->LoadConfig(missionConfig);
+
+            ///To be replaced with param file
+            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+            if(spawn)
+            tangibleLevelObjects.push_back(std::move(entity));
+
+            break;
+        }
+        case 15:
+        {
+            unique_ptr<KirajinPoweredTowerBig> entity = make_unique<KirajinPoweredTowerBig>();
+            entity.get()->LoadConfig(missionConfig);
+
+            ///To be replaced with param file
+            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+            if(spawn)
+            tangibleLevelObjects.push_back(std::move(entity));
+
+            break;
+        }
     }
 
     Entity* entity = tangibleLevelObjects[tangibleLevelObjects.size()-1].get();

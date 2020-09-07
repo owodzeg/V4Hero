@@ -19,4 +19,9 @@
 
 #include "Entities/Kirajin/Kirajin_Yari_1.h"
 
+#include "Entities/Buildings/KirajinHut.h"
+#include "Entities/Buildings/KirajinGuardTower.h"
+#include "Entities/Buildings/KirajinPoweredTowerSmall.h"
+#include "Entities/Buildings/KirajinPoweredTowerBig.h"
+
 #endif // ENTITYLIST_H
