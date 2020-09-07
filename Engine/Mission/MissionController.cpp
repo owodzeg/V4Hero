@@ -137,7 +137,7 @@ void MissionController::addItemsCounter(int id, float baseX, float baseY)
 
 }
 
-void MissionController::spawnEntity(string entityName, int entityID, int baseHP, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, vector<Entity::Loot> loot_table, vector<string> additional_data)
+void MissionController::spawnEntity(string entityName, int entityID, int baseHP, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, int layer, int parent, float overrideY, float overrideHP, vector<Entity::Loot> loot_table, vector<string> additional_data)
 {
     ///need to somehow optimize this to not copy paste the same code over and over
 
@@ -379,9 +379,17 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
     Entity* entity = tangibleLevelObjects[tangibleLevelObjects.size()-1].get();
 
+    entity->spawnOrderID = tangibleLevelObjects.size()-1;
+
     if(entityID != 5) ///ID 5 = dropped item, it has an exclusive loading type
     {
         entity->setEntityID(entityID);
+
+        if(overrideHP > 0)
+        baseHP = overrideHP;
+
+        if(overrideY != 0)
+        baseY = overrideY;
 
         if(randX > 0)
         entity->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
@@ -395,6 +403,9 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         entity->loot_table = loot_table;
         entity->curHP = baseHP;
         entity->maxHP = baseHP;
+
+        entity->layer = layer;
+        entity->parent = parent;
     }
     else
     {
@@ -435,6 +446,9 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
         entity->isCollidable = collidable;
         entity->isAttackable = attackable;
+
+        entity->layer = 9999;
+        entity->parent = -1;
     }
 
     cout << "Loading finished" << endl;
@@ -903,7 +917,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
                             entityParam.close();
 
                             cout << "Spawning an entity: " << entity_list[entityID] << endl;
-                            spawnEntity(entity_list[entityID],entityID,baseHP,atoi(spawn[1].c_str()),atoi(spawn[2].c_str()),baseY,atoi(spawn[3].c_str()),atoi(spawn[4].c_str()),atoi(spawn[5].c_str()),sf::Color(atoi(spawn[6].c_str()),atoi(spawn[7].c_str()),atoi(spawn[8].c_str()),atoi(spawn[9].c_str())), collidable, attackable, loot_table);
+                            spawnEntity(entity_list[entityID],entityID,baseHP,atoi(spawn[1].c_str()),atoi(spawn[2].c_str()),baseY,atoi(spawn[3].c_str()),atoi(spawn[4].c_str()),atoi(spawn[5].c_str()),sf::Color(atoi(spawn[6].c_str()),atoi(spawn[7].c_str()),atoi(spawn[8].c_str()),atoi(spawn[9].c_str())), collidable, attackable, atoi(spawn[10].c_str()), atoi(spawn[13].c_str()), atoi(spawn[12].c_str()), atoi(spawn[11].c_str()), loot_table);
                         }
                     }
                 }
@@ -2489,7 +2503,10 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
 
             /** Verify if Hatapon exists **/
             if(unit->getUnitID() == 0)
-            hatapon = true;
+            {
+                if(unit->getUnitHP() > 0)
+                hatapon = true;
+            }
 
             /** Execute unit features when mission is not over **/
             if(!missionEnd)
@@ -2558,6 +2575,13 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
 
 void MissionController::Update(sf::RenderWindow &window, float cfps, InputController& inputCtrl)
 {
+    ///Sort tangibleLevelObjects to prioritize rendering layers
+    std::sort(tangibleLevelObjects.begin(), tangibleLevelObjects.end(),
+              [](const std::unique_ptr<Entity>& a, const std::unique_ptr<Entity>& b)
+                {
+                    return a.get()->layer < b.get()->layer;
+                });
+
     ///Globally disable the controls when Dialogbox is opened, but preserve original controller for controlling the DialogBoxes later
     InputController o_inputCtrl;
     InputController cur_inputCtrl;

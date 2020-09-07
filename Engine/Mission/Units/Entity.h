@@ -9,6 +9,7 @@ class Entity : public CollidableObject
 {
     public:
     int entityID = -1;
+    int spawnOrderID = -1;
 
     enum EntityTypes
     {
@@ -32,6 +33,9 @@ class Entity : public CollidableObject
 
     float curHP = 500;
     float maxHP = 500;
+
+    int layer = 0; ///rendering priority
+    int parent = -1; ///if entity is bound to any other entity
 
     Entity();
     virtual void setEntityID(int new_entityID);

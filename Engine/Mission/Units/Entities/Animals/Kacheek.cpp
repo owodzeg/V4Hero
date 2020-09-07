@@ -82,7 +82,7 @@ void Kacheek::Draw(sf::RenderWindow& window)
                         auto item = thisConfig->thisCore->savereader.itemreg.GetItemByID(id_picked);
                         vector<string> data = {item->spritesheet, to_string(item->spritesheet_id), to_string(id_picked)};
 
-                        thisConfig->thisCore->currentController.spawnEntity("droppeditem",5,0,getGlobalPosition().x,0,getGlobalPosition().y-60,0,0,1,sf::Color::White,0,0,vector<Entity::Loot>(), data);
+                        thisConfig->thisCore->currentController.spawnEntity("droppeditem",5,0,getGlobalPosition().x,0,getGlobalPosition().y-60,0,0,1,sf::Color::White,0,0,0,-1,0,0,vector<Entity::Loot>(), data);
 
                         dropped_item = true;
                     }

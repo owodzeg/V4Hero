@@ -99,7 +99,7 @@ void TreasureChest::OnCollide(CollidableObject* otherObject, int collidedWith, v
                     auto item = thisConfig->thisCore->savereader.itemreg.GetItemByID(id_picked);
                     vector<string> data = {item->spritesheet, to_string(item->spritesheet_id), to_string(id_picked)};
 
-                    thisConfig->thisCore->currentController.spawnEntity("droppeditem",5,0,getGlobalPosition().x-140,0,getGlobalPosition().y+10,0,0,1,sf::Color::White,0,0,vector<Entity::Loot>(), data);
+                    thisConfig->thisCore->currentController.spawnEntity("droppeditem",5,0,getGlobalPosition().x-140,0,getGlobalPosition().y+10,0,0,1,sf::Color::White,0,0,0,-1,0,0,vector<Entity::Loot>(), data);
 
                     dropped_item = true;
                 }
