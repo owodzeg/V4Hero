@@ -13,7 +13,7 @@ class Hatapon : public PlayableUnit
     Hatapon();
     void LoadConfig(Config *thisConfigs);
     void Draw(sf::RenderWindow& window);
-    void OnCollide(CollidableObject* otherObject);
+    void OnCollide(CollidableObject* otherObject, int collidedWith=-1, vector<string> collisionData = {});
     void doRhythm(std::string current_song="", std::string current_drum="", int combo=0);
     void doMissionEnd();
 };

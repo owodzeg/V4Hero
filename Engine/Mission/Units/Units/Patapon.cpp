@@ -13,6 +13,9 @@ void Patapon::LoadConfig(Config *thisConfigs)
     /// load patapon from p4a file
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\unit\\patapon.p4a");
     setAnimationSegment("idle_armed");
+
+    isCollidable = true;
+    isAttackable = true;
 }
 
 void Patapon::startAttack()
@@ -363,3 +366,24 @@ void Patapon::Draw(sf::RenderWindow& window)
 
     AnimatedObject::Draw(window);
 }
+
+void Patapon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<string> collisionData)
+{
+    cout << "Patapon::OnCollide" << endl;
+
+    if(collisionData.size() > 0)
+    {
+        if(isCollidable)
+        {
+            ///collisionData received from Projectile, process it
+            int dmgDealt = atoi(collisionData[0].c_str());
+            current_hp -= dmgDealt;
+
+            cout << "I received " << to_string(dmgDealt) << "damage, my HP is " << current_hp << endl;
+        }
+    }
+
+    /// note we don't call the parent function. It does nothing, it just serves
+    /// as an incomplete function to be overridden by child classes.
+}
+

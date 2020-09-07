@@ -14,6 +14,9 @@ class Kirajin_Yari_1 : public Entity
     sf::Clock attack_timer;
     bool dead = false;
 
+    bool canThrow = true;
+    bool threw = false;
+
     float hspeed = 0;
     float vspeed = 0;
     float gravity = 981;
@@ -21,6 +24,7 @@ class Kirajin_Yari_1 : public Entity
     Kirajin_Yari_1();
     void LoadConfig(Config *thisConfigs);
     void Draw(sf::RenderWindow& window);
+    bool doAttack();
     void OnCollide(CollidableObject* otherObject, int collidedWith=-1, vector<string> collisionData = {});
 };
 

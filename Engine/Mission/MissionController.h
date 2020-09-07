@@ -192,6 +192,7 @@ class MissionController
     /** Collisions **/
     bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame,AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY);
     vector<CollisionEvent> DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY,int collisionObjectID,vector<string> collisionData = {});
+    vector<CollisionEvent> DoCollisionForUnit(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY,int collisionObjectID,vector<string> collisionData = {});
     float pataponMaxProjection(float axisAngle, int id);
     float pataponMinProjection(float axisAngle, int id);
 
@@ -214,7 +215,7 @@ class MissionController
     void spawnEntity(string entityName, int entityID, int baseHP, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, vector<Entity::Loot> loot_table, vector<string> additional_data={});
     void addPickedItem(std::string spritesheet, int spritesheet_id, int picked_item);
     void addUnitThumb(int unit_id);
-    void spawnProjectile(float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit);
+    void spawnProjectile(float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit, bool enemy=false);
 
     /** Load up the mission **/
     void Initialise(Config &config,std::string backgroundName,V4Core &v4core_);
@@ -227,7 +228,8 @@ class MissionController
     void DoMovement(sf::RenderWindow &window, float fps, InputController& inputCtrl);
     void DoRhythm(InputController& inputCtrl);
     void DoMissionEnd(sf::RenderWindow& window, float fps);
-    void DoVectorCleanup(std::vector<int> units_rm, std::vector<int> dmg_rm, std::vector<int> tlo_rm);
+    void DoVectorCleanup(std::vector<int> units_rm, std::vector<int> dmg_rm, std::vector<int> tlo_rm, std::vector<int> pr_rm);
+    std::vector<int> DrawProjectiles(sf::RenderWindow& window);
     void DrawUnitThumbs(sf::RenderWindow& window);
     void DrawPickedItems(sf::RenderWindow& window);
     void DrawHitboxes(sf::RenderWindow& window);

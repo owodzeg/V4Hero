@@ -20,6 +20,12 @@ void Entity::doRhythm(std::string current_song, std::string current_drum, int co
     cout << "Entity::doRhythm() was not overriden by child class" << endl;
 }
 
+bool Entity::doAttack()
+{
+    //cout << "Entity::doAttack() was not overriden by child class" << endl;
+    return false;
+}
+
 void Entity::LoadConfig(Config *thisConfigs, std::string unitParamPath)
 {
     cout << "Entity::LoadConfig() was not overriden by child class" << endl;

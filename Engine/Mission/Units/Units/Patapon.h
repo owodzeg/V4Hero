@@ -48,6 +48,7 @@ class Patapon : public PlayableUnit
     void doRhythm(std::string current_song="", std::string current_drum="", int combo=0);
     void doMissionEnd();
     void Draw(sf::RenderWindow& window);
+    void OnCollide(CollidableObject* otherObject, int collidedWith=-1, vector<string> collisionData = {});
 };
 
 #endif // PATAPON_H

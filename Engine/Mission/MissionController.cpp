@@ -440,7 +440,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
     cout << "Loading finished" << endl;
 }
 
-void MissionController::spawnProjectile(float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit)
+void MissionController::spawnProjectile(float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit, bool enemy)
 {
     unique_ptr<Spear> p = make_unique<Spear>(s_proj);
 
@@ -453,6 +453,7 @@ void MissionController::spawnProjectile(float xPos, float yPos, float speed, flo
     p.get()->maxdmg = maxdmg;
     p.get()->mindmg = mindmg;
     p.get()->crit = crit;
+    p.get()->enemy = enemy;
 
     levelProjectiles.push_back(std::move(p));
 }
@@ -1133,6 +1134,115 @@ vector<MissionController::CollisionEvent> MissionController::DoCollisionForObjec
 
     return collisionEvents;
 }
+
+vector<MissionController::CollisionEvent> MissionController::DoCollisionForUnit(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float currentObjectY,int collisionObjectID,vector<string> collisionData)
+{
+    ///Added vector because there can be more than just one collision events! Like colliding with grass AND with opponent
+    vector<MissionController::CollisionEvent> collisionEvents;
+
+    for(int i=0; i<units.size(); i++)
+    {
+        for(int h=0; h<units[i]->hitboxes.size(); h++)
+        {
+            //cout << "tangibleLevelObjects[" << i << "][" << h << "]" << endl;
+
+            /// NEW COLLISION SYSTEM:
+            /// Separating axis theorem
+            /// we check an axis at a time
+            /// 8 axes in total, aligned with the normal of each face of each shape
+            /// thankfully because we are only using rectangles, there are two pairs of parallel sides
+            /// so we only need to check 4 axes, as the other 4 are all parallel.
+            ///
+            /// in each axis we calculate the vector projection onto the axis between the origin and each corner of each box
+            /// and find the maximum projection and minimum projection for each shape
+            /// then we check if min2>max1 or min1>max2 there has been a collision in this axis
+            /// there has to be a collision in ALL axes for actual collision to be confirmed,
+            /// so we can stop checking if we find a single non-collision.
+
+
+
+
+            /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
+            //cout<<"Collision step for projectile at X: "<<currentObjectX<<" against object at x: "<<tangibleLevelObjects[i]->global_x<<endl;
+
+            float currentAxisAngle = currentObjectHitBoxFrame->rotation;
+            vector<sf::Vector2f> currentVertices = currentObjectHitBoxFrame->getCurrentVertices();
+            PVector pv1 = PVector::getVectorCartesian(0,0,currentVertices[0].x+currentObjectX,currentVertices[0].y+currentObjectY);
+            PVector pv2 = PVector::getVectorCartesian(0,0,currentVertices[1].x+currentObjectX,currentVertices[1].y+currentObjectY);
+            PVector pv3 = PVector::getVectorCartesian(0,0,currentVertices[2].x+currentObjectX,currentVertices[2].y+currentObjectY);
+            PVector pv4 = PVector::getVectorCartesian(0,0,currentVertices[3].x+currentObjectX,currentVertices[3].y+currentObjectY);
+
+            pv1.angle =-atan2(currentVertices[0].y+currentObjectY, currentVertices[0].x+currentObjectX);
+            pv2.angle =-atan2(currentVertices[1].y+currentObjectY, currentVertices[1].x+currentObjectX);
+            pv3.angle =-atan2(currentVertices[2].y+currentObjectY, currentVertices[2].x+currentObjectX);
+            pv4.angle =-atan2(currentVertices[3].y+currentObjectY, currentVertices[3].x+currentObjectX);
+
+            float proj1 = pv1.GetScalarProjectionOntoAxis(currentAxisAngle);
+            float proj2 = pv2.GetScalarProjectionOntoAxis(currentAxisAngle);
+            float proj3 = pv3.GetScalarProjectionOntoAxis(currentAxisAngle);
+            float proj4 = pv4.GetScalarProjectionOntoAxis(currentAxisAngle);
+
+            CollidableObject* target = units[i].get();
+
+            bool isCollision = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,currentObjectHitBoxFrame,currentObjectX,currentObjectY);
+            if (!isCollision)
+            {
+                continue;
+            }
+            //cout<<"COLLISION FOUND IN axis 1"<<endl;
+
+            /// axis 2: obj1 "up"
+            currentAxisAngle = 3.14159265358/2+currentObjectHitBoxFrame->rotation;
+            bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,currentObjectHitBoxFrame,currentObjectX,currentObjectY);
+            if (!isCollision2)
+            {
+                continue;
+            }
+            //cout<<"COLLISION FOUND IN axis 2 (up)"<<endl;
+
+            /// axis 3: obj2 "up" (we add the 90 degrees from before to its current rotation)
+            currentAxisAngle = target->hitboxes[h].hitboxObject.rotation + 3.14159265358/2;
+
+            bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,currentObjectHitBoxFrame,currentObjectX,currentObjectY);
+            if (!isCollision3)
+            {
+                continue;
+            }
+            //cout<<"COLLISION FOUND IN axis 3 (up2)"<<endl;
+
+            /// axis 4: obj2 "sideways"
+            currentAxisAngle = target->hitboxes[h].hitboxObject.rotation;
+
+            bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,currentObjectHitBoxFrame,currentObjectX,currentObjectY);
+            if (!isCollision4)
+            {
+                continue;
+            }
+
+            /// we have a collision
+            if (isCollision&&isCollision2&&isCollision3&&isCollision4)
+            {
+                std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
+                CollisionEvent cevent;
+                cevent.collided = true;
+                //cevent.collidedEntityID = -1;
+                cevent.isAttackable = target->isAttackable;
+                cevent.isCollidable = target->isCollidable;
+
+                target->OnCollide(target, collisionObjectID, collisionData);
+
+                collisionEvents.push_back(cevent);
+            }
+            else
+            {
+                cout<<"Something is very wrong"<<endl;
+            }
+        }
+    }
+
+    return collisionEvents;
+}
+
 float MissionController::pataponMaxProjection(float axisAngle, int id)
 {
     PlayableUnit* target = units[id].get();
@@ -1418,83 +1528,8 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, InputCon
             }
         }
     }
-
-    /** Projectile management **/
-
-    vector<int> pr_e; ///projectiles to erase
-
-    /// step 1: all projectiles have gravity applied to them
-    for(int i=0; i<levelProjectiles.size(); i++)
-    {
-        Projectile* p = levelProjectiles[i].get();
-        float xspeed = p->GetXSpeed();
-        float yspeed = p->GetYSpeed();
-        yspeed += (gravity/fps);
-        p->SetNewSpeedVector(xspeed,yspeed);
-        p->Update(window,fps);
-    }
-    /// step 2: any projectiles that hit the floor are destroyed
-    for(int i=0; i<levelProjectiles.size(); i++)
-    {
-        Projectile* p = levelProjectiles[i].get();
-        float ypos = p->yPos;
-        if (ypos>floorY)
-        {
-            levelProjectiles.erase(levelProjectiles.begin()+i);
-        }
-    }
-    /// step 3: any projectiles that hit any collidableobject are informed
-    for(int i=0; i<levelProjectiles.size(); i++)
-    {
-        Projectile* p = levelProjectiles[i].get();
-        float ypos = p->yPos;
-        float xpos = p->xPos;
-        HitboxFrame tmp;
-        tmp.time = 0;
-        tmp.g_x = 0;
-        tmp.g_y = 0;
-        tmp.clearVertices();
-        tmp.addVertex(-3,-1); /// "top left"
-        tmp.addVertex(3,-1); /// "top right"
-        tmp.addVertex(-3,1); /// "bottom left"
-        tmp.addVertex(3,1); /// "bottom right"
-        tmp.rotation = -p->angle;
-
-        ///calculate projectile damage
-        ///and pass it to a special vector called collisionData
-        ///which passes whatever you'd like to the collided animation object
-        ///so you can put anything and react with it in the individual entity classes
-        ///in projectiles' case, im transferring the damage dealt
-
-        int minDmg = p->mindmg;
-        int maxDmg = p->maxdmg;
-        int bound = maxDmg-minDmg+1;
-        int ranDmg = rand() % bound;
-        int total = minDmg + ranDmg;
-
-        ///sending damage dealt
-        vector<string> collisionData = {to_string(total)};
-
-        ///retrieve collision event
-        vector<CollisionEvent> cevent = DoCollisionForObject(&tmp,xpos,ypos,0,collisionData); //0 - spear collision ID
-
-        for(int e=0; e<cevent.size(); e++)
-        {
-            if(cevent[e].collided)
-            {
-                if(cevent[e].isCollidable)
-                pr_e.push_back(i);
-
-                ///add damage counter
-                if(cevent[e].isAttackable)
-                addDmgCounter(0, total, xpos, ypos, qualitySetting, resSetting);
-            }
-        }
-    }
-
-    for(int i=0; i<pr_e.size(); i++)
-    levelProjectiles.erase(levelProjectiles.begin()+pr_e[i]-i);
 }
+
 void MissionController::DoRhythm(InputController& inputCtrl)
 {
     /** Call Rhythm functions **/
@@ -1892,8 +1927,11 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
     }
 }
 
-void MissionController::DoVectorCleanup(vector<int> units_rm, vector<int> dmg_rm, vector<int> tlo_rm)
+void MissionController::DoVectorCleanup(vector<int> units_rm, vector<int> dmg_rm, vector<int> tlo_rm, vector<int> pr_rm)
 {
+    //cout << "MissionController::DoVectorCleanup" << endl;
+    //cout << units_rm.size() << " " << dmg_rm.size() << " " << tlo_rm.size() << " " << pr_rm.size() << endl;
+
     for(int i=0; i<units_rm.size(); i++)
     {
         units.erase(units.begin()+(units_rm[i]-i));
@@ -1911,6 +1949,107 @@ void MissionController::DoVectorCleanup(vector<int> units_rm, vector<int> dmg_rm
         tangibleLevelObjects.erase(tangibleLevelObjects.begin()+(tlo_rm[i]-i));
         cout << "Erased tangibleLevelObject " << tlo_rm[i] << endl;
     }
+
+    for(int i=0; i<pr_rm.size(); i++)
+    {
+        levelProjectiles.erase(levelProjectiles.begin()+(pr_rm[i]-i));
+        cout << "Erased levelProjectile " << pr_rm[i] << endl;
+    }
+}
+
+std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
+{
+    /** Projectile management **/
+
+    vector<int> pr_e; ///projectiles to erase
+
+    /// step 1: all projectiles have gravity applied to them
+    for(int i=0; i<levelProjectiles.size(); i++)
+    {
+        Projectile* p = levelProjectiles[i].get();
+        float xspeed = p->GetXSpeed();
+        float yspeed = p->GetYSpeed();
+        yspeed += (gravity/fps);
+        p->SetNewSpeedVector(xspeed,yspeed);
+        p->Update(window,fps);
+    }
+
+    /// step 3: any projectiles that hit any collidableobject are informed
+    for(int i=0; i<levelProjectiles.size(); i++)
+    {
+        bool removeProjectile = false;
+
+        Projectile* p = levelProjectiles[i].get();
+        float ypos = p->yPos;
+        float xpos = p->xPos;
+        HitboxFrame tmp;
+        tmp.time = 0;
+        tmp.g_x = 0;
+        tmp.g_y = 0;
+        tmp.clearVertices();
+        tmp.addVertex(-3,-1); /// "top left"
+        tmp.addVertex(3,-1); /// "top right"
+        tmp.addVertex(-3,1); /// "bottom left"
+        tmp.addVertex(3,1); /// "bottom right"
+        tmp.rotation = -p->angle;
+
+        if(ypos>floorY)
+        {
+            removeProjectile = true;
+        }
+
+        ///calculate projectile damage
+        ///and pass it to a special vector called collisionData
+        ///which passes whatever you'd like to the collided animation object
+        ///so you can put anything and react with it in the individual entity classes
+        ///in projectiles' case, im transferring the damage dealt
+
+        int minDmg = p->mindmg;
+        int maxDmg = p->maxdmg;
+        int bound = maxDmg-minDmg+1;
+        int ranDmg = rand() % bound;
+        int total = minDmg + ranDmg;
+
+        ///sending damage dealt
+        vector<string> collisionData = {to_string(total)};
+
+        ///retrieve collision event
+        vector<CollisionEvent> cevent;
+
+        ///check whether the projectile was on enemy side or ally side
+        if(!p->enemy)
+        {
+            ///Do collisions for all entities (ally projectiles)
+            cevent = DoCollisionForObject(&tmp,xpos,ypos,p->projectileID,collisionData);
+        }
+        else
+        {
+            ///Do collisions for all units (enemy projectiles)
+            cevent = DoCollisionForUnit(&tmp,xpos,ypos,p->projectileID,collisionData);
+        }
+
+        for(int e=0; e<cevent.size(); e++)
+        {
+            if(cevent[e].collided)
+            {
+                if(cevent[e].isCollidable)
+                {
+                    removeProjectile = true;
+                }
+
+                ///add damage counter
+                if(cevent[e].isAttackable)
+                addDmgCounter(0, total, xpos, ypos, qualitySetting, resSetting);
+            }
+        }
+
+        p->Draw(window,fps);
+
+        if(removeProjectile)
+        pr_e.push_back(i);
+    }
+
+    return pr_e;
 }
 
 void MissionController::DrawUnitThumbs(sf::RenderWindow& window)
@@ -2199,6 +2338,28 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
             if(entity->getGlobalPosition().x < (camera.followobject_x)/(window.getSize().x / float(1280))-600)
             entity->offbounds = true;
 
+            if(entity->doAttack())
+            {
+                ///ID 6 = Kirajin Yari
+                if(entity->getEntityID() == 6)
+                {
+                    cout << "Entity " << i << " threw a spear!" << endl;
+
+                    float rand_hs = (rand() % 1000) / float(10);
+                    float rand_vs = (rand() % 1000) / float(10);
+
+                    float rand_rad = (rand() % 200000000) / float(1000000000);
+
+                    float mindmg = 1;
+                    float maxdmg = 10;
+
+                    float xpos = entity->getGlobalPosition().x+entity->hitBox.left+entity->hitBox.width/2;
+                    float ypos = entity->getGlobalPosition().y+entity->hitBox.top+entity->hitBox.height/2;
+
+                    spawnProjectile(xpos, ypos, 800, -450-rand_hs, -450+rand_vs, -2.58 + rand_rad, maxdmg, mindmg, 0, true);
+                }
+            }
+
             entity->Draw(window);
         }
 
@@ -2389,6 +2550,7 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
     {
         missionEnd = true;
         failure = true;
+        rhythm.Stop();
     }
 
     return units_rm;
@@ -2436,10 +2598,7 @@ void MissionController::Update(sf::RenderWindow &window, float cfps, InputContro
 
     /** Draw projectiles **/
 
-    for(int i=0; i<levelProjectiles.size(); i++)
-    {
-        levelProjectiles[i].get()->Draw(window,fps);
-    }
+    vector<int> pr_rm = DrawProjectiles(window);
 
     /** Draw hitboxes **/
 
@@ -2626,7 +2785,7 @@ void MissionController::Update(sf::RenderWindow &window, float cfps, InputContro
 
     /** Remove vector objects that are no longer in use **/
 
-    DoVectorCleanup(units_rm, dmg_rm, tlo_rm);
+    DoVectorCleanup(units_rm, dmg_rm, tlo_rm, pr_rm);
 }
 void MissionController::FinishLastCutscene()
 {

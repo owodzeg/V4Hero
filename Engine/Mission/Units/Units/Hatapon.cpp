@@ -14,6 +14,9 @@ void Hatapon::LoadConfig(Config *thisConfigs)
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\unit\\hatapon.p4a");
+
+    isCollidable = true;
+    isAttackable = true;
 }
 
 void Hatapon::Draw(sf::RenderWindow& window)
@@ -22,8 +25,25 @@ void Hatapon::Draw(sf::RenderWindow& window)
     AnimatedObject::Draw(window);
 }
 
-void Hatapon::OnCollide(CollidableObject* otherObject)
+void Hatapon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<string> collisionData)
 {
+    /// note we don't call the parent function. It does nothing, it just serves
+    /// as an incomplete function to be overridden by child classes.
+
+    cout << "Hatapon::OnCollide" << endl;
+
+    if(collisionData.size() > 0)
+    {
+        if(isCollidable)
+        {
+            ///collisionData received from Projectile, process it
+            int dmgDealt = atoi(collisionData[0].c_str());
+            current_hp -= dmgDealt;
+
+            cout << "I received " << to_string(dmgDealt) << "damage, my HP is " << current_hp << endl;
+        }
+    }
+
     /// note we don't call the parent function. It does nothing, it just serves
     /// as an incomplete function to be overridden by child classes.
 }

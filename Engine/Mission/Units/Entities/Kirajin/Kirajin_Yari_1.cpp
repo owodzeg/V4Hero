@@ -18,6 +18,16 @@ void Kirajin_Yari_1::LoadConfig(Config *thisConfigs)
     AnimatedObject::setAnimationSegment("idle_armed_focused");
 }
 
+bool Kirajin_Yari_1::doAttack()
+{
+    if(threw)
+    {
+        threw = false;
+        return true;
+    }
+    return false;
+}
+
 void Kirajin_Yari_1::Draw(sf::RenderWindow& window)
 {
     if(dead)
@@ -92,8 +102,19 @@ void Kirajin_Yari_1::Draw(sf::RenderWindow& window)
 
                     if(getAnimationSegment() == "attack_prefever")
                     {
+                        if(getAnimationPos() >= 0.4666)
+                        {
+                            if(canThrow)
+                            {
+                                threw = true;
+                                canThrow = false;
+                            }
+                        }
+
                         if(cur_pos >= anim_end)
                         {
+                            canThrow = true;
+                            threw = false;
                             attack_timer.restart();
                         }
                     }
