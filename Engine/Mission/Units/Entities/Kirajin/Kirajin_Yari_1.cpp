@@ -150,6 +150,31 @@ void Kirajin_Yari_1::Draw(sf::RenderWindow& window)
     /// call the parent function to draw the animations
     AnimatedObject::Draw(window);
 }
+
+void Kirajin_Yari_1::die()
+{
+    if(!dead)
+    {
+        //cout << "Kirajin_Yari_1::die()" << endl;
+
+        dead = true;
+        hspeed = 340;
+        vspeed = -250;
+
+        //cout << global_y << " " << floorY << endl;
+        //cout << "Set local_y = " << global_y - floorY << endl;
+        local_y = global_y - floorY;
+        //cout << "Set global_y = " << global_y + floorY << endl;
+        global_y -= local_y;
+
+        isCollidable = false;
+        isAttackable = false;
+
+        AnimatedObject::setAnimationSegment("stagger", true);
+        death_timer.restart();
+    }
+}
+
 void Kirajin_Yari_1::OnCollide(CollidableObject* otherObject, int collidedWith, vector<string> collisionData)
 {
     cout << "Kirajin_Yari_1::OnCollide" << endl;
@@ -174,15 +199,7 @@ void Kirajin_Yari_1::OnCollide(CollidableObject* otherObject, int collidedWith, 
 
         if(curHP <= 0)
         {
-            dead = true;
-            hspeed = 340;
-            vspeed = -250;
-
-            isCollidable = false;
-            isAttackable = false;
-
-            AnimatedObject::setAnimationSegment("stagger", true);
-            death_timer.restart();
+            die();
         }
     }
 

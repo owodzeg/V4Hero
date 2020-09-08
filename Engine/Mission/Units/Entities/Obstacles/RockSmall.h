@@ -10,7 +10,6 @@ using namespace std;
 class RockSmall : public Entity
 {
     public:
-    bool dead = false;
     bool droppeditem = false;
     sf::Clock death_timer;
 

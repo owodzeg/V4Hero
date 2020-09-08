@@ -10,7 +10,6 @@ using namespace std;
 class KirajinHut : public Entity
 {
     public:
-    bool dead = false;
     bool droppeditem = false;
     float shake = 0;
     bool negative = false;

@@ -10,6 +10,9 @@ class Entity : public CollidableObject
     public:
     int entityID = -1;
     int spawnOrderID = -1;
+    bool dead = false;
+
+    float floorY = 0;
 
     enum EntityTypes
     {
@@ -42,6 +45,7 @@ class Entity : public CollidableObject
     virtual int getEntityID();
     virtual void doRhythm(std::string current_song, std::string current_drum, int combo, int realcombo, bool advanced_prefever, float beatBounce, float satisfaction);
     virtual bool doAttack();
+    virtual void die();
     virtual void LoadConfig(Config *thisConfigs, std::string unitParamPath);
 };
 

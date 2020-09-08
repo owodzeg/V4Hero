@@ -26,6 +26,12 @@ bool Entity::doAttack()
     return false;
 }
 
+void Entity::die()
+{
+    ///Kills the entity, if entity has a method scripted
+    ///Made so it can be called outside of the entity function and do the same work
+}
+
 void Entity::LoadConfig(Config *thisConfigs, std::string unitParamPath)
 {
     cout << "Entity::LoadConfig() was not overriden by child class" << endl;
