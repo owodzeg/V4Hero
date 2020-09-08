@@ -8,7 +8,8 @@
 
 Kirajin_Yari_1::Kirajin_Yari_1()
 {
-
+    /// Kirajin to be placed on watchtowers, stones, etc.
+    /// No significant AI other than occasionally throwing spears is necessary.
 }
 
 void Kirajin_Yari_1::LoadConfig(Config *thisConfigs)
@@ -191,8 +192,8 @@ void Kirajin_Yari_1::OnCollide(CollidableObject* otherObject, int collidedWith, 
 
                 cout << "I received " << to_string(dmgDealt) << "damage, my HP is " << curHP << "/10" << endl;
 
-                hspeed = 120 + (rand() % 50);
-                vspeed = -170;
+                //hspeed = 120 + (rand() % 50);
+                //vspeed = -170;
                 AnimatedObject::setAnimationSegment("stagger", true);
             }
         }
