@@ -77,6 +77,19 @@ void PataDialogBox::Draw(sf::RenderWindow& window, float fps, InputController& i
 
         float resRatio = window.getSize().x / float(1280);
 
+        if(!rendered)
+        {
+            t_dialogType.update(window);
+            t_dialogText.update(window);
+
+            for(int i=0; i<t_options.size(); i++)
+            {
+                t_options[i].update(window);
+            }
+
+            rendered = true;
+        }
+
         Readjust();
 
         rr_shadow.Create(width+2, height+2, 20, window.getSize().x / float(1280), sf::Color(0,0,0,96));
@@ -97,6 +110,8 @@ void PataDialogBox::Draw(sf::RenderWindow& window, float fps, InputController& i
         t_dialogText.setOrigin(t_dialogText.getLocalBounds().width/2, 0);
         t_dialogText.setPosition(x, y-rr_main.ory+t_dialogType.getLocalBounds().height);
         t_dialogText.draw(window);
+
+        cout << "stuff: " << rr_main.orx << " " << rr_main.ory << endl;
 
         highlight.setSize(sf::Vector2f((width+40)*resRatio, 30*resRatio));
         highlight.setFillColor(sf::Color(0,200,0,255));

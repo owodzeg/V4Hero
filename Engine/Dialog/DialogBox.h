@@ -12,6 +12,8 @@ class PataDialogBox
     public:
     int id = 0; ///for finding what dialog box is what
 
+    bool rendered = false;
+
     RoundedRect rr_main;
     RoundedRect rr_shadow;
     PText t_dialogType, t_dialogText;
