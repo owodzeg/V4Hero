@@ -1387,21 +1387,105 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, InputCon
     {
         PlayableUnit* unit = units[i].get();
 
-        if(temp_pos <= unit->getGlobalPosition().x)
+        if(temp_pos <= unit->getGlobalPosition().x+unit->local_x)
         {
-            temp_pos = unit->getGlobalPosition().x;
+            temp_pos = unit->getGlobalPosition().x+unit->local_x;
             farthest_id = i;
         }
     }
 
     /** Patapon movement **/
 
-    if((camera.walk) || ((missionEnd) && (!failure)))
+    if(farthest_id != -1)
     {
-        if(farthest_id != -1)
-        {
-            PlayableUnit* farthest_unit = units[farthest_id].get();
+        PlayableUnit* farthest_unit = units[farthest_id].get();
 
+        bool foundCollision = false;
+
+        for(int i=0; i<tangibleLevelObjects.size(); i++)
+        {
+            for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
+            {
+                //cout << "tangibleLevelObjects[" << i << "][" << h << "]" << endl;
+
+                float proposedXPos = farthest_unit->getGlobalPosition().x + farthest_unit->local_x + 40;
+
+                /// NEW COLLISION SYSTEM:
+                /// Separating axis theorem
+                /// we check an axis at a time
+                /// 8 axes in total, aligned with the normal of each face of each shape
+                /// thankfully because we are only using rectangles, there are two pairs of parallel sides
+                /// so we only need to check 4 axes, as the other 4 are all parallel.
+                ///
+                /// in each axis we calculate the vector projection onto the axis between the origin and each corner of each box
+                /// and find the maximum projection and minimum projection for each shape
+                /// then we check if min2>max1 or min1>max2 there has been a collision in this axis
+                /// there has to be a collision in ALL axes for actual collision to be confirmed,
+                /// so we can stop checking if we find a single non-collision.
+
+                /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
+
+                float currentAxisAngle = 0;
+                HitboxFrame tmp = farthest_unit->hitboxes[0].getRect();
+
+                CollidableObject* target = tangibleLevelObjects[i].get();
+
+                bool isCollision = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
+                if (!isCollision)
+                {
+                    continue;
+                }
+                //cout<<"COLLISION FOUND IN axis 1"<<endl;
+
+                /// axis 2: obj1 "up"
+                currentAxisAngle = 3.14159265358/2;
+                bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
+                if (!isCollision2)
+                {
+                    continue;
+                }
+                //cout<<"COLLISION FOUND IN axis 2 (up)"<<endl;
+
+                /// axis 3: obj2 "up" (we add the 90 degrees from before to its current rotation)
+                currentAxisAngle = target->hitboxes[h].hitboxObject.rotation + currentAxisAngle;
+
+                bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
+                if (!isCollision3)
+                {
+                    continue;
+                }
+                //cout<<"COLLISION FOUND IN axis 3 (up2)"<<endl;
+
+                /// axis 4: obj2 "sideways"
+                currentAxisAngle = target->hitboxes[h].hitboxObject.rotation;
+
+                bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
+                if (!isCollision4)
+                {
+                    continue;
+                }
+
+                /// we have a collision
+                if (isCollision&&isCollision2&&isCollision3&&isCollision4)
+                {
+                    ///check if unit should be prevented from passing through
+                    if(target->isCollidable)
+                    foundCollision = true;
+
+                    ///the entity can still react
+                    target->OnCollide(target);
+
+                    std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
+                }
+                else
+                {
+                    cout<<"Something is very wrong"<<endl;
+                }
+            }
+        }
+
+        if((camera.walk) || ((missionEnd) && (!failure)))
+        {
             float pataDistance = 240 * booster;
 
             float diff = (Smoothstep(walkClock.getElapsedTime().asSeconds()/2)*pataDistance)-(Smoothstep(prevTime/2)*pataDistance);
@@ -1419,90 +1503,6 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, InputCon
 
             /// right now it is very basic checking only in X axis. Jumping over a
             /// kacheek will not be possible.
-
-            bool foundCollision = false;
-            for(int i=0; i<tangibleLevelObjects.size(); i++)
-            {
-                for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
-                {
-                    //cout << "tangibleLevelObjects[" << i << "][" << h << "]" << endl;
-
-                    /// NEW COLLISION SYSTEM:
-                    /// Separating axis theorem
-                    /// we check an axis at a time
-                    /// 8 axes in total, aligned with the normal of each face of each shape
-                    /// thankfully because we are only using rectangles, there are two pairs of parallel sides
-                    /// so we only need to check 4 axes, as the other 4 are all parallel.
-                    ///
-                    /// in each axis we calculate the vector projection onto the axis between the origin and each corner of each box
-                    /// and find the maximum projection and minimum projection for each shape
-                    /// then we check if min2>max1 or min1>max2 there has been a collision in this axis
-                    /// there has to be a collision in ALL axes for actual collision to be confirmed,
-                    /// so we can stop checking if we find a single non-collision.
-
-
-
-
-                    /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
-
-                    float currentAxisAngle = 0;
-                    HitboxFrame tmp = farthest_unit->hitboxes[0].getRect();
-
-                    CollidableObject* target = tangibleLevelObjects[i].get();
-
-                    bool isCollision = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
-                    if (!isCollision)
-                    {
-                        continue;
-                    }
-                    //cout<<"COLLISION FOUND IN axis 1"<<endl;
-
-                    /// axis 2: obj1 "up"
-                    currentAxisAngle = 3.14159265358/2;
-                    bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
-                    if (!isCollision2)
-                    {
-                        continue;
-                    }
-                    //cout<<"COLLISION FOUND IN axis 2 (up)"<<endl;
-
-                    /// axis 3: obj2 "up" (we add the 90 degrees from before to its current rotation)
-                    currentAxisAngle = target->hitboxes[h].hitboxObject.rotation + currentAxisAngle;
-
-                    bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
-                    if (!isCollision3)
-                    {
-                        continue;
-                    }
-                    //cout<<"COLLISION FOUND IN axis 3 (up2)"<<endl;
-
-                    /// axis 4: obj2 "sideways"
-                    currentAxisAngle = target->hitboxes[h].hitboxObject.rotation;
-
-                    bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
-                    if (!isCollision4)
-                    {
-                        continue;
-                    }
-
-                    /// we have a collision
-                    if (isCollision&&isCollision2&&isCollision3&&isCollision4)
-                    {
-                        ///check if unit should be prevented from passing through
-                        if(target->isCollidable)
-                        foundCollision = true;
-
-                        ///the entity can still react
-                        target->OnCollide(target);
-
-                        std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
-                    }
-                    else
-                    {
-                        cout<<"Something is very wrong"<<endl;
-                    }
-                }
-            }
 
             /// if the new position is inside a kacheek, don't move. If we found anything,
             if (!foundCollision)
