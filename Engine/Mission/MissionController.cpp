@@ -385,6 +385,8 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
     {
         entity->setEntityID(entityID);
 
+        entity->floorY = baseY; ///in case Y gets overriden, save the position where the floor is
+
         if(overrideHP > 0)
         baseHP = overrideHP;
 
@@ -2344,6 +2346,7 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
         }
         else
         {
+            ///Check if entity is off bounds, if yes, don't render it.
             entity->offbounds = false;
 
             if(entity->getGlobalPosition().x > (camera.followobject_x)/(window.getSize().x / float(1280))+1600)
@@ -2352,6 +2355,7 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
             if(entity->getGlobalPosition().x < (camera.followobject_x)/(window.getSize().x / float(1280))-600)
             entity->offbounds = true;
 
+            ///Check for entity attack measures
             if(entity->doAttack())
             {
                 ///ID 6 = Kirajin Yari
@@ -2371,6 +2375,36 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
                     float ypos = entity->getGlobalPosition().y+entity->hitBox.top+entity->hitBox.height/2;
 
                     spawnProjectile(xpos, ypos, 800, -450-rand_hs, -450+rand_vs, -2.58 + rand_rad, maxdmg, mindmg, 0, true);
+                }
+            }
+
+            ///Check if entity's parent is still alive, if not, kill the entity
+            int parent = entity->parent;
+
+            ///Check if parent is defined
+            if(parent != -1)
+            {
+                ///Look for parent
+                auto it = find_if(tangibleLevelObjects.begin(), tangibleLevelObjects.end(), [&parent](const std::unique_ptr<Entity>& obj) {return obj.get()->spawnOrderID == parent;});
+
+                if(it != tangibleLevelObjects.end())
+                {
+                    ///Parent has been found!
+
+                    auto index = std::distance(tangibleLevelObjects.begin(), it);
+                    //cout << "My parent is currently residing at " << index << endl;
+
+                    ///Check if it's dead
+                    if(tangibleLevelObjects[index].get()->dead)
+                    {
+                        ///Kill the entity
+                        entity->die();
+                    }
+                }
+                else ///Parent can't be found
+                {
+                    ///Kill the entity
+                    entity->die();
                 }
             }
 
