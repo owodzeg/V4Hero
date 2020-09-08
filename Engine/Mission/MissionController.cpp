@@ -1350,8 +1350,8 @@ bool MissionController::DoCollisionStepInAxis(float currentAxisAngle,HitboxFrame
         float maxProjectionObj1 = max(max(max(proj1,proj2),proj3),proj4);
         float minProjectionObj1 = min(min(min(proj1,proj2),proj3),proj4);
 
-        float maxProjectionObj2 = currentHitboxFrame->maxProjection(currentAxisAngle, targetObject->global_x,targetObject->global_y);
-        float minProjectionObj2 = currentHitboxFrame->minProjection(currentAxisAngle, targetObject->global_x,targetObject->global_y);
+        float maxProjectionObj2 = currentHitboxFrame->maxProjection(currentAxisAngle, targetObject->global_x+targetObject->local_x,targetObject->global_y+targetObject->local_y);
+        float minProjectionObj2 = currentHitboxFrame->minProjection(currentAxisAngle, targetObject->global_x+targetObject->local_x,targetObject->global_y+targetObject->local_y);
         if(maxProjectionObj1>minProjectionObj2 && minProjectionObj1<maxProjectionObj2)
         {
             return true;
@@ -2202,8 +2202,8 @@ void MissionController::DrawHitboxes(sf::RenderWindow& window)
                 for (int j=0; j<currentVertices.size(); j++)
                 {
                     sf::Vector2f currentPoint = currentVertices[j];
-                    currentPoint.x = currentPoint.x + currentHitbox->g_x + unit->global_x;
-                    currentPoint.y = currentPoint.y + currentHitbox->g_y + unit->global_y;
+                    currentPoint.x = currentPoint.x + currentHitbox->g_x + unit->global_x + unit->local_x;
+                    currentPoint.y = currentPoint.y + currentHitbox->g_y + unit->global_y + unit->local_y;
                     //cout<<"DRAWING POINT: "<<currentVertices.size()<<" x: "<<currentPoint.x<<" y: "<<currentPoint.y<<endl;
                     sf::CircleShape shape(5);
                     shape.setFillColor(sf::Color(100, 250, 50));
@@ -2235,8 +2235,8 @@ void MissionController::DrawHitboxes(sf::RenderWindow& window)
                 {
 
                     sf::Vector2f currentPoint = currentVertices[j];
-                    currentPoint.x = currentPoint.x + currentHitbox->g_x + entity->global_x;
-                    currentPoint.y = currentPoint.y + currentHitbox->g_y + entity->global_y;
+                    currentPoint.x = currentPoint.x + currentHitbox->g_x + entity->global_x + entity->local_x;
+                    currentPoint.y = currentPoint.y + currentHitbox->g_y + entity->global_y + entity->local_y;
                     //cout<<"DRAWING POINT: "<<currentVertices.size()<<" x: "<<currentPoint.x<<" y: "<<currentPoint.y<<endl;
                     sf::CircleShape shape(5);
                     shape.setFillColor(sf::Color(100, 250, 50));
@@ -2491,7 +2491,7 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
             {
                 Entity* closest_entity = tangibleLevelObjects[closest_entity_id].get();
 
-                unit->entity_distance = abs((unit->getGlobalPosition().x) - closest_entity->getGlobalPosition().x) - 110;
+                unit->entity_distance = abs((unit->getGlobalPosition().x) - closest_entity->getGlobalPosition().x - closest_entity->hitboxes[0].getGlobalPosition().x) - 110;
 
                 if((closest_entity->entityType == Entity::EntityTypes::HOSTILE) && (inRange))
                 {
