@@ -375,6 +375,19 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
             break;
         }
+        case 16:
+        {
+            unique_ptr<Kirajin_Yari_2> entity = make_unique<Kirajin_Yari_2>();
+            entity.get()->LoadConfig(missionConfig);
+
+            ///To be replaced with param file
+            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+            if(spawn)
+            tangibleLevelObjects.push_back(std::move(entity));
+
+            break;
+        }
     }
 
     Entity* entity = tangibleLevelObjects[tangibleLevelObjects.size()-1].get();
@@ -1033,7 +1046,20 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, In
         }
     }**/
 
-    if(inputCtrl.isKeyPressed(InputController::Keys::START))
+
+    if((inputCtrl.isKeyHeld(InputController::Keys::LTRIGGER)) && (inputCtrl.isKeyHeld(InputController::Keys::RTRIGGER)) && (inputCtrl.isKeyHeld(InputController::Keys::SQUARE)))
+    {
+        if(inputCtrl.isKeyPressed(InputController::Keys::SELECT))
+        {
+            std::vector<std::string> a = {"Show hitboxes","Hide hitboxes","Heal units"};
+
+            PataDialogBox db;
+            db.Create(f_font, "Debug menu", a, missionConfig->GetInt("textureQuality"));
+            db.id = 999;
+            dialogboxes.push_back(db);
+        }
+    }
+    else if(inputCtrl.isKeyPressed(InputController::Keys::START))
     {
         std::vector<std::string> a = {Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"nav_no"))};
 
@@ -2358,8 +2384,8 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
             ///Check for entity attack measures
             if(entity->doAttack())
             {
-                ///ID 6 = Kirajin Yari
-                if(entity->getEntityID() == 6)
+                ///ID 6,16 = Kirajin Yari
+                if((entity->getEntityID() == 6) || (entity->getEntityID() == 16))
                 {
                     cout << "Entity " << i << " threw a spear!" << endl;
 
@@ -2660,7 +2686,6 @@ void MissionController::Update(sf::RenderWindow &window, float cfps, InputContro
 
     /** Draw hitboxes **/
 
-    bool showHitboxes = false;
     if(showHitboxes)
     {
         DrawHitboxes(window);
@@ -2806,15 +2831,46 @@ void MissionController::Update(sf::RenderWindow &window, float cfps, InputContro
                         missionEnd = true;
                         failure = true;
                         rhythm.Stop();
-
-                        break;
                     }
+                    else if(dialogboxes[dialogboxes.size()-1].id == 999)
+                    {
+                        cout << "Enable hitboxes" << endl;
+                        showHitboxes = true;
+                        dialogboxes[dialogboxes.size()-1].Close();
+                    }
+
+                    break;
                 }
 
                 case 1:
                 {
-                    cout << "Back to Mission" << endl;
-                    dialogboxes[dialogboxes.size()-1].Close();
+                    if(dialogboxes[dialogboxes.size()-1].id == 0)
+                    {
+                        cout << "Back to Mission" << endl;
+                        dialogboxes[dialogboxes.size()-1].Close();
+                    }
+                    else if(dialogboxes[dialogboxes.size()-1].id == 999)
+                    {
+                        cout << "Disable hitboxes" << endl;
+                        showHitboxes = false;
+                        dialogboxes[dialogboxes.size()-1].Close();
+                    }
+
+                    break;
+                }
+
+                case 2:
+                {
+                    if(dialogboxes[dialogboxes.size()-1].id == 999)
+                    {
+                        cout << "Heal all units" << endl;
+                        for(int u=0; u<units.size(); u++)
+                        {
+                            units[u].get()->current_hp = units[u].get()->max_hp;
+                        }
+
+                        dialogboxes[dialogboxes.size()-1].Close();
+                    }
 
                     break;
                 }

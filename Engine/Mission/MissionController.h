@@ -38,6 +38,8 @@ class MissionController
 
     ControlTips ctrlTips;
 
+    bool showHitboxes = false;
+
     Background test_bg;
     Rhythm rhythm;
     bool isInitialized=false;
