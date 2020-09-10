@@ -26,6 +26,11 @@ bool Entity::doAttack()
     return false;
 }
 
+void Entity::doMessages(sf::RenderWindow& window, float fps, InputController& inputCtrl)
+{
+    //cout << "Entity::doMessages() was not overriden by child class" << endl;
+}
+
 void Entity::die()
 {
     ///Kills the entity, if entity has a method scripted

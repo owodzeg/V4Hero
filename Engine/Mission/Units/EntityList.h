@@ -18,6 +18,7 @@
 #include "Entities/Nature/Grass2.h"
 
 #include "Entities/Kirajin/Kirajin_Yari_1.h"
+#include "Entities/Kirajin/Kirajin_Yari_2.h"
 
 #include "Entities/Buildings/KirajinHut.h"
 #include "Entities/Buildings/KirajinGuardTower.h"

@@ -3,6 +3,8 @@
 
 #include <SFML/Graphics.hpp>
 #include "../../Config.h"
+#include "../../Input/InputController.h"
+#include "../../Dialog/MessageCloud.h"
 #include "CollidableObject.h"
 
 class Entity : public CollidableObject
@@ -40,11 +42,18 @@ class Entity : public CollidableObject
     int layer = 0; ///rendering priority
     int parent = -1; ///if entity is bound to any other entity
 
+    float distance_to_unit = 0;
+
+    std::vector<std::string> additional_data; ///additional data passed from mission file that can be used for exclusive cases
+
+    std::vector<MessageCloud> messageclouds;
+
     Entity();
     virtual void setEntityID(int new_entityID);
     virtual int getEntityID();
     virtual void doRhythm(std::string current_song, std::string current_drum, int combo, int realcombo, bool advanced_prefever, float beatBounce, float satisfaction);
     virtual bool doAttack();
+    virtual void doMessages(sf::RenderWindow& window, float fps, InputController& inputCtrl); ///manage message clouds
     virtual void die();
     virtual void LoadConfig(Config *thisConfigs, std::string unitParamPath);
 };
