@@ -162,6 +162,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         case 0:
         {
             unique_ptr<EndFlag> entity = make_unique<EndFlag>();
+            entity.get()->additional_data = additional_data;
             entity.get()->LoadConfig(missionConfig);
 
             ///To be replaced with param file
@@ -175,6 +176,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         case 1:
         {
             unique_ptr<FeverWorm> entity = make_unique<FeverWorm>();
+            entity.get()->additional_data = additional_data;
             entity.get()->LoadConfig(missionConfig);
 
             ///To be replaced with param file
@@ -188,6 +190,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         case 2:
         {
             unique_ptr<Kacheek> entity = make_unique<Kacheek>();
+            entity.get()->additional_data = additional_data;
             entity.get()->LoadConfig(missionConfig);
 
             ///To be replaced with param file
@@ -201,6 +204,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         case 3:
         {
             unique_ptr<Grass1> entity = make_unique<Grass1>();
+            entity.get()->additional_data = additional_data;
             entity.get()->LoadConfig(missionConfig);
 
             ///To be replaced with param file
@@ -214,6 +218,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         case 4:
         {
             unique_ptr<Grass2> entity = make_unique<Grass2>();
+            entity.get()->additional_data = additional_data;
             entity.get()->LoadConfig(missionConfig);
 
             ///To be replaced with param file
@@ -248,6 +253,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         case 6:
         {
             unique_ptr<Kirajin_Yari_1> entity = make_unique<Kirajin_Yari_1>();
+            entity.get()->additional_data = additional_data;
             entity.get()->LoadConfig(missionConfig);
 
             ///To be replaced with param file
@@ -261,6 +267,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         case 7:
         {
             unique_ptr<TreasureChest> entity = make_unique<TreasureChest>();
+            entity.get()->additional_data = additional_data;
             entity.get()->LoadConfig(missionConfig);
 
             ///To be replaced with param file
@@ -274,6 +281,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         case 8:
         {
             unique_ptr<RockBig> entity = make_unique<RockBig>();
+            entity.get()->additional_data = additional_data;
             entity.get()->LoadConfig(missionConfig);
 
             ///To be replaced with param file
@@ -287,6 +295,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         case 9:
         {
             unique_ptr<RockSmall> entity = make_unique<RockSmall>();
+            entity.get()->additional_data = additional_data;
             entity.get()->LoadConfig(missionConfig);
 
             ///To be replaced with param file
@@ -300,6 +309,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         case 10:
         {
             unique_ptr<WoodenSpikes> entity = make_unique<WoodenSpikes>();
+            entity.get()->additional_data = additional_data;
             entity.get()->LoadConfig(missionConfig);
 
             ///To be replaced with param file
@@ -313,6 +323,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         case 11:
         {
             unique_ptr<RockPile> entity = make_unique<RockPile>();
+            entity.get()->additional_data = additional_data;
             entity.get()->LoadConfig(missionConfig);
 
             ///To be replaced with param file
@@ -326,6 +337,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         case 12:
         {
             unique_ptr<KirajinHut> entity = make_unique<KirajinHut>();
+            entity.get()->additional_data = additional_data;
             entity.get()->LoadConfig(missionConfig);
 
             ///To be replaced with param file
@@ -339,6 +351,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         case 13:
         {
             unique_ptr<KirajinGuardTower> entity = make_unique<KirajinGuardTower>();
+            entity.get()->additional_data = additional_data;
             entity.get()->LoadConfig(missionConfig);
 
             ///To be replaced with param file
@@ -352,6 +365,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         case 14:
         {
             unique_ptr<KirajinPoweredTowerSmall> entity = make_unique<KirajinPoweredTowerSmall>();
+            entity.get()->additional_data = additional_data;
             entity.get()->LoadConfig(missionConfig);
 
             ///To be replaced with param file
@@ -365,6 +379,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         case 15:
         {
             unique_ptr<KirajinPoweredTowerBig> entity = make_unique<KirajinPoweredTowerBig>();
+            entity.get()->additional_data = additional_data;
             entity.get()->LoadConfig(missionConfig);
 
             ///To be replaced with param file
@@ -378,6 +393,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         case 16:
         {
             unique_ptr<Kirajin_Yari_2> entity = make_unique<Kirajin_Yari_2>();
+            entity.get()->additional_data = additional_data;
             entity.get()->LoadConfig(missionConfig);
 
             ///To be replaced with param file
@@ -421,6 +437,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
         entity->layer = layer;
         entity->parent = parent;
+        entity->additional_data = additional_data;
     }
     else
     {
@@ -931,8 +948,16 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 
                             entityParam.close();
 
+                            vector<string> additional_data;
+
+                            if(spawn.size() >= 15)
+                            {
+                                ///additional data exists
+                                additional_data = Func::Split(spawn[14], ';');
+                            }
+
                             cout << "Spawning an entity: " << entity_list[entityID] << endl;
-                            spawnEntity(entity_list[entityID],entityID,baseHP,atoi(spawn[1].c_str()),atoi(spawn[2].c_str()),baseY,atoi(spawn[3].c_str()),atoi(spawn[4].c_str()),atoi(spawn[5].c_str()),sf::Color(atoi(spawn[6].c_str()),atoi(spawn[7].c_str()),atoi(spawn[8].c_str()),atoi(spawn[9].c_str())), collidable, attackable, atoi(spawn[10].c_str()), atoi(spawn[13].c_str()), atoi(spawn[12].c_str()), atoi(spawn[11].c_str()), loot_table);
+                            spawnEntity(entity_list[entityID],entityID,baseHP,atoi(spawn[1].c_str()),atoi(spawn[2].c_str()),baseY,atoi(spawn[3].c_str()),atoi(spawn[4].c_str()),atoi(spawn[5].c_str()),sf::Color(atoi(spawn[6].c_str()),atoi(spawn[7].c_str()),atoi(spawn[8].c_str()),atoi(spawn[9].c_str())), collidable, attackable, atoi(spawn[10].c_str()), atoi(spawn[13].c_str()), atoi(spawn[12].c_str()), atoi(spawn[11].c_str()), loot_table, additional_data);
                         }
                     }
                 }
@@ -2357,6 +2382,21 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
 {
     vector<int> tlo_rm;
 
+    /** Find the farthest unit in your army (for calculations) **/
+    int farthest_id = -1;
+    float temp_pos = -9999;
+
+    for(int i=0; i<units.size(); i++)
+    {
+        PlayableUnit* unit = units[i].get();
+
+        if(temp_pos <= unit->getGlobalPosition().x)
+        {
+            temp_pos = unit->getGlobalPosition().x;
+            farthest_id = i;
+        }
+    }
+
     for (int i=0; i<tangibleLevelObjects.size(); i++)
     {
         Entity* entity = tangibleLevelObjects[i].get();
@@ -2380,6 +2420,8 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
 
             if(entity->getGlobalPosition().x < (camera.followobject_x)/(window.getSize().x / float(1280))-600)
             entity->offbounds = true;
+
+            entity->distance_to_unit = abs(temp_pos - entity->getGlobalPosition().x);
 
             ///Check for entity attack measures
             if(entity->doAttack())
@@ -2683,6 +2725,13 @@ void MissionController::Update(sf::RenderWindow &window, float cfps, InputContro
     /** Draw projectiles **/
 
     vector<int> pr_rm = DrawProjectiles(window);
+
+    /** Draw message clouds **/
+    for(int e=0; e<tangibleLevelObjects.size(); e++)
+    {
+        Entity* entity = tangibleLevelObjects[e].get();
+        entity->doMessages(window, fps, inputCtrl);
+    }
 
     /** Draw hitboxes **/
 

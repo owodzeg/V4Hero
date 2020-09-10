@@ -31,13 +31,14 @@ void MessageCloud::setSize(float new_x, float new_y)
     ysize = new_y;
 }
 
-void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, int q)
+void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bool can_speedup, int q)
 {
     cout << "MessageCloud::Create()" << endl;
 
     timeout = speed;
     regular_timeout = timeout;
     quality = q;
+    speedable = can_speedup;
 
     font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
 
@@ -114,6 +115,14 @@ void MessageCloud::Hide()
     active = false;
 }
 
+void MessageCloud::End()
+{
+    dest_xsize = 0;
+    dest_ysize = 0;
+
+    done = true;
+}
+
 void MessageCloud::NextDialog()
 {
     if(cur_dialog < ptext.size()-1)
@@ -151,11 +160,11 @@ void MessageCloud::Draw(sf::RenderWindow& window, float fps, InputController& in
     if(!firstrender)
     firstrender = true;
 
-    if(inputCtrl.isKeyPressed(InputController::Keys::START))
-    Show();
-
-    if(inputCtrl.isKeyHeld(InputController::Keys::CIRCLE))
-    SpeedUp();
+    if(speedable)
+    {
+        if(inputCtrl.isKeyHeld(InputController::Keys::CIRCLE))
+        SpeedUp();
+    }
 
     if(ready)
     {

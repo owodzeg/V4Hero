@@ -26,6 +26,7 @@
 
 #include "../Dialog/ControlTips.h"
 #include "../Dialog/DialogBox.h"
+#include "../Dialog/MessageCloud.h"
 
 
 class V4Core;
@@ -190,6 +191,7 @@ class MissionController
     int curMissionID = 0;
 
     vector<PataDialogBox> dialogboxes;
+    vector<MessageCloud> messageclouds;
 
     /** Collisions **/
     bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame,AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY);

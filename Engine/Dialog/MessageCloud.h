@@ -50,6 +50,7 @@ class MessageCloud
     bool done = false;
     bool canwrite = false;
     bool firstrender = false;
+    bool speedable = false;
 
     sf::Vector2f startpos;
 
@@ -57,12 +58,13 @@ class MessageCloud
 
     MessageCloud();
     void setSize(float new_x, float new_y);
-    void Create(int speed, sf::Vector2f startpos, sf::Color color, int q);
+    void Create(int speed, sf::Vector2f start_pos, sf::Color color, bool can_speedup, int q);
     void AddDialog(sf::String text, bool nextdialog);
     void NextDialog();
     void SpeedUp();
     void Show();
     void Hide();
+    void End();
     void Draw(sf::RenderWindow& window, float fps, InputController& inputCtrl);
 };
 
