@@ -22,9 +22,18 @@ void Kirajin_Yari_2::LoadConfig(Config *thisConfigs)
     {
         action = HIDING;
     }
-    if(std::find(additional_data.begin(), additional_data.end(), "talk") != additional_data.end())
+
+    for(int i=0; i<additional_data.size(); i++)
     {
-        talk = true;
+        if(additional_data[i] == "hidden")
+        {
+            action = HIDING;
+        }
+        else if(additional_data[i].find("talk") != std::string::npos)
+        {
+            talk_id = additional_data[i].substr(additional_data[i].find_first_of(":")+1);
+            talk = true;
+        }
     }
 }
 
@@ -154,7 +163,7 @@ void Kirajin_Yari_2::doMessages(sf::RenderWindow& window, float fps, InputContro
 
 void Kirajin_Yari_2::Draw(sf::RenderWindow& window)
 {
-    cout << "Kirajin_Yari_2: " << action << " " << getAnimationSegment() << " " << cur_pos << " " << attackmode << " " << attack_timer.getElapsedTime().asSeconds() << " " << walk_clock.getElapsedTime().asSeconds() << " " << distance_to_unit << endl;
+    //cout << "Kirajin_Yari_2: " << action << " " << getAnimationSegment() << " " << cur_pos << " " << attackmode << " " << attack_timer.getElapsedTime().asSeconds() << " " << walk_clock.getElapsedTime().asSeconds() << " " << distance_to_unit << endl;
 
     if(dead)
     {
@@ -198,14 +207,17 @@ void Kirajin_Yari_2::Draw(sf::RenderWindow& window)
         {
             if(walk_clock.getElapsedTime().asSeconds() > 4)
             {
-                if((distance_to_unit > 370) || (distance_to_unit < 520))
+                if(enemy_in_range)
                 {
-                    if(jumped == false)
+                    if((distance_to_unit > 370) || (distance_to_unit < 520))
                     {
-                        action = WALK;
-                        dest_distance = 370 + (rand() % 150);
+                        if(jumped == false)
+                        {
+                            action = WALK;
+                            dest_distance = 370 + (rand() % 150);
 
-                        walk_clock.restart();
+                            walk_clock.restart();
+                        }
                     }
                 }
             }
@@ -257,16 +269,6 @@ void Kirajin_Yari_2::Draw(sf::RenderWindow& window)
 
                 setAnimationSegment("walk_yari_focused", true);
 
-                if(talk)
-                {
-                    MessageCloud tmp;
-                    tmp.Create(20, sf::Vector2f(getGlobalPosition().x-5, getGlobalPosition().y-25), sf::Color(222,102,102,255), false, thisConfig->GetInt("textureQuality"));
-                    tmp.AddDialog("Surprise attack!\nDestroy them!", false);
-                    messageclouds.push_back(tmp);
-
-                    message_clock.restart();
-                }
-
                 action = IDLE;
                 attack_timer.restart();
             }
@@ -287,7 +289,22 @@ void Kirajin_Yari_2::Draw(sf::RenderWindow& window)
             global_x += float(150) / fps;
         }
 
-        if(distance_to_unit <= 1000)
+        if(distance_to_unit <= 350)
+        {
+            if(talk)
+            {
+                MessageCloud tmp;
+                tmp.Create(20, sf::Vector2f(getGlobalPosition().x-5, getGlobalPosition().y-25), sf::Color(222,102,102,255), false, thisConfig->GetInt("textureQuality"));
+                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(talk_id)), false);
+                messageclouds.push_back(tmp);
+
+                message_clock.restart();
+
+                talk = false;
+            }
+        }
+
+        if(distance_to_unit <= 800)
         {
             enemy_in_range = true;
         }
@@ -326,15 +343,25 @@ void Kirajin_Yari_2::die()
     {
         //cout << "Kirajin_Yari_2::die()" << endl;
 
+        int a = rand() % 4 + 1;
+        string death_id = "kirajin_death_"+to_string(a);
+
+        MessageCloud tmp;
+        tmp.Create(20, sf::Vector2f(getGlobalPosition().x-5, getGlobalPosition().y-25), sf::Color(222,102,102,255), false, thisConfig->GetInt("textureQuality"));
+        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(death_id)), false);
+        messageclouds.push_back(tmp);
+
+        message_clock.restart();
+
         dead = true;
         hspeed = 340;
         vspeed = -250;
 
-        //cout << global_y << " " << floorY << endl;
-        //cout << "Set local_y = " << global_y - floorY << endl;
-        local_y = global_y - floorY;
-        //cout << "Set global_y = " << global_y + floorY << endl;
-        global_y -= local_y;
+        if(global_y != floorY)
+        {
+            local_y = global_y - floorY;
+            global_y -= local_y;
+        }
 
         isCollidable = false;
         isAttackable = false;

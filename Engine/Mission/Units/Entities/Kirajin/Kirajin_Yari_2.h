@@ -15,7 +15,7 @@ class Kirajin_Yari_2 : public Entity
 
     bool canThrow = true;
     bool threw = false;
-    bool enemy_in_range = true;
+    bool enemy_in_range = false;
 
     enum ACTIONS
     {
@@ -40,6 +40,7 @@ class Kirajin_Yari_2 : public Entity
 
     bool jumped = false;
     bool talk = false;
+    string talk_id = "";
 
     sf::Clock message_clock;
     sf::Clock walk_clock; ///position updates
