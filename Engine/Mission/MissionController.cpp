@@ -2415,10 +2415,10 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
             ///Check if entity is off bounds, if yes, don't render it.
             entity->offbounds = false;
 
-            if(entity->getGlobalPosition().x > (camera.followobject_x)/(window.getSize().x / float(1280))+1600)
+            if(entity->getGlobalPosition().x > (camera.followobject_x)/(window.getSize().x / float(1280))+2400)
             entity->offbounds = true;
 
-            if(entity->getGlobalPosition().x < (camera.followobject_x)/(window.getSize().x / float(1280))-600)
+            if(entity->getGlobalPosition().x < (camera.followobject_x)/(window.getSize().x / float(1280))-1000)
             entity->offbounds = true;
 
             entity->distance_to_unit = abs(temp_pos - entity->getGlobalPosition().x);
