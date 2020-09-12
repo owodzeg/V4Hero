@@ -540,12 +540,25 @@ void MissionController::submitPickedItems()
         invItem.inventoryId = v4core->savereader.invdata.items.size();
         v4core->savereader.invdata.items.push_back(invItem);
 
-        if(pickedItems[i].item_id == 23)
+        if(pickedItems[i].item_id == 23) ///Grubby map
         {
+            ///Check if Patapine Grove missions doesnt exist, and if Patapine Grove is not unlocked already
             if((!v4core->savereader.isMissionUnlocked(3)) && (!v4core->savereader.isMissionUnlocked(2)) && (v4core->savereader.locationsUnlocked == 1))
             {
+                ///Add first patapine mission and unlock second location
                 v4core->savereader.missionsUnlocked.push_back(2);
                 v4core->savereader.locationsUnlocked = 2;
+            }
+        }
+
+        if(pickedItems[i].item_id == 24)
+        {
+            ///Check if Ejiji Cliffs missions doesnt exist, and if Ejiji Cliffs is not unlocked already
+            if((!v4core->savereader.isMissionUnlocked(5)) && (!v4core->savereader.isMissionUnlocked(4)) && (v4core->savereader.locationsUnlocked == 2))
+            {
+                ///Add first patapine mission and unlock second location
+                v4core->savereader.missionsUnlocked.push_back(4);
+                v4core->savereader.locationsUnlocked = 4;
             }
         }
     }
@@ -567,6 +580,20 @@ void MissionController::updateMissions()
                 v4core->savereader.missionLevels[3] = 2;
 
                 auto it = std::find(v4core->savereader.missionsUnlocked.begin(), v4core->savereader.missionsUnlocked.end(), 2);
+                v4core->savereader.missionsUnlocked.erase(it);
+            }
+
+            break;
+        }
+
+        case 4:
+        {
+            if(!v4core->savereader.isMissionUnlocked(5))
+            {
+                v4core->savereader.missionsUnlocked.push_back(5);
+                v4core->savereader.missionLevels[5] = 2;
+
+                auto it = std::find(v4core->savereader.missionsUnlocked.begin(), v4core->savereader.missionsUnlocked.end(), 4);
                 v4core->savereader.missionsUnlocked.erase(it);
             }
 
@@ -1405,8 +1432,8 @@ bool MissionController::DoCollisionStepInAxis(float currentAxisAngle,HitboxFrame
         float maxProjectionObj1 = max(max(max(proj1,proj2),proj3),proj4);
         float minProjectionObj1 = min(min(min(proj1,proj2),proj3),proj4);
 
-        float maxProjectionObj2 = currentHitboxFrame->maxProjection(currentAxisAngle, targetObject->global_x+targetObject->local_x,targetObject->global_y+targetObject->local_y);
-        float minProjectionObj2 = currentHitboxFrame->minProjection(currentAxisAngle, targetObject->global_x+targetObject->local_x,targetObject->global_y+targetObject->local_y);
+        float maxProjectionObj2 = currentHitboxFrame->maxProjection(currentAxisAngle, targetObject->getGlobalPosition().x,targetObject->getGlobalPosition().y);
+        float minProjectionObj2 = currentHitboxFrame->minProjection(currentAxisAngle, targetObject->getGlobalPosition().x,targetObject->getGlobalPosition().y);
         if(maxProjectionObj1>minProjectionObj2 && minProjectionObj1<maxProjectionObj2)
         {
             return true;
@@ -1463,7 +1490,7 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, InputCon
             {
                 //cout << "tangibleLevelObjects[" << i << "][" << h << "]" << endl;
 
-                float proposedXPos = farthest_unit->getGlobalPosition().x + farthest_unit->local_x + 40;
+                float proposedXPos = farthest_unit->getGlobalPosition().x;
 
                 /// NEW COLLISION SYSTEM:
                 /// Separating axis theorem
