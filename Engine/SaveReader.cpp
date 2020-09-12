@@ -103,6 +103,11 @@ void SaveReader::LoadSave(Config& tconfig)
                 {
                     locationsUnlocked = stoi(key[1]);
                 }
+                else if(key[0] == "MISSIONLEVEL")
+                {
+                    vector<string> l = Func::Split(key[1], ',');
+                    missionLevels[stoi(l[0])] = stoi(l[1]);
+                }
             }
         }
     }
@@ -146,6 +151,14 @@ void SaveReader::Save()
             conf2 << "MISSION:" << to_string(missionsUnlocked[i]) <<'\n';
         }
         conf2 << "LOCATIONS:" << to_string(locationsUnlocked) <<'\n';
+
+        conf2 << "# mission levels" << '\n';
+        conf2 << "# MISSIONLEVEL:id,level" << '\n';
+
+        for (auto const& x : missionLevels)
+        {
+            conf2 << "MISSIONLEVEL:" << to_string(x.first) << "," << to_string(x.second) << '\n';
+        }
 
             /*for(int i=0; i<configMap.size(); i++)
         {

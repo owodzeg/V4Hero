@@ -564,6 +564,7 @@ void MissionController::updateMissions()
             if(!v4core->savereader.isMissionUnlocked(3))
             {
                 v4core->savereader.missionsUnlocked.push_back(3);
+                v4core->savereader.missionLevels[3] = 2;
 
                 auto it = std::find(v4core->savereader.missionsUnlocked.begin(), v4core->savereader.missionsUnlocked.end(), 2);
                 v4core->savereader.missionsUnlocked.erase(it);
@@ -572,6 +573,9 @@ void MissionController::updateMissions()
             break;
         }
     }
+
+    if(v4core->savereader.missionLevels[curMissionID] != 0)
+    v4core->savereader.missionLevels[curMissionID] += 1;
 }
 
 void MissionController::addUnitThumb(int unit_id)
@@ -1766,7 +1770,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
 
     /** Mission end event (Mission complete/Mission failed screen + transition to Patapolis **/
 
-    if(!failure)
+    if(!failure) ///Victory
     {
         if(missionEndTimer.getElapsedTime().asMilliseconds() >= 11500)
         {
@@ -1891,7 +1895,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
             }
         }
     }
-    else
+    else ///Failure
     {
         if(missionEndTimer.getElapsedTime().asMilliseconds() >= 2500)
         {

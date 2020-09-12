@@ -23,6 +23,7 @@ class SaveReader
 
     std::vector<int> missionsUnlocked = {1};
     int locationsUnlocked=1;
+    std::map<int, int> missionLevels; ///storing the mission level
 
     SaveReader();
     void LoadSave(Config& tconfig);

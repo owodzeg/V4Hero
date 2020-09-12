@@ -27,9 +27,16 @@ void ObeliskMenu::addMission(string missiondata)
 
     tmp.mission_file = mission[4];
 
+    string level = "";
+
+    if(thisConfig->thisCore->savereader.missionLevels[tmp.mis_ID] != 0)
+    {
+        level = to_string(thisConfig->thisCore->savereader.missionLevels[tmp.mis_ID]);
+    }
+
     PText tm;
     tm.createText(font, 18, sf::Color::Black, "", quality, 1);
-    tm.setString(Func::ConvertToUtf8String(tmp.title));
+    tm.setString(Func::ConvertToUtf8String(tmp.title)+level);
     tm.setOrigin(tm.getLocalBounds().width/2, tm.getLocalBounds().height/2);
     tmp.p_mis = tm;
 
@@ -434,7 +441,14 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
                     displayMissions = true;
 
-                    mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title));
+                    string level = "";
+
+                    if(thisConfig->thisCore->savereader.missionLevels[missions[sel_mission].mis_ID] != 0)
+                    {
+                        level = to_string(thisConfig->thisCore->savereader.missionLevels[missions[sel_mission].mis_ID]);
+                    }
+
+                    mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title)+level);
                     string desc = Func::wrap_text(Func::ConvertToUtf8String(missions[sel_mission].desc), 633, font, 18);
                     mission_desc.setString(desc);
                 }
@@ -602,7 +616,14 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
                 thisConfig->thisCore->SaveToDebugLog("Selecting Obelisk mission "+to_string(sel_mission)+".");
 
-                mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title));
+                string level = "";
+
+                if(thisConfig->thisCore->savereader.missionLevels[missions[sel_mission].mis_ID] != 0)
+                {
+                    level = to_string(thisConfig->thisCore->savereader.missionLevels[missions[sel_mission].mis_ID]);
+                }
+
+                mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title)+level);
                 string desc = Func::wrap_text(Func::ConvertToUtf8String(missions[sel_mission].desc), 633, font, 18);
                 mission_desc.setString(desc);
             }
@@ -616,7 +637,14 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
                 thisConfig->thisCore->SaveToDebugLog("Selecting Obelisk mission "+to_string(sel_mission)+".");
 
-                mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title));
+                string level = "";
+
+                if(thisConfig->thisCore->savereader.missionLevels[missions[sel_mission].mis_ID] != 0)
+                {
+                    level = to_string(thisConfig->thisCore->savereader.missionLevels[missions[sel_mission].mis_ID]);
+                }
+
+                mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title)+level);
                 string desc = Func::wrap_text(Func::ConvertToUtf8String(missions[sel_mission].desc), 633, font, 18);
                 mission_desc.setString(desc);
             }
