@@ -189,8 +189,10 @@ void ObeliskMenu::Reload()
         }
     }
 
-    location_bg_a = location_bgs[cur_location];
-    location_bg_b = location_bgs[cur_location];
+    cout << "sel_location: " << sel_location << endl;
+
+    location_bg_a = location_bgs[sel_location-1];
+    location_bg_b = location_bgs[sel_location-1];
 
     unlocked.clear();
 
@@ -222,8 +224,8 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
         //cout << mapX << " " << mapXdest << " " << (sel_location*123) << " " << (sel_location*123) + 176 << endl;
         if(!runonce)
         {
-            cout << "[DEBUG] Obelisk is currently open and active." << endl;
-            thisConfig->thisCore->SaveToDebugLog("[DEBUG] Obelisk is currently open and active.");
+            //cout << "[DEBUG] Obelisk is currently open and active." << endl;
+            //thisConfig->thisCore->SaveToDebugLog("[DEBUG] Obelisk is currently open and active.");
         }
 
         render_map.clear(sf::Color::Transparent);

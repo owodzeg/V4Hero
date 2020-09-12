@@ -1105,7 +1105,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         if(barracks_menu.missionStarted)
         {
             obelisk_menu.displayMissions = false;
-            obelisk_menu.sel_location = 1;
+            //obelisk_menu.sel_location = 1;
             obelisk_menu.sel_mission = 0;
             obelisk_menu.Hide();
             barracks_menu.missionStarted = false;
