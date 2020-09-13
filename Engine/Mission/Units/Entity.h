@@ -44,6 +44,8 @@ class Entity : public CollidableObject
 
     float distance_to_unit = 0;
 
+    float spawn_x = 0; ///base spawn X to calculate withdraw
+
     std::vector<std::string> additional_data; ///additional data passed from mission file that can be used for exclusive cases
 
     std::vector<MessageCloud> messageclouds;

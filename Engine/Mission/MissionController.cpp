@@ -429,6 +429,8 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
         entity->setColor(color);
 
+        entity->spawn_x = entity->getGlobalPosition().x;
+
         entity->isCollidable = collidable;
         entity->isAttackable = attackable;
         entity->loot_table = loot_table;

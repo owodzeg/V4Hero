@@ -284,9 +284,17 @@ void Kirajin_Yari_2::Draw(sf::RenderWindow& window)
             }
 
             if(distance_to_unit >= dest_distance)
-            global_x -= float(150) / fps;
+            {
+                global_x -= float(150) / fps;
+            }
+
             if(distance_to_unit <= dest_distance)
-            global_x += float(150) / fps;
+            {
+                if(getGlobalPosition().x - spawn_x < 1000) ///1000 is max distance an entity can go to the right
+                global_x += float(150) / fps;
+                else
+                dest_distance = distance_to_unit;
+            }
         }
 
         if(enemy_in_range)
