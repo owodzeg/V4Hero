@@ -174,6 +174,44 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
             config.debugOut->RhythmnDebugMessage("break combo #1\n");
         }
 
+        string check = "";
+
+        for(int i=0; i<commandInput.size(); i++)
+        {
+            check += commandInput[i];
+        }
+
+        if(check != "")
+        {
+            cout << "Checking " << check << " if it exists in available commands..." << endl;
+
+            bool found = false;
+
+            for(int i=0; i<av_commands.size(); i++)
+            {
+                if(av_commands[i].find(check) != std::string::npos)
+                {
+                    if(av_commands[i].find(check) == 0)
+                    {
+                        found = true;
+                    }
+                }
+            }
+
+            if(!found)
+            {
+                if(combo >= 2)
+                {
+                    command_perfects.clear();
+                    perfects.clear();
+                    commandInput.clear();
+
+                    breakCombo = true;
+                    config.debugOut->RhythmnDebugMessage("break combo #2\n");
+                }
+            }
+        }
+
         ///If drum was hit above the minimum range, determine it's quality and mark as being already hit
         if(drum_quality <= 1)
         {

@@ -46,7 +46,6 @@ class RhythmController
     int currentPattern = 0;
     bool breakCombo = false;
 
-
     std::vector<std::string> commandInput; ///Drum input
     std::string current_drum;
 
