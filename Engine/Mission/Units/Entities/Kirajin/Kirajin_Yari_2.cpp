@@ -289,18 +289,21 @@ void Kirajin_Yari_2::Draw(sf::RenderWindow& window)
             global_x += float(150) / fps;
         }
 
-        if(distance_to_unit <= 350)
+        if(enemy_in_range)
         {
-            if(talk)
+            if(action != HIDING)
             {
-                MessageCloud tmp;
-                tmp.Create(20, sf::Vector2f(getGlobalPosition().x-5, getGlobalPosition().y-25), sf::Color(222,102,102,255), false, thisConfig->GetInt("textureQuality"));
-                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(talk_id)), false);
-                messageclouds.push_back(tmp);
+                if(talk)
+                {
+                    MessageCloud tmp;
+                    tmp.Create(20, sf::Vector2f(getGlobalPosition().x-5, getGlobalPosition().y-25), sf::Color(222,102,102,255), false, thisConfig->GetInt("textureQuality"));
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(talk_id)), false);
+                    messageclouds.push_back(tmp);
 
-                message_clock.restart();
+                    message_clock.restart();
 
-                talk = false;
+                    talk = false;
+                }
             }
         }
 
