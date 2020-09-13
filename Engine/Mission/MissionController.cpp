@@ -508,27 +508,44 @@ void MissionController::addPickedItem(std::string spritesheet, int spritesheet_i
 {
     cout << "MissionController::addPickedItem(" << spritesheet << ", " << spritesheet_id << ", " << picked_item << ")" << endl;
 
-    PickedItem tmp;
-    tmp.circle.setFillColor(sf::Color(255,255,255,192));
-    //tmp.circle.setRadius(50 * resRatioX);
-    ///set radius in draw loop to get appropriate resratiox size
-    tmp.item_id = picked_item;
+    if(!((picked_item == 33) || (picked_item == 34))) ///Check for potions
+    {
+        PickedItem tmp;
+        tmp.circle.setFillColor(sf::Color(255,255,255,192));
+        //tmp.circle.setRadius(50 * resRatioX);
+        ///set radius in draw loop to get appropriate resratiox size
+        tmp.item_id = picked_item;
 
-    ///This unique entity needs to be loaded differently, read additional data for spritesheet info to be passed from the item registry.
-    vector<char> di_data = droppeditem_spritesheet[spritesheet].retrieve_char();
+        ///This unique entity needs to be loaded differently, read additional data for spritesheet info to be passed from the item registry.
+        vector<char> di_data = droppeditem_spritesheet[spritesheet].retrieve_char();
 
-    sf::Texture tex_obj;
-    tex_obj.loadFromMemory(&di_data[0], di_data.size());
-    tex_obj.setSmooth(true);
+        sf::Texture tex_obj;
+        tex_obj.loadFromMemory(&di_data[0], di_data.size());
+        tex_obj.setSmooth(true);
 
-    tmp.item.setTexture(tex_obj);
-    tmp.item.setTextureRect(droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id-1]);
-    tmp.bounds = sf::Vector2f(droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id-1].width, droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id-1].height);
+        tmp.item.setTexture(tex_obj);
+        tmp.item.setTextureRect(droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id-1]);
+        tmp.bounds = sf::Vector2f(droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id-1].width, droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id-1].height);
 
-    tmp.item.qualitySetting = qualitySetting;
-    tmp.item.resSetting = resSetting;
+        tmp.item.qualitySetting = qualitySetting;
+        tmp.item.resSetting = resSetting;
 
-    pickedItems.push_back(tmp);
+        pickedItems.push_back(tmp);
+    }
+    else
+    {
+        float heal_factor = 0;
+
+        if(picked_item == 33)
+        heal_factor = 0.2;
+        if(picked_item == 34)
+        heal_factor = 0.5;
+
+        for(int i=0; i<units.size(); i++)
+        {
+            units[i].get()->current_hp += units[i].get()->max_hp*heal_factor;
+        }
+    }
 }
 
 void MissionController::submitPickedItems()

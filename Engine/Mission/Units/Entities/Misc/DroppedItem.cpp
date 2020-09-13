@@ -216,13 +216,20 @@ void DroppedItem::OnCollide(CollidableObject* otherObject, int collidedWith, vec
     {
         if(!pickedup)
         {
-            ///add to the missioncontroller list so it can be displayed in the upper right corner VERY COOL!
-            thisConfig->thisCore->currentController.addPickedItem(spritesheet, spritesheet_id, picked_item);
+            if((picked_item != 33) && (picked_item != 34))
+            {
+                ///add to the missioncontroller list so it can be displayed in the upper right corner VERY COOL!
+                thisConfig->thisCore->currentController.addPickedItem(spritesheet, spritesheet_id, picked_item);
 
-            ///do visuals
-            pickedup = true;
-            anim_state = 0;
-            pickupClock.restart();
+                ///do visuals
+                pickedup = true;
+                anim_state = 0;
+                pickupClock.restart();
+            }
+            else
+            {
+                ready_to_erase = true;
+            }
         }
     }
 }
