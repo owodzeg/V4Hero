@@ -58,6 +58,23 @@ void Rhythm::LoadTheme(string theme)
     satisfaction_value.clear();
 
     ///Stop any current action
+    //current_song = "";
+
+    ///Restart the Rhythm clocks
+    //rhythmClock.restart();
+
+    //s_theme[0].setBuffer(songController->GetSongByNumber(0,0));
+    //cout << "Volume is " << float(config.GetInt("masterVolume"))*(float(config.GetInt("bgmVolume"))/100.f) << " " << config.GetInt("masterVolume") << " " << config.GetInt("bgmVolume") << endl;
+    //s_theme[0].setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("bgmVolume"))/100.f));
+    //s_theme[0].play();
+
+    //beat_timer = floor(songController->GetSongByNumber(0,0).getDuration().asMilliseconds() / float(8.08));
+    //cout << "Beat timer set to: " << beat_timer << endl;
+}
+
+void Rhythm::Start()
+{
+    ///Stop any current action
     current_song = "";
 
     ///Restart the Rhythm clocks

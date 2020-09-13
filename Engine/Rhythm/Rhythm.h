@@ -108,6 +108,7 @@ class Rhythm
     Rhythm();
     void Stop();
     void LoadTheme(std::string theme);
+    void Start();
     void BreakCombo();
     int GetCombo();
     int GetRealCombo();
