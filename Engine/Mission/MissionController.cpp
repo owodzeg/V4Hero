@@ -1530,6 +1530,16 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, InputCon
                 HitboxFrame tmp = farthest_unit->hitboxes[0].getRect();
 
                 CollidableObject* target = tangibleLevelObjects[i].get();
+                Entity* entity = tangibleLevelObjects[i].get();
+
+                if(entity->entityID != 5)
+                {
+                    if(entity->isCollidable)
+                    {
+                        if(farthest_unit->getGlobalPosition().x >= entity->getGlobalPosition().x)
+                        foundCollision = true;
+                    }
+                }
 
                 bool isCollision = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
                 if (!isCollision)
