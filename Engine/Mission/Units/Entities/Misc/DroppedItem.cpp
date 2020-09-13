@@ -228,6 +228,7 @@ void DroppedItem::OnCollide(CollidableObject* otherObject, int collidedWith, vec
             }
             else
             {
+                thisConfig->thisCore->currentController.addPickedItem(spritesheet, spritesheet_id, picked_item);
                 ready_to_erase = true;
             }
         }
