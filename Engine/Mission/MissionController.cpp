@@ -545,7 +545,14 @@ void MissionController::addPickedItem(std::string spritesheet, int spritesheet_i
 
         for(int i=0; i<units.size(); i++)
         {
-            units[i].get()->current_hp += units[i].get()->max_hp*heal_factor;
+            PlayableUnit* unit = units[i].get();
+
+            unit->current_hp += unit->max_hp*heal_factor;
+
+            if(unit->current_hp >= unit->max_hp)
+            unit->current_hp = unit->max_hp;
+
+            cout << "Incrementing unit " << i << " hp by " << unit->max_hp*heal_factor << endl;
         }
     }
 }
@@ -1044,10 +1051,17 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     p3.get()->mindmg = v4core->savereader.ponreg.GetPonByID(3)->pon_min_dmg;
     p3.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(3)->pon_max_dmg;
 
+    p1.get()->current_hp = v4core->savereader.ponreg.GetPonByID(1)->pon_hp;
+    p2.get()->current_hp = v4core->savereader.ponreg.GetPonByID(2)->pon_hp;
+    p3.get()->current_hp = v4core->savereader.ponreg.GetPonByID(3)->pon_hp;
+
+    p1.get()->max_hp = v4core->savereader.ponreg.GetPonByID(1)->pon_hp;
+    p2.get()->max_hp = v4core->savereader.ponreg.GetPonByID(2)->pon_hp;
+    p3.get()->max_hp = v4core->savereader.ponreg.GetPonByID(3)->pon_hp;
+
     p1.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->weapon_invItem_id).item->equip_id);
     p2.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->weapon_invItem_id).item->equip_id);
     p3.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(3)->weapon_invItem_id).item->equip_id);
-
 
     p1.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->weapon_invItem_id).item->equip_id);
     p2.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->weapon_invItem_id).item->equip_id);
@@ -1065,9 +1079,6 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     addUnitThumb(0);
     addUnitThumb(1);
 
-    isFinishedLoading=true;
-    v4core->LoadingWaitForKeyPress();
-
     cout << "Loading background " << bgName << endl;
     test_bg.Load(bgName, *missionConfig);//config.GetString("debugBackground"));
 
@@ -1080,6 +1091,11 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 
     cout << "MissionController::StartMission(): finished" << endl;
     missionConfig->thisCore->SaveToDebugLog("Mission loading finished.");
+
+    isFinishedLoading=true;
+    v4core->LoadingWaitForKeyPress();
+
+    rhythm.Start();
 }
 void MissionController::StopMission()
 {
