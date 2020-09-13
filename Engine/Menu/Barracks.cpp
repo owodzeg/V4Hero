@@ -761,7 +761,9 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
                 }
                 else
                 {
-                    InventoryItem currentItem = v4core->savereader.invdata.ItemsByType(activeCategory)[inventoryGridXPos+inventoryGridYPos/numItemColumns];
+                    cout << "Apply item from coords: " << inventoryGridXPos << " " << inventoryGridYPos/numItemColumns << " (" << inventoryGridYPos << ", " << numItemColumns << ")" << endl;
+
+                    InventoryItem currentItem = v4core->savereader.invdata.ItemsByType(activeCategory)[inventoryGridXPos+inventoryGridYPos*numItemColumns];
                     v4core->savereader.ponreg.pons[current_selected_pon].GiveItem(currentItem.inventoryId);
                     RefreshStats();
                     ApplyEquipment();
