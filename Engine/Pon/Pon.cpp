@@ -13,7 +13,12 @@ Pon::Pon(SaveReader* core)
 
 void Pon::GiveItem(int InvItemId,int where)
 {
+    /** REWORK NEEDED!!! Make this more clean **/
+
     cout << "Pon::GiveItem(" << InvItemId << ", " << where << ")" << endl;
+
+    ///occupy the current equipment
+    savReader->invdata.items[InvItemId].occupied = true;
 
     InventoryItem currentItem = savReader->invdata.GetItemByInvID(InvItemId);
 
@@ -29,6 +34,9 @@ void Pon::GiveItem(int InvItemId,int where)
             {
                 if (weapon2_invItem_id!=-1)
                 {
+                    ///make previous item unoccupied
+                    savReader->invdata.items[weapon2_invItem_id].occupied = false;
+
                     InventoryItem oldItem = savReader->invdata.GetItemByInvID(weapon2_invItem_id);
                     Weapon* owep = static_cast<Weapon*>(oldItem.item);
                     pon_min_dmg-=owep->mindmg;
@@ -51,6 +59,9 @@ void Pon::GiveItem(int InvItemId,int where)
             {
                 if (weapon_invItem_id!=-1)
                 {
+                    ///make previous item unoccupied
+                    savReader->invdata.items[weapon_invItem_id].occupied = false;
+
                     InventoryItem oldItem = savReader->invdata.GetItemByInvID(weapon_invItem_id);
                     Weapon* owep = static_cast<Weapon*>(oldItem.item);
                     pon_min_dmg-=owep->mindmg;
@@ -77,6 +88,9 @@ void Pon::GiveItem(int InvItemId,int where)
         {
             if (mask_invItem_id!=-1)
             {
+                ///make previous item unoccupied
+                savReader->invdata.items[mask_invItem_id].occupied = false;
+
                 InventoryItem oldItem = savReader->invdata.GetItemByInvID(mask_invItem_id);
                 Mask* omask = static_cast<Mask*>(oldItem.item);
                 pon_min_dmg-=omask->mindmg;
@@ -97,7 +111,11 @@ void Pon::GiveItem(int InvItemId,int where)
         }
         case 3: /// armour
         {
-            if (armour_invItem_id!=-1){
+            if (armour_invItem_id!=-1)
+            {
+                ///make previous item unoccupied
+                savReader->invdata.items[armour_invItem_id].occupied = false;
+
                 InventoryItem oldItem = savReader->invdata.GetItemByInvID(armour_invItem_id);
                 Armour* oarmour = static_cast<Armour*>(oldItem.item);
                 pon_min_dmg-=oarmour->mindmg;

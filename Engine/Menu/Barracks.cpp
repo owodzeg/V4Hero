@@ -554,30 +554,46 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
         window.draw(mm_inventory_background);
         int row_start = currentRow;
         int row_end = row_start+4;
-        for (int y=0;y<numItemRows;y++){
-            for (int x=0;x<numItemColumns;x++){
-                int currentItemId = x+y*numItemColumns;
-                if (currentItemId<v4core->savereader.invdata.ItemsByType(activeCategory).size() && (currentItemId/numItemColumns)>=row_start && (currentItemId/numItemColumns)<=row_end){
-                    Item* starting_item = v4core->savereader.invdata.ItemsByType(activeCategory)[currentItemId].item;
-                    switch (starting_item->category_id){
 
-                    case 1:
-                        spear_icon.setPosition(4+s_menu_bkg.getPosition().x+(mm_highlighted_tile.getSize().x/resRatioX)*x,4+(mm_inventory_background.getPosition().y / resRatioY)+(mm_highlighted_tile.getSize().y/resRatioY)*y-(mm_highlighted_tile.getSize().y/resRatioY)*currentRow);
-                        spear_icon.draw(window);
-                        break;
-                    case 2:
-                        mask_icon.setPosition(4+s_menu_bkg.getPosition().x+(mm_highlighted_tile.getSize().x/resRatioX)*x,4+(mm_inventory_background.getPosition().y / resRatioY)+(mm_highlighted_tile.getSize().y/resRatioY)*y-(mm_highlighted_tile.getSize().y/resRatioY)*currentRow);
-                        mask_icon.draw(window);
-                        break;
-                    case 3:
-                        armour_icon.setPosition(4+s_menu_bkg.getPosition().x+(mm_highlighted_tile.getSize().x/resRatioX)*x,4+(mm_inventory_background.getPosition().y / resRatioY)+(mm_highlighted_tile.getSize().y/resRatioY)*y-(mm_highlighted_tile.getSize().y/resRatioY)*currentRow);
-                        armour_icon.draw(window);
-                        break;
-                    case 0:
-                    default:
-                        misc_icon.setPosition(4+s_menu_bkg.getPosition().x+(mm_highlighted_tile.getSize().x/resRatioX)*x,4+(mm_inventory_background.getPosition().y / resRatioY)+(mm_highlighted_tile.getSize().y/resRatioY)*y-(mm_highlighted_tile.getSize().y/resRatioY)*currentRow);
-                        misc_icon.draw(window);
-                        break;
+        for(int y=0; y<numItemRows; y++)
+        {
+            for(int x=0; x<numItemColumns; x++)
+            {
+                int currentItemId = x+y*numItemColumns;
+
+                if(currentItemId<v4core->savereader.invdata.ItemsByType(activeCategory).size() && (currentItemId/numItemColumns)>=row_start && (currentItemId/numItemColumns)<=row_end)
+                {
+                    InventoryItem invItem = v4core->savereader.invdata.ItemsByType(activeCategory)[currentItemId];
+                    Item* starting_item = invItem.item;
+
+                    sf::Color color = sf::Color(255,255,255,255);
+
+                    if(invItem.occupied)
+                    color = sf::Color(128,128,128,255);
+
+                    switch (starting_item->category_id)
+                    {
+                        case 1:
+                            spear_icon.setColor(color);
+                            spear_icon.setPosition(4+s_menu_bkg.getPosition().x+(mm_highlighted_tile.getSize().x/resRatioX)*x,4+(mm_inventory_background.getPosition().y / resRatioY)+(mm_highlighted_tile.getSize().y/resRatioY)*y-(mm_highlighted_tile.getSize().y/resRatioY)*currentRow);
+                            spear_icon.draw(window);
+                            break;
+                        case 2:
+                            mask_icon.setColor(color);
+                            mask_icon.setPosition(4+s_menu_bkg.getPosition().x+(mm_highlighted_tile.getSize().x/resRatioX)*x,4+(mm_inventory_background.getPosition().y / resRatioY)+(mm_highlighted_tile.getSize().y/resRatioY)*y-(mm_highlighted_tile.getSize().y/resRatioY)*currentRow);
+                            mask_icon.draw(window);
+                            break;
+                        case 3:
+                            armour_icon.setColor(color);
+                            armour_icon.setPosition(4+s_menu_bkg.getPosition().x+(mm_highlighted_tile.getSize().x/resRatioX)*x,4+(mm_inventory_background.getPosition().y / resRatioY)+(mm_highlighted_tile.getSize().y/resRatioY)*y-(mm_highlighted_tile.getSize().y/resRatioY)*currentRow);
+                            armour_icon.draw(window);
+                            break;
+                        case 0:
+                        default:
+                            misc_icon.setColor(color);
+                            misc_icon.setPosition(4+s_menu_bkg.getPosition().x+(mm_highlighted_tile.getSize().x/resRatioX)*x,4+(mm_inventory_background.getPosition().y / resRatioY)+(mm_highlighted_tile.getSize().y/resRatioY)*y-(mm_highlighted_tile.getSize().y/resRatioY)*currentRow);
+                            misc_icon.draw(window);
+                            break;
                     }
                 }
             }
@@ -764,10 +780,18 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
                     cout << "Apply item from coords: " << inventoryGridXPos << " " << inventoryGridYPos/numItemColumns << " (" << inventoryGridYPos << ", " << numItemColumns << ")" << endl;
 
                     InventoryItem currentItem = v4core->savereader.invdata.ItemsByType(activeCategory)[inventoryGridXPos+inventoryGridYPos*numItemColumns];
-                    v4core->savereader.ponreg.pons[current_selected_pon].GiveItem(currentItem.inventoryId);
-                    RefreshStats();
-                    ApplyEquipment();
-                    MenuMode=false;
+
+                    if(!currentItem.occupied)
+                    {
+                        v4core->savereader.ponreg.pons[current_selected_pon].GiveItem(currentItem.inventoryId);
+                        RefreshStats();
+                        ApplyEquipment();
+                        MenuMode=false;
+                    }
+                    else
+                    {
+                        cout << "Cannot apply. Item is taken." << endl;
+                    }
                 }
             }
             if(inputCtrl.isKeyPressed(InputController::Keys::CIRCLE))
