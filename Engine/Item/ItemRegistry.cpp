@@ -12,7 +12,10 @@ using namespace std;
 ItemRegistry::ItemRegistry(){
 
 }
-void ItemRegistry::ReadItemFiles(){
+void ItemRegistry::ReadItemFiles()
+{
+    /** REWORK THIS!!!!! The code can be more efficient and nice looking. **/
+
     vector<std::string> itemPaths;
     ifstream conf("resources/data/itemdata/aaa_item_registry.txt");
     if(conf.good())
@@ -108,6 +111,14 @@ void ItemRegistry::ReadItemFiles(){
                                         } else if(key[0]=="equip_id"){
                                             wep->equip_id = stoi(key[1]);
                                         }
+                                        else if(key[0]=="spritesheet")
+                                        {
+                                            wep->spritesheet = key[1];
+                                        }
+                                        else if(key[0]=="spritesheet_id")
+                                        {
+                                            wep->spritesheet_id = stoi(key[1]);
+                                        }
                                     }
                                 }
                                 delete newItem;
@@ -149,6 +160,14 @@ void ItemRegistry::ReadItemFiles(){
                                             mask->attackspeed = stoi(key[1]);
                                         } else if(key[0]=="equip_id"){
                                             mask->equip_id = stoi(key[1]);
+                                        }
+                                        else if(key[0]=="spritesheet")
+                                        {
+                                            mask->spritesheet = key[1];
+                                        }
+                                        else if(key[0]=="spritesheet_id")
+                                        {
+                                            mask->spritesheet_id = stoi(key[1]);
                                         }
                                     }
                                 }
@@ -192,6 +211,14 @@ void ItemRegistry::ReadItemFiles(){
                                             masks->hp = stoi(key[1]);
                                         } else if(key[0]=="equip_id"){
                                             masks->equip_id = stoi(key[1]);
+                                        }
+                                        else if(key[0]=="spritesheet")
+                                        {
+                                            masks->spritesheet = key[1];
+                                        }
+                                        else if(key[0]=="spritesheet_id")
+                                        {
+                                            masks->spritesheet_id = stoi(key[1]);
                                         }
                                     }
                                 }
