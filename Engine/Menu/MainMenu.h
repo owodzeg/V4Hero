@@ -70,6 +70,8 @@ class MainMenu : public Menu
         sf::Clock menuClock;
         sf::Clock startClock;
 
+        bool mouseInBounds = false;
+
         vector<int> totem_sel_pos = {205, 490, 780, 1080};
 
         vector<PataDialogBox> dialogboxes;

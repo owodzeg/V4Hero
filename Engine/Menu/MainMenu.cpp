@@ -234,6 +234,7 @@ void MainMenu::EventFired(sf::Event event)
                 {
                     if(event.mouseButton.button == sf::Mouse::Left)
                     {
+                        if(mouseInBounds)
                         SelectMenuOption();
                     }
                 }
@@ -590,6 +591,8 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
 
             //cout << "MouseX: " << (mouseX / window.getSize().x) * 1280 << endl;
 
+            mouseInBounds = false;
+
             for(int i=0; i<=3; i++)
             {
                 //cout << "Totem " << i << " bounds: " << totem[i].getPosition().x << " - " << (totem[i].getPosition().x + totem[totem_sel].getGlobalBounds().width) << endl;
@@ -601,7 +604,11 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
                     {
                         if((mouseX / window.getSize().x) * 1280 < (totem[i].getPosition().x + totem[totem_sel].getGlobalBounds().width))
                         {
-                            totem_sel = i;
+                            if((mouseY / window.getSize().y) * 720 > totem[i].getPosition().y-totem[i].getLocalBounds().height)
+                            {
+                                totem_sel = i;
+                                mouseInBounds = true;
+                            }
                         }
                     }
                 }
