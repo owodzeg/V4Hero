@@ -101,7 +101,7 @@ class Barracks : public Menu
         /// mask icon
         PSprite s_mask_icon;
 
-        int current_selected_pon=1;
+        int current_selected_pon=0;
 
         bool MenuMode = false;
 
