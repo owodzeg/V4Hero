@@ -2253,10 +2253,25 @@ void MissionController::DrawUnitThumbs(sf::RenderWindow& window)
             {
                 manual_x = 0;
                 manual_y = 14;
+
+                unitThumbs[i].equip_1 = farthest_unit->objects[1].s_obj;
+                unitThumbs[i].equip_2 = farthest_unit->objects[2].s_obj;
+
+                unitThumbs[i].equip_1.setPosition(52+(64*i)+manual_x+((farthest_unit->objects[1].s_obj.getPosition().x-farthest_unit->getGlobalPosition().x)*0.7), 60+manual_y+((farthest_unit->objects[1].s_obj.getPosition().y-farthest_unit->getGlobalPosition().y)*0.7));
+                unitThumbs[i].equip_2.setPosition(52+(64*i)+manual_x+((farthest_unit->objects[2].s_obj.getPosition().x-farthest_unit->getGlobalPosition().x)*0.7), 60+manual_y+((farthest_unit->objects[2].s_obj.getPosition().y-farthest_unit->getGlobalPosition().y)*0.7));
+
+                unitThumbs[i].equip_1.setScale(0.7, 0.7);
+                unitThumbs[i].equip_2.setScale(0.7, 0.7);
             }
 
             unitThumbs[i].thumb.setPosition(52+(64*i)+manual_x, 60+manual_y);
             unitThumbs[i].thumb.draw(window);
+
+            if(unitThumbs[i].unit_id == 1)
+            {
+                unitThumbs[i].equip_1.draw(window);
+                unitThumbs[i].equip_2.draw(window);
+            }
 
             unitThumbs[i].hpbar_back.setOrigin(unitThumbs[i].hpbar_back.getLocalBounds().width/2, unitThumbs[i].hpbar_back.getLocalBounds().height/2);
             unitThumbs[i].hpbar_back.setPosition(52+(64*i), 32);

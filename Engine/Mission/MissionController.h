@@ -173,6 +173,7 @@ class MissionController
         ///visuals
         sf::CircleShape circle;
         PSprite thumb;
+        PSprite equip_1, equip_2;
         PText unit_count;
         PText unit_count_shadow;
         PSprite hpbar_back;
