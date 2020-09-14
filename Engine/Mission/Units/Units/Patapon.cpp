@@ -304,6 +304,8 @@ void Patapon::Draw(sf::RenderWindow& window)
             deathClock.restart();
             hspeed = -400;
             vspeed = -250;
+            action = IDLE;
+            attackmode = -1;
 
             setAnimationSegment("stagger_var5", true);
         }
