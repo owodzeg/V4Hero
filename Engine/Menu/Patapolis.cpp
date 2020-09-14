@@ -1300,7 +1300,25 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                         else if(dialogboxes[dialogboxes.size()-1].id == 2)
                         {
                             cout << "Saving game should happen here. Game not saving yet." << endl;
+                            v4core->savereader.Save();
+
                             dialogboxes[dialogboxes.size()-1].Close();
+
+                            std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_understood"))};
+
+                            PataDialogBox db;
+                            db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_saved")), a, thisConfig->GetInt("textureQuality"));
+                            db.id = 3;
+                            dialogboxes.push_back(db);
+
+                            break;
+                        }
+                        else if(dialogboxes[dialogboxes.size()-1].id == 3)
+                        {
+                            cout << "Done." << endl;
+
+                            dialogboxes[dialogboxes.size()-1].Close();
+                            break;
                         }
                     }
 

@@ -808,7 +808,6 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
                     this->isActive = false;
                     parentMenu->Show();
                     parentMenu->isActive=true;
-                    v4core->savereader.Save();
                 }
             }
             if(inputCtrl.isKeyPressed(InputController::Keys::START))
