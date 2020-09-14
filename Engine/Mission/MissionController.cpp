@@ -1042,34 +1042,34 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     h.get()->setUnitID(0);
 
     ///Apply the stats
-    p1.get()->mindmg = v4core->savereader.ponreg.GetPonByID(1)->pon_min_dmg;
-    p1.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(1)->pon_max_dmg;
+    p1.get()->mindmg = v4core->savereader.ponreg.GetPonByID(0)->pon_min_dmg;
+    p1.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(0)->pon_max_dmg;
 
-    p2.get()->mindmg = v4core->savereader.ponreg.GetPonByID(2)->pon_min_dmg;
-    p2.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(2)->pon_max_dmg;
+    p2.get()->mindmg = v4core->savereader.ponreg.GetPonByID(1)->pon_min_dmg;
+    p2.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(1)->pon_max_dmg;
 
-    p3.get()->mindmg = v4core->savereader.ponreg.GetPonByID(3)->pon_min_dmg;
-    p3.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(3)->pon_max_dmg;
+    p3.get()->mindmg = v4core->savereader.ponreg.GetPonByID(2)->pon_min_dmg;
+    p3.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(2)->pon_max_dmg;
 
-    p1.get()->current_hp = v4core->savereader.ponreg.GetPonByID(1)->pon_hp;
-    p2.get()->current_hp = v4core->savereader.ponreg.GetPonByID(2)->pon_hp;
-    p3.get()->current_hp = v4core->savereader.ponreg.GetPonByID(3)->pon_hp;
+    p1.get()->current_hp = v4core->savereader.ponreg.GetPonByID(0)->pon_hp;
+    p2.get()->current_hp = v4core->savereader.ponreg.GetPonByID(1)->pon_hp;
+    p3.get()->current_hp = v4core->savereader.ponreg.GetPonByID(2)->pon_hp;
 
-    p1.get()->max_hp = v4core->savereader.ponreg.GetPonByID(1)->pon_hp;
-    p2.get()->max_hp = v4core->savereader.ponreg.GetPonByID(2)->pon_hp;
-    p3.get()->max_hp = v4core->savereader.ponreg.GetPonByID(3)->pon_hp;
+    p1.get()->max_hp = v4core->savereader.ponreg.GetPonByID(0)->pon_hp;
+    p2.get()->max_hp = v4core->savereader.ponreg.GetPonByID(1)->pon_hp;
+    p3.get()->max_hp = v4core->savereader.ponreg.GetPonByID(2)->pon_hp;
 
-    p1.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->weapon_invItem_id).item->equip_id);
-    p2.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->weapon_invItem_id).item->equip_id);
-    p3.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(3)->weapon_invItem_id).item->equip_id);
+    p1.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(0)->weapon_invItem_id).item->equip_id);
+    p2.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->weapon_invItem_id).item->equip_id);
+    p3.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->weapon_invItem_id).item->equip_id);
 
-    p1.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->weapon_invItem_id).item->equip_id);
-    p2.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->weapon_invItem_id).item->equip_id);
-    p3.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(3)->weapon_invItem_id).item->equip_id);
+    p1.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(0)->weapon_invItem_id).item->equip_id);
+    p2.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->weapon_invItem_id).item->equip_id);
+    p3.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->weapon_invItem_id).item->equip_id);
 
-    p1.get()->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->armour_invItem_id).item->equip_id);
-    p2.get()->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->armour_invItem_id).item->equip_id);
-    p3.get()->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(3)->armour_invItem_id).item->equip_id);
+    p1.get()->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(0)->armour_invItem_id).item->equip_id);
+    p2.get()->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->armour_invItem_id).item->equip_id);
+    p3.get()->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->armour_invItem_id).item->equip_id);
 
     units.push_back(std::move(p1));
     units.push_back(std::move(p2));

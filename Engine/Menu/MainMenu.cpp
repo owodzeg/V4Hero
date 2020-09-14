@@ -270,9 +270,16 @@ void MainMenu::SelectMenuOption()
 
             v4core->continueLoading=false;*/
 
-            if(v4core->savereader.isNewSave)
+            ifstream check("resources/data/sv1.p4sv");
+            bool exists = check.good();
+            check.close();
+
+            if(!exists)
             {
                 cout << "There is no save. Start new game!" << endl;
+
+                v4core->savereader.Flush();
+                v4core->savereader.CreateBlankSave();
 
                 title_loop.stop();
 
@@ -288,6 +295,7 @@ void MainMenu::SelectMenuOption()
 
                 PataDialogBox db;
                 db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"menu_saveexists")), a, config->GetInt("textureQuality"));
+                db.id = 0;
                 dialogboxes.push_back(db);
             }
 
@@ -295,26 +303,48 @@ void MainMenu::SelectMenuOption()
         }
         case 1: // load save and patapolis
         {
-            title_loop.stop();
-            Hide();
+            ifstream check("resources/data/sv1.p4sv");
+            bool exists = check.good();
+            check.close();
 
-            if(!patapolisMenu.initialised)
+            if(exists)
             {
-                sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
-                v4core->continueLoading=true;
-                v4core->window.setActive(false);
-                loadingThreadInstance.launch();
+                title_loop.stop();
+                Hide();
 
-                patapolisMenu.Show();
-                patapolisMenu.isActive = true;
-                patapolisMenu.Initialise(config,v4core,this);
+                /** Load save from savereader **/
+                v4core->savereader.Flush();
+                v4core->savereader.LoadSave(*config);
 
-                v4core->continueLoading=false;
+                if(!patapolisMenu.initialised)
+                {
+                    sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+                    v4core->continueLoading=true;
+                    v4core->window.setActive(false);
+                    loadingThreadInstance.launch();
+
+                    patapolisMenu.Show();
+                    patapolisMenu.isActive = true;
+                    patapolisMenu.Initialise(config,v4core,this);
+
+                    v4core->continueLoading=false;
+                }
+                else
+                {
+                    patapolisMenu.Show();
+                    patapolisMenu.isActive = true;
+                }
             }
             else
             {
-                patapolisMenu.Show();
-                patapolisMenu.isActive = true;
+                cout << "There is no savedata. Error" << endl;
+
+                std::vector<std::string> a = {Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_understood"))};
+
+                PataDialogBox db;
+                db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"menu_nodata")), a, config->GetInt("textureQuality"));
+                db.id = 1;
+                dialogboxes.push_back(db);
             }
 
             break;
@@ -760,16 +790,27 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
                     {
                         case 0:
                         {
-                            cout << "Starting new game!" << endl;
-                            dialogboxes[dialogboxes.size()-1].Close();
+                            if(dialogboxes[dialogboxes.size()-1].id == 0)
+                            {
+                                cout << "Starting new game!" << endl;
+                                dialogboxes[dialogboxes.size()-1].Close();
 
-                            title_loop.stop();
+                                v4core->savereader.Flush();
+                                v4core->savereader.CreateBlankSave();
 
-                            introductionMenu.Show();
-                            introductionMenu.isActive = true;
-                            introductionMenu.Initialise(config,v4core,this);
+                                title_loop.stop();
 
-                            break;
+                                introductionMenu.Show();
+                                introductionMenu.isActive = true;
+                                introductionMenu.Initialise(config,v4core,this);
+
+                                break;
+                            }
+                            else if(dialogboxes[dialogboxes.size()-1].id == 1)
+                            {
+                                dialogboxes[dialogboxes.size()-1].Close();
+                                break;
+                            }
                         }
 
                         case 1:

@@ -32,13 +32,13 @@ void Barracks::Initialise(Config *thisConfigs, V4Core *parent, Menu *curParentMe
     patapon3->LoadConfig(thisConfigs);
     patapon3->setAnimationSegment("idle_armed");
 
-    patapon->applySpear(parent->savereader.invdata.GetItemByInvID(parent->savereader.ponreg.GetPonByID(1)->weapon_invItem_id).item->equip_id);
-    patapon2->applySpear(parent->savereader.invdata.GetItemByInvID(parent->savereader.ponreg.GetPonByID(2)->weapon_invItem_id).item->equip_id);
-    patapon3->applySpear(parent->savereader.invdata.GetItemByInvID(parent->savereader.ponreg.GetPonByID(3)->weapon_invItem_id).item->equip_id);
+    patapon->applySpear(parent->savereader.invdata.GetItemByInvID(parent->savereader.ponreg.GetPonByID(0)->weapon_invItem_id).item->equip_id);
+    patapon2->applySpear(parent->savereader.invdata.GetItemByInvID(parent->savereader.ponreg.GetPonByID(1)->weapon_invItem_id).item->equip_id);
+    patapon3->applySpear(parent->savereader.invdata.GetItemByInvID(parent->savereader.ponreg.GetPonByID(2)->weapon_invItem_id).item->equip_id);
 
-    patapon->applyHelm(parent->savereader.invdata.GetItemByInvID(parent->savereader.ponreg.GetPonByID(1)->armour_invItem_id).item->equip_id);
-    patapon2->applyHelm(parent->savereader.invdata.GetItemByInvID(parent->savereader.ponreg.GetPonByID(2)->armour_invItem_id).item->equip_id);
-    patapon3->applyHelm(parent->savereader.invdata.GetItemByInvID(parent->savereader.ponreg.GetPonByID(3)->armour_invItem_id).item->equip_id);
+    patapon->applyHelm(parent->savereader.invdata.GetItemByInvID(parent->savereader.ponreg.GetPonByID(0)->armour_invItem_id).item->equip_id);
+    patapon2->applyHelm(parent->savereader.invdata.GetItemByInvID(parent->savereader.ponreg.GetPonByID(1)->armour_invItem_id).item->equip_id);
+    patapon3->applyHelm(parent->savereader.invdata.GetItemByInvID(parent->savereader.ponreg.GetPonByID(2)->armour_invItem_id).item->equip_id);
 
     int quality = thisConfigs->GetInt("textureQuality");
 
@@ -277,13 +277,13 @@ void Barracks::OpenBarracksMenu(){
 
 void Barracks::ApplyEquipment()
 {
-    patapon->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->weapon_invItem_id).item->equip_id);
-    patapon2->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->weapon_invItem_id).item->equip_id);
-    patapon3->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(3)->weapon_invItem_id).item->equip_id);
+    patapon->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(0)->weapon_invItem_id).item->equip_id);
+    patapon2->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->weapon_invItem_id).item->equip_id);
+    patapon3->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->weapon_invItem_id).item->equip_id);
 
-    patapon->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->armour_invItem_id).item->equip_id);
-    patapon2->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->armour_invItem_id).item->equip_id);
-    patapon3->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(3)->armour_invItem_id).item->equip_id);
+    patapon->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(0)->armour_invItem_id).item->equip_id);
+    patapon2->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->armour_invItem_id).item->equip_id);
+    patapon3->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->armour_invItem_id).item->equip_id);
 }
 
 void Barracks::RefreshStats()
@@ -435,7 +435,7 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
         int highlightWidth=225;
         int ponwidth=75;
 
-        highlighted_pon.setPosition((468 + (75*(current_selected_pon-1))), 530);
+        highlighted_pon.setPosition((468 + (75*(current_selected_pon))), 530);
         highlighted_pon.draw(window);
 
         patapon->setGlobalPosition(sf::Vector2f((highlightWidth*2+ponwidth*0.7),pataponY));
@@ -682,7 +682,7 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
 
                 if(inputCtrl.isKeyPressed(InputController::Keys::LEFT))
                 {
-                    if(current_selected_pon > 1)
+                    if(current_selected_pon > 0)
                     current_selected_pon--;
 
                     RefreshStats();
@@ -690,7 +690,7 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
 
                 if(inputCtrl.isKeyPressed(InputController::Keys::RIGHT))
                 {
-                    if(current_selected_pon < 3)
+                    if(current_selected_pon < 2)
                     current_selected_pon++;
 
                     RefreshStats();

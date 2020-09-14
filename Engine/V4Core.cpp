@@ -122,8 +122,6 @@ V4Core::V4Core()
     /** Load config from config.cfg **/
     config.LoadConfig(this);
 
-    /** Load save from savereader **/
-    savereader.LoadSave(config);
     /** "Alpha release" text **/
 
     f_font.loadFromFile("resources/fonts/p4kakupop-gothic.ttf");

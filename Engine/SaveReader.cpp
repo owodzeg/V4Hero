@@ -32,6 +32,8 @@ SaveReader::SaveReader()
     }*/
 
     isNewSave = !exists;
+
+    itemreg.ReadItemFiles();
 }
 
 void SaveReader::LoadSave(Config& tconfig)
@@ -39,7 +41,6 @@ void SaveReader::LoadSave(Config& tconfig)
     config = &tconfig;
     debugOut = config->debugOut;
 
-    itemreg.ReadItemFiles();
     ifstream conf("resources/data/sv1.p4sv");
     if(conf.good())
     {
@@ -116,6 +117,64 @@ void SaveReader::LoadSave(Config& tconfig)
         cout << "ERROR! Could not load save file!" << endl;
     }
     conf.close();
+}
+
+void SaveReader::Flush() ///Empties the save data.
+{
+    missionsUnlocked.clear();
+    missionLevels.clear();
+    locationsUnlocked = 1;
+
+    invdata.items.clear();
+}
+
+void SaveReader::CreateBlankSave() ///Creates a blank save data for use
+{
+    cout << "SaveReader::CreateBlankSave()" << endl;
+
+    ///name of god
+    kaminame = "Kamipon";
+
+    ///times launched (unnecessary?)
+    timeslaunched = 0;
+    yariponsUnlocked = 3;
+    heroUnlocked = 1;
+
+    ///Adding starter items
+    vector<int> starter_items = {1,1,1,16,16,16}; ///3x wooden spear, 3x wooden helm
+
+    for(int i=0; i<starter_items.size(); i++)
+    {
+        InventoryItem invItem;
+        invItem.item = itemreg.GetItemByID(starter_items[i]);
+        invItem.inventoryId = invdata.items.size();
+        invdata.items.push_back(invItem);
+
+        cout << "Adding item with InvID " << invItem.inventoryId << " realID: " << invItem.item->item_id << endl;
+    }
+
+    ///Defining 3 Yaripons
+
+    for(int i=0; i<3; i++)
+    {
+        Pon newPon = Pon(this);
+
+        newPon.pon_id = i;
+        newPon.pon_class = 1;
+        newPon.pon_squad_position = i;
+
+        newPon.pon_exp = 0;
+        newPon.pon_level = 1;
+
+        newPon.GiveItem(0+i);
+        newPon.GiveItem(3+i);
+
+        ponreg.pons.push_back(newPon);
+    }
+
+    ///Worldmap data
+    missionsUnlocked.push_back(1);
+    locationsUnlocked = 1;
 }
 
 void SaveReader::Save()

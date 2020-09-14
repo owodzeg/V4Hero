@@ -27,6 +27,8 @@ class SaveReader
 
     SaveReader();
     void LoadSave(Config& tconfig);
+    void Flush();
+    void CreateBlankSave();
     DebugOut* debugOut;
     Config* config;
     bool isNewSave;
