@@ -183,12 +183,21 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     {
                         uint16_t check = Binary::get_uint16(pxswap, offset);
 
+                        //cout << "offset: " << std::hex << offset << std::dec << endl;
+
+                        //if((offset >= 130900) && (offset <= 131000))
+                        //cout << "offset " << offset << ": " << std::hex << check << std::dec << endl;
+
                         if(int(check) == 52445)
                         {
+                            //cout << "Check found @ 0x" << std::hex << offset << std::dec << endl;
+
                             if(checks >= 1)
                             {
                                 animation_swaps.push_back(one_swap);
                                 one_swap.clear();
+
+                                //cout << "Swap " << animation_swaps.size()-1 << " saved. Offset: 0x" << std::hex << offset << std::dec << endl;
                             }
 
                             checks++;
@@ -220,9 +229,12 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                         }
                     }
 
+                    animation_swaps.push_back(one_swap);
+                    //cout << "Swap " << animation_swaps.size()-1 << " saved. Offset: 0x" << std::hex << offset << std::dec << endl;
+
                     all_swaps.push_back(animation_swaps);
 
-                    cout << "PixelSwap animation loaded (" << all_swaps.size() << ")" << endl;
+                    cout << "PixelSwap animation loaded: " << animation_swaps.size() << " swaps (animation no. " << all_swaps.size() << ")" << endl;
                 }
 
                 if(line.find("OI:") != std::string::npos)
@@ -926,7 +938,7 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
     curFrame = floor(getAnimationPos() * animation_framerate);
     index = getSegmentIndex(getAnimationSegment());
 
-    float bound = floor(getAnimationLength(getAnimationSegment()) * animation_framerate) - 1;
+    float bound = floor(getAnimationLength(getAnimationSegment()) * animation_framerate);
 
     int curFramePX = curFrame;
 
@@ -990,7 +1002,7 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
                             //cout << "Bounds height: " << animation_bounds[index][curFrame].height << endl;
 
                             if(curFrame < all_swaps[index].size())
-                            objects[i].swapTexture(animation_spritesheet[index].spritesheet, all_swaps[index][curFrame]);
+                            objects[i].swapTexture(animation_spritesheet[index].spritesheet, all_swaps[index][curFrame-1]);
                         }
                     }
 
