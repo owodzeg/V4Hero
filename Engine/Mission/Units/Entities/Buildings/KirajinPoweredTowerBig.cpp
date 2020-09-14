@@ -82,7 +82,7 @@ void KirajinPoweredTowerBig::OnCollide(CollidableObject* otherObject, int collid
             }
         }
 
-        if((curHP > 0) && (curHP <= maxHP/2))
+        if((curHP > 0) && (curHP <= maxHP/4))
         {
             if(AnimatedObject::getAnimationSegment() != "idle_damaged")
             AnimatedObject::setAnimationSegment("idle_damaged", true);
