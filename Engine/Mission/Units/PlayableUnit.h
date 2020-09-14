@@ -38,6 +38,14 @@ class PlayableUnit : public CollidableObject
     int army_id = 0; ///ID the unit has in the army, not it's global ID
     bool enemy_in_range = false;
 
+    bool charged = false;
+    bool charge_m1 = false; ///count a measure
+    bool defend = false;
+
+    bool isFever = false;
+
+    std::string old_current_song = "";
+
     PlayableUnit();
     virtual void setUnitID(int new_unitID);
     virtual int getUnitID();

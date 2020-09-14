@@ -40,18 +40,18 @@ bool Patapon::doAttack()
                 ///Calculate the local x
                 if(!dest_set)
                 {
-                    if(entity_distance < 360) ///unit is too close, go back (distance = 250)
+                    if(entity_distance < low_throw_range) ///unit is too close, go back (distance = 250)
                     {
-                        dest_local_x = -(360-entity_distance) - (rand() % 50); ///take a random position farther from the enemy
+                        dest_local_x = -(low_throw_range-entity_distance) - (rand() % 50); ///take a random position farther from the enemy
                     }
-                    else if((entity_distance >= 360) && (entity_distance <= 410)) ///perfect spot, make some tiny adjustments and start attacking
+                    else if((entity_distance >= low_throw_range) && (entity_distance <= high_throw_range)) ///perfect spot, make some tiny adjustments and start attacking
                     {
                         ///320-370
                         dest_local_x += rand() % 40 - 20;
                     }
-                    else if(entity_distance > 410) ///unit is too far, get closer (distance = 400)
+                    else if(entity_distance > high_throw_range) ///unit is too far, get closer (distance = 400)
                     {
-                        dest_local_x = (entity_distance - 410) + (rand() % 50); ///take a random position closer the enemy
+                        dest_local_x = (entity_distance - high_throw_range) + (rand() % 50); ///take a random position closer the enemy
                     }
 
                     dest_set = true;
@@ -191,6 +191,11 @@ void Patapon::doRhythm(std::string current_song, std::string current_drum, int c
 {
     if(!dead)
     {
+        if(enemy_in_range)
+        focus = true;
+        else
+        focus = false;
+
         if(current_song == "patapata")
         {
             action = WALK;
@@ -198,11 +203,15 @@ void Patapon::doRhythm(std::string current_song, std::string current_drum, int c
             dest_local_x = 0;
 
             if(!focus)
-            setAnimationSegment("walk");
+            {
+                if(getAnimationSegment() != "walk")
+                setAnimationSegment("walk", true);
+            }
             else
-            setAnimationSegment("walk_focused");
-
-            setLoop(true);
+            {
+                if(getAnimationSegment() != "walk_focused")
+                setAnimationSegment("walk_focused", true);
+            }
         }
         else
         {
@@ -223,12 +232,75 @@ void Patapon::doRhythm(std::string current_song, std::string current_drum, int c
             ///use attack only once
             if(attackmode != 2)
             startAttack();
+
+            if(isFever)
+            {
+                high_throw_range = 410;
+                low_throw_range = 360;
+            }
+            else
+            {
+                high_throw_range = 320;
+                low_throw_range = 270;
+            }
+        }
+        else if(current_song == "chakachaka")
+        {
+            defend = true;
+
+            ///use attack only once
+            if(attackmode != 2)
+            startAttack();
+
+            if(isFever)
+            {
+                high_throw_range = 250;
+                low_throw_range = 200;
+            }
+            else
+            {
+                high_throw_range = 320;
+                low_throw_range = 270;
+            }
         }
         else
         {
             ///refresh attack mode
             attackmode = -1;
         }
+
+        if(current_song != "")
+        {
+            if(current_song == "ponchaka")
+            {
+                if((getAnimationSegment() != "charge_start") && (getAnimationSegment() != "charge_intact"))
+                setAnimationSegment("charge_start", true);
+
+                charge_m1 = true;
+                charged = false;
+            }
+            else
+            {
+                if(charge_m1)
+                {
+                    if(charged == false)
+                    charged = true;
+                    else
+                    charge_m1 = false;
+                }
+                else if(current_song != old_current_song)
+                {
+                    charged = false;
+                }
+            }
+
+            if(current_song != "chakachaka")
+            defend = false;
+        }
+
+        old_current_song = current_song;
+
+        //cout << "new comms: " << charged << " " << charge_m1 << " " << defend << endl;
 
         if((current_drum == "pata") or (current_drum == "pon") or (current_drum == "chaka") or (current_drum == "don"))
         {
@@ -240,6 +312,25 @@ void Patapon::doRhythm(std::string current_song, std::string current_drum, int c
             setAnimationSegment(current_drum, true);
             else
             setAnimationSegment(current_drum+"_focused", true);
+        }
+
+        if(combo < 2)
+        {
+            if(getAnimationSegment() == "charge_intact")
+            {
+                if(!focus)
+                {
+                    setAnimationSegment("idle_armed", true);
+                }
+                else
+                {
+                    setAnimationSegment("idle_armed_focused", true);
+                }
+            }
+
+            defend = false;
+            charged = false;
+            charge_m1 = false;
         }
 
         if(combo >= 11)
@@ -279,6 +370,8 @@ void Patapon::doMissionEnd()
 
 void Patapon::Draw(sf::RenderWindow& window)
 {
+    //cout << "Patapon: " << getAnimationSegment() << " " << getAnimationPos() << "/" << getAnimationLength(getAnimationSegment()) << " " << curFrame << " " << index << " " << floor(getAnimationLength(getAnimationSegment()) * animation_framerate) - 1 << " " << animation_framerate << endl;
+
     if(AnimatedObject::getAnimationSegment() == "walk")
     {
         framerate = 0.8;
@@ -286,15 +379,6 @@ void Patapon::Draw(sf::RenderWindow& window)
     else
     {
         framerate = 1;
-    }
-
-    if(gclosest <= 850)
-    {
-        focus = true;
-    }
-    else
-    {
-        focus = false;
     }
 
     if(getUnitHP() <= 0)
@@ -382,6 +466,15 @@ void Patapon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
         {
             ///collisionData received from Projectile, process it
             int dmgDealt = atoi(collisionData[0].c_str());
+
+            if(defend)
+            {
+                if(charged)
+                dmgDealt = round(dmgDealt / 4);
+                else
+                dmgDealt = round(dmgDealt / 2);
+            }
+
             current_hp -= dmgDealt;
 
             cout << "I received " << to_string(dmgDealt) << "damage, my HP is " << current_hp << endl;

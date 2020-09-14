@@ -29,14 +29,15 @@ class Patapon : public PlayableUnit
     bool getback = false;
     bool dest_set = false;
 
-    bool isFever = false;
-
     enum Actions
     {
         IDLE = 0,
         WALK = 1,
         ATTACK = 2
     };
+
+    float high_throw_range = 0;
+    float low_throw_range = 0;
 
     sf::Clock partyClock;
 

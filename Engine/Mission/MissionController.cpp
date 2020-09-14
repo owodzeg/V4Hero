@@ -1356,11 +1356,21 @@ vector<MissionController::CollisionEvent> MissionController::DoCollisionForUnit(
             if (isCollision&&isCollision2&&isCollision3&&isCollision4)
             {
                 std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
+                PlayableUnit* unit = units[i].get();
+
                 CollisionEvent cevent;
                 cevent.collided = true;
                 //cevent.collidedEntityID = -1;
                 cevent.isAttackable = target->isAttackable;
                 cevent.isCollidable = target->isCollidable;
+
+                if(unit->defend)
+                {
+                    if(unit->charged)
+                    cevent.defend_factor = 0.25;
+                    else
+                    cevent.defend_factor = 0.5;
+                }
 
                 target->OnCollide(target, collisionObjectID, collisionData);
 
@@ -2182,7 +2192,7 @@ std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
 
                 ///add damage counter
                 if(cevent[e].isAttackable)
-                addDmgCounter(0, total, xpos, ypos, qualitySetting, resSetting);
+                addDmgCounter(0, total*cevent[e].defend_factor, xpos, ypos, qualitySetting, resSetting);
             }
         }
 
@@ -2727,6 +2737,18 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
                         float mindmg = unit->mindmg * (0.8 + (rhythm_acc*0.05)) * fever_boost;
                         float maxdmg = unit->maxdmg * (0.8 + (rhythm_acc*0.05)) * fever_boost;
 
+                        if(unit->charged)
+                        {
+                            mindmg = mindmg*2.2;
+                            maxdmg = maxdmg*2.2;
+                        }
+
+                        if(unit->defend)
+                        {
+                            mindmg = mindmg / 3;
+                            maxdmg = maxdmg / 3;
+                        }
+
                         ///Make the spears be thrown with worse velocity when player is drumming bad (10% punishment)
                         rand_hs *= 0.9 + (rhythm_acc*0.025);
                         rand_vs *= 0.9 + (rhythm_acc*0.025);
@@ -2736,7 +2758,15 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
                         float xpos = unit->getGlobalPosition().x+unit->hitBox.left+unit->hitBox.width/2;
                         float ypos = unit->getGlobalPosition().y+unit->hitBox.top+unit->hitBox.height/2;
 
-                        spawnProjectile(unit->objects[1].s_obj, xpos, ypos, 800, 450+rand_hs, -450+rand_vs, -0.58 - rand_rad, maxdmg, mindmg, 0);
+                        float vspeed = -450+rand_vs;
+
+                        if(unit->defend)
+                        {
+                            if(unit->isFever)
+                            vspeed = fabs(vspeed)-250;
+                        }
+
+                        spawnProjectile(unit->objects[1].s_obj, xpos, ypos, 800, 450+rand_hs, vspeed, -0.58 - rand_rad, maxdmg, mindmg, 0);
                     }
                 }
             }

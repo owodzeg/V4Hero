@@ -152,6 +152,7 @@ class MissionController
         int collidedEntityID = -1; ///id of entity that has been collided with
         bool isCollidable = true; ///is the entity collidable?
         bool isAttackable = true; ///is the entity attackable?
+        float defend_factor = 1; ///how much did the entity defended off?
     };
 
     struct PickedItem ///used for item display in the top right corner
