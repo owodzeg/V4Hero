@@ -40,17 +40,18 @@ bool Patapon::doAttack()
                 ///Calculate the local x
                 if(!dest_set)
                 {
-                    if(entity_distance < 150) ///unit is too close, go back
+                    if(entity_distance < 360) ///unit is too close, go back (distance = 250)
                     {
-                        dest_local_x = -(rand() % (250)); ///take a random position farther from the enemy
+                        dest_local_x = -(360-entity_distance) - (rand() % 50); ///take a random position farther from the enemy
                     }
-                    else if((entity_distance >= 150) && (entity_distance <= 250)) ///perfect spot, make some tiny adjustments and start attacking
+                    else if((entity_distance >= 360) && (entity_distance <= 410)) ///perfect spot, make some tiny adjustments and start attacking
                     {
-                        dest_local_x += rand() % 50 - 25;
+                        ///320-370
+                        dest_local_x += rand() % 40 - 20;
                     }
-                    else if(entity_distance > 250) ///unit is too far, get closer
+                    else if(entity_distance > 410) ///unit is too far, get closer (distance = 400)
                     {
-                        dest_local_x = rand() % (int(entity_distance)-250+1); ///take a random position farther from the enemy
+                        dest_local_x = (entity_distance - 410) + (rand() % 50); ///take a random position closer the enemy
                     }
 
                     dest_set = true;
@@ -60,10 +61,10 @@ bool Patapon::doAttack()
 
                 //dest_local_x = entity_distance;
 
-                if((local_x >= dest_local_x-5) && (local_x >= dest_local_x+5)) ///When you are set at your position, start the attack
+                if((local_x >= dest_local_x-5) && (local_x <= dest_local_x+5)) ///When you are set at your position, start the attack
                 attackmode = -1;
 
-                if(walkClock.getElapsedTime().asMilliseconds() >= 500) ///If walking takes you too long, stop and start the attack
+                if(walkClock.getElapsedTime().asMilliseconds() >= 750) ///If walking takes you too long, stop and start the attack
                 {
                     attackmode = -1;
                     dest_local_x = local_x;

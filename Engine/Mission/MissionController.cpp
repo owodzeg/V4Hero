@@ -1552,7 +1552,7 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, InputCon
                 {
                     if(entity->isCollidable)
                     {
-                        if(farthest_unit->getGlobalPosition().x >= entity->getGlobalPosition().x)
+                        if(farthest_unit->getGlobalPosition().x >= entity->getGlobalPosition().x+entity->hitboxes[0].o_x)
                         foundCollision = true;
                     }
                 }
@@ -2603,7 +2603,7 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
         {
             if(tangibleLevelObjects[i].get()->getGlobalPosition().x < closest_entity_pos)
             {
-                closest_entity_pos = tangibleLevelObjects[i].get()->getGlobalPosition().x;
+                closest_entity_pos = tangibleLevelObjects[i].get()->getGlobalPosition().x + tangibleLevelObjects[i].get()->hitboxes[0].o_x;
                 closest_entity_id = i;
             }
         }
@@ -2632,7 +2632,7 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
                         //cout << "Range of unit " << i << ": " << abs((units[i].get()->getGlobalPosition().x) - closest_entity->getGlobalPosition().x) - 110 << endl;
                         //cout << "Dest local x: " << units[i].get()->dest_local_x << endl;
 
-                        if(abs((units[i].get()->getGlobalPosition().x) - closest_entity->getGlobalPosition().x) - 110 > 800)
+                        if(abs((units[i].get()->getGlobalPosition().x) - (closest_entity->getGlobalPosition().x + closest_entity->hitboxes[0].o_x)) > 900)
                         inRange = false;
                     }
                 }
@@ -2650,7 +2650,8 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
             {
                 Entity* closest_entity = tangibleLevelObjects[closest_entity_id].get();
 
-                unit->entity_distance = abs((unit->getGlobalPosition().x) - closest_entity->getGlobalPosition().x - closest_entity->hitboxes[0].getGlobalPosition().x) - 110;
+                unit->entity_distance = abs((unit->global_x) - (closest_entity->getGlobalPosition().x + closest_entity->hitboxes[0].o_x));
+                //cout << "Distance to nearest entity for unit " << i << ": " << unit->entity_distance << " (" << unit->global_x << " " << closest_entity->getGlobalPosition().x << " " << closest_entity->hitboxes[0].o_x << ")" << endl;
 
                 if((closest_entity->entityType == Entity::EntityTypes::HOSTILE) && (inRange))
                 {
