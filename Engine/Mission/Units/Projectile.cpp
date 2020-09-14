@@ -56,7 +56,8 @@ void Projectile::Update(sf::RenderWindow &window, float fps)
 
 Projectile::Projectile(PSprite& tsprite)
 {
-    sprite=&tsprite;
+    nsprite = tsprite;
+    sprite=&nsprite;
     sprite->setOrigin(sprite->getLocalBounds().width/2,sprite->getLocalBounds().height/2);
 }
 

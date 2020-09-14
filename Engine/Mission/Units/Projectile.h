@@ -22,6 +22,7 @@ class Projectile
     float hspeed;
     float vspeed;
 
+    PSprite nsprite;
     PSprite* sprite;
     Projectile(PSprite& tsprite);
 
