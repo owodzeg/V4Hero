@@ -54,6 +54,13 @@ void FeverWorm::doRhythm(std::string current_song, std::string current_drum, int
         }
     }
 
+    if(combo < 2)
+    {
+        global_x = -310;
+        next_x = -310;
+        speed = 120;
+    }
+
     f_combo = realcombo;
 
     if(f_combo != old_combo)
