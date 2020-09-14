@@ -232,6 +232,8 @@ void Patapon::doRhythm(std::string current_song, std::string current_drum, int c
         if((current_drum == "pata") or (current_drum == "pon") or (current_drum == "chaka") or (current_drum == "don"))
         {
             //cout << current_drum << endl;
+            attackmode = -1;
+            action = IDLE;
 
             if(!focus)
             setAnimationSegment(current_drum, true);
