@@ -297,6 +297,11 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     float y = atof(hbframe[5].c_str())+height/2;
                     float rotation = 0;///3.14159265358/6; /// this needs to be loaded later IN RADIANS
                     hitboxes[hitboxID].SetCustomFrame(time,g_x,g_y,x,y,rotation,width,height);
+
+                    hitboxes[hitboxID].o_x = atof(hbframe[4].c_str());
+                    hitboxes[hitboxID].o_y = atof(hbframe[5].c_str());
+                    hitboxes[hitboxID].o_width = width;
+                    hitboxes[hitboxID].o_height = height;
                 }
             }
             else if(version == "1.02-experimental")
@@ -477,6 +482,11 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     float y = atof(hbframe[5].c_str())+height/2;
                     float rotation = 0;///3.14159265358/6; /// this needs to be loaded later IN RADIANS
                     hitboxes[hitboxID].SetCustomFrame(time,g_x,g_y,x,y,rotation,width,height);
+
+                    hitboxes[hitboxID].o_x = x;
+                    hitboxes[hitboxID].o_y = y;
+                    hitboxes[hitboxID].o_width = width;
+                    hitboxes[hitboxID].o_height = height;
                 }
             }
             else if(version == "1.01")

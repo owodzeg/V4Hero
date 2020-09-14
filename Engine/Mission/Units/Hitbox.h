@@ -15,6 +15,9 @@ class Hitbox
     float g_y; ///global y pos
     HitboxFrame hitboxObject;
 
+    ///Data passed from AnimatedObject
+    float o_x, o_y, o_width, o_height;
+
     /// frame should no longer be needed: use HitboxFrame instead
     /*struct Frame
     {
