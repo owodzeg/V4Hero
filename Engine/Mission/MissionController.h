@@ -219,7 +219,7 @@ class MissionController
     void spawnEntity(string entityName, int entityID, int baseHP, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, int layer, int parent, float overrideY, float overrideHP, vector<Entity::Loot> loot_table, vector<string> additional_data={});
     void addPickedItem(std::string spritesheet, int spritesheet_id, int picked_item);
     void addUnitThumb(int unit_id);
-    void spawnProjectile(float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit, bool enemy=false);
+    void spawnProjectile(PSprite& sprite, float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit, bool enemy=false);
 
     /** Load up the mission **/
     void Initialise(Config &config,std::string backgroundName,V4Core &v4core_);

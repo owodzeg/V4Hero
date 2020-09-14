@@ -488,9 +488,9 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
     cout << "Loading finished" << endl;
 }
 
-void MissionController::spawnProjectile(float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit, bool enemy)
+void MissionController::spawnProjectile(PSprite& sprite, float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit, bool enemy)
 {
-    unique_ptr<Spear> p = make_unique<Spear>(s_proj);
+    unique_ptr<Spear> p = make_unique<Spear>(sprite);
 
     p.get()->xPos = xPos;
     p.get()->yPos = yPos;
@@ -2518,7 +2518,7 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
                     float xpos = entity->getGlobalPosition().x+entity->hitBox.left+entity->hitBox.width/2;
                     float ypos = entity->getGlobalPosition().y+entity->hitBox.top+entity->hitBox.height/2;
 
-                    spawnProjectile(xpos, ypos, 800, -450-rand_hs, -450+rand_vs, -2.58 + rand_rad, maxdmg, mindmg, 0, true);
+                    spawnProjectile(s_proj, xpos, ypos, 800, -450-rand_hs, -450+rand_vs, -2.58 + rand_rad, maxdmg, mindmg, 0, true);
                 }
             }
 
@@ -2720,7 +2720,7 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
                         float xpos = unit->getGlobalPosition().x+unit->hitBox.left+unit->hitBox.width/2;
                         float ypos = unit->getGlobalPosition().y+unit->hitBox.top+unit->hitBox.height/2;
 
-                        spawnProjectile(xpos, ypos, 800, 450+rand_hs, -450+rand_vs, -0.58 - rand_rad, maxdmg, mindmg, 0);
+                        spawnProjectile(unit->objects[1].s_obj, xpos, ypos, 800, 450+rand_hs, -450+rand_vs, -0.58 - rand_rad, maxdmg, mindmg, 0);
                     }
                 }
             }
