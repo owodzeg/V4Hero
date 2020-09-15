@@ -294,6 +294,11 @@ void Patapon::doRhythm(std::string current_song, std::string current_drum, int c
                 }
             }
 
+            if((current_song != "ponpon") && (current_song != "chakachaka"))
+            {
+                dest_local_x = 0;
+            }
+
             if(current_song != "chakachaka")
             defend = false;
         }
