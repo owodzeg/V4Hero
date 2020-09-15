@@ -2609,11 +2609,13 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
 
     for(int i=0; i<tangibleLevelObjects.size(); i++)
     {
-        if(tangibleLevelObjects[i].get()->entityType == Entity::EntityTypes::HOSTILE)
+        Entity* entity = tangibleLevelObjects[i].get();
+
+        if(entity->entityType == Entity::EntityTypes::HOSTILE)
         {
-            if(tangibleLevelObjects[i].get()->getGlobalPosition().x < closest_entity_pos)
+            if(entity->getGlobalPosition().x + entity->hitboxes[0].o_x < closest_entity_pos)
             {
-                closest_entity_pos = tangibleLevelObjects[i].get()->getGlobalPosition().x + tangibleLevelObjects[i].get()->hitboxes[0].o_x;
+                closest_entity_pos = entity->getGlobalPosition().x + entity->hitboxes[0].o_x;
                 closest_entity_id = i;
             }
         }
