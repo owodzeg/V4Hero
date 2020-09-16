@@ -2632,7 +2632,7 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
     {
         Entity* entity = tangibleLevelObjects[i].get();
 
-        if(entity->entityType == Entity::EntityTypes::HOSTILE)
+        if((entity->entityType == Entity::EntityTypes::HOSTILE) && (!entity->dead))
         {
             if(entity->getGlobalPosition().x + entity->hitboxes[0].o_x < closest_entity_pos)
             {
@@ -2660,7 +2660,7 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
             {
                 if(units[i].get()->getUnitID() != 0)
                 {
-                    if(closest_entity->entityType == Entity::EntityTypes::HOSTILE)
+                    if((entity->entityType == Entity::EntityTypes::HOSTILE) && (!entity->dead))
                     {
                         //cout << "Range of unit " << i << ": " << abs((units[i].get()->getGlobalPosition().x) - closest_entity->getGlobalPosition().x) - 110 << endl;
                         //cout << "Dest local x: " << units[i].get()->dest_local_x << endl;
@@ -2686,7 +2686,7 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
                 unit->entity_distance = abs((unit->global_x) - (closest_entity->getGlobalPosition().x + closest_entity->hitboxes[0].o_x));
                 //cout << "Distance to nearest entity for unit " << i << ": " << unit->entity_distance << " (" << unit->global_x << " " << closest_entity->getGlobalPosition().x << " " << closest_entity->hitboxes[0].o_x << ")" << endl;
 
-                if((closest_entity->entityType == Entity::EntityTypes::HOSTILE) && (inRange))
+                if((closest_entity->entityType == Entity::EntityTypes::HOSTILE) && (!closest_entity->dead) && (inRange))
                 {
                     unit->enemy_in_range = true;
                     //cout << "Unit " << i << " distance to closest enemy is " << unit->entity_distance << " pixels" << endl;
