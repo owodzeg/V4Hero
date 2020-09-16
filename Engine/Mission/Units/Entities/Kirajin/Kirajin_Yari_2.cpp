@@ -18,16 +18,13 @@ void Kirajin_Yari_2::LoadConfig(Config *thisConfigs)
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\kirajin.p4a");
     AnimatedObject::setAnimationSegment("idle_armed_focused");
 
-    if(std::find(additional_data.begin(), additional_data.end(), "hidden") != additional_data.end())
-    {
-        action = HIDING;
-    }
-
     for(int i=0; i<additional_data.size(); i++)
     {
-        if(additional_data[i] == "hidden")
+        if(additional_data[i].find("hidden") != std::string::npos)
         {
             action = HIDING;
+            string a = additional_data[i].substr(additional_data[i].find_first_of(":")+1);
+            swap_layer = stoi(a);
         }
         else if(additional_data[i].find("talk") != std::string::npos)
         {
@@ -261,7 +258,7 @@ void Kirajin_Yari_2::Draw(sf::RenderWindow& window)
         {
             if(distance_to_unit <= 350)
             {
-                layer = 99;
+                layer = swap_layer;
                 hspeed = 200;
                 vspeed = -420;
 
@@ -392,6 +389,9 @@ void Kirajin_Yari_2::OnCollide(CollidableObject* otherObject, int collidedWith, 
         {
             if(isCollidable)
             {
+                if(action == HIDING)
+                layer = swap_layer;
+
                 action = IDLE;
                 attackmode = -1;
 

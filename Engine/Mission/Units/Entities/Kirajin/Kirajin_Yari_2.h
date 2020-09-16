@@ -42,6 +42,8 @@ class Kirajin_Yari_2 : public Entity
     bool talk = false;
     string talk_id = "";
 
+    int swap_layer = 0;
+
     sf::Clock message_clock;
     sf::Clock walk_clock; ///position updates
 
