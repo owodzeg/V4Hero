@@ -1007,10 +1007,31 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 
                             vector<string> additional_data;
 
-                            if(spawn.size() >= 15)
+                            if(spawn.size() >= 16)
                             {
                                 ///additional data exists
-                                additional_data = Func::Split(spawn[14], ';');
+                                additional_data = Func::Split(spawn[15], ';');
+                            }
+
+                            string custom_loot_pool = spawn[14];
+
+                            if(custom_loot_pool != "default")
+                            {
+                                loot_table.clear();
+
+                                vector<string> b = Func::Split(custom_loot_pool,';');
+
+                                for(int e=0; e<b.size(); e++)
+                                {
+                                    vector<string> bb = Func::Split(b[e], ':');
+
+                                    Entity::Loot tmp;
+                                    tmp.item_id = stoi(bb[0]);
+                                    tmp.item_chance = stoi(bb[1]);
+                                    loot_table.push_back(tmp);
+
+                                    cout << "[CUSTOM Loot table] Item: " << v4core->savereader.itemreg.GetItemByID(tmp.item_id)->icon_path << " with " << tmp.item_chance << "% drop rate" << endl;
+                                }
                             }
 
                             cout << "Spawning an entity: " << entity_list[entityID] << endl;
