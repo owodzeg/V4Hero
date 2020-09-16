@@ -2660,7 +2660,7 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
             {
                 if(units[i].get()->getUnitID() != 0)
                 {
-                    if((entity->entityType == Entity::EntityTypes::HOSTILE) && (!entity->dead))
+                    if((closest_entity->entityType == Entity::EntityTypes::HOSTILE) && (!closest_entity->dead))
                     {
                         //cout << "Range of unit " << i << ": " << abs((units[i].get()->getGlobalPosition().x) - closest_entity->getGlobalPosition().x) - 110 << endl;
                         //cout << "Dest local x: " << units[i].get()->dest_local_x << endl;
