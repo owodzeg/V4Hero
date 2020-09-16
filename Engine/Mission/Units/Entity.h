@@ -58,6 +58,7 @@ class Entity : public CollidableObject
     virtual void doMessages(sf::RenderWindow& window, float fps, InputController& inputCtrl); ///manage message clouds
     virtual void die();
     virtual void LoadConfig(Config *thisConfigs, std::string unitParamPath);
+    virtual void dropItem();
 };
 
 #endif // ENTITY_H
