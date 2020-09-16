@@ -17,6 +17,28 @@ void Kirajin_Yari_1::LoadConfig(Config *thisConfigs)
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\kirajin.p4a");
     AnimatedObject::setAnimationSegment("idle_armed_focused");
+
+    for(int i=0; i<additional_data.size(); i++)
+    {
+        if(additional_data[i].find("hidden") != std::string::npos)
+        {
+            action = HIDING;
+            string a = additional_data[i].substr(additional_data[i].find_first_of(":")+1);
+            swap_layer = stoi(a);
+        }
+        else if(additional_data[i].find("talk") != std::string::npos)
+        {
+            talk_id = additional_data[i].substr(additional_data[i].find_first_of(":")+1);
+            talk = true;
+        }
+        else if(additional_data[i].find("equip") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            applySpear(stoi(eq[1]));
+            applyHelm(stoi(eq[2]));
+        }
+    }
 }
 
 bool Kirajin_Yari_1::doAttack()

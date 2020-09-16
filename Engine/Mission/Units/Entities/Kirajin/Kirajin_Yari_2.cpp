@@ -31,6 +31,13 @@ void Kirajin_Yari_2::LoadConfig(Config *thisConfigs)
             talk_id = additional_data[i].substr(additional_data[i].find_first_of(":")+1);
             talk = true;
         }
+        else if(additional_data[i].find("equip") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            applySpear(stoi(eq[1]));
+            applyHelm(stoi(eq[2]));
+        }
     }
 }
 
