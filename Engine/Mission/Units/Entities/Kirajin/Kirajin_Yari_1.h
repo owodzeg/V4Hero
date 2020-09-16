@@ -20,6 +20,21 @@ class Kirajin_Yari_1 : public Entity
     float vspeed = 0;
     float gravity = 981;
 
+    enum ACTIONS
+    {
+        HIDING = 0,
+        IDLE = 1,
+        ATTACK = 2,
+        WALK = 3
+    };
+
+    int action = 1;
+
+    bool talk = false;
+    string talk_id = "";
+
+    int swap_layer = 0;
+
     Kirajin_Yari_1();
     void LoadConfig(Config *thisConfigs);
     void Draw(sf::RenderWindow& window);
