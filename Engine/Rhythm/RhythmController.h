@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <deque>
 
 #include "../Config.h"
 #include "../Input/InputController.h"
@@ -26,7 +27,7 @@ class RhythmController
     ///REPLACE WITH b_drum["pata"][0] and b_drum["ch_pata"][0];
     sf::SoundBuffer b_pata[3],b_pon[3],b_chaka[3],b_don[3]; ///Drums without chants
     sf::SoundBuffer b_chpata[3],b_chpon[3],b_chchaka[3],b_chdon[3]; ///Drums with chants
-    std::vector<sf::Sound> s_drums; ///Table for storing all the drums being hit
+    std::deque<sf::Sound> s_drums; ///Table for storing all the drums being hit
 
     sf::Sound drum_c;
     sf::Sound drum_nc;
