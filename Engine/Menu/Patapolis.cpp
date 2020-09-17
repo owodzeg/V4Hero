@@ -204,7 +204,7 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
 {
     parent->SaveToDebugLog("Initializing Patapolis...");
 
-    sf::Context context;
+    //sf::Context context;
     Scene::Initialise(thisConfigs,parent);
     altar_menu.Initialise(thisConfigs,parent,this);
     barracks_menu.Initialise(thisConfigs,parent,this);

@@ -646,7 +646,7 @@ void MissionController::addUnitThumb(int unit_id)
 void MissionController::Initialise(Config &config,std::string backgroundString,V4Core &v4core_)
 {
     v4core = &v4core_;
-    sf::Context context;
+    //sf::Context context;
 
     PSprite ps_temp;
     ps_temp.loadFromFile("resources/graphics/item/icon/spear.png",1);
@@ -786,7 +786,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     playCheer[1] = false;
     playCheer[2] = false;
 
-    sf::Context context;
+    //sf::Context context;
     int quality = missionConfig->GetInt("textureQuality");
     float ratioX, ratioY;
 

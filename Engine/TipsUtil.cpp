@@ -35,7 +35,7 @@ TipsUtil::TipsUtil()
 void TipsUtil::LoadBackgrounds(Config& tconfig)
 {
 
-    sf::Context context;
+    //sf::Context context;
     config = &tconfig;
     debugOut = config->debugOut;
 
@@ -81,7 +81,7 @@ void TipsUtil::LoadBackgrounds(Config& tconfig)
 void TipsUtil::LoadIcons(Config& tconfig)
 {
 
-    sf::Context context;
+    //sf::Context context;
     config = &tconfig;
     debugOut = config->debugOut;
     ifstream conf("resources/graphics/ui/tips/tip_icons.txt");
@@ -126,7 +126,7 @@ void TipsUtil::LoadIcons(Config& tconfig)
 void TipsUtil::LoadStrings(Config& tconfig)
 {
 
-    sf::Context context;
+    //sf::Context context;
     config = &tconfig;
     debugOut = config->debugOut;
     ifstream conf("resources/lang/tip_ENG.txt");

@@ -197,7 +197,10 @@ void V4Core::LoadingWaitForKeyPress()
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
+            {
                 window.close();
+                biff = false;
+            }
 
             ///Cannot use input controller here because this while loop completely blocks the other event access from happening
             if((event.type == sf::Event::KeyPressed) || (event.type == sf::Event::JoystickButtonPressed))
@@ -214,7 +217,7 @@ void V4Core::LoadingThread()
 {
     ChangeRichPresence("Reading tips", "logo", "");
 
-    sf::Context context;
+    //sf::Context context;
     window.setActive(true);
     window.draw(t_version);
     window.clear();
