@@ -20,6 +20,8 @@ void PataDialogBox::Create(sf::Font font, std::string text, std::vector<std::str
     }
 
     arrow.loadFromFile("resources/graphics/ui/dialog/arrow.png", qualitySetting, 1);
+
+    option = t_options.size()-1;
 }
 
 void PataDialogBox::Readjust()
@@ -111,7 +113,7 @@ void PataDialogBox::Draw(sf::RenderWindow& window, float fps, InputController& i
         t_dialogText.setPosition(x, y-rr_main.ory+t_dialogType.getLocalBounds().height);
         t_dialogText.draw(window);
 
-        cout << "stuff: " << rr_main.orx << " " << rr_main.ory << endl;
+        //cout << "stuff: " << rr_main.orx << " " << rr_main.ory << endl;
 
         highlight.setSize(sf::Vector2f((width+40)*resRatio, 30*resRatio));
         highlight.setFillColor(sf::Color(0,200,0,255));

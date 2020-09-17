@@ -11,7 +11,7 @@ MessageCloud::MessageCloud()
 
 void MessageCloud::setSize(float new_x, float new_y)
 {
-    cout << "MessageCloud::setSize(" << new_x << " " << new_y << "): scale ";
+    //cout << "MessageCloud::setSize(" << new_x << " " << new_y << "): scale ";
 
     ///default x = 1080
     ///new_x = 540
@@ -185,7 +185,7 @@ void MessageCloud::Draw(sf::RenderWindow& window, float fps, InputController& in
         float xsize_diff = (dest_xsize - xsize) * 10 / fps;
         float ysize_diff = (dest_ysize - ysize) * 10 / fps;
 
-        cout << "diff: " << xsize << " " << ysize << " " << dest_xsize << " " << dest_ysize << " " << xsize_diff << " " << ysize_diff << endl;
+        //cout << "diff: " << xsize << " " << ysize << " " << dest_xsize << " " << dest_ysize << " " << xsize_diff << " " << ysize_diff << endl;
 
         setSize(xsize + xsize_diff, ysize + ysize_diff);
 
@@ -230,7 +230,7 @@ void MessageCloud::Draw(sf::RenderWindow& window, float fps, InputController& in
                         viewed_text[cur_dialog] += loaded_text[cur_dialog][cur_char];
                         cur_char++;
 
-                        cout << "adding letter " << cur_char << endl;
+                        //cout << "adding letter " << cur_char << endl;
 
                         text_timeout.restart();
                     }
