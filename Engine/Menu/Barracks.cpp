@@ -842,7 +842,7 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
                             loadingThreadInstance.launch();
 
                             currentController->Initialise(*config,config->GetString("mission1Background"),*v4core);
-                            currentController->StartMission(mission_file,1,missionID);
+                            currentController->StartMission(mission_file,1,missionID,mission_multiplier);
                             this->Hide();
                             this->isActive = false;
 

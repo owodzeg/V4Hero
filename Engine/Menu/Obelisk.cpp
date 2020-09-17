@@ -462,6 +462,12 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                 parentMenu->barracks_menu.obelisk = true;
                 parentMenu->barracks_menu.missionID = missions[sel_mission].mis_ID;
                 parentMenu->barracks_menu.mission_file = missions[sel_mission].mission_file;
+
+                if(thisConfig->thisCore->savereader.missionLevels[missions[sel_mission].mis_ID] != 0)
+                parentMenu->barracks_menu.mission_multiplier = 0.5 + thisConfig->thisCore->savereader.missionLevels[missions[sel_mission].mis_ID]*0.5;
+                else
+                parentMenu->barracks_menu.mission_multiplier = 1;
+
                 parentMenu->barracks_menu.OpenBarracksMenu();
                 parentMenu->barracks_menu.UpdateInputControls();
                 cout << "Set barracks mission to ID " << missions[sel_mission].mis_ID << endl;

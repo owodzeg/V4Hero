@@ -36,6 +36,7 @@ class Barracks : public Menu
         float floorY;
 
         int missionID = 0;
+        float mission_multiplier = 1;
 
         bool obelisk = false;
 
