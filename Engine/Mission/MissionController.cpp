@@ -2564,7 +2564,7 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
                     float xpos = entity->getGlobalPosition().x+entity->hitBox.left+entity->hitBox.width/2;
                     float ypos = entity->getGlobalPosition().y+entity->hitBox.top+entity->hitBox.height/2;
 
-                    spawnProjectile(s_proj, xpos, ypos, 800, -450-rand_hs, -450+rand_vs, -2.58 + rand_rad, maxdmg, mindmg, 0, true);
+                    spawnProjectile(entity->objects[1].s_obj, xpos, ypos, 800, -450-rand_hs, -450+rand_vs, -2.58 + rand_rad, maxdmg, mindmg, 0, true);
                 }
             }
 
