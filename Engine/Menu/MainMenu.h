@@ -54,8 +54,9 @@ class MainMenu : public Menu
         sf::SoundBuffer sb_smash;
         sf::Sound s_smash;
 
-        bool premenu = true;
+        bool premenu = false;
         bool keypressed = false;
+        bool firstrun = true;
 
         float logow_scale = 1.0;
         float logow_shscale = 1.0;
@@ -69,12 +70,16 @@ class MainMenu : public Menu
 
         sf::Clock menuClock;
         sf::Clock startClock;
+        sf::Clock frClock;
+        sf::Clock frwaitClock;
 
         bool mouseInBounds = false;
 
         vector<int> totem_sel_pos = {205, 490, 780, 1080};
 
         vector<PataDialogBox> dialogboxes;
+
+        MessageCloud msgcloud;
 
         Config *config;
         PatapolisMenu patapolisMenu;

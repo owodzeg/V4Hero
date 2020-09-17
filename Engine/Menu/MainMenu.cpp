@@ -198,9 +198,33 @@ void MainMenu::Initialise(Config *thisConfigs, V4Core *parent)
 
     optionsMenu.Initialise(config,v4core,this);
 
+    ifstream fr("resources/firstrun");
+    if(fr.good())
+    {
+        firstrun = false;
+        premenu = true;
+    }
+    else
+    {
+        cout << "It's your first time running the game!" << endl;
+        firstrun = true;
+    }
+
+    msgcloud.Create(45, sf::Vector2f(640,480), sf::Color::White, true, thisConfig->GetInt("textureQuality"));
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_1")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_2")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_3")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_4")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_5")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_6")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_7")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_8")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_9")), true);
+
     parent->SaveToDebugLog("Main menu initialized.");
     //title_loop.play();
     startClock.restart();
+    frClock.restart();
 }
 
 void MainMenu::EventFired(sf::Event event)
@@ -226,7 +250,11 @@ void MainMenu::EventFired(sf::Event event)
     }
     else if(isActive)
     {
-        if(!premenu)
+        if(firstrun)
+        {
+
+        }
+        else if(!premenu)
         {
             if(dialogboxes.size() <= 0)
             {
@@ -389,7 +417,40 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
     }
     else if(isActive)
     {
-        if(premenu)
+        if(firstrun)
+        {
+            if(frClock.getElapsedTime().asSeconds() > 2)
+            {
+                if(!msgcloud.done)
+                msgcloud.Show();
+
+            }
+
+            if(msgcloud.done)
+            {
+                if(!premenu)
+                frwaitClock.restart();
+
+                premenu = true;
+
+                startClock.restart();
+            }
+
+            if(premenu)
+            {
+                if(frwaitClock.getElapsedTime().asSeconds() > 1)
+                {
+                    firstrun = false;
+
+                    ofstream fr("resources/firstrun", ios::trunc);
+                    fr.close();
+                }
+            }
+
+            msgcloud.Draw(window, fps, inputCtrl);
+
+        }
+        else if(premenu)
         {
             if(startClock.getElapsedTime().asSeconds() > 2)
             {
