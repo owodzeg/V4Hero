@@ -76,6 +76,13 @@ void Entity::dropItem()
             }
         }
 
+        if(entityID == 7)
+        {
+            ///check if grubby map was obtained, if not, force drop it
+            if(!thisConfig->thisCore->savereader.invdata.CheckItemObtained(23)) ///check for grubby map
+            id_picked = 23; ///override drop if grubby map not achieved
+        }
+
         if(id_picked != 0)
         {
             auto item = thisConfig->thisCore->savereader.itemreg.GetItemByID(id_picked);
