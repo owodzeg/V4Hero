@@ -221,6 +221,11 @@ void MainMenu::Initialise(Config *thisConfigs, V4Core *parent)
     msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_8")), true);
     msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_9")), true);
 
+    temp_menu.push_back(Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"menu_newgame")));
+    temp_menu.push_back(Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"menu_continue")));
+    temp_menu.push_back(Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"menu_options")));
+    temp_menu.push_back(Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"menu_exit")));
+
     parent->SaveToDebugLog("Main menu initialized.");
     //title_loop.play();
     startClock.restart();

@@ -27,7 +27,7 @@ class MainMenu : public Menu
         sf::SoundBuffer sb_title_loop;
         sf::Sound title_loop;
 
-        std::vector<std::string> temp_menu = {"New game", "Continue", "Options", "Exit"};
+        std::vector<std::string> temp_menu;
 
         PText t_option[4];
 
