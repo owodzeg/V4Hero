@@ -439,7 +439,7 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                 parentMenu->barracks_menu.mission_file = missions[sel_mission].mission_file;
 
                 if(thisConfig->thisCore->savereader.missionLevels[missions[sel_mission].mis_ID] != 0)
-                parentMenu->barracks_menu.mission_multiplier = 0.5 + thisConfig->thisCore->savereader.missionLevels[missions[sel_mission].mis_ID]*0.5;
+                parentMenu->barracks_menu.mission_multiplier = 0.85 + thisConfig->thisCore->savereader.missionLevels[missions[sel_mission].mis_ID]*0.15;
                 else
                 parentMenu->barracks_menu.mission_multiplier = 1;
 

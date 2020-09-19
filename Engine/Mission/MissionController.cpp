@@ -436,7 +436,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         entity->loot_table = loot_table;
         entity->curHP = baseHP*mission_multiplier;
         entity->maxHP = baseHP*mission_multiplier;
-        entity->stat_multiplier = mission_multiplier;
+        entity->stat_multiplier = 1+((mission_multiplier-1) * 0.333);
 
         entity->layer = layer;
         entity->parent = parent;
