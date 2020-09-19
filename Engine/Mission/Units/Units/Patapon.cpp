@@ -319,9 +319,9 @@ void Patapon::doRhythm(std::string current_song, std::string current_drum, int c
             setAnimationSegment(current_drum+"_focused", true);
         }
 
-        if(combo < 2)
+        if((getAnimationSegment().find("pata") != std::string::npos) || (getAnimationSegment().find("pon") != std::string::npos) || (getAnimationSegment().find("don") != std::string::npos) || (getAnimationSegment().find("chaka") != std::string::npos))
         {
-            if(getAnimationSegment() == "charge_intact")
+            if(cur_pos >= anim_end-0.0333)
             {
                 if(!focus)
                 {
@@ -331,6 +331,32 @@ void Patapon::doRhythm(std::string current_song, std::string current_drum, int c
                 {
                     setAnimationSegment("idle_armed_focused", true);
                 }
+            }
+        }
+
+        if(combo < 2)
+        {
+            if((getAnimationSegment() == "charge_intact") || (getAnimationSegment() == "walk") || (getAnimationSegment() == "walk_focused"))
+            {
+                if(!focus)
+                {
+                    setAnimationSegment("idle_armed", true);
+                }
+                else
+                {
+                    setAnimationSegment("idle_armed_focused", true);
+                }
+            }
+
+            if(focus)
+            {
+                if(getAnimationSegment() == "idle_armed")
+                setAnimationSegment("idle_armed_focused", true);
+            }
+            else
+            {
+                if(getAnimationSegment() == "idle_armed_focused")
+                setAnimationSegment("idle_armed", true);
             }
 
             defend = false;
