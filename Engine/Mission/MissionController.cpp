@@ -1159,26 +1159,28 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, In
         }
     }**/
 
-
-    if((inputCtrl.isKeyHeld(InputController::Keys::LTRIGGER)) && (inputCtrl.isKeyHeld(InputController::Keys::RTRIGGER)) && (inputCtrl.isKeyHeld(InputController::Keys::SQUARE)))
+    if(!missionEnd)
     {
-        if(inputCtrl.isKeyPressed(InputController::Keys::SELECT))
+        if((inputCtrl.isKeyHeld(InputController::Keys::LTRIGGER)) && (inputCtrl.isKeyHeld(InputController::Keys::RTRIGGER)) && (inputCtrl.isKeyHeld(InputController::Keys::SQUARE)))
         {
-            std::vector<std::string> a = {"Show hitboxes","Hide hitboxes","Heal units"};
+            if(inputCtrl.isKeyPressed(InputController::Keys::SELECT))
+            {
+                std::vector<std::string> a = {"Show hitboxes","Hide hitboxes","Heal units"};
+
+                PataDialogBox db;
+                db.Create(f_font, "Debug menu", a, missionConfig->GetInt("textureQuality"));
+                db.id = 999;
+                dialogboxes.push_back(db);
+            }
+        }
+        else if(inputCtrl.isKeyPressed(InputController::Keys::START))
+        {
+            std::vector<std::string> a = {Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"nav_no"))};
 
             PataDialogBox db;
-            db.Create(f_font, "Debug menu", a, missionConfig->GetInt("textureQuality"));
-            db.id = 999;
+            db.Create(f_font, Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"mission_backtopatapolis")), a, missionConfig->GetInt("textureQuality"));
             dialogboxes.push_back(db);
         }
-    }
-    else if(inputCtrl.isKeyPressed(InputController::Keys::START))
-    {
-        std::vector<std::string> a = {Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"nav_no"))};
-
-        PataDialogBox db;
-        db.Create(f_font, Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"mission_backtopatapolis")), a, missionConfig->GetInt("textureQuality"));
-        dialogboxes.push_back(db);
     }
 }
 
@@ -2666,7 +2668,7 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
                         //cout << "Range of unit " << i << ": " << abs((units[i].get()->getGlobalPosition().x) - closest_entity->getGlobalPosition().x) - 110 << endl;
                         //cout << "Dest local x: " << units[i].get()->dest_local_x << endl;
 
-                        if(abs((units[i].get()->getGlobalPosition().x) - (closest_entity->getGlobalPosition().x + closest_entity->hitboxes[0].o_x)) > 900)
+                        if(abs((units[i].get()->global_x) - (closest_entity->getGlobalPosition().x + closest_entity->hitboxes[0].o_x)) > 900)
                         inRange = false;
                     }
                 }
