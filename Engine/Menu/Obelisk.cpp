@@ -45,7 +45,8 @@ void ObeliskMenu::addMission(string missiondata)
     missions.push_back(tmp);
 }
 
-void ObeliskMenu::Initialise(Config *thisConfigs,V4Core *parent, PatapolisMenu *curParentMenu){
+void ObeliskMenu::Initialise(Config *thisConfigs,V4Core *parent, PatapolisMenu *curParentMenu)
+{
     parent->SaveToDebugLog("Initializing Obelisk...");
 
     Scene::Initialise(thisConfigs,parent);
@@ -120,30 +121,16 @@ void ObeliskMenu::Initialise(Config *thisConfigs,V4Core *parent, PatapolisMenu *
     mission_title.createText(font, 18, sf::Color::Black, "Hunting Kacheek", quality, 1);
     mission_desc.createText(font, 18, sf::Color::Black, "(no translation needed)", quality, 1);
 
-    float resRatioX = thisConfigs->GetInt("resX") / float(1280);
-    float resRatioY = thisConfigs->GetInt("resY") / float(720);
-
     unavailable.loadFromFile("resources/graphics/ui/worldmap/unavailable.png", quality, 1);
     location_highlight.loadFromFile("resources/graphics/ui/worldmap/location_highlight.png", quality, 1);
     location_highlight.setOrigin(location_highlight.getLocalBounds().width/2, location_highlight.getLocalBounds().height/2);
 
-    cout << "[WorldMap] Creating render_map " << 1012*resRatioX << "x" << 162*resRatioY << endl;
-    if(!render_map.create(1012*resRatioX, 162*resRatioY))
-    {
-        cout << "[WorldMap] Failed to create render_map!" << endl;
-        thisConfigs->thisCore->SaveToDebugLog("[WorldMap] Failed to create render_map!");
-    }
-
-    cout << "[WorldMap] Creating render_map " << 280*resRatioX << "x" << 120*resRatioY << endl;
-    if(!render_missions_map.create(280*resRatioX, 120*resRatioY))
-    {
-        cout << "[WorldMap] Failed to create render_map!" << endl;
-        thisConfigs->thisCore->SaveToDebugLog("[WorldMap] Failed to create render_missions_map!");
-    }
-
     mission_select.loadFromFile("resources/graphics/ui/worldmap/mission_select.png", quality, 1);
 
     ctrlTips.create(66, font, 20, sf::String(L"Left/Right: Select field      ×: View missions      〇: Exit to Patapolis"), quality);
+
+    float resRatioX = thisConfigs->GetInt("resX") / float(1280);
+    float resRatioY = thisConfigs->GetInt("resY") / float(720);
 
     parent->SaveToDebugLog("Initializing Obelisk finished.");
 }
@@ -221,63 +208,10 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 {
     if(isActive)
     {
-        //cout << mapX << " " << mapXdest << " " << (sel_location*123) << " " << (sel_location*123) + 176 << endl;
-        if(!runonce)
-        {
-            //cout << "[DEBUG] Obelisk is currently open and active." << endl;
-            //thisConfig->thisCore->SaveToDebugLog("[DEBUG] Obelisk is currently open and active.");
-        }
+        window.setView(window.getDefaultView());
 
-        render_map.clear(sf::Color::Transparent);
-
-        if(round(mapX) != mapXdest)
-        {
-            float speed = abs(mapX - mapXdest) * 10;
-
-            if(mapX > mapXdest)
-            mapX -= speed / fps;
-            else
-            mapX += speed / fps;
-        }
-
-        if(mapX >= 0)
-        mapX = 0;
-
-        int maxBound = (worldmap_fields.size()*123 - 1012) * (-1);
-
-        if(mapX <= maxBound)
-        mapX = maxBound;
-
-        for(int i=0; i<worldmap_fields.size(); i++)
-        {
-            worldmap_fields[i].setPosition(i*123 + mapX, 0);
-            worldmap_fields[i].update(window);
-
-            render_map.draw(worldmap_fields[i].s);
-        }
-
-        location_highlight.setOrigin(location_highlight.getLocalBounds().width/2, location_highlight.getLocalBounds().height/2);
-        location_highlight.setPosition(sel_location*123 + mapX - 62, 78);
-        location_highlight.update(window);
-        render_map.draw(location_highlight.s);
-
-        for(int i=0; i<worldmap_fields.size(); i++)
-        {
-            worldmap_icons[i].setOrigin(worldmap_icons[i].getLocalBounds().width/2, worldmap_icons[i].getLocalBounds().height);
-            worldmap_icons[i].setPosition(i*123 + mapX + 61, 155);
-            worldmap_icons[i].update(window);
-
-            render_map.draw(worldmap_icons[i].s);
-
-            if(std::find(unlocked.begin(), unlocked.end(), i) == unlocked.end())
-            {
-                unavailable.setPosition(i*123 + mapX - 1, 0);
-                unavailable.update(window);
-                render_map.draw(unavailable.s);
-            }
-        }
-
-        render_map.display();
+        float resRatioX = window.getSize().x / float(1280);
+        float resRatioY = window.getSize().y / float(720);
 
         if(!displayMissions)
         {
@@ -342,12 +276,54 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
         location_desc.setPosition(mainbox.getPosition().x, mainbox.getPosition().y+142);
         location_desc.draw(window);
 
-        float resRatioX = window.getSize().x / float(1280);
-        float resRatioY = window.getSize().y / float(720);
+        if(round(mapX) != mapXdest)
+        {
+            float speed = abs(mapX - mapXdest) * 10;
 
-        spr_render_map.setTexture(render_map.getTexture(), true);
-        spr_render_map.setPosition(sf::Vector2f(134*resRatioX, (mainbox.getPosition().y - 115) * resRatioY));
-        window.draw(spr_render_map);
+            if(mapX > mapXdest)
+            mapX -= speed / fps;
+            else
+            mapX += speed / fps;
+        }
+
+        if(mapX >= 0)
+        mapX = 0;
+
+        int maxBound = (worldmap_fields.size()*123 - 1012) * (-1);
+
+        if(mapX <= maxBound)
+        mapX = maxBound;
+
+        v_render_map.setSize(1012*resRatioX, 720*resRatioY);
+        v_render_map.setCenter((506)*resRatioX, -360*resRatioY);
+        v_render_map.setViewport(sf::FloatRect(134.0/1280.0, (mainbox.getPosition().y - 115)/720.0, 1012.0/1280.0, 1.f));
+
+        window.setView(v_render_map);
+
+        for(int i=0; i<worldmap_fields.size(); i++)
+        {
+            worldmap_fields[i].setPosition(i*123 + mapX, 0-720);
+            worldmap_fields[i].draw(window);
+        }
+
+        location_highlight.setOrigin(location_highlight.getLocalBounds().width/2, location_highlight.getLocalBounds().height/2);
+        location_highlight.setPosition(sel_location*123 + mapX - 62, 78-720);
+        location_highlight.draw(window);
+
+        for(int i=0; i<worldmap_fields.size(); i++)
+        {
+            worldmap_icons[i].setOrigin(worldmap_icons[i].getLocalBounds().width/2, worldmap_icons[i].getLocalBounds().height);
+            worldmap_icons[i].setPosition(i*123 + mapX + 61, 155-720);
+            worldmap_icons[i].draw(window);
+
+            if(std::find(unlocked.begin(), unlocked.end(), i) == unlocked.end())
+            {
+                unavailable.setPosition(i*123 + mapX - 1, 0-720);
+                unavailable.draw(window);
+            }
+        }
+
+        window.setView(window.getDefaultView());
 
         if(displayMissions)
         {
@@ -366,23 +342,22 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
             mission_desc.setPosition(descbox.getPosition().x - 315, descbox.getPosition().y - 55);
             mission_desc.draw(window);
 
-            render_missions_map.clear(sf::Color::Transparent);
-
-            for(int i=0; i<missions.size(); i++)
-            {
-                missions[i].p_mis.setPosition(0, i*24);
-                missions[i].p_mis.update(window);
-                render_missions_map.draw(missions[i].p_mis.t);
-            }
-
-            render_missions_map.display();
-
             mission_select.setPosition(135, missionbox.getPosition().y - 56 + (sel_mission*24));
             mission_select.draw(window);
 
-            spr_render_missions_map.setTexture(render_missions_map.getTexture(), true);
-            spr_render_missions_map.setPosition(sf::Vector2f(143*resRatioX, (missionbox.getPosition().y - 53) * resRatioY));
-            window.draw(spr_render_missions_map);
+            v_render_missions_map.setSize(298*resRatioX, 120*resRatioY);
+            v_render_missions_map.setCenter((1280+149)*resRatioX, (-720+60)*resRatioY);
+            v_render_missions_map.setViewport(sf::FloatRect(143.0/1280.0, (missionbox.getPosition().y - 53)/720.0, 298.0/1280.0, 120.0/720.0));
+
+            window.setView(v_render_missions_map);
+
+            for(int i=0; i<missions.size(); i++)
+            {
+                missions[i].p_mis.setPosition(1280, -720+(i*24));
+                missions[i].p_mis.draw(window);
+            }
+
+            window.setView(window.getDefaultView());
         }
 
         if(inputCtrl.isKeyPressed(InputController::Keys::CIRCLE))

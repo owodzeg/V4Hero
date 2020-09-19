@@ -74,16 +74,11 @@ class ObeliskMenu : public Menu
         sf::Texture test_tex;
         sf::Sprite test_spr;
 
-        sf::RenderTexture render_map;
-        sf::Texture tex_render_map;
-        sf::Sprite spr_render_map;
-
-        sf::RenderTexture render_missions_map;
-        sf::Texture tex_render_missions_map;
-        sf::Sprite spr_render_missions_map;
-
         float mapX = 0;
         float mapXdest = 0;
+
+        sf::View v_render_map;
+        sf::View v_render_missions_map;
 
         PatapolisMenu *parentMenu;
 
