@@ -157,333 +157,336 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         spawn = true;
     }
 
-    switch(entityID)
+    if(spawn)
     {
-        case 0:
+        switch(entityID)
         {
-            unique_ptr<EndFlag> entity = make_unique<EndFlag>();
-            entity.get()->additional_data = additional_data;
-            entity.get()->LoadConfig(missionConfig);
+            case 0:
+            {
+                unique_ptr<EndFlag> entity = make_unique<EndFlag>();
+                entity.get()->additional_data = additional_data;
+                entity.get()->LoadConfig(missionConfig);
 
-            ///To be replaced with param file
-            entity.get()->entityType = Entity::EntityTypes::PASSIVE;
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::PASSIVE;
 
-            if(spawn)
-            tangibleLevelObjects.push_back(std::move(entity));
+                if(spawn)
+                tangibleLevelObjects.push_back(std::move(entity));
 
-            break;
+                break;
+            }
+            case 1:
+            {
+                unique_ptr<FeverWorm> entity = make_unique<FeverWorm>();
+                entity.get()->additional_data = additional_data;
+                entity.get()->LoadConfig(missionConfig);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::PASSIVE;
+
+                if(spawn)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 2:
+            {
+                unique_ptr<Kacheek> entity = make_unique<Kacheek>();
+                entity.get()->additional_data = additional_data;
+                entity.get()->LoadConfig(missionConfig);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+                if(spawn)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 3:
+            {
+                unique_ptr<Grass1> entity = make_unique<Grass1>();
+                entity.get()->additional_data = additional_data;
+                entity.get()->LoadConfig(missionConfig);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
+
+                if(spawn)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 4:
+            {
+                unique_ptr<Grass2> entity = make_unique<Grass2>();
+                entity.get()->additional_data = additional_data;
+                entity.get()->LoadConfig(missionConfig);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
+
+                if(spawn)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 5:
+            {
+                unique_ptr<DroppedItem> entity = make_unique<DroppedItem>();
+                entity.get()->LoadConfig(missionConfig);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
+
+                string spritesheet = additional_data[0];
+                int spritesheet_id = stoi(additional_data[1]);
+                int picked_item = stoi(additional_data[2]);
+
+                entity->spritesheet = spritesheet;
+                entity->spritesheet_id = spritesheet_id;
+                entity->picked_item = picked_item;
+
+                if(spawn)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 6:
+            {
+                unique_ptr<Kirajin_Yari_1> entity = make_unique<Kirajin_Yari_1>();
+                entity.get()->additional_data = additional_data;
+                entity.get()->LoadConfig(missionConfig);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+                if(spawn)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 7:
+            {
+                unique_ptr<TreasureChest> entity = make_unique<TreasureChest>();
+                entity.get()->additional_data = additional_data;
+                entity.get()->LoadConfig(missionConfig);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+                if(spawn)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 8:
+            {
+                unique_ptr<RockBig> entity = make_unique<RockBig>();
+                entity.get()->additional_data = additional_data;
+                entity.get()->LoadConfig(missionConfig);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+                if(spawn)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 9:
+            {
+                unique_ptr<RockSmall> entity = make_unique<RockSmall>();
+                entity.get()->additional_data = additional_data;
+                entity.get()->LoadConfig(missionConfig);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+                if(spawn)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 10:
+            {
+                unique_ptr<WoodenSpikes> entity = make_unique<WoodenSpikes>();
+                entity.get()->additional_data = additional_data;
+                entity.get()->LoadConfig(missionConfig);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+                if(spawn)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 11:
+            {
+                unique_ptr<RockPile> entity = make_unique<RockPile>();
+                entity.get()->additional_data = additional_data;
+                entity.get()->LoadConfig(missionConfig);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+                if(spawn)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 12:
+            {
+                unique_ptr<KirajinHut> entity = make_unique<KirajinHut>();
+                entity.get()->additional_data = additional_data;
+                entity.get()->LoadConfig(missionConfig);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+                if(spawn)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 13:
+            {
+                unique_ptr<KirajinGuardTower> entity = make_unique<KirajinGuardTower>();
+                entity.get()->additional_data = additional_data;
+                entity.get()->LoadConfig(missionConfig);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+                if(spawn)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 14:
+            {
+                unique_ptr<KirajinPoweredTowerSmall> entity = make_unique<KirajinPoweredTowerSmall>();
+                entity.get()->additional_data = additional_data;
+                entity.get()->LoadConfig(missionConfig);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+                if(spawn)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 15:
+            {
+                unique_ptr<KirajinPoweredTowerBig> entity = make_unique<KirajinPoweredTowerBig>();
+                entity.get()->additional_data = additional_data;
+                entity.get()->LoadConfig(missionConfig);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+                if(spawn)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 16:
+            {
+                unique_ptr<Kirajin_Yari_2> entity = make_unique<Kirajin_Yari_2>();
+                entity.get()->additional_data = additional_data;
+                entity.get()->LoadConfig(missionConfig);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+
+                if(spawn)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
         }
-        case 1:
+
+        Entity* entity = tangibleLevelObjects[tangibleLevelObjects.size()-1].get();
+
+        entity->spawnOrderID = tangibleLevelObjects.size()-1;
+
+        if(entityID != 5) ///ID 5 = dropped item, it has an exclusive loading type
         {
-            unique_ptr<FeverWorm> entity = make_unique<FeverWorm>();
-            entity.get()->additional_data = additional_data;
-            entity.get()->LoadConfig(missionConfig);
+            entity->setEntityID(entityID);
 
-            ///To be replaced with param file
-            entity.get()->entityType = Entity::EntityTypes::PASSIVE;
+            entity->floorY = baseY; ///in case Y gets overriden, save the position where the floor is
 
-            if(spawn)
-            tangibleLevelObjects.push_back(std::move(entity));
+            if(overrideHP > 0)
+            baseHP = overrideHP;
 
-            break;
+            if(overrideY != 0)
+            baseY = overrideY;
+
+            if(randX > 0)
+            entity->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
+            else
+            entity->setGlobalPosition(sf::Vector2f(baseX,baseY));
+
+            entity->setColor(color);
+
+            entity->spawn_x = entity->getGlobalPosition().x;
+
+            entity->isCollidable = collidable;
+            entity->isAttackable = attackable;
+            entity->loot_table = loot_table;
+            entity->curHP = baseHP*mission_multiplier;
+            entity->maxHP = baseHP*mission_multiplier;
+            entity->stat_multiplier = 1+((mission_multiplier-1) * 0.333);
+
+            entity->layer = layer;
+            entity->parent = parent;
+            entity->additional_data = additional_data;
         }
-        case 2:
+        else
         {
-            unique_ptr<Kacheek> entity = make_unique<Kacheek>();
-            entity.get()->additional_data = additional_data;
-            entity.get()->LoadConfig(missionConfig);
+            entity->setEntityID(entityID);
+            entity->manual_mode = true;
 
-            ///To be replaced with param file
-            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-
-            if(spawn)
-            tangibleLevelObjects.push_back(std::move(entity));
-
-            break;
-        }
-        case 3:
-        {
-            unique_ptr<Grass1> entity = make_unique<Grass1>();
-            entity.get()->additional_data = additional_data;
-            entity.get()->LoadConfig(missionConfig);
-
-            ///To be replaced with param file
-            entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
-
-            if(spawn)
-            tangibleLevelObjects.push_back(std::move(entity));
-
-            break;
-        }
-        case 4:
-        {
-            unique_ptr<Grass2> entity = make_unique<Grass2>();
-            entity.get()->additional_data = additional_data;
-            entity.get()->LoadConfig(missionConfig);
-
-            ///To be replaced with param file
-            entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
-
-            if(spawn)
-            tangibleLevelObjects.push_back(std::move(entity));
-
-            break;
-        }
-        case 5:
-        {
-            unique_ptr<DroppedItem> entity = make_unique<DroppedItem>();
-            entity.get()->LoadConfig(missionConfig);
-
-            ///To be replaced with param file
-            entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
-
+            ///This unique entity needs to be loaded differently, read additional data for spritesheet info to be passed from the item registry.
             string spritesheet = additional_data[0];
             int spritesheet_id = stoi(additional_data[1]);
             int picked_item = stoi(additional_data[2]);
 
-            entity->spritesheet = spritesheet;
-            entity->spritesheet_id = spritesheet_id;
-            entity->picked_item = picked_item;
+            cout << "[DroppedItem] Selecting spritesheet " << spritesheet << " with id " << spritesheet_id << endl;
 
-            if(spawn)
-            tangibleLevelObjects.push_back(std::move(entity));
+            cout << "[DroppedItem] Loading from memory" << endl;
+            vector<char> di_data = droppeditem_spritesheet[spritesheet].retrieve_char();
+            cout << "[DroppedItem] Vector loaded. Size: " << di_data.size() << endl;
+            entity->objects[0].tex_obj.loadFromMemory(&di_data[0], di_data.size());
+            cout << "[DroppedItem] Setting smooth" << endl;
+            entity->objects[0].tex_obj.setSmooth(true);
+            cout << "[DroppedItem] Setting texture" << endl;
+            entity->objects[0].s_obj.setTexture(entity->objects[0].tex_obj);
+            cout << "[DroppedItem] Marking as unexported" << endl;
+            entity->objects[0].exported = false;
+            cout << "[DroppedItem] Loading done." << endl;
 
-            break;
+            entity->objects[0].s_obj.qualitySetting = qualitySetting;
+            entity->objects[0].s_obj.resSetting = resSetting;
+
+            //entity->objects[0].s_obj.setOrigin(entity->objects[0].s_obj.getLocalBounds().width/2, entity->objects[0].s_obj.getLocalBounds().height/2);
+
+            entity->cur_pos = float(spritesheet_id-1) / 60.0;
+
+            entity->animation_bounds[0] = droppeditem_spritesheet[spritesheet].retrieve_rect_as_map();
+
+            entity->setGlobalPosition(sf::Vector2f(baseX,baseY));
+
+            entity->setColor(color);
+
+            entity->isCollidable = collidable;
+            entity->isAttackable = attackable;
+
+            entity->layer = 9999;
+            entity->parent = -1;
         }
-        case 6:
-        {
-            unique_ptr<Kirajin_Yari_1> entity = make_unique<Kirajin_Yari_1>();
-            entity.get()->additional_data = additional_data;
-            entity.get()->LoadConfig(missionConfig);
-
-            ///To be replaced with param file
-            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-
-            if(spawn)
-            tangibleLevelObjects.push_back(std::move(entity));
-
-            break;
-        }
-        case 7:
-        {
-            unique_ptr<TreasureChest> entity = make_unique<TreasureChest>();
-            entity.get()->additional_data = additional_data;
-            entity.get()->LoadConfig(missionConfig);
-
-            ///To be replaced with param file
-            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-
-            if(spawn)
-            tangibleLevelObjects.push_back(std::move(entity));
-
-            break;
-        }
-        case 8:
-        {
-            unique_ptr<RockBig> entity = make_unique<RockBig>();
-            entity.get()->additional_data = additional_data;
-            entity.get()->LoadConfig(missionConfig);
-
-            ///To be replaced with param file
-            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-
-            if(spawn)
-            tangibleLevelObjects.push_back(std::move(entity));
-
-            break;
-        }
-        case 9:
-        {
-            unique_ptr<RockSmall> entity = make_unique<RockSmall>();
-            entity.get()->additional_data = additional_data;
-            entity.get()->LoadConfig(missionConfig);
-
-            ///To be replaced with param file
-            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-
-            if(spawn)
-            tangibleLevelObjects.push_back(std::move(entity));
-
-            break;
-        }
-        case 10:
-        {
-            unique_ptr<WoodenSpikes> entity = make_unique<WoodenSpikes>();
-            entity.get()->additional_data = additional_data;
-            entity.get()->LoadConfig(missionConfig);
-
-            ///To be replaced with param file
-            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-
-            if(spawn)
-            tangibleLevelObjects.push_back(std::move(entity));
-
-            break;
-        }
-        case 11:
-        {
-            unique_ptr<RockPile> entity = make_unique<RockPile>();
-            entity.get()->additional_data = additional_data;
-            entity.get()->LoadConfig(missionConfig);
-
-            ///To be replaced with param file
-            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-
-            if(spawn)
-            tangibleLevelObjects.push_back(std::move(entity));
-
-            break;
-        }
-        case 12:
-        {
-            unique_ptr<KirajinHut> entity = make_unique<KirajinHut>();
-            entity.get()->additional_data = additional_data;
-            entity.get()->LoadConfig(missionConfig);
-
-            ///To be replaced with param file
-            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-
-            if(spawn)
-            tangibleLevelObjects.push_back(std::move(entity));
-
-            break;
-        }
-        case 13:
-        {
-            unique_ptr<KirajinGuardTower> entity = make_unique<KirajinGuardTower>();
-            entity.get()->additional_data = additional_data;
-            entity.get()->LoadConfig(missionConfig);
-
-            ///To be replaced with param file
-            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-
-            if(spawn)
-            tangibleLevelObjects.push_back(std::move(entity));
-
-            break;
-        }
-        case 14:
-        {
-            unique_ptr<KirajinPoweredTowerSmall> entity = make_unique<KirajinPoweredTowerSmall>();
-            entity.get()->additional_data = additional_data;
-            entity.get()->LoadConfig(missionConfig);
-
-            ///To be replaced with param file
-            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-
-            if(spawn)
-            tangibleLevelObjects.push_back(std::move(entity));
-
-            break;
-        }
-        case 15:
-        {
-            unique_ptr<KirajinPoweredTowerBig> entity = make_unique<KirajinPoweredTowerBig>();
-            entity.get()->additional_data = additional_data;
-            entity.get()->LoadConfig(missionConfig);
-
-            ///To be replaced with param file
-            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-
-            if(spawn)
-            tangibleLevelObjects.push_back(std::move(entity));
-
-            break;
-        }
-        case 16:
-        {
-            unique_ptr<Kirajin_Yari_2> entity = make_unique<Kirajin_Yari_2>();
-            entity.get()->additional_data = additional_data;
-            entity.get()->LoadConfig(missionConfig);
-
-            ///To be replaced with param file
-            entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-
-            if(spawn)
-            tangibleLevelObjects.push_back(std::move(entity));
-
-            break;
-        }
-    }
-
-    Entity* entity = tangibleLevelObjects[tangibleLevelObjects.size()-1].get();
-
-    entity->spawnOrderID = tangibleLevelObjects.size()-1;
-
-    if(entityID != 5) ///ID 5 = dropped item, it has an exclusive loading type
-    {
-        entity->setEntityID(entityID);
-
-        entity->floorY = baseY; ///in case Y gets overriden, save the position where the floor is
-
-        if(overrideHP > 0)
-        baseHP = overrideHP;
-
-        if(overrideY != 0)
-        baseY = overrideY;
-
-        if(randX > 0)
-        entity->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
-        else
-        entity->setGlobalPosition(sf::Vector2f(baseX,baseY));
-
-        entity->setColor(color);
-
-        entity->spawn_x = entity->getGlobalPosition().x;
-
-        entity->isCollidable = collidable;
-        entity->isAttackable = attackable;
-        entity->loot_table = loot_table;
-        entity->curHP = baseHP*mission_multiplier;
-        entity->maxHP = baseHP*mission_multiplier;
-        entity->stat_multiplier = 1+((mission_multiplier-1) * 0.333);
-
-        entity->layer = layer;
-        entity->parent = parent;
-        entity->additional_data = additional_data;
-    }
-    else
-    {
-        entity->setEntityID(entityID);
-        entity->manual_mode = true;
-
-        ///This unique entity needs to be loaded differently, read additional data for spritesheet info to be passed from the item registry.
-        string spritesheet = additional_data[0];
-        int spritesheet_id = stoi(additional_data[1]);
-        int picked_item = stoi(additional_data[2]);
-
-        cout << "[DroppedItem] Selecting spritesheet " << spritesheet << " with id " << spritesheet_id << endl;
-
-        cout << "[DroppedItem] Loading from memory" << endl;
-        vector<char> di_data = droppeditem_spritesheet[spritesheet].retrieve_char();
-        cout << "[DroppedItem] Vector loaded. Size: " << di_data.size() << endl;
-        entity->objects[0].tex_obj.loadFromMemory(&di_data[0], di_data.size());
-        cout << "[DroppedItem] Setting smooth" << endl;
-        entity->objects[0].tex_obj.setSmooth(true);
-        cout << "[DroppedItem] Setting texture" << endl;
-        entity->objects[0].s_obj.setTexture(entity->objects[0].tex_obj);
-        cout << "[DroppedItem] Marking as unexported" << endl;
-        entity->objects[0].exported = false;
-        cout << "[DroppedItem] Loading done." << endl;
-
-        entity->objects[0].s_obj.qualitySetting = qualitySetting;
-        entity->objects[0].s_obj.resSetting = resSetting;
-
-        //entity->objects[0].s_obj.setOrigin(entity->objects[0].s_obj.getLocalBounds().width/2, entity->objects[0].s_obj.getLocalBounds().height/2);
-
-        entity->cur_pos = float(spritesheet_id-1) / 60.0;
-
-        entity->animation_bounds[0] = droppeditem_spritesheet[spritesheet].retrieve_rect_as_map();
-
-        entity->setGlobalPosition(sf::Vector2f(baseX,baseY));
-
-        entity->setColor(color);
-
-        entity->isCollidable = collidable;
-        entity->isAttackable = attackable;
-
-        entity->layer = 9999;
-        entity->parent = -1;
     }
 
     cout << "Loading finished" << endl;

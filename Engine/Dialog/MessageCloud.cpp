@@ -20,7 +20,7 @@ void MessageCloud::setSize(float new_x, float new_y)
     float scale_x = 1080.f / new_x;
     float scale_y = 250.f / new_y;
 
-    cout << scale_x << " " << scale_y << endl;
+    //cout << scale_x << " " << scale_y << endl;
 
     cloud[0].setScale(1.f / scale_x, 1.f / scale_y);
     cloud[1].setScale(-1.f / scale_x, 1.f / scale_y);
