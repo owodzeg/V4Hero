@@ -36,17 +36,18 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
     ///Flush the buffers
     vector<int> s_rm;
 
-    for(int i=0; i<s_drums.size(); i++)
+    //cout << "RhythmController currently holds " << s_drums.size() << "/220 sounds." << endl;
+
+    for(int i=s_drums.size()-1; i>0; i--)
     {
         if(s_drums[i].getStatus() == sf::Sound::Status::Stopped)
         {
-            s_rm.push_back(i);
+            s_drums.erase(s_drums.begin()+i);
         }
-    }
-
-    for(int i=0; i<s_rm.size(); i++)
-    {
-        s_drums.erase(s_drums.begin()+s_rm[i]-i);
+        else
+        {
+            break;
+        }
     }
 
     ///Set initial values for Drum quality check
