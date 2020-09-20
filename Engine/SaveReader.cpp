@@ -107,7 +107,13 @@ void SaveReader::LoadSave(Config& tconfig)
                 else if(key[0] == "MISSIONLEVEL")
                 {
                     vector<string> l = Func::Split(key[1], ',');
-                    missionLevels[stoi(l[0])] = stoi(l[1]);
+
+                    int lvl = stoi(l[1]);
+
+                    if(lvl < 0)
+                    lvl = 1;
+
+                    missionLevels[stoi(l[0])] = lvl;
                 }
             }
         }
