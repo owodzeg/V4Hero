@@ -16,6 +16,9 @@ class Kacheek : public Entity
 
     sf::Clock walk_timer;
     sf::Clock death_timer;
+    sf::Clock react_timer; ///giving kacheek time to reevaluate it's life
+
+    float react_time = 2;
 
     float tumble_x=0, tumble_y=0, tumble_angle=0;
     float tumble_xdest=0, tumble_ydest=0, tumble_angledest=0;

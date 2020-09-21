@@ -28,6 +28,48 @@ void Kacheek::Draw(sf::RenderWindow& window)
     /// before we draw the object, check if we are walking and
     if(AnimatedObject::getAnimationSegment() != "death")
     {
+        if(react_timer.getElapsedTime().asSeconds() > react_time)
+        {
+            react_time = 1.0 + ((rand() % 3000) / 1000.0);
+
+            if(distance_to_unit <= 600)
+            {
+                ///we want to make kacheek more prone to escape the closest the patapon gets.
+                /// 800 - minimal range, not likely to escape
+                /// 500 - mid chance, might escape but might not
+                /// 100 - very high change, kacheek feels threatened
+                /// 0 - 100% chance, escape now
+
+                float chance = 600 - distance_to_unit;
+                int roll = rand() % 600 + 1;
+
+                if(roll < chance)
+                {
+                    ///run!!!!
+                    walk_timer.restart();
+                    walk_time = 2.5 + (rand() % 1500) / 1000;
+
+                    /// don't start the animation again if kacheek is still running
+                    if(AnimatedObject::getAnimationSegment() != "walk")
+                    {
+                        AnimatedObject::setAnimationSegment("walk");
+                        current_frame = 0;
+                    }
+
+                    if(!run)
+                    {
+                        cur_sound.stop();
+                        cur_sound.setBuffer(s_startle);
+                        cur_sound.play();
+                    }
+
+                    run = true;
+                }
+            }
+
+            react_timer.restart();
+        }
+
         if(run)
         {
             AnimatedObject::moveGlobalPosition(sf::Vector2f(float(160) / fps, 0));
@@ -145,7 +187,7 @@ void Kacheek::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
     if(AnimatedObject::getAnimationSegment() != "death")
     {
         walk_timer.restart();
-        walk_time = 1.5 + (rand() % 2500) / 1000;
+        walk_time = 2.5 + (rand() % 1500) / 1000;
 
         /// don't start the animation again if kacheek is still running
         if(AnimatedObject::getAnimationSegment() != "walk")
