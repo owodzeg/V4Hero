@@ -24,7 +24,19 @@ class Entity : public CollidableObject
         NEUTRAL = 2
     };
 
+    enum EntityCategories
+    {
+        NO_CATEGORY = -1,
+        ANIMAL = 0,
+        BUILDING = 1,
+        ENEMYUNIT = 2,
+        MISC = 3,
+        NATURE = 4,
+        OBSTACLE = 5
+    };
+
     int entityType = DUMMY;
+    int entityCategory = NO_CATEGORY;
 
     struct Loot
     {
