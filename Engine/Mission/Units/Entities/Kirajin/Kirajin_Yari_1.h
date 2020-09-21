@@ -15,6 +15,7 @@ class Kirajin_Yari_1 : public Entity
 
     bool canThrow = true;
     bool threw = false;
+    bool enemy_in_range = false;
 
     float hspeed = 0;
     float vspeed = 0;

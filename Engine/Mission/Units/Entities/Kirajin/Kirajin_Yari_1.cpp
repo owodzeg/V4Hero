@@ -100,55 +100,67 @@ void Kirajin_Yari_1::Draw(sf::RenderWindow& window)
         }
         else
         {
-            if(local_x > 5)
+            if(enemy_in_range)
             {
-                if(getAnimationSegment() != "walk_yari_focused")
-                setAnimationSegment("walk_yari_focused");
-
-                local_x -= float(100) / fps;
-            }
-
-            if(local_x < -5)
-            {
-                if(getAnimationSegment() != "walk_yari_focused")
-                setAnimationSegment("walk_yari_focused");
-
-                local_x += float(100) / fps;
-            }
-
-            if((local_x <= 5) && (local_x >= -5))
-            {
-                if(attack_timer.getElapsedTime().asSeconds() >= 6)
+                if(local_x > 5)
                 {
-                    if(getAnimationSegment() != "attack_prefever")
-                    setAnimationSegment("attack_prefever", true);
+                    if(getAnimationSegment() != "walk_yari_focused")
+                    setAnimationSegment("walk_yari_focused");
 
-                    if(getAnimationSegment() == "attack_prefever")
+                    local_x -= float(100) / fps;
+                }
+
+                if(local_x < -5)
+                {
+                    if(getAnimationSegment() != "walk_yari_focused")
+                    setAnimationSegment("walk_yari_focused");
+
+                    local_x += float(100) / fps;
+                }
+
+                if((local_x <= 5) && (local_x >= -5))
+                {
+                    if(attack_timer.getElapsedTime().asSeconds() >= 6)
                     {
-                        if(getAnimationPos() >= 0.4666)
+                        if(getAnimationSegment() != "attack_prefever")
+                        setAnimationSegment("attack_prefever", true);
+
+                        if(getAnimationSegment() == "attack_prefever")
                         {
-                            if(canThrow)
+                            if(getAnimationPos() >= 0.4666)
                             {
-                                threw = true;
-                                canThrow = false;
+                                if(canThrow)
+                                {
+                                    threw = true;
+                                    canThrow = false;
+                                }
+                            }
+
+                            if(cur_pos >= anim_end)
+                            {
+                                canThrow = true;
+                                threw = false;
+                                attack_timer.restart();
                             }
                         }
-
-                        if(cur_pos >= anim_end)
-                        {
-                            canThrow = true;
-                            threw = false;
-                            attack_timer.restart();
-                        }
                     }
-                }
-                else
-                {
-                    if(getAnimationSegment() != "idle_armed_focused")
-                    setAnimationSegment("idle_armed_focused");
+                    else
+                    {
+                        if(getAnimationSegment() != "idle_armed_focused")
+                        setAnimationSegment("idle_armed_focused");
+                    }
                 }
             }
         }
+    }
+
+    if(distance_to_unit <= 1000)
+    {
+        enemy_in_range = true;
+    }
+    else
+    {
+        enemy_in_range = false;
     }
 
     vspeed += gravity / fps;
