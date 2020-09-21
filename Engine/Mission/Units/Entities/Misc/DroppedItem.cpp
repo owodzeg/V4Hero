@@ -5,6 +5,7 @@ DroppedItem::DroppedItem()
 {
 
 }
+
 void DroppedItem::LoadConfig(Config *thisConfigs)
 {
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\droppeditem.p4a");
@@ -19,7 +20,14 @@ void DroppedItem::LoadConfig(Config *thisConfigs)
     cout << "DroppedItem spawned with hspeed " << hspeed << " and vspeed " << vspeed << endl;
 
     manual_spritesheet = true;
+
+    s_heal.loadFromFile("resources/sfx/level/picked_heal.ogg");
+    s_item.loadFromFile("resources/sfx/level/picked_item.ogg");
+    s_keyitem.loadFromFile("resources/sfx/level/picked_keyitem.ogg");
+
+    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
 }
+
 void DroppedItem::Draw(sf::RenderWindow& window)
 {
     /// Draw the DroppedItem, however! Lock the animation status to make it appear inanimate
@@ -218,6 +226,19 @@ void DroppedItem::OnCollide(CollidableObject* otherObject, int collidedWith, vec
         {
             if((picked_item != 33) && (picked_item != 34))
             {
+                if(picked_item == 23)
+                {
+                    cur_sound.stop();
+                    cur_sound.setBuffer(s_keyitem);
+                    cur_sound.play();
+                }
+                else
+                {
+                    cur_sound.stop();
+                    cur_sound.setBuffer(s_item);
+                    cur_sound.play();
+                }
+
                 ///add to the missioncontroller list so it can be displayed in the upper right corner VERY COOL!
                 thisConfig->thisCore->currentController.addPickedItem(spritesheet, spritesheet_id, picked_item);
 
@@ -228,6 +249,13 @@ void DroppedItem::OnCollide(CollidableObject* otherObject, int collidedWith, vec
             }
             else
             {
+                cur_sound.stop();
+                cur_sound.setBuffer(s_heal);
+                //cur_sound.play();
+
+                thisConfig->thisCore->currentController.projectile_sounds.push_back(cur_sound);
+                thisConfig->thisCore->currentController.projectile_sounds[thisConfig->thisCore->currentController.projectile_sounds.size()-1].play();
+
                 thisConfig->thisCore->currentController.addPickedItem(spritesheet, spritesheet_id, picked_item);
                 ready_to_erase = true;
             }

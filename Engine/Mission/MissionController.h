@@ -137,6 +137,10 @@ class MissionController
     std::vector<DamageCounter> dmgCounters;
     std::vector<DroppedItem> droppedItems;
 
+    sf::SoundBuffer spear_hit_enemy, spear_hit_iron, spear_hit_rock, spear_hit_solid;
+
+    std::deque<sf::Sound> projectile_sounds;
+
     bool missionEnd = false;
     float textCurX = -1280;
     float barCurX = 1920;
@@ -153,6 +157,7 @@ class MissionController
         bool isCollidable = true; ///is the entity collidable?
         bool isAttackable = true; ///is the entity attackable?
         float defend_factor = 1; ///how much did the entity defended off?
+        int collidedEntityCategory = -1;
     };
 
     struct PickedItem ///used for item display in the top right corner

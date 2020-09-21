@@ -2,6 +2,7 @@
 #define ENTITY_H
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "../../Config.h"
 #include "../../Input/InputController.h"
 #include "../../Dialog/MessageCloud.h"
@@ -28,11 +29,15 @@ class Entity : public CollidableObject
     {
         NO_CATEGORY = -1,
         ANIMAL = 0,
-        BUILDING = 1,
+        BUILDING_REGULAR = 1,
         ENEMYUNIT = 2,
         MISC = 3,
         NATURE = 4,
-        OBSTACLE = 5
+        OBSTACLE_GROUND = 5,
+        OBSTACLE_ROCK = 6,
+        OBSTACLE_IRON = 7,
+        OBSTACLE_WOOD = 8,
+        BUILDING_IRON = 9
     };
 
     int entityType = DUMMY;
@@ -62,6 +67,8 @@ class Entity : public CollidableObject
     std::vector<std::string> additional_data; ///additional data passed from mission file that can be used for exclusive cases
 
     std::vector<MessageCloud> messageclouds;
+
+    sf::Sound cur_sound;
 
     Entity();
     virtual void setEntityID(int new_entityID);

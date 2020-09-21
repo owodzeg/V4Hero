@@ -2,6 +2,7 @@
 #define KACHEEK_H
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "../../../../Config.h"
 #include "../../Entity.h"
 
@@ -18,6 +19,8 @@ class Kacheek : public Entity
 
     float tumble_x=0, tumble_y=0, tumble_angle=0;
     float tumble_xdest=0, tumble_ydest=0, tumble_angledest=0;
+
+    sf::SoundBuffer s_startle, s_dead;
 
     Kacheek();
     void LoadConfig(Config *thisConfigs);

@@ -13,6 +13,8 @@ class RockPile : public Entity
     bool droppeditem = false;
     sf::Clock death_timer;
 
+    sf::SoundBuffer s_broken;
+
     RockPile();
     void LoadConfig(Config *thisConfigs);
     void Draw(sf::RenderWindow& window);

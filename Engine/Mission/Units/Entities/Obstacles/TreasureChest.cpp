@@ -16,6 +16,10 @@ void TreasureChest::LoadConfig(Config *thisConfigs)
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\treasure_chest.p4a");
     AnimatedObject::setAnimationSegment("idle");
+
+    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
+
+    s_broken.loadFromFile("resources/sfx/level/building_medium_broken.ogg");
 }
 
 void TreasureChest::Draw(sf::RenderWindow& window)
@@ -71,6 +75,10 @@ void TreasureChest::OnCollide(CollidableObject* otherObject, int collidedWith, v
 
             AnimatedObject::setAnimationSegment("destroy", true);
             death_timer.restart();
+
+            cur_sound.stop();
+            cur_sound.setBuffer(s_broken);
+            cur_sound.play();
         }
     }
 

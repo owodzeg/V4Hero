@@ -13,6 +13,8 @@ class RockSmall : public Entity
     bool droppeditem = false;
     sf::Clock death_timer;
 
+    sf::SoundBuffer s_broken;
+
     RockSmall();
     void LoadConfig(Config *thisConfigs);
     void Draw(sf::RenderWindow& window);

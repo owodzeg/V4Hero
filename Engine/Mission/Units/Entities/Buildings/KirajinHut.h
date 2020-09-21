@@ -17,6 +17,8 @@ class KirajinHut : public Entity
     sf::Clock shake_timer;
     float shake_delay = 80;
 
+    sf::SoundBuffer s_broken;
+
     KirajinHut();
     void LoadConfig(Config *thisConfigs);
     void Draw(sf::RenderWindow& window);

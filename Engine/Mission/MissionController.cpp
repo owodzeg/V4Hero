@@ -281,7 +281,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE;
+                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE_IRON;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -296,7 +296,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE;
+                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE_ROCK;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -311,7 +311,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE;
+                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE_ROCK;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -326,7 +326,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE;
+                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE_WOOD;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -341,7 +341,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE;
+                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE_ROCK;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -356,7 +356,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-                entity.get()->entityCategory = Entity::EntityCategories::BUILDING;
+                entity.get()->entityCategory = Entity::EntityCategories::BUILDING_REGULAR;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -371,7 +371,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-                entity.get()->entityCategory = Entity::EntityCategories::BUILDING;
+                entity.get()->entityCategory = Entity::EntityCategories::BUILDING_REGULAR;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -386,7 +386,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-                entity.get()->entityCategory = Entity::EntityCategories::BUILDING;
+                entity.get()->entityCategory = Entity::EntityCategories::BUILDING_IRON;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -401,7 +401,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
-                entity.get()->entityCategory = Entity::EntityCategories::BUILDING;
+                entity.get()->entityCategory = Entity::EntityCategories::BUILDING_IRON;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -782,6 +782,11 @@ void MissionController::Initialise(Config &config,std::string backgroundString,V
     }
 
     ctrlTips.create(110, f_font, 28, sf::String(L"Onward: □-□-□-〇       Attack: 〇-〇-□-〇        Defend: △-△-□-〇              Charge: 〇-〇-△-△\nRetreat: 〇-□-〇-□          Jump: ×-×-△-△          Party: □-〇-×-△          Summon: ×-××-××") ,q, sf::Color(128,128,128,255));
+
+    spear_hit_enemy.loadFromFile("resources/sfx/level/spear_hit_enemy.ogg");
+    spear_hit_iron.loadFromFile("resources/sfx/level/spear_hit_iron.ogg");
+    spear_hit_rock.loadFromFile("resources/sfx/level/spear_hit_rock.ogg");
+    spear_hit_solid.loadFromFile("resources/sfx/level/spear_hit_solid.ogg");
 
     cout << "initialization finished" << endl;
 }
@@ -1291,12 +1296,15 @@ vector<MissionController::CollisionEvent> MissionController::DoCollisionForObjec
             /// we have a collision
             if (isCollision&&isCollision2&&isCollision3&&isCollision4)
             {
+                Entity* entity = tangibleLevelObjects[i].get();
+
                 std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
                 CollisionEvent cevent;
                 cevent.collided = true;
                 //cevent.collidedEntityID = -1;
                 cevent.isAttackable = target->isAttackable;
                 cevent.isCollidable = target->isCollidable;
+                cevent.collidedEntityCategory = entity->entityCategory;
 
                 target->OnCollide(target, collisionObjectID, collisionData);
 
@@ -1407,6 +1415,7 @@ vector<MissionController::CollisionEvent> MissionController::DoCollisionForUnit(
                 //cevent.collidedEntityID = -1;
                 cevent.isAttackable = target->isAttackable;
                 cevent.isCollidable = target->isCollidable;
+                cevent.collidedEntityCategory = 2;
 
                 if(unit->defend)
                 {
@@ -2192,6 +2201,14 @@ std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
 
         if(ypos>floorY)
         {
+            ///create hit sound
+            projectile_sounds.emplace_back();
+
+            projectile_sounds[projectile_sounds.size()-1].setBuffer(spear_hit_solid);
+
+            projectile_sounds[projectile_sounds.size()-1].setVolume(float(missionConfig->GetInt("masterVolume"))*(float(missionConfig->GetInt("sfxVolume"))/100.f));
+            projectile_sounds[projectile_sounds.size()-1].play();
+
             removeProjectile = true;
         }
 
@@ -2201,44 +2218,102 @@ std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
         ///so you can put anything and react with it in the individual entity classes
         ///in projectiles' case, im transferring the damage dealt
 
-        int minDmg = p->mindmg;
-        int maxDmg = p->maxdmg;
-        int bound = maxDmg-minDmg+1;
-        int ranDmg = rand() % bound;
-        int total = minDmg + ranDmg;
-
-        ///sending damage dealt
-        vector<string> collisionData = {to_string(total)};
-
-        ///retrieve collision event
-        vector<CollisionEvent> cevent;
-
-        ///check whether the projectile was on enemy side or ally side
-        if(!p->enemy)
+        if(!removeProjectile)
         {
-            ///Do collisions for all entities (ally projectiles)
-            cevent = DoCollisionForObject(&tmp,xpos,ypos,p->projectileID,collisionData);
-        }
-        else
-        {
-            ///Do collisions for all units (enemy projectiles)
-            cevent = DoCollisionForUnit(&tmp,xpos,ypos,p->projectileID,collisionData);
-        }
+            int minDmg = p->mindmg;
+            int maxDmg = p->maxdmg;
+            int bound = maxDmg-minDmg+1;
+            int ranDmg = rand() % bound;
+            int total = minDmg + ranDmg;
 
-        for(int e=0; e<cevent.size(); e++)
-        {
-            if(cevent[e].collided)
+            ///sending damage dealt
+            vector<string> collisionData = {to_string(total)};
+
+            ///retrieve collision event
+            vector<CollisionEvent> cevent;
+
+            ///check whether the projectile was on enemy side or ally side
+            if(!p->enemy)
             {
-                ///add damage counter
-                if(cevent[e].isAttackable)
-                addDmgCounter(0, total*cevent[e].defend_factor, xpos, ypos, qualitySetting, resSetting);
+                ///Do collisions for all entities (ally projectiles)
+                cevent = DoCollisionForObject(&tmp,xpos,ypos,p->projectileID,collisionData);
+            }
+            else
+            {
+                ///Do collisions for all units (enemy projectiles)
+                cevent = DoCollisionForUnit(&tmp,xpos,ypos,p->projectileID,collisionData);
+            }
 
-                if(cevent[e].isCollidable)
+            for(int e=0; e<cevent.size(); e++)
+            {
+                if(cevent[e].collided)
                 {
-                    removeProjectile = true;
-                    break; ///break the for loop here to prevent double hits
-                }
+                    ///add damage counter
+                    if((cevent[e].isAttackable) && (cevent[e].isCollidable))
+                    {
+                        ///create hit sound
+                        projectile_sounds.emplace_back();
 
+                        ///locate the right buffer
+                        switch(cevent[e].collidedEntityCategory)
+                        {
+                            case -1:
+                            {
+                                break;
+                            }
+
+                            case Entity::EntityCategories::ANIMAL:
+                            {
+                                projectile_sounds[projectile_sounds.size()-1].setBuffer(spear_hit_enemy);
+                                break;
+                            }
+
+                            case Entity::EntityCategories::ENEMYUNIT:
+                            {
+                                projectile_sounds[projectile_sounds.size()-1].setBuffer(spear_hit_enemy);
+                                break;
+                            }
+
+                            case Entity::EntityCategories::BUILDING_REGULAR:
+                            {
+                                projectile_sounds[projectile_sounds.size()-1].setBuffer(spear_hit_solid);
+                                break;
+                            }
+
+                            case Entity::EntityCategories::OBSTACLE_IRON:
+                            {
+                                projectile_sounds[projectile_sounds.size()-1].setBuffer(spear_hit_iron);
+                                break;
+                            }
+
+                            case Entity::EntityCategories::BUILDING_IRON:
+                            {
+                                projectile_sounds[projectile_sounds.size()-1].setBuffer(spear_hit_iron);
+                                break;
+                            }
+
+                            case Entity::EntityCategories::OBSTACLE_ROCK:
+                            {
+                                projectile_sounds[projectile_sounds.size()-1].setBuffer(spear_hit_rock);
+                                break;
+                            }
+
+                            case Entity::EntityCategories::OBSTACLE_WOOD:
+                            {
+                                projectile_sounds[projectile_sounds.size()-1].setBuffer(spear_hit_solid);
+                                break;
+                            }
+                        }
+
+                        projectile_sounds[projectile_sounds.size()-1].setVolume(float(missionConfig->GetInt("masterVolume"))*(float(missionConfig->GetInt("sfxVolume"))/100.f));
+                        projectile_sounds[projectile_sounds.size()-1].play();
+
+                        addDmgCounter(0, total*cevent[e].defend_factor, xpos, ypos, qualitySetting, resSetting);
+
+                        removeProjectile = true;
+                        break; ///break the for loop here to prevent double hits
+                    }
+                }
             }
         }
 
@@ -2847,6 +2922,19 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
 
 void MissionController::Update(sf::RenderWindow &window, float cfps, InputController& inputCtrl)
 {
+    ///remove stopped sounds
+    for(int i=projectile_sounds.size()-1; i>0; i--)
+    {
+        if(projectile_sounds[i].getStatus() == sf::Sound::Status::Stopped)
+        {
+            projectile_sounds.erase(projectile_sounds.begin()+i);
+        }
+        else
+        {
+            break;
+        }
+    }
+
     ///Sort tangibleLevelObjects to prioritize rendering layers
     std::sort(tangibleLevelObjects.begin(), tangibleLevelObjects.end(),
               [](const std::unique_ptr<Entity>& a, const std::unique_ptr<Entity>& b)

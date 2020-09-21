@@ -2,6 +2,7 @@
 #define PLAYABLEUNIT_H
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "../../Config.h"
 #include "CollidableObject.h"
 
@@ -43,6 +44,8 @@ class PlayableUnit : public CollidableObject
     bool defend = false;
 
     bool isFever = false;
+
+    sf::Sound cur_sound;
 
     std::string old_current_song = "";
 

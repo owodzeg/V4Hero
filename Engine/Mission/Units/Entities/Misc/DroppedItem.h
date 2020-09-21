@@ -43,6 +43,8 @@ class DroppedItem : public Entity
     int spritesheet_id;
     int picked_item;
 
+    sf::SoundBuffer s_item, s_keyitem, s_heal;
+
     DroppedItem();
     void LoadConfig(Config *thisConfigs);
     void Draw(sf::RenderWindow& window);

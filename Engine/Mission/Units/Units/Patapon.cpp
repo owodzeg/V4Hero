@@ -14,6 +14,10 @@ void Patapon::LoadConfig(Config *thisConfigs)
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\unit\\patapon.p4a");
     setAnimationSegment("idle_armed");
 
+    spear_throw.loadFromFile("resources/sfx/level/spear_throw.ogg");
+
+    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
+
     isCollidable = true;
     isAttackable = true;
 }
@@ -123,6 +127,10 @@ bool Patapon::doAttack()
                     {
                         if(canThrow)
                         {
+                            cur_sound.stop();
+                            cur_sound.setBuffer(spear_throw);
+                            cur_sound.play();
+
                             threw = true;
                             canThrow = false;
                         }
@@ -156,6 +164,10 @@ bool Patapon::doAttack()
                     {
                         if(canThrow)
                         {
+                            cur_sound.stop();
+                            cur_sound.setBuffer(spear_throw);
+                            cur_sound.play();
+
                             threw = true;
                             canThrow = false;
                         }

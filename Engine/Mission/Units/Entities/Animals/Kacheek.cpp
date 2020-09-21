@@ -5,16 +5,24 @@
 #include "../../../../Func.h"
 #include <sstream>
 #include "../../../../V4Core.h"
+
 Kacheek::Kacheek()
 {
 
 }
+
 void Kacheek::LoadConfig(Config *thisConfigs)
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\kacheek.p4a");
     AnimatedObject::setAnimationSegment("idle");
+
+    s_startle.loadFromFile("resources/sfx/level/kacheek_startled.ogg");
+    s_dead.loadFromFile("resources/sfx/level/kacheek_dead.ogg");
+
+    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
 }
+
 void Kacheek::Draw(sf::RenderWindow& window)
 {
     /// before we draw the object, check if we are walking and
@@ -136,7 +144,6 @@ void Kacheek::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
 
     if(AnimatedObject::getAnimationSegment() != "death")
     {
-        run = true;
         walk_timer.restart();
         walk_time = 1.5 + (rand() % 2500) / 1000;
 
@@ -160,8 +167,23 @@ void Kacheek::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
             {
                 AnimatedObject::setAnimationSegment("death", true);
                 death_timer.restart();
+
+                cur_sound.stop();
+                cur_sound.setBuffer(s_dead);
+                cur_sound.play();
             }
         }
+        else
+        {
+            if(!run)
+            {
+                cur_sound.stop();
+                cur_sound.setBuffer(s_startle);
+                cur_sound.play();
+            }
+        }
+
+        run = true;
     }
     //ready_to_erase = true;
 

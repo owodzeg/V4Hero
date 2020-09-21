@@ -16,6 +16,10 @@ void KirajinHut::LoadConfig(Config *thisConfigs)
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\kirajin_hut.p4a");
     AnimatedObject::setAnimationSegment("idle");
+
+    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
+
+    s_broken.loadFromFile("resources/sfx/level/building_small_broken.ogg");
 }
 
 void KirajinHut::Draw(sf::RenderWindow& window)
@@ -99,6 +103,10 @@ void KirajinHut::OnCollide(CollidableObject* otherObject, int collidedWith, vect
 
             //AnimatedObject::setAnimationSegment("destroy", true);
             death_timer.restart();
+
+            cur_sound.stop();
+            cur_sound.setBuffer(s_broken);
+            cur_sound.play();
         }
     }
 
