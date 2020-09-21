@@ -263,7 +263,7 @@ void Kirajin_Yari_2::Draw(sf::RenderWindow& window)
         }
         else if(action == HIDING)
         {
-            if(distance_to_unit <= 350)
+            if(distance_to_unit <= 650)
             {
                 layer = swap_layer;
                 hspeed = 200;
