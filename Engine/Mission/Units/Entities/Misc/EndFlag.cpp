@@ -30,18 +30,21 @@ void EndFlag::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
 {
     if(collidedWith == -1)
     {
-        if(AnimatedObject::getAnimationSegment() == "idle")
+        if(!thisConfig->thisCore->currentController.missionEnd)
         {
-            AnimatedObject::setAnimationSegment("triggered",true);
-            thisConfig->thisCore->currentController.missionEnd = true;
-            thisConfig->thisCore->currentController.rhythm.Stop();
+            if(AnimatedObject::getAnimationSegment() == "idle")
+            {
+                AnimatedObject::setAnimationSegment("triggered",true);
+                thisConfig->thisCore->currentController.missionEnd = true;
+                thisConfig->thisCore->currentController.rhythm.Stop();
 
-            endMissionClock.restart();
+                endMissionClock.restart();
 
-            missionEnd = true;
-            thisConfig->thisCore->currentController.missionEndTimer.restart();
+                missionEnd = true;
+                thisConfig->thisCore->currentController.missionEndTimer.restart();
 
-            s_end.play();
+                s_end.play();
+            }
         }
     }
 }
