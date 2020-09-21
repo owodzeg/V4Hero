@@ -279,25 +279,33 @@ void Kirajin_Yari_2::Draw(sf::RenderWindow& window)
         }
         else if(action == WALK)
         {
-            if((distance_to_unit >= dest_distance-5) && (distance_to_unit <= dest_distance+5))
-            action = IDLE;
-
-            if(getAnimationSegment() != "walk_yari_focused")
+            if(enemy_in_range)
             {
-                setAnimationSegment("walk_yari_focused", true);
+                if((distance_to_unit >= dest_distance-5) && (distance_to_unit <= dest_distance+5))
+                action = IDLE;
+
+                if(getAnimationSegment() != "walk_yari_focused")
+                {
+                    setAnimationSegment("walk_yari_focused", true);
+                }
+
+                if(distance_to_unit >= dest_distance)
+                {
+                    global_x -= float(150) / fps;
+                }
+
+                if(distance_to_unit <= dest_distance)
+                {
+                    if(getGlobalPosition().x - spawn_x < 1000) ///1000 is max distance an entity can go to the right
+                    global_x += float(150) / fps;
+                    else
+                    dest_distance = distance_to_unit;
+                }
             }
-
-            if(distance_to_unit >= dest_distance)
+            else
             {
-                global_x -= float(150) / fps;
-            }
-
-            if(distance_to_unit <= dest_distance)
-            {
-                if(getGlobalPosition().x - spawn_x < 1000) ///1000 is max distance an entity can go to the right
-                global_x += float(150) / fps;
-                else
-                dest_distance = distance_to_unit;
+                ///return to spawn_x
+                dest_distance = spawn_x-getGlobalPosition().x;
             }
         }
 
@@ -319,7 +327,7 @@ void Kirajin_Yari_2::Draw(sf::RenderWindow& window)
             }
         }
 
-        if(distance_to_unit <= 800)
+        if(distance_to_unit <= 1000)
         {
             enemy_in_range = true;
         }
