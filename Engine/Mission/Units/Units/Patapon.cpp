@@ -16,6 +16,12 @@ void Patapon::LoadConfig(Config *thisConfigs)
 
     spear_throw.loadFromFile("resources/sfx/level/spear_throw.ogg");
 
+    hit_1.loadFromFile("resources/sfx/level/hit_1.ogg");
+    hit_2.loadFromFile("resources/sfx/level/hit_2.ogg");
+    hit_3.loadFromFile("resources/sfx/level/hit_3.ogg");
+
+    s_dead.loadFromFile("resources/sfx/level/dead_2.ogg");
+
     cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
 
     isCollidable = true;
@@ -452,6 +458,10 @@ void Patapon::Draw(sf::RenderWindow& window)
                 cout << "Setting death animation" << endl;
 
                 setAnimationSegment("death", true);
+
+                cur_sound.stop();
+                cur_sound.setBuffer(s_dead);
+                cur_sound.play();
             }
         }
 
@@ -521,6 +531,27 @@ void Patapon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
             current_hp -= dmgDealt;
 
             cout << "I received " << to_string(dmgDealt) << "damage, my HP is " << current_hp << endl;
+
+            cur_sound.stop();
+
+            int a = rand() % 3;
+
+            switch(a)
+            {
+                case 0:
+                cur_sound.setBuffer(hit_1);
+                break;
+
+                case 1:
+                cur_sound.setBuffer(hit_2);
+                break;
+
+                case 2:
+                cur_sound.setBuffer(hit_3);
+                break;
+            }
+
+            cur_sound.play();
         }
     }
 

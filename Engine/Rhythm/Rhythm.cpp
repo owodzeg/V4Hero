@@ -22,6 +22,9 @@ Rhythm::Rhythm()
 
     t_flash.loadFromFile("resources/graphics/rhythm/drums/flash.png");
     t_flash.setSmooth(true);
+
+    s_badrhythm1.loadFromFile("resources/sfx/level/badrhythm_1.ogg");
+    s_badrhythm2.loadFromFile("resources/sfx/level/badrhythm_2.ogg");
 }
 void Rhythm::Stop()
 {
@@ -137,6 +140,18 @@ void Rhythm::BreakCombo()
     cycle_mode = 1;
 
     bgm_cycle = 0;
+
+    pata_react.stop();
+    pata_react.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
+
+    int a = rand() % 2;
+
+    if(a == 0)
+    pata_react.setBuffer(s_badrhythm1);
+    else if(a == 1)
+    pata_react.setBuffer(s_badrhythm2);
+
+    pata_react.play();
 }
 
 int Rhythm::GetCombo()

@@ -42,6 +42,7 @@ class Patapon : public PlayableUnit
     sf::Clock partyClock;
 
     sf::SoundBuffer spear_throw;
+    sf::SoundBuffer hit_1, hit_2, hit_3, s_dead;
 
     Config *thisConfig;
     Patapon();

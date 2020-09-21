@@ -101,9 +101,8 @@ class Rhythm
     RhythmController rhythmController;
     std::string current_song = "";
 
-
-
-
+    sf::SoundBuffer s_badrhythm1, s_badrhythm2; ///absolutely terrible! (shoutouts to shockturtle)
+    sf::Sound pata_react;
 
     Rhythm();
     void Stop();

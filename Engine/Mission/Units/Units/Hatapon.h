@@ -10,6 +10,8 @@ using namespace std;
 class Hatapon : public PlayableUnit
 {
     public:
+    sf::SoundBuffer hit_1, hit_2, hit_3;
+
     Hatapon();
     void LoadConfig(Config *thisConfigs);
     void Draw(sf::RenderWindow& window);
