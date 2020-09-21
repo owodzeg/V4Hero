@@ -144,11 +144,6 @@ void Rhythm::BreakCombo()
     pata_react.stop();
     pata_react.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
 
-    int a = rand() % 2;
-
-    if(a == 0)
-    pata_react.setBuffer(s_badrhythm1);
-    else if(a == 1)
     pata_react.setBuffer(s_badrhythm2);
 
     pata_react.play();
