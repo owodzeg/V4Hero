@@ -169,6 +169,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::PASSIVE;
+                entity.get()->entityCategory = Entity::EntityCategories::MISC;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -183,6 +184,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::PASSIVE;
+                entity.get()->entityCategory = Entity::EntityCategories::MISC;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -197,6 +199,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::ANIMAL;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -211,6 +214,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
+                entity.get()->entityCategory = Entity::EntityCategories::NATURE;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -225,6 +229,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
+                entity.get()->entityCategory = Entity::EntityCategories::NATURE;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -238,6 +243,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
+                entity.get()->entityCategory = Entity::EntityCategories::MISC;
 
                 string spritesheet = additional_data[0];
                 int spritesheet_id = stoi(additional_data[1]);
@@ -260,6 +266,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::ENEMYUNIT;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -274,6 +281,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -288,6 +296,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -302,6 +311,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -316,6 +326,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -330,6 +341,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -344,6 +356,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::BUILDING;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -358,6 +371,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::BUILDING;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -372,6 +386,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::BUILDING;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -386,6 +401,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::BUILDING;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -400,6 +416,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::ENEMYUNIT;
 
                 if(spawn)
                 tangibleLevelObjects.push_back(std::move(entity));
@@ -2212,14 +2229,16 @@ std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
         {
             if(cevent[e].collided)
             {
-                if(cevent[e].isCollidable)
-                {
-                    removeProjectile = true;
-                }
-
                 ///add damage counter
                 if(cevent[e].isAttackable)
                 addDmgCounter(0, total*cevent[e].defend_factor, xpos, ypos, qualitySetting, resSetting);
+
+                if(cevent[e].isCollidable)
+                {
+                    removeProjectile = true;
+                    break; ///break the for loop here to prevent double hits
+                }
+
             }
         }
 
