@@ -320,6 +320,8 @@ void MainMenu::SelectMenuOption()
                 introductionMenu.Show();
                 introductionMenu.isActive = true;
                 introductionMenu.Initialise(config,v4core,this);
+
+                patapolisMenu.loadedSave = false;
             }
             else
             {
@@ -359,6 +361,7 @@ void MainMenu::SelectMenuOption()
 
                     patapolisMenu.Show();
                     patapolisMenu.isActive = true;
+                    patapolisMenu.loadedSave = true;
                     patapolisMenu.Initialise(config,v4core,this);
 
                     v4core->continueLoading=false;
@@ -876,6 +879,8 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
                                 introductionMenu.Show();
                                 introductionMenu.isActive = true;
                                 introductionMenu.Initialise(config,v4core,this);
+
+                                patapolisMenu.loadedSave = false;
 
                                 break;
                             }

@@ -119,6 +119,11 @@ void ItemRegistry::ReadItemFiles()
                                         {
                                             wep->spritesheet_id = stoi(key[1]);
                                         }
+                                        else if(key[0]=="altar_order_id")
+                                        {
+                                            cout << "Setting altar_order_id to" << key[1] << endl;
+                                            wep->altar_order_id = stoi(key[1]);
+                                        }
                                     }
                                 }
                                 delete newItem;
@@ -168,6 +173,11 @@ void ItemRegistry::ReadItemFiles()
                                         else if(key[0]=="spritesheet_id")
                                         {
                                             mask->spritesheet_id = stoi(key[1]);
+                                        }
+                                        else if(key[0]=="altar_order_id")
+                                        {
+                                            cout << "Setting altar_order_id to" << key[1] << endl;
+                                            mask->altar_order_id = stoi(key[1]);
                                         }
                                     }
                                 }
@@ -220,6 +230,11 @@ void ItemRegistry::ReadItemFiles()
                                         {
                                             masks->spritesheet_id = stoi(key[1]);
                                         }
+                                        else if(key[0]=="altar_order_id")
+                                        {
+                                            cout << "Setting altar_order_id to" << key[1] << endl;
+                                            masks->altar_order_id = stoi(key[1]);
+                                        }
                                     }
                                 }
                                 delete newItem;
@@ -262,6 +277,11 @@ void ItemRegistry::ReadItemFiles()
                     {
                         cout << "Setting equip_id to" << key[1] << endl;
                         newItem->equip_id = stoi(key[1]);
+                    }
+                    else if(key[0]=="altar_order_id")
+                    {
+                        cout << "Setting altar_order_id to" << key[1] << endl;
+                        newItem->altar_order_id = stoi(key[1]);
                     }
                 }
             }

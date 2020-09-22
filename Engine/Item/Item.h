@@ -13,6 +13,7 @@ class Item
     std::string icon_path;
     std::string spritesheet="none";
     int spritesheet_id=-1;
+    int altar_order_id=0;
 };
 
 #endif // ITEM_H

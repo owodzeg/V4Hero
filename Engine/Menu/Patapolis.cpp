@@ -1177,76 +1177,78 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
         if(dialogboxes.size() <= 0)
         {
-            if((inputCtrl.isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl.isKeyPressed(InputController::Keys::LTRIGGER)))
-            {
-                if(location > 0)
-                {
-                    location--;
-                    left = true;
-
-                    SetTitle(location);
-                    thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
-                }
-            }
-            else if((inputCtrl.isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl.isKeyPressed(InputController::Keys::RTRIGGER)))
-            {
-                if(location < locations.size()-1)
-                {
-                    location++;
-                    left = false;
-
-                    SetTitle(location);
-                    thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
-                }
-            }
-            else if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
-            {
-                // select the current menu item
-                switch (location)
-                {
-                case 0:
-                    /// trader/random
-                    // open the world map
-                    break;
-                case 2:
-                    /// armory/barracks
-                    thisConfig->thisCore->SaveToDebugLog("Entering Barracks...");
-                    barracks_menu.Show();
-                    barracks_menu.isActive = true;
-                    barracks_menu.obelisk = false;
-                    barracks_menu.OpenBarracksMenu();
-                    barracks_menu.UpdateInputControls();
-                    thisConfig->thisCore->SaveToDebugLog("Barracks entered.");
-                    break;
-                case 3:
-                    /// festival
-                    // open barracks screen
-                    break;
-                case 4:
-                    /// altar
-                    // open mater menu
-                    thisConfig->thisCore->SaveToDebugLog("Entering Altar...");
-                    altar_menu.Show();
-                    altar_menu.isActive = true;
-                    altar_menu.ShowAltar();
-                    thisConfig->thisCore->SaveToDebugLog("Altar entered.");
-                    break;
-                case 5:
-                    /// obelisk
-                    thisConfig->thisCore->SaveToDebugLog("Entering Obelisk...");
-                    obelisk_menu.Reload();
-                    obelisk_menu.Show();
-                    obelisk_menu.isActive = true;
-                    thisConfig->thisCore->SaveToDebugLog("Obelisk entered.");
-                    break;
-                default:
-                    /// nothing
-                    break;
-                }
-            }
-
             if((!barracks_menu.isActive) && (!altar_menu.isActive) && (!obelisk_menu.isActive))
             {
+                if((inputCtrl.isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl.isKeyPressed(InputController::Keys::LTRIGGER)))
+                {
+                    if(location > 0)
+                    {
+                        location--;
+                        left = true;
+
+                        SetTitle(location);
+                        thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
+                    }
+                }
+                else if((inputCtrl.isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl.isKeyPressed(InputController::Keys::RTRIGGER)))
+                {
+                    if(location < locations.size()-1)
+                    {
+                        location++;
+                        left = false;
+
+                        SetTitle(location);
+                        thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
+                    }
+                }
+                else if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+                {
+                    // select the current menu item
+                    switch (location)
+                    {
+                    case 0:
+                        /// trader/random
+                        // open the world map
+                        break;
+                    case 2:
+                        /// armory/barracks
+                        thisConfig->thisCore->SaveToDebugLog("Entering Barracks...");
+                        barracks_menu.Show();
+                        barracks_menu.isActive = true;
+                        barracks_menu.obelisk = false;
+                        barracks_menu.OpenBarracksMenu();
+                        barracks_menu.UpdateInputControls();
+                        thisConfig->thisCore->SaveToDebugLog("Barracks entered.");
+                        break;
+                    case 3:
+                        /// festival
+                        // open barracks screen
+                        break;
+                    case 4:
+                        /// altar
+                        // open mater menu
+                        thisConfig->thisCore->SaveToDebugLog("Entering Altar...");
+                        altar_menu.loadedSave = loadedSave;
+                        altar_menu.ReloadInventory();
+                        altar_menu.Show();
+                        altar_menu.isActive = true;
+                        altar_menu.ShowAltar();
+                        thisConfig->thisCore->SaveToDebugLog("Altar entered.");
+                        break;
+                    case 5:
+                        /// obelisk
+                        thisConfig->thisCore->SaveToDebugLog("Entering Obelisk...");
+                        obelisk_menu.Reload();
+                        obelisk_menu.Show();
+                        obelisk_menu.isActive = true;
+                        thisConfig->thisCore->SaveToDebugLog("Obelisk entered.");
+                        break;
+                    default:
+                        /// nothing
+                        break;
+                    }
+                }
+
                 if(inputCtrl.isKeyPressed(InputController::Keys::START))
                 {
                     std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};

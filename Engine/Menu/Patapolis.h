@@ -169,6 +169,7 @@ class PatapolisMenu : public Menu
         bool isAnim = false;
         bool initialised=false;
         bool doWaitKeyPress=true;
+        bool loadedSave = false;
 
         ControlTips ctrlTips;
 
