@@ -443,7 +443,7 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                 else
                 parentMenu->barracks_menu.mission_multiplier = 1;
 
-                parentMenu->barracks_menu.OpenBarracksMenu();
+                parentMenu->barracks_menu.ReloadInventory();
                 parentMenu->barracks_menu.UpdateInputControls();
                 cout << "Set barracks mission to ID " << missions[sel_mission].mis_ID << endl;
                 thisConfig->thisCore->SaveToDebugLog("Barracks (In Obelisk) entered. Mission file: "+missions[sel_mission].mission_file);

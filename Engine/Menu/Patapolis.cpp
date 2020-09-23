@@ -555,6 +555,9 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
 
     ctrlTips.create(54, f_font, 20, sf::String(L"L/R: Move      ×: Interact      Select: Save      Start: Title screen"), quality);
 
+    altar_menu.loadedSave = loadedSave;
+    altar_menu.ReloadInventory();
+
     initialised=true;
 
     SetTitle(location);
@@ -1216,7 +1219,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                         barracks_menu.Show();
                         barracks_menu.isActive = true;
                         barracks_menu.obelisk = false;
-                        barracks_menu.OpenBarracksMenu();
+                        barracks_menu.ReloadInventory();
                         barracks_menu.UpdateInputControls();
                         thisConfig->thisCore->SaveToDebugLog("Barracks entered.");
                         break;

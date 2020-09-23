@@ -8,6 +8,7 @@
 #include "../Input/InputController.h"
 #include "../Dialog/ControlTips.h"
 #include "../Dialog/DialogBox.h"
+#include "../Dialog/RoundedRect.h"
 
 class V4Core;
 class Barracks : public Menu
@@ -32,6 +33,9 @@ class Barracks : public Menu
         float ratioX;
         float ratioY;
 
+        float resRatioX, resRatioY;
+        int q=0;
+
         float pataponY;
         float floorY;
 
@@ -39,7 +43,6 @@ class Barracks : public Menu
         float mission_multiplier = 1;
 
         bool obelisk = false;
-
         bool missionStarted = false;
 
         int qualitySetting = 0;
@@ -48,27 +51,26 @@ class Barracks : public Menu
         PText t_title;
         int currentItemPosition;
         vector<bool> enabledPositons;
-        /// Barracks text
-        PText t_unit_name;
-        PText t_unit_status_text;
 
-        PText t_unit_level;
-        PText t_unit_experience;
-        PText t_unit_damage;
+        RoundedRect rr_main, rr_main_sh;
+        RoundedRect rr_unitstatus, rr_unitstatus_sh;
+        RoundedRect rr_uniticon, rr_uniticon_sh;
 
-        PText t_unit_hp;
-        PText t_unit_crit;
-        PText t_unit_attack_speed;
+        PSprite class_icon;
 
+        PText unit_status, class_name;
 
-        /// Barracks stat text
-        PText s_unit_level;
-        PText s_unit_experience;
-        PText s_unit_damage;
+        PText unit_stat_level_t, unit_stat_level_v;
+        PText unit_stat_exp_t, unit_stat_exp_v;
+        PText unit_stat_hp_t, unit_stat_hp_v;
+        PText unit_stat_dmg_t, unit_stat_dmg_v;
+        PText unit_stat_atkspd_t, unit_stat_atkspd_v;
 
-        PText s_unit_hp;
-        PText s_unit_crit;
-        PText s_unit_attack_speed;
+        PText unit_stat_critc_t, unit_stat_critc_v;
+        PText unit_stat_kbc_t, unit_stat_kbc_v;
+        PText unit_stat_stgc_t, unit_stat_stgc_v;
+        PText unit_stat_firec_t, unit_stat_firec_v;
+        PText unit_stat_icec_t, unit_stat_icec_v;
 
         /// Barracks Equipment Text
         PText t_unit_rarepon_name;
@@ -77,6 +79,8 @@ class Barracks : public Menu
         PText t_armour_name;
         PText t_mask_name;
 
+        PSprite inv_box;
+        int gridSelX=0, gridSelY=0, gridOffsetY=0;
 
         /// menu background
         PSprite s_menu_bkg;
@@ -103,33 +107,38 @@ class Barracks : public Menu
         PSprite s_mask_icon;
 
         int current_selected_pon=0;
+        float item_line_flash = 0;
 
         bool MenuMode = false;
 
+        struct InvBox
+        {
+            ///data
+            Item* data;
+            int amount=0;
+            int occ_amount=0;
+            bool highlight = false;
+            vector<int> invIDs;
 
-        /// mask icon
-        PSprite mask_icon;
+            ///display
+            sf::RectangleShape r_outer;
+            sf::RectangleShape r_inner;
+            sf::RectangleShape r_highlight;
+            PText num, num_shadow;
+            PSprite icon;
+        };
 
-        /// spear icon
-        PSprite spear_icon;
+        vector<InvBox> inventory_boxes;
+        sf::RectangleShape r_sel;
 
-        /// misc icon
-        PSprite misc_icon;
+        RoundedRect rr_itempreview, rr_itempreview_sh;
+        PText item_title, item_desc;
 
-        /// armour icon
-        PSprite armour_icon;
         int currentItemId;
 
         int activeCategory=1;
         int activeSubcategory=0;
 
-        int numItemRows;
-        int numItemColumns = 4;
-        int currentRow = 0;
-
-        int inventoryGridXPos = 0;
-        int inventoryGridYPos = 0;
-        sf::RectangleShape mm_inventory_background;
         Camera camera;
         Menu *parentMenu;
         int currentMenuPosition;
@@ -150,9 +159,11 @@ class Barracks : public Menu
         vector<PataDialogBox> dialogboxes;
 
         void OnExit();
-        void OpenBarracksMenu();
+        void ReloadInventory();
+        void SetInventoryPosition();
         void ApplyEquipment();
         void RefreshStats();
+        void UpdatePreviewText();
         void UpdateButtons();
         Barracks();
         ~Barracks();
