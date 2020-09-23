@@ -5,7 +5,7 @@
 #include <codecvt>
 #include "Func.h"
 #include <iostream>
-
+#include <iomanip>
 
 using namespace std;
 
@@ -204,4 +204,12 @@ template<typename T> std::string Func::to_str(const T& t)
 	ostringstream ss;
 	ss << t;
 	return ss.str();
+}
+
+std::string Func::num_padding(int num, int padding) ///stolen from cplusplus.com
+{
+    std::ostringstream ss;
+    ss << std::setw(padding) << std::setfill('0') << num;
+
+    return ss.str();
 }

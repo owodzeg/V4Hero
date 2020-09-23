@@ -19,6 +19,7 @@ class Func
     static std::wstring ConvertToWString(const std::string &s);
     static std::string ConvertToString(const std::wstring &ws);
     template<typename T> static std::string to_str(const T& t);
+    static std::string num_padding(int num, int padding);
 };
 
 #endif // FUNC_H
