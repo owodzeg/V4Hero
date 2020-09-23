@@ -953,6 +953,7 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
                 if(!MenuMode)
                 {
                     MenuMode = true;
+                    UpdateInputControls();
 
                     if (currentItemPosition == 0)
                     {
@@ -997,6 +998,7 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
 
                                         RefreshStats();
                                         ApplyEquipment();
+                                        UpdateInputControls();
 
                                         MenuMode = false;
                                     }
@@ -1017,6 +1019,7 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
                 {
                     MenuMode=false;
 
+                    UpdateInputControls();
                     RefreshStats();
                 }
                 else
@@ -1087,10 +1090,17 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
 
 void Barracks::UpdateInputControls()
 {
-    if(!obelisk)
-    ctrlTips.create(82, f_font, 20, sf::String(L"Left/Right: Select unit      Up/Down: Select equipment      ×: Change equipment      〇: Return to Patapolis"), qualitySetting);
+    if(!MenuMode)
+    {
+        if(!obelisk)
+        ctrlTips.create(82, f_font, 20, sf::String(L"Left/Right: Select unit      Up/Down: Select equipment      ×: Change equipment      〇: Return to Patapolis"), qualitySetting);
+        else
+        ctrlTips.create(82, f_font, 20, sf::String(L"Left/Right: Select unit      Up/Down: Select equipment      ×: Change equipment      〇: Return to World map      Start: Start mission"), qualitySetting);
+    }
     else
-    ctrlTips.create(82, f_font, 20, sf::String(L"Left/Right: Select unit      Up/Down: Select equipment      ×: Change equipment      〇: Return to World map      Start: Start mission"), qualitySetting);
+    {
+        ctrlTips.create(82, f_font, 20, sf::String(L"Left/Right/Up/Down: Navigate item      ×: Equip item      〇: Cancel"), qualitySetting);
+    }
 }
 
 void Barracks::UpdateButtons()
