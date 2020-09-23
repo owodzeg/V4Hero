@@ -4,16 +4,6 @@
 #include "../V4Core.h"
 #include "math.h"
 
-#include <sstream>
-#include <iomanip>
-
-std::string num_padding(int num, int padding) ///stolen from cplusplus.com
-{
-    std::ostringstream ss;
-    ss << std::setw(padding) << std::setfill('0') << num;
-
-    return ss.str();
-}
 
 AltarMenu::AltarMenu()
 {
@@ -92,25 +82,17 @@ void AltarMenu::UpdateAltarDescriptions()
 {
     int selItem = (gridSelY+gridOffsetY)*4 + gridSelX;
 
-    if(selItem < inventory_boxes.size()-1)
+    if(selItem < inventory_boxes.size())
     {
         altar_item_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(inventory_boxes[selItem].data->item_name)));
         altar_item_category.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString("altar_category"+to_string(inventory_boxes[selItem].data->category_id))));
         altar_item_desc.setString(Func::wrap_text(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(inventory_boxes[selItem].data->item_description)), 420, f_font, 26));
-
-        altar_item_title.setOrigin(altar_item_title.getLocalBounds().width/2, altar_item_title.getLocalBounds().height/2);
-        altar_item_category.setOrigin(altar_item_category.getLocalBounds().width/2, altar_item_category.getLocalBounds().height/2);
-        altar_item_desc.setOrigin(0, 0);
     }
     else
     {
         altar_item_title.setString("");
         altar_item_category.setString("");
         altar_item_desc.setString("");
-
-        altar_item_title.setOrigin(altar_item_title.getLocalBounds().width/2, altar_item_title.getLocalBounds().height/2);
-        altar_item_category.setOrigin(altar_item_category.getLocalBounds().width/2, altar_item_category.getLocalBounds().height/2);
-        altar_item_desc.setOrigin(0, 0);
     }
 }
 
@@ -133,7 +115,8 @@ void AltarMenu::ReloadInventory()
 
     for(int i=0; i<v4core->savereader.invdata.items.size(); i++)
     {
-        Item* cur_item = v4core->savereader.invdata.GetItemByInvID(i).item;
+        InventoryItem cur_invitem = v4core->savereader.invdata.GetItemByInvID(i);
+        Item* cur_item = cur_invitem.item;
 
         bool ex = false;
 
@@ -145,8 +128,8 @@ void AltarMenu::ReloadInventory()
                 ex = true;
                 inventory_boxes[b].amount++;
 
-                inventory_boxes[b].num.setString(num_padding(inventory_boxes[b].amount, 3));
-                inventory_boxes[b].num_shadow.setString(num_padding(inventory_boxes[b].amount, 3));
+                inventory_boxes[b].num.setString(Func::num_padding(inventory_boxes[b].amount, 3));
+                inventory_boxes[b].num_shadow.setString(Func::num_padding(inventory_boxes[b].amount, 3));
             }
         }
 
@@ -169,7 +152,7 @@ void AltarMenu::ReloadInventory()
                     tmp.r_inner.setFillColor(sf::Color(146,173,217,255));
 
                     ///look up material's icon
-                    tmp.icon.loadFromFile("resources/graphics/ui/altar/materials/"+num_padding(cur_item->spritesheet_id, 4)+".png", q, 1);
+                    tmp.icon.loadFromFile("resources/graphics/ui/altar/materials/"+Func::num_padding(cur_item->spritesheet_id, 4)+".png", q, 1);
                     tmp.icon.setOrigin(tmp.icon.getLocalBounds().width/2, tmp.icon.getLocalBounds().height/2);
 
                     break;
@@ -202,7 +185,7 @@ void AltarMenu::ReloadInventory()
                     tmp.r_inner.setFillColor(sf::Color(183,183,183,255));
 
                     ///look up material's icon
-                    tmp.icon.loadFromFile("resources/graphics/ui/altar/materials/"+num_padding(cur_item->spritesheet_id, 4)+".png", q, 1);
+                    tmp.icon.loadFromFile("resources/graphics/ui/altar/materials/"+Func::num_padding(cur_item->spritesheet_id, 4)+".png", q, 1);
                     tmp.icon.setOrigin(tmp.icon.getLocalBounds().width/2, tmp.icon.getLocalBounds().height/2);
 
                     break;
@@ -242,8 +225,13 @@ void AltarMenu::ReloadInventory()
                     {
                         highlight = true;
                     }
+
+                    if(old_invboxes[b].highlight)
+                    highlight = false;
                 }
             }
+
+            cout << "Check invbox " << a << " found " << found << " highlight " << highlight << endl;
 
             if(!found)
             highlight = true;
@@ -278,7 +266,7 @@ void AltarMenu::Update(sf::RenderWindow &window, float fps, InputController& inp
 
         for(int i=0; i<24; i++)
         {
-            if(gridOffsetY*4 + i < inventory_boxes.size()-1)
+            if(gridOffsetY*4 + i < inventory_boxes.size())
             {
                 int curItem = gridOffsetY*4 + i;
 
@@ -384,6 +372,10 @@ void AltarMenu::Update(sf::RenderWindow &window, float fps, InputController& inp
         altar_title.draw(window);
         altar_kaching.draw(window);
 
+        altar_item_title.setOrigin(altar_item_title.getLocalBounds().width/2, altar_item_title.getLocalBounds().height/2);
+        altar_item_category.setOrigin(altar_item_category.getLocalBounds().width/2, altar_item_category.getLocalBounds().height/2);
+        altar_item_desc.setOrigin(0, 0);
+
         altar_item_title.draw(window);
         altar_item_category.draw(window);
         altar_item_desc.draw(window);
@@ -419,11 +411,7 @@ void AltarMenu::Update(sf::RenderWindow &window, float fps, InputController& inp
                 }
                 else
                 {
-                    ///25 = 1
-                    ///28 = 1
-                    ///29 = 2
-
-                    gridOffsetY = floor(inventory_boxes.size() / 4) - 6;
+                    gridOffsetY = ceil(inventory_boxes.size() / 4.0) - 6;
 
                     if(gridOffsetY < 0)
                     gridOffsetY = 0;
@@ -440,7 +428,7 @@ void AltarMenu::Update(sf::RenderWindow &window, float fps, InputController& inp
 
             if(gridSelY > 5)
             {
-                if(inventory_boxes.size()-1 > (6+gridOffsetY)*4)
+                if(inventory_boxes.size() > (6+gridOffsetY)*4)
                 {
                     gridOffsetY++;
                     gridSelY = 5;
