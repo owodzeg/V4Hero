@@ -132,7 +132,14 @@ void StringRepository::LoadLanguageFiles(int langNum)
 std::wstring StringRepository::GetUnicodeString(std::wstring key)
 {
     std::string s(key.begin(), key.end());
+
+    std::string c(stringMap[s].begin(), stringMap[s].end());
+    std::string nodata = s+"__no_data";
+
+    if(c != "")
     return stringMap[s];
+    else
+    return std::wstring(nodata.begin(), nodata.end());
 }
 
 std::wstring StringRepository::GetUnicodeString(std::string key)
