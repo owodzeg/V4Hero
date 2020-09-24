@@ -258,17 +258,23 @@ void V4Core::LoadingThread()
 
     int tipBackground = rand() % tipsUtil.t_backgrounds.size();
     int tipIcon = rand() % tipsUtil.t_icons.size();
-    int tipText = rand() % tipsUtil.tipTitles.size();
+    int tipText = (rand() % tipsUtil.tip_amount)+1;
+
+    string title_key = "tip"+to_string(tipText)+"_title";
+    string desc_key = "tip"+to_string(tipText)+"_desc";
+
+    wstring wtitle_key(title_key.begin(), title_key.end());
+    wstring wdesc_key(desc_key.begin(), desc_key.end());
 
     PText t_tipTitle;
-    t_tipTitle.createText(f_font, 48, sf::Color(255,255,255,255), tipsUtil.tipTitles[tipText], config.GetInt("textureQuality"), 1);
+    t_tipTitle.createText(f_font, 48, sf::Color(255,255,255,255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(wtitle_key)), config.GetInt("textureQuality"), 1);
 
-    std::string str_tipText = tipsUtil.tipTexts[tipText];
-    for(int t=0; t<str_tipText.size(); t++)
-    {
-        if(str_tipText[t] == '\\')
-        str_tipText[t] = '\n';
-    }
+    std::string str_tipText = Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(wdesc_key));
+    //for(int t=0; t<str_tipText.size(); t++)
+    //{
+    //    if(str_tipText[t] == '\\')
+    //    str_tipText[t] = '\n';
+    //}
 
     PText t_tipText;
     t_tipText.createText(f_font, 32, sf::Color(255,255,255,255), str_tipText, config.GetInt("textureQuality"), 1);

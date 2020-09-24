@@ -127,7 +127,7 @@ void TipsUtil::LoadStrings(Config& tconfig)
 {
 
     //sf::Context context;
-    config = &tconfig;
+    /**config = &tconfig;
     debugOut = config->debugOut;
     ifstream conf("resources/lang/tip_ENG.txt");
     if(conf.good())
@@ -150,5 +150,5 @@ void TipsUtil::LoadStrings(Config& tconfig)
     {
         cout << "ERROR! Could not load tips icon file!" << endl;
     }
-    conf.close();
+    conf.close();*/
 }
