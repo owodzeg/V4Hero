@@ -56,6 +56,8 @@ class MessageCloud
 
     sf::Color cur_color;
 
+    int msgcloud_ID = 0;
+
     MessageCloud();
     void setSize(float new_x, float new_y);
     void Create(int speed, sf::Vector2f start_pos, sf::Color color, bool can_speedup, int q);
