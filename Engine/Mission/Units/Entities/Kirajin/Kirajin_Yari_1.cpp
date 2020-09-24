@@ -77,6 +77,8 @@ void Kirajin_Yari_1::Draw(sf::RenderWindow& window)
             {
                 cout << "I am despawning" << endl;
                 setAnimationSegment("death_despawn", true);
+
+                dropItem();
             }
 
             if(getAnimationSegment() == "death_despawn")
