@@ -123,6 +123,10 @@ class PatapolisMenu : public Menu
         float rayX = 12215;
 
         PSprite wakapon;
+
+        AnimatedObject a_wakapon;
+        AnimatedObject a_sen;
+
         PSprite world_egg;
         PSprite light_1, light_2, egg_light;
 
@@ -181,6 +185,7 @@ class PatapolisMenu : public Menu
         std::vector<float> possibleMenuPositions;
 
         vector<PataDialogBox> dialogboxes;
+        vector<MessageCloud> messageclouds;
 
         void addL6(std::string variant, float x, float y, int q, int r);
         void addL2(std::string variant, float x, float y, int q, int r);

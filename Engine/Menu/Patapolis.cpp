@@ -396,8 +396,16 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     addSparkle(11620 + 860, 244);
 
     wakapon.loadFromFile("resources/graphics/bg/patapolis/wakapon.png", quality, 1);
-    wakapon.setPosition(11930, 462);
+    wakapon.setPosition(11920, 462);
     wakapon.setOrigin(wakapon.getLocalBounds().width/2, wakapon.getLocalBounds().height);
+
+    a_wakapon.LoadConfig(thisConfigs, "resources/units/unit/wakapon.p4a");
+    a_wakapon.setAnimationSegment("idle");
+    a_wakapon.global_y = 395;
+
+    a_sen.LoadConfig(thisConfigs, "resources/units/unit/ranpurupon.p4a");
+    a_sen.setAnimationSegment("idle");
+    a_sen.global_y = 629;
 
     world_egg.loadFromFile("resources/graphics/bg/patapolis/egg.png", quality, 1);
     world_egg.setPosition(12215, 462);
@@ -520,6 +528,7 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     locations.push_back(forge_main.getPosition().x - 640);
     locations.push_back(market.getPosition().x - 640);
     locations.push_back(festival_main.getPosition().x - 640);
+    locations.push_back(6450 - 640); ///Sen
     locations.push_back(altar.getPosition().x - 640);
     locations.push_back(obelisk.getPosition().x - 640);
     locations.push_back(paraget_main.getPosition().x - 640);
@@ -626,20 +635,156 @@ void PatapolisMenu::SetTitle(int menuPosition)
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_festival")));
         break;
     case 4:
+    {
+        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_sen")));
+        a += L"×: Interact      ";
+
+        ///activate her dialogue
+        messageclouds.clear();
+
+        MessageCloud tmp;
+        tmp.Create(20, sf::Vector2f(a_sen.getGlobalPosition().x-5, a_sen.getGlobalPosition().y-25), sf::Color(170,182,250,255), false, thisConfig->GetInt("textureQuality"));
+
+        vector<int> missions = v4core->savereader.missionsUnlocked;
+
+        if(std::find(missions.begin(), missions.end(), 1) != missions.end())
+        {
+            ///shida valley is unlocked
+
+            if(missions.size() == 1) ///if it's the only mission
+            {
+                ///shida valley dialogue
+                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_1")), true);
+                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_4")), true);
+                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_5")), true);
+            }
+            else
+            {
+                if(std::find(missions.begin(), missions.end(), 2) != missions.end()) ///patapine fortress STORY mission (non-repeatable)
+                {
+                    ///patapine unlocked dialogue
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_3")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_6")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_7")), true);
+                }
+                else if(std::find(missions.begin(), missions.end(), 3) != missions.end()) ///patapine fortress REPEATABLE mission
+                {
+                    if(missions.size() == 2) ///ejiji cliffs not unlocked yet (only shida and patapine)
+                    {
+                        ///ejiji locked dialogue
+                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_2")), true);
+                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_8")), true);
+                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_9")), true);
+                    }
+                    else
+                    {
+                        if(std::find(missions.begin(), missions.end(), 4) != missions.end()) ///ejiji cliff STORY mission
+                        {
+                            ///ejiji unlocked dialogue
+                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_3")), true);
+                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_10")), true);
+                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_11")), true);
+                        }
+                        else ///ejiji cliff REPEATABLE mission
+                        {
+                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_1")), true);
+                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_12")), true);
+                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_13")), true);
+                        }
+                    }
+                }
+            }
+        }
+
+        tmp.msgcloud_ID = 0;
+        messageclouds.push_back(tmp);
+
+        cout << "Creating message cloud at " << a_sen.getGlobalPosition().x-5 << " " << a_sen.getGlobalPosition().y-25 << endl;
+
+        break;
+    }
+    case 5:
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_altar")));
         a += L"×: Interact      ";
         break;
-    case 5:
+    case 6:
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_obelisk")));
         a += L"×: Interact      ";
         break;
-    case 6:
+    case 7:
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_paraget")));
         break;
-    case 7:
-        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_wakapon")));
-        break;
     case 8:
+    {
+        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_wakapon")));
+
+        a += L"×: Interact      ";
+
+        ///activate her dialogue
+        messageclouds.clear();
+
+        MessageCloud tmp;
+        tmp.Create(20, sf::Vector2f(a_wakapon.getGlobalPosition().x-5, a_wakapon.getGlobalPosition().y-25), sf::Color(255,255,255,255), false, thisConfig->GetInt("textureQuality"));
+
+        vector<int> missions = v4core->savereader.missionsUnlocked;
+
+        if(std::find(missions.begin(), missions.end(), 1) != missions.end())
+        {
+            ///shida valley is unlocked
+
+            if(missions.size() == 1) ///if it's the only mission
+            {
+                ///shida valley dialogue
+                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
+                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_2")), true);
+                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_3")), true);
+            }
+            else
+            {
+                if(std::find(missions.begin(), missions.end(), 2) != missions.end()) ///patapine fortress STORY mission (non-repeatable)
+                {
+                    ///patapine unlocked dialogue
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_4")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_5")), true);
+                }
+                else if(std::find(missions.begin(), missions.end(), 3) != missions.end()) ///patapine fortress REPEATABLE mission
+                {
+                    if(missions.size() == 2) ///ejiji cliffs not unlocked yet (only shida and patapine)
+                    {
+                        ///ejiji locked dialogue
+                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
+                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_6")), true);
+                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_7")), true);
+                    }
+                    else
+                    {
+                        if(std::find(missions.begin(), missions.end(), 4) != missions.end()) ///ejiji cliff STORY mission
+                        {
+                            ///ejiji unlocked dialogue
+                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
+                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_8")), true);
+                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_9")), true);
+                        }
+                        else ///ejiji cliff REPEATABLE mission
+                        {
+                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
+                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_10")), true);
+                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_11")), true);
+                        }
+                    }
+                }
+            }
+        }
+
+        tmp.msgcloud_ID = 1;
+        messageclouds.push_back(tmp);
+
+        cout << "Creating message cloud at " << a_wakapon.getGlobalPosition().x-5 << " " << a_wakapon.getGlobalPosition().y-25 << endl;
+
+        break;
+    }
+    case 9:
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_egg")));
         break;
     default:
@@ -732,6 +877,8 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         L5.lx = L5.baseX - (camPos / 1.1111111111111111111);
         L4.lx = L4.baseX - (camPos / 1.0526315789473684210526315789474);
         wakapon.lx = wakapon.baseX - camPos;
+        a_wakapon.global_x = wakapon.baseX - camPos;
+        a_sen.global_x = 6450.0 - camPos;
         world_egg.lx = world_egg.baseX - camPos;
         light_1.lx = light_1.baseX - camPos;
         light_2.lx = light_2.baseX - camPos;
@@ -1102,8 +1249,39 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         bridge.setPosition(floor_x + 11200, 720);
         bridge.draw(window);
 
-        wakapon.draw(window);
+        a_wakapon.fps = fps;
+        a_wakapon.Draw(window);
+
+        a_sen.fps = fps;
+        a_sen.Draw(window);
+
         world_egg.draw(window);
+
+        vector<int> m_rm;
+
+        for(int i=0; i<messageclouds.size(); i++)
+        {
+            if(messageclouds[i].firstrender)
+            messageclouds[i].Show();
+
+            if(messageclouds[i].msgcloud_ID == 0)
+            messageclouds[i].startpos = sf::Vector2f(a_sen.getGlobalPosition().x-5, a_sen.getGlobalPosition().y-25);
+            else if(messageclouds[i].msgcloud_ID == 1)
+            messageclouds[i].startpos = sf::Vector2f(a_wakapon.getGlobalPosition().x-5, a_wakapon.getGlobalPosition().y-25);
+
+            if((messageclouds[i].done) && (floor(messageclouds[i].xsize) == 0) && (floor(messageclouds[i].ysize) == 0))
+            messageclouds[i].Hide();
+
+            messageclouds[i].Draw(window, fps, inputCtrl);
+
+            if((!messageclouds[i].active) && (messageclouds[i].done))
+            m_rm.push_back(i);
+        }
+
+        for(int i=0; i<m_rm.size(); i++)
+        {
+            messageclouds.erase(messageclouds.begin()+m_rm[i]-i);
+        }
 
         if(barracks_menu.missionStarted)
         {
@@ -1189,6 +1367,9 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                         location--;
                         left = true;
 
+                        for(int i=0; i<messageclouds.size(); i++)
+                        messageclouds[i].End();
+
                         SetTitle(location);
                         thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
                     }
@@ -1199,6 +1380,9 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     {
                         location++;
                         left = false;
+
+                        for(int i=0; i<messageclouds.size(); i++)
+                        messageclouds[i].End();
 
                         SetTitle(location);
                         thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
@@ -1227,7 +1411,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                         /// festival
                         // open barracks screen
                         break;
-                    case 4:
+                    case 5:
                         /// altar
                         // open mater menu
                         thisConfig->thisCore->SaveToDebugLog("Entering Altar...");
@@ -1238,7 +1422,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                         altar_menu.ShowAltar();
                         thisConfig->thisCore->SaveToDebugLog("Altar entered.");
                         break;
-                    case 5:
+                    case 6:
                         /// obelisk
                         thisConfig->thisCore->SaveToDebugLog("Entering Obelisk...");
                         obelisk_menu.Reload();
