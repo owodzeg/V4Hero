@@ -484,7 +484,7 @@ void Barracks::UpdatePreviewText()
         if(invbox_id < inventory_boxes.size())
         {
             item_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(inventory_boxes[invbox_id].data->item_name)));
-            item_desc.setString(Func::wrap_text(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(inventory_boxes[invbox_id].data->item_description)), 340, f_font, 22));
+            item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(thisConfig->strRepo.GetUnicodeString(inventory_boxes[invbox_id].data->item_description), 340, f_font, 22)));
         }
         else
         {

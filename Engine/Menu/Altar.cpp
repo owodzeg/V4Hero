@@ -85,8 +85,8 @@ void AltarMenu::UpdateAltarDescriptions()
     if(selItem < inventory_boxes.size())
     {
         altar_item_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(inventory_boxes[selItem].data->item_name)));
-        altar_item_category.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString("altar_category"+to_string(inventory_boxes[selItem].data->category_id))));
-        altar_item_desc.setString(Func::wrap_text(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(inventory_boxes[selItem].data->item_description)), 420, f_font, 26));
+        altar_item_category.setString(thisConfig->strRepo.GetUnicodeString("altar_category"+to_string(inventory_boxes[selItem].data->category_id)));
+        altar_item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(thisConfig->strRepo.GetUnicodeString(inventory_boxes[selItem].data->item_description), 420, f_font, 26)));
     }
     else
     {

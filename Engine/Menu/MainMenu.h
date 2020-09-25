@@ -27,7 +27,7 @@ class MainMenu : public Menu
         sf::SoundBuffer sb_title_loop;
         sf::Sound title_loop;
 
-        std::vector<std::string> temp_menu;
+        std::vector<std::wstring> temp_menu;
 
         PText t_option[4];
 

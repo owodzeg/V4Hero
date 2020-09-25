@@ -76,7 +76,25 @@ void PText::setPosition(float x, float y)
 
 void PText::setString(std::string text_string)
 {
+    txt = sf::String(text_string);
+    t.setString(txt);
+}
+
+void PText::setString(std::wstring text_string)
+{
+    txt = sf::String(text_string);
+    t.setString(txt);
+}
+
+void PText::setString(sf::String text_string)
+{
     txt = text_string;
+    t.setString(txt);
+}
+
+void PText::setString(const char* text_string)
+{
+    txt = sf::String(text_string);
     t.setString(txt);
 }
 

@@ -221,10 +221,10 @@ void MainMenu::Initialise(Config *thisConfigs, V4Core *parent)
     msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_8")), true);
     msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_9")), true);
 
-    temp_menu.push_back(Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"menu_newgame")));
-    temp_menu.push_back(Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"menu_continue")));
-    temp_menu.push_back(Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"menu_options")));
-    temp_menu.push_back(Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"menu_exit")));
+    temp_menu.push_back(thisConfig->strRepo.GetUnicodeString(L"menu_newgame"));
+    temp_menu.push_back(thisConfig->strRepo.GetUnicodeString(L"menu_continue"));
+    temp_menu.push_back(thisConfig->strRepo.GetUnicodeString(L"menu_options"));
+    temp_menu.push_back(thisConfig->strRepo.GetUnicodeString(L"menu_exit"));
 
     parent->SaveToDebugLog("Main menu initialized.");
     //title_loop.play();
@@ -769,7 +769,7 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
                     t_option[i].setScale(1,1);
                 }
 
-                t_option[i].setString(temp_menu[i]);
+                t_option[i].setString(Func::ConvertToUtf8String(temp_menu[i]));
 
                 //cout << "Text " << i << ": " << t_option[i].orX << " " << t_option[i].orY << " " << t_option[i].getGlobalBounds().width << " " << t_option[i].getGlobalBounds().height << " " << t_option[i].getGlobalBoundsScaled().width << " " << t_option[i].getGlobalBoundsScaled().height << endl;
 

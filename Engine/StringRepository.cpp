@@ -39,7 +39,9 @@ void StringRepository::LoadLanguageFile(wifstream* conf)
             {
                 ///Split the Key and Value
                 ///wcout<<line<<endl;
+
                 vector<wstring> key = Func::Split(line,L'|');
+
                 if(key.size() == 2)
                 {
                     std::string s(key[0].begin(), key[0].end());
@@ -65,6 +67,7 @@ void StringRepository::LoadLanguageFile(wifstream* conf)
 void StringRepository::LoadLanguageFiles(int langNum)
 {
     ifstream conf("resources/lang/lang.txt");
+
     if(conf.good())
     {
         std::string line;
@@ -83,10 +86,13 @@ void StringRepository::LoadLanguageFiles(int langNum)
                 }
             }
         }
+
         wifstream conf2("resources/lang/"+langFiles[langNum-1]+".txt");
         cout<<"#### Loading language file: "<< langNames[langNum-1] <<endl;
         LoadLanguageFile(&conf2);
-    } else {
+    }
+    else
+    {
         wifstream conf2("resources/lang/str_ENG.txt");
         LoadLanguageFile(&conf2);
     }
@@ -144,7 +150,15 @@ std::wstring StringRepository::GetUnicodeString(std::wstring key)
 
 std::wstring StringRepository::GetUnicodeString(std::string key)
 {
-    return stringMap[key];
+    std::string s = key;
+
+    std::string c(stringMap[s].begin(), stringMap[s].end());
+    std::string nodata = s+"__no_data";
+
+    if(c != "")
+    return stringMap[s];
+    else
+    return std::wstring(nodata.begin(), nodata.end());
 }
 
 std::string StringRepository::GetString(std::wstring key)
