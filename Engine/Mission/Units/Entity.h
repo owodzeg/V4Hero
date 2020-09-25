@@ -56,6 +56,11 @@ class Entity : public CollidableObject
     float curHP = 500;
     float maxHP = 500;
 
+    float mindmg = 1;
+    float maxdmg = 1;
+
+    bool custom_dmg = false;
+
     int layer = 0; ///rendering priority
     int parent = -1; ///if entity is bound to any other entity
 

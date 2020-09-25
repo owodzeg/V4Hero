@@ -38,6 +38,15 @@ void Kirajin_Yari_2::LoadConfig(Config *thisConfigs)
             applySpear(stoi(eq[1]));
             applyHelm(stoi(eq[2]));
         }
+        else if(additional_data[i].find("damage") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            mindmg = stoi(eq[1]);
+            maxdmg = stoi(eq[2]);
+
+            custom_dmg = true;
+        }
     }
 }
 

@@ -137,7 +137,7 @@ void MissionController::addItemsCounter(int id, float baseX, float baseY)
 
 }
 
-void MissionController::spawnEntity(string entityName, int entityID, int baseHP, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, int layer, int parent, float overrideY, float overrideHP, float mission_multiplier, vector<Entity::Loot> loot_table, vector<string> additional_data)
+void MissionController::spawnEntity(string entityName, int entityID, int baseHP, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, int layer, int parent, float overrideY, float overrideHP, float mission_multiplier, float mindmg, float maxdmg, vector<Entity::Loot> loot_table, vector<string> additional_data)
 {
     ///need to somehow optimize this to not copy paste the same code over and over
 
@@ -455,6 +455,13 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             entity->loot_table = loot_table;
             entity->curHP = baseHP*mission_multiplier;
             entity->maxHP = baseHP*mission_multiplier;
+
+            if(!entity->custom_dmg)
+            {
+                entity->mindmg = mindmg;
+                entity->maxdmg = maxdmg;
+            }
+
             entity->stat_multiplier = 1+((mission_multiplier-1) * 0.333);
 
             entity->layer = layer;
@@ -971,6 +978,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
                             int entityID = atoi(spawn[0].c_str());
                             int baseY = 0;
                             int baseHP = 0;
+                            float mindmg=1, maxdmg=1;
                             bool collidable = false;
                             bool attackable = false;
                             vector<Entity::Loot> loot_table;
@@ -1006,6 +1014,18 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
                                         {
                                             string by = buff2.substr(buff2.find_last_of("=")+1);
                                             attackable = atoi(by.c_str());
+                                        }
+
+                                        if(buff2.find("mindmg=") != std::string::npos)
+                                        {
+                                            string by = buff2.substr(buff2.find_last_of("=")+1);
+                                            mindmg = atoi(by.c_str());
+                                        }
+
+                                        if(buff2.find("maxdmg=") != std::string::npos)
+                                        {
+                                            string by = buff2.substr(buff2.find_last_of("=")+1);
+                                            maxdmg = atoi(by.c_str());
                                         }
 
                                         if(buff2.find("loot=") != std::string::npos)
@@ -1061,7 +1081,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
                             }
 
                             cout << "Spawning an entity: " << entity_list[entityID] << endl;
-                            spawnEntity(entity_list[entityID],entityID,baseHP,atoi(spawn[1].c_str()),atoi(spawn[2].c_str()),baseY,atoi(spawn[3].c_str()),atoi(spawn[4].c_str()),atoi(spawn[5].c_str()),sf::Color(atoi(spawn[6].c_str()),atoi(spawn[7].c_str()),atoi(spawn[8].c_str()),atoi(spawn[9].c_str())), collidable, attackable, atoi(spawn[10].c_str()), atoi(spawn[13].c_str()), atoi(spawn[12].c_str()), atoi(spawn[11].c_str()), mission_multiplier, loot_table, additional_data);
+                            spawnEntity(entity_list[entityID],entityID,baseHP,atoi(spawn[1].c_str()),atoi(spawn[2].c_str()),baseY,atoi(spawn[3].c_str()),atoi(spawn[4].c_str()),atoi(spawn[5].c_str()),sf::Color(atoi(spawn[6].c_str()),atoi(spawn[7].c_str()),atoi(spawn[8].c_str()),atoi(spawn[9].c_str())), collidable, attackable, atoi(spawn[10].c_str()), atoi(spawn[13].c_str()), atoi(spawn[12].c_str()), atoi(spawn[11].c_str()), mission_multiplier, mindmg, maxdmg, loot_table, additional_data);
                         }
                     }
                 }
@@ -2658,8 +2678,8 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
 
                     float rand_rad = (rand() % 200000000) / float(1000000000);
 
-                    float mindmg = 1*entity->stat_multiplier;
-                    float maxdmg = 10*entity->stat_multiplier;
+                    float mindmg = entity->mindmg*entity->stat_multiplier;
+                    float maxdmg = entity->maxdmg*entity->stat_multiplier;
 
                     float xpos = entity->getGlobalPosition().x+entity->hitBox.left+entity->hitBox.width/2;
                     float ypos = entity->getGlobalPosition().y+entity->hitBox.top+entity->hitBox.height/2;
