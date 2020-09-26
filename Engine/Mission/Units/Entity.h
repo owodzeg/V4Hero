@@ -77,6 +77,8 @@ class Entity : public CollidableObject
     int respawnTime = 0;
     sf::Clock respawn_clock;
 
+    float view_range = 750;
+
     sf::Sound cur_sound;
 
     Entity();

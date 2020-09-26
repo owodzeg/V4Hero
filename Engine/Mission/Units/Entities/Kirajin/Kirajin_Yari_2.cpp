@@ -17,6 +17,16 @@ void Kirajin_Yari_2::LoadConfig(Config *thisConfigs)
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\kirajin.p4a");
     AnimatedObject::setAnimationSegment("idle_armed_focused");
+}
+
+void Kirajin_Yari_2::parseAdditionalData(std::vector<std::string> additional_data)
+{
+    action = IDLE;
+    swap_layer = 0;
+    talk = false;
+    talk_id = "";
+    custom_dmg = false;
+    view_range = 750;
 
     for(int i=0; i<additional_data.size(); i++)
     {
@@ -46,6 +56,12 @@ void Kirajin_Yari_2::LoadConfig(Config *thisConfigs)
             maxdmg = stoi(eq[2]);
 
             custom_dmg = true;
+        }
+        else if(additional_data[i].find("range") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            view_range = stoi(eq[1]);
         }
     }
 }
@@ -274,7 +290,7 @@ void Kirajin_Yari_2::Draw(sf::RenderWindow& window)
         }
         else if(action == HIDING)
         {
-            if(distance_to_unit <= 650)
+            if(distance_to_unit <= view_range)
             {
                 layer = swap_layer;
                 hspeed = 200;
@@ -338,7 +354,7 @@ void Kirajin_Yari_2::Draw(sf::RenderWindow& window)
             }
         }
 
-        if(distance_to_unit <= 1000)
+        if(distance_to_unit <= view_range)
         {
             enemy_in_range = true;
         }

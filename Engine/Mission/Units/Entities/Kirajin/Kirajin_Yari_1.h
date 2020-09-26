@@ -35,11 +35,14 @@ class Kirajin_Yari_1 : public Entity
     string talk_id = "";
 
     int swap_layer = 0;
+    sf::Clock message_clock;
 
     Kirajin_Yari_1();
     void LoadConfig(Config *thisConfigs);
+    void parseAdditionalData(std::vector<std::string> additional_data);
     void Draw(sf::RenderWindow& window);
     bool doAttack();
+    void doMessages(sf::RenderWindow& window, float fps, InputController& inputCtrl);
     void die();
     void OnCollide(CollidableObject* otherObject, int collidedWith=-1, vector<string> collisionData = {});
 };

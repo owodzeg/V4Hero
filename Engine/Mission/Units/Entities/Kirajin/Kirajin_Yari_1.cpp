@@ -17,6 +17,16 @@ void Kirajin_Yari_1::LoadConfig(Config *thisConfigs)
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\kirajin.p4a");
     AnimatedObject::setAnimationSegment("idle_armed_focused");
+}
+
+void Kirajin_Yari_1::parseAdditionalData(std::vector<std::string> additional_data)
+{
+    action = IDLE;
+    swap_layer = 0;
+    talk = false;
+    talk_id = "";
+    custom_dmg = false;
+    view_range = 750;
 
     for(int i=0; i<additional_data.size(); i++)
     {
@@ -47,6 +57,12 @@ void Kirajin_Yari_1::LoadConfig(Config *thisConfigs)
 
             custom_dmg = true;
         }
+        else if(additional_data[i].find("range") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            view_range = stoi(eq[1]);
+        }
     }
 }
 
@@ -58,6 +74,35 @@ bool Kirajin_Yari_1::doAttack()
         return true;
     }
     return false;
+}
+
+void Kirajin_Yari_1::doMessages(sf::RenderWindow& window, float fps, InputController& inputCtrl)
+{
+    vector<int> m_rm;
+
+    for(int i=0; i<messageclouds.size(); i++)
+    {
+        messageclouds[i].startpos = sf::Vector2f(getGlobalPosition().x-5, getGlobalPosition().y-25);
+
+        if(messageclouds[i].firstrender)
+        messageclouds[i].Show();
+
+        if(message_clock.getElapsedTime().asSeconds() >= 5)
+        messageclouds[i].End();
+
+        if((messageclouds[i].done) && (floor(messageclouds[i].xsize) == 0) && (floor(messageclouds[i].ysize) == 0))
+        messageclouds[i].Hide();
+
+        messageclouds[i].Draw(window, fps, inputCtrl);
+
+        if((!messageclouds[i].active) && (messageclouds[i].done))
+        m_rm.push_back(i);
+    }
+
+    for(int i=0; i<m_rm.size(); i++)
+    {
+        messageclouds.erase(messageclouds.begin()+m_rm[i]-i);
+    }
 }
 
 void Kirajin_Yari_1::Draw(sf::RenderWindow& window)
@@ -163,9 +208,27 @@ void Kirajin_Yari_1::Draw(sf::RenderWindow& window)
                 }
             }
         }
+
+        if(enemy_in_range)
+        {
+            if(action != HIDING)
+            {
+                if(talk)
+                {
+                    MessageCloud tmp;
+                    tmp.Create(20, sf::Vector2f(getGlobalPosition().x-5, getGlobalPosition().y-25), sf::Color(222,102,102,255), false, thisConfig->GetInt("textureQuality"));
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(talk_id)), false);
+                    messageclouds.push_back(tmp);
+
+                    message_clock.restart();
+
+                    talk = false;
+                }
+            }
+        }
     }
 
-    if(distance_to_unit <= 1000)
+    if(distance_to_unit <= view_range)
     {
         enemy_in_range = true;
     }
