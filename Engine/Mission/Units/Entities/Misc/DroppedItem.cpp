@@ -21,7 +21,6 @@ void DroppedItem::LoadConfig(Config *thisConfigs)
 
     manual_spritesheet = true;
 
-    s_heal.loadFromFile("resources/sfx/level/picked_heal.ogg");
     s_item.loadFromFile("resources/sfx/level/picked_item.ogg");
     s_keyitem.loadFromFile("resources/sfx/level/picked_keyitem.ogg");
 
@@ -249,11 +248,15 @@ void DroppedItem::OnCollide(CollidableObject* otherObject, int collidedWith, vec
             }
             else
             {
-                cur_sound.stop();
-                cur_sound.setBuffer(s_heal);
+                //cur_sound.stop();
+                //cur_sound.setBuffer(s_heal);
                 //cur_sound.play();
 
-                thisConfig->thisCore->currentController.projectile_sounds.push_back(cur_sound);
+                thisConfig->thisCore->currentController.projectile_sounds.emplace_back();
+
+                thisConfig->thisCore->currentController.projectile_sounds[thisConfig->thisCore->currentController.projectile_sounds.size()-1].setBuffer(thisConfig->thisCore->currentController.s_heal);
+
+                thisConfig->thisCore->currentController.projectile_sounds[thisConfig->thisCore->currentController.projectile_sounds.size()-1].setVolume(float(thisConfig->GetInt("masterVolume"))*(float(thisConfig->GetInt("sfxVolume"))/100.f));
                 thisConfig->thisCore->currentController.projectile_sounds[thisConfig->thisCore->currentController.projectile_sounds.size()-1].play();
 
                 thisConfig->thisCore->currentController.addPickedItem(spritesheet, spritesheet_id, picked_item);
