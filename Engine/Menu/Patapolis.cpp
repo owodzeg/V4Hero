@@ -1257,32 +1257,6 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
         world_egg.draw(window);
 
-        vector<int> m_rm;
-
-        for(int i=0; i<messageclouds.size(); i++)
-        {
-            if(messageclouds[i].firstrender)
-            messageclouds[i].Show();
-
-            if(messageclouds[i].msgcloud_ID == 0)
-            messageclouds[i].startpos = sf::Vector2f(a_sen.getGlobalPosition().x-5, a_sen.getGlobalPosition().y-25);
-            else if(messageclouds[i].msgcloud_ID == 1)
-            messageclouds[i].startpos = sf::Vector2f(a_wakapon.getGlobalPosition().x-5, a_wakapon.getGlobalPosition().y-25);
-
-            if((messageclouds[i].done) && (floor(messageclouds[i].xsize) == 0) && (floor(messageclouds[i].ysize) == 0))
-            messageclouds[i].Hide();
-
-            messageclouds[i].Draw(window, fps, inputCtrl);
-
-            if((!messageclouds[i].active) && (messageclouds[i].done))
-            m_rm.push_back(i);
-        }
-
-        for(int i=0; i<m_rm.size(); i++)
-        {
-            messageclouds.erase(messageclouds.begin()+m_rm[i]-i);
-        }
-
         if(barracks_menu.missionStarted)
         {
             obelisk_menu.displayMissions = false;
@@ -1306,9 +1280,35 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         }
         else
         {
-        t_title.setOrigin(t_title.getLocalBounds().width/2,t_title.getLocalBounds().height/2);
-        t_title.setPosition(640,80);
-        t_title.draw(window);
+            t_title.setOrigin(t_title.getLocalBounds().width/2,t_title.getLocalBounds().height/2);
+            t_title.setPosition(640,80);
+            t_title.draw(window);
+
+            vector<int> m_rm;
+
+            for(int i=0; i<messageclouds.size(); i++)
+            {
+                if(messageclouds[i].firstrender)
+                messageclouds[i].Show();
+
+                if(messageclouds[i].msgcloud_ID == 0)
+                messageclouds[i].startpos = sf::Vector2f(a_sen.getGlobalPosition().x-5, a_sen.getGlobalPosition().y-25);
+                else if(messageclouds[i].msgcloud_ID == 1)
+                messageclouds[i].startpos = sf::Vector2f(a_wakapon.getGlobalPosition().x-5, a_wakapon.getGlobalPosition().y-25);
+
+                if((messageclouds[i].done) && (floor(messageclouds[i].xsize) == 0) && (floor(messageclouds[i].ysize) == 0))
+                messageclouds[i].Hide();
+
+                messageclouds[i].Draw(window, fps, inputCtrl);
+
+                if((!messageclouds[i].active) && (messageclouds[i].done))
+                m_rm.push_back(i);
+            }
+
+            for(int i=0; i<m_rm.size(); i++)
+            {
+                messageclouds.erase(messageclouds.begin()+m_rm[i]-i);
+            }
         }
 
         vector<int> db_e; ///dialog box erase
