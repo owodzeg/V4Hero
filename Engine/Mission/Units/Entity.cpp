@@ -43,6 +43,11 @@ void Entity::LoadConfig(Config *thisConfigs, std::string unitParamPath)
     cout << "Entity::LoadConfig() was not overriden by child class" << endl;
 }
 
+void Entity::parseAdditionalData(std::vector<std::string> additional_data)
+{
+    cout << "Entity::parseAdditionalData() was not overriden by child class" << endl;
+}
+
 void Entity::dropItem()
 {
     if(!dropped_item)
@@ -88,7 +93,7 @@ void Entity::dropItem()
             auto item = thisConfig->thisCore->savereader.itemreg.GetItemByID(id_picked);
             vector<string> data = {item->spritesheet, to_string(item->spritesheet_id), to_string(id_picked)};
 
-            thisConfig->thisCore->currentController.spawnEntity("droppeditem",5,0,getGlobalPosition().x+hitboxes[0].o_x+(hitboxes[0].o_width/2),0,getGlobalPosition().y+hitboxes[0].o_y+(hitboxes[0].o_height/2)-60,0,0,1,sf::Color::White,0,0,0,-1,0,0,1,1,1,vector<Entity::Loot>(), data);
+            thisConfig->thisCore->currentController.spawnEntity("droppeditem",5,0,getGlobalPosition().x+hitboxes[0].o_x+(hitboxes[0].o_width/2),0,getGlobalPosition().y+hitboxes[0].o_y+(hitboxes[0].o_height/2)-60,0,0,1,sf::Color::White,0,0,0,-1,0,0,1,1,1,false,0,vector<Entity::Loot>(), data);
         }
         else
         {

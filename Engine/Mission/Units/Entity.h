@@ -73,6 +73,10 @@ class Entity : public CollidableObject
 
     std::vector<MessageCloud> messageclouds;
 
+    bool clonable = false;
+    int respawnTime = 0;
+    sf::Clock respawn_clock;
+
     sf::Sound cur_sound;
 
     Entity();
@@ -83,6 +87,7 @@ class Entity : public CollidableObject
     virtual void doMessages(sf::RenderWindow& window, float fps, InputController& inputCtrl); ///manage message clouds
     virtual void die();
     virtual void LoadConfig(Config *thisConfigs, std::string unitParamPath);
+    virtual void parseAdditionalData(std::vector<std::string> additional_data);
     virtual void dropItem();
 };
 
