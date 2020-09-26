@@ -116,7 +116,7 @@ void ObeliskMenu::Initialise(Config *thisConfigs,V4Core *parent, PatapolisMenu *
     location_title.createText(font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"worldmap_location_1_title")), quality, 1);
     wstring desc = Func::wrap_text(thisConfig->strRepo.GetUnicodeString(L"worldmap_location_1_description"), 800, font, 18);
 
-    location_desc.createText(font, 17, sf::Color::Black, Func::ConvertToUtf8String(desc), quality, 1);
+    location_desc.createText(font, 19, sf::Color::Black, Func::ConvertToUtf8String(desc), quality, 1);
     select_quest.createText(font, 18, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"worldmap_select")), quality, 1);
     mission_title.createText(font, 18, sf::Color::Black, "Hunting Kacheek", quality, 1);
     mission_desc.createText(font, 18, sf::Color::Black, "(no translation needed)", quality, 1);
