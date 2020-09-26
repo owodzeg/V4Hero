@@ -100,9 +100,13 @@ class MissionController
     /// we need to check against for collision (but not always damage)
 
 
+    ///object lists
     std::vector<std::unique_ptr<PlayableUnit>> units;
     std::vector<std::unique_ptr<Entity>> tangibleLevelObjects;
     std::vector<std::unique_ptr<Projectile>> levelProjectiles;
+
+    ///clonables
+    std::vector<std::unique_ptr<Kirajin_Yari_2>> kirajins;
 
     float pataponY = 600; ///temp
     float wallY = 200; ///temp
@@ -137,7 +141,7 @@ class MissionController
     std::vector<DamageCounter> dmgCounters;
     std::vector<DroppedItem> droppedItems;
 
-    sf::SoundBuffer spear_hit_enemy, spear_hit_iron, spear_hit_rock, spear_hit_solid;
+    sf::SoundBuffer spear_hit_enemy, spear_hit_iron, spear_hit_rock, spear_hit_solid, s_heal;
 
     std::deque<sf::Sound> projectile_sounds;
 
@@ -196,6 +200,7 @@ class MissionController
     bool failure = false;
 
     int curMissionID = 0;
+    int spawnOrder = 0;
 
     vector<PataDialogBox> dialogboxes;
     vector<MessageCloud> messageclouds;
@@ -223,7 +228,7 @@ class MissionController
     /** Load up the assets **/
     void addDmgCounter(int type, int damage, float baseX, float baseY, int q, int r);
     void addItemsCounter(int id, float baseX, float baseY);
-    void spawnEntity(string entityName, int entityID, int baseHP, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, int layer, int parent, float overrideY, float overrideHP, float mission_multiplier, float mindmg, float maxdmg, vector<Entity::Loot> loot_table, vector<string> additional_data={});
+    void spawnEntity(string entityName, int entityID, int baseHP, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, int layer, int parent, float overrideY, float overrideHP, float mission_multiplier, float mindmg, float maxdmg, bool clonable, int spawn_delay, vector<Entity::Loot> loot_table, vector<string> additional_data={});
     void addPickedItem(std::string spritesheet, int spritesheet_id, int picked_item);
     void addUnitThumb(int unit_id);
     void spawnProjectile(PSprite& sprite, float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit, bool enemy=false);

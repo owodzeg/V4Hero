@@ -137,7 +137,7 @@ void MissionController::addItemsCounter(int id, float baseX, float baseY)
 
 }
 
-void MissionController::spawnEntity(string entityName, int entityID, int baseHP, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, int layer, int parent, float overrideY, float overrideHP, float mission_multiplier, float mindmg, float maxdmg, vector<Entity::Loot> loot_table, vector<string> additional_data)
+void MissionController::spawnEntity(string entityName, int entityID, int baseHP, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, int layer, int parent, float overrideY, float overrideHP, float mission_multiplier, float mindmg, float maxdmg, bool clonable, int spawn_delay, vector<Entity::Loot> loot_table, vector<string> additional_data)
 {
     ///need to somehow optimize this to not copy paste the same code over and over
 
@@ -164,14 +164,14 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             case 0:
             {
                 unique_ptr<EndFlag> entity = make_unique<EndFlag>();
-                entity.get()->additional_data = additional_data;
                 entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::PASSIVE;
                 entity.get()->entityCategory = Entity::EntityCategories::MISC;
 
-                if(spawn)
+                if(!clonable)
                 tangibleLevelObjects.push_back(std::move(entity));
 
                 break;
@@ -179,14 +179,14 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             case 1:
             {
                 unique_ptr<FeverWorm> entity = make_unique<FeverWorm>();
-                entity.get()->additional_data = additional_data;
                 entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::PASSIVE;
                 entity.get()->entityCategory = Entity::EntityCategories::MISC;
 
-                if(spawn)
+                if(!clonable)
                 tangibleLevelObjects.push_back(std::move(entity));
 
                 break;
@@ -194,14 +194,14 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             case 2:
             {
                 unique_ptr<Kacheek> entity = make_unique<Kacheek>();
-                entity.get()->additional_data = additional_data;
                 entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
                 entity.get()->entityCategory = Entity::EntityCategories::ANIMAL;
 
-                if(spawn)
+                if(!clonable)
                 tangibleLevelObjects.push_back(std::move(entity));
 
                 break;
@@ -209,14 +209,14 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             case 3:
             {
                 unique_ptr<Grass1> entity = make_unique<Grass1>();
-                entity.get()->additional_data = additional_data;
                 entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
                 entity.get()->entityCategory = Entity::EntityCategories::NATURE;
 
-                if(spawn)
+                if(!clonable)
                 tangibleLevelObjects.push_back(std::move(entity));
 
                 break;
@@ -224,14 +224,14 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             case 4:
             {
                 unique_ptr<Grass2> entity = make_unique<Grass2>();
-                entity.get()->additional_data = additional_data;
                 entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
                 entity.get()->entityCategory = Entity::EntityCategories::NATURE;
 
-                if(spawn)
+                if(!clonable)
                 tangibleLevelObjects.push_back(std::move(entity));
 
                 break;
@@ -253,7 +253,7 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
                 entity->spritesheet_id = spritesheet_id;
                 entity->picked_item = picked_item;
 
-                if(spawn)
+                if(!clonable)
                 tangibleLevelObjects.push_back(std::move(entity));
 
                 break;
@@ -261,14 +261,14 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             case 6:
             {
                 unique_ptr<Kirajin_Yari_1> entity = make_unique<Kirajin_Yari_1>();
-                entity.get()->additional_data = additional_data;
                 entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
                 entity.get()->entityCategory = Entity::EntityCategories::ENEMYUNIT;
 
-                if(spawn)
+                if(!clonable)
                 tangibleLevelObjects.push_back(std::move(entity));
 
                 break;
@@ -276,14 +276,14 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             case 7:
             {
                 unique_ptr<TreasureChest> entity = make_unique<TreasureChest>();
-                entity.get()->additional_data = additional_data;
                 entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
                 entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE_IRON;
 
-                if(spawn)
+                if(!clonable)
                 tangibleLevelObjects.push_back(std::move(entity));
 
                 break;
@@ -291,14 +291,14 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             case 8:
             {
                 unique_ptr<RockBig> entity = make_unique<RockBig>();
-                entity.get()->additional_data = additional_data;
                 entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
                 entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE_ROCK;
 
-                if(spawn)
+                if(!clonable)
                 tangibleLevelObjects.push_back(std::move(entity));
 
                 break;
@@ -306,14 +306,14 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             case 9:
             {
                 unique_ptr<RockSmall> entity = make_unique<RockSmall>();
-                entity.get()->additional_data = additional_data;
                 entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
                 entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE_ROCK;
 
-                if(spawn)
+                if(!clonable)
                 tangibleLevelObjects.push_back(std::move(entity));
 
                 break;
@@ -321,14 +321,14 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             case 10:
             {
                 unique_ptr<WoodenSpikes> entity = make_unique<WoodenSpikes>();
-                entity.get()->additional_data = additional_data;
                 entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
                 entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE_WOOD;
 
-                if(spawn)
+                if(!clonable)
                 tangibleLevelObjects.push_back(std::move(entity));
 
                 break;
@@ -336,14 +336,14 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             case 11:
             {
                 unique_ptr<RockPile> entity = make_unique<RockPile>();
-                entity.get()->additional_data = additional_data;
                 entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
                 entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE_ROCK;
 
-                if(spawn)
+                if(!clonable)
                 tangibleLevelObjects.push_back(std::move(entity));
 
                 break;
@@ -351,14 +351,14 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             case 12:
             {
                 unique_ptr<KirajinHut> entity = make_unique<KirajinHut>();
-                entity.get()->additional_data = additional_data;
                 entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
                 entity.get()->entityCategory = Entity::EntityCategories::BUILDING_REGULAR;
 
-                if(spawn)
+                if(!clonable)
                 tangibleLevelObjects.push_back(std::move(entity));
 
                 break;
@@ -366,14 +366,14 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             case 13:
             {
                 unique_ptr<KirajinGuardTower> entity = make_unique<KirajinGuardTower>();
-                entity.get()->additional_data = additional_data;
                 entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
                 entity.get()->entityCategory = Entity::EntityCategories::BUILDING_REGULAR;
 
-                if(spawn)
+                if(!clonable)
                 tangibleLevelObjects.push_back(std::move(entity));
 
                 break;
@@ -381,14 +381,14 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             case 14:
             {
                 unique_ptr<KirajinPoweredTowerSmall> entity = make_unique<KirajinPoweredTowerSmall>();
-                entity.get()->additional_data = additional_data;
                 entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
                 entity.get()->entityCategory = Entity::EntityCategories::BUILDING_IRON;
 
-                if(spawn)
+                if(!clonable)
                 tangibleLevelObjects.push_back(std::move(entity));
 
                 break;
@@ -396,14 +396,14 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             case 15:
             {
                 unique_ptr<KirajinPoweredTowerBig> entity = make_unique<KirajinPoweredTowerBig>();
-                entity.get()->additional_data = additional_data;
                 entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
                 entity.get()->entityCategory = Entity::EntityCategories::BUILDING_IRON;
 
-                if(spawn)
+                if(!clonable)
                 tangibleLevelObjects.push_back(std::move(entity));
 
                 break;
@@ -411,23 +411,36 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             case 16:
             {
                 unique_ptr<Kirajin_Yari_2> entity = make_unique<Kirajin_Yari_2>();
-                entity.get()->additional_data = additional_data;
                 entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
 
                 ///To be replaced with param file
                 entity.get()->entityType = Entity::EntityTypes::HOSTILE;
                 entity.get()->entityCategory = Entity::EntityCategories::ENEMYUNIT;
 
-                if(spawn)
+                if(!clonable)
                 tangibleLevelObjects.push_back(std::move(entity));
+                else
+                kirajins.push_back(std::move(entity));
 
                 break;
             }
         }
 
-        Entity* entity = tangibleLevelObjects[tangibleLevelObjects.size()-1].get();
+        Entity* entity;
 
-        entity->spawnOrderID = tangibleLevelObjects.size()-1;
+        if(!clonable)
+        {
+            entity = tangibleLevelObjects[tangibleLevelObjects.size()-1].get();
+        }
+        else
+        {
+            if(entityID == 16)
+            entity = kirajins[kirajins.size()-1].get();
+        }
+
+        entity->spawnOrderID = spawnOrder;
+        spawnOrder++;
 
         if(entityID != 5) ///ID 5 = dropped item, it has an exclusive loading type
         {
@@ -447,6 +460,9 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             entity->setGlobalPosition(sf::Vector2f(baseX,baseY));
 
             entity->setColor(color);
+
+            entity->clonable = clonable;
+            entity->respawnTime = spawn_delay;
 
             entity->spawn_x = entity->getGlobalPosition().x;
 
@@ -699,7 +715,13 @@ void MissionController::Initialise(Config &config,std::string backgroundString,V
         tangibleLevelObjects.erase(tangibleLevelObjects.begin()+i);
     }
 
+    for(int i=kirajins.size()-1; i>=0; i--)
+    {
+        kirajins.erase(kirajins.begin()+i);
+    }
+
     tangibleLevelObjects.clear();
+    kirajins.clear();
 
     for(int i=units.size()-1; i>=0; i--)
     {
@@ -794,6 +816,7 @@ void MissionController::Initialise(Config &config,std::string backgroundString,V
     spear_hit_iron.loadFromFile("resources/sfx/level/spear_hit_iron.ogg");
     spear_hit_rock.loadFromFile("resources/sfx/level/spear_hit_rock.ogg");
     spear_hit_solid.loadFromFile("resources/sfx/level/spear_hit_solid.ogg");
+    s_heal.loadFromFile("resources/sfx/level/picked_heal.ogg");
 
     cout << "initialization finished" << endl;
 }
@@ -818,6 +841,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     playCheer[0] = false;
     playCheer[1] = false;
     playCheer[2] = false;
+    spawnOrder = 0;
 
     //sf::Context context;
     int quality = missionConfig->GetInt("textureQuality");
@@ -966,9 +990,23 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
                             missionImg = buff.substr(buff.find_first_of("=")+1);
                         }
 
-                        if(buff.find("spawn=") != std::string::npos)
+                        if((buff.find("spawn=") != std::string::npos) || (buff.find("spawn_clonable") != std::string::npos))
                         {
+                            bool clonable = false;
+                            int spawn_delay = 0;
+
+                            if(buff.find("spawn_clonable") != std::string::npos)
+                            {
+                                clonable = true;
+
+                                string p = buff.substr(0,buff.find_first_of("="));
+                                spawn_delay = stoi(p.substr(p.find_last_of(":")+1));
+                            }
+
                             cout << "Found a spawn registry. Spawning entity" << endl;
+
+                            if(clonable)
+                            cout << "Clonable entity detected!" << endl;
 
                             string sp = buff.substr(buff.find_first_of("=")+1);
                             vector<string> spawn = Func::Split(sp, ',');
@@ -1081,7 +1119,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
                             }
 
                             cout << "Spawning an entity: " << entity_list[entityID] << endl;
-                            spawnEntity(entity_list[entityID],entityID,baseHP,atoi(spawn[1].c_str()),atoi(spawn[2].c_str()),baseY,atoi(spawn[3].c_str()),atoi(spawn[4].c_str()),atoi(spawn[5].c_str()),sf::Color(atoi(spawn[6].c_str()),atoi(spawn[7].c_str()),atoi(spawn[8].c_str()),atoi(spawn[9].c_str())), collidable, attackable, atoi(spawn[10].c_str()), atoi(spawn[13].c_str()), atoi(spawn[12].c_str()), atoi(spawn[11].c_str()), mission_multiplier, mindmg, maxdmg, loot_table, additional_data);
+                            spawnEntity(entity_list[entityID],entityID,baseHP,atoi(spawn[1].c_str()),atoi(spawn[2].c_str()),baseY,atoi(spawn[3].c_str()),atoi(spawn[4].c_str()),atoi(spawn[5].c_str()),sf::Color(atoi(spawn[6].c_str()),atoi(spawn[7].c_str()),atoi(spawn[8].c_str()),atoi(spawn[9].c_str())), collidable, attackable, atoi(spawn[10].c_str()), atoi(spawn[13].c_str()), atoi(spawn[12].c_str()), atoi(spawn[11].c_str()), mission_multiplier, mindmg, maxdmg, clonable, spawn_delay, loot_table, additional_data);
                         }
                     }
                 }
@@ -2991,6 +3029,104 @@ void MissionController::Update(sf::RenderWindow &window, float cfps, InputContro
 
     DoKeyboardEvents(window,fps,cur_inputCtrl);
     DoMovement(window,fps,cur_inputCtrl);
+
+    vector<int> k_e;
+
+    /** Spawn clonable entities **/
+    for(int i=0; i<kirajins.size(); i++)
+    {
+        Kirajin_Yari_2* entity = kirajins[i].get();
+
+        ///Check if the kirajin should respawn or not
+        bool respawn = true;
+
+        for(int t=0; t<tangibleLevelObjects.size(); t++)
+        {
+            if(tangibleLevelObjects[t].get()->entityID == entity->entityID)
+            {
+                if(tangibleLevelObjects[t].get()->clonable)
+                {
+                    ///check if unit is already spawned
+                    if(tangibleLevelObjects[t].get()->spawnOrderID == entity->spawnOrderID)
+                    respawn = false;
+                }
+            }
+        }
+
+        ///Check if entity's parent is still alive, if not, kill the entity
+        int parent = entity->parent;
+        bool dead_parent = false;
+
+        ///Check if parent is defined
+        if(parent != -1)
+        {
+            ///Look for parent
+            auto it = find_if(tangibleLevelObjects.begin(), tangibleLevelObjects.end(), [&parent](const std::unique_ptr<Entity>& obj) {return obj.get()->spawnOrderID == parent;});
+
+            if(it != tangibleLevelObjects.end())
+            {
+                ///Parent has been found!
+
+                auto index = std::distance(tangibleLevelObjects.begin(), it);
+                //cout << "My parent is currently residing at " << index << endl;
+
+                ///Check if it's dead
+                if(tangibleLevelObjects[index].get()->dead)
+                {
+                    ///Kill the entity
+                    dead_parent = true;
+                }
+            }
+            else ///Parent can't be found
+            {
+                ///Kill the entity
+                dead_parent = true;
+            }
+        }
+
+        /** Find the farthest unit in your army (for calculations) **/
+        int farthest_id = -1;
+        float temp_pos = -9999;
+
+        for(int i=0; i<units.size(); i++)
+        {
+            PlayableUnit* unit = units[i].get();
+
+            if(temp_pos <= unit->getGlobalPosition().x)
+            {
+                temp_pos = unit->getGlobalPosition().x;
+                farthest_id = i;
+            }
+        }
+
+        entity->distance_to_unit = abs(temp_pos - entity->getGlobalPosition().x);
+
+        if(entity->distance_to_unit <= 1000)
+        {
+            if(!dead_parent)
+            {
+                if(respawn)
+                {
+                    if(entity->respawn_clock.getElapsedTime().asSeconds() > entity->respawnTime)
+                    {
+                        entity->respawn_clock.restart();
+
+                        tangibleLevelObjects.push_back(make_unique<Kirajin_Yari_2>(*entity));
+                    }
+                }
+            }
+            else
+            {
+                ///remove this specific kirajin
+                k_e.push_back(i);
+            }
+        }
+    }
+
+    for(int i=0; i<k_e.size(); i++)
+    {
+        kirajins.erase(kirajins.begin()+k_e[i]-i);
+    }
 
     /** Draw all Entities **/
 
