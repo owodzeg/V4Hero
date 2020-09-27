@@ -1185,6 +1185,9 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     addUnitThumb(1);
 
     cout << "Loading background " << bgName << endl;
+    Background bg_new;
+    test_bg = bg_new;
+
     test_bg.Load(bgName, *missionConfig);//config.GetString("debugBackground"));
 
     string fm = "Playing mission: "+missionName;
