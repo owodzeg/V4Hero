@@ -226,6 +226,8 @@ void MainMenu::Initialise(Config *thisConfigs, V4Core *parent)
     temp_menu.push_back(thisConfig->strRepo.GetUnicodeString(L"menu_options"));
     temp_menu.push_back(thisConfig->strRepo.GetUnicodeString(L"menu_exit"));
 
+    introductionMenu.Initialise(config,v4core,this);
+
     parent->SaveToDebugLog("Main menu initialized.");
     //title_loop.play();
     startClock.restart();
@@ -319,7 +321,7 @@ void MainMenu::SelectMenuOption()
 
                 introductionMenu.Show();
                 introductionMenu.isActive = true;
-                introductionMenu.Initialise(config,v4core,this);
+                introductionMenu.timeout.restart();
 
                 patapolisMenu.loadedSave = false;
             }
@@ -878,7 +880,7 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
 
                                 introductionMenu.Show();
                                 introductionMenu.isActive = true;
-                                introductionMenu.Initialise(config,v4core,this);
+                                introductionMenu.timeout.restart();
 
                                 patapolisMenu.loadedSave = false;
 
