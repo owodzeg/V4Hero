@@ -432,8 +432,10 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
             if(frClock.getElapsedTime().asSeconds() > 2)
             {
                 if(!msgcloud.done)
-                msgcloud.Show();
-
+                {
+                    if(msgcloud.firstrender)
+                    msgcloud.Show();
+                }
             }
 
             if(msgcloud.done)
