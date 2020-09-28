@@ -347,31 +347,64 @@ void MainMenu::SelectMenuOption()
 
             if(exists)
             {
-                title_loop.stop();
-                Hide();
-
                 /** Load save from savereader **/
                 v4core->savereader.Flush();
                 v4core->savereader.LoadSave(*config);
 
-                if(!patapolisMenu.initialised)
+                if(v4core->savereader.savever != "1.1")
                 {
-                    sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
-                    v4core->continueLoading=true;
-                    v4core->window.setActive(false);
-                    loadingThreadInstance.launch();
+                    cout << "Invalid save data!" << endl;
 
-                    patapolisMenu.Show();
-                    patapolisMenu.isActive = true;
-                    patapolisMenu.loadedSave = true;
-                    patapolisMenu.Initialise(config,v4core,this);
+                    std::vector<std::string> a = {Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_understood"))};
 
-                    v4core->continueLoading=false;
+                    PataDialogBox db;
+                    db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"menu_nosupportdata")), a, config->GetInt("textureQuality"));
+                    db.id = 2;
+                    dialogboxes.push_back(db);
                 }
                 else
                 {
-                    patapolisMenu.Show();
-                    patapolisMenu.isActive = true;
+                    title_loop.stop();
+                    Hide();
+                    patapolisClock.restart();
+
+                    if(!patapolisMenu.initialised)
+                    {
+                        sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+                        v4core->continueLoading=true;
+                        v4core->window.setActive(false);
+                        loadingThreadInstance.launch();
+
+                        patapolisMenu.Show();
+                        patapolisMenu.isActive = true;
+                        patapolisMenu.loadedSave = true;
+                        patapolisMenu.Initialise(config,v4core,this);
+
+                        v4core->continueLoading=false;
+                    }
+                    else
+                    {
+                        sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+                        v4core->continueLoading=true;
+                        v4core->window.setActive(false);
+                        loadingThreadInstance.launch();
+
+                        patapolisMenu.Show();
+                        patapolisMenu.isActive = true;
+
+                        patapolisMenu.location = 3;
+                        patapolisMenu.ctrlTips.create(54, patapolisMenu.f_font, 20, sf::String(L"L/R: Move      ×: Interact      Select: Save      Start: Title screen"), quality);
+                        patapolisMenu.SetTitle(patapolisMenu.location);
+                        patapolisMenu.camPos = patapolisMenu.locations[patapolisMenu.location];
+
+                        while(patapolisClock.getElapsedTime().asSeconds() < 3)
+                        {
+                            ///do nothing lol
+                        }
+
+                        v4core->LoadingWaitForKeyPress();
+                        v4core->continueLoading=false;
+                    }
                 }
             }
             else
@@ -889,6 +922,11 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
                                 break;
                             }
                             else if(dialogboxes[dialogboxes.size()-1].id == 1)
+                            {
+                                dialogboxes[dialogboxes.size()-1].Close();
+                                break;
+                            }
+                            else if(dialogboxes[dialogboxes.size()-1].id == 2)
                             {
                                 dialogboxes[dialogboxes.size()-1].Close();
                                 break;

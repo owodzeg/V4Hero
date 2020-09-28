@@ -72,6 +72,7 @@ class MainMenu : public Menu
         sf::Clock startClock;
         sf::Clock frClock;
         sf::Clock frwaitClock;
+        sf::Clock patapolisClock;
 
         bool mouseInBounds = false;
 

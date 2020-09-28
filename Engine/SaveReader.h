@@ -25,6 +25,8 @@ class SaveReader
     int locationsUnlocked=1;
     std::map<int, int> missionLevels; ///storing the mission level
 
+    std::string savever = "1.0";
+
     SaveReader();
     void LoadSave(Config& tconfig);
     void Flush();

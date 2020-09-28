@@ -115,6 +115,10 @@ void SaveReader::LoadSave(Config& tconfig)
 
                     missionLevels[stoi(l[0])] = lvl;
                 }
+                else if(key[0] == "version")
+                {
+                    savever = key[1];
+                }
             }
         }
     }
@@ -131,7 +135,13 @@ void SaveReader::Flush() ///Empties the save data.
     missionLevels.clear();
     locationsUnlocked = 1;
 
-    invdata.items.clear();
+    //invdata.items.clear();
+
+    PonRegistry n_ponreg;
+    InventoryData n_invdata;
+
+    ponreg = n_ponreg;
+    invdata = n_invdata;
 }
 
 void SaveReader::CreateBlankSave() ///Creates a blank save data for use
@@ -190,6 +200,7 @@ void SaveReader::Save()
     if(conf2.is_open())
     {
         conf2 << "Take caution! The data below represents your save data! Don't edit it unless you know what you're doing, and if you must, PLEASE back it up somewhere else first <3 #" <<'\n';
+        conf2 << "version:1.1" << '\n';
         conf2 << "name:" << kaminame.toAnsiString() <<'\n';
         conf2 << "timeslaunched:" << timeslaunched <<'\n';
         conf2 << "yariponsUnlocked:" << yariponsUnlocked <<'\n';
