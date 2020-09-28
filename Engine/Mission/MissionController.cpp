@@ -628,7 +628,7 @@ void MissionController::submitPickedItems()
             {
                 ///Add first patapine mission and unlock second location
                 v4core->savereader.missionsUnlocked.push_back(4);
-                v4core->savereader.locationsUnlocked = 4;
+                v4core->savereader.locationsUnlocked = 3;
             }
         }
     }

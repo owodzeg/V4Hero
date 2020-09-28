@@ -225,7 +225,7 @@ void DroppedItem::OnCollide(CollidableObject* otherObject, int collidedWith, vec
         {
             if((picked_item != 33) && (picked_item != 34))
             {
-                if(picked_item == 23)
+                if((picked_item == 23) || (picked_item == 24))
                 {
                     cur_sound.stop();
                     cur_sound.setBuffer(s_keyitem);
