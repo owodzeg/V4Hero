@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include "../Config.h"
 #include "../Graphics/Menu.h"
+#include "../Graphics/ScreenFade.h"
 #include "../Mission/MissionController.h"
 #include "OptionsMenu.h"
 #include "Altar.h"
@@ -187,6 +188,8 @@ class PatapolisMenu : public Menu
 
         vector<PataDialogBox> dialogboxes;
         vector<MessageCloud> messageclouds;
+
+        //int goto_id = -1; ///Go-to ID where should Patapolis go after ScreenFade finishes
 
         Credits credits;
 

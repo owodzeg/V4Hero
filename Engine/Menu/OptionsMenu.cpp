@@ -568,8 +568,12 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                 }
                 else
                 {
-                    Back();
-                    //thisConfig->SaveConfig();
+                    if(goto_id == -1)
+                    {
+                        cout << "Create a screenFade" << endl;
+                        screenFade.Create(thisConfig, 1, 512);
+                        goto_id = 0;
+                    }
                     sel = 0;
                 }
 
@@ -1187,7 +1191,9 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                 for(int i=0; i<original_config.size(); i++)
                 thisConfig->SetString(original_config[i].index, original_config[i].value);
 
-                Back();
+                screenFade.Create(thisConfig, 0, 512);
+                goto_id = 0;
+
                 break;
             }
 
@@ -1517,6 +1523,30 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
             {
                 if(sel < maxSel-1)
                 sel++;
+            }
+        }
+
+        screenFade.draw(window, fps);
+
+        if(screenFade.checkFinished())
+        {
+            if(goto_id != -1)
+            {
+                switch(goto_id)
+                {
+                    case 0: ///Back to main menu
+                    {
+                        cout << "Back to main menu" << endl;
+
+                        Back();
+
+                        parentMenu->screenFade.Create(thisConfig, 0, 512);
+
+                        break;
+                    }
+                }
+
+                goto_id = -1;
             }
         }
     }

@@ -569,6 +569,8 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
 
     credits.Initialise(thisConfigs, v4core);
 
+    screenFade.Create(thisConfigs, 0, 512);
+
     initialised=true;
 
     SetTitle(location);
@@ -1370,7 +1372,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
             ctrlTips.draw(window);
         }
 
-        if(fade_alpha > 0)
+        /*if(fade_alpha > 0)
         {
             fade_alpha -= float(500) / fps;
         }
@@ -1382,7 +1384,132 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
         fade_box.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
         fade_box.setFillColor(sf::Color(0,0,0,fade_alpha));
-        window.draw(fade_box);
+        window.draw(fade_box);*/
+
+        screenFade.draw(window, fps);
+
+        if(screenFade.checkFinished())
+        {
+            if(goto_id != -1)
+            {
+                switch(goto_id)
+                {
+                    case 0: ///Barracks
+                    {
+                        barracks_menu.Show();
+                        barracks_menu.isActive = true;
+                        barracks_menu.obelisk = false;
+                        barracks_menu.ReloadInventory();
+                        barracks_menu.UpdateInputControls();
+
+                        screenFade.Create(thisConfig, 0, 1536);
+
+                        break;
+                    }
+
+                    case 1: ///Obelisk
+                    {
+                        obelisk_menu.Reload();
+                        obelisk_menu.Show();
+                        obelisk_menu.isActive = true;
+
+                        screenFade.Create(thisConfig, 0, 1536);
+
+                        break;
+                    }
+
+                    case 2: ///Exit barracks
+                    {
+                        barracks_menu.Hide();
+                        barracks_menu.isActive = false;
+                        Show();
+                        isActive=true;
+
+                        screenFade.Create(thisConfig, 0, 1536);
+
+                        break;
+                    }
+
+                    case 3: ///Exit obelisk
+                    {
+                        obelisk_menu.Hide();
+                        obelisk_menu.isActive = false;
+                        Show();
+                        isActive=true;
+
+                        screenFade.Create(thisConfig, 0, 1536);
+
+                        break;
+                    }
+
+                    case 4: ///Enter barracks (obelisk)
+                    {
+                        barracks_menu.Show();
+                        barracks_menu.isActive = true;
+                        barracks_menu.obelisk = true;
+                        barracks_menu.missionID = obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID;
+                        barracks_menu.mission_file = obelisk_menu.missions[obelisk_menu.sel_mission].mission_file;
+
+                        if(thisConfig->thisCore->savereader.missionLevels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID] != 0)
+                        barracks_menu.mission_multiplier = 0.85 + thisConfig->thisCore->savereader.missionLevels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID]*0.15;
+                        else
+                        barracks_menu.mission_multiplier = 1;
+
+                        barracks_menu.ReloadInventory();
+                        barracks_menu.UpdateInputControls();
+
+                        screenFade.Create(thisConfig, 0, 1536);
+
+                        break;
+                    }
+
+                    case 5: ///Enter mission
+                    {
+                        sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+                        v4core->continueLoading=true;
+                        v4core->window.setActive(false);
+                        loadingThreadInstance.launch();
+
+                        barracks_menu.currentController->Initialise(*thisConfig,thisConfig->GetString("mission1Background"),*v4core);
+                        barracks_menu.currentController->StartMission(barracks_menu.mission_file,1,barracks_menu.missionID,barracks_menu.mission_multiplier);
+                        barracks_menu.Hide();
+                        barracks_menu.isActive = false;
+
+                        barracks_menu.missionStarted = true;
+
+                        v4core->continueLoading=false;
+
+                        screenFade.Create(thisConfig, 0, 1536);
+
+                        break;
+                    }
+
+                    case 6: ///credits
+                    {
+                        credits.isActive = true;
+                        credits.restart();
+
+                        screenFade.Create(thisConfig, 0, 512);
+
+                        break;
+                    }
+
+                    case 7: ///go to title screen
+                    {
+                        this->Hide();
+                        this->isActive = false;
+                        parentMenu->Show();
+                        parentMenu->isActive=true;
+
+                        parentMenu->screenFade.Create(thisConfig, 0, 512);
+
+                        break;
+                    }
+                }
+
+                goto_id = -1;
+            }
+        }
 
         window.setView(lastView);
 
@@ -1430,11 +1557,15 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     case 2:
                         /// armory/barracks
                         thisConfig->thisCore->SaveToDebugLog("Entering Barracks...");
-                        barracks_menu.Show();
+
+                        screenFade.Create(thisConfig, 1, 1536);
+                        goto_id = 0;
+
+                        /*barracks_menu.Show();
                         barracks_menu.isActive = true;
                         barracks_menu.obelisk = false;
                         barracks_menu.ReloadInventory();
-                        barracks_menu.UpdateInputControls();
+                        barracks_menu.UpdateInputControls();*/
                         thisConfig->thisCore->SaveToDebugLog("Barracks entered.");
                         break;
                     case 3:
@@ -1455,9 +1586,13 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     case 6:
                         /// obelisk
                         thisConfig->thisCore->SaveToDebugLog("Entering Obelisk...");
-                        obelisk_menu.Reload();
+
+                        screenFade.Create(thisConfig, 1, 1536);
+                        goto_id = 1;
+
+                        /*obelisk_menu.Reload();
                         obelisk_menu.Show();
-                        obelisk_menu.isActive = true;
+                        obelisk_menu.isActive = true;*/
                         thisConfig->thisCore->SaveToDebugLog("Obelisk entered.");
                         break;
                     default:
@@ -1511,10 +1646,8 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                         else if(dialogboxes[dialogboxes.size()-1].id == 1)
                         {
                             thisConfig->thisCore->SaveToDebugLog("Left from Patapolis to Title screen.");
-                            this->Hide();
-                            this->isActive = false;
-                            parentMenu->Show();
-                            parentMenu->isActive=true;
+                            screenFade.Create(thisConfig, 1, 512);
+                            goto_id = 7;
                         }
                         else if(dialogboxes[dialogboxes.size()-1].id == 2)
                         {
@@ -1542,8 +1675,8 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                         else if(dialogboxes[dialogboxes.size()-1].id == 4)
                         {
                             cout << "Open credits!" << endl;
-                            credits.isActive = true;
-                            credits.restart();
+                            screenFade.Create(thisConfig, 1, 512);
+                            goto_id = 6;
 
                             dialogboxes[dialogboxes.size()-1].Close();
                             break;

@@ -314,7 +314,10 @@ void MainMenu::SelectMenuOption()
             {
                 cout << "There is no save. Start new game!" << endl;
 
-                v4core->savereader.Flush();
+                screenFade.Create(thisConfig, 1, 512);
+                goto_id = 0;
+
+                /*v4core->savereader.Flush();
                 v4core->savereader.CreateBlankSave();
 
                 title_loop.stop();
@@ -323,7 +326,7 @@ void MainMenu::SelectMenuOption()
                 introductionMenu.isActive = true;
                 introductionMenu.timeout.restart();
 
-                patapolisMenu.loadedSave = false;
+                patapolisMenu.loadedSave = false;*/
             }
             else
             {
@@ -364,47 +367,8 @@ void MainMenu::SelectMenuOption()
                 }
                 else
                 {
-                    title_loop.stop();
-                    Hide();
-                    patapolisClock.restart();
-
-                    if(!patapolisMenu.initialised)
-                    {
-                        sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
-                        v4core->continueLoading=true;
-                        v4core->window.setActive(false);
-                        loadingThreadInstance.launch();
-
-                        patapolisMenu.Show();
-                        patapolisMenu.isActive = true;
-                        patapolisMenu.loadedSave = true;
-                        patapolisMenu.Initialise(config,v4core,this);
-
-                        v4core->continueLoading=false;
-                    }
-                    else
-                    {
-                        sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
-                        v4core->continueLoading=true;
-                        v4core->window.setActive(false);
-                        loadingThreadInstance.launch();
-
-                        patapolisMenu.Show();
-                        patapolisMenu.isActive = true;
-
-                        patapolisMenu.location = 3;
-                        patapolisMenu.ctrlTips.create(54, patapolisMenu.f_font, 20, sf::String(L"L/R: Move      ×: Interact      Select: Save      Start: Title screen"), quality);
-                        patapolisMenu.SetTitle(patapolisMenu.location);
-                        patapolisMenu.camPos = patapolisMenu.locations[patapolisMenu.location];
-
-                        while(patapolisClock.getElapsedTime().asSeconds() < 3)
-                        {
-                            ///do nothing lol
-                        }
-
-                        v4core->LoadingWaitForKeyPress();
-                        v4core->continueLoading=false;
-                    }
+                    screenFade.Create(thisConfig, 1, 512);
+                    goto_id = 1;
                 }
             }
             else
@@ -424,12 +388,8 @@ void MainMenu::SelectMenuOption()
         case 2:
         {
             // load the options menu
-            title_loop.stop();
-            Hide();
-            v4core->ChangeRichPresence("In Options menu", "logo", "");
-            optionsMenu.state = 0;
-            optionsMenu.sel = 0;
-            optionsMenu.Show();
+            screenFade.Create(thisConfig, 1, 512);
+            goto_id = 2;
             break;
         }
         case 3:
@@ -844,6 +804,97 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
 
             window.setView(window.getDefaultView());
 
+            screenFade.draw(window, fps);
+
+            if(screenFade.checkFinished())
+            {
+                if(goto_id != -1)
+                {
+                    switch(goto_id)
+                    {
+                        case 0: ///New game
+                        {
+                            v4core->savereader.Flush();
+                            v4core->savereader.CreateBlankSave();
+
+                            title_loop.stop();
+
+                            introductionMenu.Show();
+                            introductionMenu.isActive = true;
+                            introductionMenu.timeout.restart();
+
+                            patapolisMenu.loadedSave = false;
+
+                            break;
+                        }
+
+                        case 1: ///Continue
+                        {
+                            title_loop.stop();
+                            Hide();
+                            patapolisClock.restart();
+
+                            if(!patapolisMenu.initialised)
+                            {
+                                sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+                                v4core->continueLoading=true;
+                                v4core->window.setActive(false);
+                                loadingThreadInstance.launch();
+
+                                patapolisMenu.Show();
+                                patapolisMenu.isActive = true;
+                                patapolisMenu.loadedSave = true;
+                                patapolisMenu.Initialise(config,v4core,this);
+
+                                v4core->continueLoading=false;
+                            }
+                            else
+                            {
+                                sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+                                v4core->continueLoading=true;
+                                v4core->window.setActive(false);
+                                loadingThreadInstance.launch();
+
+                                patapolisMenu.Show();
+                                patapolisMenu.isActive = true;
+                                patapolisMenu.screenFade.Create(thisConfig, 0, 512);
+
+                                patapolisMenu.location = 3;
+                                patapolisMenu.ctrlTips.create(54, patapolisMenu.f_font, 20, sf::String(L"L/R: Move      ×: Interact      Select: Save      Start: Title screen"), quality);
+                                patapolisMenu.SetTitle(patapolisMenu.location);
+                                patapolisMenu.camPos = patapolisMenu.locations[patapolisMenu.location];
+
+                                while(patapolisClock.getElapsedTime().asSeconds() < 3)
+                                {
+                                    ///do nothing lol
+                                }
+
+                                v4core->LoadingWaitForKeyPress();
+                                v4core->continueLoading=false;
+                            }
+
+                            break;
+                        }
+
+                        case 2: ///Options
+                        {
+                            title_loop.stop();
+                            Hide();
+                            v4core->ChangeRichPresence("In Options menu", "logo", "");
+                            optionsMenu.state = 0;
+                            optionsMenu.sel = 0;
+                            optionsMenu.Show();
+
+                            optionsMenu.screenFade.Create(thisConfig, 0, 512);
+
+                            break;
+                        }
+                    }
+
+                    goto_id = -1;
+                }
+            }
+
             vector<int> db_e; ///dialog box erase
 
             for(int i=0; i<dialogboxes.size(); i++)
@@ -908,16 +959,8 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
                                 cout << "Starting new game!" << endl;
                                 dialogboxes[dialogboxes.size()-1].Close();
 
-                                v4core->savereader.Flush();
-                                v4core->savereader.CreateBlankSave();
-
-                                title_loop.stop();
-
-                                introductionMenu.Show();
-                                introductionMenu.isActive = true;
-                                introductionMenu.timeout.restart();
-
-                                patapolisMenu.loadedSave = false;
+                                screenFade.Create(thisConfig, 1, 512);
+                                goto_id = 0;
 
                                 break;
                             }

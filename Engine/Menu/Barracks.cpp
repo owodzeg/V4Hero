@@ -1024,10 +1024,13 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
                 }
                 else
                 {
-                    this->Hide();
+                    parentMenu->screenFade.Create(thisConfig, 1, 1536);
+                    parentMenu->goto_id = 2;
+
+                    /*this->Hide();
                     this->isActive = false;
                     parentMenu->Show();
-                    parentMenu->isActive=true;
+                    parentMenu->isActive=true;*/
                 }
             }
 
@@ -1057,7 +1060,10 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
                             cout << "Go on mission!" << endl;
                             dialogboxes[dialogboxes.size()-1].Close();
 
-                            sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+                            parentMenu->screenFade.Create(thisConfig, 1, 1536);
+                            parentMenu->goto_id = 5;
+
+                            /*sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
                             v4core->continueLoading=true;
                             v4core->window.setActive(false);
                             loadingThreadInstance.launch();
@@ -1069,7 +1075,7 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
 
                             missionStarted = true;
 
-                            v4core->continueLoading=false;
+                            v4core->continueLoading=false;*/
 
                             break;
                         }

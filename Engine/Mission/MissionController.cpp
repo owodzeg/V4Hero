@@ -1190,6 +1190,8 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 
     test_bg.Load(bgName, *missionConfig);//config.GetString("debugBackground"));
 
+    cout << "Set rich presence to " << missionImg << endl;
+
     string fm = "Playing mission: "+missionName;
     v4core->ChangeRichPresence(fm.c_str(), missionImg.c_str(), "logo");
 
@@ -2061,6 +2063,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 v4core->mainMenu.patapolisMenu.doWaitKeyPress = false;
                 v4core->mainMenu.patapolisMenu.Show();
                 v4core->mainMenu.patapolisMenu.isActive = true;
+                v4core->mainMenu.patapolisMenu.screenFade.Create(missionConfig, 0, 512);
 
                 if (!v4core->mainMenu.patapolisMenu.initialised)
                 {
@@ -2162,6 +2165,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 v4core->mainMenu.patapolisMenu.doWaitKeyPress = false;
                 v4core->mainMenu.patapolisMenu.Show();
                 v4core->mainMenu.patapolisMenu.isActive = true;
+                v4core->mainMenu.patapolisMenu.screenFade.Create(missionConfig, 0, 512);
 
                 if (!v4core->mainMenu.patapolisMenu.initialised)
                 {
