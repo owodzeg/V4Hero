@@ -567,6 +567,8 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     altar_menu.loadedSave = loadedSave;
     altar_menu.ReloadInventory();
 
+    credits.Initialise(thisConfigs, v4core);
+
     initialised=true;
 
     SetTitle(location);
@@ -644,6 +646,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
 
         MessageCloud tmp;
         tmp.Create(20, sf::Vector2f(a_sen.getGlobalPosition().x-5, a_sen.getGlobalPosition().y-25), sf::Color(170,182,250,255), false, thisConfig->GetInt("textureQuality"));
+        tmp.msgcloud_ID = 0;
 
         vector<int> missions = v4core->savereader.missionsUnlocked;
 
@@ -690,13 +693,14 @@ void PatapolisMenu::SetTitle(int menuPosition)
                             tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_1")), true);
                             tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_12")), true);
                             tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_13")), true);
+
+                            tmp.msgcloud_ID = 2;
                         }
                     }
                 }
             }
         }
 
-        tmp.msgcloud_ID = 0;
         messageclouds.push_back(tmp);
 
         cout << "Creating message cloud at " << a_sen.getGlobalPosition().x-5 << " " << a_sen.getGlobalPosition().y-25 << endl;
@@ -1278,6 +1282,10 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         {
             obelisk_menu.Update(window,fps,inputCtrl);
         }
+        else if(credits.isActive)
+        {
+            credits.draw(window,fps,inputCtrl);
+        }
         else
         {
             t_title.setOrigin(t_title.getLocalBounds().width/2,t_title.getLocalBounds().height/2);
@@ -1291,13 +1299,35 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                 if(messageclouds[i].firstrender)
                 messageclouds[i].Show();
 
-                if(messageclouds[i].msgcloud_ID == 0)
+                if((messageclouds[i].msgcloud_ID == 0) || (messageclouds[i].msgcloud_ID == 2))
                 messageclouds[i].startpos = sf::Vector2f(a_sen.getGlobalPosition().x-5, a_sen.getGlobalPosition().y-25);
                 else if(messageclouds[i].msgcloud_ID == 1)
                 messageclouds[i].startpos = sf::Vector2f(a_wakapon.getGlobalPosition().x-5, a_wakapon.getGlobalPosition().y-25);
 
+                if(messageclouds[i].done)
+                {
+                    if(dialogboxes.size() <= 0)
+                    {
+                        if(location == 4)
+                        {
+                            if(messageclouds[i].msgcloud_ID == 2)
+                            {
+                                ///Create ending dialogbox here
+                                std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick1")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick2"))};
+
+                                PataDialogBox db;
+                                db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demofinish")), a, thisConfig->GetInt("textureQuality"));
+                                db.id = 4;
+                                dialogboxes.push_back(db);
+                            }
+                        }
+                    }
+                }
+
                 if((messageclouds[i].done) && (floor(messageclouds[i].xsize) == 0) && (floor(messageclouds[i].ysize) == 0))
-                messageclouds[i].Hide();
+                {
+                    messageclouds[i].Hide();
+                }
 
                 messageclouds[i].Draw(window, fps, inputCtrl);
 
@@ -1333,7 +1363,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         lastView = window.getView();
         window.setView(window.getDefaultView());
 
-        if((!barracks_menu.isActive) && (!altar_menu.isActive) && (!obelisk_menu.isActive))
+        if((!barracks_menu.isActive) && (!altar_menu.isActive) && (!obelisk_menu.isActive) && (!credits.isActive))
         {
             ctrlTips.x = 0;
             ctrlTips.y = (720-ctrlTips.ySize);
@@ -1505,6 +1535,15 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                         else if(dialogboxes[dialogboxes.size()-1].id == 3)
                         {
                             cout << "Done." << endl;
+
+                            dialogboxes[dialogboxes.size()-1].Close();
+                            break;
+                        }
+                        else if(dialogboxes[dialogboxes.size()-1].id == 4)
+                        {
+                            cout << "Open credits!" << endl;
+                            credits.isActive = true;
+                            credits.restart();
 
                             dialogboxes[dialogboxes.size()-1].Close();
                             break;

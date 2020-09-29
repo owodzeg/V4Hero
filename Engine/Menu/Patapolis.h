@@ -8,6 +8,7 @@
 #include "Altar.h"
 #include "Barracks.h"
 #include "Obelisk.h"
+#include "Credits.h"
 #include "../Input/InputController.h"
 #include "../Dialog/ControlTips.h"
 #include "../Dialog/DialogBox.h"
@@ -186,6 +187,8 @@ class PatapolisMenu : public Menu
 
         vector<PataDialogBox> dialogboxes;
         vector<MessageCloud> messageclouds;
+
+        Credits credits;
 
         void addL6(std::string variant, float x, float y, int q, int r);
         void addL2(std::string variant, float x, float y, int q, int r);
