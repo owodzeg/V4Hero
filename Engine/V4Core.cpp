@@ -320,25 +320,27 @@ void V4Core::LoadingThread()
         // drawing some text
         if(pressAnyKey)
         {
-            t_pressAnyKey.setPosition(722,658);
+            t_pressAnyKey.setOrigin(t_pressAnyKey.getLocalBounds().width, t_pressAnyKey.getLocalBounds().height/2);
+            t_pressAnyKey.setPosition(722+526,658+21);
             t_pressAnyKey.draw(window);
         }
         else
         {
-            loading_head.setPosition(670+230,656);
-            loading_eye1.setPosition(689+230,699);
+            t_nowLoading.setOrigin(t_nowLoading.getLocalBounds().width, t_nowLoading.getLocalBounds().height/2);
+            t_nowLoading.setPosition(722+230+256,658+26);
+            t_nowLoading.draw(window);
+
+            loading_head.setPosition(t_nowLoading.getPosition().x-t_nowLoading.getLocalBounds().width-46,t_nowLoading.getPosition().y-28);
+            loading_eye1.setPosition(t_nowLoading.getPosition().x-t_nowLoading.getLocalBounds().width+19-46,t_nowLoading.getPosition().y+43-28);
             loading_eye1.setRotation(loading_eye1.angle+(5.0 / maxFps));
             loading_head.draw(window);
             loading_eye1.draw(window);
 
-            loading_head.setPosition(985+230,656);
-            loading_eye2.setPosition(1004+230,699);
+            loading_head.setPosition(t_nowLoading.getPosition().x+12,t_nowLoading.getPosition().y-28);
+            loading_eye2.setPosition(t_nowLoading.getPosition().x+19+12,t_nowLoading.getPosition().y+43-28);
             loading_eye2.setRotation(loading_eye2.angle-(5.0 / maxFps));
             loading_head.draw(window);
             loading_eye2.draw(window);
-
-            t_nowLoading.setPosition(722+230,658);
-            t_nowLoading.draw(window);
         }
 
         window.setView(lastView);
