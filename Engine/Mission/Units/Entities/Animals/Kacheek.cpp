@@ -32,7 +32,7 @@ void Kacheek::Draw(sf::RenderWindow& window)
         {
             react_time = 1.0 + ((rand() % 3000) / 1000.0);
 
-            if(distance_to_unit <= 600)
+            if(distance_to_unit <= 500)
             {
                 ///we want to make kacheek more prone to escape the closest the patapon gets.
                 /// 800 - minimal range, not likely to escape
@@ -40,8 +40,10 @@ void Kacheek::Draw(sf::RenderWindow& window)
                 /// 100 - very high change, kacheek feels threatened
                 /// 0 - 100% chance, escape now
 
-                float chance = 600 - distance_to_unit;
-                int roll = rand() % 600 + 1;
+                float chance = 500 - distance_to_unit;
+                int roll = rand() % 500 + 1;
+
+                cout << "Should kacheek react? " << chance << ": " << roll << " rolled" << endl;
 
                 if(roll < chance)
                 {
