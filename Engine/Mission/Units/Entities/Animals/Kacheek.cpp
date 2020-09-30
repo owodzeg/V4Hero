@@ -167,10 +167,10 @@ void Kacheek::Draw(sf::RenderWindow& window)
             {
                 ///Make it do a 180 spin based on frames 12 - 60
                 float percentage = (getAnimationPos() - 0.8) / (1 - 0.8);
-                float raise = 40 + (-100 * (1 - percentage));
+                float raise = 28 + (-100 * (1 - percentage));
 
-                if(raise >= 40)
-                raise = 40;
+                if(raise >= 28)
+                raise = 28;
 
                 local_y = raise;
             }

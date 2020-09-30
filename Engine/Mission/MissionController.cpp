@@ -1777,9 +1777,35 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, InputCon
         if(!unit->dead)
         {
             if(unit->local_x < unit->dest_local_x)
-            unit->local_x += 200.0 / fps;
+            {
+                unit->local_x += 200.0 / fps;
+
+                /*if(unit->enemy_in_range)
+                {
+                    if(unit->getAnimationSegment() != "walk_focused")
+                    unit->setAnimationSegment("walk_focused", true);
+                }
+                else
+                {
+                    if(unit->getAnimationSegment() != "walk")
+                    unit->setAnimationSegment("walk", true);
+                }*/
+            }
             if(unit->local_x > unit->dest_local_x)
-            unit->local_x -= 200.0 / fps;
+            {
+                unit->local_x -= 200.0 / fps;
+
+                /*if(unit->enemy_in_range)
+                {
+                    if(unit->getAnimationSegment() != "walk_focused")
+                    unit->setAnimationSegment("walk_focused", true);
+                }
+                else
+                {
+                    if(unit->getAnimationSegment() != "walk")
+                    unit->setAnimationSegment("walk", true);
+                }*/
+            }
         }
 
         switch(unit->getUnitID())
