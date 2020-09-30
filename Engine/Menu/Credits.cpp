@@ -39,7 +39,7 @@ void Credits::Initialise(Config* thisConfig, V4Core* parent)
     s_outro.setVolume(float(thisConfig->GetInt("masterVolume"))*(float(thisConfig->GetInt("bgmVolume"))/100.f));
     s_credits.setVolume(float(thisConfig->GetInt("masterVolume"))*(float(thisConfig->GetInt("bgmVolume"))/100.f));
 
-    f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
+    f_font.loadFromFile(thisConfig->fontPath);
     cn_font.loadFromFile("resources/fonts/dfpop2w9.ttf");
     outro_text.createText(f_font, 36, sf::Color::White, "", thisConfig->GetInt("textureQuality"), 1);
     outro_text.setOutlineThickness(2);

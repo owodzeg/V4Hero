@@ -78,11 +78,12 @@ void StringRepository::LoadLanguageFiles(int langNum)
             {
                 vector<string> key = Func::Split(line,L'|');
 
-                if(key.size() == 2)
+                if(key.size() == 3)
                 {
                     cout << "Loaded language file'" << key[0] << "' with value '" << key[1] << "'" << endl;
                     langFiles.push_back(""+key[1]);
                     langNames.push_back(key[0]);
+                    langFonts.push_back(key[2]);
                 }
             }
         }

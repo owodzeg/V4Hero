@@ -123,8 +123,7 @@ V4Core::V4Core()
     config.LoadConfig(this);
 
     /** "Alpha release" text **/
-
-    f_font.loadFromFile("resources/fonts/p4kakupop-gothic.ttf");
+    f_font.loadFromFile(config.fontPath);
 
     t_debug.setFont(f_font);
     t_debug.setCharacterSize(24);

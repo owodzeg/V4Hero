@@ -11,7 +11,7 @@ void MainMenu::Initialise(Config *thisConfigs, V4Core *parent)
 {
     parent->SaveToDebugLog("Initializing Main Menu...");
 
-    f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
+    f_font.loadFromFile(thisConfigs->fontPath);
     config = thisConfigs;
     int q = thisConfigs->GetInt("textureQuality");
     int r = 1;
@@ -210,7 +210,7 @@ void MainMenu::Initialise(Config *thisConfigs, V4Core *parent)
         firstrun = true;
     }
 
-    msgcloud.Create(45, sf::Vector2f(640,480), sf::Color::White, true, thisConfig->GetInt("textureQuality"));
+    msgcloud.Create(45, sf::Vector2f(640,480), sf::Color::White, true, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
     msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_1")), true);
     msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_2")), true);
     msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_3")), true);

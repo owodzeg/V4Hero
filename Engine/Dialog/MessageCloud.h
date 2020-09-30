@@ -60,7 +60,7 @@ class MessageCloud
 
     MessageCloud();
     void setSize(float new_x, float new_y);
-    void Create(int speed, sf::Vector2f start_pos, sf::Color color, bool can_speedup, int q);
+    void Create(int speed, sf::Vector2f start_pos, sf::Color color, bool can_speedup, int q, std::string font_path);
     void AddDialog(sf::String text, bool nextdialog);
     void NextDialog();
     void SpeedUp();

@@ -741,7 +741,7 @@ void MissionController::Initialise(Config &config,std::string backgroundString,V
     failure = false;
 
     //ctor
-    f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
+    f_font.loadFromFile(config.fontPath);
     f_moji.loadFromFile("resources/fonts/mojipon.otf");
     //f_font.loadFromFile("resources/fonts/arial.ttf");
     t_timerMenu.setFont(f_font);

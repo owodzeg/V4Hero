@@ -52,7 +52,7 @@ void ObeliskMenu::Initialise(Config *thisConfigs,V4Core *parent, PatapolisMenu *
     Scene::Initialise(thisConfigs,parent);
     parentMenu = curParentMenu;
 
-    font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
+    font.loadFromFile(thisConfigs->fontPath);
 
     quality = thisConfig->GetInt("textureQuality");
 

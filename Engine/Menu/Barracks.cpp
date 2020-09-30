@@ -17,7 +17,6 @@ std::string to_string_with_precision(const T a_value, const int n = 2)
 Barracks::Barracks()
 {
     //ctor
-    f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
     //f_font.loadFromFile("resources/fonts/arial.ttf");
 
     patapon = new Patapon;
@@ -33,6 +32,8 @@ void Barracks::Initialise(Config *thisConfigs, V4Core *parent, Menu *curParentMe
     parentMenu = curParentMenu;
     currentController = &(v4core->currentController);
     config = thisConfigs;
+
+    f_font.loadFromFile(thisConfigs->fontPath);
 
     patapon->LoadConfig(thisConfigs);
     patapon->setAnimationSegment("idle_armed");

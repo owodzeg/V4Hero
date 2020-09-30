@@ -7,7 +7,7 @@
 PatapolisMenu::PatapolisMenu()
 {
     //ctor
-    f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
+
     //f_font.loadFromFile("resources/fonts/arial.ttf");
 
     isActive=false;
@@ -214,6 +214,8 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
 
     float resRatioX = thisConfig->GetInt("resX") / float(1280);
     float resRatioY = thisConfig->GetInt("resY") / float(720);
+
+    f_font.loadFromFile(thisConfigs->fontPath);
 
     t_title.createText(f_font, 38, sf::Color::White, "", quality, 1);
     t_title.t.setOutlineThickness(2);
@@ -647,7 +649,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
         messageclouds.clear();
 
         MessageCloud tmp;
-        tmp.Create(20, sf::Vector2f(a_sen.getGlobalPosition().x-5, a_sen.getGlobalPosition().y-25), sf::Color(170,182,250,255), false, thisConfig->GetInt("textureQuality"));
+        tmp.Create(20, sf::Vector2f(a_sen.getGlobalPosition().x-5, a_sen.getGlobalPosition().y-25), sf::Color(170,182,250,255), false, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
         tmp.msgcloud_ID = 0;
 
         vector<int> missions = v4core->savereader.missionsUnlocked;
@@ -730,7 +732,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
         messageclouds.clear();
 
         MessageCloud tmp;
-        tmp.Create(20, sf::Vector2f(a_wakapon.getGlobalPosition().x-5, a_wakapon.getGlobalPosition().y-25), sf::Color(255,255,255,255), false, thisConfig->GetInt("textureQuality"));
+        tmp.Create(20, sf::Vector2f(a_wakapon.getGlobalPosition().x-5, a_wakapon.getGlobalPosition().y-25), sf::Color(255,255,255,255), false, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
 
         vector<int> missions = v4core->savereader.missionsUnlocked;
 

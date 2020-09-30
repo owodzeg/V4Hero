@@ -111,6 +111,7 @@ class Config
     std::map<std::string,std::string> configMap;
     int configDebugID=0;
     bool changedLang = false;
+    std::string fontPath = "";
     Config();
     void LoadConfig(V4Core* core);
     void ReloadLanguages();

@@ -12,6 +12,7 @@ class StringRepository
     public:
     std::vector<std::string> langFiles;
     std::vector<std::string> langNames;
+    std::vector<std::string> langFonts;
     std::map<std::string,std::wstring> stringMap;
     int configDebugID=0;
     StringRepository();

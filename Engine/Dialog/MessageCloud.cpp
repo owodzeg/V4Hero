@@ -31,7 +31,7 @@ void MessageCloud::setSize(float new_x, float new_y)
     ysize = new_y;
 }
 
-void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bool can_speedup, int q)
+void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bool can_speedup, int q, std::string font_path)
 {
     cout << "MessageCloud::Create()" << endl;
 
@@ -40,7 +40,7 @@ void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bo
     quality = q;
     speedable = can_speedup;
 
-    font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
+    font.loadFromFile(font_path);
 
     cloud[0].loadFromFile("resources/graphics/ui/dialog/message.png", q);
     cloud[1] = cloud[0];

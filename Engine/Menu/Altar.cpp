@@ -53,7 +53,7 @@ void AltarMenu::Initialise(Config *thisConfigs, V4Core *parent, PatapolisMenu *c
     resRatioX = thisConfigs->GetInt("resX") / float(1280);
     resRatioY = thisConfigs->GetInt("resY") / float(720);
 
-    f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
+    f_font.loadFromFile(thisConfigs->fontPath);
 
     altar_main.loadFromFile("resources/graphics/ui/altar/altar_main.png", quality, 1);
 

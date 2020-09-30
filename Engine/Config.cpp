@@ -112,6 +112,7 @@ void Config::LoadConfig(V4Core* core)
 
     /** Load lang from resources/lang/str_ENG.cfg **/
     strRepo.LoadLanguageFiles(GetInt("lang"));
+    fontPath = "resources/fonts/"+strRepo.langFonts[GetInt("lang")-1];
     cout<<strRepo.GetString(L"language_file_loaded")<<endl;
 }
 

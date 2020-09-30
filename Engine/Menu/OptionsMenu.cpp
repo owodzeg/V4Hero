@@ -7,7 +7,6 @@ OptionsMenu::OptionsMenu()
 {
     //ctor
     f_font.loadFromFile("resources/fonts/patapon.ttf");
-    m_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
     /*t_title.setFont(f_font);
 
     t_title.setCharacterSize(112);
@@ -48,9 +47,12 @@ void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParent
     parentMenu = curParentMenu;
     cout << "Initial values loaded, loading assets" << endl;
     /*t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"menu_button_3")));
+
     t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
     t_disclaimer.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"option_disclaimer")));
     t_disclaimer.setOrigin(t_disclaimer.getGlobalBounds().width/2,t_disclaimer.getGlobalBounds().height/2);*/
+
+    m_font.loadFromFile(thisConfigs->fontPath);
 
     int q = thisConfigs->GetInt("textureQuality");
     cout << "Quality:" << q << endl;

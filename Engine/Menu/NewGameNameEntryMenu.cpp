@@ -9,7 +9,6 @@
 NewGameNameEntryMenu::NewGameNameEntryMenu()
 {
     //ctor
-    f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
     //f_font.loadFromFile("resources/fonts/arial.ttf");
     t_promptText.setFont(f_font);
     t_promptText.setCharacterSize(35);
@@ -45,6 +44,7 @@ void NewGameNameEntryMenu::Initialise(Config *thisConfigs,V4Core *parent,Menu* p
     savefilecreated.Hide();
     buttonList.Initialise(&f_font,*thisConfig,&(v4core->currentController),this);
 
+    f_font.loadFromFile(thisConfigs->fontPath);
 
     t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_what_is_your_name")));
     t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
