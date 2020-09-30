@@ -2951,16 +2951,24 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
                         float mindmg = unit->mindmg * (0.8 + (rhythm_acc*0.05)) * fever_boost;
                         float maxdmg = unit->maxdmg * (0.8 + (rhythm_acc*0.05)) * fever_boost;
 
-                        if(unit->charged)
-                        {
-                            mindmg = mindmg*2.2;
-                            maxdmg = maxdmg*2.2;
-                        }
-
                         if(unit->defend)
                         {
-                            mindmg = mindmg / 3;
-                            maxdmg = maxdmg / 3;
+                            mindmg = mindmg / 0.75;
+                            maxdmg = maxdmg / 0.75;
+
+                            if(unit->charged)
+                            {
+                                mindmg = mindmg * 1.666;
+                                maxdmg = maxdmg * 1.666;
+                            }
+                        }
+                        else
+                        {
+                            if(unit->charged)
+                            {
+                                mindmg = mindmg*2.2;
+                                maxdmg = maxdmg*2.2;
+                            }
                         }
 
                         ///Make the spears be thrown with worse velocity when player is drumming bad (10% punishment)
