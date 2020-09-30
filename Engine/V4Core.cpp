@@ -32,37 +32,6 @@ V4Core::V4Core()
     cout << "[Debug] Maximum antialiasing level: " << rtx.getMaximumAntialiasingLevel() << endl;
     SaveToDebugLog("[GPU] Maximum antialiasing level: "+to_string(rtx.getMaximumAntialiasingLevel()));
 
-    if(!exists("WINE"))
-    {
-        system("systeminfo > syslog.txt");
-        ifstream sl("syslog.txt");
-        string buff;
-
-        while(getline(sl, buff))
-        {
-            if(buff.find("OS Name:") != std::string::npos)
-            SaveToDebugLog(buff);
-            else if(buff.find("OS Version:") != std::string::npos)
-            SaveToDebugLog(buff);
-            else if(buff.find("System Manufacturer:") != std::string::npos)
-            SaveToDebugLog(buff);
-            else if(buff.find("System Model:") != std::string::npos)
-            SaveToDebugLog(buff);
-            else if(buff.find("System Type:") != std::string::npos)
-            SaveToDebugLog(buff);
-            else if(buff.find("Processor(s):") != std::string::npos)
-            SaveToDebugLog(buff);
-            else if((buff.find("Family") != std::string::npos) && (buff.find("Model") != std::string::npos) && (buff.find("Stepping") != std::string::npos))
-            SaveToDebugLog(buff);
-            else if(buff.find("Total Physical Memory:") != std::string::npos)
-            SaveToDebugLog(buff);
-        }
-
-        sl.close();
-
-        system("del syslog.txt");
-    }
-
     auto result = discord::Core::Create(712761245752623226, DiscordCreateFlags_NoRequireDiscord, &core);
     state.core.reset(core);
     if (!state.core) {
