@@ -1361,7 +1361,7 @@ vector<MissionController::CollisionEvent> MissionController::DoCollisionForObjec
             {
                 Entity* entity = tangibleLevelObjects[i].get();
 
-                std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
+                //std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
                 CollisionEvent cevent;
                 cevent.collided = true;
                 //cevent.collidedEntityID = -1;
@@ -1470,7 +1470,7 @@ vector<MissionController::CollisionEvent> MissionController::DoCollisionForUnit(
             /// we have a collision
             if (isCollision&&isCollision2&&isCollision3&&isCollision4)
             {
-                std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
+                //std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
                 PlayableUnit* unit = units[i].get();
 
                 CollisionEvent cevent;
@@ -1728,7 +1728,7 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, InputCon
                     ///the entity can still react
                     target->OnCollide(target);
 
-                    std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
+                    //std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
                 }
                 else
                 {
