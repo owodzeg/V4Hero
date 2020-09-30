@@ -1193,8 +1193,12 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                 for(int i=0; i<original_config.size(); i++)
                 thisConfig->SetString(original_config[i].index, original_config[i].value);
 
-                screenFade.Create(thisConfig, 0, 512);
-                goto_id = 0;
+                if(goto_id == -1)
+                {
+                    cout << "Create a screenFade" << endl;
+                    screenFade.Create(thisConfig, 1, 512);
+                    goto_id = 0;
+                }
 
                 break;
             }
