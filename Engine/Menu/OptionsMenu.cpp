@@ -114,13 +114,24 @@ void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParent
             string res = to_string(modes[i].width)+"x"+to_string(modes[i].height);
 
             opt.createText(m_font, 25, sf::Color::White, res, q, 2);
-            resolutions.push_back(opt);
 
             Resolution tmp;
             tmp.width = modes[i].width;
             tmp.height = modes[i].height;
 
-            float_resolutions.push_back(tmp);
+            bool exist = false;
+
+            for(int m=0; m<float_resolutions.size(); m++)
+            {
+                if((float_resolutions[m].width == tmp.width) && (float_resolutions[m].height == tmp.height))
+                exist = true;
+            }
+
+            if(!exist)
+            {
+                resolutions.push_back(opt);
+                float_resolutions.push_back(tmp);
+            }
         }
     }
     opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_back")), q, 2);
