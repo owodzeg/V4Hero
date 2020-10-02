@@ -49,8 +49,8 @@ void Credits::Initialise(Config* thisConfig, V4Core* parent)
     anykey.createText(f_font, 36, sf::Color::White, "", thisConfig->GetInt("textureQuality"), 1);
 
     teaser_1.loadFromFile("resources/graphics/ui/credits/teaser_1.png", thisConfig->GetInt("textureQuality"), 1);
-    teaser_2.loadFromFile("resources/graphics/ui/credits/teaser_1.png", thisConfig->GetInt("textureQuality"), 1);
-    teaser_3.loadFromFile("resources/graphics/ui/credits/teaser_1.png", thisConfig->GetInt("textureQuality"), 1);
+    teaser_2.loadFromFile("resources/graphics/ui/credits/teaser_2.png", thisConfig->GetInt("textureQuality"), 1);
+    teaser_3.loadFromFile("resources/graphics/ui/credits/teaser_3.png", thisConfig->GetInt("textureQuality"), 1);
 
     addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"credits_creator")));
     addRegularText("Owocek");
