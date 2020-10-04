@@ -64,18 +64,26 @@ void Config::LoadConfig(V4Core* core)
             {
                 ///Split the Key and Value
                 vector<string> key = Func::Split(line,':');
-                configMap[key[0]] = key[1];
-                cout << "Loaded key '" << key[0] << "' with value '" << key[1] << "'" << endl;
 
-                for(int i=0; i<keysCheckList.size(); i++)
+                if(key.size() > 1)
                 {
-                    if(keysCheckList[i] == key[0])
+                    configMap[key[0]] = key[1];
+                    cout << "Loaded key '" << key[0] << "' with value '" << key[1] << "'" << endl;
+
+                    for(int i=0; i<keysCheckList.size(); i++)
                     {
-                        ///Already exists in the config, remove from check
-                        keysCheckList.erase(keysCheckList.begin()+i);
-                        keysCheckDefaults.erase(keysCheckDefaults.begin()+i);
-                        break;
+                        if(keysCheckList[i] == key[0])
+                        {
+                            ///Already exists in the config, remove from check
+                            keysCheckList.erase(keysCheckList.begin()+i);
+                            keysCheckDefaults.erase(keysCheckDefaults.begin()+i);
+                            break;
+                        }
                     }
+                }
+                else
+                {
+                    cout << "Ignoring key '" << key[0] << ". Reason: invalid value or corrupted config" << endl;
                 }
             }
         }
@@ -118,16 +126,18 @@ void Config::LoadConfig(V4Core* core)
 
 void Config::SaveConfig()
 {
-    ofstream conf2("config.ini", ios::ate);
+    ofstream conf2("config.ini", ios::trunc);
     cout<<"Config Size: "<<configMap.size()<<"Config Keys: "<<configKeys.size()<<endl;
-    conf2.seekp(0);
+
     if(conf2.is_open())
     {
         for(int i=0; i<configMap.size(); i++)
         {
-            if(i == 0){
+            if(i == 0)
+            {
                 conf2 << "# Take caution! Changing some of the settings below may cause your game to crash or become unstable! Don't edit this file unless you know what you're doing! #" <<'\n';
             }
+
             ///save all keys and defaults
             conf2 << configKeys[i] << ":" << configMap[configKeys[i]];
 
