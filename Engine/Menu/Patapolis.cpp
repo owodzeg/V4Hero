@@ -1519,7 +1519,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
         if(dialogboxes.size() <= 0)
         {
-            if((!barracks_menu.isActive) && (!altar_menu.isActive) && (!obelisk_menu.isActive) && (!credits.isActive))
+            if((!barracks_menu.isActive) && (!altar_menu.isActive) && (!obelisk_menu.isActive) && (!credits.isActive) && (screenFade.checkFinished()))
             {
                 if((inputCtrl.isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl.isKeyPressed(InputController::Keys::LTRIGGER)))
                 {
