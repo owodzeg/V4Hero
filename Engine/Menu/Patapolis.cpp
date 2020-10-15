@@ -1296,52 +1296,55 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
             t_title.setPosition(640,80);
             t_title.draw(window);
 
-            vector<int> m_rm;
-
-            for(int i=0; i<messageclouds.size(); i++)
+            if(dialogboxes.size() <= 0)
             {
-                if(messageclouds[i].firstrender)
-                messageclouds[i].Show();
+                vector<int> m_rm;
 
-                if((messageclouds[i].msgcloud_ID == 0) || (messageclouds[i].msgcloud_ID == 2))
-                messageclouds[i].startpos = sf::Vector2f(a_sen.getGlobalPosition().x-5, a_sen.getGlobalPosition().y-25);
-                else if(messageclouds[i].msgcloud_ID == 1)
-                messageclouds[i].startpos = sf::Vector2f(a_wakapon.getGlobalPosition().x-5, a_wakapon.getGlobalPosition().y-25);
-
-                if(messageclouds[i].done)
+                for(int i=0; i<messageclouds.size(); i++)
                 {
-                    if(dialogboxes.size() <= 0)
-                    {
-                        if(location == 4)
-                        {
-                            if(messageclouds[i].msgcloud_ID == 2)
-                            {
-                                ///Create ending dialogbox here
-                                std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick1")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick2"))};
+                    if(messageclouds[i].firstrender)
+                    messageclouds[i].Show();
 
-                                PataDialogBox db;
-                                db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demofinish")), a, thisConfig->GetInt("textureQuality"));
-                                db.id = 4;
-                                dialogboxes.push_back(db);
+                    if((messageclouds[i].msgcloud_ID == 0) || (messageclouds[i].msgcloud_ID == 2))
+                    messageclouds[i].startpos = sf::Vector2f(a_sen.getGlobalPosition().x-5, a_sen.getGlobalPosition().y-25);
+                    else if(messageclouds[i].msgcloud_ID == 1)
+                    messageclouds[i].startpos = sf::Vector2f(a_wakapon.getGlobalPosition().x-5, a_wakapon.getGlobalPosition().y-25);
+
+                    if(messageclouds[i].done)
+                    {
+                        if(dialogboxes.size() <= 0)
+                        {
+                            if(location == 4)
+                            {
+                                if(messageclouds[i].msgcloud_ID == 2)
+                                {
+                                    ///Create ending dialogbox here
+                                    std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick1")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick2"))};
+
+                                    PataDialogBox db;
+                                    db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demofinish")), a, thisConfig->GetInt("textureQuality"));
+                                    db.id = 4;
+                                    dialogboxes.push_back(db);
+                                }
                             }
                         }
                     }
+
+                    if((messageclouds[i].done) && (floor(messageclouds[i].xsize) == 0) && (floor(messageclouds[i].ysize) == 0))
+                    {
+                        messageclouds[i].Hide();
+                    }
+
+                    messageclouds[i].Draw(window, fps, inputCtrl);
+
+                    if((!messageclouds[i].active) && (messageclouds[i].done))
+                    m_rm.push_back(i);
                 }
 
-                if((messageclouds[i].done) && (floor(messageclouds[i].xsize) == 0) && (floor(messageclouds[i].ysize) == 0))
+                for(int i=0; i<m_rm.size(); i++)
                 {
-                    messageclouds[i].Hide();
+                    messageclouds.erase(messageclouds.begin()+m_rm[i]-i);
                 }
-
-                messageclouds[i].Draw(window, fps, inputCtrl);
-
-                if((!messageclouds[i].active) && (messageclouds[i].done))
-                m_rm.push_back(i);
-            }
-
-            for(int i=0; i<m_rm.size(); i++)
-            {
-                messageclouds.erase(messageclouds.begin()+m_rm[i]-i);
             }
         }
 
