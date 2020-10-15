@@ -57,8 +57,7 @@ void ScreenFade::draw(sf::RenderWindow& window, float fps)
     {
         alpha -= cur_speed / fps;
     }
-
-    if(dest_alpha > alpha)
+    else if(dest_alpha > alpha)
     {
         alpha += cur_speed / fps;
     }
