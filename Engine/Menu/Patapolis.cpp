@@ -1296,10 +1296,10 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
             t_title.setPosition(640,80);
             t_title.draw(window);
 
+            vector<int> m_rm;
+
             if(dialogboxes.size() <= 0)
             {
-                vector<int> m_rm;
-
                 for(int i=0; i<messageclouds.size(); i++)
                 {
                     if(messageclouds[i].firstrender)
@@ -1312,20 +1312,19 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
                     if(messageclouds[i].done)
                     {
-                        if(dialogboxes.size() <= 0)
+                        if(location == 4)
                         {
-                            if(location == 4)
+                            if(messageclouds[i].msgcloud_ID == 2)
                             {
-                                if(messageclouds[i].msgcloud_ID == 2)
-                                {
-                                    ///Create ending dialogbox here
-                                    std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick1")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick2"))};
+                                ///Create ending dialogbox here
+                                std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick1")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick2"))};
 
-                                    PataDialogBox db;
-                                    db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demofinish")), a, thisConfig->GetInt("textureQuality"));
-                                    db.id = 4;
-                                    dialogboxes.push_back(db);
-                                }
+                                PataDialogBox db;
+                                db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demofinish")), a, thisConfig->GetInt("textureQuality"));
+                                db.id = 4;
+                                dialogboxes.push_back(db);
+
+                                messageclouds[i].Hide();
                             }
                         }
                     }
@@ -1340,11 +1339,11 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     if((!messageclouds[i].active) && (messageclouds[i].done))
                     m_rm.push_back(i);
                 }
+            }
 
-                for(int i=0; i<m_rm.size(); i++)
-                {
-                    messageclouds.erase(messageclouds.begin()+m_rm[i]-i);
-                }
+            for(int i=0; i<m_rm.size(); i++)
+            {
+                messageclouds.erase(messageclouds.begin()+m_rm[i]-i);
             }
         }
 
@@ -1520,7 +1519,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
         if(dialogboxes.size() <= 0)
         {
-            if((!barracks_menu.isActive) && (!altar_menu.isActive) && (!obelisk_menu.isActive))
+            if((!barracks_menu.isActive) && (!altar_menu.isActive) && (!obelisk_menu.isActive) && (!credits.isActive))
             {
                 if((inputCtrl.isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl.isKeyPressed(InputController::Keys::LTRIGGER)))
                 {
