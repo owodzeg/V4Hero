@@ -311,7 +311,11 @@ void Rhythm::doRhythm(InputController& inputCtrl)
 
                         if(config.GetInt("enablePataponChants"))
                         {
-                            s_chant.setBuffer(songController->GetChantByNumber(0,av_songs[index]+"_1"));
+                            if(current_song != "chakapata")
+                            s_chant.setBuffer(songController->GetChantByNumber(0,current_song+"_1"));
+                            else
+                            s_chant.setBuffer(songController->GetChantByNumber(0,"patapata_1"));
+
                             s_chant.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
                             s_chant.play();
                         }
@@ -450,14 +454,19 @@ void Rhythm::doRhythm(InputController& inputCtrl)
                         {
                             song_id = 3;
 
-                            if((av_songs[index] == "patapata") || (av_songs[index] == "ponpon") || (av_songs[index] == "chakachaka"))
+                            if((av_songs[index] == "patapata") || (av_songs[index] == "ponpon") || (av_songs[index] == "chakachaka") || (av_songs[index] == "chakapata"))
                             {
                                 song_id = 3 + combo%2;
                             }
                         }
 
+                        string song;
 
-                        string song = av_songs[index]+"_"+to_string(song_id);
+                        if(av_songs[index] != "chakapata")
+                        song = av_songs[index]+"_"+to_string(song_id);
+                        else
+                        song = "patapata_"+to_string(song_id);
+
                         s_chant.setBuffer(songController->GetChantByNumber(0,song));
                         s_chant.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
 

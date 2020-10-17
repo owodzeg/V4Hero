@@ -1741,12 +1741,18 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, InputCon
         {
             float pataDistance = 240 * booster;
 
+            if(walkBackwards)
+            pataDistance = -pataDistance;
+
             float diff = (Smoothstep(walkClock.getElapsedTime().asSeconds()/2)*pataDistance)-(Smoothstep(prevTime/2)*pataDistance);
             prevTime = walkClock.getElapsedTime().asSeconds();
 
             float proposedXPos = farthest_unit->getGlobalPosition().x + diff;
 
             camera.pataSpeed = (2 * 60 * booster);
+
+            if(walkBackwards)
+            camera.pataSpeed = -camera.pataSpeed;
 
             //cout << "global_x: " << farthest_unit->global_x << endl;
             //cout << "proposedXPos = " << proposedXPos << endl;
@@ -1829,10 +1835,15 @@ void MissionController::DoRhythm(InputController& inputCtrl)
 {
     /** Call Rhythm functions **/
 
-        if(rhythm.current_song == "patapata")
+        if((rhythm.current_song == "patapata") || (rhythm.current_song == "chakapata"))
         {
             //cout << "set walk true" << endl;
             camera.walk = true;
+
+            if(rhythm.current_song == "chakapata")
+            walkBackwards = true;
+            else
+            walkBackwards = false;
 
             if(!startWalking)
             {

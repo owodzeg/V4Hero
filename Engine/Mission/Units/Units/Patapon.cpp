@@ -214,7 +214,7 @@ void Patapon::doRhythm(std::string current_song, std::string current_drum, int c
         else
         focus = false;
 
-        if(current_song == "patapata")
+        if((current_song == "patapata") || (current_song == "chakapata"))
         {
             action = WALK;
 

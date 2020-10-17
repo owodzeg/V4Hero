@@ -119,6 +119,7 @@ class MissionController
     float prevTime = 0;
     sf::Clock walkClock;
     bool startWalking = false;
+    bool walkBackwards = false;
 
     struct DamageCounter
     {

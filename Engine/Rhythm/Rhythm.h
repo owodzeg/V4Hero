@@ -69,7 +69,7 @@ class Rhythm
                                         "donchaka",
                                         "ponpata",
                                         "dondon",
-                                        "patapata"}; ///Available songs
+                                        "chakapata"}; ///Available songs
     std::vector<float> acc_req = {0,1,1,0.9325,0.875,0.8125,0.75,0.75,0.75,0.6875,0.625};
 
     std::vector<float> perfects_reward = {0, 50, 150, 250, 300};
