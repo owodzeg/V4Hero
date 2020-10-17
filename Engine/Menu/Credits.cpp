@@ -105,6 +105,8 @@ void Credits::Initialise(Config* thisConfig, V4Core* parent)
     addRegularText("Trinix");
     addRegularText("");
     addRegularText("SackBoy (SBG)");
+    addRegularText("Maglor el Mago");
+    addRegularText("NGy14");
     addRegularText("");
     ///add different font parameter maybe? would be cool!
     addRegularText(L"纯洁的菲那",1);
@@ -123,6 +125,8 @@ void Credits::Initialise(Config* thisConfig, V4Core* parent)
     addRegularText("TBAdriel");
     addRegularText("");
     addRegularText("WDayro =D");
+    addRegularText("");
+    addRegularText("Gagu2000");
     addRegularText("");
     addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"credits_supporters")));
     addRegularText("Rugnir");
@@ -171,6 +175,9 @@ void Credits::Initialise(Config* thisConfig, V4Core* parent)
     addRegularText("MrNuckMAn");
     addRegularText(L"樹皮");
     addRegularText("The Maxilimit");
+    addRegularText("bigbrainben");
+    addRegularText("Chersi Sutalinov");
+    addRegularText("Hiroyuki Kotani");
     addRegularText("");
     addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"credits_special")));
     addRegularText("Mitsuki");
