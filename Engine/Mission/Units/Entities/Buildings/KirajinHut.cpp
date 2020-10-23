@@ -118,6 +118,9 @@ void KirajinHut::OnCollide(CollidableObject* otherObject, int collidedWith, vect
 
         if(curHP <= 0)
         {
+            if(AnimatedObject::getAnimationSegment() != "idle_damaged")
+            AnimatedObject::setAnimationSegment("idle_damaged", true);
+
             dead = true;
 
             isCollidable = false;

@@ -118,6 +118,9 @@ void KirajinPoweredTowerSmall::OnCollide(CollidableObject* otherObject, int coll
 
         if(curHP <= 0)
         {
+            if(AnimatedObject::getAnimationSegment() != "idle_damaged")
+            AnimatedObject::setAnimationSegment("idle_damaged", true);
+
             dead = true;
 
             isCollidable = false;
