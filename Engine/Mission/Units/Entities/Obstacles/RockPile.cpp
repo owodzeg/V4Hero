@@ -22,6 +22,31 @@ void RockPile::LoadConfig(Config *thisConfigs)
     s_broken.loadFromFile("resources/sfx/level/boulder_broken.ogg");
 }
 
+void RockPile::parseAdditionalData(std::vector<std::string> additional_data)
+{
+    for(int i=0; i<additional_data.size(); i++)
+    {
+        if(additional_data[i].find("forceSpawnOnLvl") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            force_spawn = true;
+            force_spawn_lvl = stoi(eq[1]);
+        }
+        else if(additional_data[i].find("forceDropIfNotObtained") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            force_drop = true;
+            force_drop_item = stoi(eq[1]);
+
+            if(eq[2] != "any")
+            force_drop_mission_lvl = 0;
+        }
+    }
+}
+
+
 void RockPile::Draw(sf::RenderWindow& window)
 {
     if(dead)

@@ -27,6 +27,7 @@ class Kacheek : public Entity
 
     Kacheek();
     void LoadConfig(Config *thisConfigs);
+    void parseAdditionalData(std::vector<std::string> additional_data);
     void Draw(sf::RenderWindow& window);
     void OnCollide(CollidableObject* otherObject, int collidedWith=-1, vector<string> collisionData = {});
 };

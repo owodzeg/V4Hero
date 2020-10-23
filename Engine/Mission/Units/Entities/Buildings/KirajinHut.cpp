@@ -11,6 +11,30 @@ KirajinHut::KirajinHut()
 
 }
 
+void KirajinHut::parseAdditionalData(std::vector<std::string> additional_data)
+{
+    for(int i=0; i<additional_data.size(); i++)
+    {
+        if(additional_data[i].find("forceSpawnOnLvl") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            force_spawn = true;
+            force_spawn_lvl = stoi(eq[1]);
+        }
+        else if(additional_data[i].find("forceDropIfNotObtained") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            force_drop = true;
+            force_drop_item = stoi(eq[1]);
+
+            if(eq[2] != "any")
+            force_drop_mission_lvl = 0;
+        }
+    }
+}
+
 void KirajinHut::LoadConfig(Config *thisConfigs)
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file

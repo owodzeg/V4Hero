@@ -63,6 +63,23 @@ void Kirajin_Yari_1::parseAdditionalData(std::vector<std::string> additional_dat
 
             view_range = stoi(eq[1]);
         }
+        else if(additional_data[i].find("forceSpawnOnLvl") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            force_spawn = true;
+            force_spawn_lvl = stoi(eq[1]);
+        }
+        else if(additional_data[i].find("forceDropIfNotObtained") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            force_drop = true;
+            force_drop_item = stoi(eq[1]);
+
+            if(eq[2] != "any")
+            force_drop_mission_lvl = 0;
+        }
     }
 }
 

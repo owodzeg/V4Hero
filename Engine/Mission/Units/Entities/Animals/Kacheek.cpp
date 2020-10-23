@@ -23,6 +23,30 @@ void Kacheek::LoadConfig(Config *thisConfigs)
     cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
 }
 
+void Kacheek::parseAdditionalData(std::vector<std::string> additional_data)
+{
+    for(int i=0; i<additional_data.size(); i++)
+    {
+        if(additional_data[i].find("forceSpawnOnLvl") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            force_spawn = true;
+            force_spawn_lvl = stoi(eq[1]);
+        }
+        else if(additional_data[i].find("forceDropIfNotObtained") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            force_drop = true;
+            force_drop_item = stoi(eq[1]);
+
+            if(eq[2] != "any")
+            force_drop_mission_lvl = 0;
+        }
+    }
+}
+
 void Kacheek::Draw(sf::RenderWindow& window)
 {
     /// before we draw the object, check if we are walking and
