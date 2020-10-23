@@ -81,26 +81,24 @@ void Entity::dropItem()
             }
         }
 
-        if(entityID == 7) ///treasure chest
+        if(force_drop)
         {
-            ///check if grubby map was obtained, if not, force drop it
-            if(!thisConfig->thisCore->savereader.invdata.CheckItemObtained(23)) ///check for grubby map
-            id_picked = 23; ///override drop if grubby map not achieved
-        }
-
-        if(entityID == 12) ///kirajin hut
-        {
-            if(thisConfig->thisCore->currentController.curMissionID == 3) ///patapine grove repeatable map
+            ///check if there are level requirements
+            if(force_drop_mission_lvl != 0)
             {
-                if(thisConfig->thisCore->savereader.missionLevels[3] == 3) ///level 3
+                ///specific mission level is required, compare it
+                if(thisConfig->thisCore->savereader.missionLevels[thisConfig->thisCore->currentController.curMissionID] == force_drop_mission_lvl)
                 {
-                    if(global_x > 5000) ///check the last hut only
-                    {
-                        ///check if digital blueprint was obtained, if not, force drop it
-                        if(!thisConfig->thisCore->savereader.invdata.CheckItemObtained(24)) ///check for digital blueprint
-                        id_picked = 24; ///override drop if digital blueprint not achieved
-                    }
+                    ///check if the item was obtained, if not, force drop it
+                    if(!thisConfig->thisCore->savereader.invdata.CheckItemObtained(force_drop_item))
+                    id_picked = force_drop_item;
                 }
+            }
+            else
+            {
+                ///there are no level requirements, just drop the item if its not obtained yet
+                if(!thisConfig->thisCore->savereader.invdata.CheckItemObtained(force_drop_item))
+                id_picked = force_drop_item;
             }
         }
 

@@ -77,6 +77,13 @@ class Entity : public CollidableObject
     int respawnTime = 0;
     sf::Clock respawn_clock;
 
+    bool force_spawn = false;
+    int force_spawn_lvl = 0;
+
+    bool force_drop = false;
+    int force_drop_item = 0;
+    int force_drop_mission_lvl = 0;
+
     float view_range = 750;
 
     sf::Sound cur_sound;
