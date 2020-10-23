@@ -157,6 +157,32 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
         spawn = true;
     }
 
+    for(int i=0; i<additional_data.size(); i++)
+    {
+        ///Force entity to spawn when mission is on a specific level
+        if(additional_data[i].find("forceSpawnOnLvl") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            if(v4core->savereader.missionLevels[curMissionID] == stoi(eq[1]))
+            {
+                spawn = true;
+            }
+        }
+
+        ///Force entity to spawn when specific item is not obtained
+        if(additional_data[i].find("forceSpawnIfNotObtained") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            ///check if the item is obtained
+            if(!v4core->savereader.invdata.CheckItemObtained(stoi(eq[1])))
+            {
+                spawn = true;
+            }
+        }
+    }
+
     if(spawn)
     {
         switch(entityID)
