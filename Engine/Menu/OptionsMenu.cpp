@@ -827,7 +827,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                 for(int i=0; i<ms_volume.size(); i++)
                 {
                     string key = "";
-                    string str = "";
+                    sf::String str = "";
 
                     switch(i)
                     {
