@@ -485,6 +485,7 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                 //mapXdest = 0;
 
                 sel_location--;
+                sel_mission = 0;
 
                 if(sel_location <= 1)
                 sel_location = 1;
@@ -545,6 +546,7 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                 //mapXdest = maxBound;
 
                 sel_location++;
+                sel_mission = 0;
 
                 if(sel_location >= worldmap_fields.size())
                 sel_location = worldmap_fields.size();
