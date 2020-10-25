@@ -356,16 +356,17 @@ void OptionsMenu::SetConfigValue(std::string key, std::string value, bool select
     }
 }
 
-void OptionsMenu::EventFired(sf::Event event){
+void OptionsMenu::EventFired(sf::Event event)
+{
     if(event.type == sf::Event::KeyPressed)
     {
 
-    } else if (event.type == sf::Event::MouseButtonReleased){
-        // We use mouse released so a user can change their mind by keeping the mouse held and moving away.
-        //buttonList.MouseReleasedEvent(event);
+    }
+    else if(event.type == sf::Event::MouseButtonReleased)
+    {
         if (event.mouseButton.button == sf::Mouse::Left)
         {
-            if(state != 31)
+            if((state != 31) && (state != 32))
             SelectMenuOption();
         }
     }
