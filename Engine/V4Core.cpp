@@ -237,7 +237,7 @@ void V4Core::LoadingThread()
     PText t_tipTitle;
     t_tipTitle.createText(f_font, 48, sf::Color(255,255,255,255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(wtitle_key)), config.GetInt("textureQuality"), 1);
 
-    std::string str_tipText = Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(wdesc_key));
+    sf::String str_tipText = Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(wdesc_key));
     //for(int t=0; t<str_tipText.size(); t++)
     //{
     //    if(str_tipText[t] == '\\')
