@@ -77,7 +77,7 @@ void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParent
 
     t_restart.createText(m_font, 26, sf::Color::Black, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_restart_notice")), q, 2);
 
-    vector<string> restart_opt = {Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_restart_button1")), Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_restart_button2"))};
+    vector<sf::String> restart_opt = {Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_restart_button1")), Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_restart_button2"))};
     restart_prompt.Create(m_font, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_restart_notice")), restart_opt, q);
     options_header.createText(m_font, 45, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_options")), q, 2);
 

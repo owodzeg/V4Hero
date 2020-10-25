@@ -332,7 +332,7 @@ void MainMenu::SelectMenuOption()
             {
                 cout << "There is an existing save data. Ask if overwrite" << endl;
 
-                std::vector<std::string> a = {Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_no"))};
+                std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_no"))};
 
                 PataDialogBox db;
                 db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"menu_saveexists")), a, config->GetInt("textureQuality"));
@@ -358,7 +358,7 @@ void MainMenu::SelectMenuOption()
                 {
                     cout << "Invalid save data!" << endl;
 
-                    std::vector<std::string> a = {Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_understood"))};
+                    std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_understood"))};
 
                     PataDialogBox db;
                     db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"menu_nosupportdata")), a, config->GetInt("textureQuality"));
@@ -375,7 +375,7 @@ void MainMenu::SelectMenuOption()
             {
                 cout << "There is no savedata. Error" << endl;
 
-                std::vector<std::string> a = {Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_understood"))};
+                std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_understood"))};
 
                 PataDialogBox db;
                 db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"menu_nodata")), a, config->GetInt("textureQuality"));

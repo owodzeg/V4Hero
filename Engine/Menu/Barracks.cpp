@@ -1039,7 +1039,7 @@ void Barracks::Update(sf::RenderWindow &window, float fps, InputController& inpu
             {
                 if(obelisk)
                 {
-                    std::vector<std::string> a = {Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_no"))};
+                    std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_no"))};
 
                     PataDialogBox db;
                     db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"barracks_depart")), a, config->GetInt("textureQuality"));

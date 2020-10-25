@@ -7,7 +7,24 @@ PataDialogBox::PataDialogBox()
 {
 }
 
-void PataDialogBox::Create(sf::Font font, std::string text, std::vector<std::string> options, int qualitySetting)
+/*void PataDialogBox::Create(sf::Font font, std::string text, std::vector<std::string> options, int qualitySetting)
+{
+    t_dialogType.createText(font, 16, sf::Color::Red, "Information", qualitySetting, 1);
+    t_dialogText.createText(font, 30, sf::Color::Black, text, qualitySetting, 1);
+
+    for(int i=0; i<options.size(); i++)
+    {
+        PText tmp;
+        tmp.createText(font, 22, sf::Color::Black, options[i], qualitySetting, 1);
+        t_options.push_back(tmp);
+    }
+
+    arrow.loadFromFile("resources/graphics/ui/dialog/arrow.png", qualitySetting, 1);
+
+    option = t_options.size()-1;
+}*/
+
+void PataDialogBox::Create(sf::Font font, sf::String text, std::vector<sf::String> options, int qualitySetting)
 {
     t_dialogType.createText(font, 16, sf::Color::Red, "Information", qualitySetting, 1);
     t_dialogText.createText(font, 30, sf::Color::Black, text, qualitySetting, 1);

@@ -1279,7 +1279,7 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, In
         {
             if(inputCtrl.isKeyPressed(InputController::Keys::SELECT))
             {
-                std::vector<std::string> a = {"Show hitboxes","Hide hitboxes","Heal units"};
+                std::vector<sf::String> a = {"Show hitboxes","Hide hitboxes","Heal units"};
 
                 PataDialogBox db;
                 db.Create(f_font, "Debug menu", a, missionConfig->GetInt("textureQuality"));
@@ -1289,7 +1289,7 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, In
         }
         else if(inputCtrl.isKeyPressed(InputController::Keys::START))
         {
-            std::vector<std::string> a = {Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"nav_no"))};
+            std::vector<sf::String> a = {Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"nav_no"))};
 
             PataDialogBox db;
             db.Create(f_font, Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"mission_backtopatapolis")), a, missionConfig->GetInt("textureQuality"));

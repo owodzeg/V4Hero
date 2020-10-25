@@ -1317,7 +1317,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                             if(messageclouds[i].msgcloud_ID == 2)
                             {
                                 ///Create ending dialogbox here
-                                std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick1")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick2"))};
+                                std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick1")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick2"))};
 
                                 PataDialogBox db;
                                 db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demofinish")), a, thisConfig->GetInt("textureQuality"));
@@ -1607,7 +1607,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
                 if(inputCtrl.isKeyPressed(InputController::Keys::START))
                 {
-                    std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
+                    std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
 
                     PataDialogBox db;
                     db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_returntomain")), a, thisConfig->GetInt("textureQuality"));
@@ -1616,7 +1616,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                 }
                 else if(inputCtrl.isKeyPressed(InputController::Keys::SELECT))
                 {
-                    std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
+                    std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
 
                     PataDialogBox db;
                     db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_save")), a, thisConfig->GetInt("textureQuality"));
@@ -1638,7 +1638,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                             cout << "Open second dialogbox" << endl;
                             dialogboxes[dialogboxes.size()-1].Close();
 
-                            std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
+                            std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
 
                             PataDialogBox db;
                             db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_returntomainsave")), a, thisConfig->GetInt("textureQuality"));
@@ -1660,7 +1660,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
                             dialogboxes[dialogboxes.size()-1].Close();
 
-                            std::vector<std::string> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_understood"))};
+                            std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_understood"))};
 
                             PataDialogBox db;
                             db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_saved")), a, thisConfig->GetInt("textureQuality"));
