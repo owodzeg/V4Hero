@@ -156,6 +156,7 @@ std::string Func::wrap_text(std::string input, int box_width, sf::Font& font, in
                 string ltemp = "";
 
                 ///if its just a long ass word
+                ///need to optimize this because it doesnt work correctly for chinese
                 for(int e=0; e<temp.size(); e++)
                 {
                     ltemp += temp[e];
@@ -376,12 +377,30 @@ std::wstring Func::wrap_text(std::wstring input, int box_width, sf::Font& font, 
                     //cout << "We need to go through every character, testing the sample if it fits the box." << endl;
                     wstring word_test = L"";
 
+                    ///Check string letter by letter
                     for(int e=0; e<length_test.size(); e++)
                     {
                         //cout << "Preserve original word without testing letter" << endl;
                         wstring pre_word_test = word_test;
-                        //cout << "Add one letter (" << e+1 << "/" << length_test.size() << endl;
-                        word_test += length_test[e];
+                        int bpw = 1; ///byte per word
+
+                        ///Check if letter is from different alphabet
+                        if((length_test[e] >= 0xE0) && (length_test[e] <= 0xEF))
+                        {
+                            ///3-byte letter detected, treat differently
+                            word_test += length_test[e];
+                            word_test += length_test[e+1];
+                            word_test += length_test[e+2];
+
+                            bpw = 3;
+                            e += 2;
+
+                        }
+                        else ///otherwise treat like regular text, there should be no problems with that
+                        {
+                            //cout << "Add one letter (" << e+1 << "/" << length_test.size() << endl;
+                            word_test += length_test[e];
+                        }
 
                         //cout << "Test the word" << endl;
                         sf::Text t_tmp;
@@ -392,13 +411,15 @@ std::wstring Func::wrap_text(std::wstring input, int box_width, sf::Font& font, 
                         if(t_tmp.getLocalBounds().width > box_width-30)
                         {
                             //cout << "Tested word is too big, submit the letters" << endl;
+                            if(bpw != 3)
                             pre_word_test += L"-";
+
                             small_lines.push_back(pre_word_test);
 
                             word_test = L"";
 
                             //cout << "Move the loop back one step, so the letter that exceeded size won't be skipped" << endl;
-                            e--;
+                            e-=bpw;
                         }
                         else
                         {
