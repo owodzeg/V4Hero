@@ -768,7 +768,12 @@ void MissionController::Initialise(Config &config,std::string backgroundString,V
 
     //ctor
     f_font.loadFromFile(config.fontPath);
+
+    if(config.fontPath == "resources/fonts/p4kakupop-pro.ttf")
     f_moji.loadFromFile("resources/fonts/mojipon.otf");
+    else
+    f_moji.loadFromFile(config.fontPath);
+
     //f_font.loadFromFile("resources/fonts/arial.ttf");
     t_timerMenu.setFont(f_font);
     t_timerMenu.setCharacterSize(38);
