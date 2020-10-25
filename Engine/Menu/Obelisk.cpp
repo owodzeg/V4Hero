@@ -127,7 +127,7 @@ void ObeliskMenu::Initialise(Config *thisConfigs,V4Core *parent, PatapolisMenu *
 
     mission_select.loadFromFile("resources/graphics/ui/worldmap/mission_select.png", quality, 1);
 
-    ctrlTips.create(66, font, 20, sf::String(L"Left/Right: Select field      ×: View missions      〇: Exit to Patapolis"), quality);
+    ctrlTips.create(66, font, 20, sf::String(L"Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
 
     float resRatioX = thisConfigs->GetInt("resX") / float(1280);
     float resRatioY = thisConfigs->GetInt("resY") / float(720);
@@ -364,7 +364,7 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
         {
             if(displayMissions)
             {
-                ctrlTips.create(66, font, 20, sf::String(L"Left/Right: Select field      ×: View missions      〇: Exit to Patapolis"), quality);
+                ctrlTips.create(66, font, 20, sf::String(L"Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
 
                 displayMissions = false;
                 thisConfig->thisCore->SaveToDebugLog("Exited mission selection.");
@@ -417,7 +417,7 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
                 if(missions.size() > 0)
                 {
-                    ctrlTips.create(66, font, 20, sf::String(L"Up/Down: Select mission      ×: Enter mission      〇: Return to field select"), quality);
+                    ctrlTips.create(66, font, 20, sf::String(L"Up/Down: Select mission      X: Enter mission      O: Return to field select"), quality);
 
                     displayMissions = true;
 

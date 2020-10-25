@@ -64,7 +64,7 @@ void AltarMenu::Initialise(Config *thisConfigs, V4Core *parent, PatapolisMenu *c
     altar_item_category.createText(f_font, 20, sf::Color(111, 71, 51, 255), "", q, 1);
     altar_item_desc.createText(f_font, 26, sf::Color(111, 71, 51, 255), "", q, 1);
 
-    ctrlTips.create(54, f_font, 20, sf::String(L"Left/Right/Up/Down: Navigate      〇: Exit to Patapolis"), quality);
+    ctrlTips.create(54, f_font, 20, sf::String(L"Left/Right/Up/Down: Navigate      O: Exit to Patapolis"), quality);
 
     parent->SaveToDebugLog("Initializing Altar finished.");
 }

@@ -564,7 +564,7 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     addCloud("A", 8800, 240, 0, 0, quality, 1);
     addCloud("A", 8000, 170, 0, 0, quality, 1);
 
-    ctrlTips.create(54, f_font, 20, sf::String(L"L/R: Move      ×: Interact      Select: Save      Start: Title screen"), quality);
+    ctrlTips.create(54, f_font, 20, sf::String(L"L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
 
     altar_menu.loadedSave = loadedSave;
     altar_menu.ReloadInventory();
@@ -635,7 +635,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
         break;
     case 2:
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_barracks")));
-        a += L"×: Interact      ";
+        a += L"X: Interact      ";
         break;
     case 3:
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_festival")));
@@ -643,7 +643,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
     case 4:
     {
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_sen")));
-        a += L"×: Interact      ";
+        a += L"X: Interact      ";
 
         ///activate her dialogue
         messageclouds.clear();
@@ -713,11 +713,11 @@ void PatapolisMenu::SetTitle(int menuPosition)
     }
     case 5:
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_altar")));
-        a += L"×: Interact      ";
+        a += L"X: Interact      ";
         break;
     case 6:
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_obelisk")));
-        a += L"×: Interact      ";
+        a += L"X: Interact      ";
         break;
     case 7:
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_paraget")));
@@ -726,7 +726,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
     {
         t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_wakapon")));
 
-        a += L"×: Interact      ";
+        a += L"X: Interact      ";
 
         ///activate her dialogue
         messageclouds.clear();

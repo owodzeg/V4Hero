@@ -860,7 +860,7 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
                                 patapolisMenu.screenFade.Create(thisConfig, 0, 512);
 
                                 patapolisMenu.location = 3;
-                                patapolisMenu.ctrlTips.create(54, patapolisMenu.f_font, 20, sf::String(L"L/R: Move      ×: Interact      Select: Save      Start: Title screen"), quality);
+                                patapolisMenu.ctrlTips.create(54, patapolisMenu.f_font, 20, sf::String(L"L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
                                 patapolisMenu.SetTitle(patapolisMenu.location);
                                 patapolisMenu.camPos = patapolisMenu.locations[patapolisMenu.location];
 

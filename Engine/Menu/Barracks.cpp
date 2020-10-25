@@ -1100,13 +1100,13 @@ void Barracks::UpdateInputControls()
     if(!MenuMode)
     {
         if(!obelisk)
-        ctrlTips.create(82, f_font, 20, sf::String(L"Left/Right: Select unit      Up/Down: Select equipment      ×: Change equipment      〇: Return to Patapolis"), qualitySetting);
+        ctrlTips.create(82, f_font, 20, sf::String(L"Left/Right: Select unit      Up/Down: Select equipment      X: Change equipment      O: Return to Patapolis"), qualitySetting);
         else
-        ctrlTips.create(82, f_font, 20, sf::String(L"Left/Right: Select unit      Up/Down: Select equipment      ×: Change equipment      〇: Return to World map      Start: Start mission"), qualitySetting);
+        ctrlTips.create(82, f_font, 20, sf::String(L"Left/Right: Select unit      Up/Down: Select equipment      X: Change equipment      O: Return to World map      Start: Start mission"), qualitySetting);
     }
     else
     {
-        ctrlTips.create(82, f_font, 20, sf::String(L"Left/Right/Up/Down: Navigate item      ×: Equip item      〇: Cancel"), qualitySetting);
+        ctrlTips.create(82, f_font, 20, sf::String(L"Left/Right/Up/Down: Navigate item      X: Equip item      O: Cancel"), qualitySetting);
     }
 }
 

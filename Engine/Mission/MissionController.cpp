@@ -836,7 +836,7 @@ void MissionController::Initialise(Config &config,std::string backgroundString,V
         }
     }
 
-    ctrlTips.create(110, f_font, 28, sf::String(L"Onward: □-□-□-〇       Attack: 〇-〇-□-〇        Defend: △-△-□-〇              Charge: 〇-〇-△-△\nRetreat: 〇-□-〇-□          Jump: ×-×-△-△          Party: □-〇-×-△          Summon: ×-××-××") ,q, sf::Color(128,128,128,255));
+    ctrlTips.create(110, f_font, 28, sf::String(L"Onward: □-□-□-O       Attack: O-O-□-O        Defend: △-△-□-O              Charge: O-O-△-△\nRetreat: O-□-O-□          Jump: X-X-△-△          Party: □-O-X-△          Summon: X-XX-XX") ,q, sf::Color(128,128,128,255));
 
     spear_hit_enemy.loadFromFile("resources/sfx/level/spear_hit_enemy.ogg");
     spear_hit_iron.loadFromFile("resources/sfx/level/spear_hit_iron.ogg");
