@@ -44,6 +44,15 @@ void Hatapon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
         {
             ///collisionData received from Projectile, process it
             int dmgDealt = atoi(collisionData[0].c_str());
+
+            if(defend)
+            {
+                if(charged)
+                dmgDealt = round(dmgDealt / 4);
+                else
+                dmgDealt = round(dmgDealt / 2);
+            }
+
             current_hp -= dmgDealt;
 
             cout << "I received " << to_string(dmgDealt) << "damage, my HP is " << current_hp << endl;
