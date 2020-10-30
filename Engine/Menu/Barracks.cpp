@@ -19,9 +19,9 @@ Barracks::Barracks()
     //ctor
     //f_font.loadFromFile("resources/fonts/arial.ttf");
 
-    patapon = new Patapon;
-    patapon2 = new Patapon;
-    patapon3 = new Patapon;
+    patapon = new Yaripon;
+    patapon2 = new Yaripon;
+    patapon3 = new Yaripon;
 
     isActive=false;
 }

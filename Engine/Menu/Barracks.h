@@ -24,9 +24,9 @@ class Barracks : public Menu
         sf::RectangleShape mm_bigBox;
         sf::RectangleShape mm_titleBox;
         sf::RectangleShape mm_selected_item_line;
-        Patapon* patapon;
-        Patapon* patapon2;
-        Patapon* patapon3;
+        Yaripon* patapon;
+        Yaripon* patapon2;
+        Yaripon* patapon3;
 
         sf::Texture t_background;
         PSprite s_background;
