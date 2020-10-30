@@ -1162,9 +1162,9 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 
     ///make this unit load based on how the army is built later
 
-    unique_ptr<Patapon> p1 = make_unique<Patapon>();
-    unique_ptr<Patapon> p2 = make_unique<Patapon>();
-    unique_ptr<Patapon> p3 = make_unique<Patapon>();
+    unique_ptr<Yaripon> p1 = make_unique<Yaripon>();
+    unique_ptr<Yaripon> p2 = make_unique<Yaripon>();
+    unique_ptr<Yaripon> p3 = make_unique<Yaripon>();
     unique_ptr<Hatapon> h = make_unique<Hatapon>();
 
     p1.get()->LoadConfig(missionConfig);
