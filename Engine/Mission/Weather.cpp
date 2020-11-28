@@ -1,6 +1,9 @@
 #include "Weather.h"
 
 #include <string>
+#include <iostream>
+
+using namespace std;
 
 Weather::Weather()
 {
@@ -9,14 +12,13 @@ Weather::Weather()
 
 void Weather::loadWeather(int type)
 {
+    cout << "[Weather] Loading weather " << type << endl;
+
     switch(type)
     {
         case 1:
         {
-            ps_snowflakes[0].loadFromFile("resources/graphics/weather/snowflake_1.png", thisConfig->GetInt("textureQuality"), 1);
-            ps_snowflakes[1].loadFromFile("resources/graphics/weather/snowflake_2.png", thisConfig->GetInt("textureQuality"), 1);
-            ps_snowflakes[2].loadFromFile("resources/graphics/weather/snowflake_3.png", thisConfig->GetInt("textureQuality"), 1);
-
+            cout << "[Weather] Loading snowflakes" << endl;
             for(int i=0; i<3; i++)
             {
                 ps_snowflakes[i].loadFromFile("resources/graphics/weather/snowflake_"+std::to_string(i+1)+".png", thisConfig->GetInt("textureQuality"), 1);
