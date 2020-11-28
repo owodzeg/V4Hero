@@ -787,6 +787,7 @@ void MissionController::Initialise(Config &config,std::string backgroundString,V
     //t_cutscene_text.setOrigin(t_cutscene_text.getGlobalBounds().width/2,t_cutscene_text.getGlobalBounds().height/2);
 
     missionConfig = &config;
+    weather.thisConfig = missionConfig;
 
     isInitialized = true;
     // this is outside the loop
@@ -1284,7 +1285,7 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, In
         {
             if(inputCtrl.isKeyPressed(InputController::Keys::SELECT))
             {
-                std::vector<sf::String> a = {"Show hitboxes","Hide hitboxes","Heal units"};
+                std::vector<sf::String> a = {"Show hitboxes","Hide hitboxes","Heal units","Set weather to clear", "Set weather to snow"};
 
                 PataDialogBox db;
                 db.Create(f_font, "Debug menu", a, missionConfig->GetInt("textureQuality"));
@@ -1306,6 +1307,7 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, In
 vector<MissionController::CollisionEvent> MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float currentObjectY,int collisionObjectID,vector<string> collisionData)
 {
     ///Added vector because there can be more than just one collision events! Like colliding with grass AND with opponent
+    ///TO-DO: can't hit two hittable entities, this should only deal damage to one entity per attack.
     vector<MissionController::CollisionEvent> collisionEvents;
 
     for(int i=0; i<tangibleLevelObjects.size(); i++)
@@ -3203,6 +3205,9 @@ void MissionController::Update(sf::RenderWindow &window, float cfps, InputContro
     test_bg.setCamera(camera);
     test_bg.Draw(window);
 
+    /** Weather stuff **/
+    weather.draw(window, fps);
+
     /** Execute Keyboard events and Movement **/
 
     DoKeyboardEvents(window,fps,cur_inputCtrl);
@@ -3509,6 +3514,34 @@ void MissionController::Update(sf::RenderWindow &window, float cfps, InputContro
                         {
                             units[u].get()->current_hp = units[u].get()->max_hp;
                         }
+
+                        dialogboxes[dialogboxes.size()-1].Close();
+                    }
+
+                    break;
+                }
+
+                case 3:
+                {
+                    if(dialogboxes[dialogboxes.size()-1].id == 999)
+                    {
+                        cout << "Set weather to clear" << endl;
+
+                        weather.loadWeather(0);
+
+                        dialogboxes[dialogboxes.size()-1].Close();
+                    }
+
+                    break;
+                }
+
+                case 4:
+                {
+                    if(dialogboxes[dialogboxes.size()-1].id == 999)
+                    {
+                        cout << "Set weather to snow" << endl;
+
+                        weather.loadWeather(1);
 
                         dialogboxes[dialogboxes.size()-1].Close();
                     }

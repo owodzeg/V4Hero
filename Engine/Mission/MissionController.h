@@ -28,6 +28,8 @@
 #include "../Dialog/DialogBox.h"
 #include "../Dialog/MessageCloud.h"
 
+#include "Weather.h"
+
 
 class V4Core;
 class MissionController
@@ -205,6 +207,8 @@ class MissionController
 
     vector<PataDialogBox> dialogboxes;
     vector<MessageCloud> messageclouds;
+
+    Weather weather;
 
     /** Collisions **/
     bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame,AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY);
