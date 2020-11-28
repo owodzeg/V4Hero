@@ -33,6 +33,8 @@ SaveReader::SaveReader()
 
     isNewSave = !exists;
 
+    invdata.savereader = this;
+
     itemreg.ReadItemFiles();
 }
 

@@ -2,14 +2,16 @@
 #include "Item.h"
 #include "InventoryItem.h"
 #include <iostream>
+#include "../SaveReader.h"
 
 /** Needs some rework **/
 
 using namespace std;
 
-InventoryData::InventoryData(){
-
+InventoryData::InventoryData()
+{
 }
+
 InventoryData::~InventoryData(){
 
 }

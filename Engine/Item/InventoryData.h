@@ -3,9 +3,14 @@
 #include <SFML/Graphics.hpp>
 #include "Item.h"
 #include "InventoryItem.h"
+
+class SaveReader;
+
 class InventoryData
 {
     public:
+        SaveReader* savereader;
+
         std::vector<InventoryItem> items;
         InventoryItem GetItemByInvID(int id);
         int GetItemCountByTypeID(int id);
