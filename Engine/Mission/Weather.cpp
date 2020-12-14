@@ -38,9 +38,6 @@ void Weather::draw(sf::RenderWindow& window, float fps)
     {
         case 1: ///Snow
         {
-            auto view = window.getView();
-            window.setView(window.getDefaultView());
-
             ///snow intensivity = 60 per second
             ///fps = 240
             ///snow per frame = 0.25
@@ -61,11 +58,11 @@ void Weather::draw(sf::RenderWindow& window, float fps)
                 flake = 0;
 
                 tmp.flake = ps_snowflakes[flake];
-                tmp.x = rand() % 1400 - 200;
+                tmp.x = rand() % 1400 - 180 - 6*weatherIntensivity;
                 tmp.y = -100;
                 tmp.r = (rand() % 1000) / float(1000);
-                tmp.xspeed = 12;
-                tmp.yspeed = 60;
+                tmp.xspeed = 6*weatherIntensivity;
+                tmp.yspeed = 30*weatherIntensivity;
                 tmp.rspeed = (rand() % 50) / float(50);
 
                 snowflakes.push_back(tmp);
@@ -73,31 +70,93 @@ void Weather::draw(sf::RenderWindow& window, float fps)
                 snowflakesToRender -= 1;
             }
 
-            vector<int> s_rm;
+            break;
+        }
 
-            for(int i=0; i<snowflakes.size(); i++)
+        case 2: ///Rain
+        {
+            float resRatioX = window.getSize().x / float(1280);
+            float resRatioY = window.getSize().y / float(720);
+
+            raindropsToRender += weatherIntensivity / fps;
+
+            for(int i=0; i<floor(raindropsToRender); i++)
             {
-                snowflakes[i].x += snowflakes[i].xspeed / fps;
-                snowflakes[i].y += snowflakes[i].yspeed / fps;
-                snowflakes[i].r += snowflakes[i].rspeed / fps;
+                Raindrop tmp;
 
-                snowflakes[i].flake.setPosition(snowflakes[i].x, snowflakes[i].y);
-                snowflakes[i].flake.setRotation(snowflakes[i].r);
+                int ra = rand() % 100;
+                int d = 1;
+                if(ra < 30)
+                d = 0;
 
-                if((snowflakes[i].x > 1320) || (snowflakes[i].y > 800))
-                s_rm.push_back(i);
+                sf::RectangleShape r_drop;
+                r_drop.setSize({3.0*resRatioX, 64.0*resRatioY});
 
-                snowflakes[i].flake.draw(window);
+                if(d == 1)
+                r_drop.setFillColor(sf::Color(240,240,240,255));
+                if(d == 0)
+                r_drop.setFillColor(sf::Color(210,210,210,255));
+
+                tmp.droplet = r_drop;
+                tmp.x = rand() % 1400 - 180 - 6*weatherIntensivity;
+                tmp.y = -100;
+                tmp.r = (rand() % 1000) / float(1000);
+                tmp.xspeed = 0*weatherIntensivity;
+                tmp.yspeed = 60*weatherIntensivity;
+
+                raindrops.push_back(tmp);
+
+                raindropsToRender -= 1;
             }
-
-            for(int i=0; i<s_rm.size(); i++)
-            {
-                snowflakes.erase(snowflakes.begin() + s_rm[i] - i);
-            }
-
-            window.setView(view);
 
             break;
         }
     }
+
+    auto view = window.getView();
+    window.setView(window.getDefaultView());
+
+    vector<int> s_rm;
+    vector<int> r_rm;
+
+    for(int i=0; i<snowflakes.size(); i++)
+    {
+        snowflakes[i].x += snowflakes[i].xspeed / fps;
+        snowflakes[i].y += snowflakes[i].yspeed / fps;
+        snowflakes[i].r += snowflakes[i].rspeed / fps;
+
+        snowflakes[i].flake.setPosition(snowflakes[i].x, snowflakes[i].y);
+        snowflakes[i].flake.setRotation(snowflakes[i].r);
+
+        if((snowflakes[i].x > 1320) || (snowflakes[i].y > 800))
+        s_rm.push_back(i);
+
+        snowflakes[i].flake.draw(window);
+    }
+
+    for(int i=0; i<raindrops.size(); i++)
+    {
+        raindrops[i].x += raindrops[i].xspeed / fps;
+        raindrops[i].y += raindrops[i].yspeed / fps;
+
+        raindrops[i].droplet.setPosition(raindrops[i].x, raindrops[i].y);
+
+        if((raindrops[i].x > 1320) || (raindrops[i].y > 800))
+        r_rm.push_back(i);
+
+        window.draw(raindrops[i].droplet);
+    }
+
+    for(int i=0; i<s_rm.size(); i++)
+    {
+        snowflakes.erase(snowflakes.begin() + s_rm[i] - i);
+    }
+
+    for(int i=0; i<r_rm.size(); i++)
+    {
+        raindrops.erase(raindrops.begin() + r_rm[i] - i);
+    }
+
+    window.setView(view);
+
 }
