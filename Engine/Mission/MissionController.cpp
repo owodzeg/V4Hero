@@ -451,6 +451,38 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
 
                 break;
             }
+
+            case 17:
+            {
+                unique_ptr<Rappata> entity = make_unique<Rappata>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::ANIMAL;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+
+            case 18:
+            {
+                unique_ptr<Rappata> entity = make_unique<Rappata>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::ANIMAL;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
         }
 
         Entity* entity;
@@ -1022,6 +1054,17 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
                             missionImg = buff.substr(buff.find_first_of("=")+1);
                         }
 
+                        if(buff.find("force_weather=") != std::string::npos)
+                        {
+                            string word = buff.substr(buff.find_first_of("=")+1);
+
+                            if(word == "snow")
+                            {
+                                weather.loadWeather(1);
+                                weather.weatherIntensivity = 3;
+                            }
+                        }
+
                         if((buff.find("spawn=") != std::string::npos) || (buff.find("spawn_clonable") != std::string::npos))
                         {
                             bool clonable = false;
@@ -1285,7 +1328,7 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, In
         {
             if(inputCtrl.isKeyPressed(InputController::Keys::SELECT))
             {
-                std::vector<sf::String> a = {"Show hitboxes","Hide hitboxes","Heal units","Set weather to clear", "Set weather to snow"};
+                std::vector<sf::String> a = {"Show hitboxes","Hide hitboxes","Heal units","Set weather to clear", "Set weather to snow", "Increase weather intensivity", "Decrease weather intensivity", "Set weather to rain"};
 
                 PataDialogBox db;
                 db.Create(f_font, "Debug menu", a, missionConfig->GetInt("textureQuality"));
@@ -3542,6 +3585,48 @@ void MissionController::Update(sf::RenderWindow &window, float cfps, InputContro
                         cout << "Set weather to snow" << endl;
 
                         weather.loadWeather(1);
+
+                        dialogboxes[dialogboxes.size()-1].Close();
+                    }
+
+                    break;
+                }
+
+                case 5:
+                {
+                    if(dialogboxes[dialogboxes.size()-1].id == 999)
+                    {
+                        cout << "Increase weather intensivity" << endl;
+
+                        weather.weatherIntensivity++;
+
+                        dialogboxes[dialogboxes.size()-1].Close();
+                    }
+
+                    break;
+                }
+
+                case 6:
+                {
+                    if(dialogboxes[dialogboxes.size()-1].id == 999)
+                    {
+                        cout << "Decrease weather intensivity" << endl;
+
+                        weather.weatherIntensivity--;
+
+                        dialogboxes[dialogboxes.size()-1].Close();
+                    }
+
+                    break;
+                }
+
+                case 7:
+                {
+                    if(dialogboxes[dialogboxes.size()-1].id == 999)
+                    {
+                        cout << "Set weather to rain" << endl;
+
+                        weather.loadWeather(2);
 
                         dialogboxes[dialogboxes.size()-1].Close();
                     }
