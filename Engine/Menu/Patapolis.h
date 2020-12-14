@@ -5,6 +5,7 @@
 #include "../Graphics/Menu.h"
 #include "../Graphics/ScreenFade.h"
 #include "../Mission/MissionController.h"
+#include "../Mission/Weather.h"
 #include "OptionsMenu.h"
 #include "Altar.h"
 #include "Barracks.h"
@@ -177,6 +178,10 @@ class PatapolisMenu : public Menu
         bool doWaitKeyPress=true;
         bool loadedSave = false;
 
+        ///Seasonal events
+        bool se_christmas = false;
+        Weather weather;
+
         ControlTips ctrlTips;
 
         AltarMenu altar_menu;
@@ -188,6 +193,9 @@ class PatapolisMenu : public Menu
 
         vector<PataDialogBox> dialogboxes;
         vector<MessageCloud> messageclouds;
+
+        sf::SoundBuffer sb_city_loop;
+        sf::Sound city_loop;
 
         //int goto_id = -1; ///Go-to ID where should Patapolis go after ScreenFade finishes
 

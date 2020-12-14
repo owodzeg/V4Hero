@@ -3,7 +3,9 @@
 #include "iostream"
 #include "../V4Core.h"
 #include <sstream>
+#include <ctime>
 #include "Altar.h"
+
 PatapolisMenu::PatapolisMenu()
 {
     //ctor
@@ -212,6 +214,47 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     parentMenu = curParentMenu;
     quality = thisConfig->GetInt("textureQuality");
 
+    if(thisConfig->GetInt("seasonalEvents") == 1)
+    {
+        std::time_t t = std::time(0);   // get time now
+        std::tm* now = std::localtime(&t);
+
+        if(now->tm_mon+1 >= 12)
+        {
+            if(now->tm_mday >= 1)
+            {
+                se_christmas = true;
+            }
+        }
+
+        ///force
+        se_christmas = true;
+
+        if(se_christmas)
+        cout << "Merry christmas! :)" << endl;
+    }
+
+    weather.thisConfig = thisConfig;
+
+    ///Enable winter weather
+    if(se_christmas)
+    weather.loadWeather(1);
+
+    ///Unlock special mission
+    if(se_christmas)
+    {
+        if(!v4core->savereader.isMissionUnlocked(6))
+        {
+            v4core->savereader.missionsUnlocked.push_back(6);
+            v4core->savereader.missionLevels[6] = 0;
+        }
+    }
+    else
+    {
+        auto it = std::find(v4core->savereader.missionsUnlocked.begin(), v4core->savereader.missionsUnlocked.end(), 6);
+        v4core->savereader.missionsUnlocked.erase(it);
+    }
+
     float resRatioX = thisConfig->GetInt("resX") / float(1280);
     float resRatioY = thisConfig->GetInt("resY") / float(720);
 
@@ -221,7 +264,12 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     t_title.t.setOutlineThickness(2);
     t_title.t.setOutlineColor(sf::Color::Black);
 
-    string vx_params = "0,24,128,238;66,24,128,238;444,184,243,202;591,184,243,202;592,255,255,255;710,171,243,214;720,171,243,214";
+    string vx_params = "";
+
+    if(!se_christmas)
+    vx_params = "0,24,128,238;66,24,128,238;444,184,243,202;591,184,243,202;592,255,255,255;710,171,243,214;720,171,243,214";
+    else
+    vx_params = "0,70,124,190;66,70,124,190;444,184,243,202;591,184,243,202;592,255,255,255;710,171,243,214;720,171,243,214";
 
     vector<string> v_vxparams = Func::Split(vx_params,';');
     std::vector<sf::Vector2f> vx_pos;
@@ -327,34 +375,51 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
 
     addL2("a", 800, 766-floor_height, quality, 1);
     addL2("b", 2900, 740-floor_height, quality, 1);
-    addL2("c", 3900, 720-floor_height, quality, 1);
-    addL2("c", 4300, 770-floor_height, quality, 1);
 
-    addL2("c", 5080, 750-floor_height, quality, 1);
-    addL2("c", 5220, 720-floor_height, quality, 1);
+    if(!se_christmas)
+    {
+        addL2("c", 4300, 770-floor_height, quality, 1);
+        addL2("c", 5220, 720-floor_height, quality, 1);
+        addL2("c", 5600, 770-floor_height, quality, 1);
+        addL2("c", 6150, 760-floor_height, quality, 1);
+        addL2("c", 6320, 720-floor_height, quality, 1);
+        addL2("c", 7540, 760-floor_height, quality, 1);
+        addL2("c", 8900, 770-floor_height, quality, 1);
+        addL2("c", 9060, 740-floor_height, quality, 1);
+        addL2("c", 10300, 770-floor_height, quality, 1);
+        addL2("c", 10470, 740-floor_height, quality, 1);
 
-    addL2("c", 5600, 770-floor_height, quality, 1);
-    addL2("c", 5740, 720-floor_height, quality, 1);
+        addL2("c", 3900, 720-floor_height, quality, 1);
+        addL2("c", 5080, 750-floor_height, quality, 1);
+        addL2("c", 5740, 720-floor_height, quality, 1);
+        addL2("c", 6540, 760-floor_height, quality, 1);
+        addL2("c", 7800, 720-floor_height, quality, 1);
+        addL2("c", 8000, 750-floor_height, quality, 1);
+        addL2("c", 9760, 740-floor_height, quality, 1);
+        addL2("c", 11000, 750-floor_height, quality, 1);
+    }
+    else
+    {
+        addL2("c_winter1", 4300, 770-floor_height, quality, 1);
+        addL2("c_winter2", 5220, 720-floor_height, quality, 1);
+        addL2("c_winter1", 5600, 770-floor_height, quality, 1);
+        addL2("c_winter1", 6150, 760-floor_height, quality, 1);
+        addL2("c_winter2", 6320, 720-floor_height, quality, 1);
+        addL2("c_winter1", 7540, 760-floor_height, quality, 1);
+        addL2("c_winter2", 8900, 770-floor_height, quality, 1);
+        addL2("c_winter2", 9060, 740-floor_height, quality, 1);
+        addL2("c_winter1", 10300, 770-floor_height, quality, 1);
+        addL2("c_winter2", 10470, 740-floor_height, quality, 1);
 
-    addL2("c", 6150, 760-floor_height, quality, 1);
-    addL2("c", 6320, 720-floor_height, quality, 1);
-
-    addL2("c", 6540, 760-floor_height, quality, 1);
-
-    addL2("c", 7540, 760-floor_height, quality, 1);
-
-    addL2("c", 7800, 720-floor_height, quality, 1);
-    addL2("c", 8000, 750-floor_height, quality, 1);
-
-    addL2("c", 8900, 770-floor_height, quality, 1);
-    addL2("c", 9060, 740-floor_height, quality, 1);
-
-    addL2("c", 9760, 740-floor_height, quality, 1);
-
-    addL2("c", 10300, 770-floor_height, quality, 1);
-    addL2("c", 10470, 740-floor_height, quality, 1);
-
-    addL2("c", 11000, 750-floor_height, quality, 1);
+        addL2("c_winter2", 3900, 720-floor_height, quality, 1);
+        addL2("c_winter1", 5080, 750-floor_height, quality, 1);
+        addL2("c_winter2", 5740, 720-floor_height, quality, 1);
+        addL2("c_winter1", 6540, 760-floor_height, quality, 1);
+        addL2("c_winter1", 7800, 720-floor_height, quality, 1);
+        addL2("c_winter2", 8000, 750-floor_height, quality, 1);
+        addL2("c_winter1", 9760, 740-floor_height, quality, 1);
+        addL2("c_winter2", 11000, 750-floor_height, quality, 1);
+    }
 
     addL2("d", 300, 728-floor_height, quality, 1);
     addL2("d", 940, 728-floor_height, quality, 1);
@@ -563,6 +628,13 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     addCloud("A", 9500, 140, 0, 0, quality, 1);
     addCloud("A", 8800, 240, 0, 0, quality, 1);
     addCloud("A", 8000, 170, 0, 0, quality, 1);
+
+    float volume = (float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("bgmVolume"))/100.f));
+
+    sb_city_loop.loadFromFile("resources/sfx/bgm/patapolis.ogg");
+    city_loop.setBuffer(sb_city_loop);
+    city_loop.setLoop(true);
+    city_loop.setVolume(volume);
 
     ctrlTips.create(54, f_font, 20, sf::String(L"L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
 
@@ -819,6 +891,12 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 {
     if(isActive)
     {
+        if(city_loop.getStatus() == sf::Sound::Status::Stopped)
+        {
+            cout << "I am playing" << endl;
+            city_loop.play();
+        }
+
         auto lastView = window.getView();
         window.setView(window.getDefaultView());
 
@@ -1130,6 +1208,9 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         }
 
         altar.draw(window);
+
+        ///Weather here
+        weather.draw(window, fps);
 
         r_ground.setPosition(floor_x * resRatioX, (float(720) - floor_height) * resRatioY);
         window.draw(r_ground);
