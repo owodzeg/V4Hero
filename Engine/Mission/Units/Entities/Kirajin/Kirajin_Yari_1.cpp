@@ -17,6 +17,9 @@ void Kirajin_Yari_1::LoadConfig(Config *thisConfigs)
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\kirajin.p4a");
     AnimatedObject::setAnimationSegment("idle_armed_focused");
+
+    if(thisConfigs->se_christmas)
+    se_christmas = true;
 }
 
 void Kirajin_Yari_1::parseAdditionalData(std::vector<std::string> additional_data)
@@ -47,6 +50,12 @@ void Kirajin_Yari_1::parseAdditionalData(std::vector<std::string> additional_dat
 
             applySpear(stoi(eq[1]));
             applyHelm(stoi(eq[2]));
+
+            if(se_christmas)
+            {
+                if((rand() % 3) == 1)
+                applyHelm(7);
+            }
         }
         else if(additional_data[i].find("damage") != std::string::npos)
         {

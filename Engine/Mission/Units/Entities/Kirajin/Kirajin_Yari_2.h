@@ -17,6 +17,8 @@ class Kirajin_Yari_2 : public Entity
     bool threw = false;
     bool enemy_in_range = false;
 
+    bool se_christmas = false;
+
     enum ACTIONS
     {
         HIDING = 0,

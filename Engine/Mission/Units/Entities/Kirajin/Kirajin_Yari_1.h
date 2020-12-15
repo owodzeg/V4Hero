@@ -21,6 +21,8 @@ class Kirajin_Yari_1 : public Entity
     float vspeed = 0;
     float gravity = 981;
 
+    bool se_christmas = false;
+
     enum ACTIONS
     {
         HIDING = 0,
