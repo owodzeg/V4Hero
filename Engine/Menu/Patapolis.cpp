@@ -224,6 +224,7 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
             if(now->tm_mday >= 1)
             {
                 se_christmas = true;
+                thisConfigs->se_christmas = true;
             }
         }
 
@@ -891,11 +892,6 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 {
     if(isActive)
     {
-        if(city_loop.getStatus() == sf::Sound::Status::Stopped)
-        {
-            cout << "I am playing" << endl;
-            city_loop.play();
-        }
 
         auto lastView = window.getView();
         window.setView(window.getDefaultView());
@@ -1373,6 +1369,12 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         }
         else
         {
+            if(city_loop.getStatus() == sf::Sound::Status::Stopped)
+            {
+                cout << "I am playing" << endl;
+                city_loop.play();
+            }
+
             t_title.setOrigin(t_title.getLocalBounds().width/2,t_title.getLocalBounds().height/2);
             t_title.setPosition(640,80);
             t_title.draw(window);
@@ -1481,6 +1483,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                 {
                     case 0: ///Barracks
                     {
+                        city_loop.stop();
                         barracks_menu.Show();
                         barracks_menu.isActive = true;
                         barracks_menu.obelisk = false;
@@ -1494,6 +1497,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
                     case 1: ///Obelisk
                     {
+                        city_loop.stop();
                         obelisk_menu.Reload();
                         obelisk_menu.Show();
                         obelisk_menu.isActive = true;
@@ -1505,6 +1509,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
                     case 2: ///Exit barracks
                     {
+                        city_loop.stop();
                         barracks_menu.Hide();
                         barracks_menu.isActive = false;
                         Show();
@@ -1517,6 +1522,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
                     case 3: ///Exit obelisk
                     {
+                        city_loop.stop();
                         obelisk_menu.Hide();
                         obelisk_menu.isActive = false;
                         Show();
@@ -1529,6 +1535,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
                     case 4: ///Enter barracks (obelisk)
                     {
+                        city_loop.stop();
                         barracks_menu.Show();
                         barracks_menu.isActive = true;
                         barracks_menu.obelisk = true;
@@ -1550,6 +1557,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
                     case 5: ///Enter mission
                     {
+                        city_loop.stop();
                         sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
                         v4core->continueLoading=true;
                         v4core->window.setActive(false);
@@ -1571,6 +1579,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
                     case 6: ///credits
                     {
+                        city_loop.stop();
                         credits.isActive = true;
                         credits.restart();
 
@@ -1581,6 +1590,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
                     case 7: ///go to title screen
                     {
+                        city_loop.stop();
                         this->Hide();
                         this->isActive = false;
                         parentMenu->Show();

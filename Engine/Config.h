@@ -113,6 +113,7 @@ class Config
     std::map<std::string,std::string> configMap;
     int configDebugID=0;
     bool changedLang = false;
+    bool se_christmas = false;
     std::string fontPath = "";
     Config();
     void LoadConfig(V4Core* core);
