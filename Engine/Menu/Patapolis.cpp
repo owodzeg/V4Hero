@@ -228,9 +228,6 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
             }
         }
 
-        ///force
-        se_christmas = true;
-
         if(se_christmas)
         cout << "Merry christmas! :)" << endl;
     }
