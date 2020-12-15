@@ -527,6 +527,19 @@ void MissionController::spawnEntity(string entityName, int entityID, int baseHP,
             entity->isCollidable = collidable;
             entity->isAttackable = attackable;
             entity->loot_table = loot_table;
+
+            if(missionConfig->se_christmas)
+            {
+                Entity::Loot santa_hat;
+                santa_hat.item_id = 40;
+                santa_hat.item_chance = 15;
+
+                if((entityID == 6) || (entityID == 16) || (entityID == 17))
+                {
+                    entity->loot_table.push_back(santa_hat);
+                }
+            }
+
             entity->curHP = baseHP*mission_multiplier;
             entity->maxHP = baseHP*mission_multiplier;
 
