@@ -216,12 +216,26 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
 
     if(thisConfig->GetInt("seasonalEvents") == 1)
     {
+        auto start = std::time(0);
         std::time_t t = std::time(0);   // get time now
         std::tm* now = std::localtime(&t);
 
+        se_christmas = false;
+        thisConfigs->se_christmas = false;
+
+        cout << "Current month: " << now->tm_mon+1 << " current day: " << now->tm_mday << endl;
+
         if(now->tm_mon+1 >= 12)
         {
-            if(now->tm_mday >= 1)
+            if(now->tm_mday >= 14)
+            {
+                se_christmas = true;
+                thisConfigs->se_christmas = true;
+            }
+        }
+        else if(now->tm_mon+1 <= 1)
+        {
+            if(now->tm_mday <= 14)
             {
                 se_christmas = true;
                 thisConfigs->se_christmas = true;
@@ -229,7 +243,9 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
         }
 
         if(se_christmas)
-        cout << "Merry christmas! :)" << endl;
+        {
+            cout << "Merry christmas! :)" << endl;
+        }
     }
 
     weather.thisConfig = thisConfig;
@@ -417,6 +433,21 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
         addL2("c_winter2", 8000, 750-floor_height, quality, 1);
         addL2("c_winter1", 9760, 740-floor_height, quality, 1);
         addL2("c_winter2", 11000, 750-floor_height, quality, 1);
+
+        addL2("_snowman", 11100, 720-floor_height, quality, 1);
+        addL2("_present1", 10200, 720-floor_height, quality, 1);
+        addL2("_present3", 10100, 720-floor_height, quality, 1);
+        addL2("_present2", 9500, 720-floor_height, quality, 1);
+        addL2("_present1", 9400, 720-floor_height, quality, 1);
+        addL2("_present3", 8500, 720-floor_height, quality, 1);
+        addL2("_present2", 8100, 720-floor_height, quality, 1);
+        addL2("_present3", 8060, 720-floor_height, quality, 1);
+        addL2("_present3", 6800, 720-floor_height, quality, 1);
+        addL2("_present2", 6700, 720-floor_height, quality, 1);
+        addL2("_present3", 6560, 720-floor_height, quality, 1);
+        addL2("_present1", 6400, 720-floor_height, quality, 1);
+        addL2("_present1", 6330, 720-floor_height, quality, 1);
+        addL2("_present2", 6200, 720-floor_height, quality, 1);
     }
 
     addL2("d", 300, 728-floor_height, quality, 1);
@@ -568,6 +599,10 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     festival_main.loadFromFile("resources/graphics/bg/patapolis/festival_main.png", quality, 1);
     festival_main.setPosition(5620, 720-floor_height);
     festival_main.setOrigin(festival_main.getLocalBounds().width/2, festival_main.getLocalBounds().height);
+
+    se_ornament.loadFromFile("resources/graphics/bg/patapolis/ornament.png", quality, 1);
+    se_ornament.setPosition(5620, 500-floor_height);
+    se_ornament.setOrigin(se_ornament.getLocalBounds().width/2, se_ornament.getLocalBounds().height);
 
     altar.loadFromFile("resources/graphics/bg/patapolis/altar.png", quality, 1);
     altar.setPosition(7280, 720-floor_height);
@@ -972,6 +1007,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         forge_slab_glow.lx = forge_slab_glow.baseX - camPos;
         barracks.lx = barracks.baseX - camPos;
         festival_main.lx = festival_main.baseX - camPos;
+        se_ornament.lx = se_ornament.baseX - camPos;
         altar.lx = altar.baseX - camPos;
         obelisk.lx = obelisk.baseX - camPos;
         paraget_main.lx = paraget_main.baseX - camPos;
@@ -1159,6 +1195,8 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         }
 
         festival_main.draw(window);
+        if(se_christmas)
+        se_ornament.draw(window);
         obelisk.draw(window);
 
         smokepath1 += float(40) / fps;

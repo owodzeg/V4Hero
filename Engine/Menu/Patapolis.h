@@ -156,6 +156,7 @@ class PatapolisMenu : public Menu
         PSprite forge_main, forge_back, forge_glow, forge_fence, forge_slab, forge_slab_glow;
         PSprite barracks;
         PSprite festival_main;
+        PSprite se_ornament;
         PSprite altar;
         PSprite obelisk;
         PSprite paraget_main, paraget_crystal_glow, paraget_crystal;
