@@ -101,6 +101,8 @@ void Credits::Initialise(Config* thisConfig, V4Core* parent)
     addRegularText("TooFat4You");
     addRegularText("");
     addRegularText("Iracy");
+    addRegularText("DriftStar");
+    addRegularText("Oimate");
     addRegularText("");
     addRegularText("Trinix");
     addRegularText("");
