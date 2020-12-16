@@ -763,7 +763,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
         {
             ///shida valley is unlocked
 
-            if(missions.size() == 1) ///if it's the only mission
+            if((std::find(missions.begin(), missions.end(), 1) != missions.end()) && (std::find(missions.begin(), missions.end(), 2) == missions.end()) && (std::find(missions.begin(), missions.end(), 3) == missions.end())) ///if it's the only mission and patapine story is not unlocked
             {
                 ///shida valley dialogue
                 tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_1")), true);
@@ -781,7 +781,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
                 }
                 else if(std::find(missions.begin(), missions.end(), 3) != missions.end()) ///patapine fortress REPEATABLE mission
                 {
-                    if(missions.size() == 2) ///ejiji cliffs not unlocked yet (only shida and patapine)
+                    if((std::find(missions.begin(), missions.end(), 1) != missions.end()) && (std::find(missions.begin(), missions.end(), 4) == missions.end()) && (std::find(missions.begin(), missions.end(), 5) == missions.end())) ///neither of ejiji cliffs are unlocked yet (only shida and patapine)
                     {
                         ///ejiji locked dialogue
                         tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_2")), true);
@@ -845,7 +845,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
         {
             ///shida valley is unlocked
 
-            if(missions.size() == 1) ///if it's the only mission
+            if((std::find(missions.begin(), missions.end(), 1) != missions.end()) && (std::find(missions.begin(), missions.end(), 2) == missions.end()) && (std::find(missions.begin(), missions.end(), 3) == missions.end())) ///if it's the only mission and patapine story is not unlocked
             {
                 ///shida valley dialogue
                 tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
@@ -863,7 +863,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
                 }
                 else if(std::find(missions.begin(), missions.end(), 3) != missions.end()) ///patapine fortress REPEATABLE mission
                 {
-                    if(missions.size() == 2) ///ejiji cliffs not unlocked yet (only shida and patapine)
+                    if((std::find(missions.begin(), missions.end(), 1) != missions.end()) && (std::find(missions.begin(), missions.end(), 4) == missions.end()) && (std::find(missions.begin(), missions.end(), 5) == missions.end())) ///neither of ejiji cliffs are unlocked yet (only shida and patapine)
                     {
                         ///ejiji locked dialogue
                         tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
