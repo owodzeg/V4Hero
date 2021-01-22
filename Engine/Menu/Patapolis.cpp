@@ -265,8 +265,11 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     }
     else
     {
-        auto it = std::find(v4core->savereader.missionsUnlocked.begin(), v4core->savereader.missionsUnlocked.end(), 6);
-        v4core->savereader.missionsUnlocked.erase(it);
+        if(std::find(v4core->savereader.missionsUnlocked.begin(), v4core->savereader.missionsUnlocked.end(), 6) != v4core->savereader.missionsUnlocked.end())
+        {
+            auto it = std::find(v4core->savereader.missionsUnlocked.begin(), v4core->savereader.missionsUnlocked.end(), 6);
+            v4core->savereader.missionsUnlocked.erase(it);
+        }
     }
 
     float resRatioX = thisConfig->GetInt("resX") / float(1280);
