@@ -137,239 +137,475 @@ void MissionController::addItemsCounter(int id, float baseX, float baseY)
 
 }
 
-void MissionController::spawnEntity(string entityName, int entityID, int baseHP, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, vector<Entity::Loot> loot_table, vector<string> additional_data)
+void MissionController::spawnEntity(string entityName, int entityID, int baseHP, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, int layer, int parent, float overrideY, float overrideHP, float mission_multiplier, float mindmg, float maxdmg, bool clonable, int spawn_delay, vector<Entity::Loot> loot_table, vector<string> additional_data)
 {
     ///need to somehow optimize this to not copy paste the same code over and over
 
     cout << "Spawning entity " << entityName << " (ID: " << entityID << ") " << baseHP << " " << baseX << " " << randX << " " << baseY << " " << spr_goal << " " << spr_range << " " << statLevel << endl;
 
-    switch(entityID)
+    bool spawn = false;
+
+    if(spr_range != 0)
     {
-        case 0:
+        if(rand() % spr_range == spr_goal)
         {
-            unique_ptr<EndFlag> entity = make_unique<EndFlag>();
-            entity.get()->LoadConfig(missionConfig);
-            entity.get()->setEntityID(entityID);
+            spawn = true;
+        }
+    }
+    else
+    {
+        spawn = true;
+    }
+
+    for(int i=0; i<additional_data.size(); i++)
+    {
+        ///Force entity to spawn when mission is on a specific level
+        if(additional_data[i].find("forceSpawnOnLvl") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            if(v4core->savereader.missionLevels[curMissionID] == stoi(eq[1]))
+            {
+                spawn = true;
+            }
+        }
+
+        ///Force entity to spawn when specific item is not obtained
+        if(additional_data[i].find("forceSpawnIfNotObtained") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            ///check if the item is obtained
+            if(!v4core->savereader.invdata.CheckItemObtained(stoi(eq[1])))
+            {
+                spawn = true;
+            }
+        }
+    }
+
+    if(spawn)
+    {
+        switch(entityID)
+        {
+            case 0:
+            {
+                unique_ptr<EndFlag> entity = make_unique<EndFlag>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::PASSIVE;
+                entity.get()->entityCategory = Entity::EntityCategories::MISC;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 1:
+            {
+                unique_ptr<FeverWorm> entity = make_unique<FeverWorm>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::PASSIVE;
+                entity.get()->entityCategory = Entity::EntityCategories::MISC;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 2:
+            {
+                unique_ptr<Kacheek> entity = make_unique<Kacheek>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::ANIMAL;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 3:
+            {
+                unique_ptr<Grass1> entity = make_unique<Grass1>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
+                entity.get()->entityCategory = Entity::EntityCategories::NATURE;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 4:
+            {
+                unique_ptr<Grass2> entity = make_unique<Grass2>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
+                entity.get()->entityCategory = Entity::EntityCategories::NATURE;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 5:
+            {
+                unique_ptr<DroppedItem> entity = make_unique<DroppedItem>();
+                entity.get()->LoadConfig(missionConfig);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
+                entity.get()->entityCategory = Entity::EntityCategories::MISC;
+
+                string spritesheet = additional_data[0];
+                int spritesheet_id = stoi(additional_data[1]);
+                int picked_item = stoi(additional_data[2]);
+
+                entity->spritesheet = spritesheet;
+                entity->spritesheet_id = spritesheet_id;
+                entity->picked_item = picked_item;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 6:
+            {
+                unique_ptr<Kirajin_Yari_1> entity = make_unique<Kirajin_Yari_1>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::ENEMYUNIT;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 7:
+            {
+                unique_ptr<TreasureChest> entity = make_unique<TreasureChest>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE_IRON;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 8:
+            {
+                unique_ptr<RockBig> entity = make_unique<RockBig>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE_ROCK;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 9:
+            {
+                unique_ptr<RockSmall> entity = make_unique<RockSmall>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE_ROCK;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 10:
+            {
+                unique_ptr<WoodenSpikes> entity = make_unique<WoodenSpikes>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE_WOOD;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 11:
+            {
+                unique_ptr<RockPile> entity = make_unique<RockPile>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::OBSTACLE_ROCK;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 12:
+            {
+                unique_ptr<KirajinHut> entity = make_unique<KirajinHut>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::BUILDING_REGULAR;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 13:
+            {
+                unique_ptr<KirajinGuardTower> entity = make_unique<KirajinGuardTower>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::BUILDING_REGULAR;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 14:
+            {
+                unique_ptr<KirajinPoweredTowerSmall> entity = make_unique<KirajinPoweredTowerSmall>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::BUILDING_IRON;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 15:
+            {
+                unique_ptr<KirajinPoweredTowerBig> entity = make_unique<KirajinPoweredTowerBig>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::BUILDING_IRON;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+            case 16:
+            {
+                unique_ptr<Kirajin_Yari_2> entity = make_unique<Kirajin_Yari_2>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::ENEMYUNIT;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+                else
+                kirajins.push_back(std::move(entity));
+
+                break;
+            }
+
+            case 17:
+            {
+                unique_ptr<Rappata> entity = make_unique<Rappata>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::ANIMAL;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+
+            case 18:
+            {
+                unique_ptr<Rappata> entity = make_unique<Rappata>();
+                entity.get()->LoadConfig(missionConfig);
+                entity.get()->parseAdditionalData(additional_data);
+
+                ///To be replaced with param file
+                entity.get()->entityType = Entity::EntityTypes::HOSTILE;
+                entity.get()->entityCategory = Entity::EntityCategories::ANIMAL;
+
+                if(!clonable)
+                tangibleLevelObjects.push_back(std::move(entity));
+
+                break;
+            }
+        }
+
+        Entity* entity;
+
+        if(!clonable)
+        {
+            entity = tangibleLevelObjects[tangibleLevelObjects.size()-1].get();
+        }
+        else
+        {
+            if(entityID == 16)
+            entity = kirajins[kirajins.size()-1].get();
+        }
+
+        entity->spawnOrderID = spawnOrder;
+        spawnOrder++;
+
+        if(entityID != 5) ///ID 5 = dropped item, it has an exclusive loading type
+        {
+            entity->setEntityID(entityID);
+
+            entity->floorY = baseY; ///in case Y gets overriden, save the position where the floor is
+
+            if(overrideHP > 0)
+            baseHP = overrideHP;
+
+            if(overrideY != 0)
+            baseY = overrideY;
 
             if(randX > 0)
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
+            entity->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
             else
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
+            entity->setGlobalPosition(sf::Vector2f(baseX,baseY));
 
-            entity.get()->setColor(color);
+            entity->setColor(color);
 
-            entity.get()->isCollidable = collidable;
-            entity.get()->isAttackable = attackable;
-            entity.get()->loot_table = loot_table;
+            entity->clonable = clonable;
+            entity->respawnTime = spawn_delay;
 
-            if(spr_range != 0)
+            entity->spawn_x = entity->getGlobalPosition().x;
+
+            entity->isCollidable = collidable;
+            entity->isAttackable = attackable;
+            entity->loot_table = loot_table;
+
+            if(missionConfig->se_christmas)
             {
-                if(rand() % spr_range == spr_goal)
+                Entity::Loot santa_hat;
+                santa_hat.item_id = 40;
+                santa_hat.item_chance = 15;
+
+                if((entityID == 6) || (entityID == 16) || (entityID == 17))
                 {
-                    tangibleLevelObjects.push_back(std::move(entity));
+                    entity->loot_table.push_back(santa_hat);
                 }
             }
-            else
+
+            entity->curHP = baseHP*mission_multiplier;
+            entity->maxHP = baseHP*mission_multiplier;
+
+            if(!entity->custom_dmg)
             {
-                tangibleLevelObjects.push_back(std::move(entity));
+                entity->mindmg = mindmg;
+                entity->maxdmg = maxdmg;
             }
 
-            break;
+            entity->stat_multiplier = 1+((mission_multiplier-1) * 0.333);
+
+            entity->layer = layer;
+            entity->parent = parent;
+            entity->additional_data = additional_data;
         }
-        case 1:
+        else
         {
-            unique_ptr<FeverWorm> entity = make_unique<FeverWorm>();
-            entity.get()->LoadConfig(missionConfig);
-            entity.get()->setEntityID(entityID);
-
-            if(randX > 0)
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
-            else
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
-
-            entity.get()->setColor(color);
-
-            entity.get()->isCollidable = collidable;
-            entity.get()->isAttackable = attackable;
-            entity.get()->loot_table = loot_table;
-
-            if(spr_range != 0)
-            {
-                if(rand() % spr_range == spr_goal)
-                {
-                    tangibleLevelObjects.push_back(std::move(entity));
-                }
-            }
-            else
-            {
-                tangibleLevelObjects.push_back(std::move(entity));
-            }
-
-            break;
-        }
-        case 2:
-        {
-            unique_ptr<Kacheek> entity = make_unique<Kacheek>();
-            entity.get()->LoadConfig(missionConfig);
-            entity.get()->setEntityID(entityID);
-
-            if(randX > 0)
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
-            else
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
-
-            entity.get()->setColor(color);
-
-            entity.get()->isCollidable = collidable;
-            entity.get()->isAttackable = attackable;
-            entity.get()->loot_table = loot_table;
-            entity.get()->curHP = baseHP;
-            entity.get()->maxHP = baseHP;
-
-            if(spr_range != 0)
-            {
-                if(rand() % spr_range == spr_goal)
-                {
-                    tangibleLevelObjects.push_back(std::move(entity));
-                }
-            }
-            else
-            {
-                tangibleLevelObjects.push_back(std::move(entity));
-            }
-
-            break;
-        }
-        case 3:
-        {
-            unique_ptr<Grass1> entity = make_unique<Grass1>();
-            entity.get()->LoadConfig(missionConfig);
-            entity.get()->setEntityID(entityID);
-
-            if(randX > 0)
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
-            else
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
-
-            entity.get()->setColor(color);
-
-            entity.get()->isCollidable = collidable;
-            entity.get()->isAttackable = attackable;
-            entity.get()->loot_table = loot_table;
-
-            if(spr_range != 0)
-            {
-                if(rand() % spr_range == spr_goal)
-                {
-                    tangibleLevelObjects.push_back(std::move(entity));
-                }
-            }
-            else
-            {
-                tangibleLevelObjects.push_back(std::move(entity));
-            }
-
-            break;
-        }
-        case 4:
-        {
-            unique_ptr<Grass2> entity = make_unique<Grass2>();
-            entity.get()->LoadConfig(missionConfig);
-            entity.get()->setEntityID(entityID);
-
-            if(randX > 0)
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX + (rand() % randX),baseY));
-            else
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
-
-            entity.get()->setColor(color);
-
-            entity.get()->isCollidable = collidable;
-            entity.get()->isAttackable = attackable;
-            entity.get()->loot_table = loot_table;
-
-            if(spr_range != 0)
-            {
-                if(rand() % spr_range == spr_goal)
-                {
-                    tangibleLevelObjects.push_back(std::move(entity));
-                }
-            }
-            else
-            {
-                tangibleLevelObjects.push_back(std::move(entity));
-            }
-
-            break;
-        }
-        case 5:
-        {
-            unique_ptr<DroppedItem> entity = make_unique<DroppedItem>();
-            entity.get()->LoadConfig(missionConfig);
-            entity.get()->setEntityID(entityID);
-            entity.get()->manual_mode = true;
+            entity->setEntityID(entityID);
+            entity->manual_mode = true;
 
             ///This unique entity needs to be loaded differently, read additional data for spritesheet info to be passed from the item registry.
             string spritesheet = additional_data[0];
             int spritesheet_id = stoi(additional_data[1]);
             int picked_item = stoi(additional_data[2]);
 
-            entity.get()->spritesheet = spritesheet;
-            entity.get()->spritesheet_id = spritesheet_id;
-            entity.get()->picked_item = picked_item;
-
             cout << "[DroppedItem] Selecting spritesheet " << spritesheet << " with id " << spritesheet_id << endl;
 
             cout << "[DroppedItem] Loading from memory" << endl;
             vector<char> di_data = droppeditem_spritesheet[spritesheet].retrieve_char();
             cout << "[DroppedItem] Vector loaded. Size: " << di_data.size() << endl;
-            entity.get()->objects[0].tex_obj.loadFromMemory(&di_data[0], di_data.size());
+            entity->objects[0].tex_obj.loadFromMemory(&di_data[0], di_data.size());
             cout << "[DroppedItem] Setting smooth" << endl;
-            entity.get()->objects[0].tex_obj.setSmooth(true);
+            entity->objects[0].tex_obj.setSmooth(true);
             cout << "[DroppedItem] Setting texture" << endl;
-            entity.get()->objects[0].s_obj.setTexture(entity.get()->objects[0].tex_obj);
+            entity->objects[0].s_obj.setTexture(entity->objects[0].tex_obj);
             cout << "[DroppedItem] Marking as unexported" << endl;
-            entity.get()->objects[0].exported = false;
+            entity->objects[0].exported = false;
             cout << "[DroppedItem] Loading done." << endl;
 
-            entity.get()->objects[0].s_obj.qualitySetting = qualitySetting;
-            entity.get()->objects[0].s_obj.resSetting = resSetting;
+            entity->objects[0].s_obj.qualitySetting = qualitySetting;
+            entity->objects[0].s_obj.resSetting = resSetting;
 
-            //entity.get()->objects[0].s_obj.setOrigin(entity.get()->objects[0].s_obj.getLocalBounds().width/2, entity.get()->objects[0].s_obj.getLocalBounds().height/2);
+            //entity->objects[0].s_obj.setOrigin(entity->objects[0].s_obj.getLocalBounds().width/2, entity->objects[0].s_obj.getLocalBounds().height/2);
 
-            entity.get()->cur_pos = float(spritesheet_id-1) / 60.0;
+            entity->cur_pos = float(spritesheet_id-1) / 60.0;
 
-            entity.get()->animation_bounds[0] = droppeditem_spritesheet[spritesheet].retrieve_rect_as_map();
+            entity->animation_bounds[0] = droppeditem_spritesheet[spritesheet].retrieve_rect_as_map();
 
-            entity.get()->setGlobalPosition(sf::Vector2f(baseX,baseY));
+            entity->setGlobalPosition(sf::Vector2f(baseX,baseY));
 
-            entity.get()->setColor(color);
+            entity->setColor(color);
 
-            entity.get()->isCollidable = collidable;
-            entity.get()->isAttackable = attackable;
+            entity->isCollidable = collidable;
+            entity->isAttackable = attackable;
 
-            if(spr_range != 0)
-            {
-                if(rand() % spr_range == spr_goal)
-                {
-                    tangibleLevelObjects.push_back(std::move(entity));
-                }
-            }
-            else
-            {
-                tangibleLevelObjects.push_back(std::move(entity));
-            }
-
-            break;
+            entity->layer = 9999;
+            entity->parent = -1;
         }
     }
 
     cout << "Loading finished" << endl;
 }
 
-void MissionController::spawnProjectile(float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit)
+void MissionController::spawnProjectile(PSprite& sprite, float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit, bool enemy)
 {
-    unique_ptr<Spear> p = make_unique<Spear>(s_proj);
+    unique_ptr<Spear> p = make_unique<Spear>(sprite);
 
     p.get()->xPos = xPos;
     p.get()->yPos = yPos;
@@ -380,6 +616,7 @@ void MissionController::spawnProjectile(float xPos, float yPos, float speed, flo
     p.get()->maxdmg = maxdmg;
     p.get()->mindmg = mindmg;
     p.get()->crit = crit;
+    p.get()->enemy = enemy;
 
     levelProjectiles.push_back(std::move(p));
 }
@@ -388,27 +625,51 @@ void MissionController::addPickedItem(std::string spritesheet, int spritesheet_i
 {
     cout << "MissionController::addPickedItem(" << spritesheet << ", " << spritesheet_id << ", " << picked_item << ")" << endl;
 
-    PickedItem tmp;
-    tmp.circle.setFillColor(sf::Color(255,255,255,192));
-    //tmp.circle.setRadius(50 * resRatioX);
-    ///set radius in draw loop to get appropriate resratiox size
-    tmp.item_id = picked_item;
+    if(!((picked_item == 33) || (picked_item == 34))) ///Check for potions
+    {
+        PickedItem tmp;
+        tmp.circle.setFillColor(sf::Color(255,255,255,192));
+        //tmp.circle.setRadius(50 * resRatioX);
+        ///set radius in draw loop to get appropriate resratiox size
+        tmp.item_id = picked_item;
 
-    ///This unique entity needs to be loaded differently, read additional data for spritesheet info to be passed from the item registry.
-    vector<char> di_data = droppeditem_spritesheet[spritesheet].retrieve_char();
+        ///This unique entity needs to be loaded differently, read additional data for spritesheet info to be passed from the item registry.
+        vector<char> di_data = droppeditem_spritesheet[spritesheet].retrieve_char();
 
-    sf::Texture tex_obj;
-    tex_obj.loadFromMemory(&di_data[0], di_data.size());
-    tex_obj.setSmooth(true);
+        sf::Texture tex_obj;
+        tex_obj.loadFromMemory(&di_data[0], di_data.size());
+        tex_obj.setSmooth(true);
 
-    tmp.item.setTexture(tex_obj);
-    tmp.item.setTextureRect(droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id-1]);
-    tmp.bounds = sf::Vector2f(droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id-1].width, droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id-1].height);
+        tmp.item.setTexture(tex_obj);
+        tmp.item.setTextureRect(droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id-1]);
+        tmp.bounds = sf::Vector2f(droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id-1].width, droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id-1].height);
 
-    tmp.item.qualitySetting = qualitySetting;
-    tmp.item.resSetting = resSetting;
+        tmp.item.qualitySetting = qualitySetting;
+        tmp.item.resSetting = resSetting;
 
-    pickedItems.push_back(tmp);
+        pickedItems.push_back(tmp);
+    }
+    else
+    {
+        float heal_factor = 0;
+
+        if(picked_item == 33)
+        heal_factor = 0.2;
+        if(picked_item == 34)
+        heal_factor = 0.5;
+
+        for(int i=0; i<units.size(); i++)
+        {
+            PlayableUnit* unit = units[i].get();
+
+            unit->current_hp += unit->max_hp*heal_factor;
+
+            if(unit->current_hp >= unit->max_hp)
+            unit->current_hp = unit->max_hp;
+
+            cout << "Incrementing unit " << i << " hp by " << unit->max_hp*heal_factor << endl;
+        }
+    }
 }
 
 void MissionController::submitPickedItems()
@@ -419,8 +680,70 @@ void MissionController::submitPickedItems()
         invItem.item = v4core->savereader.itemreg.GetItemByID(pickedItems[i].item_id);
         invItem.inventoryId = v4core->savereader.invdata.items.size();
         v4core->savereader.invdata.items.push_back(invItem);
+
+        if(pickedItems[i].item_id == 23) ///Grubby map
+        {
+            ///Check if Patapine Grove missions doesnt exist, and if Patapine Grove is not unlocked already
+            if((!v4core->savereader.isMissionUnlocked(3)) && (!v4core->savereader.isMissionUnlocked(2)) && (v4core->savereader.locationsUnlocked == 1))
+            {
+                ///Add first patapine mission and unlock second location
+                v4core->savereader.missionsUnlocked.push_back(2);
+                v4core->savereader.locationsUnlocked = 2;
+            }
+        }
+
+        if(pickedItems[i].item_id == 24)
+        {
+            ///Check if Ejiji Cliffs missions doesnt exist, and if Ejiji Cliffs is not unlocked already
+            if((!v4core->savereader.isMissionUnlocked(5)) && (!v4core->savereader.isMissionUnlocked(4)) && (v4core->savereader.locationsUnlocked == 2))
+            {
+                ///Add first patapine mission and unlock second location
+                v4core->savereader.missionsUnlocked.push_back(4);
+                v4core->savereader.locationsUnlocked = 3;
+            }
+        }
     }
 
+}
+
+void MissionController::updateMissions()
+{
+    ///When this function is called, the mission has been completed successfully
+    cout << "MissionController::updateMissions(): " << curMissionID << endl;
+
+    switch(curMissionID)
+    {
+        case 2:
+        {
+            if(!v4core->savereader.isMissionUnlocked(3))
+            {
+                v4core->savereader.missionsUnlocked.push_back(3);
+                v4core->savereader.missionLevels[3] = 2;
+
+                auto it = std::find(v4core->savereader.missionsUnlocked.begin(), v4core->savereader.missionsUnlocked.end(), 2);
+                v4core->savereader.missionsUnlocked.erase(it);
+            }
+
+            break;
+        }
+
+        case 4:
+        {
+            if(!v4core->savereader.isMissionUnlocked(5))
+            {
+                v4core->savereader.missionsUnlocked.push_back(5);
+                v4core->savereader.missionLevels[5] = 2;
+
+                auto it = std::find(v4core->savereader.missionsUnlocked.begin(), v4core->savereader.missionsUnlocked.end(), 4);
+                v4core->savereader.missionsUnlocked.erase(it);
+            }
+
+            break;
+        }
+    }
+
+    if(v4core->savereader.missionLevels[curMissionID] != 0)
+    v4core->savereader.missionLevels[curMissionID] += 1;
 }
 
 void MissionController::addUnitThumb(int unit_id)
@@ -435,11 +758,10 @@ void MissionController::addUnitThumb(int unit_id)
     unitThumbs.push_back(tmp);
 }
 
-void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,std::string backgroundString,V4Core &v4core_)
+void MissionController::Initialise(Config &config,std::string backgroundString,V4Core &v4core_)
 {
     v4core = &v4core_;
-    sf::Context context;
-    test_bg.Load(backgroundString, config);//config.GetString("debugBackground"));
+    //sf::Context context;
 
     PSprite ps_temp;
     ps_temp.loadFromFile("resources/graphics/item/icon/spear.png",1);
@@ -464,7 +786,13 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
         tangibleLevelObjects.erase(tangibleLevelObjects.begin()+i);
     }
 
+    for(int i=kirajins.size()-1; i>=0; i--)
+    {
+        kirajins.erase(kirajins.begin()+i);
+    }
+
     tangibleLevelObjects.clear();
+    kirajins.clear();
 
     for(int i=units.size()-1; i>=0; i--)
     {
@@ -484,8 +812,13 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     failure = false;
 
     //ctor
-    f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
+    f_font.loadFromFile(config.fontPath);
+
+    if(config.fontPath == "resources/fonts/p4kakupop-pro.ttf")
     f_moji.loadFromFile("resources/fonts/mojipon.otf");
+    else
+    f_moji.loadFromFile(config.fontPath);
+
     //f_font.loadFromFile("resources/fonts/arial.ttf");
     t_timerMenu.setFont(f_font);
     t_timerMenu.setCharacterSize(38);
@@ -498,8 +831,8 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     //t_cutscene_text.setString(Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"intro_cutscene_1")));
     //t_cutscene_text.setOrigin(t_cutscene_text.getGlobalBounds().width/2,t_cutscene_text.getGlobalBounds().height/2);
 
-    missionKeyMap = &keyMap;
     missionConfig = &config;
+    weather.thisConfig = missionConfig;
 
     isInitialized = true;
     // this is outside the loop
@@ -520,12 +853,12 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
     sb_cheer2.loadFromFile("resources/sfx/level/cheer2.ogg");
     sb_cheer3.loadFromFile("resources/sfx/level/cheer1.ogg");
 
-    t_win.createText(f_moji, 56, sf::Color(222, 83, 0, 255), "MISSION COMPLETE!", q, 1);
-    t_win_outline.createText(f_moji, 56, sf::Color(255, 171, 0, 255), "MISSION COMPLETE!", q, 1);
+    t_win.createText(f_moji, 56, sf::Color(222, 83, 0, 255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"mission_complete")), q, 1);
+    t_win_outline.createText(f_moji, 56, sf::Color(255, 171, 0, 255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"mission_complete")), q, 1);
     t_win_outline.setOutlineColor(sf::Color(255, 171, 0, 255));
     t_win_outline.setOutlineThickness(10);
-    t_lose.createText(f_moji, 56, sf::Color(138, 15, 26, 255), "MISSION FAILED!", q, 1);
-    t_lose_outline.createText(f_moji, 56, sf::Color(254, 48, 55, 255), "MISSION FAILED!", q, 1);
+    t_lose.createText(f_moji, 56, sf::Color(138, 15, 26, 255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"mission_failed")), q, 1);
+    t_lose_outline.createText(f_moji, 56, sf::Color(254, 48, 55, 255),Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"mission_failed")), q, 1);
     t_lose_outline.setOutlineColor(sf::Color(254, 48, 55, 255));
     t_lose_outline.setOutlineThickness(10);
 
@@ -554,11 +887,21 @@ void MissionController::Initialise(Config &config, std::map<int,bool> &keyMap,st
         }
     }
 
+    ctrlTips.create(110, f_font, 28, sf::String(L"    Onward: □-□-□-O       Attack: O-O-□-O        Defend: △-△-□-O              Charge: O-O-△-△\n    Retreat: O-□-O-□          Jump: X-X-△-△            Party: □-O-X-△             Summon: X-XX-XX") ,q, sf::Color(128,128,128,255));
+
+    spear_hit_enemy.loadFromFile("resources/sfx/level/spear_hit_enemy.ogg");
+    spear_hit_iron.loadFromFile("resources/sfx/level/spear_hit_iron.ogg");
+    spear_hit_rock.loadFromFile("resources/sfx/level/spear_hit_rock.ogg");
+    spear_hit_solid.loadFromFile("resources/sfx/level/spear_hit_solid.ogg");
+    s_heal.loadFromFile("resources/sfx/level/picked_heal.ogg");
+
     cout << "initialization finished" << endl;
 }
-void MissionController::StartMission(std::string missionFile, bool showCutscene)
+void MissionController::StartMission(std::string missionFile, bool showCutscene, int missionID, float mission_multiplier)
 {
     missionConfig->thisCore->SaveToDebugLog("Starting mission");
+
+    curMissionID = missionID;
 
     fade_alpha = 255;
     missionEnd = false;
@@ -575,8 +918,9 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
     playCheer[0] = false;
     playCheer[1] = false;
     playCheer[2] = false;
+    spawnOrder = 0;
 
-    sf::Context context;
+    //sf::Context context;
     int quality = missionConfig->GetInt("textureQuality");
     float ratioX, ratioY;
 
@@ -723,14 +1067,44 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
                             missionImg = buff.substr(buff.find_first_of("=")+1);
                         }
 
-                        if(buff.find("spawn=") != std::string::npos)
+                        if(buff.find("force_weather=") != std::string::npos)
                         {
+                            string word = buff.substr(buff.find_first_of("=")+1);
+
+                            if(word == "snow")
+                            {
+                                weather.loadWeather(1);
+                                weather.weatherIntensivity = 3;
+                            }
+                        }
+
+                        if((buff.find("spawn=") != std::string::npos) || (buff.find("spawn_clonable") != std::string::npos))
+                        {
+                            bool clonable = false;
+                            int spawn_delay = 0;
+
+                            if(buff.find("spawn_clonable") != std::string::npos)
+                            {
+                                clonable = true;
+
+                                string p = buff.substr(0,buff.find_first_of("="));
+                                spawn_delay = stoi(p.substr(p.find_last_of(":")+1));
+                            }
+
+                            cout << "Found a spawn registry. Spawning entity" << endl;
+
+                            if(clonable)
+                            cout << "Clonable entity detected!" << endl;
+
                             string sp = buff.substr(buff.find_first_of("=")+1);
                             vector<string> spawn = Func::Split(sp, ',');
+
+                            cout << "Entity ID: " << spawn[0] << endl;
 
                             int entityID = atoi(spawn[0].c_str());
                             int baseY = 0;
                             int baseHP = 0;
+                            float mindmg=1, maxdmg=1;
                             bool collidable = false;
                             bool attackable = false;
                             vector<Entity::Loot> loot_table;
@@ -768,6 +1142,18 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
                                             attackable = atoi(by.c_str());
                                         }
 
+                                        if(buff2.find("mindmg=") != std::string::npos)
+                                        {
+                                            string by = buff2.substr(buff2.find_last_of("=")+1);
+                                            mindmg = atoi(by.c_str());
+                                        }
+
+                                        if(buff2.find("maxdmg=") != std::string::npos)
+                                        {
+                                            string by = buff2.substr(buff2.find_last_of("=")+1);
+                                            maxdmg = atoi(by.c_str());
+                                        }
+
                                         if(buff2.find("loot=") != std::string::npos)
                                         {
                                             string by = buff2.substr(buff2.find_last_of("=")+1);
@@ -791,8 +1177,37 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
 
                             entityParam.close();
 
+                            vector<string> additional_data;
+
+                            if(spawn.size() >= 16)
+                            {
+                                ///additional data exists
+                                additional_data = Func::Split(spawn[15], ';');
+                            }
+
+                            string custom_loot_pool = spawn[14];
+
+                            if(custom_loot_pool != "default")
+                            {
+                                loot_table.clear();
+
+                                vector<string> b = Func::Split(custom_loot_pool,';');
+
+                                for(int e=0; e<b.size(); e++)
+                                {
+                                    vector<string> bb = Func::Split(b[e], ':');
+
+                                    Entity::Loot tmp;
+                                    tmp.item_id = stoi(bb[0]);
+                                    tmp.item_chance = stoi(bb[1]);
+                                    loot_table.push_back(tmp);
+
+                                    cout << "[CUSTOM Loot table] Item: " << v4core->savereader.itemreg.GetItemByID(tmp.item_id)->icon_path << " with " << tmp.item_chance << "% drop rate" << endl;
+                                }
+                            }
+
                             cout << "Spawning an entity: " << entity_list[entityID] << endl;
-                            spawnEntity(entity_list[entityID],entityID,baseHP,atoi(spawn[1].c_str()),atoi(spawn[2].c_str()),baseY,atoi(spawn[3].c_str()),atoi(spawn[4].c_str()),atoi(spawn[5].c_str()),sf::Color(atoi(spawn[6].c_str()),atoi(spawn[7].c_str()),atoi(spawn[8].c_str()),atoi(spawn[9].c_str())), collidable, attackable, loot_table);
+                            spawnEntity(entity_list[entityID],entityID,baseHP,atoi(spawn[1].c_str()),atoi(spawn[2].c_str()),baseY,atoi(spawn[3].c_str()),atoi(spawn[4].c_str()),atoi(spawn[5].c_str()),sf::Color(atoi(spawn[6].c_str()),atoi(spawn[7].c_str()),atoi(spawn[8].c_str()),atoi(spawn[9].c_str())), collidable, attackable, atoi(spawn[10].c_str()), atoi(spawn[13].c_str()), atoi(spawn[12].c_str()), atoi(spawn[11].c_str()), mission_multiplier, mindmg, maxdmg, clonable, spawn_delay, loot_table, additional_data);
                         }
                     }
                 }
@@ -804,9 +1219,9 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
 
     ///make this unit load based on how the army is built later
 
-    unique_ptr<Patapon> p1 = make_unique<Patapon>();
-    unique_ptr<Patapon> p2 = make_unique<Patapon>();
-    unique_ptr<Patapon> p3 = make_unique<Patapon>();
+    unique_ptr<Yaripon> p1 = make_unique<Yaripon>();
+    unique_ptr<Yaripon> p2 = make_unique<Yaripon>();
+    unique_ptr<Yaripon> p3 = make_unique<Yaripon>();
     unique_ptr<Hatapon> h = make_unique<Hatapon>();
 
     p1.get()->LoadConfig(missionConfig);
@@ -820,14 +1235,34 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
     h.get()->setUnitID(0);
 
     ///Apply the stats
-    p1.get()->mindmg = v4core->savereader.ponreg.GetPonByID(1)->pon_min_dmg;
-    p1.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(1)->pon_max_dmg;
+    p1.get()->mindmg = v4core->savereader.ponreg.GetPonByID(0)->pon_min_dmg;
+    p1.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(0)->pon_max_dmg;
 
-    p2.get()->mindmg = v4core->savereader.ponreg.GetPonByID(2)->pon_min_dmg;
-    p2.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(2)->pon_max_dmg;
+    p2.get()->mindmg = v4core->savereader.ponreg.GetPonByID(1)->pon_min_dmg;
+    p2.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(1)->pon_max_dmg;
 
-    p3.get()->mindmg = v4core->savereader.ponreg.GetPonByID(3)->pon_min_dmg;
-    p3.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(3)->pon_max_dmg;
+    p3.get()->mindmg = v4core->savereader.ponreg.GetPonByID(2)->pon_min_dmg;
+    p3.get()->maxdmg = v4core->savereader.ponreg.GetPonByID(2)->pon_max_dmg;
+
+    p1.get()->current_hp = v4core->savereader.ponreg.GetPonByID(0)->pon_hp;
+    p2.get()->current_hp = v4core->savereader.ponreg.GetPonByID(1)->pon_hp;
+    p3.get()->current_hp = v4core->savereader.ponreg.GetPonByID(2)->pon_hp;
+
+    p1.get()->max_hp = v4core->savereader.ponreg.GetPonByID(0)->pon_hp;
+    p2.get()->max_hp = v4core->savereader.ponreg.GetPonByID(1)->pon_hp;
+    p3.get()->max_hp = v4core->savereader.ponreg.GetPonByID(2)->pon_hp;
+
+    p1.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(0)->weapon_invItem_id).item->equip_id);
+    p2.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->weapon_invItem_id).item->equip_id);
+    p3.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->weapon_invItem_id).item->equip_id);
+
+    p1.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(0)->weapon_invItem_id).item->equip_id);
+    p2.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->weapon_invItem_id).item->equip_id);
+    p3.get()->applySpear(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->weapon_invItem_id).item->equip_id);
+
+    p1.get()->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(0)->armour_invItem_id).item->equip_id);
+    p2.get()->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(1)->armour_invItem_id).item->equip_id);
+    p3.get()->applyHelm(v4core->savereader.invdata.GetItemByInvID(v4core->savereader.ponreg.GetPonByID(2)->armour_invItem_id).item->equip_id);
 
     units.push_back(std::move(p1));
     units.push_back(std::move(p2));
@@ -837,31 +1272,42 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene)
     addUnitThumb(0);
     addUnitThumb(1);
 
-    isFinishedLoading=true;
-    v4core->LoadingWaitForKeyPress();
+    cout << "Loading background " << bgName << endl;
+    Background bg_new;
+    test_bg = bg_new;
+
+    test_bg.Load(bgName, *missionConfig);//config.GetString("debugBackground"));
+
+    cout << "Set rich presence to " << missionImg << endl;
 
     string fm = "Playing mission: "+missionName;
     v4core->ChangeRichPresence(fm.c_str(), missionImg.c_str(), "logo");
+
+    rhythm.config = *missionConfig;
     rhythm.LoadTheme(songName); // missionConfig->GetString("debugTheme")
     missionTimer.restart();
 
     cout << "MissionController::StartMission(): finished" << endl;
     missionConfig->thisCore->SaveToDebugLog("Mission loading finished.");
+
+    isFinishedLoading=true;
+    v4core->LoadingWaitForKeyPress();
+
+    rhythm.Start();
 }
 void MissionController::StopMission()
 {
     rhythm.Stop();
     isInitialized = false;
 }
-void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld)
+void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, InputController& inputCtrl)
 {
-    /// do the keyboard things
+    /**
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num5))
     {
         missionEnd = true;
     }
 
-    /// do the keyboard things
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::M))
     {
         if(!debug_map_drop)
@@ -887,11 +1333,39 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow &window, float fps, st
                     units[i].get()->setUnitHP(0);
                 }
         }
+    }**/
+
+    if(!missionEnd)
+    {
+        if((inputCtrl.isKeyHeld(InputController::Keys::LTRIGGER)) && (inputCtrl.isKeyHeld(InputController::Keys::RTRIGGER)) && (inputCtrl.isKeyHeld(InputController::Keys::SQUARE)))
+        {
+            if(inputCtrl.isKeyPressed(InputController::Keys::SELECT))
+            {
+                std::vector<sf::String> a = {"Show hitboxes","Hide hitboxes","Heal units","Set weather to clear", "Set weather to snow", "Increase weather intensivity", "Decrease weather intensivity", "Set weather to rain"};
+
+                PataDialogBox db;
+                db.Create(f_font, "Debug menu", a, missionConfig->GetInt("textureQuality"));
+                db.id = 999;
+                dialogboxes.push_back(db);
+            }
+        }
+        else if(inputCtrl.isKeyPressed(InputController::Keys::START))
+        {
+            std::vector<sf::String> a = {Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"nav_no"))};
+
+            PataDialogBox db;
+            db.Create(f_font, Func::ConvertToUtf8String(missionConfig->strRepo.GetUnicodeString(L"mission_backtopatapolis")), a, missionConfig->GetInt("textureQuality"));
+            dialogboxes.push_back(db);
+        }
     }
 }
 
-MissionController::CollisionEvent MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float currentObjectY,int collisionObjectID,vector<string> collisionData)
+vector<MissionController::CollisionEvent> MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float currentObjectY,int collisionObjectID,vector<string> collisionData)
 {
+    ///Added vector because there can be more than just one collision events! Like colliding with grass AND with opponent
+    ///TO-DO: can't hit two hittable entities, this should only deal damage to one entity per attack.
+    vector<MissionController::CollisionEvent> collisionEvents;
+
     for(int i=0; i<tangibleLevelObjects.size(); i++)
     {
         for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
@@ -974,16 +1448,19 @@ MissionController::CollisionEvent MissionController::DoCollisionForObject(Hitbox
             /// we have a collision
             if (isCollision&&isCollision2&&isCollision3&&isCollision4)
             {
-                std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
-                target->OnCollide(target, collisionObjectID, collisionData);
+                Entity* entity = tangibleLevelObjects[i].get();
 
+                //std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
                 CollisionEvent cevent;
                 cevent.collided = true;
                 //cevent.collidedEntityID = -1;
                 cevent.isAttackable = target->isAttackable;
                 cevent.isCollidable = target->isCollidable;
+                cevent.collidedEntityCategory = entity->entityCategory;
 
-                return cevent;
+                target->OnCollide(target, collisionObjectID, collisionData);
+
+                collisionEvents.push_back(cevent);
             }
             else
             {
@@ -991,7 +1468,129 @@ MissionController::CollisionEvent MissionController::DoCollisionForObject(Hitbox
             }
         }
     }
+
+    return collisionEvents;
 }
+
+vector<MissionController::CollisionEvent> MissionController::DoCollisionForUnit(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float currentObjectY,int collisionObjectID,vector<string> collisionData)
+{
+    ///Added vector because there can be more than just one collision events! Like colliding with grass AND with opponent
+    vector<MissionController::CollisionEvent> collisionEvents;
+
+    for(int i=0; i<units.size(); i++)
+    {
+        for(int h=0; h<units[i]->hitboxes.size(); h++)
+        {
+            //cout << "tangibleLevelObjects[" << i << "][" << h << "]" << endl;
+
+            /// NEW COLLISION SYSTEM:
+            /// Separating axis theorem
+            /// we check an axis at a time
+            /// 8 axes in total, aligned with the normal of each face of each shape
+            /// thankfully because we are only using rectangles, there are two pairs of parallel sides
+            /// so we only need to check 4 axes, as the other 4 are all parallel.
+            ///
+            /// in each axis we calculate the vector projection onto the axis between the origin and each corner of each box
+            /// and find the maximum projection and minimum projection for each shape
+            /// then we check if min2>max1 or min1>max2 there has been a collision in this axis
+            /// there has to be a collision in ALL axes for actual collision to be confirmed,
+            /// so we can stop checking if we find a single non-collision.
+
+
+
+
+            /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
+            //cout<<"Collision step for projectile at X: "<<currentObjectX<<" against object at x: "<<tangibleLevelObjects[i]->global_x<<endl;
+
+            float currentAxisAngle = currentObjectHitBoxFrame->rotation;
+            vector<sf::Vector2f> currentVertices = currentObjectHitBoxFrame->getCurrentVertices();
+            PVector pv1 = PVector::getVectorCartesian(0,0,currentVertices[0].x+currentObjectX,currentVertices[0].y+currentObjectY);
+            PVector pv2 = PVector::getVectorCartesian(0,0,currentVertices[1].x+currentObjectX,currentVertices[1].y+currentObjectY);
+            PVector pv3 = PVector::getVectorCartesian(0,0,currentVertices[2].x+currentObjectX,currentVertices[2].y+currentObjectY);
+            PVector pv4 = PVector::getVectorCartesian(0,0,currentVertices[3].x+currentObjectX,currentVertices[3].y+currentObjectY);
+
+            pv1.angle =-atan2(currentVertices[0].y+currentObjectY, currentVertices[0].x+currentObjectX);
+            pv2.angle =-atan2(currentVertices[1].y+currentObjectY, currentVertices[1].x+currentObjectX);
+            pv3.angle =-atan2(currentVertices[2].y+currentObjectY, currentVertices[2].x+currentObjectX);
+            pv4.angle =-atan2(currentVertices[3].y+currentObjectY, currentVertices[3].x+currentObjectX);
+
+            float proj1 = pv1.GetScalarProjectionOntoAxis(currentAxisAngle);
+            float proj2 = pv2.GetScalarProjectionOntoAxis(currentAxisAngle);
+            float proj3 = pv3.GetScalarProjectionOntoAxis(currentAxisAngle);
+            float proj4 = pv4.GetScalarProjectionOntoAxis(currentAxisAngle);
+
+            CollidableObject* target = units[i].get();
+
+            bool isCollision = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,currentObjectHitBoxFrame,currentObjectX,currentObjectY);
+            if (!isCollision)
+            {
+                continue;
+            }
+            //cout<<"COLLISION FOUND IN axis 1"<<endl;
+
+            /// axis 2: obj1 "up"
+            currentAxisAngle = 3.14159265358/2+currentObjectHitBoxFrame->rotation;
+            bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,currentObjectHitBoxFrame,currentObjectX,currentObjectY);
+            if (!isCollision2)
+            {
+                continue;
+            }
+            //cout<<"COLLISION FOUND IN axis 2 (up)"<<endl;
+
+            /// axis 3: obj2 "up" (we add the 90 degrees from before to its current rotation)
+            currentAxisAngle = target->hitboxes[h].hitboxObject.rotation + 3.14159265358/2;
+
+            bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,currentObjectHitBoxFrame,currentObjectX,currentObjectY);
+            if (!isCollision3)
+            {
+                continue;
+            }
+            //cout<<"COLLISION FOUND IN axis 3 (up2)"<<endl;
+
+            /// axis 4: obj2 "sideways"
+            currentAxisAngle = target->hitboxes[h].hitboxObject.rotation;
+
+            bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,currentObjectHitBoxFrame,currentObjectX,currentObjectY);
+            if (!isCollision4)
+            {
+                continue;
+            }
+
+            /// we have a collision
+            if (isCollision&&isCollision2&&isCollision3&&isCollision4)
+            {
+                //std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
+                PlayableUnit* unit = units[i].get();
+
+                CollisionEvent cevent;
+                cevent.collided = true;
+                //cevent.collidedEntityID = -1;
+                cevent.isAttackable = target->isAttackable;
+                cevent.isCollidable = target->isCollidable;
+                cevent.collidedEntityCategory = 2;
+
+                if(unit->defend)
+                {
+                    if(unit->charged)
+                    cevent.defend_factor = 0.25;
+                    else
+                    cevent.defend_factor = 0.5;
+                }
+
+                target->OnCollide(target, collisionObjectID, collisionData);
+
+                collisionEvents.push_back(cevent);
+            }
+            else
+            {
+                cout<<"Something is very wrong"<<endl;
+            }
+        }
+    }
+
+    return collisionEvents;
+}
+
 float MissionController::pataponMaxProjection(float axisAngle, int id)
 {
     PlayableUnit* target = units[id].get();
@@ -1083,8 +1682,8 @@ bool MissionController::DoCollisionStepInAxis(float currentAxisAngle,HitboxFrame
         float maxProjectionObj1 = max(max(max(proj1,proj2),proj3),proj4);
         float minProjectionObj1 = min(min(min(proj1,proj2),proj3),proj4);
 
-        float maxProjectionObj2 = currentHitboxFrame->maxProjection(currentAxisAngle, targetObject->global_x,targetObject->global_y);
-        float minProjectionObj2 = currentHitboxFrame->minProjection(currentAxisAngle, targetObject->global_x,targetObject->global_y);
+        float maxProjectionObj2 = currentHitboxFrame->maxProjection(currentAxisAngle, targetObject->getGlobalPosition().x,targetObject->getGlobalPosition().y);
+        float minProjectionObj2 = currentHitboxFrame->minProjection(currentAxisAngle, targetObject->getGlobalPosition().x,targetObject->getGlobalPosition().y);
         if(maxProjectionObj1>minProjectionObj2 && minProjectionObj1<maxProjectionObj2)
         {
             return true;
@@ -1099,7 +1698,7 @@ bool MissionController::DoCollisionStepInAxis(float currentAxisAngle,HitboxFrame
         return false;
     }
 }
-void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld)
+void MissionController::DoMovement(sf::RenderWindow &window, float fps, InputController& inputCtrl)
 {
     /** Make Patapon walk (temporary) **/
     float booster=1.0;
@@ -1120,29 +1719,129 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
     {
         PlayableUnit* unit = units[i].get();
 
-        if(temp_pos <= unit->getGlobalPosition().x)
+        if(temp_pos <= unit->getGlobalPosition().x+unit->local_x)
         {
-            temp_pos = unit->getGlobalPosition().x;
+            temp_pos = unit->getGlobalPosition().x+unit->local_x;
             farthest_id = i;
         }
     }
 
     /** Patapon movement **/
 
-    if((camera.walk) || ((missionEnd) && (!failure)))
+    if(farthest_id != -1)
     {
-        if(farthest_id != -1)
-        {
-            PlayableUnit* farthest_unit = units[farthest_id].get();
+        PlayableUnit* farthest_unit = units[farthest_id].get();
 
+        bool foundCollision = false;
+
+        for(int i=0; i<tangibleLevelObjects.size(); i++)
+        {
+            for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
+            {
+                //cout << "tangibleLevelObjects[" << i << "][" << h << "]" << endl;
+
+                float proposedXPos = farthest_unit->getGlobalPosition().x;
+
+                /// NEW COLLISION SYSTEM:
+                /// Separating axis theorem
+                /// we check an axis at a time
+                /// 8 axes in total, aligned with the normal of each face of each shape
+                /// thankfully because we are only using rectangles, there are two pairs of parallel sides
+                /// so we only need to check 4 axes, as the other 4 are all parallel.
+                ///
+                /// in each axis we calculate the vector projection onto the axis between the origin and each corner of each box
+                /// and find the maximum projection and minimum projection for each shape
+                /// then we check if min2>max1 or min1>max2 there has been a collision in this axis
+                /// there has to be a collision in ALL axes for actual collision to be confirmed,
+                /// so we can stop checking if we find a single non-collision.
+
+                /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
+
+                float currentAxisAngle = 0;
+                HitboxFrame tmp = farthest_unit->hitboxes[0].getRect();
+
+                CollidableObject* target = tangibleLevelObjects[i].get();
+                Entity* entity = tangibleLevelObjects[i].get();
+
+                if(entity->entityID != 5)
+                {
+                    if(entity->isCollidable)
+                    {
+                        if(farthest_unit->getGlobalPosition().x >= entity->getGlobalPosition().x+entity->hitboxes[0].o_x)
+                        foundCollision = true;
+                    }
+                }
+
+                bool isCollision = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
+                if (!isCollision)
+                {
+                    continue;
+                }
+                //cout<<"COLLISION FOUND IN axis 1"<<endl;
+
+                /// axis 2: obj1 "up"
+                currentAxisAngle = 3.14159265358/2;
+                bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
+                if (!isCollision2)
+                {
+                    continue;
+                }
+                //cout<<"COLLISION FOUND IN axis 2 (up)"<<endl;
+
+                /// axis 3: obj2 "up" (we add the 90 degrees from before to its current rotation)
+                currentAxisAngle = target->hitboxes[h].hitboxObject.rotation + currentAxisAngle;
+
+                bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
+                if (!isCollision3)
+                {
+                    continue;
+                }
+                //cout<<"COLLISION FOUND IN axis 3 (up2)"<<endl;
+
+                /// axis 4: obj2 "sideways"
+                currentAxisAngle = target->hitboxes[h].hitboxObject.rotation;
+
+                bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
+                if (!isCollision4)
+                {
+                    continue;
+                }
+
+                /// we have a collision
+                if (isCollision&&isCollision2&&isCollision3&&isCollision4)
+                {
+                    ///check if unit should be prevented from passing through
+                    if(target->isCollidable)
+                    foundCollision = true;
+
+                    ///the entity can still react
+                    target->OnCollide(target);
+
+                    //std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
+                }
+                else
+                {
+                    cout<<"Something is very wrong"<<endl;
+                }
+            }
+        }
+
+        if((camera.walk) || ((missionEnd) && (!failure)))
+        {
             float pataDistance = 240 * booster;
+
+            if(walkBackwards)
+            pataDistance = -pataDistance;
 
             float diff = (Smoothstep(walkClock.getElapsedTime().asSeconds()/2)*pataDistance)-(Smoothstep(prevTime/2)*pataDistance);
             prevTime = walkClock.getElapsedTime().asSeconds();
 
-            float proposedXPos = farthest_unit->global_x + diff;
+            float proposedXPos = farthest_unit->getGlobalPosition().x + diff;
 
             camera.pataSpeed = (2 * 60 * booster);
+
+            if(walkBackwards)
+            camera.pataSpeed = -camera.pataSpeed;
 
             //cout << "global_x: " << farthest_unit->global_x << endl;
             //cout << "proposedXPos = " << proposedXPos << endl;
@@ -1152,90 +1851,6 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
 
             /// right now it is very basic checking only in X axis. Jumping over a
             /// kacheek will not be possible.
-
-            bool foundCollision = false;
-            for(int i=0; i<tangibleLevelObjects.size(); i++)
-            {
-                for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
-                {
-                    //cout << "tangibleLevelObjects[" << i << "][" << h << "]" << endl;
-
-                    /// NEW COLLISION SYSTEM:
-                    /// Separating axis theorem
-                    /// we check an axis at a time
-                    /// 8 axes in total, aligned with the normal of each face of each shape
-                    /// thankfully because we are only using rectangles, there are two pairs of parallel sides
-                    /// so we only need to check 4 axes, as the other 4 are all parallel.
-                    ///
-                    /// in each axis we calculate the vector projection onto the axis between the origin and each corner of each box
-                    /// and find the maximum projection and minimum projection for each shape
-                    /// then we check if min2>max1 or min1>max2 there has been a collision in this axis
-                    /// there has to be a collision in ALL axes for actual collision to be confirmed,
-                    /// so we can stop checking if we find a single non-collision.
-
-
-
-
-                    /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
-
-                    float currentAxisAngle = 0;
-                    HitboxFrame tmp = farthest_unit->hitboxes[0].getRect();
-
-                    CollidableObject* target = tangibleLevelObjects[i].get();
-
-                    bool isCollision = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
-                    if (!isCollision)
-                    {
-                        continue;
-                    }
-                    //cout<<"COLLISION FOUND IN axis 1"<<endl;
-
-                    /// axis 2: obj1 "up"
-                    currentAxisAngle = 3.14159265358/2;
-                    bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
-                    if (!isCollision2)
-                    {
-                        continue;
-                    }
-                    //cout<<"COLLISION FOUND IN axis 2 (up)"<<endl;
-
-                    /// axis 3: obj2 "up" (we add the 90 degrees from before to its current rotation)
-                    currentAxisAngle = target->hitboxes[h].hitboxObject.rotation + currentAxisAngle;
-
-                    bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
-                    if (!isCollision3)
-                    {
-                        continue;
-                    }
-                    //cout<<"COLLISION FOUND IN axis 3 (up2)"<<endl;
-
-                    /// axis 4: obj2 "sideways"
-                    currentAxisAngle = target->hitboxes[h].hitboxObject.rotation;
-
-                    bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,farthest_unit->getGlobalPosition().y);
-                    if (!isCollision4)
-                    {
-                        continue;
-                    }
-
-                    /// we have a collision
-                    if (isCollision&&isCollision2&&isCollision3&&isCollision4)
-                    {
-                        ///check if unit should be prevented from passing through
-                        if(target->isCollidable)
-                        foundCollision = true;
-
-                        ///the entity can still react
-                        target->OnCollide(target);
-
-                        std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
-                    }
-                    else
-                    {
-                        cout<<"Something is very wrong"<<endl;
-                    }
-                }
-            }
 
             /// if the new position is inside a kacheek, don't move. If we found anything,
             if (!foundCollision)
@@ -1254,6 +1869,135 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
     {
         PlayableUnit* unit = units[i].get();
 
+        bool foundCollision = false;
+
+        for(int i=0; i<tangibleLevelObjects.size(); i++)
+        {
+            for(int h=0; h<tangibleLevelObjects[i]->hitboxes.size(); h++)
+            {
+                //cout << "tangibleLevelObjects[" << i << "][" << h << "]" << endl;
+
+                float proposedXPos = unit->getGlobalPosition().x;
+
+                /// NEW COLLISION SYSTEM:
+                /// Separating axis theorem
+                /// we check an axis at a time
+                /// 8 axes in total, aligned with the normal of each face of each shape
+                /// thankfully because we are only using rectangles, there are two pairs of parallel sides
+                /// so we only need to check 4 axes, as the other 4 are all parallel.
+                ///
+                /// in each axis we calculate the vector projection onto the axis between the origin and each corner of each box
+                /// and find the maximum projection and minimum projection for each shape
+                /// then we check if min2>max1 or min1>max2 there has been a collision in this axis
+                /// there has to be a collision in ALL axes for actual collision to be confirmed,
+                /// so we can stop checking if we find a single non-collision.
+
+                /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
+
+                float currentAxisAngle = 0;
+                HitboxFrame tmp = unit->hitboxes[0].getRect();
+
+                CollidableObject* target = tangibleLevelObjects[i].get();
+                Entity* entity = tangibleLevelObjects[i].get();
+
+                if(entity->entityID != 5)
+                {
+                    if(entity->isCollidable)
+                    {
+                        if(unit->getGlobalPosition().x >= entity->getGlobalPosition().x+entity->hitboxes[0].o_x)
+                        foundCollision = true;
+                    }
+                }
+
+                bool isCollision = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,unit->getGlobalPosition().y);
+                if (!isCollision)
+                {
+                    continue;
+                }
+                //cout<<"COLLISION FOUND IN axis 1"<<endl;
+
+                /// axis 2: obj1 "up"
+                currentAxisAngle = 3.14159265358/2;
+                bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,unit->getGlobalPosition().y);
+                if (!isCollision2)
+                {
+                    continue;
+                }
+                //cout<<"COLLISION FOUND IN axis 2 (up)"<<endl;
+
+                /// axis 3: obj2 "up" (we add the 90 degrees from before to its current rotation)
+                currentAxisAngle = target->hitboxes[h].hitboxObject.rotation + currentAxisAngle;
+
+                bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,unit->getGlobalPosition().y);
+                if (!isCollision3)
+                {
+                    continue;
+                }
+                //cout<<"COLLISION FOUND IN axis 3 (up2)"<<endl;
+
+                /// axis 4: obj2 "sideways"
+                currentAxisAngle = target->hitboxes[h].hitboxObject.rotation;
+
+                bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle,&(target->hitboxes[h].hitboxObject),target,&tmp,proposedXPos,unit->getGlobalPosition().y);
+                if (!isCollision4)
+                {
+                    continue;
+                }
+
+                /// we have a collision
+                if (isCollision&&isCollision2&&isCollision3&&isCollision4)
+                {
+                    ///check if unit should be prevented from passing through
+                    if(target->isCollidable)
+                    foundCollision = true;
+
+                    ///the entity can still react
+                    target->OnCollide(target);
+
+                    //std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
+                }
+                else
+                {
+                    cout<<"Something is very wrong"<<endl;
+                }
+            }
+        }
+
+        if(!unit->dead)
+        {
+            if(unit->local_x < unit->dest_local_x)
+            {
+                if(!foundCollision)
+                unit->local_x += 200.0 / fps;
+
+                /*if(unit->enemy_in_range)
+                {
+                    if(unit->getAnimationSegment() != "walk_focused")
+                    unit->setAnimationSegment("walk_focused", true);
+                }
+                else
+                {
+                    if(unit->getAnimationSegment() != "walk")
+                    unit->setAnimationSegment("walk", true);
+                }*/
+            }
+            if(unit->local_x > unit->dest_local_x)
+            {
+                unit->local_x -= 200.0 / fps;
+
+                /*if(unit->enemy_in_range)
+                {
+                    if(unit->getAnimationSegment() != "walk_focused")
+                    unit->setAnimationSegment("walk_focused", true);
+                }
+                else
+                {
+                    if(unit->getAnimationSegment() != "walk")
+                    unit->setAnimationSegment("walk", true);
+                }*/
+            }
+        }
+
         switch(unit->getUnitID())
         {
             case 0: ///Hatapon
@@ -1269,84 +2013,21 @@ void MissionController::DoMovement(sf::RenderWindow &window, float fps, std::map
             }
         }
     }
-
-    /** Projectile management **/
-
-    /// step 1: all projectiles have gravity applied to them
-    for(int i=0; i<levelProjectiles.size(); i++)
-    {
-        Projectile* p = levelProjectiles[i].get();
-        float xspeed = p->GetXSpeed();
-        float yspeed = p->GetYSpeed();
-        yspeed += (gravity/fps);
-        p->SetNewSpeedVector(xspeed,yspeed);
-        p->Update(window,fps);
-    }
-    /// step 2: any projectiles that hit the floor are destroyed
-    for(int i=0; i<levelProjectiles.size(); i++)
-    {
-        Projectile* p = levelProjectiles[i].get();
-        float ypos = p->yPos;
-        if (ypos>floorY)
-        {
-            levelProjectiles.erase(levelProjectiles.begin()+i);
-        }
-    }
-    /// step 3: any projectiles that hit any collidableobject are informed
-    for(int i=0; i<levelProjectiles.size(); i++)
-    {
-        Projectile* p = levelProjectiles[i].get();
-        float ypos = p->yPos;
-        float xpos = p->xPos;
-        HitboxFrame tmp;
-        tmp.time = 0;
-        tmp.g_x = 0;
-        tmp.g_y = 0;
-        tmp.clearVertices();
-        tmp.addVertex(-3,-1); /// "top left"
-        tmp.addVertex(3,-1); /// "top right"
-        tmp.addVertex(-3,1); /// "bottom left"
-        tmp.addVertex(3,1); /// "bottom right"
-        tmp.rotation = -p->angle;
-
-        ///calculate projectile damage
-        ///and pass it to a special vector called collisionData
-        ///which passes whatever you'd like to the collided animation object
-        ///so you can put anything and react with it in the individual entity classes
-        ///in projectiles' case, im transferring the damage dealt
-
-        int minDmg = p->mindmg;
-        int maxDmg = p->maxdmg;
-        int bound = maxDmg-minDmg+1;
-        int ranDmg = rand() % bound;
-        int total = minDmg + ranDmg;
-
-        ///sending damage dealt
-        vector<string> collisionData = {to_string(total)};
-
-        ///retrieve collision event
-        CollisionEvent cevent = DoCollisionForObject(&tmp,xpos,ypos,0,collisionData); //0 - spear collision ID
-
-        if(cevent.collided)
-        {
-            if(cevent.isCollidable)
-            levelProjectiles.erase(levelProjectiles.begin()+i);
-
-            ///add damage counter
-            if(cevent.isAttackable)
-            addDmgCounter(0, total, xpos, ypos, qualitySetting, resSetting);
-        };
-    }
-
 }
-void MissionController::DoRhythm()
+
+void MissionController::DoRhythm(InputController& inputCtrl)
 {
     /** Call Rhythm functions **/
 
-        if(rhythm.current_song == "patapata")
+        if((rhythm.current_song == "patapata") || (rhythm.current_song == "chakapata"))
         {
             //cout << "set walk true" << endl;
             camera.walk = true;
+
+            if(rhythm.current_song == "chakapata")
+            walkBackwards = true;
+            else
+            walkBackwards = false;
 
             if(!startWalking)
             {
@@ -1373,7 +2054,7 @@ void MissionController::DoRhythm()
         rhythm.rhythmController.config = *missionConfig;
         rhythm.config = *missionConfig;
 
-        rhythm.doRhythm();
+        rhythm.doRhythm(inputCtrl);
 }
 
 void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
@@ -1394,6 +2075,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 {
                     s_cheer.stop();
                     s_cheer.setBuffer(sb_cheer1);
+                    s_cheer.setVolume(float(missionConfig->GetInt("masterVolume"))*(float(missionConfig->GetInt("sfxVolume"))/100.f));
                     s_cheer.play();
                     playCheer[0] = true;
                 }
@@ -1405,6 +2087,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 {
                     s_cheer.stop();
                     s_cheer.setBuffer(sb_cheer2);
+                    s_cheer.setVolume(float(missionConfig->GetInt("masterVolume"))*(float(missionConfig->GetInt("sfxVolume"))/100.f));
                     s_cheer.play();
                     playCheer[1] = true;
                 }
@@ -1416,6 +2099,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 {
                     s_cheer.stop();
                     s_cheer.setBuffer(sb_cheer3);
+                    s_cheer.setVolume(float(missionConfig->GetInt("masterVolume"))*(float(missionConfig->GetInt("sfxVolume"))/100.f));
                     s_cheer.play();
                     playCheer[2] = true;
                 }
@@ -1426,6 +2110,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 if(!playJingle)
                 {
                     s_jingle.setBuffer(sb_win_jingle);
+                    s_jingle.setVolume(float(missionConfig->GetInt("masterVolume"))*(float(missionConfig->GetInt("sfxVolume"))/100.f));
                     s_jingle.play();
                     playJingle = true;
                 }
@@ -1436,6 +2121,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
             if(!playJingle)
             {
                 s_jingle.setBuffer(sb_lose_jingle);
+                s_jingle.setVolume(float(missionConfig->GetInt("masterVolume"))*(float(missionConfig->GetInt("sfxVolume"))/100.f));
                 s_jingle.play();
                 playJingle = true;
             }
@@ -1503,7 +2189,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
 
     /** Mission end event (Mission complete/Mission failed screen + transition to Patapolis **/
 
-    if(!failure)
+    if(!failure) ///Victory
     {
         if(missionEndTimer.getElapsedTime().asMilliseconds() >= 11500)
         {
@@ -1572,9 +2258,64 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 fadeout_box.setFillColor(sf::Color(0,0,0,fadeout_alpha));
                 window.draw(fadeout_box);
             }
+
+            if(missionEndTimer.getElapsedTime().asMilliseconds() > 19000)
+            {
+                cout << "End mission" << endl;
+                /// A wall is unyielding, so it does nothing when collided with.
+
+                /// note we don't call the parent function. It does nothing, it just serves
+                /// as an incomplete function to be overridden by child classes.
+                /// end the mission
+
+                StopMission();
+
+                cout << "Add the picked up items to item repository" << endl;
+                submitPickedItems();
+                updateMissions();
+
+                cout << "Go to Patapolis" << endl;
+
+                sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+                v4core->continueLoading=true;
+                v4core->window.setActive(false);
+                loadingThreadInstance.launch();
+
+                v4core->mainMenu.patapolisMenu.doWaitKeyPress = false;
+                v4core->mainMenu.patapolisMenu.Show();
+                v4core->mainMenu.patapolisMenu.isActive = true;
+                v4core->mainMenu.patapolisMenu.screenFade.Create(missionConfig, 0, 512);
+
+                if (!v4core->mainMenu.patapolisMenu.initialised)
+                {
+                    /// patapolis might not be initialised because we could be running the pre-patapolis scripted first mission.
+                    cout << "[ENDFLAG] Initialize Patapolis for the first time" << endl;
+                    v4core->mainMenu.patapolisMenu.Initialise(missionConfig,v4core,&v4core->mainMenu);
+                }
+                else
+                {
+                    cout << "Don't initialize Patapolis, just show it again" << endl;
+                }
+
+                v4core->mainMenu.patapolisMenu.location = 3;
+                v4core->mainMenu.patapolisMenu.SetTitle(3);
+                v4core->mainMenu.patapolisMenu.camPos = v4core->mainMenu.patapolisMenu.locations[3];
+                v4core->mainMenu.patapolisMenu.fade_alpha = 255;
+
+                while(missionEndTimer.getElapsedTime().asMilliseconds() < 21000)
+                {
+                    ///halt loading for a second
+                }
+
+                v4core->LoadingWaitForKeyPress();
+
+                v4core->continueLoading=false;
+
+                v4core->ChangeRichPresence("In Patapolis", "logo", "");
+            }
         }
     }
-    else
+    else ///Failure
     {
         if(missionEndTimer.getElapsedTime().asMilliseconds() >= 2500)
         {
@@ -1645,12 +2386,13 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 v4core->mainMenu.patapolisMenu.doWaitKeyPress = false;
                 v4core->mainMenu.patapolisMenu.Show();
                 v4core->mainMenu.patapolisMenu.isActive = true;
+                v4core->mainMenu.patapolisMenu.screenFade.Create(missionConfig, 0, 512);
 
                 if (!v4core->mainMenu.patapolisMenu.initialised)
                 {
                     /// patapolis might not be initialised because we could be running the pre-patapolis scripted first mission.
                     cout << "[ENDFLAG] Initialize Patapolis for the first time" << endl;
-                    v4core->mainMenu.patapolisMenu.Initialise(missionConfig,v4core->mainMenu.keyMapping,v4core,&v4core->mainMenu);
+                    v4core->mainMenu.patapolisMenu.Initialise(missionConfig,v4core,&v4core->mainMenu);
                 }
                 else
                 {
@@ -1677,8 +2419,11 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
     }
 }
 
-void MissionController::DoVectorCleanup(vector<int> units_rm, vector<int> dmg_rm, vector<int> tlo_rm)
+void MissionController::DoVectorCleanup(vector<int> units_rm, vector<int> dmg_rm, vector<int> tlo_rm, vector<int> pr_rm)
 {
+    //cout << "MissionController::DoVectorCleanup" << endl;
+    //cout << units_rm.size() << " " << dmg_rm.size() << " " << tlo_rm.size() << " " << pr_rm.size() << endl;
+
     for(int i=0; i<units_rm.size(); i++)
     {
         units.erase(units.begin()+(units_rm[i]-i));
@@ -1696,6 +2441,175 @@ void MissionController::DoVectorCleanup(vector<int> units_rm, vector<int> dmg_rm
         tangibleLevelObjects.erase(tangibleLevelObjects.begin()+(tlo_rm[i]-i));
         cout << "Erased tangibleLevelObject " << tlo_rm[i] << endl;
     }
+
+    for(int i=0; i<pr_rm.size(); i++)
+    {
+        levelProjectiles.erase(levelProjectiles.begin()+(pr_rm[i]-i));
+        cout << "Erased levelProjectile " << pr_rm[i] << endl;
+    }
+}
+
+std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
+{
+    /** Projectile management **/
+
+    vector<int> pr_e; ///projectiles to erase
+
+    /// step 1: all projectiles have gravity applied to them
+    for(int i=0; i<levelProjectiles.size(); i++)
+    {
+        Projectile* p = levelProjectiles[i].get();
+        float xspeed = p->GetXSpeed();
+        float yspeed = p->GetYSpeed();
+        yspeed += (gravity/fps);
+        p->SetNewSpeedVector(xspeed,yspeed);
+        p->Update(window,fps);
+    }
+
+    /// step 3: any projectiles that hit any collidableobject are informed
+    for(int i=0; i<levelProjectiles.size(); i++)
+    {
+        bool removeProjectile = false;
+
+        Projectile* p = levelProjectiles[i].get();
+        float ypos = p->yPos;
+        float xpos = p->xPos;
+        HitboxFrame tmp;
+        tmp.time = 0;
+        tmp.g_x = 0;
+        tmp.g_y = 0;
+        tmp.clearVertices();
+        tmp.addVertex(-3,-1); /// "top left"
+        tmp.addVertex(3,-1); /// "top right"
+        tmp.addVertex(-3,1); /// "bottom left"
+        tmp.addVertex(3,1); /// "bottom right"
+        tmp.rotation = -p->angle;
+
+        if(ypos>floorY)
+        {
+            ///create hit sound
+            projectile_sounds.emplace_back();
+
+            projectile_sounds[projectile_sounds.size()-1].setBuffer(spear_hit_solid);
+
+            projectile_sounds[projectile_sounds.size()-1].setVolume(float(missionConfig->GetInt("masterVolume"))*(float(missionConfig->GetInt("sfxVolume"))/100.f));
+            projectile_sounds[projectile_sounds.size()-1].play();
+
+            removeProjectile = true;
+        }
+
+        ///calculate projectile damage
+        ///and pass it to a special vector called collisionData
+        ///which passes whatever you'd like to the collided animation object
+        ///so you can put anything and react with it in the individual entity classes
+        ///in projectiles' case, im transferring the damage dealt
+
+        if(!removeProjectile)
+        {
+            int minDmg = p->mindmg;
+            int maxDmg = p->maxdmg;
+            int bound = maxDmg-minDmg+1;
+            int ranDmg = rand() % bound;
+            int total = minDmg + ranDmg;
+
+            ///sending damage dealt
+            vector<string> collisionData = {to_string(total)};
+
+            ///retrieve collision event
+            vector<CollisionEvent> cevent;
+
+            ///check whether the projectile was on enemy side or ally side
+            if(!p->enemy)
+            {
+                ///Do collisions for all entities (ally projectiles)
+                cevent = DoCollisionForObject(&tmp,xpos,ypos,p->projectileID,collisionData);
+            }
+            else
+            {
+                ///Do collisions for all units (enemy projectiles)
+                cevent = DoCollisionForUnit(&tmp,xpos,ypos,p->projectileID,collisionData);
+            }
+
+            for(int e=0; e<cevent.size(); e++)
+            {
+                if(cevent[e].collided)
+                {
+                    ///add damage counter
+                    if((cevent[e].isAttackable) && (cevent[e].isCollidable))
+                    {
+                        ///create hit sound
+                        projectile_sounds.emplace_back();
+
+                        ///locate the right buffer
+                        switch(cevent[e].collidedEntityCategory)
+                        {
+                            case -1:
+                            {
+                                break;
+                            }
+
+                            case Entity::EntityCategories::ANIMAL:
+                            {
+                                projectile_sounds[projectile_sounds.size()-1].setBuffer(spear_hit_enemy);
+                                break;
+                            }
+
+                            case Entity::EntityCategories::ENEMYUNIT:
+                            {
+                                projectile_sounds[projectile_sounds.size()-1].setBuffer(spear_hit_enemy);
+                                break;
+                            }
+
+                            case Entity::EntityCategories::BUILDING_REGULAR:
+                            {
+                                projectile_sounds[projectile_sounds.size()-1].setBuffer(spear_hit_solid);
+                                break;
+                            }
+
+                            case Entity::EntityCategories::OBSTACLE_IRON:
+                            {
+                                projectile_sounds[projectile_sounds.size()-1].setBuffer(spear_hit_iron);
+                                break;
+                            }
+
+                            case Entity::EntityCategories::BUILDING_IRON:
+                            {
+                                projectile_sounds[projectile_sounds.size()-1].setBuffer(spear_hit_iron);
+                                break;
+                            }
+
+                            case Entity::EntityCategories::OBSTACLE_ROCK:
+                            {
+                                projectile_sounds[projectile_sounds.size()-1].setBuffer(spear_hit_rock);
+                                break;
+                            }
+
+                            case Entity::EntityCategories::OBSTACLE_WOOD:
+                            {
+                                projectile_sounds[projectile_sounds.size()-1].setBuffer(spear_hit_solid);
+                                break;
+                            }
+                        }
+
+                        projectile_sounds[projectile_sounds.size()-1].setVolume(float(missionConfig->GetInt("masterVolume"))*(float(missionConfig->GetInt("sfxVolume"))/100.f));
+                        projectile_sounds[projectile_sounds.size()-1].play();
+
+                        addDmgCounter(0, total*cevent[e].defend_factor, xpos, ypos, qualitySetting, resSetting);
+
+                        removeProjectile = true;
+                        break; ///break the for loop here to prevent double hits
+                    }
+                }
+            }
+        }
+
+        p->Draw(window,fps);
+
+        if(removeProjectile)
+        pr_e.push_back(i);
+    }
+
+    return pr_e;
 }
 
 void MissionController::DrawUnitThumbs(sf::RenderWindow& window)
@@ -1756,10 +2670,25 @@ void MissionController::DrawUnitThumbs(sf::RenderWindow& window)
             {
                 manual_x = 0;
                 manual_y = 14;
+
+                unitThumbs[i].equip_1 = farthest_unit->objects[1].s_obj;
+                unitThumbs[i].equip_2 = farthest_unit->objects[2].s_obj;
+
+                unitThumbs[i].equip_1.setPosition(52+(64*i)+manual_x+((farthest_unit->objects[1].s_obj.getPosition().x-farthest_unit->getGlobalPosition().x)*0.7), 60+manual_y+((farthest_unit->objects[1].s_obj.getPosition().y-farthest_unit->getGlobalPosition().y)*0.7));
+                unitThumbs[i].equip_2.setPosition(52+(64*i)+manual_x+((farthest_unit->objects[2].s_obj.getPosition().x-farthest_unit->getGlobalPosition().x)*0.7), 60+manual_y+((farthest_unit->objects[2].s_obj.getPosition().y-farthest_unit->getGlobalPosition().y)*0.7));
+
+                unitThumbs[i].equip_1.setScale(0.7, 0.7);
+                unitThumbs[i].equip_2.setScale(0.7, 0.7);
             }
 
             unitThumbs[i].thumb.setPosition(52+(64*i)+manual_x, 60+manual_y);
             unitThumbs[i].thumb.draw(window);
+
+            if(unitThumbs[i].unit_id == 1)
+            {
+                unitThumbs[i].equip_1.draw(window);
+                unitThumbs[i].equip_2.draw(window);
+            }
 
             unitThumbs[i].hpbar_back.setOrigin(unitThumbs[i].hpbar_back.getLocalBounds().width/2, unitThumbs[i].hpbar_back.getLocalBounds().height/2);
             unitThumbs[i].hpbar_back.setPosition(52+(64*i), 32);
@@ -1832,8 +2761,8 @@ void MissionController::DrawHitboxes(sf::RenderWindow& window)
                 for (int j=0; j<currentVertices.size(); j++)
                 {
                     sf::Vector2f currentPoint = currentVertices[j];
-                    currentPoint.x = currentPoint.x + currentHitbox->g_x + unit->global_x;
-                    currentPoint.y = currentPoint.y + currentHitbox->g_y + unit->global_y;
+                    currentPoint.x = currentPoint.x + currentHitbox->g_x + unit->global_x + unit->local_x;
+                    currentPoint.y = currentPoint.y + currentHitbox->g_y + unit->global_y + unit->local_y;
                     //cout<<"DRAWING POINT: "<<currentVertices.size()<<" x: "<<currentPoint.x<<" y: "<<currentPoint.y<<endl;
                     sf::CircleShape shape(5);
                     shape.setFillColor(sf::Color(100, 250, 50));
@@ -1865,8 +2794,8 @@ void MissionController::DrawHitboxes(sf::RenderWindow& window)
                 {
 
                     sf::Vector2f currentPoint = currentVertices[j];
-                    currentPoint.x = currentPoint.x + currentHitbox->g_x + entity->global_x;
-                    currentPoint.y = currentPoint.y + currentHitbox->g_y + entity->global_y;
+                    currentPoint.x = currentPoint.x + currentHitbox->g_x + entity->global_x + entity->local_x;
+                    currentPoint.y = currentPoint.y + currentHitbox->g_y + entity->global_y + entity->local_y;
                     //cout<<"DRAWING POINT: "<<currentVertices.size()<<" x: "<<currentPoint.x<<" y: "<<currentPoint.y<<endl;
                     sf::CircleShape shape(5);
                     shape.setFillColor(sf::Color(100, 250, 50));
@@ -1961,6 +2890,21 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
 {
     vector<int> tlo_rm;
 
+    /** Find the farthest unit in your army (for calculations) **/
+    int farthest_id = -1;
+    float temp_pos = -9999;
+
+    for(int i=0; i<units.size(); i++)
+    {
+        PlayableUnit* unit = units[i].get();
+
+        if(temp_pos <= unit->getGlobalPosition().x)
+        {
+            temp_pos = unit->getGlobalPosition().x;
+            farthest_id = i;
+        }
+    }
+
     for (int i=0; i<tangibleLevelObjects.size(); i++)
     {
         Entity* entity = tangibleLevelObjects[i].get();
@@ -1976,13 +2920,69 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
         }
         else
         {
+            ///Check if entity is off bounds, if yes, don't render it.
             entity->offbounds = false;
 
-            if(entity->getGlobalPosition().x > camera.followobject_x+1600)
+            if(entity->getGlobalPosition().x > (camera.followobject_x)/(window.getSize().x / float(1280))+2400)
             entity->offbounds = true;
 
-            if(entity->getGlobalPosition().x < camera.followobject_x-600)
+            if(entity->getGlobalPosition().x < (camera.followobject_x)/(window.getSize().x / float(1280))-1000)
             entity->offbounds = true;
+
+            entity->distance_to_unit = abs(temp_pos - entity->getGlobalPosition().x);
+
+            ///Check for entity attack measures
+            if(entity->doAttack())
+            {
+                ///ID 6,16 = Kirajin Yari
+                if((entity->getEntityID() == 6) || (entity->getEntityID() == 16))
+                {
+                    cout << "Entity " << i << " threw a spear!" << endl;
+
+                    float rand_hs = (rand() % 1000) / float(10);
+                    float rand_vs = (rand() % 1000) / float(10);
+
+                    float rand_rad = (rand() % 200000000) / float(1000000000);
+
+                    float mindmg = entity->mindmg*entity->stat_multiplier;
+                    float maxdmg = entity->maxdmg*entity->stat_multiplier;
+
+                    float xpos = entity->getGlobalPosition().x+entity->hitBox.left+entity->hitBox.width/2;
+                    float ypos = entity->getGlobalPosition().y+entity->hitBox.top+entity->hitBox.height/2;
+
+                    spawnProjectile(entity->objects[1].s_obj, xpos, ypos, 800, -450-rand_hs, -450+rand_vs, -2.58 + rand_rad, maxdmg, mindmg, 0, true);
+                }
+            }
+
+            ///Check if entity's parent is still alive, if not, kill the entity
+            int parent = entity->parent;
+
+            ///Check if parent is defined
+            if(parent != -1)
+            {
+                ///Look for parent
+                auto it = find_if(tangibleLevelObjects.begin(), tangibleLevelObjects.end(), [&parent](const std::unique_ptr<Entity>& obj) {return obj.get()->spawnOrderID == parent;});
+
+                if(it != tangibleLevelObjects.end())
+                {
+                    ///Parent has been found!
+
+                    auto index = std::distance(tangibleLevelObjects.begin(), it);
+                    //cout << "My parent is currently residing at " << index << endl;
+
+                    ///Check if it's dead
+                    if(tangibleLevelObjects[index].get()->dead)
+                    {
+                        ///Kill the entity
+                        entity->die();
+                    }
+                }
+                else ///Parent can't be found
+                {
+                    ///Kill the entity
+                    entity->die();
+                }
+            }
 
             entity->Draw(window);
         }
@@ -1999,10 +2999,10 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
     vector<int> units_rm;
 
     int farthest_id = -1;
-    float temp_pos = -9999;
+    int closest_entity_id = -1;
+    int closest_entity_pos = 9999;
 
     bool hatapon = false;
-    int u = 0;
 
     auto max_distance = std::max_element( units.begin(), units.end(),
                              []( unique_ptr<PlayableUnit> &a, unique_ptr<PlayableUnit> &b )
@@ -2014,39 +3014,112 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
 
     /** Units draw loop and entity range detection **/
 
-    if(farthest_id != -1)
+    for(int i=0; i<tangibleLevelObjects.size(); i++)
     {
-        PlayableUnit* farthest_unit = units[farthest_id].get();
+        Entity* entity = tangibleLevelObjects[i].get();
 
-        /** Detect how far the entity is **/
-        /*vector<float> gdistances;
-        vector<float> ldistances;
-
-        for(int e=0; e<tangibleLevelObjects.size(); e++)
+        if((entity->entityType == Entity::EntityTypes::HOSTILE) && (!entity->dead))
         {
-            if(tangibleLevelObjects[e]->type == tangibleLevelObjects[e]->HOSTILE)
+            if(entity->getGlobalPosition().x + entity->hitboxes[0].o_x < closest_entity_pos)
             {
-                float global_distance = tangibleLevelObjects[e]->getGlobalPosition().x - (farthest_unit->getGlobalPosition().x - farthest_unit->local_x);
-                float local_distance = tangibleLevelObjects[e]->getGlobalPosition().x - farthest_unit->getGlobalPosition().x;
-                gdistances.push_back(global_distance);
-                ldistances.push_back(local_distance);
+                closest_entity_pos = entity->getGlobalPosition().x + entity->hitboxes[0].o_x;
+                closest_entity_id = i;
             }
         }
+    }
 
-        if(gdistances.size() > 0)
+    if(farthest_id != -1)
+    {
+        bool inRange = true;
+
+        if(closest_entity_id == -1)
         {
-            unit->gclosest = *std::min_element(std::begin(gdistances), std::end(gdistances));
-            unit->lclosest = *std::min_element(std::begin(ldistances), std::end(ldistances));
-        }*/
+            inRange = false;
+        }
+        else
+        {
+            Entity* closest_entity = tangibleLevelObjects[closest_entity_id].get();
+
+            //cout << "Check if entity is in range" << endl;
+
+            for(int i=0; i<units.size(); i++)
+            {
+                if(units[i].get()->getUnitID() != 0)
+                {
+                    if((closest_entity->entityType == Entity::EntityTypes::HOSTILE) && (!closest_entity->dead))
+                    {
+                        //cout << "Range of unit " << i << ": " << abs((units[i].get()->getGlobalPosition().x) - closest_entity->getGlobalPosition().x) - 110 << endl;
+                        //cout << "Dest local x: " << units[i].get()->dest_local_x << endl;
+
+                        if(abs((units[i].get()->global_x) - (closest_entity->getGlobalPosition().x + closest_entity->hitboxes[0].o_x)) > 900)
+                        inRange = false;
+                    }
+                }
+            }
+
+            //cout << "In range: " << inRange << endl;
+        }
 
         /** Draw the units **/
         for(int i=0; i<units.size(); i++)
         {
             PlayableUnit* unit = units[i].get();
 
+            if(closest_entity_id != -1)
+            {
+                Entity* closest_entity = tangibleLevelObjects[closest_entity_id].get();
+
+                unit->entity_distance = abs((unit->global_x) - (closest_entity->getGlobalPosition().x + closest_entity->hitboxes[0].o_x));
+                //cout << "Distance to nearest entity for unit " << i << ": " << unit->entity_distance << " (" << unit->global_x << " " << closest_entity->getGlobalPosition().x << " " << closest_entity->hitboxes[0].o_x << ")" << endl;
+
+                if((closest_entity->entityType == Entity::EntityTypes::HOSTILE) && (!closest_entity->dead) && (inRange))
+                {
+                    unit->enemy_in_range = true;
+                    //cout << "Unit " << i << " distance to closest enemy is " << unit->entity_distance << " pixels" << endl;
+                }
+                else
+                {
+                    unit->enemy_in_range = false;
+                    unit->dest_local_x = 0;
+                }
+            }
+            else
+            {
+                unit->enemy_in_range = false;
+            }
+
+            if(unit->getUnitID() != 0)
+            {
+                float unit_distance = 9999;
+
+                for(int a=0; a<units.size(); a++)
+                {
+                    if(a != i)
+                    {
+                        if(units[a].get()->getUnitID() == 1)
+                        {
+                            float gx = units[a].get()->getGlobalPosition().x;
+                            float my_gx = unit->getGlobalPosition().x;
+
+                            float dis = abs(gx-my_gx);
+
+                            if(dis < unit_distance)
+                            unit_distance = dis;
+                        }
+                    }
+                }
+
+                unit->unit_distance = unit_distance;
+
+                //cout << "Unit " << i << " distance to another unit is " << unit_distance << " pixels" << endl;
+            }
+
             /** Verify if Hatapon exists **/
             if(unit->getUnitID() == 0)
-            hatapon = true;
+            {
+                if(unit->getUnitHP() > 0)
+                hatapon = true;
+            }
 
             /** Execute unit features when mission is not over **/
             if(!missionEnd)
@@ -2073,6 +3146,26 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
                         float mindmg = unit->mindmg * (0.8 + (rhythm_acc*0.05)) * fever_boost;
                         float maxdmg = unit->maxdmg * (0.8 + (rhythm_acc*0.05)) * fever_boost;
 
+                        if(unit->defend)
+                        {
+                            mindmg = mindmg / 0.75;
+                            maxdmg = maxdmg / 0.75;
+
+                            if(unit->charged)
+                            {
+                                mindmg = mindmg * 1.666;
+                                maxdmg = maxdmg * 1.666;
+                            }
+                        }
+                        else
+                        {
+                            if(unit->charged)
+                            {
+                                mindmg = mindmg*2.2;
+                                maxdmg = maxdmg*2.2;
+                            }
+                        }
+
                         ///Make the spears be thrown with worse velocity when player is drumming bad (10% punishment)
                         rand_hs *= 0.9 + (rhythm_acc*0.025);
                         rand_vs *= 0.9 + (rhythm_acc*0.025);
@@ -2082,7 +3175,15 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
                         float xpos = unit->getGlobalPosition().x+unit->hitBox.left+unit->hitBox.width/2;
                         float ypos = unit->getGlobalPosition().y+unit->hitBox.top+unit->hitBox.height/2;
 
-                        spawnProjectile(xpos, ypos, 800, 450+rand_hs, -450+rand_vs, -0.58 - rand_rad, maxdmg, mindmg, 0);
+                        float vspeed = -450+rand_vs;
+
+                        if(unit->defend)
+                        {
+                            if(unit->isFever)
+                            vspeed = fabs(vspeed)-250;
+                        }
+
+                        spawnProjectile(unit->objects[1].s_obj, xpos, ypos, 800, 450+rand_hs, vspeed, -0.58 - rand_rad, maxdmg, mindmg, 0);
                     }
                 }
             }
@@ -2107,29 +3208,164 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
     {
         missionEnd = true;
         failure = true;
+        rhythm.Stop();
     }
 
     return units_rm;
 }
 
-void MissionController::Update(sf::RenderWindow &window, float cfps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld)
+void MissionController::Update(sf::RenderWindow &window, float cfps, InputController& inputCtrl)
 {
+    ///remove stopped sounds
+    for(int i=projectile_sounds.size()-1; i>0; i--)
+    {
+        if(projectile_sounds[i].getStatus() == sf::Sound::Status::Stopped)
+        {
+            projectile_sounds.erase(projectile_sounds.begin()+i);
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    ///Sort tangibleLevelObjects to prioritize rendering layers
+    std::sort(tangibleLevelObjects.begin(), tangibleLevelObjects.end(),
+              [](const std::unique_ptr<Entity>& a, const std::unique_ptr<Entity>& b)
+                {
+                    return a.get()->layer < b.get()->layer;
+                });
+
+    ///Globally disable the controls when Dialogbox is opened, but preserve original controller for controlling the DialogBoxes later
+    InputController o_inputCtrl;
+    InputController cur_inputCtrl;
+
+    cur_inputCtrl = inputCtrl;
+
+    if(dialogboxes.size() > 0)
+    {
+        o_inputCtrl = inputCtrl;
+
+        InputController a;
+        cur_inputCtrl = a;
+    }
+
     /** Update loop, everything here happens per each frame of the game **/
     fps = cfps;
 
     /** Apply the keyMap from parent class **/
-    missionKeyMap = keyMap;
 
     /** Execute camera and background **/
 
-    camera.Work(window,fps,keyMapHeld);
+    camera.Work(window,fps,cur_inputCtrl);
     test_bg.setCamera(camera);
     test_bg.Draw(window);
 
+    /** Weather stuff **/
+    weather.draw(window, fps);
+
     /** Execute Keyboard events and Movement **/
 
-    DoKeyboardEvents(window,fps,keyMap,keyMapHeld);
-    DoMovement(window,fps,keyMap,keyMapHeld);
+    DoKeyboardEvents(window,fps,cur_inputCtrl);
+    DoMovement(window,fps,cur_inputCtrl);
+
+    vector<int> k_e;
+
+    /** Spawn clonable entities **/
+    for(int i=0; i<kirajins.size(); i++)
+    {
+        Kirajin_Yari_2* entity = kirajins[i].get();
+
+        ///Check if the kirajin should respawn or not
+        bool respawn = true;
+
+        for(int t=0; t<tangibleLevelObjects.size(); t++)
+        {
+            if(tangibleLevelObjects[t].get()->entityID == entity->entityID)
+            {
+                if(tangibleLevelObjects[t].get()->clonable)
+                {
+                    ///check if unit is already spawned
+                    if(tangibleLevelObjects[t].get()->spawnOrderID == entity->spawnOrderID)
+                    respawn = false;
+                }
+            }
+        }
+
+        ///Check if entity's parent is still alive, if not, kill the entity
+        int parent = entity->parent;
+        bool dead_parent = false;
+
+        ///Check if parent is defined
+        if(parent != -1)
+        {
+            ///Look for parent
+            auto it = find_if(tangibleLevelObjects.begin(), tangibleLevelObjects.end(), [&parent](const std::unique_ptr<Entity>& obj) {return obj.get()->spawnOrderID == parent;});
+
+            if(it != tangibleLevelObjects.end())
+            {
+                ///Parent has been found!
+
+                auto index = std::distance(tangibleLevelObjects.begin(), it);
+                //cout << "My parent is currently residing at " << index << endl;
+
+                ///Check if it's dead
+                if(tangibleLevelObjects[index].get()->dead)
+                {
+                    ///Kill the entity
+                    dead_parent = true;
+                }
+            }
+            else ///Parent can't be found
+            {
+                ///Kill the entity
+                dead_parent = true;
+            }
+        }
+
+        /** Find the farthest unit in your army (for calculations) **/
+        int farthest_id = -1;
+        float temp_pos = -9999;
+
+        for(int i=0; i<units.size(); i++)
+        {
+            PlayableUnit* unit = units[i].get();
+
+            if(temp_pos <= unit->getGlobalPosition().x)
+            {
+                temp_pos = unit->getGlobalPosition().x;
+                farthest_id = i;
+            }
+        }
+
+        entity->distance_to_unit = abs(temp_pos - entity->getGlobalPosition().x);
+
+        if(entity->distance_to_unit <= 1000)
+        {
+            if(!dead_parent)
+            {
+                if(respawn)
+                {
+                    if(entity->respawn_clock.getElapsedTime().asSeconds() > entity->respawnTime)
+                    {
+                        entity->respawn_clock.restart();
+
+                        tangibleLevelObjects.push_back(make_unique<Kirajin_Yari_2>(*entity));
+                    }
+                }
+            }
+            else
+            {
+                ///remove this specific kirajin
+                k_e.push_back(i);
+            }
+        }
+    }
+
+    for(int i=0; i<k_e.size(); i++)
+    {
+        kirajins.erase(kirajins.begin()+k_e[i]-i);
+    }
 
     /** Draw all Entities **/
 
@@ -2141,14 +3377,17 @@ void MissionController::Update(sf::RenderWindow &window, float cfps, std::map<in
 
     /** Draw projectiles **/
 
-    for(int i=0; i<levelProjectiles.size(); i++)
+    vector<int> pr_rm = DrawProjectiles(window);
+
+    /** Draw message clouds **/
+    for(int e=0; e<tangibleLevelObjects.size(); e++)
     {
-        levelProjectiles[i].get()->Draw(window,fps);
+        Entity* entity = tangibleLevelObjects[e].get();
+        entity->doMessages(window, fps, inputCtrl);
     }
 
     /** Draw hitboxes **/
 
-    bool showHitboxes = false;
     if(showHitboxes)
     {
         DrawHitboxes(window);
@@ -2266,22 +3505,173 @@ void MissionController::Update(sf::RenderWindow &window, float cfps, std::map<in
 
     if(!missionEnd)
     {
-        // TODO: at some point some pointer shenanigans is required to make these be a reference to v4core's ones too.
-        rhythm.rhythmController.keyMap = *missionKeyMap;
+        ctrlTips.x = 0;
+        ctrlTips.y = (720-ctrlTips.ySize);
+        ctrlTips.draw(window);
 
         rhythm.fps = fps;
-        DoRhythm();
+        DoRhythm(cur_inputCtrl);
         rhythm.Draw(window);
     }
 
     /** Execute all mission end related things **/
     DoMissionEnd(window, fps);
 
+    if(dialogboxes.size() > 0)
+    {
+        if(o_inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+        {
+            switch(dialogboxes[dialogboxes.size()-1].CheckSelectedOption())
+            {
+                case 0:
+                {
+                    if(dialogboxes[dialogboxes.size()-1].id == 0)
+                    {
+                        cout << "Return to Patapolis" << endl;
+                        dialogboxes[dialogboxes.size()-1].Close();
+
+                        missionEnd = true;
+                        failure = true;
+                        rhythm.Stop();
+                    }
+                    else if(dialogboxes[dialogboxes.size()-1].id == 999)
+                    {
+                        cout << "Enable hitboxes" << endl;
+                        showHitboxes = true;
+                        dialogboxes[dialogboxes.size()-1].Close();
+                    }
+
+                    break;
+                }
+
+                case 1:
+                {
+                    if(dialogboxes[dialogboxes.size()-1].id == 0)
+                    {
+                        cout << "Back to Mission" << endl;
+                        dialogboxes[dialogboxes.size()-1].Close();
+                    }
+                    else if(dialogboxes[dialogboxes.size()-1].id == 999)
+                    {
+                        cout << "Disable hitboxes" << endl;
+                        showHitboxes = false;
+                        dialogboxes[dialogboxes.size()-1].Close();
+                    }
+
+                    break;
+                }
+
+                case 2:
+                {
+                    if(dialogboxes[dialogboxes.size()-1].id == 999)
+                    {
+                        cout << "Heal all units" << endl;
+                        for(int u=0; u<units.size(); u++)
+                        {
+                            units[u].get()->current_hp = units[u].get()->max_hp;
+                        }
+
+                        dialogboxes[dialogboxes.size()-1].Close();
+                    }
+
+                    break;
+                }
+
+                case 3:
+                {
+                    if(dialogboxes[dialogboxes.size()-1].id == 999)
+                    {
+                        cout << "Set weather to clear" << endl;
+
+                        weather.loadWeather(0);
+
+                        dialogboxes[dialogboxes.size()-1].Close();
+                    }
+
+                    break;
+                }
+
+                case 4:
+                {
+                    if(dialogboxes[dialogboxes.size()-1].id == 999)
+                    {
+                        cout << "Set weather to snow" << endl;
+
+                        weather.loadWeather(1);
+
+                        dialogboxes[dialogboxes.size()-1].Close();
+                    }
+
+                    break;
+                }
+
+                case 5:
+                {
+                    if(dialogboxes[dialogboxes.size()-1].id == 999)
+                    {
+                        cout << "Increase weather intensivity" << endl;
+
+                        weather.weatherIntensivity++;
+
+                        dialogboxes[dialogboxes.size()-1].Close();
+                    }
+
+                    break;
+                }
+
+                case 6:
+                {
+                    if(dialogboxes[dialogboxes.size()-1].id == 999)
+                    {
+                        cout << "Decrease weather intensivity" << endl;
+
+                        weather.weatherIntensivity--;
+
+                        dialogboxes[dialogboxes.size()-1].Close();
+                    }
+
+                    break;
+                }
+
+                case 7:
+                {
+                    if(dialogboxes[dialogboxes.size()-1].id == 999)
+                    {
+                        cout << "Set weather to rain" << endl;
+
+                        weather.loadWeather(2);
+
+                        dialogboxes[dialogboxes.size()-1].Close();
+                    }
+
+                    break;
+                }
+            }
+        }
+    }
+
+    vector<int> db_e; ///dialog box erase
+
+    for(int i=0; i<dialogboxes.size(); i++)
+    {
+        dialogboxes[i].x = 640;
+        dialogboxes[i].y = 360;
+        dialogboxes[i].Draw(window, fps, o_inputCtrl);
+
+        if(dialogboxes[i].closed)
+        db_e.push_back(i);
+    }
+
+    for(int i=0; i<db_e.size(); i++)
+    {
+        dialogboxes.erase(dialogboxes.begin()+db_e[i]-i);
+    }
+
     window.setView(lastView);
 
     /** Remove vector objects that are no longer in use **/
 
-    DoVectorCleanup(units_rm, dmg_rm, tlo_rm);
+    DoVectorCleanup(units_rm, dmg_rm, tlo_rm, pr_rm);
 }
 void MissionController::FinishLastCutscene()
 {

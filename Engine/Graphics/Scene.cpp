@@ -5,7 +5,8 @@ Scene::Scene()
 {
     //ctor
 }
-void Scene::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent){
+void Scene::Initialise(Config *thisConfigs, V4Core *parent)
+{
     parent->SaveToDebugLog("Initializing a new Scene...");
 
     std::cout << "[SCENE] Initializing...";
@@ -16,14 +17,19 @@ void Scene::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *pa
 
     parent->SaveToDebugLog("Scene initialized.");
 }
-void Scene::EventFired(sf::Event event){
+
+void Scene::EventFired(sf::Event event)
+{
 
 }
+
 void Scene::Update(sf::RenderWindow &window, float fps)
 {
 
 }
-void Scene::OnExit(){
+
+void Scene::OnExit()
+{
 
 }
 

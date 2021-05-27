@@ -14,6 +14,15 @@ void Hatapon::LoadConfig(Config *thisConfigs)
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\unit\\hatapon.p4a");
+
+    hit_1.loadFromFile("resources/sfx/level/hit_1.ogg");
+    hit_2.loadFromFile("resources/sfx/level/hit_2.ogg");
+    hit_3.loadFromFile("resources/sfx/level/hit_3.ogg");
+
+    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
+
+    isCollidable = true;
+    isAttackable = true;
 }
 
 void Hatapon::Draw(sf::RenderWindow& window)
@@ -22,8 +31,55 @@ void Hatapon::Draw(sf::RenderWindow& window)
     AnimatedObject::Draw(window);
 }
 
-void Hatapon::OnCollide(CollidableObject* otherObject)
+void Hatapon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<string> collisionData)
 {
+    /// note we don't call the parent function. It does nothing, it just serves
+    /// as an incomplete function to be overridden by child classes.
+
+    cout << "Hatapon::OnCollide" << endl;
+
+    if(collisionData.size() > 0)
+    {
+        if(isCollidable)
+        {
+            ///collisionData received from Projectile, process it
+            int dmgDealt = atoi(collisionData[0].c_str());
+
+            if(defend)
+            {
+                if(charged)
+                dmgDealt = round(dmgDealt / 4);
+                else
+                dmgDealt = round(dmgDealt / 2);
+            }
+
+            current_hp -= dmgDealt;
+
+            cout << "I received " << to_string(dmgDealt) << "damage, my HP is " << current_hp << endl;
+
+            cur_sound.stop();
+
+            int a = rand() % 3;
+
+            switch(a)
+            {
+                case 0:
+                cur_sound.setBuffer(hit_1);
+                break;
+
+                case 1:
+                cur_sound.setBuffer(hit_2);
+                break;
+
+                case 2:
+                cur_sound.setBuffer(hit_3);
+                break;
+            }
+
+            cur_sound.play();
+        }
+    }
+
     /// note we don't call the parent function. It does nothing, it just serves
     /// as an incomplete function to be overridden by child classes.
 }

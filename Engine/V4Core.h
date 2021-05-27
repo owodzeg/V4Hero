@@ -15,25 +15,26 @@
 #include "Menu/NewGameMenu.h"
 #include "TipsUtil.h"
 #include "../discord-cpp/discord.h"
+
+#include "Input/InputController.h"
+
 class V4Core
 {
     private:
     //MissionController currentController;
         std::vector<float> tot_fps;
-        std::map<int,bool> keyMap;
-        std::map<int,bool> keyMapHeld;
         sf::Thread* loadingThreadInstance;
 
         sf::Font f_font;
         sf::Text t_debug;
         sf::Text t_version;
-        sf::Text t_pressAnyKey;
+        sf::Text t_fps;
         float fps = 60;
         sf::Clock fpsclock;
 
     bool leftkey=false,rightkey=false,upkey=false,downkey=false;
     public:
-        std::string hero_version = "v1.1-pre-release-2";
+        std::string hero_version = "v1.1.2";
         sf::RenderWindow window;
 
         NewGameMenu newGameMenu;
@@ -55,6 +56,8 @@ class V4Core
         bool pressAnyKey = false;
         int framerateLimit = 60;
         vector<float> frameTimes;
+
+        InputController inputCtrl;
 
         struct DiscordState {
             discord::User currentUser;

@@ -11,7 +11,7 @@ class PText
     sf::Font f;
     sf::Text t;
 
-    std::string txt;
+    sf::String txt;
 
     int qualitySetting, resSetting;
     float cS = 1;
@@ -25,8 +25,10 @@ class PText
     float lx=0,ly=0;
     float angle=0;
 
+    bool wide = false;
+
     PText();
-    void createText(sf::Font font, float characterSize, sf::Color color, std::string text_string, int q, int r);
+    void createText(sf::Font& font, float characterSize, sf::Color color, sf::String text_string, int q, int r);
     void setOrigin(float x, float y);
     sf::Vector2f getScale();
     void setScale(float x, float y);
@@ -36,6 +38,10 @@ class PText
     void setOutlineThickness(int thick);
     void setPosition(float x, float y);
     void setString(std::string text_string);
+    void setString(std::wstring text_string);
+    void setString(sf::String text_string);
+    void setString(const char* text_string);
+    void setWString(std::wstring text_string);
     sf::Vector2f getPosition();
     sf::FloatRect getLocalBounds();
     sf::FloatRect getGlobalBounds();

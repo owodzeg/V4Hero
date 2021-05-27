@@ -3,11 +3,18 @@
 #include <SFML/Graphics.hpp>
 #include "../Config.h"
 #include "../Graphics/Menu.h"
+#include "../Graphics/ScreenFade.h"
 #include "../Mission/MissionController.h"
+#include "../Mission/Weather.h"
 #include "OptionsMenu.h"
 #include "Altar.h"
 #include "Barracks.h"
 #include "Obelisk.h"
+#include "Credits.h"
+#include "../Input/InputController.h"
+#include "../Dialog/ControlTips.h"
+#include "../Dialog/DialogBox.h"
+
 class V4Core;
 class PatapolisMenu : public Menu
 {
@@ -39,6 +46,9 @@ class PatapolisMenu : public Menu
         PSprite edge;
         PSprite bridge;
         PSprite rainbow;
+
+        PSprite back_layer[4];
+        vector<float> back_pos = {0, 3900, 7400, 9560};
 
         struct Sparkle ///for rainbow
         {
@@ -98,11 +108,28 @@ class PatapolisMenu : public Menu
             float alpha = 255;
         };
 
+        struct CloudA
+        {
+            PSprite cloud;
+            float x=0, y=0;
+        };
+
+        struct CloudB
+        {
+            sf::CircleShape cloud;
+            float base_x=0, base_y=0;
+            float x=0, y=0;
+        };
+
         vector<RayStart> coords;
         float rayXbase = 12215;
         float rayX = 12215;
 
         PSprite wakapon;
+
+        AnimatedObject a_wakapon;
+        AnimatedObject a_sen;
+
         PSprite world_egg;
         PSprite light_1, light_2, egg_light;
 
@@ -115,6 +142,8 @@ class PatapolisMenu : public Menu
         std::vector<LightRay> lightrays;
         std::vector<Fire> fires;
         std::vector<SmokeParticle> smoke;
+        std::vector<CloudA> clouds_A;
+        std::vector<CloudB> clouds_B;
 
         PSprite p_smoke;
         float smokepath1 = 0;
@@ -127,6 +156,7 @@ class PatapolisMenu : public Menu
         PSprite forge_main, forge_back, forge_glow, forge_fence, forge_slab, forge_slab_glow;
         PSprite barracks;
         PSprite festival_main;
+        PSprite se_ornament;
         PSprite altar;
         PSprite obelisk;
         PSprite paraget_main, paraget_crystal_glow, paraget_crystal;
@@ -147,6 +177,13 @@ class PatapolisMenu : public Menu
         bool isAnim = false;
         bool initialised=false;
         bool doWaitKeyPress=true;
+        bool loadedSave = false;
+
+        ///Seasonal events
+        bool se_christmas = false;
+        Weather weather;
+
+        ControlTips ctrlTips;
 
         AltarMenu altar_menu;
         Barracks barracks_menu;
@@ -154,6 +191,17 @@ class PatapolisMenu : public Menu
         Menu *parentMenu;
         int currentMenuPosition;
         std::vector<float> possibleMenuPositions;
+
+        vector<PataDialogBox> dialogboxes;
+        vector<MessageCloud> messageclouds;
+
+        sf::SoundBuffer sb_city_loop;
+        sf::Sound city_loop;
+
+        //int goto_id = -1; ///Go-to ID where should Patapolis go after ScreenFade finishes
+
+        Credits credits;
+
         void addL6(std::string variant, float x, float y, int q, int r);
         void addL2(std::string variant, float x, float y, int q, int r);
         void addSparkle(float x, float y);
@@ -161,8 +209,9 @@ class PatapolisMenu : public Menu
         void addRay(float x1, float y1, float x2, float y2);
         Fire addFire(int type, float x, float y, bool add);
         void addSmokeParticle(float x, float y, PSprite& refer);
-        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent,Menu *curParentMenu);
-        void Update(sf::RenderWindow &window, float fps);
+        void addCloud(std::string type, float x, float y, float xsize, float ysize, int q, int r);
+        void Initialise(Config *thisConfig, V4Core *parent,Menu *curParentMenu);
+        void Update(sf::RenderWindow &window, float fps, InputController& inputCtrl);
         void EventFired(sf::Event event);
         void SetTitle(int menuPosition);
         void OnExit();

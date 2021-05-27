@@ -32,37 +32,6 @@ V4Core::V4Core()
     cout << "[Debug] Maximum antialiasing level: " << rtx.getMaximumAntialiasingLevel() << endl;
     SaveToDebugLog("[GPU] Maximum antialiasing level: "+to_string(rtx.getMaximumAntialiasingLevel()));
 
-    if(!exists("WINE"))
-    {
-        system("systeminfo > syslog.txt");
-        ifstream sl("syslog.txt");
-        string buff;
-
-        while(getline(sl, buff))
-        {
-            if(buff.find("OS Name:") != std::string::npos)
-            SaveToDebugLog(buff);
-            else if(buff.find("OS Version:") != std::string::npos)
-            SaveToDebugLog(buff);
-            else if(buff.find("System Manufacturer:") != std::string::npos)
-            SaveToDebugLog(buff);
-            else if(buff.find("System Model:") != std::string::npos)
-            SaveToDebugLog(buff);
-            else if(buff.find("System Type:") != std::string::npos)
-            SaveToDebugLog(buff);
-            else if(buff.find("Processor(s):") != std::string::npos)
-            SaveToDebugLog(buff);
-            else if((buff.find("Family") != std::string::npos) && (buff.find("Model") != std::string::npos) && (buff.find("Stepping") != std::string::npos))
-            SaveToDebugLog(buff);
-            else if(buff.find("Total Physical Memory:") != std::string::npos)
-            SaveToDebugLog(buff);
-        }
-
-        sl.close();
-
-        system("del syslog.txt");
-    }
-
     auto result = discord::Core::Create(712761245752623226, DiscordCreateFlags_NoRequireDiscord, &core);
     state.core.reset(core);
     if (!state.core) {
@@ -122,11 +91,8 @@ V4Core::V4Core()
     /** Load config from config.cfg **/
     config.LoadConfig(this);
 
-    /** Load save from savereader **/
-    savereader.LoadSave(config);
     /** "Alpha release" text **/
-
-    f_font.loadFromFile("resources/fonts/p4kakupop-gothic.ttf");
+    f_font.loadFromFile(config.fontPath);
 
     t_debug.setFont(f_font);
     t_debug.setCharacterSize(24);
@@ -139,31 +105,21 @@ V4Core::V4Core()
     t_version.setFillColor(sf::Color(255,255,255,32));
     t_version.setString("V4Hero Client "+hero_version);
 
-    t_pressAnyKey.setFont(f_font);
-    t_pressAnyKey.setCharacterSize(42);
-    t_pressAnyKey.setFillColor(sf::Color(255,255,255,255));
-    t_pressAnyKey.setString("Press any key to continue...");
+    t_fps.setFont(f_font);
+    t_fps.setCharacterSize(24);
+    t_fps.setFillColor(sf::Color(255,255,255,96));
+    t_fps.setOutlineColor(sf::Color(0,0,0,96));
+    t_fps.setOutlineThickness(1);
+    t_fps.setString("FPS: ");
 
     /** Initialize main menu **/
     tipsUtil.LoadBackgrounds(config);
     tipsUtil.LoadIcons(config);
     tipsUtil.LoadStrings(config);
-    mainMenu.Initialise(&config,&keyMap,this);
+    mainMenu.Initialise(&config,this);
 
     menus.push_back(&mainMenu);
     config.configDebugID = 10;
-
-    /// If this is a new save (no previous save data) we load up the new game menu
-    newGameMenu.Initialise(&config,&keyMap,this);
-    menus.push_back(&newGameMenu);
-    if(savereader.isNewSave)
-    {
-        mainMenu.Hide();
-    }
-    else
-    {
-        newGameMenu.Hide();
-    }
 }
 
 void V4Core::SaveToDebugLog(string data)
@@ -209,12 +165,14 @@ void V4Core::LoadingWaitForKeyPress()
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
-                window.close();
-
-            if(event.type == sf::Event::KeyPressed)
             {
-                cout << "[DEBUG] Key released: " << event.key.code << endl;
-                //keyMapHeld[event.key.code] = false;
+                window.close();
+                biff = false;
+            }
+
+            ///Cannot use input controller here because this while loop completely blocks the other event access from happening
+            if((event.type == sf::Event::KeyPressed) || (event.type == sf::Event::JoystickButtonPressed))
+            {
                 biff=false;
                 pressAnyKey = false;
                 continueLoading = false;
@@ -225,82 +183,132 @@ void V4Core::LoadingWaitForKeyPress()
 }
 void V4Core::LoadingThread()
 {
-    ChangeRichPresence("Watching tips", "logo", "");
+    ChangeRichPresence("Reading tips", "logo", "");
 
-    sf::Context context;
+    //sf::Context context;
     window.setActive(true);
     window.draw(t_version);
     window.clear();
     window.display();
-    int i=0;
-    srand (time(NULL));
+
+    srand(time(NULL));
+
+    float resRatioX = window.getSize().x / float(1280);
+    float resRatioY = window.getSize().y / float(720);
+
+    sf::RectangleShape box_1,box_2;
+    box_1.setSize(sf::Vector2f(1280*resRatioX, 80*resRatioY));
+    box_2.setSize(sf::Vector2f(1280*resRatioX, 514*resRatioY));
+
+    PSprite tip_logo;
+    tip_logo.loadFromFile("resources/graphics/ui/tips/tip-logo.png", config.GetInt("textureQuality"), 1);
+
+    PSprite loading_head, loading_eye1, loading_eye2;
+    loading_head.loadFromFile("resources/graphics/ui/tips/loading_head.png", config.GetInt("textureQuality"), 1);
+    loading_eye1.loadFromFile("resources/graphics/ui/tips/loading_eye.png", config.GetInt("textureQuality"), 1);
+    loading_eye2.loadFromFile("resources/graphics/ui/tips/loading_eye.png", config.GetInt("textureQuality"), 1);
+
+    loading_eye1.setOrigin(loading_eye1.getLocalBounds().width*0.85, loading_eye1.getLocalBounds().height*0.85);
+    loading_eye2.setOrigin(loading_eye2.getLocalBounds().width*0.85, loading_eye2.getLocalBounds().height*0.85);
+
+    ///20 from top
+    ///80 box1
+    ///20 gap
+    ///480 box2
+    ///20 from bottom
+    ///66 for floor
+
+    box_1.setPosition(0,20*resRatioY);
+    box_2.setPosition(0,120*resRatioY);
+
+    box_1.setFillColor(sf::Color(0,0,0,192));
+    box_2.setFillColor(sf::Color(0,0,0,192));
+
     int tipBackground = rand() % tipsUtil.t_backgrounds.size();
     int tipIcon = rand() % tipsUtil.t_icons.size();
-    int tipText = rand() % tipsUtil.tipTitles.size();
-    int ScrWidth = 3840;
-    int ScrHeight = 2160;
+    int tipText = (rand() % tipsUtil.tip_amount)+1;
 
-    int WScrWidth = config.GetInt("resX");
-    int WScrHeight = config.GetInt("resY");
+    string title_key = "tip"+to_string(tipText)+"_title";
+    string desc_key = "tip"+to_string(tipText)+"_desc";
 
+    wstring wtitle_key(title_key.begin(), title_key.end());
+    wstring wdesc_key(desc_key.begin(), desc_key.end());
 
-    sf::Text t_tipTitle = sf::Text();
-    t_tipTitle.setFont(f_font);
-    t_tipTitle.setCharacterSize(42*config.GetInt("resX")/1280);
-    t_tipTitle.setFillColor(sf::Color(255,255,255,255));
-    t_tipTitle.setString(tipsUtil.tipTitles[tipText]);
-    std::vector<std::string> lines = Func::Split(tipsUtil.tipTexts[tipText],'\\');
-    std::vector<sf::Text> t_tipTextLines;
-    int textSize = 28*config.GetInt("resX")/1280;
-    for (auto it = lines.begin();it<lines.end();++it){
-        sf::Text t_tipText = sf::Text();
-        t_tipText.setFont(f_font);
-        t_tipText.setCharacterSize(textSize);
-        t_tipText.setFillColor(sf::Color(255,255,255,255));
-        t_tipText.setString(*it);
-        t_tipTextLines.push_back(t_tipText);
-    }
+    PText t_tipTitle;
+    t_tipTitle.createText(f_font, 48, sf::Color(255,255,255,255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(wtitle_key)), config.GetInt("textureQuality"), 1);
 
+    sf::String str_tipText = Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(wdesc_key));
+    //for(int t=0; t<str_tipText.size(); t++)
+    //{
+    //    if(str_tipText[t] == '\\')
+    //    str_tipText[t] = '\n';
+    //}
+
+    PText t_tipText;
+    t_tipText.createText(f_font, 32, sf::Color(255,255,255,255), str_tipText, config.GetInt("textureQuality"), 1);
+
+    PText t_pressAnyKey;
+    t_pressAnyKey.createText(f_font, 46, sf::Color(255,255,255,255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"tips_anykey")), config.GetInt("textureQuality"), 1);
+
+    PText t_nowLoading;
+    t_nowLoading.createText(f_font, 46, sf::Color(255,255,255,255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"tips_loading")), config.GetInt("textureQuality"), 1);
+
+    float maxFps = config.GetInt("framerateLimit");
+
+    if(maxFps == 0)
+    maxFps = 240;
 
     while (continueLoading)
     {
-        i++;
+        Sleep(1000/maxFps);
+
         window.clear();
         auto lastView = window.getView();
         window.setView(window.getDefaultView());
 
+        tipsUtil.t_backgrounds[tipBackground].setPosition(0,0);
+        tipsUtil.t_backgrounds[tipBackground].draw(window);
+
+        window.draw(box_1);
+        window.draw(box_2);
+
+        tip_logo.setPosition(1060,20);
+        tip_logo.draw(window);
+
+        tipsUtil.t_icons[tipIcon].setOrigin(tipsUtil.t_icons[tipIcon].getLocalBounds().width/2, tipsUtil.t_icons[tipIcon].getLocalBounds().height/2);
+        tipsUtil.t_icons[tipIcon].setPosition(1040,380);
+        tipsUtil.t_icons[tipIcon].draw(window);
+
+        t_tipTitle.setPosition(24,32);
+        t_tipTitle.draw(window);
+
+        t_tipText.setPosition(24,130);
+        t_tipText.draw(window);
+
         // drawing some text
-        if (!pressAnyKey){
-            t_version.setPosition(config.GetInt("resX")/2-50-100*sin(i/50.0),config.GetInt("resY")/2-20-100*sin((i+30)/50.0));
-            tipsUtil.t_backgrounds[tipBackground].setPosition(0,0);
-            tipsUtil.t_backgrounds[tipBackground].draw(window);
+        if(pressAnyKey)
+        {
+            t_pressAnyKey.setOrigin(t_pressAnyKey.getLocalBounds().width, t_pressAnyKey.getLocalBounds().height/2);
+            t_pressAnyKey.setPosition(722+526,658+21);
+            t_pressAnyKey.draw(window);
+        }
+        else
+        {
+            t_nowLoading.setOrigin(t_nowLoading.getLocalBounds().width, t_nowLoading.getLocalBounds().height/2);
+            t_nowLoading.setPosition(722+230+256,658+26);
+            t_nowLoading.draw(window);
 
-            tipsUtil.t_icons[tipIcon].setPosition((ScrWidth*3)/4,ScrHeight/4);
-            tipsUtil.t_icons[tipIcon].draw(window);
-            t_tipTitle.setPosition(24,42*WScrWidth/1280);
-            window.draw(t_tipTitle);
-            for (int i = 0;i<t_tipTextLines.size();++i){
-                t_tipTextLines[i].setPosition(24,152*WScrWidth/1280+(textSize+4)*i);
-                window.draw(t_tipTextLines[i]);
-            }
-            window.draw(t_version);
-        } else {
-            t_pressAnyKey.setPosition(12,config.GetInt("resY")-54);
-            tipsUtil.t_backgrounds[tipBackground].setPosition(0,0);
-            tipsUtil.t_backgrounds[tipBackground].draw(window);
+            loading_head.setPosition(t_nowLoading.getPosition().x-t_nowLoading.getLocalBounds().width-46,t_nowLoading.getPosition().y-28);
+            loading_eye1.setPosition(t_nowLoading.getPosition().x-t_nowLoading.getLocalBounds().width+19-46,t_nowLoading.getPosition().y+43-28);
+            loading_eye1.setRotation(loading_eye1.angle+(5.0 / maxFps));
+            loading_head.draw(window);
+            loading_eye1.draw(window);
 
-            tipsUtil.t_icons[tipIcon].setPosition((ScrWidth*3)/4,ScrHeight/4);
-            tipsUtil.t_icons[tipIcon].draw(window);
-
-            t_tipTitle.setPosition(24,42*WScrWidth/1280);
-            window.draw(t_tipTitle);
-
-            for (int i = 0;i<t_tipTextLines.size();++i){
-                t_tipTextLines[i].setPosition(24,152*WScrWidth/1280+(textSize+4)*i);
-                window.draw(t_tipTextLines[i]);
-            }
-            window.draw(t_version);
-            window.draw(t_pressAnyKey);
+            loading_head.setPosition(t_nowLoading.getPosition().x+12,t_nowLoading.getPosition().y-28);
+            loading_eye2.setPosition(t_nowLoading.getPosition().x+19+12,t_nowLoading.getPosition().y+43-28);
+            loading_eye2.setRotation(loading_eye2.angle-(5.0 / maxFps));
+            loading_head.draw(window);
+            loading_eye2.draw(window);
         }
 
         window.setView(lastView);
@@ -309,10 +317,8 @@ void V4Core::LoadingThread()
     }
 
     window.setActive(false);
-
-
-
 }
+
 void V4Core::ShowTip()
 {
     //loadingThreadInstance = sf::Thread(LoadingThread);
@@ -320,6 +326,7 @@ void V4Core::ShowTip()
     continueLoading=true;
 
 }
+
 void V4Core::Init()
 {
     /// turned off because it doesn't work for owocek
@@ -338,10 +345,13 @@ void V4Core::Init()
 
     window.setFramerateLimit(config.GetInt("framerateLimit"));
     window.setKeyRepeatEnabled(false);
+    window.setVerticalSyncEnabled(config.GetInt("verticalSync"));
 
     framerateLimit = config.GetInt("framerateLimit");
     if(framerateLimit == 0)
     framerateLimit = 1000;
+
+    inputCtrl.LoadKeybinds(config);
 
     while (window.isOpen())
     {
@@ -357,42 +367,21 @@ void V4Core::Init()
                 cout << "[DEBUG] Key pressed: " << event.key.code << endl;
                 SaveToDebugLog("[DEBUG] Key pressed: "+to_string(event.key.code));
 
-                keyMap[event.key.code] = true;
-                keyMapHeld[event.key.code] = true;
-
-                //if (!inMission){
-                //inMission=true;
-                //currentController.StartMission();
-                //} else if(event.key.code==59) {
-                //    cout<<"Returning to main menu...";
-                //    inMission=false;
-                //}
+                inputCtrl.keyRegistered = true;
+                inputCtrl.currentKey = event.key.code;
+                inputCtrl.keyMap[event.key.code] = true;
+                inputCtrl.keyMapHeld[event.key.code] = true;
             }
 
             if(event.type == sf::Event::KeyReleased)
             {
                 cout << "[DEBUG] Key released: " << event.key.code << endl;
                 SaveToDebugLog("[DEBUG] Key released: "+to_string(event.key.code));
-                keyMapHeld[event.key.code] = false;
+
+                inputCtrl.keyMapHeld[event.key.code] = false;
             }
 
-            /**
-            Joystick map (x360, ds4 is turned off by default, unsure about custom joysticks)
-            0 - square
-            1 - cross
-            2 - circle
-            3 - triangle
-            4 - L1
-            5 - R1
-            6 - L2
-            7 - R2
-            8 - share (start)
-            9 - options (select)
-            10 - L3 (analog)
-            11 - R3 (analog)
-            12 - PS/XB button
-            13 - DS4 touchpad
-            **/
+            /** Joystick buttons need to be somewhat manually assigned **/
 
             if (event.type == sf::Event::JoystickButtonPressed)
             {
@@ -400,138 +389,83 @@ void V4Core::Init()
                 {
                     std::cout << "[DEBUG] Joystick (" << event.joystickButton.joystickId << ") key pressed: " << event.joystickButton.button << std::endl;
 
-                    /// TEMPORARY SOLUTION! Make joysticks mappable in future, just like keyboard. //
-                    switch(event.joystickButton.button)
-                    {
-                    case 0:
-                    {
-                        keyMap[config.GetInt("keybindPata")] = true;
-                        keyMapHeld[config.GetInt("keybindPata")] = true;
-                        break;
-                    }
-
-                    case 1:
-                    {
-                        keyMap[config.GetInt("keybindDon")] = true;
-                        keyMapHeld[config.GetInt("keybindDon")] = true;
-                        break;
-                    }
-
-                    case 2:
-                    {
-                        keyMap[config.GetInt("keybindPon")] = true;
-                        keyMapHeld[config.GetInt("keybindPon")] = true;
-                        break;
-                    }
-
-                    case 3:
-                    {
-                        keyMap[config.GetInt("keybindChaka")] = true;
-                        keyMapHeld[config.GetInt("keybindChaka")] = true;
-                        break;
-                    }
-
-                    case 4:
-                    {
-                        keyMap[sf::Keyboard::Q] = true;
-                        keyMapHeld[sf::Keyboard::Q] = true;
-                        break;
-                    }
-
-                    case 5:
-                    {
-                        keyMap[sf::Keyboard::E] = true;
-                        keyMapHeld[sf::Keyboard::E] = true;
-                        break;
-                    }
-                    }
+                    inputCtrl.keyRegistered = true;
+                    inputCtrl.currentKey = 1000+event.joystickButton.button;
+                    inputCtrl.keyMap[1000+event.joystickButton.button] = true;
+                    inputCtrl.keyMapHeld[1000+event.joystickButton.button] = true;
                 }
             }
 
-            if (event.type == sf::Event::JoystickButtonReleased)
+            if(event.type == sf::Event::JoystickButtonReleased)
             {
                 if(event.joystickButton.joystickId == 0)
                 {
-                    std::cout << "[DEBUG] Joystick (" << event.joystickButton.joystickId << ") key released: " << event.joystickButton.button << std::endl;
+                    std::cout << "[DEBUG] Joystick (" << event.joystickButton.joystickId << ") key pressed: " << event.joystickButton.button << std::endl;
 
-                    /// TEMPORARY SOLUTION! Make joysticks mappable in future, just like keyboard. //
-                    switch(event.joystickButton.button)
-                    {
-                    case 0:
-                    {
-                        keyMapHeld[config.GetInt("keybindPata")] = false;
-                        break;
-                    }
-
-                    case 1:
-                    {
-                        keyMapHeld[config.GetInt("keybindDon")] = false;
-                        break;
-                    }
-
-                    case 2:
-                    {
-                        keyMapHeld[config.GetInt("keybindPon")] = false;
-                        break;
-                    }
-
-                    case 3:
-                    {
-                        keyMapHeld[config.GetInt("keybindChaka")] = false;
-                        break;
-                    }
-
-                    case 4:
-                    {
-                        keyMapHeld[sf::Keyboard::Q] = false;
-                        break;
-                    }
-
-                    case 5:
-                    {
-                        keyMapHeld[sf::Keyboard::E] = false;
-                        break;
-                    }
-                    }
+                    inputCtrl.keyMapHeld[1000+event.joystickButton.button] = false;
                 }
             }
 
-            if (event.type == sf::Event::JoystickMoved)
+            if(event.type == sf::Event::JoystickMoved)
             {
                 if(event.joystickMove.joystickId == 0)
                 {
                     if (event.joystickMove.axis == sf::Joystick::PovX)
                     {
-                        if(event.joystickMove.position == -100)
+                        if(event.joystickMove.position == -100) ///left
                         {
-                            cout << "left" << endl;
+                            inputCtrl.keyRegistered = true;
+                            inputCtrl.currentKey = 1100;
+                            inputCtrl.keyMap[1100] = true;
+                            inputCtrl.keyMapHeld[1100] = true;
+                        }
+                        else
+                        {
+                            inputCtrl.keyMapHeld[1100] = false;
                         }
 
-                        if(event.joystickMove.position == 100)
+                        if(event.joystickMove.position == 100) ///right
                         {
-                            cout << "right" << endl;
+                            inputCtrl.keyRegistered = true;
+                            inputCtrl.currentKey = 1101;
+                            inputCtrl.keyMap[1101] = true;
+                            inputCtrl.keyMapHeld[1101] = true;
+                        }
+                        else
+                        {
+                            inputCtrl.keyMapHeld[1101] = false;
                         }
                     }
 
                     if (event.joystickMove.axis == sf::Joystick::PovY)
                     {
-                        if(event.joystickMove.position == -100)
+                        if(event.joystickMove.position == -100) ///down
                         {
-                            cout << "down" << endl;
+                            inputCtrl.keyRegistered = true;
+                            inputCtrl.currentKey = 1102;
+                            inputCtrl.keyMap[1102] = true;
+                            inputCtrl.keyMapHeld[1102] = true;
+                        }
+                        else
+                        {
+                            inputCtrl.keyMapHeld[1102] = false;
                         }
 
-                        if(event.joystickMove.position == 100)
+                        if(event.joystickMove.position == 100) ///up
                         {
-                            cout << "up" << endl;
+                            inputCtrl.keyRegistered = true;
+                            inputCtrl.currentKey = 1103;
+                            inputCtrl.keyMap[1103] = true;
+                            inputCtrl.keyMapHeld[1103] = true;
+                        }
+                        else
+                        {
+                            inputCtrl.keyMapHeld[1103] = false;
                         }
                     }
                 }
             }
 
-            if (savereader.isNewSave)
-            {
-                newGameMenu.EventFired(event);
-            }
             mainMenu.EventFired(event);
         }
 
@@ -544,7 +478,7 @@ void V4Core::Init()
         float average = 0.0f;
         if(n != 0)
         {
-             average = accumulate(frameTimes.begin(), frameTimes.end(), 0.0) / n;
+             average = accumulate(frameTimes.begin(), frameTimes.end(), 0.0) / (n-1);
         }
 
         if(fps <= 1)
@@ -558,31 +492,30 @@ void V4Core::Init()
         //cout << fps << endl;
 
         window.clear();
-        // Something important goes here ok cool thanks
-        //if(inMission){
-        //currentController.Update(window,fps);
 
-        //} else {
-        //if (savereader.isNewSave){
-        //    newGameMenu.Update(window,fps,&keyMap,&keyMapHeld);
-        //} else {
-        mainMenu.Update(window,fps,&keyMap,&keyMapHeld);
-        //}
-        //}
+        mainMenu.Update(window,fps,inputCtrl);
 
         auto lastView = window.getView();
         window.setView(window.getDefaultView());
 
-        //t_debug.setPosition(window.getSize().x/2,window.getSize().y-20);
-        //window.draw(t_debug);
-
         t_version.setPosition(4,4);
         window.draw(t_version);
+
+        if(config.GetInt("showFPS"))
+        {
+            t_fps.setString("FPS: "+to_string(int(ceil(rawFps))));
+            t_fps.setOrigin(t_fps.getLocalBounds().width, 0);
+            t_fps.setPosition(window.getSize().x-4, 4);
+            window.draw(t_fps);
+        }
+
         window.display();
 
         window.setView(lastView);
 
-        keyMap.clear();
+        ///Clear the key inputs
+        inputCtrl.Flush();
+
         if(closeWindow)
         {
             window.close();

@@ -28,7 +28,7 @@ class SaveFileCreatedMenu : public Menu
 
         NewGameNameEntryMenu* nameEntryMenu;
         void UpdateKamiName(string newName);
-        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent,NewGameNameEntryMenu* parentMenu);
+        void Initialise(Config *thisConfig,V4Core *parent,NewGameNameEntryMenu* parentMenu);
 
         void Update(sf::RenderWindow &window, float fps);
         void EventFired(sf::Event event);

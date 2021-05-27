@@ -32,6 +32,10 @@ SaveReader::SaveReader()
     }*/
 
     isNewSave = !exists;
+
+    invdata.savereader = this;
+
+    itemreg.ReadItemFiles();
 }
 
 void SaveReader::LoadSave(Config& tconfig)
@@ -39,7 +43,6 @@ void SaveReader::LoadSave(Config& tconfig)
     config = &tconfig;
     debugOut = config->debugOut;
 
-    itemreg.ReadItemFiles();
     ifstream conf("resources/data/sv1.p4sv");
     if(conf.good())
     {
@@ -64,10 +67,12 @@ void SaveReader::LoadSave(Config& tconfig)
                     InventoryItem invItem;
                     invItem.item = itemreg.GetItemByID(stoi(key[1]));
                     invItem.inventoryId =invdata.items.size();
+                    cout << "ITEM: " << invItem.item->category_id << endl;
                     invdata.items.push_back(invItem);
                 } else if(key[0]=="heroUnlocked"){
                     heroUnlocked = stoi(key[1]);
                 } else if(key[0]=="PON"){
+                    cout << "PON reading: " << line << endl;
                     vector<string> ponData = Func::Split(key[1],'|');
                     Pon newPon = Pon(this);
                     newPon.pon_id=stoi(ponData[0]);
@@ -93,7 +98,29 @@ void SaveReader::LoadSave(Config& tconfig)
 
                     ponreg.pons.push_back(newPon);
                 }
+                else if(key[0] == "MISSION")
+                {
+                    missionsUnlocked.push_back(stoi(key[1]));
+                }
+                else if(key[0] == "LOCATIONS")
+                {
+                    locationsUnlocked = stoi(key[1]);
+                }
+                else if(key[0] == "MISSIONLEVEL")
+                {
+                    vector<string> l = Func::Split(key[1], ',');
 
+                    int lvl = stoi(l[1]);
+
+                    if(lvl < 0)
+                    lvl = 1;
+
+                    missionLevels[stoi(l[0])] = lvl;
+                }
+                else if(key[0] == "version")
+                {
+                    savever = key[1];
+                }
             }
         }
     }
@@ -104,6 +131,70 @@ void SaveReader::LoadSave(Config& tconfig)
     conf.close();
 }
 
+void SaveReader::Flush() ///Empties the save data.
+{
+    missionsUnlocked.clear();
+    missionLevels.clear();
+    locationsUnlocked = 1;
+
+    //invdata.items.clear();
+
+    PonRegistry n_ponreg;
+    InventoryData n_invdata;
+
+    ponreg = n_ponreg;
+    invdata = n_invdata;
+}
+
+void SaveReader::CreateBlankSave() ///Creates a blank save data for use
+{
+    cout << "SaveReader::CreateBlankSave()" << endl;
+
+    ///name of god
+    kaminame = "Kamipon";
+
+    ///times launched (unnecessary?)
+    timeslaunched = 0;
+    yariponsUnlocked = 3;
+    heroUnlocked = 1;
+
+    ///Adding starter items
+    vector<int> starter_items = {1,1,1,16,16,16}; ///3x wooden spear, 3x wooden helm
+
+    for(int i=0; i<starter_items.size(); i++)
+    {
+        InventoryItem invItem;
+        invItem.item = itemreg.GetItemByID(starter_items[i]);
+        invItem.inventoryId = invdata.items.size();
+        invdata.items.push_back(invItem);
+
+        cout << "Adding item with InvID " << invItem.inventoryId << " realID: " << invItem.item->item_id << endl;
+    }
+
+    ///Defining 3 Yaripons
+
+    for(int i=0; i<3; i++)
+    {
+        Pon newPon = Pon(this);
+
+        newPon.pon_id = i;
+        newPon.pon_class = 1;
+        newPon.pon_squad_position = i;
+
+        newPon.pon_exp = 0;
+        newPon.pon_level = 1;
+
+        newPon.GiveItem(0+i);
+        newPon.GiveItem(3+i);
+
+        ponreg.pons.push_back(newPon);
+    }
+
+    ///Worldmap data
+    missionsUnlocked.push_back(1);
+    locationsUnlocked = 1;
+}
+
 void SaveReader::Save()
 {
     ofstream conf2("resources/data/sv1.p4sv", ios::ate);
@@ -111,6 +202,7 @@ void SaveReader::Save()
     if(conf2.is_open())
     {
         conf2 << "Take caution! The data below represents your save data! Don't edit it unless you know what you're doing, and if you must, PLEASE back it up somewhere else first <3 #" <<'\n';
+        conf2 << "version:1.1" << '\n';
         conf2 << "name:" << kaminame.toAnsiString() <<'\n';
         conf2 << "timeslaunched:" << timeslaunched <<'\n';
         conf2 << "yariponsUnlocked:" << yariponsUnlocked <<'\n';
@@ -128,6 +220,22 @@ void SaveReader::Save()
             cout  <<"PON:" << current_pon.pon_id<<'|' <<current_pon.pon_class<<'|' <<current_pon.pon_squad_position<<'|' <<current_pon.pon_exp<<'|' <<current_pon.pon_level<<'|' <<current_pon.weapon_invItem_id<<'|' <<current_pon.armour_invItem_id<<'|' <<current_pon.weapon2_invItem_id<<'|' <<current_pon.mask_invItem_id<<'|' <<'\n';
 
             conf2 << "PON:" << current_pon.pon_id<<'|' <<current_pon.pon_class<<'|' <<current_pon.pon_squad_position<<'|' <<current_pon.pon_exp<<'|' <<current_pon.pon_level<<'|' <<current_pon.weapon_invItem_id<<'|' <<current_pon.armour_invItem_id<<'|' <<current_pon.weapon2_invItem_id<<'|' <<current_pon.mask_invItem_id<<'|' <<'\n';
+        }
+
+        conf2 << "# missions unlock" <<'\n';
+        conf2 << "# MISSION:id" <<'\n';
+        conf2 << "# LOCATIONS:number of locations unlocked" <<'\n';
+        for (int i=0; i<missionsUnlocked.size(); i++){
+            conf2 << "MISSION:" << to_string(missionsUnlocked[i]) <<'\n';
+        }
+        conf2 << "LOCATIONS:" << to_string(locationsUnlocked) <<'\n';
+
+        conf2 << "# mission levels" << '\n';
+        conf2 << "# MISSIONLEVEL:id,level" << '\n';
+
+        for (auto const& x : missionLevels)
+        {
+            conf2 << "MISSIONLEVEL:" << to_string(x.first) << "," << to_string(x.second) << '\n';
         }
 
             /*for(int i=0; i<configMap.size(); i++)
@@ -150,3 +258,14 @@ void SaveReader::Save()
     conf2.close();
 }
 
+bool SaveReader::isMissionUnlocked(int mission)
+{
+    if(std::find(missionsUnlocked.begin(), missionsUnlocked.end(), mission) != missionsUnlocked.end())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}

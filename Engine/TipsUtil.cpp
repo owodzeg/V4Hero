@@ -35,7 +35,7 @@ TipsUtil::TipsUtil()
 void TipsUtil::LoadBackgrounds(Config& tconfig)
 {
 
-    sf::Context context;
+    //sf::Context context;
     config = &tconfig;
     debugOut = config->debugOut;
 
@@ -61,7 +61,7 @@ void TipsUtil::LoadBackgrounds(Config& tconfig)
     for (auto it = backgroundFileNames.begin(); it != backgroundFileNames.end(); ++it){
         ///             ####   BARRACKS MENU BACKGROUND
         PSprite ps_temp;
-        ps_temp.loadFromFile("resources/graphics/ui/tips/"+*it,3);
+        ps_temp.loadFromFile("resources/graphics/ui/tips/"+*it,tconfig.GetInt("textureQuality"),1);
         ps_temp.setRepeated(true);
         ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
         ps_temp.setOrigin(0,0);
@@ -81,7 +81,7 @@ void TipsUtil::LoadBackgrounds(Config& tconfig)
 void TipsUtil::LoadIcons(Config& tconfig)
 {
 
-    sf::Context context;
+    //sf::Context context;
     config = &tconfig;
     debugOut = config->debugOut;
     ifstream conf("resources/graphics/ui/tips/tip_icons.txt");
@@ -106,7 +106,7 @@ void TipsUtil::LoadIcons(Config& tconfig)
     for (auto it = iconFileNames.begin(); it != iconFileNames.end(); ++it){
         ///             ####   BARRACKS MENU BACKGROUND
         PSprite ps_temp;
-        ps_temp.loadFromFile("resources/graphics/ui/tips/"+*it,3);
+        ps_temp.loadFromFile("resources/graphics/ui/tips/"+*it,tconfig.GetInt("textureQuality"),1);
         ps_temp.setRepeated(true);
         ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
         ps_temp.setOrigin(0,0);
@@ -126,8 +126,8 @@ void TipsUtil::LoadIcons(Config& tconfig)
 void TipsUtil::LoadStrings(Config& tconfig)
 {
 
-    sf::Context context;
-    config = &tconfig;
+    //sf::Context context;
+    /**config = &tconfig;
     debugOut = config->debugOut;
     ifstream conf("resources/lang/tip_ENG.txt");
     if(conf.good())
@@ -150,5 +150,5 @@ void TipsUtil::LoadStrings(Config& tconfig)
     {
         cout << "ERROR! Could not load tips icon file!" << endl;
     }
-    conf.close();
+    conf.close();*/
 }

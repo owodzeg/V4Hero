@@ -12,7 +12,10 @@ using namespace std;
 ItemRegistry::ItemRegistry(){
 
 }
-void ItemRegistry::ReadItemFiles(){
+void ItemRegistry::ReadItemFiles()
+{
+    /** REWORK THIS!!!!! The code can be more efficient and nice looking. **/
+
     vector<std::string> itemPaths;
     ifstream conf("resources/data/itemdata/aaa_item_registry.txt");
     if(conf.good())
@@ -49,17 +52,28 @@ void ItemRegistry::ReadItemFiles(){
                 ///ignore comments
                 if(line.find("#") == std::string::npos && line.find("//") == std::string::npos)
                 {
+                    cout << "[ItemRegistry] " << line << endl;
+
                     ///read into the item
                     vector<string> key = Func::Split(line,':');
-                    if(key[0]=="id"){
+
+                    if(key[0]=="id")
+                    {
                         newItem->item_id = stoi(key[1]);
-                    } else if(key[0]=="name"){
+                    }
+                    else if(key[0]=="name")
+                    {
                         std::wstring resws;
                         std::string str = key[1];
                         resws.assign(str.begin(), str.end());
                         newItem->item_name = resws;
-                    } else if(key[0]=="type"){
+                    }
+                    else if(key[0]=="type")
+                    {
                         newItem->category_id = stoi(key[1]);
+
+                        cout << "category_id: " << key[1] << endl;
+
                         switch (stoi(key[1])){
                             case 1: /// weapon
                                 {
@@ -94,6 +108,21 @@ void ItemRegistry::ReadItemFiles(){
                                             wep->crit = stoi(key[1]);
                                         } else if(key[0]=="attackspeed"){
                                             wep->attackspeed = stoi(key[1]);
+                                        } else if(key[0]=="equip_id"){
+                                            wep->equip_id = stoi(key[1]);
+                                        }
+                                        else if(key[0]=="spritesheet")
+                                        {
+                                            wep->spritesheet = key[1];
+                                        }
+                                        else if(key[0]=="spritesheet_id")
+                                        {
+                                            wep->spritesheet_id = stoi(key[1]);
+                                        }
+                                        else if(key[0]=="altar_order_id")
+                                        {
+                                            cout << "Setting altar_order_id to" << key[1] << endl;
+                                            wep->altar_order_id = stoi(key[1]);
                                         }
                                     }
                                 }
@@ -134,6 +163,21 @@ void ItemRegistry::ReadItemFiles(){
                                             mask->crit = stoi(key[1]);
                                         } else if(key[0]=="attackspeed"){
                                             mask->attackspeed = stoi(key[1]);
+                                        } else if(key[0]=="equip_id"){
+                                            mask->equip_id = stoi(key[1]);
+                                        }
+                                        else if(key[0]=="spritesheet")
+                                        {
+                                            mask->spritesheet = key[1];
+                                        }
+                                        else if(key[0]=="spritesheet_id")
+                                        {
+                                            mask->spritesheet_id = stoi(key[1]);
+                                        }
+                                        else if(key[0]=="altar_order_id")
+                                        {
+                                            cout << "Setting altar_order_id to" << key[1] << endl;
+                                            mask->altar_order_id = stoi(key[1]);
                                         }
                                     }
                                 }
@@ -143,6 +187,8 @@ void ItemRegistry::ReadItemFiles(){
                                 }
                             case 3: /// armour
                                 {
+                                cout << "loading a new armor" << endl;
+
                                 quit=true;
                                 Armour* masks = Armour::FromItem(newItem);
                                 while(getline(itemStream, line))
@@ -173,6 +219,21 @@ void ItemRegistry::ReadItemFiles(){
                                             masks->attackspeed = stoi(key[1]);
                                         } else if(key[0]=="hp"){
                                             masks->hp = stoi(key[1]);
+                                        } else if(key[0]=="equip_id"){
+                                            masks->equip_id = stoi(key[1]);
+                                        }
+                                        else if(key[0]=="spritesheet")
+                                        {
+                                            masks->spritesheet = key[1];
+                                        }
+                                        else if(key[0]=="spritesheet_id")
+                                        {
+                                            masks->spritesheet_id = stoi(key[1]);
+                                        }
+                                        else if(key[0]=="altar_order_id")
+                                        {
+                                            cout << "Setting altar_order_id to" << key[1] << endl;
+                                            masks->altar_order_id = stoi(key[1]);
                                         }
                                     }
                                 }
@@ -188,23 +249,43 @@ void ItemRegistry::ReadItemFiles(){
                         if (quit){
                             break;
                         }
-                    } else if(key[0]=="subtype"){
+                    }
+                    else if(key[0]=="subtype")
+                    {
                         newItem->subcategory_id = stoi(key[1]);
-                    } else if(key[0]=="desc"){
+                    }
+                    else if(key[0]=="desc")
+                    {
                         std::wstring resws;
                         std::string str = key[1];
                         resws.assign(str.begin(), str.end());
                         newItem->item_description = resws;
-                    } else if(key[0]=="icon"){
+                    }
+                    else if(key[0]=="icon")
+                    {
                         newItem->icon_path = key[1];
-                    } else if(key[0]=="spritesheet"){
+                    }
+                    else if(key[0]=="spritesheet")
+                    {
                         newItem->spritesheet = key[1];
-                    } else if(key[0]=="spritesheet_id"){
+                    }
+                    else if(key[0]=="spritesheet_id")
+                    {
                         newItem->spritesheet_id = stoi(key[1]);
+                    }
+                    else if(key[0]=="equip_id")
+                    {
+                        cout << "Setting equip_id to" << key[1] << endl;
+                        newItem->equip_id = stoi(key[1]);
+                    }
+                    else if(key[0]=="altar_order_id")
+                    {
+                        cout << "Setting altar_order_id to" << key[1] << endl;
+                        newItem->altar_order_id = stoi(key[1]);
                     }
                 }
             }
-            cout << "Registered "<< itemPaths[i] <<" as an item !" << endl;
+            cout << "Registered "<< itemPaths[i] <<" as an item ! (" << newItem->category_id << ")" << endl;
         }
         else
         {
@@ -219,13 +300,15 @@ void ItemRegistry::ReadItemFiles(){
 ItemRegistry::~ItemRegistry(){
 
 }
-Item* ItemRegistry::GetItemByID(int id){
-
-    for (int i=0;i<items.size()-1;i++){
+Item* ItemRegistry::GetItemByID(int id)
+{
+    for (int i=0; i<items.size(); i++)
+    {
         Item* currentItem = items[i];
-        ///cout<<currentItem->item_id<<"|"<<id<<'\n';
+
         if (currentItem->item_id==id)
             return items[i];
     }
-    cout<<"A stupid happened: "<<id<<'\n';
+
+    cout << "A stupid happened: " << id <<'\n';
 }

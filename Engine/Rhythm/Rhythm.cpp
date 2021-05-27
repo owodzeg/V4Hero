@@ -22,6 +22,9 @@ Rhythm::Rhythm()
 
     t_flash.loadFromFile("resources/graphics/rhythm/drums/flash.png");
     t_flash.setSmooth(true);
+
+    s_badrhythm1.loadFromFile("resources/sfx/level/badrhythm_1.ogg");
+    s_badrhythm2.loadFromFile("resources/sfx/level/badrhythm_2.ogg");
 }
 void Rhythm::Stop()
 {
@@ -58,12 +61,31 @@ void Rhythm::LoadTheme(string theme)
     satisfaction_value.clear();
 
     ///Stop any current action
+    //current_song = "";
+
+    ///Restart the Rhythm clocks
+    //rhythmClock.restart();
+
+    //s_theme[0].setBuffer(songController->GetSongByNumber(0,0));
+    //cout << "Volume is " << float(config.GetInt("masterVolume"))*(float(config.GetInt("bgmVolume"))/100.f) << " " << config.GetInt("masterVolume") << " " << config.GetInt("bgmVolume") << endl;
+    //s_theme[0].setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("bgmVolume"))/100.f));
+    //s_theme[0].play();
+
+    //beat_timer = floor(songController->GetSongByNumber(0,0).getDuration().asMilliseconds() / float(8.08));
+    //cout << "Beat timer set to: " << beat_timer << endl;
+}
+
+void Rhythm::Start()
+{
+    ///Stop any current action
     current_song = "";
 
     ///Restart the Rhythm clocks
     rhythmClock.restart();
 
     s_theme[0].setBuffer(songController->GetSongByNumber(0,0));
+    cout << "Volume is " << float(config.GetInt("masterVolume"))*(float(config.GetInt("bgmVolume"))/100.f) << " " << config.GetInt("masterVolume") << " " << config.GetInt("bgmVolume") << endl;
+    s_theme[0].setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("bgmVolume"))/100.f));
     s_theme[0].play();
 
     beat_timer = floor(songController->GetSongByNumber(0,0).getDuration().asMilliseconds() / float(8.08));
@@ -86,6 +108,7 @@ void Rhythm::BreakCombo()
     {
         ///Dying fever sound
         s_fever_fail.setBuffer(b_fever_fail);
+        s_fever_fail.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
         s_fever_fail.play();
     }
 
@@ -106,6 +129,7 @@ void Rhythm::BreakCombo()
 
     ///Play the idle loop
     s_theme[0].setBuffer(songController->GetSongByNumber(0,1));
+    s_theme[0].setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("bgmVolume"))/100.f));
     s_theme[0].play();
 
     ///Stop any current action
@@ -116,6 +140,13 @@ void Rhythm::BreakCombo()
     cycle_mode = 1;
 
     bgm_cycle = 0;
+
+    pata_react.stop();
+    pata_react.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
+
+    pata_react.setBuffer(s_badrhythm2);
+
+    pata_react.play();
 }
 
 int Rhythm::GetCombo()
@@ -133,7 +164,7 @@ float Rhythm::GetSatisfaction()
     return last_satisfaction;
 }
 
-void Rhythm::checkRhythmController()
+void Rhythm::checkRhythmController(InputController& inputCtrl)
 {
     ///RHYTHM CONTROLLER SETUP
     rhythmController.combo = combo;
@@ -144,7 +175,7 @@ void Rhythm::checkRhythmController()
     rhythmController.low_range = low_range;
     rhythmController.high_range = high_range;
 
-    if(rhythmController.checkForInput())
+    if(rhythmController.checkForInput(inputCtrl))
     {
         Drum temp;
         temp.Load(rhythmController.drumToLoad,rhythmController.drum_perfection,t_drums[rhythmController.drumToLoad], t_flash);
@@ -160,9 +191,9 @@ void Rhythm::checkRhythmController()
     rhythmController.resetValues();
 }
 
-void Rhythm::doRhythm()
+void Rhythm::doRhythm(InputController& inputCtrl)
 {
-    checkRhythmController();
+    checkRhythmController(inputCtrl);
 
     if(rhythmClock.getElapsedTime().asMilliseconds() > (beat_timer/float(2)))
     {
@@ -273,13 +304,19 @@ void Rhythm::doRhythm()
                         s_theme[1].stop();
 
                         s_theme[combo%2].setBuffer(songController->GetSongByNumber(0,combo));
+                        s_theme[combo%2].setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("bgmVolume"))/100.f));
 
                         s_theme[combo%2].stop();
                         s_theme[combo%2].play();
 
                         if(config.GetInt("enablePataponChants"))
                         {
-                            s_chant.setBuffer(songController->GetChantByNumber(0,av_songs[index]+"_1"));
+                            if(current_song != "chakapata")
+                            s_chant.setBuffer(songController->GetChantByNumber(0,current_song+"_1"));
+                            else
+                            s_chant.setBuffer(songController->GetChantByNumber(0,"patapata_1"));
+
+                            s_chant.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
                             s_chant.play();
                         }
 
@@ -300,6 +337,7 @@ void Rhythm::doRhythm()
                 combo = 1;
 
                 s_theme[0].setBuffer(songController->GetSongByNumber(0,combo));
+                s_theme[0].setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("bgmVolume"))/100.f));
 
                 s_theme[0].stop();
                 s_theme[1].stop();
@@ -399,6 +437,7 @@ void Rhythm::doRhythm()
                     }
 
                     s_theme[combo%2].setBuffer(songController->GetSongByNumber(0,combo));
+                    s_theme[combo%2].setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("bgmVolume"))/100.f));
 
                     s_theme[combo%2].stop();
                     s_theme[combo%2].play();
@@ -415,15 +454,21 @@ void Rhythm::doRhythm()
                         {
                             song_id = 3;
 
-                            if((av_songs[index] == "patapata") || (av_songs[index] == "ponpon") || (av_songs[index] == "chakachaka"))
+                            if((av_songs[index] == "patapata") || (av_songs[index] == "ponpon") || (av_songs[index] == "chakachaka") || (av_songs[index] == "chakapata"))
                             {
                                 song_id = 3 + combo%2;
                             }
                         }
 
+                        string song;
 
-                        string song = av_songs[index]+"_"+to_string(song_id);
+                        if(av_songs[index] != "chakapata")
+                        song = av_songs[index]+"_"+to_string(song_id);
+                        else
+                        song = "patapata_"+to_string(song_id);
+
                         s_chant.setBuffer(songController->GetChantByNumber(0,song));
+                        s_chant.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
 
                         if(combo != 11)
                         s_chant.play();
@@ -432,6 +477,7 @@ void Rhythm::doRhythm()
                     if(combo == 11)
                     {
                         s_fever_start.setBuffer(b_fever_start);
+                        s_fever_start.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
                         s_fever_start.play();
                     }
 

@@ -2,24 +2,100 @@
 #include "math.h"
 #include <fstream>
 #include <iostream>
-#include "../../../Func.h"
+#include "../../../../Func.h"
 #include <sstream>
-#include "../../../V4Core.h"
+#include "../../../../V4Core.h"
+
 Kacheek::Kacheek()
 {
-    type = HOSTILE;
+
 }
+
 void Kacheek::LoadConfig(Config *thisConfigs)
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\kacheek.p4a");
     AnimatedObject::setAnimationSegment("idle");
+
+    s_startle.loadFromFile("resources/sfx/level/kacheek_startled.ogg");
+    s_dead.loadFromFile("resources/sfx/level/kacheek_dead.ogg");
+
+    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
 }
+
+void Kacheek::parseAdditionalData(std::vector<std::string> additional_data)
+{
+    for(int i=0; i<additional_data.size(); i++)
+    {
+        if(additional_data[i].find("forceSpawnOnLvl") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            force_spawn = true;
+            force_spawn_lvl = stoi(eq[1]);
+        }
+        else if(additional_data[i].find("forceDropIfNotObtained") != std::string::npos)
+        {
+            vector<string> eq = Func::Split(additional_data[i], ':');
+
+            force_drop = true;
+            force_drop_item = stoi(eq[1]);
+
+            if(eq[2] != "any")
+            force_drop_mission_lvl = 0;
+        }
+    }
+}
+
 void Kacheek::Draw(sf::RenderWindow& window)
 {
     /// before we draw the object, check if we are walking and
     if(AnimatedObject::getAnimationSegment() != "death")
     {
+        if(react_timer.getElapsedTime().asSeconds() > react_time)
+        {
+            react_time = 1.0 + ((rand() % 3000) / 1000.0);
+
+            if(distance_to_unit <= 500)
+            {
+                ///we want to make kacheek more prone to escape the closest the patapon gets.
+                /// 800 - minimal range, not likely to escape
+                /// 500 - mid chance, might escape but might not
+                /// 100 - very high change, kacheek feels threatened
+                /// 0 - 100% chance, escape now
+
+                float chance = 500 - distance_to_unit;
+                int roll = rand() % 500 + 1;
+
+                cout << "Should kacheek react? " << chance << ": " << roll << " rolled" << endl;
+
+                if(roll < chance)
+                {
+                    ///run!!!!
+                    walk_timer.restart();
+                    walk_time = 2.5 + (rand() % 1500) / 1000;
+
+                    /// don't start the animation again if kacheek is still running
+                    if(AnimatedObject::getAnimationSegment() != "walk")
+                    {
+                        AnimatedObject::setAnimationSegment("walk");
+                        current_frame = 0;
+                    }
+
+                    if(!run)
+                    {
+                        cur_sound.stop();
+                        cur_sound.setBuffer(s_startle);
+                        cur_sound.play();
+                    }
+
+                    run = true;
+                }
+            }
+
+            react_timer.restart();
+        }
+
         if(run)
         {
             AnimatedObject::moveGlobalPosition(sf::Vector2f(float(160) / fps, 0));
@@ -54,43 +130,7 @@ void Kacheek::Draw(sf::RenderWindow& window)
 
                 AnimatedObject::setColor(sf::Color(c.r,c.g,c.b,alpha));
 
-                if(!dropped_item)
-                {
-                    ///Drop item mechanism! Really cool!
-                    cout << "Look at me! I'm a Kacheek and I'm dropping an item!" << endl;
-                    int rng = rand() % 100 + 1; ///select 1 - 100;
-                    int total_rng = 0;
-                    int id_picked = 0;
-
-                    cout << "Rng: " << rng << endl;
-
-                    for(int i=0; i<loot_table.size(); i++)
-                    {
-                        total_rng += loot_table[i].item_chance;
-
-                        if(rng <= total_rng)
-                        {
-                            id_picked = loot_table[i].item_id;
-                            cout << "Picked id: " << id_picked << endl;
-
-                            break;
-                        }
-                    }
-
-                    if(id_picked != 0)
-                    {
-                        auto item = thisConfig->thisCore->savereader.itemreg.GetItemByID(id_picked);
-                        vector<string> data = {item->spritesheet, to_string(item->spritesheet_id), to_string(id_picked)};
-
-                        thisConfig->thisCore->currentController.spawnEntity("droppeditem",5,0,getGlobalPosition().x,0,getGlobalPosition().y-60,0,0,1,sf::Color::White,0,0,vector<Entity::Loot>(), data);
-
-                        dropped_item = true;
-                    }
-                    else
-                    {
-                        cout << "No item dropped :(" << endl;
-                    }
-                }
+                dropItem();
             }
         }
         else
@@ -153,10 +193,10 @@ void Kacheek::Draw(sf::RenderWindow& window)
             {
                 ///Make it do a 180 spin based on frames 12 - 60
                 float percentage = (getAnimationPos() - 0.8) / (1 - 0.8);
-                float raise = 40 + (-100 * (1 - percentage));
+                float raise = 28 + (-100 * (1 - percentage));
 
-                if(raise >= 40)
-                raise = 40;
+                if(raise >= 28)
+                raise = 28;
 
                 local_y = raise;
             }
@@ -172,9 +212,8 @@ void Kacheek::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
 
     if(AnimatedObject::getAnimationSegment() != "death")
     {
-        run = true;
         walk_timer.restart();
-        walk_time = 1.5 + (rand() % 2500) / 1000;
+        walk_time = 2.5 + (rand() % 1500) / 1000;
 
         /// don't start the animation again if kacheek is still running
         if(AnimatedObject::getAnimationSegment() != "walk")
@@ -196,8 +235,23 @@ void Kacheek::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
             {
                 AnimatedObject::setAnimationSegment("death", true);
                 death_timer.restart();
+
+                cur_sound.stop();
+                cur_sound.setBuffer(s_dead);
+                cur_sound.play();
             }
         }
+        else
+        {
+            if(!run)
+            {
+                cur_sound.stop();
+                cur_sound.setBuffer(s_startle);
+                cur_sound.play();
+            }
+        }
+
+        run = true;
     }
     //ready_to_erase = true;
 

@@ -9,9 +9,9 @@ NewGameMenuButtonList::NewGameMenuButtonList()
 {
 
 }
-void NewGameMenuButtonList::Initialise(sf::Font *font,Config &newConfig,  std::map<int,bool> *thisKeymap,MissionController *controller,Menu *mainMenu, Menu *CurOptionsMenu, Menu *CurNameEntryMenu)
+void NewGameMenuButtonList::Initialise(sf::Font *font,Config &newConfig, MissionController *controller,Menu *mainMenu, Menu *CurOptionsMenu, Menu *CurNameEntryMenu)
 {
-    ButtonList::Initialise(font,newConfig,thisKeymap,controller,mainMenu);
+    ButtonList::Initialise(font,newConfig,controller,mainMenu);
     MenuButton* level1Button = new MenuButton(L"menu_button_newgame",font,42,350,this,0);
     MenuButton* optionsButton = new MenuButton(L"menu_button_3",font,42,400,this,1);
     buttons.push_back(*level1Button);

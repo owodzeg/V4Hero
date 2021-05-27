@@ -7,7 +7,10 @@
 #include "Background.h"
 #include "Camera.h"
 #include "../Config.h"
+
 #include "../Graphics/PText.h"
+#include "../Graphics/PSpritesheet.h"
+
 #include <string>
 #include <thread>
 
@@ -20,7 +23,13 @@
 #include "Units/Projectile.h"
 #include "Units/CollidableObject.h"
 #include "Units/PlayableUnit.h"
-#include "../Graphics/PSpritesheet.h"
+
+#include "../Dialog/ControlTips.h"
+#include "../Dialog/DialogBox.h"
+#include "../Dialog/MessageCloud.h"
+
+#include "Weather.h"
+
 
 class V4Core;
 class MissionController
@@ -29,6 +38,10 @@ class MissionController
     int qualitySetting=1, resSetting=1;
 
     float fps = 60;
+
+    ControlTips ctrlTips;
+
+    bool showHitboxes = false;
 
     Background test_bg;
     Rhythm rhythm;
@@ -63,7 +76,6 @@ class MissionController
 
     sf::Text t_timerMenu;
     Camera camera;
-    std::map<int,bool>* missionKeyMap;
     Config* missionConfig;
     V4Core* v4core;
 
@@ -90,9 +102,13 @@ class MissionController
     /// we need to check against for collision (but not always damage)
 
 
+    ///object lists
     std::vector<std::unique_ptr<PlayableUnit>> units;
     std::vector<std::unique_ptr<Entity>> tangibleLevelObjects;
     std::vector<std::unique_ptr<Projectile>> levelProjectiles;
+
+    ///clonables
+    std::vector<std::unique_ptr<Kirajin_Yari_2>> kirajins;
 
     float pataponY = 600; ///temp
     float wallY = 200; ///temp
@@ -105,6 +121,7 @@ class MissionController
     float prevTime = 0;
     sf::Clock walkClock;
     bool startWalking = false;
+    bool walkBackwards = false;
 
     struct DamageCounter
     {
@@ -127,6 +144,10 @@ class MissionController
     std::vector<DamageCounter> dmgCounters;
     std::vector<DroppedItem> droppedItems;
 
+    sf::SoundBuffer spear_hit_enemy, spear_hit_iron, spear_hit_rock, spear_hit_solid, s_heal;
+
+    std::deque<sf::Sound> projectile_sounds;
+
     bool missionEnd = false;
     float textCurX = -1280;
     float barCurX = 1920;
@@ -142,6 +163,8 @@ class MissionController
         int collidedEntityID = -1; ///id of entity that has been collided with
         bool isCollidable = true; ///is the entity collidable?
         bool isAttackable = true; ///is the entity attackable?
+        float defend_factor = 1; ///how much did the entity defended off?
+        int collidedEntityCategory = -1;
     };
 
     struct PickedItem ///used for item display in the top right corner
@@ -163,6 +186,7 @@ class MissionController
         ///visuals
         sf::CircleShape circle;
         PSprite thumb;
+        PSprite equip_1, equip_2;
         PText unit_count;
         PText unit_count_shadow;
         PSprite hpbar_back;
@@ -178,9 +202,18 @@ class MissionController
     bool debug_map_drop = false;
     bool failure = false;
 
+    int curMissionID = 0;
+    int spawnOrder = 0;
+
+    vector<PataDialogBox> dialogboxes;
+    vector<MessageCloud> messageclouds;
+
+    Weather weather;
+
     /** Collisions **/
     bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame,AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY);
-    CollisionEvent DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY,int collisionObjectID,vector<string> collisionData = {});
+    vector<CollisionEvent> DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY,int collisionObjectID,vector<string> collisionData = {});
+    vector<CollisionEvent> DoCollisionForUnit(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY,int collisionObjectID,vector<string> collisionData = {});
     float pataponMaxProjection(float axisAngle, int id);
     float pataponMinProjection(float axisAngle, int id);
 
@@ -193,29 +226,31 @@ class MissionController
     float Smoothstep(float time);
     float Clamp(float x, float lowerlimit, float upperlimit);
 
-    /** Item management **/
+    /** Save data management **/
     void submitPickedItems();
+    void updateMissions();
 
     /** Load up the assets **/
     void addDmgCounter(int type, int damage, float baseX, float baseY, int q, int r);
     void addItemsCounter(int id, float baseX, float baseY);
-    void spawnEntity(string entityName, int entityID, int baseHP, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, vector<Entity::Loot> loot_table, vector<string> additional_data={});
+    void spawnEntity(string entityName, int entityID, int baseHP, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, int layer, int parent, float overrideY, float overrideHP, float mission_multiplier, float mindmg, float maxdmg, bool clonable, int spawn_delay, vector<Entity::Loot> loot_table, vector<string> additional_data={});
     void addPickedItem(std::string spritesheet, int spritesheet_id, int picked_item);
     void addUnitThumb(int unit_id);
-    void spawnProjectile(float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit);
+    void spawnProjectile(PSprite& sprite, float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit, bool enemy=false);
 
     /** Load up the mission **/
-    void Initialise(Config &config, std::map<int,bool> &keymap,std::string backgroundName,V4Core &v4core_);
-    void StartMission(std::string missionFile, bool showCutscene=false);
+    void Initialise(Config &config,std::string backgroundName,V4Core &v4core_);
+    void StartMission(std::string missionFile, bool showCutscene=false, int missionID=0, float mission_multiplier=1);
 
     /** Stop the mission **/
     void StopMission();
 
     /** Mission update stuff **/
-    void DoMovement(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
-    void DoRhythm();
+    void DoMovement(sf::RenderWindow &window, float fps, InputController& inputCtrl);
+    void DoRhythm(InputController& inputCtrl);
     void DoMissionEnd(sf::RenderWindow& window, float fps);
-    void DoVectorCleanup(std::vector<int> units_rm, std::vector<int> dmg_rm, std::vector<int> tlo_rm);
+    void DoVectorCleanup(std::vector<int> units_rm, std::vector<int> dmg_rm, std::vector<int> tlo_rm, std::vector<int> pr_rm);
+    std::vector<int> DrawProjectiles(sf::RenderWindow& window);
     void DrawUnitThumbs(sf::RenderWindow& window);
     void DrawPickedItems(sf::RenderWindow& window);
     void DrawHitboxes(sf::RenderWindow& window);
@@ -224,10 +259,10 @@ class MissionController
     std::vector<int> DrawUnits(sf::RenderWindow& window);
 
     /** Main update function **/
-    void Update(sf::RenderWindow &window, float cfps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
+    void Update(sf::RenderWindow &window, float cfps, InputController& inputCtrl);
 
     /** Events **/
-    void DoKeyboardEvents(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap,std::map<int,bool> *keyMapHeld);
+    void DoKeyboardEvents(sf::RenderWindow &window, float fps, InputController& inputCtrl);
 
 
     MissionController();

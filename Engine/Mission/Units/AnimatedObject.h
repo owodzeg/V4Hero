@@ -44,15 +44,6 @@ class AnimatedObject
 
     sf::Color color = sf::Color(255,255,255,255);
 
-    enum EntityType
-    {
-        NONE = 0,
-        HOSTILE = 1,
-        PASSIVE = 2
-    };
-
-    int type = NONE;
-
     float framerate = 1;
     sf::Rect<float> hitBox;
 
@@ -108,6 +99,9 @@ class AnimatedObject
     int curFrame, lastFrame, index;
     bool force_origin_null = false;
 
+    sf::Vector2f spear_origin;
+    sf::Vector2f helm_origin;
+
     vector<int> animation_frames;
     Config *thisConfig;
     AnimatedObject();
@@ -125,6 +119,8 @@ class AnimatedObject
     void setColor(sf::Color new_color);
     sf::Color getColor();
     virtual void LoadConfig(Config *thisConfigs,std::string unitParamPath);
+    void applySpear(int id);
+    void applyHelm(int id);
     virtual void Draw(sf::RenderWindow& window);
 };
 

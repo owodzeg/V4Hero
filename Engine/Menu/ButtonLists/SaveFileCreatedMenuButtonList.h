@@ -15,7 +15,7 @@ class SaveFileCreatedMenu;
 class SaveFileCreatedMenuButtonList : public ButtonList
 {
     public:
-        void Initialise(sf::Font *font,Config &newConfig, std::map<int,bool> *keymap,MissionController *controller,SaveFileCreatedMenu *parentMenu);
+        void Initialise(sf::Font *font,Config &newConfig, MissionController *controller, SaveFileCreatedMenu *parentMenu);
         void SelectButton(int index);
         SaveFileCreatedMenu* svCrtMnu;
         SaveFileCreatedMenuButtonList();

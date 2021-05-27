@@ -11,6 +11,9 @@
 #include "SongController.h"
 #include "RhythmController.h"
 #include "RhythmGUI.h"
+
+#include "../Input/InputController.h"
+
 class Rhythm
 {
     private:
@@ -66,7 +69,7 @@ class Rhythm
                                         "donchaka",
                                         "ponpata",
                                         "dondon",
-                                        "patapata"}; ///Available songs
+                                        "chakapata"}; ///Available songs
     std::vector<float> acc_req = {0,1,1,0.9325,0.875,0.8125,0.75,0.75,0.75,0.6875,0.625};
 
     std::vector<float> perfects_reward = {0, 50, 150, 250, 300};
@@ -98,19 +101,19 @@ class Rhythm
     RhythmController rhythmController;
     std::string current_song = "";
 
-
-
-
+    sf::SoundBuffer s_badrhythm1, s_badrhythm2; ///absolutely terrible! (shoutouts to shockturtle)
+    sf::Sound pata_react;
 
     Rhythm();
     void Stop();
     void LoadTheme(std::string theme);
+    void Start();
     void BreakCombo();
     int GetCombo();
     int GetRealCombo();
     float GetSatisfaction();
-    void checkRhythmController();
-    void doRhythm();
+    void checkRhythmController(InputController& inputCtrl);
+    void doRhythm(InputController& inputCtrl);
     void Draw(sf::RenderWindow& window);
 
 };

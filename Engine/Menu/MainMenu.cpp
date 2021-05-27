@@ -7,14 +7,16 @@ MainMenu::MainMenu()
     //ctor
     isActive=true;
 }
-void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent)
+void MainMenu::Initialise(Config *thisConfigs, V4Core *parent)
 {
     parent->SaveToDebugLog("Initializing Main Menu...");
 
-    f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
+    f_font.loadFromFile(thisConfigs->fontPath);
     config = thisConfigs;
     int q = thisConfigs->GetInt("textureQuality");
     int r = 1;
+
+    quality = q;
 
     float ratioX, ratioY;
 
@@ -65,11 +67,11 @@ void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     logow_shadow.setColor(sf::Color(64,64,64,ui_alpha));
     logow_text.setColor(sf::Color(255,255,255,ui_alpha));
 
-    t_pressanykey.createText(f_font, 26, sf::Color(255,255,255,t_alpha), "Press any key to start", q, r);
+    t_pressanykey.createText(f_font, 26, sf::Color(255,255,255,t_alpha), Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"menu_pressanykey")), q, r);
 
     sb_smash.loadFromFile("resources/sfx/menu/smash.ogg");
     s_smash.setBuffer(sb_smash);
-    s_smash.setVolume(thisConfigs->GetInt("masterVolume"));
+    s_smash.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
 
     grass_1.loadFromFile("resources/graphics/ui/menu/grass_1.png", q, r);
     grass_2.loadFromFile("resources/graphics/ui/menu/grass_2.png", q, r);
@@ -185,23 +187,55 @@ void MainMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core 
     g_x[2] = 0;
     g_x[3] = 0;
 
-    float volume = thisConfigs->GetInt("masterVolume");
+    float volume = (float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("bgmVolume"))/100.f));
 
     sb_title_loop.loadFromFile("resources/sfx/menu/menuloop.ogg");
     title_loop.setBuffer(sb_title_loop);
     title_loop.setLoop(true);
     title_loop.setVolume(volume);
 
-    Scene::Initialise(thisConfigs,keymap,parent);
-    keyMapping=keymap;
+    Scene::Initialise(thisConfigs,parent);
 
-    optionsMenu.Initialise(config,keyMapping,v4core,this);
+    optionsMenu.Initialise(config,v4core,this);
+
+    ifstream fr("resources/firstrun");
+    if(fr.good())
+    {
+        firstrun = false;
+        premenu = true;
+    }
+    else
+    {
+        cout << "It's your first time running the game!" << endl;
+        firstrun = true;
+    }
+
+    msgcloud.Create(45, sf::Vector2f(640,480), sf::Color::White, true, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_1")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_2")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_3")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_4")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_5")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_6")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_7")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_8")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_9")), true);
+
+    temp_menu.push_back(thisConfig->strRepo.GetUnicodeString(L"menu_newgame"));
+    temp_menu.push_back(thisConfig->strRepo.GetUnicodeString(L"menu_continue"));
+    temp_menu.push_back(thisConfig->strRepo.GetUnicodeString(L"menu_options"));
+    temp_menu.push_back(thisConfig->strRepo.GetUnicodeString(L"menu_exit"));
+
+    introductionMenu.Initialise(config,v4core,this);
 
     parent->SaveToDebugLog("Main menu initialized.");
     //title_loop.play();
     startClock.restart();
+    frClock.restart();
 }
-void MainMenu::EventFired(sf::Event event){
+
+void MainMenu::EventFired(sf::Event event)
+{
     if (patapolisMenu.isActive)
     {
         patapolisMenu.EventFired(event);
@@ -223,60 +257,30 @@ void MainMenu::EventFired(sf::Event event){
     }
     else if(isActive)
     {
-        if(!premenu)
+        if(firstrun)
         {
-            if(event.type == sf::Event::KeyPressed)
-            {
-                UsingMouseSelection=false;
-                if (event.key.code == config->GetInt("keybindPata") || event.key.code == config->GetInt("keybindChaka") || event.key.code == config->GetInt("secondaryKeybindPata") || event.key.code == config->GetInt("secondaryKeybindChaka")){
-                    totem_sel-=1;
-                    if (totem_sel<0)
-                        totem_sel=3;
-                    old_sel = totem_sel;
-                }
-                if (event.key.code == config->GetInt("keybindPon") || event.key.code == config->GetInt("keybindDon") || event.key.code == config->GetInt("secondaryKeybindPon") || event.key.code == config->GetInt("secondaryKeybindDon")){
-                    totem_sel+=1;
-                    if (totem_sel>3)
-                        totem_sel=0;
-                    old_sel = totem_sel;
-                }
-                if (event.key.code == config->GetInt("keybindMenuEnter"))
-                {
-                    SelectMenuOption();
-                }
-            }
-            else if (event.type == sf::Event::MouseButtonReleased)
-            {
-            if (event.mouseButton.button == sf::Mouse::Left){
-                    SelectMenuOption();
-                }
-            }
-            else if (event.type == sf::Event::MouseMoved)
-            {
-                mouseX = event.mouseMove.x;
-                mouseY = event.mouseMove.y;
-                UsingMouseSelection=true;
-            }
+
         }
-        else
+        else if(!premenu)
         {
-            if(event.type == sf::Event::KeyPressed)
+            if(dialogboxes.size() <= 0)
             {
-                if(startClock.getElapsedTime().asSeconds() > 2)
+                if(event.type == sf::Event::MouseButtonReleased)
                 {
-                    if(!keypressed)
+                    if(event.mouseButton.button == sf::Mouse::Left)
                     {
-                        s_smash.play();
-                        logow_bg.setColor(sf::Color(200,0,0,255));
-                        logow_shadow.setColor(sf::Color(200,0,0,255));
-                        logow_text.setColor(sf::Color(255,255,255,255));
-                        ui_alpha = 255;
-                        logow_scale = 1.2;
-                        logow_shscale = 1.2;
-                        dest_y = 360;
-                        keypressed = true;
-                        menuClock.restart();
+                        if(mouseInBounds)
+                        SelectMenuOption();
                     }
+                }
+                else if (event.type == sf::Event::MouseMoved)
+                {
+                    mouseX = event.mouseMove.x;
+                    mouseY = event.mouseMove.y;
+
+                    cout << mouseX << " " << mouseY << endl;
+
+                    UsingMouseSelection=true;
                 }
             }
         }
@@ -284,80 +288,174 @@ void MainMenu::EventFired(sf::Event event){
 }
 void MainMenu::SelectMenuOption()
 {
-    switch (totem_sel){
-    case 0:
-        // load the start game cutscenes and menu
+    switch (totem_sel)
+    {
+        case 0: // load the start game cutscenes and menu
         {
+            /*title_loop.stop();
 
-        title_loop.stop();
-
-        Hide();
-        sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
-        v4core->continueLoading=true;
-        v4core->window.setActive(false);
-        loadingThreadInstance.launch();
-
-        nameEntryMenu.Show();
-        nameEntryMenu.isActive = true;
-        nameEntryMenu.Initialise(config,keyMapping,v4core,this);
-
-        v4core->continueLoading=false;
-        }
-        break;
-    case 1:
-        // load save and patapolis
-        {
-
-            title_loop.stop();
             Hide();
+            sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+            v4core->continueLoading=true;
+            v4core->window.setActive(false);
+            loadingThreadInstance.launch();
 
-            if(!patapolisMenu.initialised)
+            nameEntryMenu.Show();
+            nameEntryMenu.isActive = true;
+            nameEntryMenu.Initialise(config,v4core,this);
+
+            v4core->continueLoading=false;*/
+
+            ifstream check("resources/data/sv1.p4sv");
+            bool exists = check.good();
+            check.close();
+
+            if(!exists)
             {
-                sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
-                v4core->continueLoading=true;
-                v4core->window.setActive(false);
-                loadingThreadInstance.launch();
+                cout << "There is no save. Start new game!" << endl;
 
-                patapolisMenu.Show();
-                patapolisMenu.isActive = true;
-                patapolisMenu.Initialise(config,keyMapping,v4core,this);
+                screenFade.Create(thisConfig, 1, 512);
+                goto_id = 0;
 
-                v4core->continueLoading=false;
+                /*v4core->savereader.Flush();
+                v4core->savereader.CreateBlankSave();
+
+                title_loop.stop();
+
+                introductionMenu.Show();
+                introductionMenu.isActive = true;
+                introductionMenu.timeout.restart();
+
+                patapolisMenu.loadedSave = false;*/
             }
             else
             {
-                patapolisMenu.Show();
-                patapolisMenu.isActive = true;
+                cout << "There is an existing save data. Ask if overwrite" << endl;
+
+                std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_no"))};
+
+                PataDialogBox db;
+                db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"menu_saveexists")), a, config->GetInt("textureQuality"));
+                db.id = 0;
+                dialogboxes.push_back(db);
             }
+
+            break;
         }
-        break;
-    case 2:
-        // load the options menu
-        title_loop.stop();
-        Hide();
-        v4core->ChangeRichPresence("In Options menu", "logo", "");
-        optionsMenu.state = 0;
-        optionsMenu.sel = 0;
-        optionsMenu.Show();
-        break;
-    case 3:
-        // quit the game probably
-        v4core->closeWindow=true;
-        break;
-    default:
-        cout<<"WTF happened? you probably added more menu buttons but messed it up"<<endl;
-        break;
+        case 1: // load save and patapolis
+        {
+            ifstream check("resources/data/sv1.p4sv");
+            bool exists = check.good();
+            check.close();
+
+            if(exists)
+            {
+                /** Load save from savereader **/
+                v4core->savereader.Flush();
+                v4core->savereader.LoadSave(*config);
+
+                if(v4core->savereader.savever != "1.1")
+                {
+                    cout << "Invalid save data!" << endl;
+
+                    std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_understood"))};
+
+                    PataDialogBox db;
+                    db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"menu_nosupportdata")), a, config->GetInt("textureQuality"));
+                    db.id = 2;
+                    dialogboxes.push_back(db);
+                }
+                else
+                {
+                    screenFade.Create(thisConfig, 1, 512);
+                    goto_id = 1;
+                }
+            }
+            else
+            {
+                cout << "There is no savedata. Error" << endl;
+
+                std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_understood"))};
+
+                PataDialogBox db;
+                db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"menu_nodata")), a, config->GetInt("textureQuality"));
+                db.id = 1;
+                dialogboxes.push_back(db);
+            }
+
+            break;
+        }
+        case 2:
+        {
+            // load the options menu
+            screenFade.Create(thisConfig, 1, 512);
+            goto_id = 2;
+            break;
+        }
+        case 3:
+        {
+            // quit the game probably
+            v4core->closeWindow=true;
+            break;
+        }
     }
 }
-void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld)
+void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inputCtrl)
 {
     if (v4core->currentController.isInitialized)
     {
-        v4core->currentController.Update(window, fps, keyMap,keyMapHeld);
+        v4core->currentController.Update(window, fps, inputCtrl);
+    }
+    else if(patapolisMenu.isActive)
+    {
+        patapolisMenu.Update(window,fps,inputCtrl);
+    }
+    else if(introductionMenu.isActive)
+    {
+        introductionMenu.Update(window,fps,inputCtrl);
+    }
+    else if(optionsMenu.isActive)
+    {
+        optionsMenu.Update(window,fps,inputCtrl);
     }
     else if(isActive)
     {
-        if(premenu)
+        if(firstrun)
+        {
+            if(frClock.getElapsedTime().asSeconds() > 2)
+            {
+                if(!msgcloud.done)
+                {
+                    if(msgcloud.firstrender)
+                    msgcloud.Show();
+                }
+            }
+
+            if(msgcloud.done)
+            {
+                if(!premenu)
+                frwaitClock.restart();
+
+                premenu = true;
+
+                startClock.restart();
+            }
+
+            if(premenu)
+            {
+                if(frwaitClock.getElapsedTime().asSeconds() > 1)
+                {
+                    firstrun = false;
+
+                    ofstream fr("resources/firstrun", ios::trunc);
+                    fr.close();
+                }
+            }
+
+            msgcloud.Draw(window, fps, inputCtrl);
+
+        }
+        else if(premenu)
         {
             if(startClock.getElapsedTime().asSeconds() > 2)
             {
@@ -386,6 +484,20 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
                     logow_bg.setColor(sf::Color(120,0,0,ui_alpha));
                     logow_text.setColor(sf::Color(255,255,255,ui_alpha));
                     logow_shadow.setColor(sf::Color(64,0,0,ui_alpha));
+
+                    if(inputCtrl.isAnyKeyPressed())
+                    {
+                        s_smash.play();
+                        logow_bg.setColor(sf::Color(200,0,0,255));
+                        logow_shadow.setColor(sf::Color(200,0,0,255));
+                        logow_text.setColor(sf::Color(255,255,255,255));
+                        ui_alpha = 255;
+                        logow_scale = 1.2;
+                        logow_shscale = 1.2;
+                        dest_y = 360;
+                        keypressed = true;
+                        menuClock.restart();
+                    }
                 }
 
                 logow_bg.setOrigin(logow_bg.getLocalBounds().width/2, logow_bg.getLocalBounds().height/2);
@@ -458,7 +570,10 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
         else
         {
             if(title_loop.getStatus() == sf::Sound::Status::Stopped)
-            title_loop.play();
+            {
+                cout << "I am playing" << endl;
+                title_loop.play();
+            }
 
             window.draw(v_background);
 
@@ -542,6 +657,8 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
 
             //cout << "MouseX: " << (mouseX / window.getSize().x) * 1280 << endl;
 
+            mouseInBounds = false;
+
             for(int i=0; i<=3; i++)
             {
                 //cout << "Totem " << i << " bounds: " << totem[i].getPosition().x << " - " << (totem[i].getPosition().x + totem[totem_sel].getGlobalBounds().width) << endl;
@@ -553,7 +670,11 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
                     {
                         if((mouseX / window.getSize().x) * 1280 < (totem[i].getPosition().x + totem[totem_sel].getGlobalBounds().width))
                         {
-                            totem_sel = i;
+                            if((mouseY / window.getSize().y) * 720 > totem[i].getPosition().y-totem[i].getLocalBounds().height)
+                            {
+                                totem_sel = i;
+                                mouseInBounds = true;
+                            }
                         }
                     }
                 }
@@ -645,7 +766,7 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
                     t_option[i].setScale(1,1);
                 }
 
-                t_option[i].setString(temp_menu[i]);
+                t_option[i].setString(Func::ConvertToUtf8String(temp_menu[i]));
 
                 //cout << "Text " << i << ": " << t_option[i].orX << " " << t_option[i].orY << " " << t_option[i].getGlobalBounds().width << " " << t_option[i].getGlobalBounds().height << " " << t_option[i].getGlobalBoundsScaled().width << " " << t_option[i].getGlobalBoundsScaled().height << endl;
 
@@ -682,24 +803,191 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, std::map<int,bool> *k
             window.draw(rs_cover2);
 
             window.setView(window.getDefaultView());
-        }
-    }
-    else
-    {
-        if (patapolisMenu.isActive)
-        {
-            patapolisMenu.Update(window,fps);
-        }
-        else if (nameEntryMenu.isActive)
-        {
-            nameEntryMenu.Update(window,fps);
-        }
-        else if (optionsMenu.isActive)
-        {
-            optionsMenu.Update(window,fps);
-        }
-    }
 
+            screenFade.draw(window, fps);
+
+            if(screenFade.checkFinished())
+            {
+                if(goto_id != -1)
+                {
+                    switch(goto_id)
+                    {
+                        case 0: ///New game
+                        {
+                            v4core->savereader.Flush();
+                            v4core->savereader.CreateBlankSave();
+
+                            title_loop.stop();
+
+                            introductionMenu.Show();
+                            introductionMenu.isActive = true;
+                            introductionMenu.timeout.restart();
+
+                            patapolisMenu.loadedSave = false;
+
+                            break;
+                        }
+
+                        case 1: ///Continue
+                        {
+                            title_loop.stop();
+                            Hide();
+                            patapolisClock.restart();
+
+                            if(!patapolisMenu.initialised)
+                            {
+                                sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+                                v4core->continueLoading=true;
+                                v4core->window.setActive(false);
+                                loadingThreadInstance.launch();
+
+                                patapolisMenu.Show();
+                                patapolisMenu.isActive = true;
+                                patapolisMenu.loadedSave = true;
+                                patapolisMenu.Initialise(config,v4core,this);
+
+                                v4core->continueLoading=false;
+                            }
+                            else
+                            {
+                                sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
+                                v4core->continueLoading=true;
+                                v4core->window.setActive(false);
+                                loadingThreadInstance.launch();
+
+                                patapolisMenu.Show();
+                                patapolisMenu.isActive = true;
+                                patapolisMenu.screenFade.Create(thisConfig, 0, 512);
+
+                                patapolisMenu.location = 3;
+                                patapolisMenu.ctrlTips.create(54, patapolisMenu.f_font, 20, sf::String(L"L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
+                                patapolisMenu.SetTitle(patapolisMenu.location);
+                                patapolisMenu.camPos = patapolisMenu.locations[patapolisMenu.location];
+
+                                while(patapolisClock.getElapsedTime().asSeconds() < 3)
+                                {
+                                    ///do nothing lol
+                                }
+
+                                v4core->LoadingWaitForKeyPress();
+                                v4core->continueLoading=false;
+                            }
+
+                            break;
+                        }
+
+                        case 2: ///Options
+                        {
+                            title_loop.stop();
+                            Hide();
+                            v4core->ChangeRichPresence("In Options menu", "logo", "");
+                            optionsMenu.state = 0;
+                            optionsMenu.sel = 0;
+                            optionsMenu.Show();
+
+                            optionsMenu.screenFade.Create(thisConfig, 0, 512);
+
+                            break;
+                        }
+                    }
+
+                    goto_id = -1;
+                }
+            }
+
+            vector<int> db_e; ///dialog box erase
+
+            for(int i=0; i<dialogboxes.size(); i++)
+            {
+                dialogboxes[i].x = 640;
+                dialogboxes[i].y = 360;
+                dialogboxes[i].Draw(window, fps, inputCtrl);
+
+                if(dialogboxes[i].closed)
+                db_e.push_back(i);
+            }
+
+            for(int i=0; i<db_e.size(); i++)
+            {
+                dialogboxes.erase(dialogboxes.begin()+db_e[i]-i);
+            }
+
+            if(dialogboxes.size() <= 0)
+            {
+                if((inputCtrl.isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl.isKeyPressed(InputController::Keys::LTRIGGER)))
+                {
+                    UsingMouseSelection=false;
+
+                    totem_sel-=1;
+                    if (totem_sel<0)
+                        totem_sel=3;
+                    old_sel = totem_sel;
+
+                    mouseX = totem_sel_pos[totem_sel];
+                }
+
+                if((inputCtrl.isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl.isKeyPressed(InputController::Keys::RTRIGGER)))
+                {
+                    UsingMouseSelection=false;
+
+                    totem_sel+=1;
+                    if (totem_sel>3)
+                        totem_sel=0;
+                    old_sel = totem_sel;
+
+                    mouseX = totem_sel_pos[totem_sel];
+                }
+
+                if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+                {
+                    UsingMouseSelection=false;
+
+                    SelectMenuOption();
+                    //title_loop.stop();
+                }
+            }
+            else
+            {
+                if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+                {
+                    switch(dialogboxes[dialogboxes.size()-1].CheckSelectedOption())
+                    {
+                        case 0:
+                        {
+                            if(dialogboxes[dialogboxes.size()-1].id == 0)
+                            {
+                                cout << "Starting new game!" << endl;
+                                dialogboxes[dialogboxes.size()-1].Close();
+
+                                screenFade.Create(thisConfig, 1, 512);
+                                goto_id = 0;
+
+                                break;
+                            }
+                            else if(dialogboxes[dialogboxes.size()-1].id == 1)
+                            {
+                                dialogboxes[dialogboxes.size()-1].Close();
+                                break;
+                            }
+                            else if(dialogboxes[dialogboxes.size()-1].id == 2)
+                            {
+                                dialogboxes[dialogboxes.size()-1].Close();
+                                break;
+                            }
+                        }
+
+                        case 1:
+                        {
+                            cout << "Returning to title screen!" << endl;
+                            dialogboxes[dialogboxes.size()-1].Close();
+
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 void MainMenu::UpdateButtons(){
     /// this should update the text on all the buttons

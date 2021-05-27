@@ -59,7 +59,7 @@ void Background::Load(string bg_name,Config &thisConfigs)
 
     cout << resRatioX << " " << resRatioY << endl;
 
-    v_background.clear();
+    /*v_background.clear();
     vx_pos.clear();
     vx_pos.clear();
     vx_color.clear();
@@ -67,7 +67,7 @@ void Background::Load(string bg_name,Config &thisConfigs)
     t_background.clear();
     s_background.clear();
     background_xspeed.clear();
-    background_y.clear();
+    background_y.clear();*/
 
     temp_camerax = 0;
     ifstream param_file("resources/graphics/bg/"+bg_name+"/param.dat");

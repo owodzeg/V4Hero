@@ -285,7 +285,6 @@ void Object::Draw(sf::RenderWindow& window, int orx, int ory)
         s_obj.setColor(color);
         s_obj.draw(window);
 
-
         if((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
         {
             if(!exported)

@@ -9,8 +9,29 @@
 SaveFileCreatedMenu::SaveFileCreatedMenu()
 {
     //ctor
-    f_font.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
     //f_font.loadFromFile("resources/fonts/arial.ttf");
+
+
+    isActive=true;
+}
+void SaveFileCreatedMenu::Initialise(Config *thisConfigs,V4Core *parent,NewGameNameEntryMenu* parentMenu_){
+    Scene::Initialise(thisConfigs,parent);
+    //v4core->menus.push_back(&optionsMenu);
+    buttonList.Initialise(&f_font,*thisConfig,&(v4core->currentController),this);
+
+    t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_game_save_created")));
+    t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
+
+    t_welcome1.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_welcome")));
+    t_welcome1.setOrigin(t_welcome1.getGlobalBounds().width/2,t_welcome1.getGlobalBounds().height/2);
+
+    t_welcome2.setString(Func::ConvertToUtf8String(kamiName));
+    t_welcome2.setOrigin(t_welcome2.getGlobalBounds().width/2,t_welcome2.getGlobalBounds().height/2);
+
+    t_welcome3.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_welcome2")));
+    t_welcome3.setOrigin(t_welcome3.getGlobalBounds().width/2,t_welcome3.getGlobalBounds().height/2);
+
+    f_font.loadFromFile(thisConfigs->fontPath);
 
     t_title.setFont(f_font);
     t_title.setCharacterSize(25);
@@ -33,24 +54,7 @@ SaveFileCreatedMenu::SaveFileCreatedMenu()
 
     mm_titleBox.setSize(sf::Vector2f(100,10));
     mm_titleBox.setFillColor(sf::Color::Red);
-    isActive=true;
-}
-void SaveFileCreatedMenu::Initialise(Config *thisConfigs,std::map<int,bool> *keymap,V4Core *parent,NewGameNameEntryMenu* parentMenu_){
-    Scene::Initialise(thisConfigs,keymap,parent);
-    //v4core->menus.push_back(&optionsMenu);
-    buttonList.Initialise(&f_font,*thisConfig,keymap,&(v4core->currentController),this);
 
-    t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_game_save_created")));
-    t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
-
-    t_welcome1.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_welcome")));
-    t_welcome1.setOrigin(t_welcome1.getGlobalBounds().width/2,t_welcome1.getGlobalBounds().height/2);
-
-    t_welcome2.setString(Func::ConvertToUtf8String(kamiName));
-    t_welcome2.setOrigin(t_welcome2.getGlobalBounds().width/2,t_welcome2.getGlobalBounds().height/2);
-
-    t_welcome3.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_welcome2")));
-    t_welcome3.setOrigin(t_welcome3.getGlobalBounds().width/2,t_welcome3.getGlobalBounds().height/2);
     nameEntryMenu = parentMenu_;
 
 }

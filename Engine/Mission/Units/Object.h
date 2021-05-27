@@ -13,6 +13,7 @@ class Object
 
     public:
     std::string texture_path;
+    std::string object_name;
 
     sf::Texture tex_obj;
     PSprite s_obj;

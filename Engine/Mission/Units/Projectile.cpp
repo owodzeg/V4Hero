@@ -27,21 +27,42 @@ void Projectile::OnCollide(CollidableObject* otherObject){
     // this space intentionally left blank
     cout<<"[COLLISION_SYSTEM]: Class derived from Projectile has not overridden OnCollide() method"<<endl;
 }
-void Projectile::Update(sf::RenderWindow &window, float fps){
+void Projectile::Update(sf::RenderWindow &window, float fps)
+{
     vspeed += float(981) / fps;
-    hspeed -= float(166) / fps;
-    if(hspeed < 0)
-    hspeed = 0;
+
+    /// FOR REWORK: projectile should not be dependant on enemy whether it goes to left or to right.
+    /// make a better unified system for projectile flight
+    /// this is just a temporary workaround
+
+    if(!enemy)
+    {
+        hspeed -= float(166) / fps;
+
+        if(hspeed < 0)
+        hspeed = 0;
+    }
+    else
+    {
+        hspeed += float(166) / fps;
+
+        if(hspeed > 0)
+        hspeed = 0;
+    }
 
     xPos+=GetXSpeed()/fps;
     yPos+=GetYSpeed()/fps;
 }
 
-Projectile::Projectile(PSprite& tsprite){
-    sprite=&tsprite;
+Projectile::Projectile(PSprite& tsprite)
+{
+    nsprite = tsprite;
+    sprite=&nsprite;
     sprite->setOrigin(sprite->getLocalBounds().width/2,sprite->getLocalBounds().height/2);
 }
-void Projectile::Draw(sf::RenderWindow &window, float fps){
+
+void Projectile::Draw(sf::RenderWindow &window, float fps)
+{
 
     /*HitboxFrame tmp;
     tmp.time = 0;

@@ -30,7 +30,7 @@ class NewGameNameEntryMenu : public Menu
 
         OptionsMenu optionsMenu;
         PatapolisMenu patapolisMenu;
-        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent,Menu* parentMenu);
+        void Initialise(Config *thisConfig,V4Core *parent,Menu* parentMenu);
         string GetEnteredString();
         void Update(sf::RenderWindow &window, float fps);
         void EventFired(sf::Event event);

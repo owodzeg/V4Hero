@@ -5,37 +5,23 @@ using namespace std;
 
 RhythmController::RhythmController()
 {
-    b_pata[0].loadFromFile("resources/sfx/drums/pata.ogg");
-    b_pata[1].loadFromFile("resources/sfx/drums/pata_2.ogg");
-    b_pata[2].loadFromFile("resources/sfx/drums/pata_3.ogg");
+    for(int i=0; i<=2; i++)
+    {
+        string num = "_"+to_string(i+1);
 
-    b_pon[0].loadFromFile("resources/sfx/drums/pon.ogg");
-    b_pon[1].loadFromFile("resources/sfx/drums/pon_2.ogg");
-    b_pon[2].loadFromFile("resources/sfx/drums/pon_3.ogg");
+        if(i==0)
+        num = "";
 
-    b_chaka[0].loadFromFile("resources/sfx/drums/chaka.ogg");
-    b_chaka[1].loadFromFile("resources/sfx/drums/chaka_2.ogg");
-    b_chaka[2].loadFromFile("resources/sfx/drums/chaka_3.ogg");
+        b_pata[i].loadFromFile("resources/sfx/drums/pata"+num+".ogg");
+        b_pon[i].loadFromFile("resources/sfx/drums/pon"+num+".ogg");
+        b_don[i].loadFromFile("resources/sfx/drums/don"+num+".ogg");
+        b_chaka[i].loadFromFile("resources/sfx/drums/chaka"+num+".ogg");
 
-    b_don[0].loadFromFile("resources/sfx/drums/don.ogg");
-    b_don[1].loadFromFile("resources/sfx/drums/don_2.ogg");
-    b_don[2].loadFromFile("resources/sfx/drums/don_3.ogg");
-
-    b_chpata[0].loadFromFile("resources/sfx/drums/ch_pata.ogg");
-    b_chpata[1].loadFromFile("resources/sfx/drums/ch_pata_2.ogg");
-    b_chpata[2].loadFromFile("resources/sfx/drums/ch_pata_3.ogg");
-
-    b_chpon[0].loadFromFile("resources/sfx/drums/ch_pon.ogg");
-    b_chpon[1].loadFromFile("resources/sfx/drums/ch_pon_2.ogg");
-    b_chpon[2].loadFromFile("resources/sfx/drums/ch_pon_3.ogg");
-
-    b_chchaka[0].loadFromFile("resources/sfx/drums/ch_chaka.ogg");
-    b_chchaka[1].loadFromFile("resources/sfx/drums/ch_chaka_2.ogg");
-    b_chchaka[2].loadFromFile("resources/sfx/drums/ch_chaka_3.ogg");
-
-    b_chdon[0].loadFromFile("resources/sfx/drums/ch_don.ogg");
-    b_chdon[1].loadFromFile("resources/sfx/drums/ch_don_2.ogg");
-    b_chdon[2].loadFromFile("resources/sfx/drums/ch_don_3.ogg");
+        b_chpata[i].loadFromFile("resources/sfx/drums/ch_pata"+num+".ogg");
+        b_chpon[i].loadFromFile("resources/sfx/drums/ch_pon"+num+".ogg");
+        b_chdon[i].loadFromFile("resources/sfx/drums/ch_don"+num+".ogg");
+        b_chchaka[i].loadFromFile("resources/sfx/drums/ch_chaka"+num+".ogg");
+    }
 
     b_perfect.loadFromFile("resources/sfx/drums/perfect.ogg");
 
@@ -45,14 +31,36 @@ RhythmController::RhythmController()
     patterns["chaka"] = 0;
 }
 
-bool RhythmController::checkForInput()
+bool RhythmController::checkForInput(InputController& inputCtrl)
 {
+    ///Flush the buffers
+    vector<int> s_rm;
+
+    //cout << "RhythmController currently holds " << s_drums.size() << "/220 sounds." << endl;
+
+    for(int i=s_drums.size()-1; i>0; i--)
+    {
+        if(s_drums[i].getStatus() == sf::Sound::Status::Stopped)
+        {
+            s_drums.erase(s_drums.begin()+i);
+        }
+        else
+        {
+            break;
+        }
+    }
+
     ///Set initial values for Drum quality check
     int drum_quality = 2;
     bool add_to_commandtable = false;
 
+    bool pata = inputCtrl.isKeyPressed(InputController::Keys::SQUARE);
+    bool pon = inputCtrl.isKeyPressed(InputController::Keys::CIRCLE);
+    bool don = inputCtrl.isKeyPressed(InputController::Keys::CROSS);
+    bool chaka = inputCtrl.isKeyPressed(InputController::Keys::TRIANGLE);
+
     ///Determine the quality of given drum input
-    if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")] || keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")] || keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")] || keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
+    if(pata || pon || don || chaka)
     {
         if(masterTimer < low_range) ///BAD hit
         {
@@ -77,11 +85,14 @@ bool RhythmController::checkForInput()
     }
 
     ///Keybind for PATA drum
-    if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")])
+    if(pata)
     {
         ///Add PATA drum sound effect to the buffer
         drum_nc.setBuffer(b_pata[drum_quality]);
         drum_c.setBuffer(b_chpata[drum_quality]);
+
+        drum_nc.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
+        drum_c.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
 
         ///Add PATA drum to user input table
         if(add_to_commandtable)
@@ -96,11 +107,14 @@ bool RhythmController::checkForInput()
     }
 
     ///Keybind for PON drum
-    if(keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")])
+    if(pon)
     {
         ///Add PON drum sound effect to the buffer
         drum_nc.setBuffer(b_pon[drum_quality]);
         drum_c.setBuffer(b_chpon[drum_quality]);
+
+        drum_nc.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
+        drum_c.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
 
         ///Add PON drum to user input table
         if(add_to_commandtable)
@@ -115,11 +129,14 @@ bool RhythmController::checkForInput()
     }
 
     ///Keybind for CHAKA drum
-    if(keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
+    if(chaka)
     {
         ///Add CHAKA drum sound effect to the buffer
         drum_nc.setBuffer(b_chaka[drum_quality]);
         drum_c.setBuffer(b_chchaka[drum_quality]);
+
+        drum_nc.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
+        drum_c.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
 
         ///Add CHAKA drum to user input table
         if(add_to_commandtable)
@@ -134,11 +151,14 @@ bool RhythmController::checkForInput()
     }
 
     ///Keybind for DON drum
-    if(keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")])
+    if(don)
     {
         ///Add DON drum sound effect to the buffer
         drum_nc.setBuffer(b_don[drum_quality]);
         drum_c.setBuffer(b_chdon[drum_quality]);
+
+        drum_nc.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
+        drum_c.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
 
         ///Add DON drum to user input table
         if(add_to_commandtable)
@@ -153,7 +173,7 @@ bool RhythmController::checkForInput()
     }
 
     ///IF statement that applies to all drum keybinds (to not repeat the same code over and over)
-    if(keyMap[config.GetInt("keybindPata")] || keyMap[config.GetInt("secondaryKeybindPata")] || keyMap[config.GetInt("keybindPon")] || keyMap[config.GetInt("secondaryKeybindPon")] || keyMap[config.GetInt("keybindDon")] || keyMap[config.GetInt("secondaryKeybindDon")] || keyMap[config.GetInt("keybindChaka")] || keyMap[config.GetInt("secondaryKeybindChaka")])
+    if(pata || pon || don || chaka)
     {
         //cout<<"Input registered"<<endl;
         config.debugOut->RhythmnDebugMessage(current_drum + " " + std::to_string(masterTimer) + " ms \n");
@@ -169,6 +189,44 @@ bool RhythmController::checkForInput()
             if(combo >= 2)
             breakCombo = true;
             config.debugOut->RhythmnDebugMessage("break combo #1\n");
+        }
+
+        string check = "";
+
+        for(int i=0; i<commandInput.size(); i++)
+        {
+            check += commandInput[i];
+        }
+
+        if(check != "")
+        {
+            cout << "Checking " << check << " if it exists in available commands..." << endl;
+
+            bool found = false;
+
+            for(int i=0; i<av_commands.size(); i++)
+            {
+                if(av_commands[i].find(check) != std::string::npos)
+                {
+                    if(av_commands[i].find(check) == 0)
+                    {
+                        found = true;
+                    }
+                }
+            }
+
+            if(!found)
+            {
+                if(combo >= 2)
+                {
+                    command_perfects.clear();
+                    perfects.clear();
+                    commandInput.clear();
+
+                    breakCombo = true;
+                    config.debugOut->RhythmnDebugMessage("break combo #2\n");
+                }
+            }
         }
 
         ///If drum was hit above the minimum range, determine it's quality and mark as being already hit
@@ -227,6 +285,7 @@ bool RhythmController::checkForInput()
                 {
                     s_perfect.stop();
                     s_perfect.setBuffer(b_perfect);
+                    s_perfect.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
                     s_perfect.play();
                 }
             }
@@ -243,16 +302,6 @@ bool RhythmController::checkForInput()
 
         if(patterns["chaka"] >= 8)
         patterns["chaka"] = 0;
-
-        ///Reset all keybindings
-        keyMap[config.GetInt("keybindPata")] = false;
-        keyMap[config.GetInt("secondaryKeybindPata")] = false;
-        keyMap[config.GetInt("keybindPon")] = false;
-        keyMap[config.GetInt("secondaryKeybindPon")] = false;
-        keyMap[config.GetInt("keybindChaka")] = false;
-        keyMap[config.GetInt("secondaryKeybindChaka")] = false;
-        keyMap[config.GetInt("keybindDon")] = false;
-        keyMap[config.GetInt("secondaryKeybindDon")] = false;
 
         drum_perfection = drum_quality;
 

@@ -9,6 +9,7 @@ class InventoryItem
     Item* item;
     int PonIdRegistered=-1;
     int inventoryId;
+    bool occupied = false;
 };
 
 #endif // INVENTORY_ITEM_H

@@ -233,7 +233,7 @@ void P4A::ReadDictionary(std::string filename)
 
 std::string P4A::ReadToMemory(std::string name)
 {
-    //cout << "Reading " << name << " from memory" << endl;
+    cout << "Reading " << name << " from memory" << endl;
 
     int i = std::distance(in_fnames.begin(), std::find(in_fnames.begin(), in_fnames.end(), name));
 

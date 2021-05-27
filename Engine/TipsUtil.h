@@ -20,6 +20,8 @@ class TipsUtil
     std::vector<PSprite> t_backgrounds;
     std::vector<PSprite> t_icons;
 
+    int tip_amount = 8;
+
     TipsUtil();
     void LoadBackgrounds(Config& tconfig);
     void LoadIcons(Config& tconfig);

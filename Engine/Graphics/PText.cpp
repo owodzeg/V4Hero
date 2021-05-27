@@ -8,14 +8,19 @@ PText::PText()
 
 }
 
-void PText::createText(sf::Font font, float characterSize, sf::Color color, std::string text_string, int q, int r)
+void PText::createText(sf::Font& font, float characterSize, sf::Color color, sf::String text_string, int q, int r)
 {
-    cout << "[PText] Creating a new PText object: " << characterSize << " " << text_string << " " << q << " " << r << endl;
+    cout << "[PText] Creating a new PText object: " << characterSize << " " << text_string.toAnsiString() << " " << q << " " << r << endl;
 
     f = font;
     cS = characterSize;
     c = color;
     txt = text_string;
+
+    //t.setFont(f);
+    //t.setCharacterSize(cS);
+    //t.setFillColor(c);
+    //t.setString(txt);
 
     qualitySetting = q;
     resSetting = r;
@@ -71,7 +76,25 @@ void PText::setPosition(float x, float y)
 
 void PText::setString(std::string text_string)
 {
+    txt = sf::String(text_string);
+    t.setString(txt);
+}
+
+void PText::setString(std::wstring text_string)
+{
+    txt = sf::String(text_string);
+    t.setString(txt);
+}
+
+void PText::setString(sf::String text_string)
+{
     txt = text_string;
+    t.setString(txt);
+}
+
+void PText::setString(const char* text_string)
+{
+    txt = sf::String(text_string);
     t.setString(txt);
 }
 

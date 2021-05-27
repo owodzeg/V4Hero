@@ -2,8 +2,8 @@
 #define DROPPEDITEM_H
 
 #include <SFML/Graphics.hpp>
-#include "../../../Config.h"
-#include "../Entity.h"
+#include "../../../../Config.h"
+#include "../../Entity.h"
 
 using namespace std;
 
@@ -42,6 +42,8 @@ class DroppedItem : public Entity
     string spritesheet;
     int spritesheet_id;
     int picked_item;
+
+    sf::SoundBuffer s_item, s_keyitem;
 
     DroppedItem();
     void LoadConfig(Config *thisConfigs);

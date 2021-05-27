@@ -6,13 +6,17 @@
 #include "../Mission/MissionController.h"
 #include "OptionsMenu.h"
 #include "NewGameNameEntryMenu.h"
+#include "IntroductionMenu.h"
 #include "Patapolis.h"
 #include "../Graphics/PSprite.h"
 #include "../Graphics/PText.h"
+#include "../Dialog/DialogBox.h"
 class V4Core;
 class MainMenu : public Menu
 {
     public:
+        int quality = 0;
+
         sf::Font f_font;
         PSprite grass_1,grass_2,grass_3,grass_4;
         PSprite logo,logo_shadow;
@@ -23,7 +27,7 @@ class MainMenu : public Menu
         sf::SoundBuffer sb_title_loop;
         sf::Sound title_loop;
 
-        std::vector<std::string> temp_menu = {"New game", "Continue", "Options", "Exit"};
+        std::vector<std::wstring> temp_menu;
 
         PText t_option[4];
 
@@ -50,8 +54,9 @@ class MainMenu : public Menu
         sf::SoundBuffer sb_smash;
         sf::Sound s_smash;
 
-        bool premenu = true;
+        bool premenu = false;
         bool keypressed = false;
+        bool firstrun = true;
 
         float logow_scale = 1.0;
         float logow_shscale = 1.0;
@@ -65,15 +70,26 @@ class MainMenu : public Menu
 
         sf::Clock menuClock;
         sf::Clock startClock;
+        sf::Clock frClock;
+        sf::Clock frwaitClock;
+        sf::Clock patapolisClock;
+
+        bool mouseInBounds = false;
+
+        vector<int> totem_sel_pos = {205, 490, 780, 1080};
+
+        vector<PataDialogBox> dialogboxes;
+
+        MessageCloud msgcloud;
 
         Config *config;
         PatapolisMenu patapolisMenu;
         NewGameNameEntryMenu nameEntryMenu;
         OptionsMenu optionsMenu;
-        std::map<int,bool> *keyMapping;
+        IntroductionMenu introductionMenu;
 
-        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent);
-        void Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld);
+        void Initialise(Config *thisConfig, V4Core *parent);
+        void Update(sf::RenderWindow &window, float fps, InputController& inputCtrl);
         void EventFired(sf::Event event);
         void OnExit();
         void SelectMenuOption();

@@ -16,9 +16,9 @@ NameEntryButtonList::NameEntryButtonList()
 {
 
 }
-void NameEntryButtonList::Initialise(sf::Font *font,Config &newConfig,  std::map<int,bool> *thisKeymap,MissionController *controller,NewGameNameEntryMenu *parMenu)
+void NameEntryButtonList::Initialise(sf::Font *font,Config &newConfig,MissionController *controller,NewGameNameEntryMenu *parMenu)
 {
-    ButtonList::Initialise(font,newConfig,thisKeymap,controller,parMenu);
+    ButtonList::Initialise(font,newConfig,controller,parMenu);
     MenuButton* level1Button = new MenuButton(L"menu_button_confirm",font,42,450,this,0);
     buttons.push_back(*level1Button);
     buttons[0].SetSelected(false);

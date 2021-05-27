@@ -2,8 +2,8 @@
 #define GRASS1_H
 
 #include <SFML/Graphics.hpp>
-#include "../../../Config.h"
-#include "../Entity.h"
+#include "../../../../Config.h"
+#include "../../Entity.h"
 
 using namespace std;
 

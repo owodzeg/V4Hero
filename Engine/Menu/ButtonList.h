@@ -7,6 +7,7 @@
 #include "../Config.h"
 #include "../Mission/MissionController.h"
 #include "../Graphics/Menu.h"
+
 class Menu;
 class ButtonList
 {
@@ -15,12 +16,11 @@ class ButtonList
         int currentIndex;
 
         Config *config;
-        std::map<int,bool> *keyMap;
         MissionController *currentController;
         Menu *parentMenu;
         void UpdateButtons();
         bool SelectButtons = true;
-        virtual void Initialise(sf::Font *font,Config &newConfig, std::map<int,bool> *keymap,MissionController *controller,Menu *parentMenu);
+        virtual void Initialise(sf::Font *font, Config &newConfig, MissionController *controller, Menu *parentMenu);
         virtual void Update(sf::RenderWindow &window, float fps, sf::Vector2f *mousePos);
         virtual void KeyPressedEvent(sf::Event event);
         virtual void MouseReleasedEvent(sf::Event event);

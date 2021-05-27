@@ -1,10 +1,11 @@
 #include "DroppedItem.h"
-#include "../../../V4Core.h"
+#include "../../../../V4Core.h"
 
 DroppedItem::DroppedItem()
 {
 
 }
+
 void DroppedItem::LoadConfig(Config *thisConfigs)
 {
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\droppeditem.p4a");
@@ -16,8 +17,16 @@ void DroppedItem::LoadConfig(Config *thisConfigs)
     hspeed = -200+rand_hs;
     vspeed = -600+rand_vs;
 
+    cout << "DroppedItem spawned with hspeed " << hspeed << " and vspeed " << vspeed << endl;
+
     manual_spritesheet = true;
+
+    s_item.loadFromFile("resources/sfx/level/picked_item.ogg");
+    s_keyitem.loadFromFile("resources/sfx/level/picked_keyitem.ogg");
+
+    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
 }
+
 void DroppedItem::Draw(sf::RenderWindow& window)
 {
     /// Draw the DroppedItem, however! Lock the animation status to make it appear inanimate
@@ -59,10 +68,13 @@ void DroppedItem::Draw(sf::RenderWindow& window)
 
         int ground = 610 - (animation_bounds[index][curFrame].height / 2 / multiplier);
 
-        if(global_y >= ground)
+        if(vspeed > 0)
         {
-            vspeed = 0;
-            global_y = ground;
+            if(global_y >= ground)
+            {
+                vspeed = 0;
+                global_y = ground;
+            }
         }
 
         if(hspeed >= 0)
@@ -171,9 +183,9 @@ void DroppedItem::Draw(sf::RenderWindow& window)
                 if(alpha <= 0)
                 alpha = 0;
 
-                local_y += vspeed2;
+                local_y += vspeed2 / fps * 60;
 
-                local_x += hspeed2;
+                local_x += hspeed2 / fps * 60;
 
                 curXscale -= 0.1 / fps;
                 curYscale -= 0.1 / fps;
@@ -192,6 +204,7 @@ void DroppedItem::Draw(sf::RenderWindow& window)
     }
 
     force_origin_null = true;
+    manual_spritesheet = true;
 
     animation_origins[index][curFrame].x = animation_bounds[index][curFrame].width/2;
     animation_origins[index][curFrame].y = animation_bounds[index][curFrame].height/2;
@@ -210,13 +223,45 @@ void DroppedItem::OnCollide(CollidableObject* otherObject, int collidedWith, vec
     {
         if(!pickedup)
         {
-            ///add to the missioncontroller list so it can be displayed in the upper right corner VERY COOL!
-            thisConfig->thisCore->currentController.addPickedItem(spritesheet, spritesheet_id, picked_item);
+            if((picked_item != 33) && (picked_item != 34))
+            {
+                if((picked_item == 23) || (picked_item == 24))
+                {
+                    cur_sound.stop();
+                    cur_sound.setBuffer(s_keyitem);
+                    cur_sound.play();
+                }
+                else
+                {
+                    cur_sound.stop();
+                    cur_sound.setBuffer(s_item);
+                    cur_sound.play();
+                }
 
-            ///do visuals
-            pickedup = true;
-            anim_state = 0;
-            pickupClock.restart();
+                ///add to the missioncontroller list so it can be displayed in the upper right corner VERY COOL!
+                thisConfig->thisCore->currentController.addPickedItem(spritesheet, spritesheet_id, picked_item);
+
+                ///do visuals
+                pickedup = true;
+                anim_state = 0;
+                pickupClock.restart();
+            }
+            else
+            {
+                //cur_sound.stop();
+                //cur_sound.setBuffer(s_heal);
+                //cur_sound.play();
+
+                thisConfig->thisCore->currentController.projectile_sounds.emplace_back();
+
+                thisConfig->thisCore->currentController.projectile_sounds[thisConfig->thisCore->currentController.projectile_sounds.size()-1].setBuffer(thisConfig->thisCore->currentController.s_heal);
+
+                thisConfig->thisCore->currentController.projectile_sounds[thisConfig->thisCore->currentController.projectile_sounds.size()-1].setVolume(float(thisConfig->GetInt("masterVolume"))*(float(thisConfig->GetInt("sfxVolume"))/100.f));
+                thisConfig->thisCore->currentController.projectile_sounds[thisConfig->thisCore->currentController.projectile_sounds.size()-1].play();
+
+                thisConfig->thisCore->currentController.addPickedItem(spritesheet, spritesheet_id, picked_item);
+                ready_to_erase = true;
+            }
         }
     }
 }

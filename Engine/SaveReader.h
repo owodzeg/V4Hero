@@ -21,13 +21,21 @@ class SaveReader
     int yariponsUnlocked;
     int heroUnlocked;
 
+    std::vector<int> missionsUnlocked = {1};
+    int locationsUnlocked=1;
+    std::map<int, int> missionLevels; ///storing the mission level
+
+    std::string savever = "1.0";
 
     SaveReader();
     void LoadSave(Config& tconfig);
+    void Flush();
+    void CreateBlankSave();
     DebugOut* debugOut;
     Config* config;
     bool isNewSave;
     void Save();
+    bool isMissionUnlocked(int mission);
 };
 
 #endif // SAVEREADER_H

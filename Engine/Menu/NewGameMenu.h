@@ -8,6 +8,8 @@
 #include "OptionsMenu.h"
 #include "Patapolis.h"
 #include "NewGameNameEntryMenu.h"
+#include "../Input/InputController.h"
+
 class V4Core;
 class NewGameMenu : public Menu
 {
@@ -30,9 +32,9 @@ class NewGameMenu : public Menu
 
         OptionsMenu optionsMenu;
         NewGameNameEntryMenu newGameNameEntryMenu;
-        void Initialise(Config *thisConfig, std::map<int,bool> *keymap,V4Core *parent);
+        void Initialise(Config *thisConfig, V4Core *parent);
 
-        void Update(sf::RenderWindow &window, float fps, std::map<int,bool> *keyMap, std::map<int,bool> *keyMapHeld);
+        void Update(sf::RenderWindow &window, float fps, InputController& inputCtrl, InputController& inputCtrlHeld);
         void EventFired(sf::Event event);
         void OnExit();
         void UpdateButtons();
