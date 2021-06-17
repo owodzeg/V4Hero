@@ -1,12 +1,15 @@
 #include "Binary.hpp"
 #include <fstream>
 #include <iostream>
+#include <filesystem>
 
 using namespace std;
 
 ///Read entire binary file to std::string
 std::string Binary::get_file(const std::string& path)
 {
+    cout << "[Binary] get_file(" << path << ")" << endl;
+
     string npath = "";
 
     for(unsigned int i=0; i<path.size(); i++)
@@ -27,10 +30,16 @@ std::string Binary::get_file(const std::string& path)
 
     if(!file)
     {
-        //cout << "Error when loading file" << endl;
+        cout << "Error when loading file" << endl;
     }
 
-    std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    auto sz = std::filesystem::file_size(npath);
+
+    //cout << "Filesystem: size of file is " << sz << " bytes" << endl;
+
+    std::string content;
+    content.resize(sz);
+    file.read(content.data(), sz);
 
     file.close();
 
@@ -63,7 +72,13 @@ uint16_t Binary::get_uint16(const std::vector<unsigned char>& source, int offset
 ///Read four bytes into unsigned int from file on given offset
 uint32_t Binary::get_uint32(const std::vector<unsigned char>& source, int offset)
 {
-    return (uint32_t(source[offset]) + uint32_t(source[offset+1] << 8) + uint32_t(source[offset+2] << 16) + uint32_t(source[offset+3] << 24));
+    return (uint32_t(source[offset]) + uint32_t(source[offset + 1] << 8) + uint32_t(source[offset + 2] << 16) + uint32_t(source[offset + 3] << 24));
+}
+
+///Read four bytes into unsigned int from file on given offset in reverse endianness
+uint32_t Binary::get_uint32_r(const std::vector<unsigned char>& source, int offset)
+{
+    return (uint32_t(source[offset] << 24) + uint32_t(source[offset + 1] << 16) + uint32_t(source[offset + 2] << 8) + uint32_t(source[offset + 3]));
 }
 
 ///Read a null-terminated ANSI string from file on given offset
@@ -76,6 +91,19 @@ std::string Binary::get_string(const std::vector<unsigned char>& source, int off
     {
         temp += get_uint8(source,offset+str);
         str++;
+    }
+
+    return temp;
+}
+
+///Converts a non-null-terminated ANSI string to std::string
+std::string Binary::to_string(const std::vector<unsigned char>& source)
+{
+    std::string temp;
+
+    for(unsigned int i=0; i<source.size(); i++)
+    {
+        temp += get_uint8(source, i);
     }
 
     return temp;
