@@ -13,9 +13,9 @@ class Yaripon : public PlayableUnit
     int action = 0;
     float attack_speed = 1;
     sf::Clock attack_clock;
-    bool threw = false;
-    bool stopthrew = false;
-    bool canThrow = true;
+    bool attacked = false;
+    bool stopAttack = false;
+    bool canAttack = true;
 
     int attackmode = -2;
 

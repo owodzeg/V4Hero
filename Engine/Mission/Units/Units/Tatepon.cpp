@@ -1,21 +1,20 @@
-#include "Yaripon.h"
+#include "Tatepon.h"
 #include "math.h"
 #include <fstream>
 #include <iostream>
 #include "../../../Func.h"
-#include "../../../V4Core.h"
 #include <sstream>
-Yaripon::Yaripon()
+Tatepon::Tatepon()
 {
 
 }
-void Yaripon::LoadConfig(Config *thisConfigs)
+void Tatepon::LoadConfig(Config *thisConfigs)
 {
     /// load patapon from p4a file
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\unit\\yaripon.p4a");
     setAnimationSegment("idle_armed");
 
-    spear_throw.loadFromFile("resources/sfx/level/spear_throw.ogg");
+    sword_swing.loadFromFile("resources/sfx/level/spear_throw.ogg");
 
     hit_1.loadFromFile("resources/sfx/level/hit_1.ogg");
     hit_2.loadFromFile("resources/sfx/level/hit_2.ogg");
@@ -25,11 +24,15 @@ void Yaripon::LoadConfig(Config *thisConfigs)
 
     cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
 
+
+    can_shield = true;
     isCollidable = true;
     isAttackable = true;
+    far_attack_range = 32;
+    near_attack_range = 0;
 }
 
-void Yaripon::startAttack()
+void Tatepon::startAttack()
 {
     if(action != ATTACK)
     {
@@ -40,10 +43,12 @@ void Yaripon::startAttack()
     }
 }
 
-bool Yaripon::doAttack()
+bool Tatepon::doAttack()
 {
+    cout << "[DEBUG] Tatepon tried to attack!" << endl;
     if(action == ATTACK)
     {
+        cout << "[DEBUG] Tatepon tried to attack (action)!" << endl;
         if(enemy_in_range)
         {
             if(attackmode == -2) ///prepare the attack (move around)
@@ -51,18 +56,15 @@ bool Yaripon::doAttack()
                 ///Calculate the local x
                 if(!dest_set)
                 {
-                    if(entity_distance < low_throw_range) ///unit is too close, go back (distance = 250)
+                    if((entity_distance >= near_attack_range) && (entity_distance <= far_attack_range)) ///perfect spot, make some tiny adjustments and start attacking
                     {
-                        dest_local_x = -(low_throw_range-entity_distance) - (rand() % 50); ///take a random position farther from the enemy
+                        cout << "[DEBUG] Tatepon is positioned well, setting dest_local_x to " << entity_distance - far_attack_range << endl;
+                        dest_local_x = entity_distance - far_attack_range; ///Get as close to enemy as possible
                     }
-                    else if((entity_distance >= low_throw_range) && (entity_distance <= high_throw_range)) ///perfect spot, make some tiny adjustments and start attacking
+                    else if(entity_distance > far_attack_range) ///unit is too far, get closer
                     {
-                        ///320-370
-                        dest_local_x += rand() % 40 - 20;
-                    }
-                    else if(entity_distance > high_throw_range) ///unit is too far, get closer (distance = 400)
-                    {
-                        dest_local_x = (entity_distance - high_throw_range) + (rand() % 50); ///take a random position closer the enemy
+                        cout << "[DEBUG] Tatepon has to get closer, setting dest_local_x to " << entity_distance + (far_attack_range + near_attack_range) / 2 << endl;
+                        dest_local_x = entity_distance + (far_attack_range + near_attack_range) / 2; ///take a position closer the enemy
                     }
 
                     dest_set = true;
@@ -75,9 +77,9 @@ bool Yaripon::doAttack()
                 if((local_x >= dest_local_x-5) && (local_x <= dest_local_x+5)) ///When you are set at your position, start the attack
                 attackmode = -1;
 
-                if(walkClock.getElapsedTime().asMilliseconds() >= 750) ///If walking takes you too long, stop and start the attack
+                if(walkClock.getElapsedTime().asMilliseconds() >= 1000) ///If walking takes you too long, stop and defend (slowly walking back)
                 {
-                    attackmode = -1;
+                    action = DEFEND;
                     dest_local_x = local_x;
                 }
             }
@@ -89,7 +91,7 @@ bool Yaripon::doAttack()
                 attack_clock.restart();
                 attackmode = 0;
 
-                if(isFever)
+                if(isFever) ///Weaken knockback if fever?
                 vspeed = -683;
             }
 
@@ -114,7 +116,7 @@ bool Yaripon::doAttack()
                     if(AnimatedObject::getAnimationSegment() != "attack_prefever_focused_start")
                     AnimatedObject::setAnimationSegment("attack_prefever_focused_start", true);
 
-                    if(attack_clock.getElapsedTime().asMilliseconds() > 400)
+                    if(attack_clock.getElapsedTime().asMilliseconds() > 600)
                     {
                         AnimatedObject::setAnimationSegment("attack_prefever_focused_throw", true);
                         attack_clock.restart();
@@ -123,7 +125,7 @@ bool Yaripon::doAttack()
                 }
             }
 
-            if(attackmode == 1) ///attack continously
+            if(attackmode == 1) ///attack continuously
             {
                 if(isFever)
                 {
@@ -135,7 +137,7 @@ bool Yaripon::doAttack()
                         if(canAttack)
                         {
                             cur_sound.stop();
-                            cur_sound.setBuffer(spear_throw);
+                            cur_sound.setBuffer(sword_swing);
                             cur_sound.play();
 
                             attacked = true;
@@ -172,7 +174,7 @@ bool Yaripon::doAttack()
                         if(canAttack)
                         {
                             cur_sound.stop();
-                            cur_sound.setBuffer(spear_throw);
+                            cur_sound.setBuffer(sword_swing);
                             cur_sound.play();
 
                             attacked = true;
@@ -206,7 +208,7 @@ bool Yaripon::doAttack()
     }
 }
 
-void Yaripon::doRhythm(std::string current_song, std::string current_drum, int combo)
+void Tatepon::doRhythm(std::string current_song, std::string current_drum, int combo)
 {
     if(!dead)
     {
@@ -251,36 +253,10 @@ void Yaripon::doRhythm(std::string current_song, std::string current_drum, int c
             ///use attack only once
             if(attackmode != 2)
             startAttack();
-
-            if(isFever)
-            {
-                high_throw_range = 410;
-                low_throw_range = 360;
-            }
-            else
-            {
-                high_throw_range = 320;
-                low_throw_range = 270;
-            }
         }
         else if(current_song == "chakachaka")
         {
             defend = true;
-
-            ///use attack only once
-            if(attackmode != 2)
-            startAttack();
-
-            if(isFever)
-            {
-                high_throw_range = 250;
-                low_throw_range = 200;
-            }
-            else
-            {
-                high_throw_range = 320;
-                low_throw_range = 270;
-            }
         }
         else
         {
@@ -390,7 +366,7 @@ void Yaripon::doRhythm(std::string current_song, std::string current_drum, int c
     }
 }
 
-void Yaripon::doMissionEnd()
+void Tatepon::doMissionEnd()
 {
     if(getAnimationSegment().find("dance") == std::string::npos)
     {
@@ -418,7 +394,7 @@ void Yaripon::doMissionEnd()
     }
 }
 
-void Yaripon::Draw(sf::RenderWindow& window)
+void Tatepon::Draw(sf::RenderWindow& window)
 {
     //cout << "Patapon: " << getAnimationSegment() << " " << getAnimationPos() << "/" << getAnimationLength(getAnimationSegment()) << " " << curFrame << " " << index << " " << floor(getAnimationLength(getAnimationSegment()) * animation_framerate) - 1 << " " << animation_framerate << endl;
 
@@ -466,7 +442,7 @@ void Yaripon::Draw(sf::RenderWindow& window)
             }
         }
 
-        if(deathClock.getElapsedTime().asSeconds() > 5)
+        if(deathClock.getElapsedTime().asSeconds() > 3)
         {
             cout << "Death clock passed 3 seconds. Time to bury into the ground" << endl;
 
@@ -483,6 +459,14 @@ void Yaripon::Draw(sf::RenderWindow& window)
                     ready_to_erase = true;
                 }
             }
+        }
+    }
+    else
+    {
+        if(old_current_song == "chakachaka")
+        {
+            cout << "[DEBUG] ChakaChaka in draw function" << endl;
+            //thisConfig->thisCore->saveReader.ponreg.GetPonByID(0);
         }
     }
 
@@ -510,7 +494,7 @@ void Yaripon::Draw(sf::RenderWindow& window)
     AnimatedObject::Draw(window);
 }
 
-void Yaripon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<string> collisionData)
+void Tatepon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<string> collisionData)
 {
     cout << "Patapon::OnCollide" << endl;
 

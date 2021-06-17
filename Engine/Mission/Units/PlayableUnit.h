@@ -13,8 +13,11 @@ class PlayableUnit : public CollidableObject
     enum Classes
     {
         DUMMY = -1,
-        HATAPON = 0,
-        YARIPON = 1
+        HATAPON = 0, // What the frick no
+        YARIPON = 1,
+        TATEPON = 2,
+        YUMIPON = 3,
+        HERO = 4
     };
 
     int unitID = DUMMY;
@@ -37,6 +40,10 @@ class PlayableUnit : public CollidableObject
     float prev_dest_local_x = 0;
 
     int army_id = 0; ///ID the unit has in the army, not it's global ID
+
+    bool can_two_weapons = false;
+    bool can_shield = false;
+
     bool enemy_in_range = false;
 
     bool charged = false;

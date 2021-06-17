@@ -29,6 +29,8 @@ class HitboxFrame
         float scaleX=1;
         float scaleY=1;
 
+        float lastRotation = -1;
+
         void clearVertices();
         void addVertex(float relX, float relY);
         std::vector<sf::Vector2f> getCurrentVertices();

@@ -15,7 +15,7 @@ class Barracks : public Menu
 {
     public:
         MissionController* currentController;
-        Config *config;
+        Config *thisConfig;
         std::string mission_file;
 
         ControlTips ctrlTips;
@@ -24,33 +24,31 @@ class Barracks : public Menu
         sf::RectangleShape mm_bigBox;
         sf::RectangleShape mm_titleBox;
         sf::RectangleShape mm_selected_item_line;
-        Yaripon* patapon;
-        Yaripon* patapon2;
-        Yaripon* patapon3;
+        std::vector<std::unique_ptr<PlayableUnit>> units;
 
         sf::Texture t_background;
         PSprite s_background;
-        float ratioX;
-        float ratioY;
+        float ratio_x;
+        float ratio_y;
 
-        float resRatioX, resRatioY;
-        int q=0;
+        float res_ratio_x, res_ratio_y;
+        int q = 0;
 
-        float pataponY;
-        float floorY;
+        float patapon_y;
+        float floor_y;
 
-        int missionID = 0;
+        int mission_id = 0;
         float mission_multiplier = 1;
 
         bool obelisk = false;
-        bool missionStarted = false;
+        bool mission_started = false;
 
-        int qualitySetting = 0;
+        int quality_setting = 0;
 
         sf::Font f_font;
         PText t_title;
-        int currentItemPosition;
-        vector<bool> enabledPositons;
+        int current_item_position;
+        std::vector<bool> enabled_positons;
 
         RoundedRect rr_main, rr_main_sh;
         RoundedRect rr_unitstatus, rr_unitstatus_sh;
@@ -74,13 +72,15 @@ class Barracks : public Menu
 
         /// Barracks Equipment Text
         PText t_unit_rarepon_name;
-        PText t_weapon_name;
-        PText t_weapon2_name;
-        PText t_armour_name;
-        PText t_mask_name;
+        PText t_slot_1_name;
+        PText t_slot_2_name;
+        PText t_slot_3_name;
+        PText t_slot_4_name;
+        PText t_slot_5_name;
+        std::vector<PText> t_eq_names = {t_slot_1_name, t_slot_2_name, t_slot_3_name, t_slot_4_name, t_slot_5_name};
 
         PSprite inv_box;
-        int gridSelX=0, gridSelY=0, gridOffsetY=0;
+        int grid_sel_x = 0, grid_sel_y = 0, grid_offset_y = 0;
 
         /// menu background
         PSprite s_menu_bkg;
@@ -109,7 +109,7 @@ class Barracks : public Menu
         int current_selected_pon=0;
         float item_line_flash = 0;
 
-        bool MenuMode = false;
+        bool menu_mode = false;
 
         struct InvBox
         {
@@ -118,7 +118,7 @@ class Barracks : public Menu
             int amount=0;
             int occ_amount=0;
             bool highlight = false;
-            vector<int> invIDs;
+            int inv_id;
 
             ///display
             sf::RectangleShape r_outer;
@@ -128,43 +128,44 @@ class Barracks : public Menu
             PSprite icon;
         };
 
-        vector<InvBox> inventory_boxes;
+        std::vector<InvBox> inventory_boxes;
         sf::RectangleShape r_sel;
 
         RoundedRect rr_itempreview, rr_itempreview_sh;
         PText item_title, item_desc;
 
-        int currentItemId;
+        int current_item_id;
 
-        int activeCategory=1;
-        int activeSubcategory=0;
+        int active_category=0;
+        int active_subcategory=0;
 
         Camera camera;
         Menu *parentMenu;
-        int currentMenuPosition;
-        std::vector<float> possibleMenuPositions;
-        void Initialise(Config *thisConfig, V4Core *parent, Menu *curParentMenu);
-        void Update(sf::RenderWindow &window, float fps, InputController& inputCtrl);
-        void UpdateInputControls();
-        void EventFired(sf::Event event);
-        void SetTitle(int menuPosition);
+        int current_menu_position;
+        std::vector<float> possible_menu_positions;
+        void initialise(Config *thisConfig, V4Core *v4Core, Menu *curParentMenu);
+        void update(sf::RenderWindow &window, float fps, InputController& inputCtrl);
+        void updateInputControls();
+        void eventFired(sf::Event event);
+        void setTitle(int menu_position);
         sf::RectangleShape mm_description_background;
         sf::RectangleShape mm_highlighted_tile;
 
         PSprite highlighted_pon;
 
-        PText t_itemtitle;
-        std::vector<PText> t_itemdescription;
+        PText t_item_title;
+        std::vector<PText> t_item_description;
 
-        vector<PataDialogBox> dialogboxes;
+        std::vector<PataDialogBox> dialog_boxes;
 
-        void OnExit();
-        void ReloadInventory();
-        void SetInventoryPosition();
-        void ApplyEquipment();
-        void RefreshStats();
-        void UpdatePreviewText();
-        void UpdateButtons();
+        void onExit();
+        int countOccupied(std::vector<int>);
+        void loadInventory();
+        void setInventoryPosition();
+        void applyEquipment();
+        void refreshStats();
+        void updatePreviewText();
+        void updateButtons();
         Barracks();
         ~Barracks();
 
