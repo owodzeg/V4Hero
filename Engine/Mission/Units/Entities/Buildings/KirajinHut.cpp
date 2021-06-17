@@ -34,7 +34,7 @@ void KirajinHut::parseAdditionalData(nlohmann::json additional_data)
 void KirajinHut::LoadConfig(Config *thisConfigs)
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\kirajin_hut.p4a");
+    AnimatedObject::LoadConfig(thisConfigs,"resources/units/entity/kirajin_hut.p4a");
     AnimatedObject::setAnimationSegment("idle");
 
     cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));

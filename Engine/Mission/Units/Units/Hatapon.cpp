@@ -13,7 +13,7 @@ Hatapon::Hatapon()
 void Hatapon::LoadConfig(Config *thisConfigs)
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\unit\\hatapon.p4a");
+    AnimatedObject::LoadConfig(thisConfigs,"resources/units/unit/hatapon.p4a");
 
     hit_1.loadFromFile("resources/sfx/level/hit_1.ogg");
     hit_2.loadFromFile("resources/sfx/level/hit_2.ogg");

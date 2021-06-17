@@ -15,7 +15,7 @@ Kirajin_Yari_2::Kirajin_Yari_2()
 void Kirajin_Yari_2::LoadConfig(Config *thisConfigs)
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\kirajin.p4a");
+    AnimatedObject::LoadConfig(thisConfigs,"resources/units/entity/kirajin.p4a");
     AnimatedObject::setAnimationSegment("idle_armed_focused");
 }
 

@@ -10,30 +10,16 @@ std::string Binary::get_file(const std::string& path)
 {
     cout << "[Binary] get_file(" << path << ")" << endl;
 
-    string npath = "";
+    //cout << "Get the file located at " << path << endl;
 
-    for(unsigned int i=0; i<path.size(); i++)
-    {
-        if(path[i] == '/')
-        {
-            npath += '\\';
-        }
-        else
-        {
-            npath += path[i];
-        }
-    }
-
-    //cout << "Get the file located at " << npath << endl;
-
-    std::ifstream file(npath, std::ios::binary);
+    std::ifstream file(path, std::ios::binary);
 
     if(!file)
     {
         cout << "Error when loading file" << endl;
     }
 
-    auto sz = std::filesystem::file_size(npath);
+    auto sz = std::filesystem::file_size(path);
 
     //cout << "Filesystem: size of file is " << sz << " bytes" << endl;
 

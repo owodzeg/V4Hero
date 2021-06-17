@@ -11,7 +11,7 @@ Tatepon::Tatepon()
 void Tatepon::LoadConfig(Config *thisConfigs)
 {
     /// load patapon from p4a file
-    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\unit\\yaripon.p4a");
+    AnimatedObject::LoadConfig(thisConfigs,"resources/units/unit/yaripon.p4a");
     setAnimationSegment("idle_armed");
 
     sword_swing.loadFromFile("resources/sfx/level/spear_throw.ogg");

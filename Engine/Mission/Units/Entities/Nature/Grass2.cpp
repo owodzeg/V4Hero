@@ -7,7 +7,7 @@ Grass2::Grass2()
 void Grass2::LoadConfig(Config *thisConfigs)
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\grass_2.p4a");
+    AnimatedObject::LoadConfig(thisConfigs,"resources/units/entity/grass_2.p4a");
 }
 void Grass2::Draw(sf::RenderWindow& window)
 {

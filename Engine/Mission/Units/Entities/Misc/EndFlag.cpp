@@ -11,9 +11,9 @@ EndFlag::EndFlag()
 }
 void EndFlag::LoadConfig(Config *thisConfigs)
 {
-    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\end_flag.p4a");
+    AnimatedObject::LoadConfig(thisConfigs,"resources/units/entity/end_flag.p4a");
     current_animation = "idle";
-    end_sound.loadFromFile("resources\\sfx\\level\\endflag.ogg");
+    end_sound.loadFromFile("resources/sfx/level/endflag.ogg");
     s_end.setBuffer(end_sound);
     s_end.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
 }

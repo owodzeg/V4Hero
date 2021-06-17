@@ -8,7 +8,7 @@ DroppedItem::DroppedItem()
 
 void DroppedItem::LoadConfig(Config *thisConfigs)
 {
-    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\droppeditem.p4a");
+    AnimatedObject::LoadConfig(thisConfigs,"resources/units/entity/droppeditem.p4a");
 
     /// You need to load the appropriate spritesheet for given item and quality settings.
     float rand_hs = (rand() % 500) / float(10);

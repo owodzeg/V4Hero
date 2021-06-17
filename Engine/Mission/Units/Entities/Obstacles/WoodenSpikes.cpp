@@ -14,7 +14,7 @@ WoodenSpikes::WoodenSpikes()
 void WoodenSpikes::LoadConfig(Config *thisConfigs)
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\wooden_spikes.p4a");
+    AnimatedObject::LoadConfig(thisConfigs,"resources/units/entity/wooden_spikes.p4a");
     AnimatedObject::setAnimationSegment("idle");
 
     cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));

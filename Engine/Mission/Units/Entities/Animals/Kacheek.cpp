@@ -14,7 +14,7 @@ Kacheek::Kacheek()
 void Kacheek::LoadConfig(Config *thisConfigs)
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\kacheek.p4a");
+    AnimatedObject::LoadConfig(thisConfigs,"resources/units/entity/kacheek.p4a");
     AnimatedObject::setAnimationSegment("idle");
 
     s_startle.loadFromFile("resources/sfx/level/kacheek_startled.ogg");

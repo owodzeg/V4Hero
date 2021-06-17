@@ -14,7 +14,7 @@ TreasureChest::TreasureChest()
 void TreasureChest::LoadConfig(Config *thisConfigs)
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\treasure_chest.p4a");
+    AnimatedObject::LoadConfig(thisConfigs,"resources/units/entity/treasure_chest.p4a");
     AnimatedObject::setAnimationSegment("idle");
 
     cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));

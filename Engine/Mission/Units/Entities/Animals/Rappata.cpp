@@ -14,7 +14,7 @@ Rappata::Rappata()
 void Rappata::LoadConfig(Config *thisConfigs)
 {
     /// all (normal) Rappatas have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\rappata.p4a");
+    AnimatedObject::LoadConfig(thisConfigs,"resources/units/entity/rappata.p4a");
     AnimatedObject::setAnimationSegment("idle");
 
     cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
