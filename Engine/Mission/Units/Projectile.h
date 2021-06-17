@@ -6,13 +6,13 @@
 class Projectile
 {
     public:
-    int projectileID = 0;
+    int projectile_id = 0;
     bool enemy = false;
 
-    int mindmg=0;
-    int maxdmg=0; /// by default, masks add/deal no damage
+    int min_dmg=0;
+    int max_dmg=0; /// by default, masks add/deal no damage
     int crit=0;
-    float attackspeed=0;/// 0% reduction
+    float attack_speed=0;/// 0% reduction
     float speed;
     float angle;
     float xPos;

@@ -45,9 +45,9 @@ void PSpritesheet::load(std::string file, int q, int r)
 
     std::cout << "[PSPRITESHEET] Loading " << c << std::endl;
 
-    std::ifstream file(c, ios::binary);
+    std::ifstream sfile(c, ios::binary);
     std::ostringstream ss;
-    ss << file.rdbuf();
+    ss << sfile.rdbuf();
     const std::string& s = ss.str();
     std::vector<char> vec(s.begin(), s.end());
     t_c = vec;

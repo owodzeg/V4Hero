@@ -6,7 +6,6 @@
 #include "Entities/Misc/DroppedItem.h"
 
 #include "Entities/Animals/Kacheek.h"
-#include "Entities/Animals/Rappata.h"
 
 #include "Entities/Obstacles/Wall.h"
 #include "Entities/Obstacles/TreasureChest.h"

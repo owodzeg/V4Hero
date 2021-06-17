@@ -39,6 +39,7 @@ int translateKeybind(int keyID)
     ///regular keyboard: key press 1 = 1
     ///joystick: key press 1 = 1001
 
+    return 0;
 }
 
 ///Returns true if any key has been pressed

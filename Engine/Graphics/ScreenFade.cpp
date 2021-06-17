@@ -1,4 +1,5 @@
 #include "ScreenFade.h"
+#include <math.h>
 
 ScreenFade::ScreenFade()
 {
@@ -10,7 +11,7 @@ void ScreenFade::Create(Config* config, int mode, float speed)
     cur_mode = mode;
     cur_speed = speed;
 
-    r_rect.setSize({config->GetInt("resX"), config->GetInt("resY")});
+    r_rect.setSize(sf::Vector2f(config->GetInt("resX"), config->GetInt("resY")));
     //r_rect.setFillColor(sf::Color::Black);
 
     switch(cur_mode)
