@@ -104,7 +104,6 @@ void Drum::Load(string drum, int perfection, sf::Texture& drum_texture, sf::Text
         temp.setPosition(-1000,-1000);
 
         int distance = (rand() % 200) + 50;
-
         c_particle.push_back(temp);
 
         particle_x.push_back(0);
@@ -294,8 +293,6 @@ void Drum::Draw(sf::RenderWindow& window)
 
             c_particle[i].setFillColor(sf::Color(c_particle[i].getFillColor().r,c_particle[i].getFillColor().g,0,c_alpha));
         }
-
-        c_particle[i].setRadius(particle_radius[i]);
 
         c_particle[i].setPosition(particle_x[i],particle_y[i]);
         window.draw(c_particle[i]);

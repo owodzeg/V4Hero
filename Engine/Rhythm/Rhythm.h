@@ -14,18 +14,21 @@
 
 #include "../Input/InputController.h"
 
+
 class Rhythm
 {
+    public:
+        /// Low and high range for BAD, GOOD and BEST hits (in milliseconds, 250 is the center point, 250-range = ms gap) ///
+        float low_range = 135.f; ///Anything below that range will be treated as BAD hit
+        float high_range = 210.f; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
+        float beat_timer = 500.f; ///Amount of milliseconds for each beat to be made
+        sf::Clock rhythmClock; ///Main clock for Rhythm purposes
+
     private:
     /// Theme and chant buffers ///
     std::map<std::string,sf::SoundBuffer> b_chant; ///Sound buffer for Patapon chants
-    SongController *songController;
+    std::vector<std::unique_ptr<SongController>> songController;
     std::string currentThemeName;
-
-    /// Low and high range for BAD, GOOD and BEST hits (in milliseconds, 250 is the center point, 250-range = ms gap) ///
-    int low_range = 135; ///Anything below that range will be treated as BAD hit
-    int high_range = 210; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
-    int beat_timer = 500; ///Amount of milliseconds for each beat to be made
     /// Check if it's possible to replace cycles with one (max 2) values based on a clock, would make things more reliable
     int cycle = 0;
     int cycle_mode = 0;
@@ -46,7 +49,6 @@ class Rhythm
     sf::Texture t_flash;
 
     /// Initialize clocks ///
-    sf::Clock rhythmClock; ///Main clock for Rhythm purposes
     sf::Clock beatCycleClock; ///Clock for proper command inputs and requirements
 
     /// Initialize Rhythm System values ///
@@ -96,7 +98,7 @@ class Rhythm
     bool advanced_prefever = false; ///When the game is still before fever, but gets more livid
     bool updateworm = false; ///For fever worm
     /// Config and Keybindings ///
-    Config config;
+    Config* config;
     std::map<int,bool> keyMap;
     RhythmController rhythmController;
     std::string current_song = "";
@@ -105,6 +107,7 @@ class Rhythm
     sf::Sound pata_react;
 
     Rhythm();
+    void Clear();
     void Stop();
     void LoadTheme(std::string theme);
     void Start();

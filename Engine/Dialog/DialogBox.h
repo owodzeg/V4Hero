@@ -16,6 +16,7 @@ class PataDialogBox
 
     RoundedRect rr_main;
     RoundedRect rr_shadow;
+    sf::Font d_font;
     PText t_dialogType, t_dialogText;
     std::vector<PText> t_options;
 

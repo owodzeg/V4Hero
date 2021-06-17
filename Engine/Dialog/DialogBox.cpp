@@ -26,6 +26,8 @@ PataDialogBox::PataDialogBox()
 
 void PataDialogBox::Create(sf::Font font, sf::String text, std::vector<sf::String> options, int qualitySetting)
 {
+    cout << "Creating new PataDialogBox" << endl;
+
     t_dialogType.createText(font, 16, sf::Color::Red, "Information", qualitySetting, 1);
     t_dialogText.createText(font, 30, sf::Color::Black, text, qualitySetting, 1);
 
@@ -54,10 +56,13 @@ void PataDialogBox::Readjust()
         height += 30;
     }
 
-    if(t_dialogText.getLocalBounds().width > width)
-    width = t_dialogText.getLocalBounds().width;
+    if (t_dialogText.rendered)
+    {
+        if (t_dialogText.getLocalBounds().width > width)
+            width = t_dialogText.getLocalBounds().width;
 
-    height += t_dialogText.getLocalBounds().height;
+        height += t_dialogText.getLocalBounds().height;
+    }
 
     height += 40; ///gap for options
 }

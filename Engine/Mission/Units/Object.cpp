@@ -86,6 +86,7 @@ void Object::LoadFromMemory(std::string mem, int xpos, int ypos)
 
 void Object::swapTexture(sf::Image img)
 {
+    //cout << "[AnimatedObject::swapTexture A] swapping texture" << endl;
     //cout << "[Object] Object::swapTexture(): " << texture_path << endl;
 
     sf::Clock c;
@@ -95,10 +96,12 @@ void Object::swapTexture(sf::Image img)
     //cout << c.getElapsedTime().asMicroseconds() << "us ";
     s_obj.applyTexture();
     //cout << c.getElapsedTime().asMicroseconds() << "us" << endl;;
+    //cout << "[AnimatedObject::swapTexture A] swapping done" << endl;
 }
 
 void Object::swapTexture(sf::Image first, vector<Pixel> px)
 {
+    //cout << "[AnimatedObject::swapTexture B] swapping texture" << endl;
     //cout << "[Object] Object::swapTexture(): " << texture_path << endl;
 
     //sf::Clock c;
@@ -116,6 +119,7 @@ void Object::swapTexture(sf::Image first, vector<Pixel> px)
     //cout << c.getElapsedTime().asMicroseconds() << "us ";
     s_obj.applyTexture();
     //cout << c.getElapsedTime().asMicroseconds() << "us" << endl;;
+    //cout << "[AnimatedObject::swapTexture B] swapping done" << endl;
 }
 
 void Object::SetFrame(float time)
@@ -205,15 +209,17 @@ void Object::SetPos(float time)
                     old_y = y;
                     old_r = r;
 
-                    x = frames[frames.size()-1].pos_x;
-                    y = frames[frames.size()-1].pos_y;
-                    r = frames[frames.size()-1].rotation;
-                    or_x = frames[frames.size()-1].or_x;
-                    or_y = frames[frames.size()-1].or_y;
-                    s_x = frames[frames.size()-1].scale_x;
-                    s_y = frames[frames.size()-1].scale_y;
+                    int sz = frames.size() - 1;
 
-                    if(frames[frames.size()-1].pos_x == -999999)
+                    x = frames[sz].pos_x;
+                    y = frames[sz].pos_y;
+                    r = frames[sz].rotation;
+                    or_x = frames[sz].or_x;
+                    or_y = frames[sz].or_y;
+                    s_x = frames[sz].scale_x;
+                    s_y = frames[sz].scale_y;
+
+                    if(frames[sz].pos_x == -999999)
                     disable = true;
                     else
                     disable = false;
@@ -271,6 +277,132 @@ void Object::SetPos(float time)
     }
 
    // cout << x << " " << y << " " << r << " " << or_x << " " << or_y << " " << s_x << " " << s_y << endl;
+}
+
+void Object::SetPosFrame(float time, int frame)
+{
+    //debug = true;
+
+    if (frame > 0)
+        frame -= 1;
+
+    if (!first_set)
+    {
+        old_x = x;
+        old_y = y;
+        old_r = r;
+
+        x = frames[0].pos_x;
+        y = frames[0].pos_y;
+        r = frames[0].rotation;
+        or_x = frames[0].or_x;
+        or_y = frames[0].or_y;
+        s_x = frames[0].scale_x;
+        s_y = frames[0].scale_y;
+
+        if (frames[0].pos_x == -999999)
+            disable = true;
+        else
+            disable = false;
+
+        first_set = true;
+    }
+
+    int sz = frames.size() - 1;
+
+    for (int i = frame; i <= sz; i++)
+    {
+        if (debug)
+            cout << "[OBJ] Check frame " << i << ", ftime " << frames[i].time << " vs " << time << " sz: " << frames.size() - 1 << " >= " << i + 1 << endl;
+
+        if (frames[i].time < time)
+        {
+            if (sz - 1 >= i + 1)
+            {
+                ///another frame exists
+
+                if (frames[i + 1].time > time)
+                {
+                    if (debug)
+                        cout << "[OBJ] HANDLER 1: another frame, calc inbetween" << endl;
+
+                    old_x = x;
+                    old_y = y;
+                    old_r = r;
+
+                    ///Calculate in-between positions
+                    float time_diff = frames[i + 1].time - frames[i].time;
+                    float time_pos = time - frames[i].time;
+                    float time_percentage = time_pos / time_diff;
+
+                    x = frames[i].pos_x + ((frames[i + 1].pos_x - frames[i].pos_x) * time_percentage);
+                    y = frames[i].pos_y + ((frames[i + 1].pos_y - frames[i].pos_y) * time_percentage);
+                    r = frames[i].rotation + ((frames[i + 1].rotation - frames[i].rotation) * time_percentage);
+                    or_x = frames[i].or_x + ((frames[i + 1].or_x - frames[i].or_x) * time_percentage);
+                    or_y = frames[i].or_y + ((frames[i + 1].or_y - frames[i].or_y) * time_percentage);
+                    s_x = frames[i].scale_x + ((frames[i + 1].scale_x - frames[i].scale_x) * time_percentage);
+                    s_y = frames[i].scale_y + ((frames[i + 1].scale_y - frames[i].scale_y) * time_percentage);
+
+                    if (frames[i + 1].pos_x == -999999)
+                        disable = true;
+                    else
+                        disable = false;
+
+                    break;
+                }
+            }
+            else
+            {
+                if (debug)
+                    cout << "[OBJ] HANDLER 2: last frame, get last pos" << endl;
+
+                old_x = x;
+                old_y = y;
+                old_r = r;
+
+                x = frames[i].pos_x;
+                y = frames[i].pos_y;
+                r = frames[i].rotation;
+                or_x = frames[i].or_x;
+                or_y = frames[i].or_y;
+                s_x = frames[i].scale_x;
+                s_y = frames[i].scale_y;
+
+                if (frames[i].pos_x == -999999)
+                    disable = true;
+                else
+                    disable = false;
+
+                break;
+            }
+        }
+        else
+        {
+            if (debug)
+                cout << "[OBJ] HANDLER 3: first frame/before first frame, get first pos" << endl;
+
+            old_x = x;
+            old_y = y;
+            old_r = r;
+
+            x = frames[i].pos_x;
+            y = frames[i].pos_y;
+            r = frames[i].rotation;
+            or_x = frames[i].or_x;
+            or_y = frames[i].or_y;
+            s_x = frames[i].scale_x;
+            s_y = frames[i].scale_y;
+
+            if (frames[i].pos_x == -999999)
+                disable = true;
+            else
+                disable = false;
+
+            break;
+        }
+    }
+
+    // cout << x << " " << y << " " << r << " " << or_x << " " << or_y << " " << s_x << " " << s_y << endl;
 }
 
 void Object::Draw(sf::RenderWindow& window, int orx, int ory)

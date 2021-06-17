@@ -13,8 +13,9 @@ class AnimatedObject
 {
     public:
     int ao_version = 0;
+    int entityID = -1;
 
-    vector<Object> objects;
+    shared_ptr<vector<Object>> objects;
     vector<Hitbox> hitboxes;
     float max_time = 0;
     float cur_pos = 0;
@@ -62,6 +63,7 @@ class AnimatedObject
 
     vector<float> animation_begin;
     vector<float> animation_end;
+    vector<float> animation_length;
     vector<string> animation_names;
     vector<string> animation_goto;
     vector<bool> animation_loop;
@@ -84,13 +86,16 @@ class AnimatedObject
     };
 
     vector<vector<vector<Object::Pixel>>> all_swaps;
+    shared_ptr<vector<vector<sf::Image>>> all_swaps_img;
+
+    //unique_ptr<vector<vector<sf::Image>>> swap_ptr;
 
     float xBound=0, yBound=0;
 
     map<int, map<int, sf::IntRect>> animation_bounds;
     map<int, map<int, sf::Vector2f>> animation_origins;
 
-    vector<Animation> animation_spritesheet;
+    shared_ptr<vector<Animation>> animation_spritesheet;
 
     map<int, map<int, AnimationFrameBound>> afb;
 
@@ -99,12 +104,14 @@ class AnimatedObject
     int curFrame, lastFrame, index;
     bool force_origin_null = false;
 
-    sf::Vector2f spear_origin;
-    sf::Vector2f helm_origin;
+    map<int,sf::Vector2f> slots_origins;
+
+    bool cached = false;
 
     vector<int> animation_frames;
     Config *thisConfig;
     AnimatedObject();
+    ~AnimatedObject();
     void loadAnim(std::string data, P4A handle);
     int getSegmentIndex(std::string segment_name);
     void setAnimationSegment(std::string new_segment_name);
@@ -118,9 +125,8 @@ class AnimatedObject
     void setLoop(bool loop);
     void setColor(sf::Color new_color);
     sf::Color getColor();
-    virtual void LoadConfig(Config *thisConfigs,std::string unitParamPath);
-    void applySpear(int id);
-    void applyHelm(int id);
+    virtual void LoadConfig(Config* thisConfigs, std::string unitParamPath);
+    void applyEquipment(std::vector<int> item_id, int slot, bool offhand = false);
     virtual void Draw(sf::RenderWindow& window);
 };
 

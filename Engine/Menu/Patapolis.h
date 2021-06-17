@@ -5,7 +5,6 @@
 #include "../Graphics/Menu.h"
 #include "../Graphics/ScreenFade.h"
 #include "../Mission/MissionController.h"
-#include "../Mission/Weather.h"
 #include "OptionsMenu.h"
 #include "Altar.h"
 #include "Barracks.h"
@@ -156,7 +155,6 @@ class PatapolisMenu : public Menu
         PSprite forge_main, forge_back, forge_glow, forge_fence, forge_slab, forge_slab_glow;
         PSprite barracks;
         PSprite festival_main;
-        PSprite se_ornament;
         PSprite altar;
         PSprite obelisk;
         PSprite paraget_main, paraget_crystal_glow, paraget_crystal;
@@ -177,11 +175,7 @@ class PatapolisMenu : public Menu
         bool isAnim = false;
         bool initialised=false;
         bool doWaitKeyPress=true;
-        bool loadedSave = false;
-
-        ///Seasonal events
-        bool se_christmas = false;
-        Weather weather;
+        bool save_loaded = false;
 
         ControlTips ctrlTips;
 
@@ -195,12 +189,29 @@ class PatapolisMenu : public Menu
         vector<PataDialogBox> dialogboxes;
         vector<MessageCloud> messageclouds;
 
-        sf::SoundBuffer sb_city_loop;
-        sf::Sound city_loop;
-
         //int goto_id = -1; ///Go-to ID where should Patapolis go after ScreenFade finishes
 
         Credits credits;
+
+        /// Stores the currently visible objects to the camera, so only them can be drawn (more efficient)
+        vector<int> draw_ID = {};
+
+        enum Buildings
+        {
+            MARKET = 0,
+            FORGE = 1,
+            BARRACKS = 2,
+            FESTIVAL = 3,
+            SEN = 4,
+            ALTAR = 5,
+            OBELISK = 6,
+            PARAGET = 7,
+            WAKAPON = 8,
+            EGG = 9
+        };
+
+        sf::SoundBuffer sb_city_loop;
+        sf::Sound city_loop;
 
         void addL6(std::string variant, float x, float y, int q, int r);
         void addL2(std::string variant, float x, float y, int q, int r);

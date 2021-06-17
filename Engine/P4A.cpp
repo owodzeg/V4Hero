@@ -1,4 +1,5 @@
 #include "P4A.h"
+#include "Binary.hpp"
 #include <algorithm>
 
 using namespace std;
@@ -137,94 +138,52 @@ void P4A::ReadDictionary(std::string filename)
     char header[3];
     file.read(header,3);
 
-    cout << header[0] << header[1] << header[2] << endl;
+    std::vector<unsigned char> bin_data = Binary::file_to_uchar(Binary::get_file(filename));
+
+    //cout << header[0] << header[1] << header[2] << endl;
     if(header[0] == 'P' and header[1] == '4' and header[2] == 'A')
     {
-        cout << "Correct archive format!" << endl;
-        ///reading
+        //cout << "[P4A] Correct archive format!" << endl;
 
-        ///8 bits = 1 byte, 0-255 (0-FF)
-        ///signed 8 bit integer: -127 - 128
-        ///unsigned 8 bit integer: 0 - 255
-        /// file version - 01
-        /// unsigned - 1
-        /// signed - -126
-
-        ///16 bits = 2 bytes, 0 - 65535
-
-        uint8_t file_version;
-
-        file.seekg(3);
-        file.read(reinterpret_cast<char*>(&file_version), 1);
+        uint8_t file_version = Binary::get_uint8(bin_data, 3);;
 
         if(file_version == 1)
         {
-            cout << "Detected Archive version 1" << endl;
+            cout << "[P4A] Detected Archive version 1" << endl;
 
-            uint32_t file_dictionary_size;
+            uint32_t file_dictionary_size = Binary::get_uint32(bin_data, 4);
 
-            file.seekg(4);
-            file.read(reinterpret_cast<char*>(&file_dictionary_size), 4);
-
-            cout << "Dictionary size is: " << file_dictionary_size << endl;
+            cout << "[P4A] Dictionary size is: " << file_dictionary_size << endl;
 
             int file_data_pointer = file_dictionary_size + 8;
 
             p4a_offset = 8;
-            vector<string> file_names;
-            vector<int> file_offsets;
-            vector<int> file_sizes;
 
             while(p4a_offset < file_data_pointer)
             {
-                uint8_t filename_length;
-
-                file.seekg(p4a_offset);
-                file.read(reinterpret_cast<char*>(&filename_length), 1);
+                uint8_t filename_length = Binary::get_uint8(bin_data, p4a_offset);
                 p4a_offset += 1;
 
-                file.seekg(p4a_offset);
-                char file_name[filename_length];
-                file.read(file_name,filename_length);
-
-                string str_filename(file_name);
-                str_filename = str_filename.substr(0,filename_length);
-
-                //cout << "Filename: " << str_filename << endl;
-                in_fnames.push_back(str_filename);
-
+                string str_filename = Binary::to_string(Binary::get_block(bin_data, p4a_offset, filename_length));
                 p4a_offset += filename_length;
 
-                uint32_t file_offset;
-
-                file.seekg(p4a_offset);
-                file.read(reinterpret_cast<char*>(&file_offset), 4);
-                //cout << "File offset: " << file_offset << endl;
-                in_foffsets.push_back(file_offset);
-
+                uint32_t file_offset = Binary::get_uint32(bin_data, p4a_offset);
                 p4a_offset += 4;
 
-                uint32_t file_size;
-
-                file.seekg(p4a_offset);
-                file.read(reinterpret_cast<char*>(&file_size), 4);
-                //cout << "File size: " << file_size << endl;
-                in_fsizes.push_back(file_size);
-
+                uint32_t file_size = Binary::get_uint32(bin_data, p4a_offset);
                 p4a_offset += 4;
+
+                files[str_filename] = Binary::get_block(bin_data, file_offset, file_size);
             }
-
-            file.seekg(0);
-            bin_data = std::vector<char>(std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>());
         }
         else
         {
-            cout << "Incorrect file version!" << endl;
+            cout << "[P4A] Incorrect file version!" << endl;
         }
     }
     else
     {
-        cout << "Incorrect file type" << endl;
+        cout << "[P4A] Incorrect file type" << endl;
         ///exit
     }
 
@@ -233,43 +192,12 @@ void P4A::ReadDictionary(std::string filename)
 
 std::string P4A::ReadToMemory(std::string name)
 {
-    cout << "Reading " << name << " from memory" << endl;
-
-    int i = std::distance(in_fnames.begin(), std::find(in_fnames.begin(), in_fnames.end(), name));
-
-    vector<char>::const_iterator first = bin_data.begin() + in_foffsets[i];
-    vector<char>::const_iterator last = bin_data.begin() + in_foffsets[i] + in_fsizes[i];
-    vector<char> cut_data(first, last);
-
-    return string(cut_data.begin(), cut_data.end());
+    cout << "[P4A] Reading " << name << " from memory" << endl;
+    
+    return string(files[name].begin(), files[name].end());
 }
 
-vector<char> P4A::ReadToMemoryChar(std::string name)
+vector<unsigned char> P4A::ReadToMemoryChar(std::string name)
 {
-    int i = std::distance(in_fnames.begin(), std::find(in_fnames.begin(), in_fnames.end(), name));
-
-    vector<char>::const_iterator first = bin_data.begin() + in_foffsets[i];
-    vector<char>::const_iterator last = bin_data.begin() + in_foffsets[i] + in_fsizes[i];
-
-    return vector<char>(first, last);
-}
-
-void P4A::Extract(std::string name)
-{
-    for(int i=0; i<in_fnames.size(); i++)
-    {
-        if(in_fnames[i] == name)
-        {
-            ifstream p4(p4a_filename, ios::binary);
-            char buffer[in_fsizes[i]];
-            p4.seekg(in_foffsets[i]);
-            p4.read(buffer,in_fsizes[i]);
-            p4.close();
-
-
-            ofstream p4o(in_fnames[i], ios::binary | ios::trunc);
-            p4o.write(buffer,in_fsizes[i]);
-            p4o.close();
-        }
-    }
+    return files[name];
 }

@@ -90,7 +90,7 @@ void Weather::draw(sf::RenderWindow& window, float fps)
                 d = 0;
 
                 sf::RectangleShape r_drop;
-                r_drop.setSize({3.0*resRatioX, 64.0*resRatioY});
+                r_drop.setSize(sf::Vector2f(3.0*resRatioX, 64.0*resRatioY));
 
                 if(d == 1)
                 r_drop.setFillColor(sf::Color(240,240,240,255));

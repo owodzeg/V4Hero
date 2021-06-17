@@ -3,16 +3,14 @@
 #include "iostream"
 #include "../V4Core.h"
 #include <sstream>
-#include <ctime>
 #include "Altar.h"
-
 PatapolisMenu::PatapolisMenu()
 {
     //ctor
 
     //f_font.loadFromFile("resources/fonts/arial.ttf");
 
-    isActive=false;
+    is_active = false;
 }
 
 void PatapolisMenu::addL6(std::string variant, float x, float y, int q, int r)
@@ -202,91 +200,28 @@ void PatapolisMenu::addCloud(std::string type, float x, float y, float xsize, fl
     }
 }
 
-void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParentMenu)
+void PatapolisMenu::Initialise(Config *_thisConfig,V4Core *parent, Menu *curParentMenu)
 {
-    parent->SaveToDebugLog("Initializing Patapolis...");
+    parent->saveToDebugLog("Initializing Patapolis...");
 
     //sf::Context context;
-    Scene::Initialise(thisConfigs,parent);
-    altar_menu.Initialise(thisConfigs,parent,this);
-    barracks_menu.Initialise(thisConfigs,parent,this);
-    obelisk_menu.Initialise(thisConfigs,parent,this);
+    Scene::Initialise(_thisConfig,parent);
+    altar_menu.initialise(_thisConfig,parent,this);
+    barracks_menu.initialise(_thisConfig,parent,this);
+    obelisk_menu.Initialise(_thisConfig,parent,this);
     parentMenu = curParentMenu;
     quality = thisConfig->GetInt("textureQuality");
-
-    if(thisConfig->GetInt("seasonalEvents") == 1)
-    {
-        auto start = std::time(0);
-        std::time_t t = std::time(0);   // get time now
-        std::tm* now = std::localtime(&t);
-
-        se_christmas = false;
-        thisConfigs->se_christmas = false;
-
-        cout << "Current month: " << now->tm_mon+1 << " current day: " << now->tm_mday << endl;
-
-        if(now->tm_mon+1 >= 12)
-        {
-            if(now->tm_mday >= 14)
-            {
-                se_christmas = true;
-                thisConfigs->se_christmas = true;
-            }
-        }
-        else if(now->tm_mon+1 <= 1)
-        {
-            if(now->tm_mday <= 14)
-            {
-                se_christmas = true;
-                thisConfigs->se_christmas = true;
-            }
-        }
-
-        if(se_christmas)
-        {
-            cout << "Merry christmas! :)" << endl;
-        }
-    }
-
-    weather.thisConfig = thisConfig;
-
-    ///Enable winter weather
-    if(se_christmas)
-    weather.loadWeather(1);
-
-    ///Unlock special mission
-    if(se_christmas)
-    {
-        if(!v4core->savereader.isMissionUnlocked(6))
-        {
-            v4core->savereader.missionsUnlocked.push_back(6);
-            v4core->savereader.missionLevels[6] = 0;
-        }
-    }
-    else
-    {
-        if(std::find(v4core->savereader.missionsUnlocked.begin(), v4core->savereader.missionsUnlocked.end(), 6) != v4core->savereader.missionsUnlocked.end())
-        {
-            auto it = std::find(v4core->savereader.missionsUnlocked.begin(), v4core->savereader.missionsUnlocked.end(), 6);
-            v4core->savereader.missionsUnlocked.erase(it);
-        }
-    }
 
     float resRatioX = thisConfig->GetInt("resX") / float(1280);
     float resRatioY = thisConfig->GetInt("resY") / float(720);
 
-    f_font.loadFromFile(thisConfigs->fontPath);
+    f_font.loadFromFile(_thisConfig->fontPath);
 
     t_title.createText(f_font, 38, sf::Color::White, "", quality, 1);
     t_title.t.setOutlineThickness(2);
     t_title.t.setOutlineColor(sf::Color::Black);
 
-    string vx_params = "";
-
-    if(!se_christmas)
-    vx_params = "0,24,128,238;66,24,128,238;444,184,243,202;591,184,243,202;592,255,255,255;710,171,243,214;720,171,243,214";
-    else
-    vx_params = "0,70,124,190;66,70,124,190;444,184,243,202;591,184,243,202;592,255,255,255;710,171,243,214;720,171,243,214";
+    string vx_params = "0,24,128,238;66,24,128,238;444,184,243,202;591,184,243,202;592,255,255,255;710,171,243,214;720,171,243,214";
 
     vector<string> v_vxparams = Func::Split(vx_params,';');
     std::vector<sf::Vector2f> vx_pos;
@@ -392,66 +327,34 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
 
     addL2("a", 800, 766-floor_height, quality, 1);
     addL2("b", 2900, 740-floor_height, quality, 1);
+    addL2("c", 3900, 720-floor_height, quality, 1);
+    addL2("c", 4300, 770-floor_height, quality, 1);
 
-    if(!se_christmas)
-    {
-        addL2("c", 4300, 770-floor_height, quality, 1);
-        addL2("c", 5220, 720-floor_height, quality, 1);
-        addL2("c", 5600, 770-floor_height, quality, 1);
-        addL2("c", 6150, 760-floor_height, quality, 1);
-        addL2("c", 6320, 720-floor_height, quality, 1);
-        addL2("c", 7540, 760-floor_height, quality, 1);
-        addL2("c", 8900, 770-floor_height, quality, 1);
-        addL2("c", 9060, 740-floor_height, quality, 1);
-        addL2("c", 10300, 770-floor_height, quality, 1);
-        addL2("c", 10470, 740-floor_height, quality, 1);
+    addL2("c", 5080, 750-floor_height, quality, 1);
+    addL2("c", 5220, 720-floor_height, quality, 1);
 
-        addL2("c", 3900, 720-floor_height, quality, 1);
-        addL2("c", 5080, 750-floor_height, quality, 1);
-        addL2("c", 5740, 720-floor_height, quality, 1);
-        addL2("c", 6540, 760-floor_height, quality, 1);
-        addL2("c", 7800, 720-floor_height, quality, 1);
-        addL2("c", 8000, 750-floor_height, quality, 1);
-        addL2("c", 9760, 740-floor_height, quality, 1);
-        addL2("c", 11000, 750-floor_height, quality, 1);
-    }
-    else
-    {
-        addL2("c_winter1", 4300, 770-floor_height, quality, 1);
-        addL2("c_winter2", 5220, 720-floor_height, quality, 1);
-        addL2("c_winter1", 5600, 770-floor_height, quality, 1);
-        addL2("c_winter1", 6150, 760-floor_height, quality, 1);
-        addL2("c_winter2", 6320, 720-floor_height, quality, 1);
-        addL2("c_winter1", 7540, 760-floor_height, quality, 1);
-        addL2("c_winter2", 8900, 770-floor_height, quality, 1);
-        addL2("c_winter2", 9060, 740-floor_height, quality, 1);
-        addL2("c_winter1", 10300, 770-floor_height, quality, 1);
-        addL2("c_winter2", 10470, 740-floor_height, quality, 1);
+    addL2("c", 5600, 770-floor_height, quality, 1);
+    addL2("c", 5740, 720-floor_height, quality, 1);
 
-        addL2("c_winter2", 3900, 720-floor_height, quality, 1);
-        addL2("c_winter1", 5080, 750-floor_height, quality, 1);
-        addL2("c_winter2", 5740, 720-floor_height, quality, 1);
-        addL2("c_winter1", 6540, 760-floor_height, quality, 1);
-        addL2("c_winter1", 7800, 720-floor_height, quality, 1);
-        addL2("c_winter2", 8000, 750-floor_height, quality, 1);
-        addL2("c_winter1", 9760, 740-floor_height, quality, 1);
-        addL2("c_winter2", 11000, 750-floor_height, quality, 1);
+    addL2("c", 6150, 760-floor_height, quality, 1);
+    addL2("c", 6320, 720-floor_height, quality, 1);
 
-        addL2("_snowman", 11100, 720-floor_height, quality, 1);
-        addL2("_present1", 10200, 720-floor_height, quality, 1);
-        addL2("_present3", 10100, 720-floor_height, quality, 1);
-        addL2("_present2", 9500, 720-floor_height, quality, 1);
-        addL2("_present1", 9400, 720-floor_height, quality, 1);
-        addL2("_present3", 8500, 720-floor_height, quality, 1);
-        addL2("_present2", 8100, 720-floor_height, quality, 1);
-        addL2("_present3", 8060, 720-floor_height, quality, 1);
-        addL2("_present3", 6800, 720-floor_height, quality, 1);
-        addL2("_present2", 6700, 720-floor_height, quality, 1);
-        addL2("_present3", 6560, 720-floor_height, quality, 1);
-        addL2("_present1", 6400, 720-floor_height, quality, 1);
-        addL2("_present1", 6330, 720-floor_height, quality, 1);
-        addL2("_present2", 6200, 720-floor_height, quality, 1);
-    }
+    addL2("c", 6540, 760-floor_height, quality, 1);
+
+    addL2("c", 7540, 760-floor_height, quality, 1);
+
+    addL2("c", 7800, 720-floor_height, quality, 1);
+    addL2("c", 8000, 750-floor_height, quality, 1);
+
+    addL2("c", 8900, 770-floor_height, quality, 1);
+    addL2("c", 9060, 740-floor_height, quality, 1);
+
+    addL2("c", 9760, 740-floor_height, quality, 1);
+
+    addL2("c", 10300, 770-floor_height, quality, 1);
+    addL2("c", 10470, 740-floor_height, quality, 1);
+
+    addL2("c", 11000, 750-floor_height, quality, 1);
 
     addL2("d", 300, 728-floor_height, quality, 1);
     addL2("d", 940, 728-floor_height, quality, 1);
@@ -498,11 +401,11 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     wakapon.setPosition(11920, 462);
     wakapon.setOrigin(wakapon.getLocalBounds().width/2, wakapon.getLocalBounds().height);
 
-    a_wakapon.LoadConfig(thisConfigs, "resources/units/unit/wakapon.p4a");
+    a_wakapon.LoadConfig(_thisConfig, "resources/units/unit/wakapon.p4a");
     a_wakapon.setAnimationSegment("idle");
     a_wakapon.global_y = 395;
 
-    a_sen.LoadConfig(thisConfigs, "resources/units/unit/ranpurupon.p4a");
+    a_sen.LoadConfig(_thisConfig, "resources/units/unit/ranpurupon.p4a");
     a_sen.setAnimationSegment("idle");
     a_sen.global_y = 629;
 
@@ -603,10 +506,6 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     festival_main.setPosition(5620, 720-floor_height);
     festival_main.setOrigin(festival_main.getLocalBounds().width/2, festival_main.getLocalBounds().height);
 
-    se_ornament.loadFromFile("resources/graphics/bg/patapolis/ornament.png", quality, 1);
-    se_ornament.setPosition(5620, 500-floor_height);
-    se_ornament.setOrigin(se_ornament.getLocalBounds().width/2, se_ornament.getLocalBounds().height);
-
     altar.loadFromFile("resources/graphics/bg/patapolis/altar.png", quality, 1);
     altar.setPosition(7280, 720-floor_height);
     altar.setOrigin(altar.getLocalBounds().width/2, altar.getLocalBounds().height);
@@ -665,21 +564,21 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     addCloud("A", 8800, 240, 0, 0, quality, 1);
     addCloud("A", 8000, 170, 0, 0, quality, 1);
 
-    float volume = (float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("bgmVolume"))/100.f));
+    ctrlTips.create(54, f_font, 20, sf::String(L"L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
+
+    altar_menu.save_loaded = save_loaded;
+    altar_menu.reloadInventory();
+
+    credits.Initialise(_thisConfig, v4Core);
+
+    screenFade.Create(_thisConfig, 0, 512);
+
+    float volume = (float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("bgmVolume")) / 100.f));
 
     sb_city_loop.loadFromFile("resources/sfx/bgm/patapolis.ogg");
     city_loop.setBuffer(sb_city_loop);
     city_loop.setLoop(true);
     city_loop.setVolume(volume);
-
-    ctrlTips.create(54, f_font, 20, sf::String(L"L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
-
-    altar_menu.loadedSave = loadedSave;
-    altar_menu.ReloadInventory();
-
-    credits.Initialise(thisConfigs, v4core);
-
-    screenFade.Create(thisConfigs, 0, 512);
 
     initialised=true;
 
@@ -688,27 +587,28 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
 
     if (doWaitKeyPress)
     {
-        v4core->LoadingWaitForKeyPress();
-        v4core->ChangeRichPresence("In Patapolis", "logo", "");
+        v4Core->loadingWaitForKeyPress();
+        v4Core->changeRichPresence("In Patapolis", "logo", "");
     }
 
-    parent->SaveToDebugLog("Initializing Patapolis finished.");
+    parent->saveToDebugLog("Initializing Patapolis finished.");
 }
+
 void PatapolisMenu::EventFired(sf::Event event)
 {
-    if (altar_menu.isActive)
+    if (altar_menu.is_active)
     {
         altar_menu.EventFired(event);
     }
-    else if (barracks_menu.isActive)
+    else if (barracks_menu.is_active)
     {
         barracks_menu.EventFired(event);
     }
-    else if (obelisk_menu.isActive)
+    else if (obelisk_menu.is_active)
     {
         obelisk_menu.EventFired(event);
     }
-    else if(isActive)
+    else if(is_active)
     {
         if(event.type == sf::Event::KeyPressed)
         {
@@ -732,6 +632,23 @@ void PatapolisMenu::EventFired(sf::Event event)
 void PatapolisMenu::SetTitle(int menuPosition)
 {
     sf::String a = L"L/R: Move      ";
+
+    if (draw_ID.size() <= 1)
+    {
+        draw_ID.push_back(menuPosition);
+    }
+    else
+    {
+        draw_ID.erase(draw_ID.begin());
+        draw_ID.push_back(menuPosition);
+    }
+
+    cout << "draw_ID: ";
+
+    for (auto i : draw_ID)
+        cout << i;
+
+    cout << endl;
 
     switch(menuPosition)
     {
@@ -760,13 +677,13 @@ void PatapolisMenu::SetTitle(int menuPosition)
         tmp.Create(20, sf::Vector2f(a_sen.getGlobalPosition().x-5, a_sen.getGlobalPosition().y-25), sf::Color(170,182,250,255), false, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
         tmp.msgcloud_ID = 0;
 
-        vector<int> missions = v4core->savereader.missionsUnlocked;
+        vector<int> missions = v4Core->saveReader.missions_unlocked;
 
         if(std::find(missions.begin(), missions.end(), 1) != missions.end())
         {
             ///shida valley is unlocked
 
-            if((std::find(missions.begin(), missions.end(), 1) != missions.end()) && (std::find(missions.begin(), missions.end(), 2) == missions.end()) && (std::find(missions.begin(), missions.end(), 3) == missions.end())) ///if it's the only mission and patapine story is not unlocked
+            if(missions.size() == 1) ///if it's the only mission
             {
                 ///shida valley dialogue
                 tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_1")), true);
@@ -784,7 +701,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
                 }
                 else if(std::find(missions.begin(), missions.end(), 3) != missions.end()) ///patapine fortress REPEATABLE mission
                 {
-                    if((std::find(missions.begin(), missions.end(), 1) != missions.end()) && (std::find(missions.begin(), missions.end(), 4) == missions.end()) && (std::find(missions.begin(), missions.end(), 5) == missions.end())) ///neither of ejiji cliffs are unlocked yet (only shida and patapine)
+                    if(missions.size() == 2) ///ejiji cliffs not unlocked yet (only shida and patapine)
                     {
                         ///ejiji locked dialogue
                         tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_2")), true);
@@ -842,13 +759,13 @@ void PatapolisMenu::SetTitle(int menuPosition)
         MessageCloud tmp;
         tmp.Create(20, sf::Vector2f(a_wakapon.getGlobalPosition().x-5, a_wakapon.getGlobalPosition().y-25), sf::Color(255,255,255,255), false, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
 
-        vector<int> missions = v4core->savereader.missionsUnlocked;
+        vector<int> missions = v4Core->saveReader.missions_unlocked;
 
         if(std::find(missions.begin(), missions.end(), 1) != missions.end())
         {
             ///shida valley is unlocked
 
-            if((std::find(missions.begin(), missions.end(), 1) != missions.end()) && (std::find(missions.begin(), missions.end(), 2) == missions.end()) && (std::find(missions.begin(), missions.end(), 3) == missions.end())) ///if it's the only mission and patapine story is not unlocked
+            if(missions.size() == 1) ///if it's the only mission
             {
                 ///shida valley dialogue
                 tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
@@ -866,7 +783,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
                 }
                 else if(std::find(missions.begin(), missions.end(), 3) != missions.end()) ///patapine fortress REPEATABLE mission
                 {
-                    if((std::find(missions.begin(), missions.end(), 1) != missions.end()) && (std::find(missions.begin(), missions.end(), 4) == missions.end()) && (std::find(missions.begin(), missions.end(), 5) == missions.end())) ///neither of ejiji cliffs are unlocked yet (only shida and patapine)
+                    if(missions.size() == 2) ///ejiji cliffs not unlocked yet (only shida and patapine)
                     {
                         ///ejiji locked dialogue
                         tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
@@ -925,9 +842,8 @@ float EaseIn (float time, float startValue, float change, float duration)
 };
 void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController& inputCtrl)
 {
-    if(isActive)
+    if(is_active)
     {
-
         auto lastView = window.getView();
         window.setView(window.getDefaultView());
 
@@ -1010,7 +926,6 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         forge_slab_glow.lx = forge_slab_glow.baseX - camPos;
         barracks.lx = barracks.baseX - camPos;
         festival_main.lx = festival_main.baseX - camPos;
-        se_ornament.lx = se_ornament.baseX - camPos;
         altar.lx = altar.baseX - camPos;
         obelisk.lx = obelisk.baseX - camPos;
         paraget_main.lx = paraget_main.baseX - camPos;
@@ -1040,168 +955,202 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         float resRatioX = window.getSize().x / float(1280);
         float resRatioY = window.getSize().y / float(720);
 
-        market.draw(window);
-
-        forge_big.id += float(12) / fps;
-
-        if(round(forge_big.id) >= 3)
-        forge_big.id = 0;
-
-        int id = round(forge_big.id);
-
-        forge_big.glowsize += float(90) / fps;
-
-        if(forge_big.glowsize >= 360)
-        forge_big.glowsize -= 360;
-
-        forge_big.glow.setOrigin(forge_big.glow.getLocalBounds().width/2, forge_big.glow.getLocalBounds().height/2);
-        forge_big.glow.setScale(1.05 + (cos(forge_big.glowsize * 3.141592 / 180) / 10));
-        forge_big.glow.setPosition(forge_big.baseX - camPos, forge_big.baseY);
-
-        forge_big.glow.draw(window);
-
-        forge_big.fire[id].setOrigin(forge_big.fire[id].getLocalBounds().width/2, forge_big.fire[id].getLocalBounds().height/2);
-        forge_big.fire[id].setPosition(forge_big.baseX - camPos, forge_big.baseY);
-
-        forge_big.fire[id].draw(window);
-
-        forge_back.draw(window);
-
-        forge_glowsize += float(90) / fps;
-
-        if(forge_glowsize >= 360)
-        forge_glowsize = 0;
-
-        forge_glow.setOrigin(forge_glow.getLocalBounds().width/2, forge_glow.getLocalBounds().height/2);
-        forge_glow.setScale(1.05 + (cos(forge_glowsize * 3.141592 / 180) / 10));
-        forge_glow.draw(window);
-
-        forge_purple.id += float(12) / fps;
-
-        if(round(forge_purple.id) >= 3)
-        forge_purple.id = 0;
-
-        id = round(forge_purple.id);
-
-        forge_purple.glowsize += float(90) / fps;
-
-        if(forge_purple.glowsize >= 360)
-        forge_purple.glowsize -= 360;
-
-        forge_purple.glow.setOrigin(forge_purple.glow.getLocalBounds().width/2, forge_purple.glow.getLocalBounds().height/2);
-        forge_purple.glow.setScale(1.05 + (cos(forge_purple.glowsize * 3.141592 / 180) / 10));
-        forge_purple.glow.setPosition(forge_purple.baseX - camPos, forge_purple.baseY);
-
-        forge_purple.glow.draw(window);
-
-        forge_purple.fire[id].setOrigin(forge_purple.fire[id].getLocalBounds().width/2, forge_purple.fire[id].getLocalBounds().height/2);
-        forge_purple.fire[id].setPosition(forge_purple.baseX - camPos, forge_purple.baseY);
-
-        forge_purple.fire[id].draw(window);
-
-        forge_slab_glow.setOrigin(forge_slab_glow.getLocalBounds().width/2, forge_slab_glow.getLocalBounds().height/2);
-        forge_slab_glow.setScale(1.05 + (cos(forge_glowsize * 3.141592 / 180) / 10));
-        forge_slab_glow.draw(window);
-
-        forge_main.draw(window);
-
-        forge_slab.draw(window);
-
-        forge_fence.draw(window);
-
-        barracks.draw(window);
-
-        crystal_y += float(90) / fps;
-
-        if(crystal_y >= 360)
-        crystal_y -= 360;
-
-        crystal_y2 += float(30) / fps;
-
-        if(crystal_y2 >= 360)
-        crystal_y2 -= 360;
-
-        paraget_crystal.ly = paraget_crystal.baseY + sin(crystal_y * 3.141592 / 180) * 10;
-        paraget_crystal_glow.ly = paraget_crystal.baseY + sin(crystal_y * 3.141592 / 180) * 10;
-
-        paraget_crystal_glow.setScale(1.05 + (cos(crystal_y2 * 3.141592 / 180) / 10));
-        paraget_crystal_glow.draw(window);
-        paraget_main.draw(window);
-        paraget_crystal.draw(window);
-
-        for(int i=0; i<paraget_sparkles.size(); i++)
-        {
-            paraget_sparkles[i].x = paraget_sparkles[i].baseX - camPos;
-
-            if(paraget_sparkles[i].alpha > 0)
-            {
-                paraget_sparkles[i].alpha -= float(300) / fps;
-            }
-            else
-            {
-                paraget_sparkles[i].alpha = 0;
-            }
-
-            if(paraget_sparkles[i].curScale > 0)
-            {
-                paraget_sparkles[i].curScale -= float(1.35) / fps;
-            }
-            else
-            {
-                paraget_sparkles[i].curScale = 0;
-            }
-
-            if(paraget_sparkles[i].curScale <= 0)
-            {
-                paraget_sparkles[i].timer -= float(1000) / fps;
-            }
-
-            if(paraget_sparkles[i].timer <= 0)
-            {
-                paraget_sparkles[i].curScale = paraget_sparkles[i].initScale;
-                paraget_sparkles[i].alpha = 255;
-                paraget_sparkles[i].timer = 400 + (rand() % 200);
-                paraget_sparkles[i].y = paraget_sparkles[i].baseY + sin(crystal_y * 3.141592 / 180) * 10;
-            }
-
-            paraget_sparkles[i].sprk.setColor(sf::Color(255,255,255,paraget_sparkles[i].alpha));
-            paraget_sparkles[i].sprk.setScale(paraget_sparkles[i].curScale);
-            paraget_sparkles[i].sprk.setOrigin(paraget_sparkles[i].sprk.getLocalBounds().width/2, paraget_sparkles[i].sprk.getLocalBounds().height/2);
-            paraget_sparkles[i].sprk.setPosition(paraget_sparkles[i].x, paraget_sparkles[i].y);
-            paraget_sparkles[i].sprk.draw(window);
-        }
-
-        for(int i=0; i<fires.size(); i++)
+        /// Fires
+        for (int i = 0; i < fires.size(); i++)
         {
             fires[i].id += float(10) / fps;
 
-            if(round(fires[i].id) >= 3)
-            fires[i].id = 0;
+            if (round(fires[i].id) >= 3)
+                fires[i].id = 0;
 
             int id = round(fires[i].id);
 
             fires[i].glowsize += float(90) / fps;
 
-            if(fires[i].glowsize >= 360)
-            fires[i].glowsize -= 360;
+            if (fires[i].glowsize >= 360)
+                fires[i].glowsize -= 360;
 
-            fires[i].glow.setOrigin(fires[i].glow.getLocalBounds().width/2, fires[i].glow.getLocalBounds().height/2);
+            fires[i].glow.setOrigin(fires[i].glow.getLocalBounds().width / 2, fires[i].glow.getLocalBounds().height / 2);
             fires[i].glow.setScale(1.05 + (cos(fires[i].glowsize * 3.141592 / 180) / 10));
             fires[i].glow.setPosition(fires[i].baseX - camPos, fires[i].baseY);
 
             fires[i].glow.draw(window);
 
-            fires[i].fire[id].setOrigin(fires[i].fire[id].getLocalBounds().width/2, fires[i].fire[id].getLocalBounds().height/2);
+            fires[i].fire[id].setOrigin(fires[i].fire[id].getLocalBounds().width / 2, fires[i].fire[id].getLocalBounds().height / 2);
             fires[i].fire[id].setPosition(fires[i].baseX - camPos, fires[i].baseY);
 
             fires[i].fire[id].draw(window);
         }
 
-        festival_main.draw(window);
-        if(se_christmas)
-        se_ornament.draw(window);
-        obelisk.draw(window);
+        //cout << "for: " << endl;
 
+        for (auto i : draw_ID)
+        {
+            //cout << i << endl;
+
+            switch(i)
+            {
+                case Buildings::MARKET: ///Marketplace
+                {
+                    //for some reason, barracks are marketplace. what the fuck?
+                    barracks.draw(window);
+                    break;
+                }
+
+                case Buildings::FORGE: ///Blacksmith
+                {
+                    forge_big.id += float(12) / fps;
+
+                    if (round(forge_big.id) >= 3)
+                        forge_big.id = 0;
+
+                    int id = round(forge_big.id);
+
+                    forge_big.glowsize += float(90) / fps;
+
+                    if (forge_big.glowsize >= 360)
+                        forge_big.glowsize -= 360;
+
+                    forge_big.glow.setOrigin(forge_big.glow.getLocalBounds().width / 2, forge_big.glow.getLocalBounds().height / 2);
+                    forge_big.glow.setScale(1.05 + (cos(forge_big.glowsize * 3.141592 / 180) / 10));
+                    forge_big.glow.setPosition(forge_big.baseX - camPos, forge_big.baseY);
+
+                    forge_big.glow.draw(window);
+
+                    forge_big.fire[id].setOrigin(forge_big.fire[id].getLocalBounds().width / 2, forge_big.fire[id].getLocalBounds().height / 2);
+                    forge_big.fire[id].setPosition(forge_big.baseX - camPos, forge_big.baseY);
+
+                    forge_big.fire[id].draw(window);
+
+                    forge_back.draw(window);
+
+                    forge_glowsize += float(90) / fps;
+
+                    if (forge_glowsize >= 360)
+                        forge_glowsize = 0;
+
+                    forge_glow.setOrigin(forge_glow.getLocalBounds().width / 2, forge_glow.getLocalBounds().height / 2);
+                    forge_glow.setScale(1.05 + (cos(forge_glowsize * 3.141592 / 180) / 10));
+                    forge_glow.draw(window);
+
+                    forge_purple.id += float(12) / fps;
+
+                    if (round(forge_purple.id) >= 3)
+                        forge_purple.id = 0;
+
+                    id = round(forge_purple.id);
+
+                    forge_purple.glowsize += float(90) / fps;
+
+                    if (forge_purple.glowsize >= 360)
+                        forge_purple.glowsize -= 360;
+
+                    forge_purple.glow.setOrigin(forge_purple.glow.getLocalBounds().width / 2, forge_purple.glow.getLocalBounds().height / 2);
+                    forge_purple.glow.setScale(1.05 + (cos(forge_purple.glowsize * 3.141592 / 180) / 10));
+                    forge_purple.glow.setPosition(forge_purple.baseX - camPos, forge_purple.baseY);
+
+                    forge_purple.glow.draw(window);
+
+                    forge_purple.fire[id].setOrigin(forge_purple.fire[id].getLocalBounds().width / 2, forge_purple.fire[id].getLocalBounds().height / 2);
+                    forge_purple.fire[id].setPosition(forge_purple.baseX - camPos, forge_purple.baseY);
+
+                    forge_purple.fire[id].draw(window);
+
+                    forge_slab_glow.setOrigin(forge_slab_glow.getLocalBounds().width / 2, forge_slab_glow.getLocalBounds().height / 2);
+                    forge_slab_glow.setScale(1.05 + (cos(forge_glowsize * 3.141592 / 180) / 10));
+                    forge_slab_glow.draw(window);
+
+                    forge_main.draw(window);
+
+                    forge_slab.draw(window);
+
+                    forge_fence.draw(window);
+                    break;
+                }
+
+                case Buildings::BARRACKS: ///Barracks
+                {
+                    //for some reason, marketplace is barracks. ??????
+                    market.draw(window);
+                    break;
+                }
+
+                case Buildings::PARAGET: ///Paraget
+                {
+                    crystal_y += float(90) / fps;
+
+                    if (crystal_y >= 360)
+                        crystal_y -= 360;
+
+                    crystal_y2 += float(30) / fps;
+
+                    if (crystal_y2 >= 360)
+                        crystal_y2 -= 360;
+
+                    paraget_crystal.ly = paraget_crystal.baseY + sin(crystal_y * 3.141592 / 180) * 10;
+                    paraget_crystal_glow.ly = paraget_crystal.baseY + sin(crystal_y * 3.141592 / 180) * 10;
+
+                    paraget_crystal_glow.setScale(1.05 + (cos(crystal_y2 * 3.141592 / 180) / 10));
+                    paraget_crystal_glow.draw(window);
+                    paraget_main.draw(window);
+                    paraget_crystal.draw(window);
+
+                    for (int i = 0; i < paraget_sparkles.size(); i++)
+                    {
+                        paraget_sparkles[i].x = paraget_sparkles[i].baseX - camPos;
+
+                        if (paraget_sparkles[i].alpha > 0)
+                        {
+                            paraget_sparkles[i].alpha -= float(300) / fps;
+                        }
+                        else
+                        {
+                            paraget_sparkles[i].alpha = 0;
+                        }
+
+                        if (paraget_sparkles[i].curScale > 0)
+                        {
+                            paraget_sparkles[i].curScale -= float(1.35) / fps;
+                        }
+                        else
+                        {
+                            paraget_sparkles[i].curScale = 0;
+                        }
+
+                        if (paraget_sparkles[i].curScale <= 0)
+                        {
+                            paraget_sparkles[i].timer -= float(1000) / fps;
+                        }
+
+                        if (paraget_sparkles[i].timer <= 0)
+                        {
+                            paraget_sparkles[i].curScale = paraget_sparkles[i].initScale;
+                            paraget_sparkles[i].alpha = 255;
+                            paraget_sparkles[i].timer = 400 + (rand() % 200);
+                            paraget_sparkles[i].y = paraget_sparkles[i].baseY + sin(crystal_y * 3.141592 / 180) * 10;
+                        }
+
+                        paraget_sparkles[i].sprk.setColor(sf::Color(255, 255, 255, paraget_sparkles[i].alpha));
+                        paraget_sparkles[i].sprk.setScale(paraget_sparkles[i].curScale);
+                        paraget_sparkles[i].sprk.setOrigin(paraget_sparkles[i].sprk.getLocalBounds().width / 2, paraget_sparkles[i].sprk.getLocalBounds().height / 2);
+                        paraget_sparkles[i].sprk.setPosition(paraget_sparkles[i].x, paraget_sparkles[i].y);
+                        paraget_sparkles[i].sprk.draw(window);
+                    }
+
+                    break;
+                }
+
+                case Buildings::OBELISK:
+                {
+                    obelisk.draw(window);
+                    break;
+                }
+            }
+        }
+
+        festival_main.draw(window);
+
+        /// Smoke
         smokepath1 += float(40) / fps;
 
         if(smokepath1 >= 360)
@@ -1212,39 +1161,39 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         if(rand() % 100 == 1)
         addSmokeParticle(altar.baseX + 186 + (sin(smokepath1 * 3.141592 / 180) * 2), 410, p_smoke);
 
-        //cout << smoke.size() << endl;
+        vector<int> e_s;
 
-        for(auto i=smoke.begin(); i!=smoke.end(); i++)
+        for(int i=0; i<smoke.size(); i++)
         {
-            int s = std::distance(smoke.begin(), i);
+            smoke[i].y -= float(20) / fps;
+            smoke[i].x = smoke[i].baseX - camPos;
 
-            smoke[s].y -= float(20) / fps;
-            smoke[s].x = smoke[s].baseX - camPos;
+            smoke[i].alpha -= float(60) / fps;
 
-            smoke[s].alpha -= float(60) / fps;
+            if(smoke[i].alpha <= 0)
+            smoke[i].alpha = 0;
 
-            if(smoke[s].alpha <= 0)
-            smoke[s].alpha = 0;
+            smoke[i].curScale += float(0.14) / fps;
 
-            smoke[s].curScale += float(0.14) / fps;
+            smoke[i].smk.setPosition(smoke[i].x, smoke[i].y);
+            smoke[i].smk.setColor(sf::Color(255,255,255,smoke[i].alpha));
+            smoke[i].smk.setScale(smoke[i].curScale);
 
-            smoke[s].smk.setPosition(smoke[s].x, smoke[s].y);
-            smoke[s].smk.setColor(sf::Color(255,255,255,smoke[s].alpha));
-            smoke[s].smk.setScale(smoke[s].curScale);
+            smoke[i].smk.draw(window);
 
-            //cout << "[SMOKE " << i << "] " << smoke[s].smk.lx << " " << smoke[s].smk.ly << endl;
-            smoke[s].smk.draw(window);
-
-            if(smoke[s].alpha <= 0)
+            if(smoke[i].alpha <= 0)
             {
-                smoke.erase(i--);
+                e_s.push_back(i);
             }
         }
 
-        altar.draw(window);
+        for (int i = 0; i < e_s.size(); i++)
+        {
+            smoke.erase(smoke.begin() + e_s[i] - i);
+        }
 
-        ///Weather here
-        weather.draw(window, fps);
+        /// Altar
+        altar.draw(window);
 
         r_ground.setPosition(floor_x * resRatioX, (float(720) - floor_height) * resRatioY);
         window.draw(r_ground);
@@ -1253,6 +1202,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         edge.setPosition(floor_x + 11500, 720);
         edge.draw(window);
 
+        /// Remaining sparkles
         for(int i=0; i<sparkles.size(); i++)
         {
             sparkles[i].x = sparkles[i].baseX - camPos;
@@ -1294,6 +1244,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
             sparkles[i].sprk.draw(window);
         }
 
+        /// Egg light and light rays
         if(!light)
         {
             light_1.setScale(light_1.scaleX + (float(0.15) / fps));
@@ -1372,42 +1323,44 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         bridge.setPosition(floor_x + 11200, 720);
         bridge.draw(window);
 
+        /// Wakapon
         a_wakapon.fps = fps;
         a_wakapon.Draw(window);
 
+        /// Sen
         a_sen.fps = fps;
         a_sen.Draw(window);
 
         world_egg.draw(window);
 
-        if(barracks_menu.missionStarted)
+        if(barracks_menu.mission_started)
         {
             obelisk_menu.displayMissions = false;
             //obelisk_menu.sel_location = 1;
             obelisk_menu.sel_mission = 0;
             obelisk_menu.Hide();
-            barracks_menu.missionStarted = false;
+            barracks_menu.mission_started = false;
         }
 
-        if(barracks_menu.isActive)
+        if(barracks_menu.is_active)
         {
-            barracks_menu.Update(window,fps,inputCtrl);
+            barracks_menu.update(window,fps,inputCtrl);
         }
-        else if(altar_menu.isActive)
+        else if(altar_menu.is_active)
         {
-            altar_menu.Update(window,fps, inputCtrl);
+            altar_menu.update(window,fps, inputCtrl);
         }
-        else if(obelisk_menu.isActive)
+        else if(obelisk_menu.is_active)
         {
             obelisk_menu.Update(window,fps,inputCtrl);
         }
-        else if(credits.isActive)
+        else if(credits.is_active)
         {
             credits.draw(window,fps,inputCtrl);
         }
         else
         {
-            if(city_loop.getStatus() == sf::Sound::Status::Stopped)
+            if (city_loop.getStatus() == sf::Sound::Status::Stopped)
             {
                 cout << "I am playing" << endl;
                 city_loop.play();
@@ -1490,7 +1443,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         lastView = window.getView();
         window.setView(window.getDefaultView());
 
-        if((!barracks_menu.isActive) && (!altar_menu.isActive) && (!obelisk_menu.isActive) && (!credits.isActive))
+        if((!barracks_menu.is_active) && (!altar_menu.is_active) && (!obelisk_menu.is_active) && (!credits.is_active))
         {
             ctrlTips.x = 0;
             ctrlTips.y = (720-ctrlTips.ySize);
@@ -1523,10 +1476,10 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     {
                         city_loop.stop();
                         barracks_menu.Show();
-                        barracks_menu.isActive = true;
+                        barracks_menu.is_active = true;
                         barracks_menu.obelisk = false;
-                        barracks_menu.ReloadInventory();
-                        barracks_menu.UpdateInputControls();
+                        barracks_menu.loadInventory();
+                        barracks_menu.updateInputControls();
 
                         screenFade.Create(thisConfig, 0, 1536);
 
@@ -1538,7 +1491,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                         city_loop.stop();
                         obelisk_menu.Reload();
                         obelisk_menu.Show();
-                        obelisk_menu.isActive = true;
+                        obelisk_menu.is_active = true;
 
                         screenFade.Create(thisConfig, 0, 1536);
 
@@ -1549,9 +1502,9 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     {
                         city_loop.stop();
                         barracks_menu.Hide();
-                        barracks_menu.isActive = false;
+                        barracks_menu.is_active = false;
                         Show();
-                        isActive=true;
+                        is_active=true;
 
                         screenFade.Create(thisConfig, 0, 1536);
 
@@ -1562,9 +1515,9 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     {
                         city_loop.stop();
                         obelisk_menu.Hide();
-                        obelisk_menu.isActive = false;
+                        obelisk_menu.is_active = false;
                         Show();
-                        isActive=true;
+                        is_active=true;
 
                         screenFade.Create(thisConfig, 0, 1536);
 
@@ -1575,18 +1528,18 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     {
                         city_loop.stop();
                         barracks_menu.Show();
-                        barracks_menu.isActive = true;
+                        barracks_menu.is_active = true;
                         barracks_menu.obelisk = true;
-                        barracks_menu.missionID = obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID;
+                        barracks_menu.mission_id = obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID;
                         barracks_menu.mission_file = obelisk_menu.missions[obelisk_menu.sel_mission].mission_file;
 
-                        if(thisConfig->thisCore->savereader.missionLevels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID] != 0)
-                        barracks_menu.mission_multiplier = 0.85 + thisConfig->thisCore->savereader.missionLevels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID]*0.15;
+                        if(thisConfig->thisCore->saveReader.mission_levels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID] != 0)
+                        barracks_menu.mission_multiplier = 0.85 + thisConfig->thisCore->saveReader.mission_levels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID]*0.15;
                         else
                         barracks_menu.mission_multiplier = 1;
 
-                        barracks_menu.ReloadInventory();
-                        barracks_menu.UpdateInputControls();
+                        barracks_menu.loadInventory();
+                        barracks_menu.updateInputControls();
 
                         screenFade.Create(thisConfig, 0, 1536);
 
@@ -1596,19 +1549,19 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     case 5: ///Enter mission
                     {
                         city_loop.stop();
-                        sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
-                        v4core->continueLoading=true;
-                        v4core->window.setActive(false);
+                        sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
+                        v4Core->continue_loading=true;
+                        v4Core->window.setActive(false);
                         loadingThreadInstance.launch();
 
-                        barracks_menu.currentController->Initialise(*thisConfig,thisConfig->GetString("mission1Background"),*v4core);
-                        barracks_menu.currentController->StartMission(barracks_menu.mission_file,1,barracks_menu.missionID,barracks_menu.mission_multiplier);
+                        barracks_menu.currentController->Initialise(*thisConfig,thisConfig->GetString("mission1Background"), *v4Core);
+                        barracks_menu.currentController->StartMission(barracks_menu.mission_file,1,barracks_menu.mission_id,barracks_menu.mission_multiplier);
                         barracks_menu.Hide();
-                        barracks_menu.isActive = false;
+                        barracks_menu.is_active = false;
 
-                        barracks_menu.missionStarted = true;
+                        barracks_menu.mission_started = true;
 
-                        v4core->continueLoading=false;
+                        v4Core->continue_loading=false;
 
                         screenFade.Create(thisConfig, 0, 1536);
 
@@ -1618,7 +1571,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     case 6: ///credits
                     {
                         city_loop.stop();
-                        credits.isActive = true;
+                        credits.is_active = true;
                         credits.restart();
 
                         screenFade.Create(thisConfig, 0, 512);
@@ -1630,9 +1583,9 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     {
                         city_loop.stop();
                         this->Hide();
-                        this->isActive = false;
+                        this->is_active = false;
                         parentMenu->Show();
-                        parentMenu->isActive=true;
+                        parentMenu->is_active=true;
 
                         parentMenu->screenFade.Create(thisConfig, 0, 512);
 
@@ -1648,7 +1601,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
         if(dialogboxes.size() <= 0)
         {
-            if((!barracks_menu.isActive) && (!altar_menu.isActive) && (!obelisk_menu.isActive) && (!credits.isActive) && (screenFade.checkFinished()))
+            if((!barracks_menu.is_active) && (!altar_menu.is_active) && (!obelisk_menu.is_active) && (!credits.is_active) && (screenFade.checkFinished()))
             {
                 if((inputCtrl.isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl.isKeyPressed(InputController::Keys::LTRIGGER)))
                 {
@@ -1661,7 +1614,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                         messageclouds[i].End();
 
                         SetTitle(location);
-                        thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
+                        thisConfig->thisCore->saveToDebugLog("Changing Patapolis location to "+to_string(location));
                     }
                 }
                 else if((inputCtrl.isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl.isKeyPressed(InputController::Keys::RTRIGGER)))
@@ -1675,7 +1628,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                         messageclouds[i].End();
 
                         SetTitle(location);
-                        thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
+                        thisConfig->thisCore->saveToDebugLog("Changing Patapolis location to "+to_string(location));
                     }
                 }
                 else if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
@@ -1689,17 +1642,17 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                         break;
                     case 2:
                         /// armory/barracks
-                        thisConfig->thisCore->SaveToDebugLog("Entering Barracks...");
+                        thisConfig->thisCore->saveToDebugLog("Entering Barracks...");
 
                         screenFade.Create(thisConfig, 1, 1536);
                         goto_id = 0;
 
                         /*barracks_menu.Show();
-                        barracks_menu.isActive = true;
+                        barracks_menu.is_active = true;
                         barracks_menu.obelisk = false;
                         barracks_menu.ReloadInventory();
                         barracks_menu.UpdateInputControls();*/
-                        thisConfig->thisCore->SaveToDebugLog("Barracks entered.");
+                        thisConfig->thisCore->saveToDebugLog("Barracks entered.");
                         break;
                     case 3:
                         /// festival
@@ -1708,17 +1661,17 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     case 5:
                         /// altar
                         // open mater menu
-                        thisConfig->thisCore->SaveToDebugLog("Entering Altar...");
-                        altar_menu.loadedSave = loadedSave;
-                        altar_menu.ReloadInventory();
-                        altar_menu.Show();
-                        altar_menu.isActive = true;
-                        altar_menu.ShowAltar();
-                        thisConfig->thisCore->SaveToDebugLog("Altar entered.");
+                        thisConfig->thisCore->saveToDebugLog("Entering Altar...");
+                        altar_menu.save_loaded = save_loaded;
+                        altar_menu.reloadInventory();
+                        altar_menu.showAltar();
+                        altar_menu.is_active = true;
+                        altar_menu.showAltar();
+                        thisConfig->thisCore->saveToDebugLog("Altar entered.");
                         break;
                     case 6:
                         /// obelisk
-                        thisConfig->thisCore->SaveToDebugLog("Entering Obelisk...");
+                        thisConfig->thisCore->saveToDebugLog("Entering Obelisk...");
 
                         screenFade.Create(thisConfig, 1, 1536);
                         goto_id = 1;
@@ -1726,7 +1679,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                         /*obelisk_menu.Reload();
                         obelisk_menu.Show();
                         obelisk_menu.isActive = true;*/
-                        thisConfig->thisCore->SaveToDebugLog("Obelisk entered.");
+                        thisConfig->thisCore->saveToDebugLog("Obelisk entered.");
                         break;
                     default:
                         /// nothing
@@ -1778,14 +1731,14 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                         }
                         else if(dialogboxes[dialogboxes.size()-1].id == 1)
                         {
-                            thisConfig->thisCore->SaveToDebugLog("Left from Patapolis to Title screen.");
+                            thisConfig->thisCore->saveToDebugLog("Left from Patapolis to Title screen.");
                             screenFade.Create(thisConfig, 1, 512);
                             goto_id = 7;
                         }
                         else if(dialogboxes[dialogboxes.size()-1].id == 2)
                         {
                             cout << "Saving game should happen here. Game not saving yet." << endl;
-                            v4core->savereader.Save();
+                            v4Core->saveReader.Save();
 
                             dialogboxes[dialogboxes.size()-1].Close();
 
