@@ -44,7 +44,7 @@ void RhythmGUI::doVisuals(sf::RenderWindow& window,int bgm_cycle,sf::Clock *rhyt
         float ratio_universal = (window.getSize().x * window.getSize().y) / (float(1280) * float(720));
 
         /// Beat frame
-        if((combo <= 1) or ((combo > 1) and (combo < 11) and (v_cycle_mode == 0)))
+        if((combo <= 1) || ((combo > 1) && (combo < 11) && (v_cycle_mode == 0)))
         {
             r_rhythm.setFillColor(sf::Color(0,0,0,0));
             r_rhythm.setOutlineThickness(-ceil(3 * ratio_universal));
@@ -54,7 +54,7 @@ void RhythmGUI::doVisuals(sf::RenderWindow& window,int bgm_cycle,sf::Clock *rhyt
 
             r_rhythm2.setOutlineColor(sf::Color(0,0,0,0));
         }
-        else if((combo > 1) and (v_cycle_mode == 1))
+        else if((combo > 1) && (v_cycle_mode == 1))
         {
             r_rhythm.setFillColor(sf::Color(0,0,0,0));
             r_rhythm.setOutlineThickness(-ceil(2 * ratio_universal));
@@ -87,7 +87,7 @@ void RhythmGUI::doVisuals(sf::RenderWindow& window,int bgm_cycle,sf::Clock *rhyt
                     *flicker = 0;
             }
         }
-        else if((combo >= 11) and (v_cycle_mode == 0))
+        else if((combo >= 11) && (v_cycle_mode == 0))
         {
             r_rhythm.setFillColor(sf::Color(0,0,0,0));
             r_rhythm.setOutlineThickness(-ceil(7 * ratio_universal));
