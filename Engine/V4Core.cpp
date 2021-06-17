@@ -3,8 +3,11 @@
 #include <time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <windows.h>
 #include "V4Core.h"
+#include <numeric>
+#include <chrono>
+#include <random>
+#include <thread>
 
 using namespace std;
 
@@ -22,24 +25,24 @@ V4Core::V4Core()
     dbg.close();
 
     rpc_details = "Running Patafour "+hero_version;
-    SaveToDebugLog(rpc_details);
+    saveToDebugLog(rpc_details);
 
     const unsigned int maxSize = sf::Texture::getMaximumSize();
     cout << "[Debug] Max texture size: " << maxSize << endl;
-    SaveToDebugLog("[GPU] Max texture size: "+to_string(maxSize));
+    saveToDebugLog("[GPU] Max texture size: "+to_string(maxSize));
 
     sf::RenderTexture rtx;
     cout << "[Debug] Maximum antialiasing level: " << rtx.getMaximumAntialiasingLevel() << endl;
-    SaveToDebugLog("[GPU] Maximum antialiasing level: "+to_string(rtx.getMaximumAntialiasingLevel()));
+    saveToDebugLog("[GPU] Maximum antialiasing level: "+to_string(rtx.getMaximumAntialiasingLevel()));
 
-    auto result = discord::Core::Create(712761245752623226, DiscordCreateFlags_NoRequireDiscord, &core);
+    /*auto result = discord::Core::Create(712761245752623226, DiscordCreateFlags_NoRequireDiscord, &core);
     state.core.reset(core);
     if (!state.core) {
         std::cout << "Failed to instantiate discord core! (err " << static_cast<int>(result)
                   << ")\n";
-    }
+    }*/
 
-    if(state.core)
+    /*if(state.core)
     {
         discord::Activity activity{};
         activity.SetDetails(rpc_details.c_str());
@@ -50,7 +53,7 @@ V4Core::V4Core()
             std::cout << ((result == discord::Result::Ok) ? "Succeeded" : "Failed")
                       << " updating activity!\n";
         });
-    }
+    }*/
 
     /** Detect when the build was compiled **/
 
@@ -122,7 +125,7 @@ V4Core::V4Core()
     config.configDebugID = 10;
 }
 
-void V4Core::SaveToDebugLog(string data)
+void V4Core::saveToDebugLog(string data)
 {
     ofstream dbg("V4Hero-"+hero_version+"-latest.log", ios::app);
     dbg << data;
@@ -130,9 +133,9 @@ void V4Core::SaveToDebugLog(string data)
     dbg.close();
 }
 
-void V4Core::ChangeRichPresence(string title, string bg_image, string sm_image)
+void V4Core::changeRichPresence(string title, string bg_image, string sm_image)
 {
-    if(state.core)
+    /*if(state.core)
     {
         if(rpc_current != title)
         {
@@ -149,17 +152,17 @@ void V4Core::ChangeRichPresence(string title, string bg_image, string sm_image)
                           << " updating activity\n";
             });
         }
-    }
+    }*/
 }
 
-void V4Core::LoadingWaitForKeyPress()
+void V4Core::loadingWaitForKeyPress()
 {
     bool biff = true;
-    pressAnyKey = true;
+    press_any_key = true;
 
     while (biff)
     {
-        Sleep(16); ///force it 60fps
+        std::this_thread::sleep_for(std::chrono::milliseconds(16)); ///force it 60fps
 
         sf::Event event;
         while (window.pollEvent(event))
@@ -174,16 +177,16 @@ void V4Core::LoadingWaitForKeyPress()
             if((event.type == sf::Event::KeyPressed) || (event.type == sf::Event::JoystickButtonPressed))
             {
                 biff=false;
-                pressAnyKey = false;
-                continueLoading = false;
+                press_any_key = false;
+                continue_loading = false;
             }
 
         }
     }
 }
-void V4Core::LoadingThread()
+void V4Core::loadingThread()
 {
-    ChangeRichPresence("Reading tips", "logo", "");
+    changeRichPresence("Reading tips", "logo", "");
 
     //sf::Context context;
     window.setActive(true);
@@ -191,7 +194,19 @@ void V4Core::LoadingThread()
     window.clear();
     window.display();
 
-    srand(time(NULL));
+	// Seed RNG
+	srand(time(NULL));
+	random_device rd; // https://stackoverflow.com/questions/13445688
+	seed = rd() ^ (
+		(mt19937::result_type)
+		chrono::duration_cast<chrono::seconds>(
+			chrono::system_clock::now().time_since_epoch()
+		).count() +
+		(mt19937::result_type)
+		chrono::duration_cast<chrono::microseconds>(
+			chrono::high_resolution_clock::now().time_since_epoch()
+		).count()
+	);
 
     float resRatioX = window.getSize().x / float(1280);
     float resRatioY = window.getSize().y / float(720);
@@ -258,9 +273,10 @@ void V4Core::LoadingThread()
     if(maxFps == 0)
     maxFps = 240;
 
-    while (continueLoading)
+    while (continue_loading)
     {
-        Sleep(1000/maxFps);
+        int ms = round(1000 / maxFps);
+        std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 
         window.clear();
         auto lastView = window.getView();
@@ -286,7 +302,7 @@ void V4Core::LoadingThread()
         t_tipText.draw(window);
 
         // drawing some text
-        if(pressAnyKey)
+        if(press_any_key)
         {
             t_pressAnyKey.setOrigin(t_pressAnyKey.getLocalBounds().width, t_pressAnyKey.getLocalBounds().height/2);
             t_pressAnyKey.setPosition(722+526,658+21);
@@ -319,19 +335,33 @@ void V4Core::LoadingThread()
     window.setActive(false);
 }
 
-void V4Core::ShowTip()
+void V4Core::showTip()
 {
     //loadingThreadInstance = sf::Thread(LoadingThread);
     //loadingThreadInstance.launch();
-    continueLoading=true;
+    continue_loading = true;
 
 }
 
-void V4Core::Init()
+void V4Core::init()
 {
     /// turned off because it doesn't work for owocek
     // DisableProcessWindowsGhosting();
-    srand(time(NULL));
+	// Seed RNG
+	srand(time(NULL));
+	random_device rd; // https://stackoverflow.com/questions/13445688
+	seed = rd() ^ (
+		(mt19937::result_type)
+		chrono::duration_cast<chrono::seconds>(
+			chrono::system_clock::now().time_since_epoch()
+		).count() +
+		(mt19937::result_type)
+		chrono::duration_cast<chrono::microseconds>(
+			chrono::high_resolution_clock::now().time_since_epoch()
+		).count()
+	);
+	mt19937 tmp(seed);
+	gen = tmp;
 
     sf::ContextSettings settings;
     settings.antialiasingLevel = 16;
@@ -347,9 +377,9 @@ void V4Core::Init()
     window.setKeyRepeatEnabled(false);
     window.setVerticalSyncEnabled(config.GetInt("verticalSync"));
 
-    framerateLimit = config.GetInt("framerateLimit");
-    if(framerateLimit == 0)
-    framerateLimit = 1000;
+    framerate_limit = config.GetInt("framerateLimit");
+    if(framerate_limit == 0)
+    framerate_limit = 1000;
 
     inputCtrl.LoadKeybinds(config);
 
@@ -365,7 +395,7 @@ void V4Core::Init()
             {
                 ///keyMap[event.key.code] = true/false??? would that do the trick?
                 cout << "[DEBUG] Key pressed: " << event.key.code << endl;
-                SaveToDebugLog("[DEBUG] Key pressed: "+to_string(event.key.code));
+                saveToDebugLog("[DEBUG] Key pressed: "+to_string(event.key.code));
 
                 inputCtrl.keyRegistered = true;
                 inputCtrl.currentKey = event.key.code;
@@ -376,7 +406,7 @@ void V4Core::Init()
             if(event.type == sf::Event::KeyReleased)
             {
                 cout << "[DEBUG] Key released: " << event.key.code << endl;
-                SaveToDebugLog("[DEBUG] Key released: "+to_string(event.key.code));
+                saveToDebugLog("[DEBUG] Key released: "+to_string(event.key.code));
 
                 inputCtrl.keyMapHeld[event.key.code] = false;
             }
@@ -471,14 +501,14 @@ void V4Core::Init()
 
         fps = float(1000000) / fpsclock.getElapsedTime().asMicroseconds();
         float rawFps = fps;
-        frameTimes.push_back(fps);
+        frame_times.push_back(fps);
         fpsclock.restart();
 
-        auto n = frameTimes.size();
+        auto n = frame_times.size();
         float average = 0.0f;
         if(n != 0)
         {
-             average = accumulate(frameTimes.begin(), frameTimes.end(), 0.0) / (n-1);
+             average = accumulate(frame_times.begin(), frame_times.end(), 0.0) / (n-1);
         }
 
         if(fps <= 1)
@@ -486,8 +516,8 @@ void V4Core::Init()
         else
         fps = rawFps;
 
-        while(frameTimes.size() > framerateLimit)
-        frameTimes.erase(frameTimes.begin());
+        while(frame_times.size() > framerate_limit)
+        frame_times.erase(frame_times.begin());
 
         //cout << fps << endl;
 
@@ -516,13 +546,13 @@ void V4Core::Init()
         ///Clear the key inputs
         inputCtrl.Flush();
 
-        if(closeWindow)
+        if(close_window)
         {
             window.close();
         }
 
-        if(state.core)
-        state.core->RunCallbacks();
+        //if(state.core)
+        //state.core->RunCallbacks();
     }
     cout<<"Main game loop exited. Shutting down..."<<endl;
 }
