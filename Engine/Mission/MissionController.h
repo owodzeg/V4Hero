@@ -29,7 +29,7 @@
 #include "../Dialog/DialogBox.h"
 #include "../Dialog/MessageCloud.h"
 
-#include "../Json/json.hpp"
+#include <nlohmann/json.hpp>
 
 
 class V4Core;

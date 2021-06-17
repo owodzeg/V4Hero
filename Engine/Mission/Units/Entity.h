@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include "../../Json/json.hpp"
+#include <nlohmann/json.hpp>
 #include "../../Config.h"
 #include "../../Input/InputController.h"
 #include "../../Dialog/MessageCloud.h"

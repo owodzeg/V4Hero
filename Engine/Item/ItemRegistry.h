@@ -2,7 +2,7 @@
 #define ITEM_REGISTRY_H
 #include <SFML/Graphics.hpp>
 #include "Item.h"
-#include "../Json/json.hpp"
+#include <nlohmann/json.hpp>
 
 class SaveReader;
 
