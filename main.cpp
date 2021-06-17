@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     SetCurrentDirectoryA(wd.c_str());
 
     V4Core V4;
-    V4.Init();
+    V4.init();
 
     return 0;
 }
