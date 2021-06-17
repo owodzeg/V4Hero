@@ -6,6 +6,8 @@ class PonRegistry
 {
     public:
         std::vector<Pon> pons;
+        std::vector<int> squads_available;
+        std::vector<int> army;
         PonRegistry();
         ~PonRegistry();
         Pon* GetPonByID(int id);

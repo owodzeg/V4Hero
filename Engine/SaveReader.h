@@ -5,6 +5,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include "Json/json.hpp"
 #include "DebugOut.h"
 #include "Item/ItemRegistry.h"
 #include "Pon/PonRegistry.h"
@@ -12,27 +13,28 @@
 class SaveReader
 {
     public:
-    ItemRegistry itemreg;
-    PonRegistry ponreg;
-    InventoryData invdata;
+    ItemRegistry itemReg;
+    PonRegistry ponReg;
+    InventoryData invData;
 
-    sf::String kaminame;
-    int timeslaunched;
-    int yariponsUnlocked;
-    int heroUnlocked;
+    nlohmann::json save_data;
 
-    std::vector<int> missionsUnlocked = {1};
-    int locationsUnlocked=1;
-    std::map<int, int> missionLevels; ///storing the mission level
+    sf::String kami_name;
+    int times_launched;
+    bool hero_unlocked = false;
 
-    std::string savever = "1.0";
+    std::vector<int> missions_unlocked = {1};
+    int locations_unlocked=1;
+    std::map<int, int> mission_levels; // Storing the mission level
+
+    std::string save_ver = "2.0";
 
     SaveReader();
     void LoadSave(Config& tconfig);
     void Flush();
     void CreateBlankSave();
     DebugOut* debugOut;
-    Config* config;
+    Config* thisConfig;
     bool isNewSave;
     void Save();
     bool isMissionUnlocked(int mission);

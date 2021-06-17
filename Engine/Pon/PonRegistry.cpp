@@ -23,10 +23,9 @@ PonRegistry::~PonRegistry()
 
 Pon* PonRegistry::GetPonByID(int id)
 {
-    for(int i=0; i<pons.size(); i++)
+    for(int i = 0; i < pons.size(); i++)
     {
-        Pon currentItem = pons[i];
-        if(currentItem.pon_id == id)
+        if(i == id)
         {
             return &pons[i];
         }

@@ -1,3 +1,4 @@
+#include "Json/json.hpp"
 #include "SaveReader.h"
 #include "Func.h"
 #include "DebugOut.h"
@@ -8,7 +9,9 @@
 #include <cctype>
 #include <string>
 #include "config.h"
+
 using namespace std;
+using json = nlohmann::json; // Convenience recommended by the library
 
 SaveReader::SaveReader()
 {
@@ -33,95 +36,121 @@ SaveReader::SaveReader()
 
     isNewSave = !exists;
 
-    invdata.savereader = this;
+    itemReg.saveReader = this;
+    itemReg.readItemFiles(); ///load up items
 
-    itemreg.ReadItemFiles();
+    invData.saveReader = this;
+
+    cout << invData.itemReg.items.size() << endl; ///says 35
 }
 
 void SaveReader::LoadSave(Config& tconfig)
 {
-    config = &tconfig;
-    debugOut = config->debugOut;
+    thisConfig = &tconfig;
+    debugOut = thisConfig->debugOut;
 
-    ifstream conf("resources/data/sv1.p4sv");
+    ifstream conf("resources/data/sv1.p4sv", std::ios::in);
     if(conf.good())
     {
-        string line;
-        while(getline(conf, line))
+        conf >> save_data;
+        save_data = save_data["save"];
+
+        cout << "Fetching save metadata" << endl;
+        save_ver = save_data["details"]["version"];
+        kami_name = sf::String(to_string(save_data["details"]["name"]));
+        times_launched = save_data["details"]["times_launched"];
+        times_launched++;
+        locations_unlocked = save_data["details"]["locations_unlocked"];
+
+        cout << "Fetching owned items" << endl;
+        for(int i = 0; i < save_data["items"].size(); i++)
         {
-            ///ignore comments
-            if(line.find("#") == std::string::npos && line.find("//") == std::string::npos && line.length()>0)
+            vector<int> cur_item_id;
+            for(int o = 0; o < save_data["items"][i].size(); o++)
             {
-                ///Split the Key and Value
-                vector<string> key = Func::Split(line,':');
-                //configMap[key[0]] = key[1];
-                //cout << "Loaded key '" << key[0] << "' with value '" << key[1] << "'" << endl;
-                if(key[0]=="name"){
-                    kaminame = key[1];
-                } else if(key[0]=="timeslaunched"){
-                    timeslaunched = stoi(key[1]);
-                    timeslaunched++;
-                } else if(key[0]=="yariponsUnlocked"){
-                    timeslaunched = stoi(key[1]);
-                } else if(key[0]=="ITEM"){
-                    InventoryItem invItem;
-                    invItem.item = itemreg.GetItemByID(stoi(key[1]));
-                    invItem.inventoryId =invdata.items.size();
-                    cout << "ITEM: " << invItem.item->category_id << endl;
-                    invdata.items.push_back(invItem);
-                } else if(key[0]=="heroUnlocked"){
-                    heroUnlocked = stoi(key[1]);
-                } else if(key[0]=="PON"){
-                    cout << "PON reading: " << line << endl;
-                    vector<string> ponData = Func::Split(key[1],'|');
-                    Pon newPon = Pon(this);
-                    newPon.pon_id=stoi(ponData[0]);
-                    newPon.pon_class=stoi(ponData[1]);
-                    newPon.pon_squad_position=stoi(ponData[2]);
+                cur_item_id.push_back(save_data["items"][i][o]);
+            }
+            invData.addItem(cur_item_id);
+        }
 
-
-                    newPon.pon_exp=stoi(ponData[3]);
-                    newPon.pon_level=stoi(ponData[4]);
-
-                    if (stoi(ponData[5])!=-1){
-                        newPon.GiveItem(stoi(ponData[5]));
-                    }
-                    if (stoi(ponData[6])!=-1){
-                        newPon.GiveItem(stoi(ponData[6]));
-                    }
-                    if (stoi(ponData[7])!=-1){
-                        newPon.GiveItem(stoi(ponData[7]),1);
-                    }
-                    if (stoi(ponData[8])!=-1){
-                        newPon.GiveItem(stoi(ponData[8]));
-                    }
-
-                    ponreg.pons.push_back(newPon);
-                }
-                else if(key[0] == "MISSION")
+        cout << "Fetching hero data" << endl;
+        if(save_data["army"][0]["rarepon"] != -1) // Is hero unlocked?
+        {
+            hero_unlocked = true;
+            Pon new_pon = Pon(this);
+            new_pon.pon_id = save_data["army"][0]["rarepon"];
+            new_pon.pon_class = save_data["army"][0]["class"];
+            new_pon.pon_level = save_data["army"][0]["level"];
+            new_pon.pon_exp = save_data["army"][0]["exp"];
+            for(int o = 0; o < save_data["army"][0]["slots"].size(); o++)
+            {
+                if(save_data["army"][0]["slots"][0] != -1) // Is this necessary?
                 {
-                    missionsUnlocked.push_back(stoi(key[1]));
-                }
-                else if(key[0] == "LOCATIONS")
-                {
-                    locationsUnlocked = stoi(key[1]);
-                }
-                else if(key[0] == "MISSIONLEVEL")
-                {
-                    vector<string> l = Func::Split(key[1], ',');
-
-                    int lvl = stoi(l[1]);
-
-                    if(lvl < 0)
-                    lvl = 1;
-
-                    missionLevels[stoi(l[0])] = lvl;
-                }
-                else if(key[0] == "version")
-                {
-                    savever = key[1];
+                    new_pon.giveItem(invData.getInvIDByItemID(save_data["army"][0]["slots"][o]), o);
                 }
             }
+            ponReg.pons.push_back(new_pon);
+        }
+
+        int comparison = save_data["army"].size();
+        if(comparison>4)
+        comparison = 4;
+
+        for(int i = 1; i < comparison; i++)
+        {
+            for(int o = 0; o < save_data["army"][i].size(); o++)
+            {
+                Pon new_pon = Pon(this);
+                new_pon.pon_id = save_data["army"][i][o]["rarepon"];
+                new_pon.pon_class = save_data["army"][i][o]["class"];
+                new_pon.pon_level = save_data["army"][i][o]["level"];
+                new_pon.pon_exp = save_data["army"][i][o]["exp"];
+                for(int p = 0; p < save_data["army"][i][o]["slots"].size(); p++)
+                {
+                    cout << "save_data[\"army\"][" << i << "][" << o << "][\"slots\"][" << p << "] = " << save_data["army"][i][o]["slots"][p] << endl;
+
+                    if(save_data["army"][i][o]["slots"][p][0] != -1) // Is this necessary?
+                    {
+                        new_pon.giveItem(invData.getInvIDByItemID(save_data["army"][i][o]["slots"][p]), p);
+                    }
+                }
+                ponReg.pons.push_back(new_pon);
+            }
+
+            ponReg.squads_available.push_back(save_data["army"][i][0]["class"]); // Save to available squads for choosing in barracks / prep
+            ponReg.army.push_back(save_data["army"][i][0]["class"]); // The first 3 squads are in army, to change the limit of squads in army change the `i < 4` above and `i = 4` below
+        }
+
+        for(int i = 4; i < save_data["army"].size(); i++)
+        {
+            for(int o = 0; o < save_data["army"][i].size(); o++)
+            {
+                Pon new_pon = Pon(this);
+                new_pon.pon_id = save_data["army"][i][o]["rarepon"];
+                new_pon.pon_class = save_data["army"][i][o]["class"];
+                new_pon.pon_level = save_data["army"][i][o]["level"];
+                new_pon.pon_exp = save_data["army"][i][o]["exp"];
+                for(int p = 0; p < save_data["army"][i][o]["slots"].size(); p++)
+                {
+                    if(save_data["army"][i][o]["slots"][0] != -1) // Is this necessary?
+                    {
+                        new_pon.giveItem(invData.getInvIDByItemID(save_data["army"][i][o]["slots"][p]), p);
+                    }
+                }
+                ponReg.pons.push_back(new_pon);
+            }
+
+            ponReg.squads_available.push_back(save_data["army"][i][0]["class"]); // Save to available squads for choosing in barracks / prep
+        }
+
+        cout << "Fetching unlocked missions" << endl;
+        for(int i = 0; i < save_data["missions"].size(); i++) // Each mission is stored as a single array so it can be handled elegantly (slightly increases file size, but shouldn't be a problem)
+        {
+            if(save_data["missions"][i][2]) // Is unlocked?
+            {
+                missions_unlocked.push_back(save_data["missions"][i][0]); // Add mission id
+            }
+            mission_levels.insert(pair<int, int>(save_data["missions"][i][0], save_data["missions"][i][0])); // Add mission level regardless
         }
     }
     else
@@ -133,17 +162,17 @@ void SaveReader::LoadSave(Config& tconfig)
 
 void SaveReader::Flush() ///Empties the save data.
 {
-    missionsUnlocked.clear();
-    missionLevels.clear();
-    locationsUnlocked = 1;
+    missions_unlocked.clear();
+    mission_levels.clear();
+    locations_unlocked = 1;
 
     //invdata.items.clear();
 
-    PonRegistry n_ponreg;
-    InventoryData n_invdata;
+    PonRegistry n_ponReg;
+    InventoryData n_invData;
 
-    ponreg = n_ponreg;
-    invdata = n_invdata;
+    ponReg = n_ponReg;
+    invData = n_invData;
 }
 
 void SaveReader::CreateBlankSave() ///Creates a blank save data for use
@@ -151,24 +180,26 @@ void SaveReader::CreateBlankSave() ///Creates a blank save data for use
     cout << "SaveReader::CreateBlankSave()" << endl;
 
     ///name of god
-    kaminame = "Kamipon";
+    kami_name = "Kamipon";
 
     ///times launched (unnecessary?)
-    timeslaunched = 0;
-    yariponsUnlocked = 3;
-    heroUnlocked = 1;
+    times_launched = 0;
 
     ///Adding starter items
-    vector<int> starter_items = {1,1,1,16,16,16}; ///3x wooden spear, 3x wooden helm
+    vector<string> starter_items = {"wooden_spear", "wooden_spear", "wooden_spear", "wooden_helmet", "wooden_helmet", "wooden_helmet"};
 
     for(int i=0; i<starter_items.size(); i++)
     {
-        InventoryItem invItem;
-        invItem.item = itemreg.GetItemByID(starter_items[i]);
-        invItem.inventoryId = invdata.items.size();
-        invdata.items.push_back(invItem);
+        InventoryData::InventoryItem inv_item;
+        inv_item.item = itemReg.getItemByName(starter_items[i]);
+        invData.items.push_back(inv_item);
 
-        cout << "Adding item with InvID " << invItem.inventoryId << " realID: " << invItem.item->item_id << endl;
+        cout << "Adding item with InvID " << invData.getInvIDByItemID(inv_item.item->order_id) << " realID: {" << inv_item.item->order_id[0] << ", " << inv_item.item->order_id[1];
+        if(inv_item.item->order_id.size() > 2)
+        {
+            cout << ", " << inv_item.item->order_id[2];
+        }
+        cout << "}" << endl;
     }
 
     ///Defining 3 Yaripons
@@ -184,83 +215,113 @@ void SaveReader::CreateBlankSave() ///Creates a blank save data for use
         newPon.pon_exp = 0;
         newPon.pon_level = 1;
 
-        newPon.GiveItem(0+i);
-        newPon.GiveItem(3+i);
+        newPon.giveItem(0+i);
+        newPon.giveItem(3+i);
 
-        ponreg.pons.push_back(newPon);
+        ponReg.pons.push_back(newPon);
     }
 
     ///Worldmap data
-    missionsUnlocked.push_back(1);
-    locationsUnlocked = 1;
+    missions_unlocked.push_back(1);
+    locations_unlocked = 1;
 }
 
 void SaveReader::Save()
 {
-    ofstream conf2("resources/data/sv1.p4sv", ios::ate);
-    conf2.seekp(0);
-    if(conf2.is_open())
+    ofstream save_file("resources/data/sv1.p4sv", ios::ate);
+    save_file.seekp(0); // Honestly no idea what this does but it was in the previous version
+
+    json save_json;
+
+    save_json["save"]["details"]["version"] = 2.0;
+    save_json["save"]["details"]["name"] = kami_name;
+    save_json["save"]["details"]["times_launched"] = times_launched;
+    save_json["save"]["details"]["locations_unlocked"] = locations_unlocked;
+
+    for(int i = 0; i < invData.items.size(); i++)
     {
-        conf2 << "Take caution! The data below represents your save data! Don't edit it unless you know what you're doing, and if you must, PLEASE back it up somewhere else first <3 #" <<'\n';
-        conf2 << "version:1.1" << '\n';
-        conf2 << "name:" << kaminame.toAnsiString() <<'\n';
-        conf2 << "timeslaunched:" << timeslaunched <<'\n';
-        conf2 << "yariponsUnlocked:" << yariponsUnlocked <<'\n';
-        conf2 << "heroUnlocked:" << heroUnlocked <<'\n';
-        conf2 << "# item layout:" <<'\n';
-        conf2 << "# ITEM:id" <<'\n';
-        for (int i=0; i<invdata.items.size(); i++){
-            InventoryItem current_item = invdata.items[i];
-            conf2 << "ITEM:" << current_item.item->item_id <<'\n';
-        }
-        conf2 << "# pon layout: " <<'\n';
-        conf2 << "# PON:unitTypeID (0 hero, 1 yaripon)|totalExpNum|lvlNum|slot1_Item_Id|slot2_Item_Id|slot3_Item_Id|slot4_Item_Id|slot5_Item_Id|" <<'\n';
-        for (int j=0; j<ponreg.pons.size(); j++){
-            Pon current_pon = ponreg.pons[j];
-            cout  <<"PON:" << current_pon.pon_id<<'|' <<current_pon.pon_class<<'|' <<current_pon.pon_squad_position<<'|' <<current_pon.pon_exp<<'|' <<current_pon.pon_level<<'|' <<current_pon.weapon_invItem_id<<'|' <<current_pon.armour_invItem_id<<'|' <<current_pon.weapon2_invItem_id<<'|' <<current_pon.mask_invItem_id<<'|' <<'\n';
-
-            conf2 << "PON:" << current_pon.pon_id<<'|' <<current_pon.pon_class<<'|' <<current_pon.pon_squad_position<<'|' <<current_pon.pon_exp<<'|' <<current_pon.pon_level<<'|' <<current_pon.weapon_invItem_id<<'|' <<current_pon.armour_invItem_id<<'|' <<current_pon.weapon2_invItem_id<<'|' <<current_pon.mask_invItem_id<<'|' <<'\n';
-        }
-
-        conf2 << "# missions unlock" <<'\n';
-        conf2 << "# MISSION:id" <<'\n';
-        conf2 << "# LOCATIONS:number of locations unlocked" <<'\n';
-        for (int i=0; i<missionsUnlocked.size(); i++){
-            conf2 << "MISSION:" << to_string(missionsUnlocked[i]) <<'\n';
-        }
-        conf2 << "LOCATIONS:" << to_string(locationsUnlocked) <<'\n';
-
-        conf2 << "# mission levels" << '\n';
-        conf2 << "# MISSIONLEVEL:id,level" << '\n';
-
-        for (auto const& x : missionLevels)
+        for(int o = 0; o < invData.items[i].item_count; o++)
         {
-            conf2 << "MISSIONLEVEL:" << to_string(x.first) << "," << to_string(x.second) << '\n';
+            save_json["save"]["items"] += invData.items[i].item->order_id;
         }
-
-            /*for(int i=0; i<configMap.size(); i++)
-        {
-            if(i == 0){
-                conf2 << "# Take caution! Changing some of the settings below may cause your game to crash or become unstable! Don't edit this file unless you know what you're doing! #" <<'\n';
-            }
-            /*
-            ///save all keys and defaults
-            conf2 << configKeys[i] << ":" << configMap[configKeys[i]];
-
-            cout << "Saving config entry: " << configKeys[i] << " = " << configMap[configKeys[i]] << endl;
-
-            ///remember to newline
-            if(i != configMap.size()-1)
-            conf2 << '\n';*/
-        //}
     }
 
-    conf2.close();
+    if(hero_unlocked)
+    {
+        save_json["save"]["army"][0]["rarepon"] = ponReg.pons[0].pon_id;
+        save_json["save"]["army"][0]["class"] = ponReg.pons[0].pon_class;
+        save_json["save"]["army"][0]["level"] = ponReg.pons[0].pon_id;
+        save_json["save"]["army"][0]["exp"] = ponReg.pons[0].pon_id;
+        save_json["save"]["army"][0]["slot_1"] = invData.items[ponReg.pons[0].slot_1_invItem_id].item->order_id;
+        save_json["save"]["army"][0]["slot_2"] = invData.items[ponReg.pons[0].slot_2_invItem_id].item->order_id;
+        save_json["save"]["army"][0]["slot_3"] = invData.items[ponReg.pons[0].slot_3_invItem_id].item->order_id;
+        save_json["save"]["army"][0]["slot_4"] = invData.items[ponReg.pons[0].slot_4_invItem_id].item->order_id;
+        save_json["save"]["army"][0]["slot_5"] = invData.items[ponReg.pons[0].slot_5_invItem_id].item->order_id;
+    }
+
+    int squad_pos = 0;
+    for(int i = 0; i < ponReg.squads_available.size(); i++)
+    {
+        for(int o = 0; o < ponReg.pons.size(); o++)
+        {
+            if(ponReg.pons[o].pon_class == ponReg.squads_available[i])
+            {
+                int temp_i = i;
+                if(hero_unlocked)
+                {
+                    temp_i++;
+                }
+                save_json["save"]["army"][temp_i][squad_pos]["rarepon"] = ponReg.pons[o].pon_id;
+                save_json["save"]["army"][temp_i][squad_pos]["class"] = ponReg.pons[o].pon_class;
+                save_json["save"]["army"][temp_i][squad_pos]["level"] = ponReg.pons[o].pon_id;
+                save_json["save"]["army"][temp_i][squad_pos]["exp"] = ponReg.pons[o].pon_id;
+
+                if (ponReg.pons[o].slot_1_invItem_id != -1)
+                    save_json["save"]["army"][temp_i][squad_pos]["slot_1"] = invData.items[ponReg.pons[o].slot_1_invItem_id].item->order_id;
+                else
+                    save_json["save"]["army"][temp_i][squad_pos]["slot_1"] = { -1 };
+
+                if (ponReg.pons[o].slot_2_invItem_id != -1)
+                    save_json["save"]["army"][temp_i][squad_pos]["slot_2"] = invData.items[ponReg.pons[o].slot_2_invItem_id].item->order_id;
+                else
+                    save_json["save"]["army"][temp_i][squad_pos]["slot_2"] = { -1 };
+
+                if (ponReg.pons[o].slot_3_invItem_id != -1)
+                    save_json["save"]["army"][temp_i][squad_pos]["slot_3"] = invData.items[ponReg.pons[o].slot_3_invItem_id].item->order_id;
+                else
+                    save_json["save"]["army"][temp_i][squad_pos]["slot_3"] = { -1 };
+
+                if (ponReg.pons[o].slot_4_invItem_id != -1)
+                    save_json["save"]["army"][temp_i][squad_pos]["slot_4"] = invData.items[ponReg.pons[o].slot_4_invItem_id].item->order_id;
+                else
+                    save_json["save"]["army"][temp_i][squad_pos]["slot_4"] = { -1 };
+
+                if (ponReg.pons[o].slot_5_invItem_id != -1)
+                    save_json["save"]["army"][temp_i][squad_pos]["slot_5"] = invData.items[ponReg.pons[o].slot_5_invItem_id].item->order_id;
+                else
+                    save_json["save"]["army"][temp_i][squad_pos]["slot_5"] = { -1 };
+
+                squad_pos++;
+            }
+        }
+        squad_pos = 0;
+    }
+
+    map<int, int>::iterator it;
+    for(it = mission_levels.begin(); it != mission_levels.end(); it++)
+    {
+        save_json["save"]["missions"][it->first][0] = it->first;
+        save_json["save"]["missions"][it->first][1] = it->second;
+        save_json["save"]["missions"][it->first][2] = isMissionUnlocked(it->first);
+    }
+
+    save_file << save_json;
+    save_file.close();
 }
 
 bool SaveReader::isMissionUnlocked(int mission)
 {
-    if(std::find(missionsUnlocked.begin(), missionsUnlocked.end(), mission) != missionsUnlocked.end())
+    if(std::find(missions_unlocked.begin(), missions_unlocked.end(), mission) != missions_unlocked.end())
     {
         return true;
     }
