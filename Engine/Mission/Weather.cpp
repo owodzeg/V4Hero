@@ -2,8 +2,10 @@
 
 #include <string>
 #include <iostream>
+#include <cmath>
 
 using namespace std;
+using std::floor;
 
 Weather::Weather()
 {

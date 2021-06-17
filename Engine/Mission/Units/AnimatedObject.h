@@ -6,6 +6,7 @@
 #include "../../P4A.h"
 #include "Object.h"
 #include "Hitbox.h"
+#include <memory>
 
 using namespace std;
 

@@ -7,7 +7,7 @@
 #include <cassert>
 #include <cctype>
 #include <string>
-#include "config.h"
+#include "Config.h"
 using namespace std;
 
 TipsUtil::TipsUtil()
