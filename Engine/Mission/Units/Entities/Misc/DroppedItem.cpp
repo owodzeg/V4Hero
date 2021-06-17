@@ -38,7 +38,7 @@ void DroppedItem::Draw(sf::RenderWindow& window)
         vspeed += float(981) / fps;
         hspeed += float(100) / fps;
 
-        int q = objects[0].s_obj.qualitySetting;
+        int q = (*objects)[0].s_obj.qualitySetting;
 
         ///i want: 20
         ///it can be:
@@ -214,18 +214,31 @@ void DroppedItem::Draw(sf::RenderWindow& window)
 
     AnimatedObject::Draw(window);
 }
+
 void DroppedItem::OnCollide(CollidableObject* otherObject, int collidedWith, vector<string> collisionData)
 {
     /// Animate the item obtaining and save the obtained item to a temporary list in MissionController
     /// Then, when the mission is properly passed, add the items from the list to the save data.
 
+    cout << "DroppedItem::OnCollide: " << "picked_item: " << picked_item << endl;
+
+    if(picked_item.find(":") != std::string::npos)
+    {
+        vector<string> str_item_id = Func::Split(picked_item, ':');
+        vector<int> order_id = {stoi(str_item_id[0]), stoi(str_item_id[1]), stoi(str_item_id[2])};
+
+        picked_item = thisConfig->thisCore->saveReader.itemReg.getItemByID(order_id)->item_name;
+
+        cout << "assigned picked_item name: " << picked_item << endl;
+    }
+
     if(collisionData.size() == 0) ///collision data needs to be empty so it will not be executed when spears touch items
     {
         if(!pickedup)
         {
-            if((picked_item != 33) && (picked_item != 34))
+            if((picked_item != "item_potion_1") && (picked_item != "item_potion_2"))
             {
-                if((picked_item == 23) || (picked_item == 24))
+                if((picked_item == "item_soggy_map") || (picked_item == "item_digital_blueprint"))
                 {
                     cur_sound.stop();
                     cur_sound.setBuffer(s_keyitem);

@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include "../../Json/json.hpp"
 #include "../../Config.h"
 #include "../../Input/InputController.h"
 #include "../../Dialog/MessageCloud.h"
@@ -45,8 +46,7 @@ class Entity : public CollidableObject
 
     struct Loot
     {
-        int item_id = 0;
-        int item_chance = 0;
+        std::vector<int> order_id;
     };
 
     std::vector<Loot> loot_table;
@@ -69,11 +69,11 @@ class Entity : public CollidableObject
     float spawn_x = 0; ///base spawn X to calculate withdraw
     float stat_multiplier = 1;
 
-    std::vector<std::string> additional_data; ///additional data passed from mission file that can be used for exclusive cases
+    nlohmann::json additional_data; ///additional data passed from mission file that can be used for exclusive cases
 
     std::vector<MessageCloud> messageclouds;
 
-    bool clonable = false;
+    bool cloneable = false;
     int respawnTime = 0;
     sf::Clock respawn_clock;
 
@@ -81,7 +81,7 @@ class Entity : public CollidableObject
     int force_spawn_lvl = 0;
 
     bool force_drop = false;
-    int force_drop_item = 0;
+    string force_drop_item;
     int force_drop_mission_lvl = 0;
 
     float view_range = 750;
@@ -91,12 +91,13 @@ class Entity : public CollidableObject
     Entity();
     virtual void setEntityID(int new_entityID);
     virtual int getEntityID();
+    virtual bool willDrop(vector<int> item_id);
     virtual void doRhythm(std::string current_song, std::string current_drum, int combo, int realcombo, bool advanced_prefever, float beatBounce, float satisfaction);
     virtual bool doAttack();
     virtual void doMessages(sf::RenderWindow& window, float fps, InputController& inputCtrl); ///manage message clouds
     virtual void die();
     virtual void LoadConfig(Config *thisConfigs, std::string unitParamPath);
-    virtual void parseAdditionalData(std::vector<std::string> additional_data);
+    virtual void parseAdditionalData(nlohmann::json additional_data);
     virtual void dropItem();
 };
 

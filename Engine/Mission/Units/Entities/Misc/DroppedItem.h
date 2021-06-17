@@ -41,7 +41,7 @@ class DroppedItem : public Entity
     ///picked item data
     string spritesheet;
     int spritesheet_id;
-    int picked_item;
+    string picked_item;
 
     sf::SoundBuffer s_item, s_keyitem;
 

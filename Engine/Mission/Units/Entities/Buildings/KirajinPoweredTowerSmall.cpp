@@ -11,28 +11,24 @@ KirajinPoweredTowerSmall::KirajinPoweredTowerSmall()
 
 }
 
-void KirajinPoweredTowerSmall::parseAdditionalData(std::vector<std::string> additional_data)
+void KirajinPoweredTowerSmall::parseAdditionalData(nlohmann::json additional_data)
 {
-    for(int i=0; i<additional_data.size(); i++)
-    {
-        if(additional_data[i].find("forceSpawnOnLvl") != std::string::npos)
-        {
-            vector<string> eq = Func::Split(additional_data[i], ':');
+	if(additional_data.contains("forceSpawnOnLvl"))
+	{
+		force_spawn = true;
+		force_spawn_lvl = additional_data["forceSpawnOnLvl"];
+	}
 
-            force_spawn = true;
-            force_spawn_lvl = stoi(eq[1]);
-        }
-        else if(additional_data[i].find("forceDropIfNotObtained") != std::string::npos)
-        {
-            vector<string> eq = Func::Split(additional_data[i], ':');
+	if(additional_data.contains("forceDropIfNotObtained"))
+	{
+		force_drop = true;
+		force_drop_item = additional_data["forceDropIfNotObtained"][0];
 
-            force_drop = true;
-            force_drop_item = stoi(eq[1]);
-
-            if(eq[2] != "any")
-            force_drop_mission_lvl = 0;
-        }
-    }
+		if(additional_data["forceDropIfNotObtained"][1] != "any")
+		{
+			force_drop_mission_lvl = additional_data["forceDropIfNotObtained"][1];
+		}
+	}
 }
 
 void KirajinPoweredTowerSmall::LoadConfig(Config *thisConfigs)

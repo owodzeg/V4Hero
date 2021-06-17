@@ -17,8 +17,6 @@ class Kirajin_Yari_2 : public Entity
     bool threw = false;
     bool enemy_in_range = false;
 
-    bool se_christmas = false;
-
     enum ACTIONS
     {
         HIDING = 0,
@@ -51,7 +49,7 @@ class Kirajin_Yari_2 : public Entity
 
     Kirajin_Yari_2();
     void LoadConfig(Config *thisConfigs);
-    void parseAdditionalData(std::vector<std::string> additional_data);
+    void parseAdditionalData(nlohmann::json additional_data);
     void Draw(sf::RenderWindow& window);
     bool doAttack();
     void doMessages(sf::RenderWindow& window, float fps, InputController& inputCtrl);

@@ -17,12 +17,9 @@ void Kirajin_Yari_2::LoadConfig(Config *thisConfigs)
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
     AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\kirajin.p4a");
     AnimatedObject::setAnimationSegment("idle_armed_focused");
-
-    if(thisConfigs->se_christmas)
-    se_christmas = true;
 }
 
-void Kirajin_Yari_2::parseAdditionalData(std::vector<std::string> additional_data)
+void Kirajin_Yari_2::parseAdditionalData(nlohmann::json additional_data)
 {
     action = IDLE;
     swap_layer = 0;
@@ -31,65 +28,58 @@ void Kirajin_Yari_2::parseAdditionalData(std::vector<std::string> additional_dat
     custom_dmg = false;
     view_range = 750;
 
-    for(int i=0; i<additional_data.size(); i++)
-    {
-        if(additional_data[i].find("hidden") != std::string::npos)
-        {
-            action = HIDING;
-            string a = additional_data[i].substr(additional_data[i].find_first_of(":")+1);
-            swap_layer = stoi(a);
-        }
-        else if(additional_data[i].find("talk") != std::string::npos)
-        {
-            talk_id = additional_data[i].substr(additional_data[i].find_first_of(":")+1);
-            talk = true;
-        }
-        else if(additional_data[i].find("equip") != std::string::npos)
-        {
-            vector<string> eq = Func::Split(additional_data[i], ':');
+	if(additional_data.contains("forceSpawnOnLvl"))
+	{
+		force_spawn = true;
+		force_spawn_lvl = additional_data["forceSpawnOnLvl"];
+	}
 
-            applySpear(stoi(eq[1]));
-            applyHelm(stoi(eq[2]));
+	if(additional_data.contains("forceDropIfNotObtained"))
+	{
+		force_drop = true;
+		force_drop_item = additional_data["forceDropIfNotObtained"][0];
 
-            if(se_christmas)
-            {
-                if((rand() % 3) == 1)
-                applyHelm(7);
-            }
-        }
-        else if(additional_data[i].find("damage") != std::string::npos)
-        {
-            vector<string> eq = Func::Split(additional_data[i], ':');
+		if(additional_data["forceDropIfNotObtained"][1] != "any")
+		{
+			force_drop_mission_lvl = additional_data["forceDropIfNotObtained"][1];
+		}
+	}
 
-            mindmg = stoi(eq[1]);
-            maxdmg = stoi(eq[2]);
+	if(additional_data.contains("hidden"))
+	{
+		action = HIDING;
+		swap_layer = additional_data["hidden"];
+	}
 
-            custom_dmg = true;
-        }
-        else if(additional_data[i].find("range") != std::string::npos)
-        {
-            vector<string> eq = Func::Split(additional_data[i], ':');
+	if(additional_data.contains("talk"))
+	{
+		talk = true;
+		talk_id = additional_data["talk"];
+	}
 
-            view_range = stoi(eq[1]);
-        }
-        else if(additional_data[i].find("forceSpawnOnLvl") != std::string::npos)
-        {
-            vector<string> eq = Func::Split(additional_data[i], ':');
+	if(additional_data.contains("equip"))
+	{
+		for(int i = 0; i < additional_data["equip"].size(); i++)
+		{
+			if(additional_data["equip"][i] != "") // allows for overriding helmet but not spear etc.
+			{
+				applyEquipment(thisConfig->thisCore->saveReader.itemReg.getItemByName(additional_data["equip"][i])->order_id, i);
+			}
+		}
+	}
 
-            force_spawn = true;
-            force_spawn_lvl = stoi(eq[1]);
-        }
-        else if(additional_data[i].find("forceDropIfNotObtained") != std::string::npos)
-        {
-            vector<string> eq = Func::Split(additional_data[i], ':');
+	if(additional_data.contains("damage"))
+	{
+		custom_dmg = true;
+		
+		mindmg = additional_data["damage"][0];
+		maxdmg = additional_data["damage"][1];
+	}
 
-            force_drop = true;
-            force_drop_item = stoi(eq[1]);
-
-            if(eq[2] != "any")
-            force_drop_mission_lvl = 0;
-        }
-    }
+	if(additional_data.contains("range"))
+	{
+		view_range = additional_data["range"];
+	}
 }
 
 bool Kirajin_Yari_2::doAttack()

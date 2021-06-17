@@ -21,8 +21,6 @@ class Kirajin_Yari_1 : public Entity
     float vspeed = 0;
     float gravity = 981;
 
-    bool se_christmas = false;
-
     enum ACTIONS
     {
         HIDING = 0,
@@ -41,7 +39,7 @@ class Kirajin_Yari_1 : public Entity
 
     Kirajin_Yari_1();
     void LoadConfig(Config *thisConfigs);
-    void parseAdditionalData(std::vector<std::string> additional_data);
+    void parseAdditionalData(nlohmann::json additional_data);
     void Draw(sf::RenderWindow& window);
     bool doAttack();
     void doMessages(sf::RenderWindow& window, float fps, InputController& inputCtrl);

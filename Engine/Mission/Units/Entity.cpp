@@ -1,19 +1,33 @@
 #include "Entity.h"
 #include "../../V4Core.h"
+#include <algorithm>
 
 Entity::Entity()
 {
-
+    force_drop_item.push_back(0);
 }
 
 void Entity::setEntityID(int new_entityID)
 {
     entityID = new_entityID;
+    AnimatedObject::entityID = new_entityID;
 }
 
 int Entity::getEntityID()
 {
     return entityID;
+}
+
+bool Entity::willDrop(vector<int> item_id)
+{
+    for (int i = 0; i < loot_table.size(); i++)
+    {
+        if (loot_table[i].order_id == item_id)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 void Entity::doRhythm(std::string current_song, std::string current_drum, int combo, int realcombo, bool advanced_prefever, float beatBounce, float satisfaction)
@@ -38,80 +52,77 @@ void Entity::die()
     ///Made so it can be called outside of the entity function and do the same work
 }
 
-void Entity::LoadConfig(Config *thisConfigs, std::string unitParamPath)
+void Entity::LoadConfig(Config* thisConfigs, std::string unitParamPath)
 {
     cout << "Entity::LoadConfig() was not overriden by child class" << endl;
 }
 
-void Entity::parseAdditionalData(std::vector<std::string> additional_data)
+void Entity::parseAdditionalData(nlohmann::json additional_data)
 {
     cout << "Entity::parseAdditionalData() was not overriden by child class" << endl;
 }
 
 void Entity::dropItem()
 {
-    if(!dropped_item)
+    if (!dropped_item)
     {
-        ///Lets say we're dropping following items: 30 spear, 30 helm, 30 mask, 30 item, 120 in total
-        int full_rng = 0;
-
-        for(int i=0; i<loot_table.size(); i++)
+        if (force_drop)
         {
-            full_rng += loot_table[i].item_chance;
-        }
+            std::vector<int> force_drop_id = thisConfig->thisCore->saveReader.itemReg.getItemByName(force_drop_item)->order_id;
 
-        ///Drop item mechanism! Really cool!
-        int rng = rand() % full_rng + 1; ///select 1 - 100;
-        int total_rng = 0;
-        int id_picked = 0;
-
-        cout << "Rng: " << rng << endl;
-
-        for(int i=0; i<loot_table.size(); i++)
-        {
-            ///total_rng goes to 30, 60, 90, 120 to check for the item drop. should work
-            total_rng += loot_table[i].item_chance;
-
-            if(rng <= total_rng)
-            {
-                id_picked = loot_table[i].item_id;
-                cout << "Picked id: " << id_picked << endl;
-
-                break;
-            }
-        }
-
-        if(force_drop)
-        {
             ///check if there are level requirements
-            if(force_drop_mission_lvl != 0)
+            if (force_drop_mission_lvl != 0)
             {
                 ///specific mission level is required, compare it
-                if(thisConfig->thisCore->savereader.missionLevels[thisConfig->thisCore->currentController.curMissionID] == force_drop_mission_lvl)
+                if (thisConfig->thisCore->saveReader.mission_levels[thisConfig->thisCore->currentController.curMissionID] == force_drop_mission_lvl)
                 {
                     ///check if the item was obtained, if not, force drop it
-                    if(!thisConfig->thisCore->savereader.invdata.CheckItemObtained(force_drop_item))
-                    id_picked = force_drop_item;
+                    if (!thisConfig->thisCore->saveReader.invData.checkItemObtained(force_drop_id))
+                    {
+                        Loot tmp;
+                        tmp.order_id = force_drop_id;
+                        // check if the item is scheduled to drop anyway
+                        if (willDrop(force_drop_id))
+                        {
+                            loot_table.push_back(tmp);
+                        }
+                    }
                 }
             }
             else
             {
                 ///there are no level requirements, just drop the item if its not obtained yet
-                if(!thisConfig->thisCore->savereader.invdata.CheckItemObtained(force_drop_item))
-                id_picked = force_drop_item;
+                if (!thisConfig->thisCore->saveReader.invData.checkItemObtained(force_drop_id))
+                {
+                    Loot tmp;
+                    tmp.order_id = force_drop_id;
+                    // check if the item is scheduled to drop anyway
+                    if (willDrop(force_drop_id))
+                    {
+                        loot_table.push_back(tmp);
+                    }
+                }
             }
         }
 
-        if(id_picked != 0)
+        for (int i = 0; i < loot_table.size(); i++)
         {
-            auto item = thisConfig->thisCore->savereader.itemreg.GetItemByID(id_picked);
-            vector<string> data = {item->spritesheet, to_string(item->spritesheet_id), to_string(id_picked)};
+            vector<int> cur_id = loot_table[i].order_id;
 
-            thisConfig->thisCore->currentController.spawnEntity("droppeditem",5,0,getGlobalPosition().x+hitboxes[0].o_x+(hitboxes[0].o_width/2),0,getGlobalPosition().y+hitboxes[0].o_y+(hitboxes[0].o_height/2)-60,0,0,1,sf::Color::White,0,0,0,-1,0,0,1,1,1,false,0,vector<Entity::Loot>(), data);
-        }
-        else
-        {
-            cout << "No item dropped :(" << endl;
+            auto item = thisConfig->thisCore->saveReader.itemReg.getItemByID(loot_table[i].order_id);
+            string id_out = to_string(cur_id[0]);
+            for (int o = 1; o < cur_id.size(); o++)
+            {
+                id_out += ":" + to_string(cur_id[o]);
+            }
+
+            nlohmann::json data;
+            data["spritesheet"] = item->spritesheet;
+            data["spritesheet_id"] = item->spritesheet_id;
+            data["picked_item"] = id_out;
+
+            thisConfig->thisCore->currentController.spawnEntity(5, true, false, getGlobalPosition().x + hitboxes[0].o_x + (hitboxes[0].o_width / 2), 0, false, 10, 100, 1, 1, 1, 0, getGlobalPosition().y + hitboxes[0].o_y + (hitboxes[0].o_height / 2) - 60, 0, sf::Color::White, 9999, -1, {}, data);
+        
         }
 
         dropped_item = true;
