@@ -1,4 +1,5 @@
 #include "Credits.h"
+#include <math.h>
 
 Credits::Credits()
 {
@@ -30,7 +31,7 @@ void Credits::Initialise(Config* thisConfig, V4Core* parent)
     config = thisConfig;
     quality = thisConfig->GetInt("textureQuality");
 
-    r_black.setSize({thisConfig->GetInt("resX"), thisConfig->GetInt("resY")});
+    r_black.setSize(sf::Vector2f(thisConfig->GetInt("resX"), thisConfig->GetInt("resY")));
     r_black.setFillColor(sf::Color::Black);
 
     sb_outro.loadFromFile("resources/sfx/fun/outro.ogg");
@@ -101,8 +102,6 @@ void Credits::Initialise(Config* thisConfig, V4Core* parent)
     addRegularText("TooFat4You");
     addRegularText("");
     addRegularText("Iracy");
-    addRegularText("DriftStar");
-    addRegularText("Oimate");
     addRegularText("");
     addRegularText("Trinix");
     addRegularText("");
@@ -345,7 +344,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
             if(inputCtrl.isAnyKeyPressed())
             {
                 s_credits.stop();
-                isActive = false;
+                is_active = false;
             }
         }
     }
@@ -354,6 +353,6 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
     {
         s_credits.stop();
         s_outro.stop();
-        isActive = false;
+        is_active = false;
     }
 }

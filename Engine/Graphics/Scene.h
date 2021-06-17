@@ -7,7 +7,7 @@ class V4Core;
 class Scene
 {
     public:
-        V4Core *v4core;
+        V4Core *v4Core;
 
         Config *thisConfig;
 

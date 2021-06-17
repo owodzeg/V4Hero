@@ -9,7 +9,7 @@ class V4Core;
 class Menu : public Scene
 {
     public:
-        bool isActive;
+        bool is_active;
         ScreenFade screenFade;
         int goto_id=-1;
         virtual void Back();

@@ -36,7 +36,7 @@ class RhythmController
     sf::Sound s_perfect;
 
     map<int, bool> keyMap;
-    Config config;
+    Config* config;
 
     map<string, int> patterns;
     bool drumAlreadyHit = false;

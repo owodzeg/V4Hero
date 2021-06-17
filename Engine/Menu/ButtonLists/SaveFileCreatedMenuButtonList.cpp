@@ -25,16 +25,16 @@ void SaveFileCreatedMenuButtonList::SelectButton(int index){
     currentIndex = index;
     switch (currentIndex){
             case 0:
-                sf::Thread loadingThreadInstance(parentMenu->v4core->LoadingThread,parentMenu->v4core);
-                parentMenu->v4core->continueLoading=true;
-                parentMenu->v4core->window.setActive(false);
+                sf::Thread loadingThreadInstance(&V4Core::loadingThread,parentMenu->v4Core);
+                parentMenu->v4Core->continue_loading=true;
+                parentMenu->v4Core->window.setActive(false);
                 loadingThreadInstance.launch();
 
                 parentMenu->Hide();
-                parentMenu->isActive = false;
+                parentMenu->is_active = false;
                 svCrtMnu->nameEntryMenu->Hide();
 
-                currentController->Initialise(*config,config->GetString("mission1Background"),*parentMenu->v4core);
+                currentController->Initialise(*config,config->GetString("mission1Background"),*parentMenu->v4Core);
                 currentController->StartMission(config->GetString("mission1Theme"),1,1);
 
                 break;

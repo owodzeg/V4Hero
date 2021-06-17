@@ -29,7 +29,7 @@ NewGameMenu::NewGameMenu()
 
     mm_titleBox.setSize(sf::Vector2f(100,10));
     mm_titleBox.setFillColor(sf::Color::Red);
-    isActive=true;
+    is_active=true;
 
     // this is outside the loop
     startAlpha = 255;
@@ -45,48 +45,48 @@ void NewGameMenu::Initialise(Config *thisConfigs,V4Core *parent){
     Scene::Initialise(thisConfigs,parent);
     optionsMenu.Initialise(thisConfigs,parent,this);
     newGameNameEntryMenu.Initialise(thisConfigs,parent,this);
-    v4core->menus.push_back(&optionsMenu);
-    buttonList.Initialise(&f_font,*thisConfig,&(v4core->currentController),this,&optionsMenu,&newGameNameEntryMenu);
+    v4Core->menus.push_back(&optionsMenu);
+    buttonList.Initialise(&f_font,*thisConfig,&(v4Core->currentController),this,&optionsMenu,&newGameNameEntryMenu);
 }
 void NewGameMenu::EventFired(sf::Event event){
-    if (v4core->currentController.isInitialized){
+    if (v4Core->currentController.isInitialized){
         if(event.type == sf::Event::KeyPressed)
         {
             // do something here;
             buttonList.KeyPressedEvent(event);
             if(event.key.code==sf::Keyboard::Escape) {
                 thisConfig->debugOut->DebugMessage("Returning to patapolis menu...");
-                v4core->currentController.StopMission();
-                v4core->mainMenu.Show();
-                v4core->mainMenu.patapolisMenu.Hide();
+                v4Core->currentController.StopMission();
+                v4Core->mainMenu.Show();
+                v4Core->mainMenu.patapolisMenu.Hide();
             }
         }
-    } else if(isActive){
+    } else if(is_active){
         if(event.type == sf::Event::KeyPressed)
         {
             // do something here;
             buttonList.KeyPressedEvent(event);
             if(event.key.code==sf::Keyboard::Escape) {
                 thisConfig->debugOut->DebugMessage("Returning to main menu...");
-                v4core->currentController.StopMission();
-                isActive=true;
+                v4Core->currentController.StopMission();
+                is_active=true;
             }
         } else if (event.type == sf::Event::MouseButtonReleased){
             // We use mouse released so a user can change their mind by keeping the mouse held and moving away.
             buttonList.MouseReleasedEvent(event);
         }
-    } else if (optionsMenu.isActive){
+    } else if (optionsMenu.is_active){
         optionsMenu.EventFired(event);
-    } else if (newGameNameEntryMenu.isActive){
+    } else if (newGameNameEntryMenu.is_active){
         newGameNameEntryMenu.EventFired(event);
-    } else if (newGameNameEntryMenu.savefilecreated.isActive){
+    } else if (newGameNameEntryMenu.savefilecreated.is_active){
         newGameNameEntryMenu.savefilecreated.EventFired(event);
     }
 }
 void NewGameMenu::Update(sf::RenderWindow &window, float fps, InputController& inputCtrl, InputController& inputCtrlHeld)
 {
 
-    if(isActive){
+    if(is_active){
         // this is inside the loop
         sf::Time currentTime = timer.getElapsedTime();
         int currentAlpha = endAlpha;
@@ -136,13 +136,13 @@ void NewGameMenu::Update(sf::RenderWindow &window, float fps, InputController& i
         window.setView(window.getDefaultView());
 
     } else {
-        if (v4core->currentController.isInitialized && v4core->currentController.isFinishedLoading){
-            v4core->currentController.Update(window, fps, inputCtrl);
-        } else if (optionsMenu.isActive){
+        if (v4Core->currentController.isInitialized && v4Core->currentController.isFinishedLoading){
+            v4Core->currentController.Update(window, fps, inputCtrl);
+        } else if (optionsMenu.is_active){
             optionsMenu.Update(window,fps,inputCtrl);
-        } else if (newGameNameEntryMenu.isActive){
+        } else if (newGameNameEntryMenu.is_active){
             newGameNameEntryMenu.Update(window,fps);
-        } else if (newGameNameEntryMenu.savefilecreated.isActive){
+        } else if (newGameNameEntryMenu.savefilecreated.is_active){
             newGameNameEntryMenu.savefilecreated.Update(window,fps);
         }
     }

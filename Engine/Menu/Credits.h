@@ -19,7 +19,7 @@ class Credits
 
     sf::RectangleShape r_black;
 
-    bool isActive = false;
+    bool is_active = false;
 
     sf::Clock startTimer;
 

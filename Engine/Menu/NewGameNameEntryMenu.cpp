@@ -37,14 +37,14 @@ NewGameNameEntryMenu::NewGameNameEntryMenu()
     mm_titleBox.setSize(sf::Vector2f(100,10));
     mm_titleBox.setFillColor(sf::Color::Red);
 }
-void NewGameNameEntryMenu::Initialise(Config *thisConfigs,V4Core *parent,Menu* parentMenu){
-    Scene::Initialise(thisConfigs,parent);
-    v4core->menus.push_back(&optionsMenu);
-    savefilecreated.Initialise(thisConfigs,parent,this);
+void NewGameNameEntryMenu::Initialise(Config *_thisConfig,V4Core *parent,Menu* parentMenu){
+    Scene::Initialise(_thisConfig,parent);
+    v4Core->menus.push_back(&optionsMenu);
+    savefilecreated.Initialise(_thisConfig,parent,this);
     savefilecreated.Hide();
-    buttonList.Initialise(&f_font,*thisConfig,&(v4core->currentController),this);
+    buttonList.Initialise(&f_font,*thisConfig,&(v4Core->currentController),this);
 
-    f_font.loadFromFile(thisConfigs->fontPath);
+    f_font.loadFromFile(_thisConfig->fontPath);
 
     t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_what_is_your_name")));
     t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
@@ -58,11 +58,11 @@ string NewGameNameEntryMenu::GetEnteredString(){
     return currentText.toAnsiString();
 }
 void NewGameNameEntryMenu::EventFired(sf::Event event){
-    if(savefilecreated.isActive)
+    if(savefilecreated.is_active)
     {
         savefilecreated.EventFired(event);
     }
-    else if(isActive)
+    else if(is_active)
     {
         if(event.type == sf::Event::KeyPressed)
         {
@@ -94,9 +94,9 @@ void NewGameNameEntryMenu::EventFired(sf::Event event){
 }
 void NewGameNameEntryMenu::Update(sf::RenderWindow &window, float fps)
 {
-    if(savefilecreated.isActive){
+    if(savefilecreated.is_active){
         savefilecreated.Update(window, fps);
-    } else if(isActive){
+    } else if(is_active){
 
         mm_bigBox.setSize(sf::Vector2f(window.getSize().x,window.getSize().y-200));
         //mm_smallerBox.setSize(sf::Vector2f(100,10));
@@ -131,7 +131,7 @@ void NewGameNameEntryMenu::Update(sf::RenderWindow &window, float fps)
         window.setView(window.getDefaultView());
 
     } else {
-        if (v4core->currentController.isInitialized){
+        if (v4Core->currentController.isInitialized){
             //v4core->currentController.Update(window, fps, keyMap,keyMapHeld);
         }
     }

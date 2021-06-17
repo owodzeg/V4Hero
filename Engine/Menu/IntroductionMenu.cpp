@@ -3,12 +3,12 @@
 
 IntroductionMenu::IntroductionMenu()
 {
-    isActive=false;
+    is_active=false;
 }
 
 void IntroductionMenu::Initialise(Config *thisConfig, V4Core *parent, Menu *curParentMenu)
 {
-    parent->SaveToDebugLog("Initializing Introduction menu...");
+    parent->saveToDebugLog("Initializing Introduction menu...");
     cout << "Initialize Introduction menu" << endl;
     Scene::Initialise(thisConfig,parent);
     //buttonList.Initialise(&m_font,*thisConfig,keymap,&(v4core->currentController),this);
@@ -33,7 +33,7 @@ void IntroductionMenu::Initialise(Config *thisConfig, V4Core *parent, Menu *curP
 
     timeout.restart();
 
-    parent->SaveToDebugLog("Introduction menu initialized.");
+    parent->saveToDebugLog("Introduction menu initialized.");
 }
 
 void IntroductionMenu::EventFired(sf::Event event)
@@ -56,18 +56,18 @@ void IntroductionMenu::Update(sf::RenderWindow& window, float fps, InputControll
 
     if(timeout2.getElapsedTime().asSeconds() > 3)
     {
-        sf::Thread loadingThreadInstance(parentMenu->v4core->LoadingThread,parentMenu->v4core);
-        parentMenu->v4core->continueLoading=true;
-        parentMenu->v4core->window.setActive(false);
+        sf::Thread loadingThreadInstance(&V4Core::loadingThread,parentMenu->v4Core);
+        parentMenu->v4Core->continue_loading = true;
+        parentMenu->v4Core->window.setActive(false);
         loadingThreadInstance.launch();
 
         parentMenu->Hide();
-        parentMenu->isActive = false;
+        parentMenu->is_active = false;
         Hide();
-        isActive = false;
+        is_active = false;
 
-        v4core->currentController.Initialise(*thisConfig,thisConfig->GetString("mission1Background"),*v4core);
-        v4core->currentController.StartMission("mis1_0.p4m",false,1);
+        v4Core->currentController.Initialise(*thisConfig,thisConfig->GetString("mission1Background"),*v4Core);
+        v4Core->currentController.StartMission("mis1_0.p4m",false,1);
     }
 }
 

@@ -5,11 +5,11 @@
 MainMenu::MainMenu()
 {
     //ctor
-    isActive=true;
+    is_active=true;
 }
 void MainMenu::Initialise(Config *thisConfigs, V4Core *parent)
 {
-    parent->SaveToDebugLog("Initializing Main Menu...");
+    parent->saveToDebugLog("Initializing Main Menu...");
 
     f_font.loadFromFile(thisConfigs->fontPath);
     config = thisConfigs;
@@ -194,9 +194,9 @@ void MainMenu::Initialise(Config *thisConfigs, V4Core *parent)
     title_loop.setLoop(true);
     title_loop.setVolume(volume);
 
-    Scene::Initialise(thisConfigs,parent);
+    Scene::Initialise(thisConfigs, parent);
 
-    optionsMenu.Initialise(config,v4core,this);
+    optionsMenu.Initialise(thisConfig, v4Core, this);
 
     ifstream fr("resources/firstrun");
     if(fr.good())
@@ -210,7 +210,7 @@ void MainMenu::Initialise(Config *thisConfigs, V4Core *parent)
         firstrun = true;
     }
 
-    msgcloud.Create(45, sf::Vector2f(640,480), sf::Color::White, true, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
+    msgcloud.Create(45, sf::Vector2f(640, 480), sf::Color::White, true, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
     msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_1")), true);
     msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_2")), true);
     msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_3")), true);
@@ -226,9 +226,9 @@ void MainMenu::Initialise(Config *thisConfigs, V4Core *parent)
     temp_menu.push_back(thisConfig->strRepo.GetUnicodeString(L"menu_options"));
     temp_menu.push_back(thisConfig->strRepo.GetUnicodeString(L"menu_exit"));
 
-    introductionMenu.Initialise(config,v4core,this);
+    introductionMenu.Initialise(thisConfig, v4Core, this);
 
-    parent->SaveToDebugLog("Main menu initialized.");
+    parent->saveToDebugLog("Main menu initialized.");
     //title_loop.play();
     startClock.restart();
     frClock.restart();
@@ -236,26 +236,26 @@ void MainMenu::Initialise(Config *thisConfigs, V4Core *parent)
 
 void MainMenu::EventFired(sf::Event event)
 {
-    if (patapolisMenu.isActive)
+    if (patapolisMenu.is_active)
     {
         patapolisMenu.EventFired(event);
     }
-    else if (nameEntryMenu.isActive)
+    else if (nameEntryMenu.is_active)
     {
         nameEntryMenu.EventFired(event);
     }
-    else if (optionsMenu.isActive)
+    else if (optionsMenu.is_active)
     {
         optionsMenu.EventFired(event);
     }
-    else if (v4core->currentController.isInitialized)
+    else if (v4Core->currentController.isInitialized)
     {
         if(event.type == sf::Event::KeyPressed)
         {
 
         }
     }
-    else if(isActive)
+    else if(is_active)
     {
         if(firstrun)
         {
@@ -317,8 +317,8 @@ void MainMenu::SelectMenuOption()
                 screenFade.Create(thisConfig, 1, 512);
                 goto_id = 0;
 
-                /*v4core->savereader.Flush();
-                v4core->savereader.CreateBlankSave();
+                /*v4core->saveReader.Flush();
+                v4core->saveReader.CreateBlankSave();
 
                 title_loop.stop();
 
@@ -350,11 +350,11 @@ void MainMenu::SelectMenuOption()
 
             if(exists)
             {
-                /** Load save from savereader **/
-                v4core->savereader.Flush();
-                v4core->savereader.LoadSave(*config);
+                /** Load save from saveReader **/
+                v4Core->saveReader.Flush();
+                v4Core->saveReader.LoadSave(*config);
 
-                if(v4core->savereader.savever != "1.1")
+                if(v4Core->saveReader.save_ver != "2.0")
                 {
                     cout << "Invalid save data!" << endl;
 
@@ -395,30 +395,30 @@ void MainMenu::SelectMenuOption()
         case 3:
         {
             // quit the game probably
-            v4core->closeWindow=true;
+            v4Core->close_window=true;
             break;
         }
     }
 }
 void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inputCtrl)
 {
-    if (v4core->currentController.isInitialized)
+    if (v4Core->currentController.isInitialized)
     {
-        v4core->currentController.Update(window, fps, inputCtrl);
+        v4Core->currentController.Update(window, fps, inputCtrl);
     }
-    else if(patapolisMenu.isActive)
+    else if(patapolisMenu.is_active)
     {
         patapolisMenu.Update(window,fps,inputCtrl);
     }
-    else if(introductionMenu.isActive)
+    else if(introductionMenu.is_active)
     {
         introductionMenu.Update(window,fps,inputCtrl);
     }
-    else if(optionsMenu.isActive)
+    else if(optionsMenu.is_active)
     {
         optionsMenu.Update(window,fps,inputCtrl);
     }
-    else if(isActive)
+    else if(is_active)
     {
         if(firstrun)
         {
@@ -814,16 +814,16 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
                     {
                         case 0: ///New game
                         {
-                            v4core->savereader.Flush();
-                            v4core->savereader.CreateBlankSave();
+                            v4Core->saveReader.Flush();
+                            v4Core->saveReader.CreateBlankSave();
 
                             title_loop.stop();
 
                             introductionMenu.Show();
-                            introductionMenu.isActive = true;
+                            introductionMenu.is_active = true;
                             introductionMenu.timeout.restart();
 
-                            patapolisMenu.loadedSave = false;
+                            patapolisMenu.save_loaded = false;
 
                             break;
                         }
@@ -836,27 +836,27 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
 
                             if(!patapolisMenu.initialised)
                             {
-                                sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
-                                v4core->continueLoading=true;
-                                v4core->window.setActive(false);
+                                sf::Thread loadingThreadInstance(&V4Core::loadingThread,v4Core);
+                                v4Core->continue_loading=true;
+                                v4Core->window.setActive(false);
                                 loadingThreadInstance.launch();
 
                                 patapolisMenu.Show();
-                                patapolisMenu.isActive = true;
-                                patapolisMenu.loadedSave = true;
-                                patapolisMenu.Initialise(config,v4core,this);
+                                patapolisMenu.is_active = true;
+                                patapolisMenu.save_loaded = true;
+                                patapolisMenu.Initialise(config,v4Core,this);
 
-                                v4core->continueLoading=false;
+                                v4Core->continue_loading=false;
                             }
                             else
                             {
-                                sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
-                                v4core->continueLoading=true;
-                                v4core->window.setActive(false);
+                                sf::Thread loadingThreadInstance(&V4Core::loadingThread,v4Core);
+                                v4Core->continue_loading=true;
+                                v4Core->window.setActive(false);
                                 loadingThreadInstance.launch();
 
                                 patapolisMenu.Show();
-                                patapolisMenu.isActive = true;
+                                patapolisMenu.is_active = true;
                                 patapolisMenu.screenFade.Create(thisConfig, 0, 512);
 
                                 patapolisMenu.location = 3;
@@ -869,8 +869,8 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
                                     ///do nothing lol
                                 }
 
-                                v4core->LoadingWaitForKeyPress();
-                                v4core->continueLoading=false;
+                                v4Core->loadingWaitForKeyPress();
+                                v4Core->continue_loading=false;
                             }
 
                             break;
@@ -880,7 +880,7 @@ void MainMenu::Update(sf::RenderWindow &window, float fps, InputController& inpu
                         {
                             title_loop.stop();
                             Hide();
-                            v4core->ChangeRichPresence("In Options menu", "logo", "");
+                            //v4Core->changeRichPresence("In Options menu", "logo", "");
                             optionsMenu.state = 0;
                             optionsMenu.sel = 0;
                             optionsMenu.Show();

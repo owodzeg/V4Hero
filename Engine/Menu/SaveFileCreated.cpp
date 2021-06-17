@@ -12,12 +12,12 @@ SaveFileCreatedMenu::SaveFileCreatedMenu()
     //f_font.loadFromFile("resources/fonts/arial.ttf");
 
 
-    isActive=true;
+    is_active = true;
 }
 void SaveFileCreatedMenu::Initialise(Config *thisConfigs,V4Core *parent,NewGameNameEntryMenu* parentMenu_){
     Scene::Initialise(thisConfigs,parent);
     //v4core->menus.push_back(&optionsMenu);
-    buttonList.Initialise(&f_font,*thisConfig,&(v4core->currentController),this);
+    buttonList.Initialise(&f_font, *thisConfig, &(v4Core->currentController),this);
 
     t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_game_save_created")));
     t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
@@ -64,7 +64,7 @@ void SaveFileCreatedMenu::UpdateKamiName(string newName){
     t_welcome2.setOrigin(t_welcome2.getGlobalBounds().width/2,t_welcome2.getGlobalBounds().height/2);
 }
 void SaveFileCreatedMenu::EventFired(sf::Event event){
-    if(isActive){
+    if(is_active){
         if(event.type == sf::Event::KeyPressed)
         {
             if(event.key.code==sf::Keyboard::Enter) {
@@ -80,7 +80,7 @@ void SaveFileCreatedMenu::EventFired(sf::Event event){
 }
 void SaveFileCreatedMenu::Update(sf::RenderWindow &window, float fps)
 {
-    if(isActive){
+    if(is_active){
 
         mm_bigBox.setSize(sf::Vector2f(window.getSize().x,window.getSize().y-200));
         //mm_smallerBox.setSize(sf::Vector2f(100,10));
@@ -118,8 +118,8 @@ void SaveFileCreatedMenu::Update(sf::RenderWindow &window, float fps)
         window.setView(window.getDefaultView());
 
     } else {
-        if (v4core->currentController.isInitialized){
-            //v4core->currentController.Update(window, fps, keyMap);
+        if (v4Core->currentController.isInitialized){
+            //v4Core->currentController.Update(window, fps, keyMap);
         }
     }
 

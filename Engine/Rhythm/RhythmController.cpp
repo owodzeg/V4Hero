@@ -70,13 +70,13 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         else
         {
             ///Apply GOOD drum sound effect
-            if((masterTimer >= low_range) && (masterTimer < high_range)) ///GOOD hit
-            {
-                drum_quality = 1;
-            }
-            else if(masterTimer >= high_range)
+            if(masterTimer >= high_range) ///BEST hit
             {
                 drum_quality = 0;
+            }
+            else if(masterTimer >= low_range) ///GOOD hit
+            {
+                drum_quality = 1;
             }
 
             ///Add drum to commandInput table
@@ -91,8 +91,8 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         drum_nc.setBuffer(b_pata[drum_quality]);
         drum_c.setBuffer(b_chpata[drum_quality]);
 
-        drum_nc.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
-        drum_c.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
+        drum_nc.setVolume(float(config->GetInt("masterVolume"))*(float(config->GetInt("sfxVolume"))/100.f));
+        drum_c.setVolume(float(config->GetInt("masterVolume"))*(float(config->GetInt("sfxVolume"))/100.f));
 
         ///Add PATA drum to user input table
         if(add_to_commandtable)
@@ -113,8 +113,8 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         drum_nc.setBuffer(b_pon[drum_quality]);
         drum_c.setBuffer(b_chpon[drum_quality]);
 
-        drum_nc.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
-        drum_c.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
+        drum_nc.setVolume(float(config->GetInt("masterVolume"))*(float(config->GetInt("sfxVolume"))/100.f));
+        drum_c.setVolume(float(config->GetInt("masterVolume"))*(float(config->GetInt("sfxVolume"))/100.f));
 
         ///Add PON drum to user input table
         if(add_to_commandtable)
@@ -135,8 +135,8 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         drum_nc.setBuffer(b_chaka[drum_quality]);
         drum_c.setBuffer(b_chchaka[drum_quality]);
 
-        drum_nc.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
-        drum_c.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
+        drum_nc.setVolume(float(config->GetInt("masterVolume"))*(float(config->GetInt("sfxVolume"))/100.f));
+        drum_c.setVolume(float(config->GetInt("masterVolume"))*(float(config->GetInt("sfxVolume"))/100.f));
 
         ///Add CHAKA drum to user input table
         if(add_to_commandtable)
@@ -157,8 +157,8 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         drum_nc.setBuffer(b_don[drum_quality]);
         drum_c.setBuffer(b_chdon[drum_quality]);
 
-        drum_nc.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
-        drum_c.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
+        drum_nc.setVolume(float(config->GetInt("masterVolume"))*(float(config->GetInt("sfxVolume"))/100.f));
+        drum_c.setVolume(float(config->GetInt("masterVolume"))*(float(config->GetInt("sfxVolume"))/100.f));
 
         ///Add DON drum to user input table
         if(add_to_commandtable)
@@ -176,8 +176,8 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
     if(pata || pon || don || chaka)
     {
         //cout<<"Input registered"<<endl;
-        config.debugOut->RhythmnDebugMessage(current_drum + " " + std::to_string(masterTimer) + " ms \n");
-        config.debugOut->RhythmnDebugMessage("drum quality was " + std::to_string(drum_quality) +"\n");
+        config->debugOut->RhythmnDebugMessage(current_drum + " " + std::to_string(masterTimer) + " ms \n");
+        config->debugOut->RhythmnDebugMessage("drum quality was " + std::to_string(drum_quality) +"\n");
 
         ///If drum was already hit and you hit once again, or you hit BAD, reset user input and break combo
         if((hit) || (drum_quality == 2))
@@ -188,7 +188,7 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
 
             if(combo >= 2)
             breakCombo = true;
-            config.debugOut->RhythmnDebugMessage("break combo #1\n");
+            config->debugOut->RhythmnDebugMessage("break combo #1\n");
         }
 
         string check = "";
@@ -224,7 +224,7 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
                     commandInput.clear();
 
                     breakCombo = true;
-                    config.debugOut->RhythmnDebugMessage("break combo #2\n");
+                    config->debugOut->RhythmnDebugMessage("break combo #2\n");
                 }
             }
         }
@@ -246,7 +246,7 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         }
 
         ///Check config if drum sound effect should be played
-        if(config.GetInt("enableDrums"))
+        if(config->GetInt("enableDrums"))
         {
             ///And play it
             s_drums.push_back(drum_nc);
@@ -254,7 +254,7 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         }
 
         ///Check config if drum chant sound effect should be played
-        if(config.GetInt("enableDrumChants"))
+        if(config->GetInt("enableDrumChants"))
         {
             ///And play it
             s_drums.push_back(drum_c);
@@ -277,7 +277,7 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         if(commandInput.size() == 4)
         {
             string fullcom = commandInput[0]+commandInput[1]+commandInput[2]+commandInput[3]; ///Create a full command using 4 individual hits
-            config.debugOut->RhythmnDebugMessage("fullcom: " + fullcom+"\n");
+            config->debugOut->RhythmnDebugMessage("fullcom: " + fullcom+"\n");
 
             if(std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end()) ///Check if the command exists in available commands
             {
@@ -285,7 +285,7 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
                 {
                     s_perfect.stop();
                     s_perfect.setBuffer(b_perfect);
-                    s_perfect.setVolume(float(config.GetInt("masterVolume"))*(float(config.GetInt("sfxVolume"))/100.f));
+                    s_perfect.setVolume(float(config->GetInt("masterVolume"))*(float(config->GetInt("sfxVolume"))/100.f));
                     s_perfect.play();
                 }
             }
