@@ -35,7 +35,7 @@ class V4Core
 
     public:
         bool left_key=false, right_key=false, up_key=false, down_key=false;
-        std::string hero_version = "v1.1.1";
+        std::string hero_version = PATAFOUR_VERSION;
         sf::RenderWindow window;
 
 		std::mt19937::result_type seed;
