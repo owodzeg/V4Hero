@@ -96,6 +96,9 @@ void TipsUtil::LoadIcons(Config& tconfig)
             ///ignore comments and empty lines
             if(line.find("#") == std::string::npos && line.find("//") == std::string::npos && line.length()>0)
             {
+                if (line.back() == '\r') {
+                    line.pop_back();
+                }
                 ///Split the Key and Value
                 iconFileNames.push_back(line);
             }
