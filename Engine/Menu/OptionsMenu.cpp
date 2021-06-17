@@ -1,8 +1,9 @@
 #include "OptionsMenu.h"
 #include "ButtonList.h"
 #include <iostream>
-#include <windows.h>
+//#include <windows.h>
 #include "../V4Core.h"
+#include "math.h"
 OptionsMenu::OptionsMenu()
 {
     //ctor
@@ -35,12 +36,12 @@ OptionsMenu::OptionsMenu()
 
     mm_titleBox.setSize(sf::Vector2f(100,10));
     mm_titleBox.setFillColor(sf::Color::Red);*/
-    isActive=false;
+    is_active=false;
     madeChanges=false;
 }
 void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParentMenu)
 {
-    parent->SaveToDebugLog("Initializing Options menu...");
+    parent->saveToDebugLog("Initializing Options menu...");
     cout << "Initialize Options menu" << endl;
     Scene::Initialise(thisConfigs,parent);
     //buttonList.Initialise(&m_font,*thisConfig,keymap,&(v4core->currentController),this);
@@ -195,12 +196,23 @@ void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParent
     opt.createText(m_font, 25, sf::Color::Black, "Revert changes", q, 2);
     restarts.push_back(opt);
 
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_input2")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_input2")), q, 2); // Keyboard Bindings
     inputs.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_input1")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_input1")), q, 2); // Controller Setup
+    inputs.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_input3")), q, 2); // Beat Difficulty
     inputs.push_back(opt);
     opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_back")), q, 2);
     inputs.push_back(opt);
+
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_diff1")), q, 2); // Low Range
+    diff_options.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_diff2")), q, 2); // High Range
+    diff_options.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_diff3")), q, 2); // Apply
+    diff_options.push_back(opt);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_back")), q, 2);
+    diff_options.push_back(opt);
 
     ifstream langfile("resources/lang/lang.txt");
     string buf;
@@ -273,7 +285,7 @@ void OptionsMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParent
     t_cs_bigbutton.createText(m_font, 30, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_bigbutton")), q, 1);
     t_cs_tip.createText(m_font, 15, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"options_tip2")), q, 1);
 
-    parent->SaveToDebugLog("Options menu initialized.");
+    parent->saveToDebugLog("Options menu initialized.");
 }
 
 void OptionsMenu::SelectMenuOption()
@@ -304,6 +316,11 @@ void OptionsMenu::SelectMenuOption()
 
 void OptionsMenu::GoBackMenuOption(int a)
 {
+    if(a > 1)
+    {
+        diff_sel = 0;
+    }
+
     if(prevStates.size() > a-1)
     {
         state = prevStates[prevStates.size()-a];
@@ -349,11 +366,11 @@ void OptionsMenu::SetConfigValue(std::string key, std::string value, bool select
         ///Make the changes
         thisConfig->SetString(key,value);
         madeChanges = true;
-
-        ///Change the state
-        if(selectmenu)
-        SelectMenuOption();
     }
+
+    ///Change the state
+    if(selectmenu)
+    SelectMenuOption();
 }
 
 void OptionsMenu::EventFired(sf::Event event)
@@ -366,7 +383,7 @@ void OptionsMenu::EventFired(sf::Event event)
     {
         if (event.mouseButton.button == sf::Mouse::Left)
         {
-            if((state != 31) && (state != 32))
+            if((state != 31) && (state != 32) && (state != 33))
             SelectMenuOption();
         }
     }
@@ -378,7 +395,7 @@ void OptionsMenu::EventFired(sf::Event event)
 }
 void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& inputCtrl)
 {
-    if(isActive)
+    if(is_active)
     {
         bg.setPosition(0,0);
         bg.draw(window);
@@ -1051,6 +1068,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                 if(changeInput)
                 {
                     block.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+                    block.setOrigin(block.getLocalBounds().width/2, block.getLocalBounds().height/2);
                     block.setFillColor(sf::Color(0,0,0,192));
                     window.draw(block);
 
@@ -1076,6 +1094,7 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
                 ///Controller setup
 
                 block.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+                block.setOrigin(block.getLocalBounds().width/2, block.getLocalBounds().height/2);
                 block.setFillColor(sf::Color(0,0,0,96));
                 window.draw(block);
 
@@ -1180,6 +1199,206 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
             case 33:
             {
+                ///Beat Difficulty
+                float beat_length = thisConfig->thisCore->currentController.rhythm.beat_timer;
+                float low_range = thisConfig->thisCore->currentController.rhythm.low_range;
+                float high_range = thisConfig->thisCore->currentController.rhythm.high_range;
+
+                int right_pressed = int(thisConfig->thisCore->inputCtrl.isKeyHeld(thisConfig->thisCore->inputCtrl.RIGHT));
+                int left_pressed = -int(thisConfig->thisCore->inputCtrl.isKeyHeld(thisConfig->thisCore->inputCtrl.LEFT));
+                int slide_to = right_pressed + left_pressed;
+                if((slide_to != 0) && (diff_sel != 0))
+                {
+                    if(diff_sel == 1)
+                    {
+                        high_range += slide_to;
+                    }
+                    else
+                    {
+                        low_range += slide_to;
+                    }
+                }
+
+                if(diff_sel == 1) // Limit or push properly
+                {
+                    if(high_range > beat_length / 2)
+                    {
+                        cout << "[DEBUG] Trying to push high range, but bar is full" << endl;
+                        if(low_range > 1) low_range -= 1;
+                        else
+                        {
+                            high_range = beat_length / 2 - 1;
+                            low_range = 1;
+                        }
+                    }
+                    else if (high_range < 1)
+                    {
+                        cout << "[DEBUG] Trying to make high range 0" << endl;
+                        high_range = 1;
+                    }
+                    cout << "[DEBUG] Best range changed to: " << high_range << endl;;
+                    cout << "[DEBUG] Good range changed to: " << low_range << endl;
+                }
+                else if(diff_sel == 2)
+                {
+                    if(low_range > beat_length / 2)
+                    {
+                        cout << "[DEBUG] Trying to push low range, but bar is full" << endl;
+                        if(high_range > 1) high_range -= 1;
+                        else
+                        {
+                            low_range = beat_length / 2 - 1;
+                            high_range = 1;
+                        }
+                    }
+                    else if (low_range < 1)
+                    {
+                        cout << "[DEBUG] Trying to make low range 0" << endl;
+                        if(high_range > 1) high_range -= 1;
+                        low_range = 1;
+                    }
+                    cout << "[DEBUG] Best range changed to: " << high_range << endl;;
+                    cout << "[DEBUG] Good range changed to: " << low_range << endl;
+                }
+
+                thisConfig->thisCore->currentController.rhythm.high_range = high_range; // Apply (current session only) (to be able to load next update)
+                thisConfig->thisCore->currentController.rhythm.low_range = low_range;
+
+                int beat_bar_size = floor(window.getSize().x / 3);
+                int high_bar_size = beat_bar_size * ((high_range-low_range) / (beat_length / 2));
+                int low_bar_size = beat_bar_size * (low_range / (beat_length / 2)) + high_bar_size;
+                int bar_height = floor(0.02 * 1080); // 2% of window height, rounding down
+                float text_padding = 8;
+
+                block.setSize(sf::Vector2f(beat_bar_size, bar_height)); // Beat length bar
+                block.setFillColor(sf::Color(80,80,80,255));
+                block.setOrigin(block.getLocalBounds().width/2, block.getLocalBounds().height/2);
+                block.setPosition(window.getSize().x / 2, window.getSize().y / 2);
+                window.draw(block);
+
+                block.setSize(sf::Vector2f(low_bar_size, bar_height)); // Low range bar
+                block.setFillColor(sf::Color(255,115,45,255));
+                block.setOrigin(block.getLocalBounds().width/2, block.getLocalBounds().height/2);
+                block.setPosition(window.getSize().x / 2, window.getSize().y / 2);
+                window.draw(block);
+
+                block.setSize(sf::Vector2f(high_bar_size, bar_height)); // High range bar
+                block.setFillColor(sf::Color(0,255,255,255));
+                block.setOrigin(block.getLocalBounds().width/2, block.getLocalBounds().height/2);
+                block.setPosition(window.getSize().x / 2, window.getSize().y / 2);
+                window.draw(block);
+
+                beat_bar_size = 640;
+                high_bar_size = beat_bar_size * ((high_range-low_range) / (beat_length / 2));
+                low_bar_size = beat_bar_size * (low_range / (beat_length / 2)) + high_bar_size;
+
+                PSprite low_sword_1 = sword; // "1" is on the left, "2" is on the right
+                PSprite low_sword_2 = sword;
+                PSprite high_sword_1 = sword;
+                PSprite high_sword_2 = sword;
+
+                low_sword_1.setOrigin(low_sword_1.getLocalBounds().width / 2, low_sword_1.getLocalBounds().height / 2);
+                low_sword_2.setOrigin(low_sword_2.getLocalBounds().width / 2, low_sword_2.getLocalBounds().height / 2);
+                high_sword_1.setOrigin(high_sword_1.getLocalBounds().width / 2, high_sword_1.getLocalBounds().height / 2);
+                high_sword_2.setOrigin(high_sword_2.getLocalBounds().width / 2, high_sword_2.getLocalBounds().height / 2);
+
+                low_sword_1.setPosition(960 - (low_bar_size / 2), 540 - (low_sword_1.getLocalBounds().height + bar_height) / 2);
+                low_sword_2.setPosition(960 + (low_bar_size / 2), 540  - (low_sword_2.getLocalBounds().height + bar_height) / 2);
+                high_sword_1.setPosition(960 - (high_bar_size / 2), 540 - (high_sword_1.getLocalBounds().height + bar_height) / 2);
+                high_sword_2.setPosition(960 + (high_bar_size / 2), 540 - (high_sword_2.getLocalBounds().height + bar_height) / 2);
+
+                low_sword_1.setRotation(1.57079632679);
+                low_sword_2.setRotation(1.57079632679);
+                high_sword_1.setRotation(1.57079632679);
+                high_sword_2.setRotation(1.57079632679);
+
+                switch(diff_sel)
+                {
+                    case 1:
+                    {
+                        high_sword_1.setColor(sf::Color(255, 215, 0));
+                        high_sword_2.setColor(sf::Color(255, 215, 0));
+                        break;
+                    }
+                    case 2:
+                    {
+                        low_sword_1.setColor(sf::Color(255, 215, 0));
+                        low_sword_2.setColor(sf::Color(255, 215, 0));
+                        break;
+                    }
+                }
+
+                low_sword_1.draw(window);
+                low_sword_2.draw(window);
+                high_sword_1.draw(window);
+                high_sword_2.draw(window);
+
+                t_cs_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"options_input3")));
+                t_cs_title.setOrigin(t_cs_title.getLocalBounds().width/2, t_cs_title.getLocalBounds().height/2);
+                t_cs_title.setPosition(640, 240);
+                t_cs_title.draw(window);
+
+                lang_current = 0;
+
+                maxSel = diff_options.size();
+
+                for(int i=0; i<diff_options.size(); i++)
+                {
+                    diff_options[i].setOrigin(diff_options[i].getLocalBounds().width / 2, diff_options[i].getLocalBounds().height / 2);
+                    diff_options[i].setPosition(960, 1080 * 0.6 + floor((diff_options[i].getLocalBounds().height + text_padding)*i));
+                    if(diff_sel - 1 == i)
+                    {
+                        diff_options[i].setColor(sf::Color(255, 215, 0));
+                    }
+                    else
+                    {
+                        diff_options[i].setColor(sf::Color::White);
+                    }
+
+                    diff_options[i].draw(window);
+                }
+
+                if(sel == -1)
+                sword.setPosition(-999, -999);
+                else
+                sword.setPosition(960 - (diff_options[sel].getLocalBounds().width / 2 + sword.getLocalBounds().width / 2 + text_padding * 3), 1080 * 0.6 + floor((diff_options[sel].getLocalBounds().height + text_padding)*sel - diff_options[sel].getLocalBounds().height / 2));
+                sword.draw(window);
+                break;
+            }
+
+            case 331:
+            {
+                diff_sel = 1;
+
+                GoBackMenuOption(1);
+                break;
+            }
+
+            case 332:
+            {
+                diff_sel = 2;
+
+                GoBackMenuOption(1);
+                break;
+            }
+
+            case 333:
+            {
+                SetConfigValue("highRange", to_string(thisConfig->thisCore->currentController.rhythm.high_range));
+                SetConfigValue("lowRange", to_string(thisConfig->thisCore->currentController.rhythm.low_range));
+
+                GoBackMenuOption(3);
+                break;
+            }
+
+            case 334:
+            {
+                GoBackMenuOption();
+                break;
+            }
+
+            case 34:
+            {
                 GoBackMenuOption();
                 break;
             }
@@ -1187,15 +1406,15 @@ void OptionsMenu::Update(sf::RenderWindow &window, float fps, InputController& i
             case 51:
             {
                 thisConfig->SaveConfig();
-                v4core->closeWindow = true;
+                v4Core->close_window = true;
 
                 ///Run the game process again
-                STARTUPINFO info = {sizeof(info)};
+                /**STARTUPINFO info = {sizeof(info)};
                 PROCESS_INFORMATION processInfo;
                 if (CreateProcess("V4Hero.exe", "", NULL, NULL, TRUE, 0, NULL, NULL, &info, &processInfo)) {
                     CloseHandle(processInfo.hProcess); // Cleanup since you don't need this
                     CloseHandle(processInfo.hThread); // Cleanup since you don't need this
-                }
+                }**/
 
                 break;
             }
@@ -1575,7 +1794,7 @@ void OptionsMenu::Back()
     /// this should go back to the previous menu.
     Hide();
     parentMenu->Show();
-    v4core->ChangeRichPresence("In Main menu", "logo", "");
+    v4Core->changeRichPresence("In Main menu", "logo", "");
     OnExit();
 }
 void OptionsMenu::OnExit(){
@@ -1586,7 +1805,7 @@ void OptionsMenu::UpdateButtons(){
     /// this should update the text on all the buttons
 }
 void OptionsMenu::Show(){
-    isActive = true;
+    is_active = true;
     /*Menu::Show();
     buttonList.Show();
     t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"menu_button_3")));

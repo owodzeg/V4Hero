@@ -31,6 +31,7 @@ class OptionsMenu : public Menu
         float mouseX=0, mouseY=0;
         vector<int> prevStates;
         int state = 0;
+        int diff_sel = 0;
         int sel = -1;
         int maxSel = 0;
 
@@ -61,6 +62,7 @@ class OptionsMenu : public Menu
         std::vector<ConfigValue> original_config; ///If the changes are reverted, keep the original settings to return them back
         std::vector<PText> restarts;
         std::vector<PText> inputs;
+        std::vector<PText> diff_options;
         PText t_restart;
 
         PSprite dg_restart, dg_select;
