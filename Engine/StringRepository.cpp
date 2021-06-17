@@ -26,7 +26,9 @@ StringRepository::StringRepository()
 void StringRepository::LoadLanguageFile(wifstream* conf)
 {
     vector<wstring> keysCheckList;
-    //conf->imbue(std::locale(conf->getloc(), new std::codecvt_utf16<wchar_t, 0x10ffff, std::consume_header>));
+    std::locale old_locale;
+    std::locale utf8_locale(old_locale, new std::codecvt_utf8<wchar_t>);
+    conf->imbue(utf8_locale);
 
 
     if(conf->good())
@@ -40,6 +42,9 @@ void StringRepository::LoadLanguageFile(wifstream* conf)
                 ///Split the Key and Value
                 ///wcout<<line<<endl;
 
+                if (line.back() == '\r') {
+                    line.pop_back();
+                }
                 vector<wstring> key = Func::Split(line,L'|');
 
                 if(key.size() == 2)
@@ -76,6 +81,9 @@ void StringRepository::LoadLanguageFiles(int langNum)
             ///ignore comments
             if(line.find("//") == std::string::npos)
             {
+                if (line.back() == '\r') {
+                    line.pop_back();
+                }
                 vector<string> key = Func::Split(line,L'|');
 
                 if(key.size() == 3)

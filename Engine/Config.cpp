@@ -62,6 +62,9 @@ void Config::LoadConfig(V4Core* core)
             ///ignore comments
             if(line.find("#") == std::string::npos)
             {
+                if (line.back() == '\r') {
+                    line.pop_back();
+                }
                 ///Split the Key and Value
                 vector<string> key = Func::Split(line,':');
 

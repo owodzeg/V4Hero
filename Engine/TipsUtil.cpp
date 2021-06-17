@@ -49,6 +49,9 @@ void TipsUtil::LoadBackgrounds(Config& tconfig)
             if(line.find("#") == std::string::npos && line.find("//") == std::string::npos && line.length()>0)
             {
                 ///Split the Key and Value
+                if (line.back() == '\r') {
+                    line.pop_back();
+                }
                 backgroundFileNames.push_back(line);
             }
         }
