@@ -59,15 +59,14 @@ void Background::Load(string bg_name,Config &thisConfigs)
 
     cout << resRatioX << " " << resRatioY << endl;
 
-    /*v_background.clear();
-    vx_pos.clear();
+    v_background.clear();
     vx_pos.clear();
     vx_color.clear();
     p_background.clear();
     t_background.clear();
     s_background.clear();
     background_xspeed.clear();
-    background_y.clear();*/
+    background_y.clear();
 
     temp_camerax = 0;
     ifstream param_file("resources/graphics/bg/"+bg_name+"/param.dat");
@@ -128,20 +127,22 @@ void Background::Load(string bg_name,Config &thisConfigs)
             vector<string> v_params = Func::Split(buff,',');
 
             PSprite ps_temp;
-            ps_temp.loadFromFile("resources/graphics/bg/"+bg_name+"/"+v_params[0],quality);
-            ps_temp.setRepeated(true);
-            ps_temp.setTextureRect(sf::IntRect(0,0,500000,ps_temp.t.getSize().y));
-            ps_temp.setOrigin(10000,ps_temp.getGlobalBounds().height);
-            ps_temp.setColor(sf::Color(atoi(v_params[3].c_str()),atoi(v_params[4].c_str()),atoi(v_params[5].c_str()),255));
-            ps_temp.setPosition(-1000,atoi(v_params[1].c_str()));
-            ps_temp.setSmooth(false);
+            s_background.push_back(ps_temp);
+            int id = s_background.size() - 1;
+
+            s_background[id].loadFromFile("resources/graphics/bg/"+bg_name+"/"+v_params[0],quality);
+            s_background[id].setRepeated(true);
+            s_background[id].setTextureRect(sf::IntRect(0,0,500000, s_background[id].t.getSize().y));
+            s_background[id].setOrigin(10000, s_background[id].getGlobalBounds().height);
+            s_background[id].setColor(sf::Color(atoi(v_params[3].c_str()),atoi(v_params[4].c_str()),atoi(v_params[5].c_str()),255));
+            s_background[id].setPosition(-1000,atoi(v_params[1].c_str()));
+            s_background[id].setSmooth(false);
 
             sf::Vector2f tmpp;
 
             tmpp.x = -1000;
             tmpp.y = atoi(v_params[1].c_str());
 
-            s_background.push_back(ps_temp);
             p_background.push_back(tmpp);
             background_xspeed.push_back(atof(v_params[2].c_str()));
         }

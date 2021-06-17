@@ -10,6 +10,7 @@ class PSprite
     public:
     sf::Texture t;
     sf::Sprite s;
+    std::string texname;
     int qualitySetting=1;
     int resSetting=1;
     float ratioX=1,ratioY=1;
@@ -42,6 +43,7 @@ class PSprite
     void setSmooth(bool smooth);
     void draw(sf::RenderWindow& window);
     void update(sf::RenderWindow& window);
+    void saveToFile(std::string file);
 };
 
 #endif // PSPRITE_H

@@ -40,6 +40,7 @@ void PSprite::loadFromFile(std::string file, int q)
     resSetting = 1;
 
     std::cout << "[PSPRITE] Loading " << c << std::endl;
+    texname = c;
 
     if(!t.loadFromFile(c))
     {
@@ -85,8 +86,7 @@ void PSprite::loadFromFile(std::string file, int q, int r=1)
     resSetting = r;
 
     std::cout << "[PSPRITE] Loading " << c << std::endl;
-
-    t.loadFromFile(c);
+    texname = c;
 
     if(!t.loadFromFile(c))
     {
@@ -292,12 +292,15 @@ void PSprite::draw(sf::RenderWindow& window)
     {
         if(!exported)
         {
-            sf::Image img;
-            img = t.copyToImage();
-            int rrr = rand() % 100000000;
-            img.saveToFile("texDump/"+std::to_string(rrr)+".png");
+            if (texname.find("locationbg") != std::string::npos)
+            {
+                sf::Image img;
+                img = t.copyToImage();
+                int rrr = rand() % 100000000;
+                img.saveToFile("texDump/" + std::to_string(rrr) + ".png");
 
-            exported = true;
+                exported = true;
+            }
         }
     }
 }
@@ -386,4 +389,9 @@ void PSprite::update(sf::RenderWindow& window)
             exported = true;
         }
     }
+}
+
+void saveToFile(std::string file)
+{
+
 }

@@ -26,6 +26,7 @@ class PText
     float angle=0;
 
     bool wide = false;
+    bool rendered = false;
 
     PText();
     void createText(sf::Font& font, float characterSize, sf::Color color, sf::String text_string, int q, int r);
