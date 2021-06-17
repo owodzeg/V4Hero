@@ -1,314 +1,384 @@
-
+#include "../Json/json.hpp"
+#include "../Config.h"
 #include "ItemRegistry.h"
 #include "Item.h"
+#include "../SaveReader.h"
 #include "../Func.h"
 #include <fstream>
 #include<iostream>
-#include "Weapon.h"
-#include "mask.h"
-#include "Armour.h"
-using namespace std;
+#include "Equipment.h"
 
-ItemRegistry::ItemRegistry(){
+using namespace std;
+using json = nlohmann::json; // Convenience recommended by the library
+
+ItemRegistry::ItemRegistry()
+{
 
 }
-void ItemRegistry::ReadItemFiles()
+
+void ItemRegistry::readItemFiles()
 {
-    /** REWORK THIS!!!!! The code can be more efficient and nice looking. **/
+    items.clear();
 
-    vector<std::string> itemPaths;
-    ifstream conf("resources/data/itemdata/aaa_item_registry.txt");
-    if(conf.good())
+    ifstream t("resources/data/item_data.json", std::ios::in);
+    t >> item_data;
+    for(int i = 0; i < item_data["items"].size(); i++)
     {
-        string line;
-        while(getline(conf, line))
+        for(int j = 0; j < item_data["items"][i].size(); j++)
         {
-            ///ignore comments
-            if(line.find("#") == std::string::npos && line.find("//") == std::string::npos)
+            if(item_data["items"][i][0].is_array()) // Check whether array or something else (if something else we know the array is 2D, not 3D) (technically, we could just check if i == 0 but futureproofing)
             {
-                ///register the item path
-                itemPaths.push_back(line);
-            }
-        }
-    }
-    else
-    {
-        cout << "ERROR! Could not find item registry file!" << endl;
-        return;
-    }
-    conf.close();
-    bool quit=false;
-    for (int i=0;i<itemPaths.size();i++){
-        Item* newItem=new Item();
-        ifstream itemStream("resources/data/itemdata/"+itemPaths[i]+".txt");
-
-        cout << "itemStream(" << "resources/data/itemdata/"+itemPaths[i]+".txt)" << endl;
-
-        if(itemStream.good())
-        {
-            string line;
-            while(getline(itemStream, line))
-            {
-                ///ignore comments
-                if(line.find("#") == std::string::npos && line.find("//") == std::string::npos)
+                //type_counts[i]++;
+                for(int k = 0; k < item_data["items"][i][j].size(); k++)
                 {
-                    cout << "[ItemRegistry] " << line << endl;
-
-                    ///read into the item
-                    vector<string> key = Func::Split(line,':');
-
-                    if(key[0]=="id")
+                    switch(i)
                     {
-                        newItem->item_id = stoi(key[1]);
-                    }
-                    else if(key[0]=="name")
-                    {
-                        std::wstring resws;
-                        std::string str = key[1];
-                        resws.assign(str.begin(), str.end());
-                        newItem->item_name = resws;
-                    }
-                    else if(key[0]=="type")
-                    {
-                        newItem->category_id = stoi(key[1]);
+                        case 0: ///Key items
+                        {
+                            //cout << "[ERROR] Key Items section of item_data.json thought to be 3 levels of arrays" << endl;
+                            //item_counts[0]++;
 
-                        cout << "category_id: " << key[1] << endl;
+                            // Note from Owocek (27.05.2021)
+                            // I made Key Items section to be 3 level array just because it would be pain in the ass to differentiate 2 level and 3 level arrays when dropping items
+                            // Or maybe you got it covered already and I screwed stuff up, but imo it's better if everything is 3 layer than having "exclusives", right?
 
-                        switch (stoi(key[1])){
-                            case 1: /// weapon
-                                {
-
-                                quit=true;
-                                ///Weapon* wep = new Weapon();
-                                Weapon* wep = Weapon::FromItem(newItem);
-                                //wep->item_id = newItem->item_id;
-                                while(getline(itemStream, line))
-                                {
-                                    ///ignore comments
-                                    if(line.find("#") == std::string::npos && line.find("//") == std::string::npos)
-                                    {
-                                        ///read into the item
-                                        vector<string> key = Func::Split(line,':');
-                                        if(key[0]=="id"){
-                                            wep->item_id = stoi(key[1]);
-                                        } else if(key[0]=="subtype"){
-                                            wep->subcategory_id = stoi(key[1]);
-                                        } else if(key[0]=="desc"){
-                                            std::wstring resws;
-                                            std::string str = key[1];
-                                            resws.assign(str.begin(), str.end());
-                                            wep->item_description = resws;
-                                        } else if(key[0]=="icon"){
-                                            wep->icon_path = key[1];
-                                        } else if(key[0]=="mindmg"){
-                                            wep->mindmg = stoi(key[1]);
-                                        } else if(key[0]=="maxdmg"){
-                                            wep->maxdmg = stoi(key[1]);
-                                        } else if(key[0]=="crit"){
-                                            wep->crit = stoi(key[1]);
-                                        } else if(key[0]=="attackspeed"){
-                                            wep->attackspeed = stoi(key[1]);
-                                        } else if(key[0]=="equip_id"){
-                                            wep->equip_id = stoi(key[1]);
-                                        }
-                                        else if(key[0]=="spritesheet")
-                                        {
-                                            wep->spritesheet = key[1];
-                                        }
-                                        else if(key[0]=="spritesheet_id")
-                                        {
-                                            wep->spritesheet_id = stoi(key[1]);
-                                        }
-                                        else if(key[0]=="altar_order_id")
-                                        {
-                                            cout << "Setting altar_order_id to" << key[1] << endl;
-                                            wep->altar_order_id = stoi(key[1]);
-                                        }
-                                    }
-                                }
-                                delete newItem;
-                                newItem = wep;
-                                cout<< newItem->item_id << wep->item_id<<'\n';
-                                break;
-                                }
-                            case 2: /// mask
-                                {
-
-
-                                quit=true;
-                                Mask* mask = Mask::FromItem(newItem);
-                                while(getline(itemStream, line))
-                                {
-                                    ///ignore comments
-                                    if(line.find("#") == std::string::npos && line.find("//") == std::string::npos)
-                                    {
-                                        ///read into the item
-                                        vector<string> key = Func::Split(line,':');
-                                        if(key[0]=="id"){
-                                            mask->item_id = stoi(key[1]);
-                                        } else if(key[0]=="subtype"){
-                                            mask->subcategory_id = stoi(key[1]);
-                                        } else if(key[0]=="desc"){
-                                            std::wstring resws;
-                                            std::string str = key[1];
-                                            resws.assign(str.begin(), str.end());
-                                            mask->item_description = resws;
-                                        } else if(key[0]=="icon"){
-                                            mask->icon_path = key[1];
-                                        } else if(key[0]=="mindmg"){
-                                            mask->mindmg = stoi(key[1]);
-                                        } else if(key[0]=="maxdmg"){
-                                            mask->maxdmg = stoi(key[1]);
-                                        } else if(key[0]=="crit"){
-                                            mask->crit = stoi(key[1]);
-                                        } else if(key[0]=="attackspeed"){
-                                            mask->attackspeed = stoi(key[1]);
-                                        } else if(key[0]=="equip_id"){
-                                            mask->equip_id = stoi(key[1]);
-                                        }
-                                        else if(key[0]=="spritesheet")
-                                        {
-                                            mask->spritesheet = key[1];
-                                        }
-                                        else if(key[0]=="spritesheet_id")
-                                        {
-                                            mask->spritesheet_id = stoi(key[1]);
-                                        }
-                                        else if(key[0]=="altar_order_id")
-                                        {
-                                            cout << "Setting altar_order_id to" << key[1] << endl;
-                                            mask->altar_order_id = stoi(key[1]);
-                                        }
-                                    }
-                                }
-                                delete newItem;
-                                newItem = mask;
-                                break;
-                                }
-                            case 3: /// armour
-                                {
-                                cout << "loading a new armor" << endl;
-
-                                quit=true;
-                                Armour* masks = Armour::FromItem(newItem);
-                                while(getline(itemStream, line))
-                                {
-                                    ///ignore comments
-                                    if(line.find("#") == std::string::npos && line.find("//") == std::string::npos)
-                                    {
-                                        ///read into the item
-                                        vector<string> key = Func::Split(line,':');
-                                        if(key[0]=="id"){
-                                            masks->item_id = stoi(key[1]);
-                                        } else if(key[0]=="subtype"){
-                                            masks->subcategory_id = stoi(key[1]);
-                                        } else if(key[0]=="desc"){
-                                            std::wstring resws;
-                                            std::string str = key[1];
-                                            resws.assign(str.begin(), str.end());
-                                            masks->item_description = resws;
-                                        } else if(key[0]=="icon"){
-                                            masks->icon_path = key[1];
-                                        } else if(key[0]=="mindmg"){
-                                            masks->mindmg = stoi(key[1]);
-                                        } else if(key[0]=="maxdmg"){
-                                            masks->maxdmg = stoi(key[1]);
-                                        } else if(key[0]=="crit"){
-                                            masks->crit = stoi(key[1]);
-                                        } else if(key[0]=="attackspeed"){
-                                            masks->attackspeed = stoi(key[1]);
-                                        } else if(key[0]=="hp"){
-                                            masks->hp = stoi(key[1]);
-                                        } else if(key[0]=="equip_id"){
-                                            masks->equip_id = stoi(key[1]);
-                                        }
-                                        else if(key[0]=="spritesheet")
-                                        {
-                                            masks->spritesheet = key[1];
-                                        }
-                                        else if(key[0]=="spritesheet_id")
-                                        {
-                                            masks->spritesheet_id = stoi(key[1]);
-                                        }
-                                        else if(key[0]=="altar_order_id")
-                                        {
-                                            cout << "Setting altar_order_id to" << key[1] << endl;
-                                            masks->altar_order_id = stoi(key[1]);
-                                        }
-                                    }
-                                }
-                                delete newItem;
-                                newItem = masks;
-                                break;
-                                }
-                            case 0: /// regular item/material
-                            default:
-                                quit=false;
-                                break;
+                            Item* new_item = new Item();
+                            new_item->item_category = "key_items";
+                            new_item->item_type = "key_item";
+                            new_item->item_name = item_data["items"][i][j][k]["name"];
+                            new_item->item_description = item_data["items"][i][j][k]["desc"];
+                            new_item->icon_path = item_data["items"][i][j][k]["icon"];
+                            new_item->spritesheet = item_data["items"][i][j][k]["spritesheet"];
+                            new_item->spritesheet_id = item_data["items"][i][j][k]["spritesheet_id"];
+                            new_item->order_id.push_back(i);
+                            new_item->order_id.push_back(j);
+                            new_item->order_id.push_back(k);
+                            items.push_back(new_item);
+                            cout << "[DEBUG] Item Registered: " << new_item->order_id[0] << ", " << new_item->order_id[1] << ", " << new_item->order_id[2] << " " << new_item->item_name << endl;
+                      
+                            break;
                         }
-                        if (quit){
+
+                        case 1: /// Materials
+                        {
+                            Item* new_item = new Item();
+                            new_item->item_category = "materials";
+                            switch(j)
+                            {
+                                case 0:
+                                {
+                                    new_item->item_type = "wood";
+                                    break;
+                                }
+
+                                case 1:
+                                {
+                                    new_item->item_type = "meat";
+                                    break;
+                                }
+
+                                case 2:
+                                {
+                                    new_item->item_type = "fangs";
+                                    break;
+                                }
+
+                                case 3:
+                                {
+                                    new_item->item_type = "bones";
+                                    break;
+                                }
+
+                                case 4:
+                                {
+                                    new_item->item_type = "ore";
+                                    break;
+                                }
+                            }
+                            new_item->item_name = item_data["items"][i][j][k]["name"];
+                            new_item->item_description = item_data["items"][i][j][k]["desc"];
+                            new_item->icon_path = item_data["items"][i][j][k]["icon"];
+                            new_item->spritesheet = item_data["items"][i][j][k]["spritesheet"];
+                            new_item->spritesheet_id = item_data["items"][i][j][k]["spritesheet_id"];
+                            new_item->order_id.push_back(i);
+                            new_item->order_id.push_back(j);
+                            new_item->order_id.push_back(k);
+                            cout << "[DEBUG] Item Registered: " << new_item->order_id[0] << ", " << new_item->order_id[1] << ", " << new_item->order_id[2] << " " << new_item->item_name << endl;
+                            items.push_back(new_item);
+
+                            break;
+                        }
+
+                        case 2: /// Consumables
+                        {
+                            Item* new_item = new Item();
+                            new_item->item_category = "consumables";
+                            switch(j)
+                            {
+                                case 0:
+                                {
+                                    new_item->item_type = "potion";
+                                    break;
+                                }
+                            }
+                            new_item->item_name = item_data["items"][i][j][k]["name"];
+                            new_item->item_description = item_data["items"][i][j][k]["desc"];
+                            new_item->icon_path = item_data["items"][i][j][k]["icon"];
+                            new_item->spritesheet = item_data["items"][i][j][k]["spritesheet"];
+                            new_item->spritesheet_id = item_data["items"][i][j][k]["spritesheet_id"];
+                            new_item->order_id.push_back(i);
+                            new_item->order_id.push_back(j);
+                            new_item->order_id.push_back(k);
+                            cout << "[DEBUG] Item Registered: " << new_item->order_id[0] << ", " << new_item->order_id[1] << ", " << new_item->order_id[2] << " " << new_item->item_name << endl;
+                            items.push_back(new_item);
+
+                            break;
+                        }
+
+                        case 3: /// Weapons
+                        {
+                            Item* new_weapon = new Item();
+                            new_weapon->item_category = "weapon";
+                            switch(j)
+                            {
+                                case 0:
+                                {
+                                    new_weapon->item_type = "spear";
+                                    break;
+                                }
+
+                                case 1:
+                                {
+                                    new_weapon->item_type = "sword";
+                                    break;
+                                }
+                            }
+
+                            new_weapon->item_name = item_data["items"][i][j][k]["name"];
+                            new_weapon->item_description = item_data["items"][i][j][k]["desc"];
+                            new_weapon->icon_path = item_data["items"][i][j][k]["icon"];
+                            new_weapon->spritesheet = item_data["items"][i][j][k]["spritesheet"];
+                            new_weapon->spritesheet_id = item_data["items"][i][j][k]["spritesheet_id"];
+                            new_weapon->equip = new Equipment();
+                            new_weapon->equip->hp = item_data["items"][i][j][k]["hp"];
+                            new_weapon->equip->min_dmg = item_data["items"][i][j][k]["min_dmg"];
+                            new_weapon->equip->max_dmg = item_data["items"][i][j][k]["max_dmg"];
+                            new_weapon->equip->crit = item_data["items"][i][j][k]["crit"];
+                            new_weapon->equip->attack_speed = item_data["items"][i][j][k]["attack_speed"];
+                            new_weapon->order_id.push_back(i);
+                            new_weapon->order_id.push_back(j);
+                            new_weapon->order_id.push_back(k);
+                            cout << "[DEBUG] Item Registered: " << new_weapon->order_id[0] << ", " << new_weapon->order_id[1] << ", " << new_weapon->order_id[2] << ", " << new_weapon->icon_path << ", " << new_weapon->icon_path << endl;
+                            items.push_back(new_weapon);
+
+                            break;
+                        }
+
+                        case 4: /// Armour
+                        {
+                            Item* new_armour = new Item();
+                            new_armour->item_category = "armor";
+                            switch(j)
+                            {
+                                case 0:
+                                {
+                                    new_armour->item_type = "shield";
+                                    break;
+                                }
+
+                                case 1:
+                                {
+                                    new_armour->item_type = "helm";
+                                    break;
+                                }
+
+                                case 2:
+                                {
+                                    new_armour->item_type = "mask";
+                                    break;
+                                }
+                            }
+
+                            new_armour->item_name = item_data["items"][i][j][k]["name"];
+                            new_armour->item_description = item_data["items"][i][j][k]["desc"];
+                            new_armour->icon_path = item_data["items"][i][j][k]["icon"];
+                            new_armour->spritesheet = item_data["items"][i][j][k]["spritesheet"];
+                            new_armour->spritesheet_id = item_data["items"][i][j][k]["spritesheet_id"];
+                            new_armour->equip = new Equipment();
+                            new_armour->equip->hp = item_data["items"][i][j][k]["hp"];
+                            new_armour->equip->min_dmg = item_data["items"][i][j][k]["min_dmg"];
+                            new_armour->equip->max_dmg = item_data["items"][i][j][k]["max_dmg"];
+                            new_armour->equip->crit = item_data["items"][i][j][k]["crit"];
+                            new_armour->equip->attack_speed = item_data["items"][i][j][k]["attack_speed"];
+                            new_armour->order_id.push_back(i);
+                            new_armour->order_id.push_back(j);
+                            new_armour->order_id.push_back(k);
+                            cout << "[DEBUG] Item Registered: " << new_armour->order_id[0] << ", " << new_armour->order_id[1] << ", " << new_armour->order_id[2] << ", " << new_armour->icon_path << ", " << new_armour->item_name << endl;
+                            items.push_back(new_armour);
+
                             break;
                         }
                     }
-                    else if(key[0]=="subtype")
+                    //if(i != 0) // Not sure
+                    //{
+                        //item_counts[type_counts[i] + j]++;
+                    //}
+                }
+            }
+            else
+            {
+                //type_counts[i] = 1;
+                switch(i)
+                {
+                    case 0: ///Key items
                     {
-                        newItem->subcategory_id = stoi(key[1]);
+                        Item* new_item = new Item();
+                        new_item->item_category = "key_items";
+                        new_item->item_type = "key_item";
+                        new_item->item_name = item_data["items"][i][j]["name"];
+                        new_item->item_description = item_data["items"][i][j]["desc"];
+                        new_item->icon_path = item_data["items"][i][j]["icon"];
+                        new_item->spritesheet = item_data["items"][i][j]["spritesheet"];
+                        new_item->spritesheet_id = item_data["items"][i][j]["spritesheet_id"];
+                        new_item->order_id.push_back(i);
+                        new_item->order_id.push_back(j);
+                        items.push_back(new_item);
+                        cout << "[DEBUG] Item Registered: " << new_item->order_id[0] << ", " << new_item->order_id[1] << endl;
+                        //item_counts[0]++;
+                        break;
                     }
-                    else if(key[0]=="desc")
+
+                    case 1: /// Materials
                     {
-                        std::wstring resws;
-                        std::string str = key[1];
-                        resws.assign(str.begin(), str.end());
-                        newItem->item_description = resws;
+                        cout << "[ERROR] Materials section of item_data.json thought to be only 2 levels of arrays" << endl;
+                        //item_counts[type_counts[1] + j]++; // I dunno but I might as well see if it works
+                        break;
                     }
-                    else if(key[0]=="icon")
+
+                    case 2: /// Consumables
                     {
-                        newItem->icon_path = key[1];
+                        cout << "[ERROR] Consumables section of item_data.json thought to be only 2 levels of arrays" << endl;
+                        //item_counts[type_counts[2] + j]++;
+                        break;
                     }
-                    else if(key[0]=="spritesheet")
+
+                    case 3: /// Weapons
                     {
-                        newItem->spritesheet = key[1];
+                        cout << "[ERROR] Weapons section of item_data.json thought to be only 2 levels of arrays" << endl;
+                        //item_counts[type_counts[4] + j]++;
+                        break;
                     }
-                    else if(key[0]=="spritesheet_id")
+
+                    case 4: /// Armour
                     {
-                        newItem->spritesheet_id = stoi(key[1]);
-                    }
-                    else if(key[0]=="equip_id")
-                    {
-                        cout << "Setting equip_id to" << key[1] << endl;
-                        newItem->equip_id = stoi(key[1]);
-                    }
-                    else if(key[0]=="altar_order_id")
-                    {
-                        cout << "Setting altar_order_id to" << key[1] << endl;
-                        newItem->altar_order_id = stoi(key[1]);
+                        cout << "[ERROR] Armour section of item_data.json thought to be only 2 levels of arrays" << endl;
+                        //item_counts[type_counts[5] + j]++;
+                        break;
                     }
                 }
             }
-            cout << "Registered "<< itemPaths[i] <<" as an item ! (" << newItem->category_id << ")" << endl;
         }
-        else
-        {
-            cout << "ERROR! Could not find "<< itemPaths[i] <<"item !" << endl;
-            return;
-        }
-        itemStream.close();
-        items.push_back(newItem);
-
     }
+
+    cout << "ItemRegistry::readItemFiles(): amount of items: " << items.size() << endl;
+
+    /*
+    cout << "Loaded items:" << endl;
+    for(int i = 0; i < items.size(); i++)
+    {
+        cout << "Item: " << items[i]->item_name << endl;
+    }
+    */ // Use this to print out all loaded items
+    /*
+    cout << "Item counts:" << endl;
+    for(int i = 0; i < item_counts.size(); i++)
+    {
+        for(int o = 0; o < item_counts[i].size(); o++)
+        {
+            cout << "Category:" << i << ", Type:" << o << ", Count:" << item_counts[i][o] << endl;
+        }
+    }
+    */
+     // Use this to print out all item counts
 }
 ItemRegistry::~ItemRegistry(){
 
 }
-Item* ItemRegistry::GetItemByID(int id)
+
+Item* ItemRegistry::getItemByID(std::vector<int> id)
 {
-    for (int i=0; i<items.size(); i++)
+    for(int i = 0; i < items.size(); i++) // Just to test other stuff
     {
-        Item* currentItem = items[i];
-
-        if (currentItem->item_id==id)
+        if(items[i]->order_id == id)
+        {
             return items[i];
+        }
     }
+    /*
+    int total_id = 0;
+    for(int i = type_counts[id[0]]; i >= 0; i--)
+    {
+        if(i == type_counts[id[0]])
+        {
+            o = id[1];
+        }
+        else
+        {
+            o = item_counts[i][type_counts[]]
+        }
+        for(; o)
+    }
+    cerr  << "Returning: " << items[total_id + id[id.size() - 1]]->item_name << endl << endl;
+    cerr << "total_id is " << total_id << endl;
+    if(items[total_id + id[id.size() - 1]]->order_id != id)
+    {
+        cout << "[ERROR] Item \"found\" but is wrong" << endl;
+    }
+    else
+    {
+        return items[total_id + id[id.size() - 1]];
+    }
+    */
+    if(id.size() > 2)
+    {
+        cout << "[ERROR] Item registry failed to found item of id{" << id[0] << " " << id[1] << " " << id[2] << endl;
+    }
+    else
+    {
+        cout << "[ERROR] Item registry failed to found item of id{" << id[0] << " " << id[1] << endl;
+    }
+}
 
-    cout << "A stupid happened: " << id <<'\n';
+int ItemRegistry::getCategoryIDByString(std::string item_category)
+{
+    if(item_category == "key_items") return Categories::KEY_ITEMS;
+    if(item_category == "materials") return Categories::MATERIALS;
+    if(item_category == "consumables") return Categories::CONSUMABLES;
+    if(item_category == "weapon") return Categories::WEAPONS;
+    if(item_category == "armor") return Categories::ARMOR;
+}
+
+Item* ItemRegistry::getItemByName(std::string name, bool lang_specific)
+{
+    if (lang_specific) // By e.g. Wooden Spear (won't return if comparing between languages)
+    {
+        string converted_name = Func::ConvertToUtf8String(saveReader->thisConfig->strRepo.GetUnicodeString(name));
+        for (int i = 0; i < items.size(); i++)
+        {
+            if (Func::ConvertToUtf8String(saveReader->thisConfig->strRepo.GetUnicodeString(items[i]->item_name)) == converted_name)
+            {
+                return items[i];
+            }
+        }
+    }
+    else // By e.g. item_wooden_spear
+    {
+        for (int i = 0; i < items.size(); i++)
+        {
+            if (items[i]->item_name == name)
+            {
+                return items[i];
+            }
+        }
+    }
 }

@@ -12,8 +12,8 @@ class PatapolisMenu;
 class AltarMenu : public Menu
 {
     public:
-        float ratioX, ratioY;
-        float resRatioX, resRatioY;
+        float ratio_x, ratio_y;
+        float res_ratio_x, res_ratio_y;
         int q = 1;
 
         sf::Font f_font;
@@ -46,22 +46,22 @@ class AltarMenu : public Menu
         PText altar_kaching;
         PText altar_item_title, altar_item_category, altar_item_desc;
 
-        int gridSelX=0, gridSelY=0, gridOffsetY=0;
+        int grid_sel_x = 0, grid_sel_y = 0, grid_offset_y = 0;
         sf::RectangleShape r_sel;
 
-        bool loadedSave = false;
+        bool save_loaded = false;
 
         PatapolisMenu *parentMenu;
 
-        void Initialise(Config *thisConfig, V4Core *parent, PatapolisMenu *curParentMenu);
-        void Update(sf::RenderWindow &window, float fps, InputController& inputCtrl);
-        void EventFired(sf::Event event);
-        void ReloadInventory();
-        void ShowCategory();
-        void OnExit();
-        void ShowAltar();
-        void UpdateAltarDescriptions();
-        void UpdateButtons();
+        void initialise(Config *thisConfig, V4Core *parent, PatapolisMenu *curParentMenu);
+        void update(sf::RenderWindow &window, float fps, InputController& inputCtrl);
+        void eventFired(sf::Event event);
+        void reloadInventory();
+        void showCategory();
+        void onExit();
+        void showAltar();
+        void updateAltarDescriptions();
+        void updateButtons();
         AltarMenu();
         ~AltarMenu();
 
