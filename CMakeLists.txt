@@ -123,9 +123,9 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
 endif()
 
 if(MSVC)
-    target_compile_options(V4Hero PRIVATE /W4 /Zi)
+    target_compile_options(V4Hero PRIVATE /W4)
 else()
-    target_compile_options(V4Hero PRIVATE -Wall -Wextra -g)
+    target_compile_options(V4Hero PRIVATE -Wall -Wextra)
 endif()
 
 target_include_directories(V4Hero PRIVATE Engine/)
