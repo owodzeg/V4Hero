@@ -1,14 +1,23 @@
-#include <iostream>
 #include <filesystem>
-
+#include <iostream>
 #include "Engine/V4Core.h"
 
 using namespace std;
 namespace fs = std::filesystem;
 
+#ifdef __linux__
+#include <X11/Xlib.h>
+void setupPlatform() {
+    XInitThreads();
+}
+#else
+void setupPlatform() {}
+#endif
+
 int main(int argc, char *argv[])
 {
     std::cout << SFML_VERSION_MAJOR << "." << SFML_VERSION_MINOR << "." << SFML_VERSION_PATCH << std::endl;
+    setupPlatform();
 
     cout << "V4" << endl;
     auto executable_path = weakly_canonical(fs::path(argv[0])).parent_path();

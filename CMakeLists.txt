@@ -138,6 +138,11 @@ target_link_libraries(V4Hero PRIVATE
         nlohmann_json::nlohmann_json
         spdlog::spdlog)
 
+if (OS STREQUAL "Linux")
+    find_package(X11 REQUIRED)
+    target_link_libraries(V4Hero PRIVATE X11::X11)
+endif (OS STREQUAL "Linux")
+
 add_custom_command(
         TARGET V4Hero POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E create_symlink ${PROJECT_SOURCE_DIR}/resources ${PROJECT_BINARY_DIR}/resources
