@@ -412,6 +412,9 @@ void ObeliskMenu::Update(sf::RenderWindow &window, float fps, InputController& i
 
                 while(getline(wmap, buff))
                 {
+                    if (buff.back() == '\r') {
+                        buff.pop_back();
+                    }
                     cout << "[WorldMap] Read: " << buff << endl;
 
                     if(buff.find("#") == std::string::npos)

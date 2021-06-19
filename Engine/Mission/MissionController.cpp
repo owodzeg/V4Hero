@@ -1291,7 +1291,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 		{
 			if(buff.size() > 0)
 			{
-				entity_list.push_back(buff.substr(buff.find_last_of(",")+1));
+				entity_list.push_back(buff.substr(buff.find_last_of(',')+1));
 			}
 		}
 	}

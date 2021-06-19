@@ -58,6 +58,10 @@ void SongController::LoadSongsConfig(){
         string line;
         while(getline(conf, line))
         {
+            if (line.back() == '\r') {
+                line.pop_back();
+            }
+
             ///ignore comments
             if(line.find("#") == std::string::npos)
             {
