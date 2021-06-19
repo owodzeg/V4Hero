@@ -132,6 +132,7 @@ sf::FloatRect PText::getGlobalBoundsScaled()
     float nw = 1;
     float nh = 1;
 
+    t.setFont(f);
     if(t.getGlobalBounds().width > 0)
     nw = t.getGlobalBounds().width / resRatioX;
 
