@@ -141,7 +141,7 @@ void P4A::ReadDictionary(std::string filename)
     std::vector<unsigned char> bin_data = Binary::file_to_uchar(Binary::get_file(filename));
 
     //cout << header[0] << header[1] << header[2] << endl;
-    if(header[0] == 'P' and header[1] == '4' and header[2] == 'A')
+    if(header[0] == 'P' && header[1] == '4' && header[2] == 'A')
     {
         //cout << "[P4A] Correct archive format!" << endl;
 
