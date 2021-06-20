@@ -64,9 +64,9 @@ set_target_properties(${CMAKE_DISCORD_GAME_SDK_CONFIG_TARGET_NAME} PROPERTIES IN
 ### Installs Discord Game SDK binaries
 if (OS STREQUAL "Windows")
     if (ARCH STREQUAL "x86_64")
-        set(CMAKE_DISCORD_GAME_SDK_LIB_PATH ${DISCORD_GAME_SDK_PATH}/lib/x86_64/discord_game_sdk.dll)
+        set(CMAKE_DISCORD_GAME_SDK_LIB_PATH ${DISCORD_GAME_SDK_PATH}/lib/x86_64/discord_game_sdk.dll.lib)
     else ()
-        set(CMAKE_DISCORD_GAME_SDK_LIB_PATH ${DISCORD_GAME_SDK_PATH}/lib/x86/discord_game_sdk.dll)
+        set(CMAKE_DISCORD_GAME_SDK_LIB_PATH ${DISCORD_GAME_SDK_PATH}/lib/x86/discord_game_sdk.dll.lib)
     endif ()
 elseif (OS STREQUAL "Linux")
     set(CMAKE_DISCORD_GAME_SDK_LIB_PATH ${DISCORD_GAME_SDK_PATH}/lib/x86_64/discord_game_sdk.so)
