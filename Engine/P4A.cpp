@@ -28,7 +28,7 @@ void P4A::LoadFile(string filename)
     original_path.push_back(filename);
 
     ///Strip the file name only
-    filenames.push_back(filename.substr(filename.find_last_of("\\")+1));
+    filenames.push_back(filename.substr(filename.find_last_of("\\") + 1));
 
     ///Get the size of a file
     filesizes.push_back(GetFileSize(filename));
@@ -37,7 +37,7 @@ void P4A::LoadFile(string filename)
 void P4A::CreateDictionary()
 {
     ///Calculate the full size of dictionary
-    for(int i=0; i<filenames.size(); i++)
+    for (int i = 0; i < filenames.size(); i++)
     {
         dictionary_size += 9 + filenames[i].size();
     }
@@ -45,7 +45,7 @@ void P4A::CreateDictionary()
     ///Offset where files start
     file_offset = dictionary_size;
 
-    for(int i=0; i<filenames.size(); i++)
+    for (int i = 0; i < filenames.size(); i++)
     {
         ///Get file name, name's length and convert it to 1 byte signed (what for???)
         string file = filenames[i];
@@ -56,7 +56,7 @@ void P4A::CreateDictionary()
         output_dictionary.push_back(length_8bit);
 
         ///Save the file's name
-        for(int a=0; a<file.size(); a++)
+        for (int a = 0; a < file.size(); a++)
         {
             output_dictionary.push_back(file[a]);
         }
@@ -80,10 +80,10 @@ void P4A::CreateDictionary()
     }
 
     ///Save the dictionary size to header
-    output_header.push_back(char(uint32_t(dictionary_size-8)));
-    output_header.push_back(char(uint32_t(dictionary_size-8) >> 8));
-    output_header.push_back(char(uint32_t(dictionary_size-8) >> 16));
-    output_header.push_back(char(uint32_t(dictionary_size-8) >> 24));
+    output_header.push_back(char(uint32_t(dictionary_size - 8)));
+    output_header.push_back(char(uint32_t(dictionary_size - 8) >> 8));
+    output_header.push_back(char(uint32_t(dictionary_size - 8) >> 16));
+    output_header.push_back(char(uint32_t(dictionary_size - 8) >> 24));
 }
 
 void P4A::SaveToFile(string filename)
@@ -94,31 +94,31 @@ void P4A::SaveToFile(string filename)
     ///Rebuild dictionary
     CreateDictionary();
 
-    ofstream file(filename,std::ios_base::binary);
+    ofstream file(filename, std::ios_base::binary);
 
-    while(file.is_open())
+    while (file.is_open())
     {
         ///Write header
-        for(int i=0; i<output_header.size(); i++)
+        for (int i = 0; i < output_header.size(); i++)
         {
             file.put(output_header[i]);
         }
 
         ///Write dictionary
-        for(int i=0; i<output_dictionary.size(); i++)
+        for (int i = 0; i < output_dictionary.size(); i++)
         {
             file.put(output_dictionary[i]);
         }
 
         ///Write files
-        for(int i=0; i<filenames.size(); i++)
+        for (int i = 0; i < filenames.size(); i++)
         {
             ifstream get_file(filenames[i], std::ios_base::binary);
 
             char ch;
 
-            while(get_file.get(ch))
-            file.put(ch);
+            while (get_file.get(ch))
+                file.put(ch);
 
             get_file.close();
         }
@@ -136,18 +136,19 @@ void P4A::ReadDictionary(std::string filename)
     ifstream file(filename, std::ifstream::binary);
 
     char header[3];
-    file.read(header,3);
+    file.read(header, 3);
 
     std::vector<unsigned char> bin_data = Binary::file_to_uchar(Binary::get_file(filename));
 
     //cout << header[0] << header[1] << header[2] << endl;
-    if(header[0] == 'P' && header[1] == '4' && header[2] == 'A')
+    if (header[0] == 'P' && header[1] == '4' && header[2] == 'A')
     {
         //cout << "[P4A] Correct archive format!" << endl;
 
-        uint8_t file_version = Binary::get_uint8(bin_data, 3);;
+        uint8_t file_version = Binary::get_uint8(bin_data, 3);
+        ;
 
-        if(file_version == 1)
+        if (file_version == 1)
         {
             cout << "[P4A] Detected Archive version 1" << endl;
 
@@ -159,7 +160,7 @@ void P4A::ReadDictionary(std::string filename)
 
             p4a_offset = 8;
 
-            while(p4a_offset < file_data_pointer)
+            while (p4a_offset < file_data_pointer)
             {
                 uint8_t filename_length = Binary::get_uint8(bin_data, p4a_offset);
                 p4a_offset += 1;
@@ -175,13 +176,11 @@ void P4A::ReadDictionary(std::string filename)
 
                 files[str_filename] = Binary::get_block(bin_data, file_offset, file_size);
             }
-        }
-        else
+        } else
         {
             cout << "[P4A] Incorrect file version!" << endl;
         }
-    }
-    else
+    } else
     {
         cout << "[P4A] Incorrect file type" << endl;
         ///exit
@@ -193,7 +192,7 @@ void P4A::ReadDictionary(std::string filename)
 std::string P4A::ReadToMemory(std::string name)
 {
     cout << "[P4A] Reading " << name << " from memory" << endl;
-    
+
     return string(files[name].begin(), files[name].end());
 }
 

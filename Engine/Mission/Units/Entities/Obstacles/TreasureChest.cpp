@@ -1,65 +1,64 @@
 #include "TreasureChest.h"
+#include "../../../../Func.h"
+#include "../../../../V4Core.h"
 #include "math.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include "../../../../Func.h"
-#include "../../../../V4Core.h"
 
 TreasureChest::TreasureChest()
 {
-
 }
 
-void TreasureChest::LoadConfig(Config *thisConfigs)
+void TreasureChest::LoadConfig(Config* thisConfigs)
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs,"resources/units/entity/treasure_chest.p4a");
+    AnimatedObject::LoadConfig(thisConfigs, "resources/units/entity/treasure_chest.p4a");
     AnimatedObject::setAnimationSegment("idle");
 
-    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
+    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("sfxVolume")) / 100.f));
 
     s_broken.loadFromFile("resources/sfx/level/building_medium_broken.ogg");
 }
 
 void TreasureChest::parseAdditionalData(nlohmann::json additional_data)
 {
-	if(additional_data.contains("forceSpawnOnLvl"))
-	{
-		force_spawn = true;
-		force_spawn_lvl = additional_data["forceSpawnOnLvl"];
-	}
+    if (additional_data.contains("forceSpawnOnLvl"))
+    {
+        force_spawn = true;
+        force_spawn_lvl = additional_data["forceSpawnOnLvl"];
+    }
 
-	if(additional_data.contains("forceDropIfNotObtained"))
-	{
-		force_drop = true;
-		force_drop_item = additional_data["forceDropIfNotObtained"][0];
+    if (additional_data.contains("forceDropIfNotObtained"))
+    {
+        force_drop = true;
+        force_drop_item = additional_data["forceDropIfNotObtained"][0];
 
-		if(additional_data["forceDropIfNotObtained"][1] != "any")
-		{
-			force_drop_mission_lvl = additional_data["forceDropIfNotObtained"][1];
-		}
-	}
+        if (additional_data["forceDropIfNotObtained"][1] != "any")
+        {
+            force_drop_mission_lvl = additional_data["forceDropIfNotObtained"][1];
+        }
+    }
 }
 
 void TreasureChest::Draw(sf::RenderWindow& window)
 {
-    if(dead)
+    if (dead)
     {
-        if(death_timer.getElapsedTime().asSeconds() >= 3)
+        if (death_timer.getElapsedTime().asSeconds() >= 3)
         {
             sf::Color c = AnimatedObject::getColor();
             float alpha = c.a;
 
             alpha -= 510.0 / fps;
 
-            if(alpha <= 0)
+            if (alpha <= 0)
             {
                 alpha = 0;
                 ready_to_erase = true;
             }
 
-            AnimatedObject::setColor(sf::Color(c.r,c.g,c.b,alpha));
+            AnimatedObject::setColor(sf::Color(c.r, c.g, c.b, alpha));
         }
     }
 
@@ -70,11 +69,11 @@ void TreasureChest::OnCollide(CollidableObject* otherObject, int collidedWith, v
 {
     cout << "TreasureChest::OnCollide" << endl;
 
-    if((AnimatedObject::getAnimationSegment() != "destroy") && (AnimatedObject::getAnimationSegment() != "destroyed"))
+    if ((AnimatedObject::getAnimationSegment() != "destroy") && (AnimatedObject::getAnimationSegment() != "destroyed"))
     {
-        if(collisionData.size() > 0)
+        if (collisionData.size() > 0)
         {
-            if(isCollidable)
+            if (isCollidable)
             {
                 ///collisionData received from Projectile, process it
                 int dmgDealt = atoi(collisionData[0].c_str());
@@ -84,7 +83,7 @@ void TreasureChest::OnCollide(CollidableObject* otherObject, int collidedWith, v
             }
         }
 
-        if(curHP <= 0)
+        if (curHP <= 0)
         {
             dead = true;
 

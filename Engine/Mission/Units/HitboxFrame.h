@@ -7,39 +7,39 @@
 
 class HitboxFrame
 {
-    private:
-        ///timestamp
-        ///global position, so the hitbox can be moved around as a whole
+private:
+    ///timestamp
+    ///global position, so the hitbox can be moved around as a whole
 
 
-        ///hitboxes' rect that react with other collidables
-        std::vector<sf::Vector2f> vertices;
-        //float x;
-        //float y;
-        //float width;
-        //float height;
-    public:
-        ///timestamp
-        float time;
-        ///global position, so the hitbox can be moved around as a whole
-        float g_x=0;
-        float g_y=0;
-        ///rotation (in radians)
-        float rotation=0;
-        float scaleX=1;
-        float scaleY=1;
+    ///hitboxes' rect that react with other collidables
+    std::vector<sf::Vector2f> vertices;
+    //float x;
+    //float y;
+    //float width;
+    //float height;
+public:
+    ///timestamp
+    float time;
+    ///global position, so the hitbox can be moved around as a whole
+    float g_x = 0;
+    float g_y = 0;
+    ///rotation (in radians)
+    float rotation = 0;
+    float scaleX = 1;
+    float scaleY = 1;
 
-        float lastRotation = -1;
+    float lastRotation = -1;
 
-        void clearVertices();
-        void addVertex(float relX, float relY);
-        std::vector<sf::Vector2f> getCurrentVertices();
-        std::vector<sf::Vector2f>* getBaseVerticiesDontUseThisUnlessYouKnowWhy();
-        float minProjection(float axisAngle,float object_x,float object_y);
-        float maxProjection(float axisAngle,float object_x,float object_y);
+    void clearVertices();
+    void addVertex(float relX, float relY);
+    std::vector<sf::Vector2f> getCurrentVertices();
+    std::vector<sf::Vector2f>* getBaseVerticiesDontUseThisUnlessYouKnowWhy();
+    float minProjection(float axisAngle, float object_x, float object_y);
+    float maxProjection(float axisAngle, float object_x, float object_y);
 
-        HitboxFrame();
-        ~HitboxFrame();
+    HitboxFrame();
+    ~HitboxFrame();
 };
 
 #endif // HITBOXFRAME_H

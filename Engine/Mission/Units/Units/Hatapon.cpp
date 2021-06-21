@@ -1,25 +1,24 @@
 #include "Hatapon.h"
+#include "../../../Func.h"
 #include "math.h"
 #include <fstream>
 #include <iostream>
-#include "../../../Func.h"
 #include <sstream>
 
 Hatapon::Hatapon()
 {
-
 }
 
-void Hatapon::LoadConfig(Config *thisConfigs)
+void Hatapon::LoadConfig(Config* thisConfigs)
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs,"resources/units/unit/hatapon.p4a");
+    AnimatedObject::LoadConfig(thisConfigs, "resources/units/unit/hatapon.p4a");
 
     hit_1.loadFromFile("resources/sfx/level/hit_1.ogg");
     hit_2.loadFromFile("resources/sfx/level/hit_2.ogg");
     hit_3.loadFromFile("resources/sfx/level/hit_3.ogg");
 
-    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
+    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("sfxVolume")) / 100.f));
 
     isCollidable = true;
     isAttackable = true;
@@ -38,19 +37,19 @@ void Hatapon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
 
     cout << "Hatapon::OnCollide" << endl;
 
-    if(collisionData.size() > 0)
+    if (collisionData.size() > 0)
     {
-        if(isCollidable)
+        if (isCollidable)
         {
             ///collisionData received from Projectile, process it
             int dmgDealt = atoi(collisionData[0].c_str());
 
-            if(defend)
+            if (defend)
             {
-                if(charged)
-                dmgDealt = round(dmgDealt / 4);
+                if (charged)
+                    dmgDealt = round(dmgDealt / 4);
                 else
-                dmgDealt = round(dmgDealt / 2);
+                    dmgDealt = round(dmgDealt / 2);
             }
 
             current_hp -= dmgDealt;
@@ -61,19 +60,19 @@ void Hatapon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
 
             int a = rand() % 3;
 
-            switch(a)
+            switch (a)
             {
                 case 0:
-                cur_sound.setBuffer(hit_1);
-                break;
+                    cur_sound.setBuffer(hit_1);
+                    break;
 
                 case 1:
-                cur_sound.setBuffer(hit_2);
-                break;
+                    cur_sound.setBuffer(hit_2);
+                    break;
 
                 case 2:
-                cur_sound.setBuffer(hit_3);
-                break;
+                    cur_sound.setBuffer(hit_3);
+                    break;
             }
 
             cur_sound.play();
@@ -86,19 +85,16 @@ void Hatapon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
 
 void Hatapon::doRhythm(std::string current_song, std::string current_drum, int combo)
 {
-    if((current_song != "") && ((current_song != "dondon") && (current_song != "ponpata")))
+    if ((current_song != "") && ((current_song != "dondon") && (current_song != "ponpata")))
     {
         setAnimationSegment("wave");
-    }
-    else if(current_song == "dondon")
+    } else if (current_song == "dondon")
     {
         setAnimationSegment("jump");
-    }
-    else if(current_song == "ponpata")
+    } else if (current_song == "ponpata")
     {
         setAnimationSegment("flee");
-    }
-    else
+    } else
     {
         setAnimationSegment("idle");
     }

@@ -1,16 +1,16 @@
 #ifndef P4A_H
 #define P4A_H
 
-#include <vector>
-#include <map>
-#include <string>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <math.h>
+#include <string>
+#include <vector>
 
 class P4A
 {
-    public:
+public:
     ///For output
     std::vector<std::string> original_path;
     std::vector<std::string> filenames;

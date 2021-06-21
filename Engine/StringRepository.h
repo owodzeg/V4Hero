@@ -1,20 +1,20 @@
 #ifndef STRINGREPOSITORY_H
 #define STRINGREPOSITORY_H
+#include "DebugOut.h"
 #include <SFML/Graphics.hpp>
-#include <vector>
+#include <fstream>
+#include <iostream>
 #include <map>
 #include <string>
-#include <iostream>
-#include <fstream>
-#include "DebugOut.h"
+#include <vector>
 class StringRepository
 {
-    public:
+public:
     std::vector<std::string> langFiles;
     std::vector<std::string> langNames;
     std::vector<std::string> langFonts;
-    std::map<std::string,std::wstring> stringMap;
-    int configDebugID=0;
+    std::map<std::string, std::wstring> stringMap;
+    int configDebugID = 0;
     StringRepository();
     void LoadLanguageFiles(int langNum);
     void LoadLanguageFile(std::wifstream* conf);

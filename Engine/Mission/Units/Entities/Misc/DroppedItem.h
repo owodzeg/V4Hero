@@ -1,33 +1,32 @@
 #ifndef DROPPEDITEM_H
 #define DROPPEDITEM_H
 
-#include <SFML/Graphics.hpp>
 #include "../../../../Config.h"
 #include "../../Entity.h"
+#include <SFML/Graphics.hpp>
 
 using namespace std;
 
 class DroppedItem : public Entity
 {
-    public:
-    float hspeed=0;
-    float vspeed=0;
+public:
+    float hspeed = 0;
+    float vspeed = 0;
 
-    struct GlowCircle
-    {
+    struct GlowCircle {
         sf::CircleShape circle;
-        float alpha=64;
-        float radius=20;
+        float alpha = 64;
+        float radius = 20;
     };
 
-    float resRatioX,resRatioY;
+    float resRatioX, resRatioY;
 
     vector<GlowCircle> glow;
     sf::Clock glowTimer;
 
     ///for the fun pickup animation
-    float curXscale=1,curYscale=1;
-    float destXscale=1,destYscale=1;
+    float curXscale = 1, curYscale = 1;
+    float destXscale = 1, destYscale = 1;
     float local_xPosDest = 0;
     float local_yPosDest = 0;
     float vspeed2 = 0;
@@ -46,9 +45,9 @@ class DroppedItem : public Entity
     sf::SoundBuffer s_item, s_keyitem;
 
     DroppedItem();
-    void LoadConfig(Config *thisConfigs);
+    void LoadConfig(Config* thisConfigs);
     void Draw(sf::RenderWindow& window);
-    void OnCollide(CollidableObject* otherObject, int collidedWith=-1, vector<string> collisionData = {});
+    void OnCollide(CollidableObject* otherObject, int collidedWith = -1, vector<string> collisionData = {});
 };
 
 #endif // DROPPEDITEM_H

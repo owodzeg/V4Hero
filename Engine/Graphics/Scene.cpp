@@ -1,11 +1,11 @@
 #include "Scene.h"
-#include <iostream>
 #include "../V4Core.h"
+#include <iostream>
 Scene::Scene()
 {
     //ctor
 }
-void Scene::Initialise(Config *thisConfigs, V4Core *parent)
+void Scene::Initialise(Config* thisConfigs, V4Core* parent)
 {
     parent->saveToDebugLog("Initializing a new Scene...");
 
@@ -20,17 +20,14 @@ void Scene::Initialise(Config *thisConfigs, V4Core *parent)
 
 void Scene::EventFired(sf::Event event)
 {
-
 }
 
-void Scene::Update(sf::RenderWindow &window, float fps)
+void Scene::Update(sf::RenderWindow& window, float fps)
 {
-
 }
 
 void Scene::OnExit()
 {
-
 }
 
 Scene::~Scene()

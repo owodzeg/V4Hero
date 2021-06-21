@@ -5,8 +5,8 @@
 
 class PSpritesheet
 {
-    public:
-    int qualitySetting=0, resSetting=0;
+public:
+    int qualitySetting = 0, resSetting = 0;
 
     sf::Texture t;
     std::vector<char> t_c;

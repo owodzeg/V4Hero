@@ -2,7 +2,6 @@
 
 PlayableUnit::PlayableUnit()
 {
-
 }
 
 void PlayableUnit::setUnitID(int new_unitID)

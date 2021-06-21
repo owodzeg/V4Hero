@@ -1,20 +1,20 @@
 #ifndef BACKGROUND_H
 #define BACKGROUND_H
 
-#include <SFML/Graphics.hpp>
-#include "Camera.h"
 #include "../Config.h"
 #include "../Graphics/PSprite.h"
+#include "Camera.h"
+#include <SFML/Graphics.hpp>
 class Background
 {
-    public:
+public:
     Camera camera;
 
     sf::VertexArray v_background;
     std::vector<sf::Vector2f> vx_pos;
     std::vector<sf::Color> vx_color;
 
-    Config *thisConfig;
+    Config* thisConfig;
     std::vector<sf::Texture> t_background;
     std::vector<PSprite> s_background;
     std::vector<sf::Vector2f> p_background;
@@ -28,7 +28,7 @@ class Background
 
     Background();
     void setCamera(Camera camera);
-    void Load(std::string bg_name,Config &thisConfigs);
+    void Load(std::string bg_name, Config& thisConfigs);
     void Draw(sf::RenderWindow& window);
 };
 

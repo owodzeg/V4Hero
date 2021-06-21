@@ -1,19 +1,18 @@
-#include <nlohmann/json.hpp>
-#include "../Config.h"
 #include "ItemRegistry.h"
-#include "Item.h"
-#include "../SaveReader.h"
+#include "../Config.h"
 #include "../Func.h"
-#include <fstream>
-#include<iostream>
+#include "../SaveReader.h"
 #include "Equipment.h"
+#include "Item.h"
+#include <fstream>
+#include <iostream>
+#include <nlohmann/json.hpp>
 
 using namespace std;
 using json = nlohmann::json; // Convenience recommended by the library
 
 ItemRegistry::ItemRegistry()
 {
-
 }
 
 void ItemRegistry::readItemFiles()
@@ -22,16 +21,16 @@ void ItemRegistry::readItemFiles()
 
     ifstream t("resources/data/item_data.json", std::ios::in);
     t >> item_data;
-    for(int i = 0; i < item_data["items"].size(); i++)
+    for (int i = 0; i < item_data["items"].size(); i++)
     {
-        for(int j = 0; j < item_data["items"][i].size(); j++)
+        for (int j = 0; j < item_data["items"][i].size(); j++)
         {
-            if(item_data["items"][i][0].is_array()) // Check whether array or something else (if something else we know the array is 2D, not 3D) (technically, we could just check if i == 0 but futureproofing)
+            if (item_data["items"][i][0].is_array()) // Check whether array or something else (if something else we know the array is 2D, not 3D) (technically, we could just check if i == 0 but futureproofing)
             {
                 //type_counts[i]++;
-                for(int k = 0; k < item_data["items"][i][j].size(); k++)
+                for (int k = 0; k < item_data["items"][i][j].size(); k++)
                 {
-                    switch(i)
+                    switch (i)
                     {
                         case 0: ///Key items
                         {
@@ -55,7 +54,7 @@ void ItemRegistry::readItemFiles()
                             new_item->order_id.push_back(k);
                             items.push_back(new_item);
                             cout << "[DEBUG] Item Registered: " << new_item->order_id[0] << ", " << new_item->order_id[1] << ", " << new_item->order_id[2] << " " << new_item->item_name << endl;
-                      
+
                             break;
                         }
 
@@ -63,34 +62,29 @@ void ItemRegistry::readItemFiles()
                         {
                             Item* new_item = new Item();
                             new_item->item_category = "materials";
-                            switch(j)
+                            switch (j)
                             {
-                                case 0:
-                                {
+                                case 0: {
                                     new_item->item_type = "wood";
                                     break;
                                 }
 
-                                case 1:
-                                {
+                                case 1: {
                                     new_item->item_type = "meat";
                                     break;
                                 }
 
-                                case 2:
-                                {
+                                case 2: {
                                     new_item->item_type = "fangs";
                                     break;
                                 }
 
-                                case 3:
-                                {
+                                case 3: {
                                     new_item->item_type = "bones";
                                     break;
                                 }
 
-                                case 4:
-                                {
+                                case 4: {
                                     new_item->item_type = "ore";
                                     break;
                                 }
@@ -113,10 +107,9 @@ void ItemRegistry::readItemFiles()
                         {
                             Item* new_item = new Item();
                             new_item->item_category = "consumables";
-                            switch(j)
+                            switch (j)
                             {
-                                case 0:
-                                {
+                                case 0: {
                                     new_item->item_type = "potion";
                                     break;
                                 }
@@ -139,16 +132,14 @@ void ItemRegistry::readItemFiles()
                         {
                             Item* new_weapon = new Item();
                             new_weapon->item_category = "weapon";
-                            switch(j)
+                            switch (j)
                             {
-                                case 0:
-                                {
+                                case 0: {
                                     new_weapon->item_type = "spear";
                                     break;
                                 }
 
-                                case 1:
-                                {
+                                case 1: {
                                     new_weapon->item_type = "sword";
                                     break;
                                 }
@@ -178,22 +169,19 @@ void ItemRegistry::readItemFiles()
                         {
                             Item* new_armour = new Item();
                             new_armour->item_category = "armor";
-                            switch(j)
+                            switch (j)
                             {
-                                case 0:
-                                {
+                                case 0: {
                                     new_armour->item_type = "shield";
                                     break;
                                 }
 
-                                case 1:
-                                {
+                                case 1: {
                                     new_armour->item_type = "helm";
                                     break;
                                 }
 
-                                case 2:
-                                {
+                                case 2: {
                                     new_armour->item_type = "mask";
                                     break;
                                 }
@@ -221,14 +209,13 @@ void ItemRegistry::readItemFiles()
                     }
                     //if(i != 0) // Not sure
                     //{
-                        //item_counts[type_counts[i] + j]++;
+                    //item_counts[type_counts[i] + j]++;
                     //}
                 }
-            }
-            else
+            } else
             {
                 //type_counts[i] = 1;
-                switch(i)
+                switch (i)
                 {
                     case 0: ///Key items
                     {
@@ -288,7 +275,8 @@ void ItemRegistry::readItemFiles()
     {
         cout << "Item: " << items[i]->item_name << endl;
     }
-    */ // Use this to print out all loaded items
+    */
+    // Use this to print out all loaded items
     /*
     cout << "Item counts:" << endl;
     for(int i = 0; i < item_counts.size(); i++)
@@ -299,17 +287,17 @@ void ItemRegistry::readItemFiles()
         }
     }
     */
-     // Use this to print out all item counts
+    // Use this to print out all item counts
 }
-ItemRegistry::~ItemRegistry(){
-
+ItemRegistry::~ItemRegistry()
+{
 }
 
 Item* ItemRegistry::getItemByID(std::vector<int> id)
 {
-    for(int i = 0; i < items.size(); i++) // Just to test other stuff
+    for (int i = 0; i < items.size(); i++) // Just to test other stuff
     {
-        if(items[i]->order_id == id)
+        if (items[i]->order_id == id)
         {
             return items[i];
         }
@@ -339,11 +327,10 @@ Item* ItemRegistry::getItemByID(std::vector<int> id)
         return items[total_id + id[id.size() - 1]];
     }
     */
-    if(id.size() > 2)
+    if (id.size() > 2)
     {
         cout << "[ERROR] Item registry failed to found item of id{" << id[0] << " " << id[1] << " " << id[2] << endl;
-    }
-    else
+    } else
     {
         cout << "[ERROR] Item registry failed to found item of id{" << id[0] << " " << id[1] << endl;
     }
@@ -351,11 +338,16 @@ Item* ItemRegistry::getItemByID(std::vector<int> id)
 
 int ItemRegistry::getCategoryIDByString(std::string item_category)
 {
-    if(item_category == "key_items") return Categories::KEY_ITEMS;
-    if(item_category == "materials") return Categories::MATERIALS;
-    if(item_category == "consumables") return Categories::CONSUMABLES;
-    if(item_category == "weapon") return Categories::WEAPONS;
-    if(item_category == "armor") return Categories::ARMOR;
+    if (item_category == "key_items")
+        return Categories::KEY_ITEMS;
+    if (item_category == "materials")
+        return Categories::MATERIALS;
+    if (item_category == "consumables")
+        return Categories::CONSUMABLES;
+    if (item_category == "weapon")
+        return Categories::WEAPONS;
+    if (item_category == "armor")
+        return Categories::ARMOR;
 }
 
 Item* ItemRegistry::getItemByName(std::string name, bool lang_specific)
@@ -370,8 +362,7 @@ Item* ItemRegistry::getItemByName(std::string name, bool lang_specific)
                 return items[i];
             }
         }
-    }
-    else // By e.g. item_wooden_spear
+    } else // By e.g. item_wooden_spear
     {
         for (int i = 0; i < items.size(); i++)
         {

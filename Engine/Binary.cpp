@@ -1,7 +1,7 @@
 #include "Binary.hpp"
+#include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <filesystem>
 
 using namespace std;
 
@@ -14,7 +14,7 @@ std::string Binary::get_file(const std::string& path)
 
     std::ifstream file(path, std::ios::binary);
 
-    if(!file)
+    if (!file)
     {
         cout << "Error when loading file" << endl;
     }
@@ -52,7 +52,7 @@ uint8_t Binary::get_uint8(const std::vector<unsigned char>& source, int offset)
 ///Read two bytes into unsigned int from file on given offset
 uint16_t Binary::get_uint16(const std::vector<unsigned char>& source, int offset)
 {
-    return uint16_t(uint32_t(source[offset]) + uint32_t(source[offset+1] << 8));
+    return uint16_t(uint32_t(source[offset]) + uint32_t(source[offset + 1] << 8));
 }
 
 ///Read four bytes into unsigned int from file on given offset
@@ -73,9 +73,9 @@ std::string Binary::get_string(const std::vector<unsigned char>& source, int off
     std::string temp;
     int str = 0;
 
-    while(get_uint8(source,offset+str) != 0x0)
+    while (get_uint8(source, offset + str) != 0x0)
     {
-        temp += get_uint8(source,offset+str);
+        temp += get_uint8(source, offset + str);
         str++;
     }
 
@@ -87,7 +87,7 @@ std::string Binary::to_string(const std::vector<unsigned char>& source)
 {
     std::string temp;
 
-    for(unsigned int i=0; i<source.size(); i++)
+    for (unsigned int i = 0; i < source.size(); i++)
     {
         temp += get_uint8(source, i);
     }

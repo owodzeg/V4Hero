@@ -1,17 +1,16 @@
 #include "Tatepon.h"
+#include "../../../Func.h"
 #include "math.h"
 #include <fstream>
 #include <iostream>
-#include "../../../Func.h"
 #include <sstream>
 Tatepon::Tatepon()
 {
-
 }
-void Tatepon::LoadConfig(Config *thisConfigs)
+void Tatepon::LoadConfig(Config* thisConfigs)
 {
     /// load patapon from p4a file
-    AnimatedObject::LoadConfig(thisConfigs,"resources/units/unit/yaripon.p4a");
+    AnimatedObject::LoadConfig(thisConfigs, "resources/units/unit/yaripon.p4a");
     setAnimationSegment("idle_armed");
 
     sword_swing.loadFromFile("resources/sfx/level/spear_throw.ogg");
@@ -22,7 +21,7 @@ void Tatepon::LoadConfig(Config *thisConfigs)
 
     s_dead.loadFromFile("resources/sfx/level/dead_2.ogg");
 
-    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
+    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("sfxVolume")) / 100.f));
 
 
     can_shield = true;
@@ -34,7 +33,7 @@ void Tatepon::LoadConfig(Config *thisConfigs)
 
 void Tatepon::startAttack()
 {
-    if(action != ATTACK)
+    if (action != ATTACK)
     {
         action = ATTACK;
         attackmode = -2;
@@ -46,22 +45,21 @@ void Tatepon::startAttack()
 bool Tatepon::doAttack()
 {
     cout << "[DEBUG] Tatepon tried to attack!" << endl;
-    if(action == ATTACK)
+    if (action == ATTACK)
     {
         cout << "[DEBUG] Tatepon tried to attack (action)!" << endl;
-        if(enemy_in_range)
+        if (enemy_in_range)
         {
-            if(attackmode == -2) ///prepare the attack (move around)
+            if (attackmode == -2) ///prepare the attack (move around)
             {
                 ///Calculate the local x
-                if(!dest_set)
+                if (!dest_set)
                 {
-                    if((entity_distance >= near_attack_range) && (entity_distance <= far_attack_range)) ///perfect spot, make some tiny adjustments and start attacking
+                    if ((entity_distance >= near_attack_range) && (entity_distance <= far_attack_range)) ///perfect spot, make some tiny adjustments and start attacking
                     {
                         cout << "[DEBUG] Tatepon is positioned well, setting dest_local_x to " << entity_distance - far_attack_range << endl;
                         dest_local_x = entity_distance - far_attack_range; ///Get as close to enemy as possible
-                    }
-                    else if(entity_distance > far_attack_range) ///unit is too far, get closer
+                    } else if (entity_distance > far_attack_range)         ///unit is too far, get closer
                     {
                         cout << "[DEBUG] Tatepon has to get closer, setting dest_local_x to " << entity_distance + (far_attack_range + near_attack_range) / 2 << endl;
                         dest_local_x = entity_distance + (far_attack_range + near_attack_range) / 2; ///take a position closer the enemy
@@ -74,49 +72,48 @@ bool Tatepon::doAttack()
 
                 //dest_local_x = entity_distance;
 
-                if((local_x >= dest_local_x-5) && (local_x <= dest_local_x+5)) ///When you are set at your position, start the attack
-                attackmode = -1;
+                if ((local_x >= dest_local_x - 5) && (local_x <= dest_local_x + 5)) ///When you are set at your position, start the attack
+                    attackmode = -1;
 
-                if(walkClock.getElapsedTime().asMilliseconds() >= 1000) ///If walking takes you too long, stop and defend (slowly walking back)
+                if (walkClock.getElapsedTime().asMilliseconds() >= 1000) ///If walking takes you too long, stop and defend (slowly walking back)
                 {
                     action = DEFEND;
                     dest_local_x = local_x;
                 }
             }
 
-            if(attackmode == -1) ///start the attack
+            if (attackmode == -1) ///start the attack
             {
                 prev_dest_local_x = dest_local_x;
 
                 attack_clock.restart();
                 attackmode = 0;
 
-                if(isFever) ///Weaken knockback if fever?
-                vspeed = -683;
+                if (isFever) ///Weaken knockback if fever?
+                    vspeed = -683;
             }
 
-            if(attackmode == 0) ///begin the attack
+            if (attackmode == 0) ///begin the attack
             {
                 canAttack = true;
 
-                if(isFever)
+                if (isFever)
                 {
-                    if(AnimatedObject::getAnimationSegment() != "attack_fever_jump")
-                    AnimatedObject::setAnimationSegment("attack_fever_jump", true);
+                    if (AnimatedObject::getAnimationSegment() != "attack_fever_jump")
+                        AnimatedObject::setAnimationSegment("attack_fever_jump", true);
 
-                    if(attack_clock.getElapsedTime().asMilliseconds() > 500)
+                    if (attack_clock.getElapsedTime().asMilliseconds() > 500)
                     {
                         AnimatedObject::setAnimationSegment("attack_fever_throw", true);
                         attack_clock.restart();
                         attackmode = 1;
                     }
-                }
-                else
+                } else
                 {
-                    if(AnimatedObject::getAnimationSegment() != "attack_prefever_focused_start")
-                    AnimatedObject::setAnimationSegment("attack_prefever_focused_start", true);
+                    if (AnimatedObject::getAnimationSegment() != "attack_prefever_focused_start")
+                        AnimatedObject::setAnimationSegment("attack_prefever_focused_start", true);
 
-                    if(attack_clock.getElapsedTime().asMilliseconds() > 600)
+                    if (attack_clock.getElapsedTime().asMilliseconds() > 600)
                     {
                         AnimatedObject::setAnimationSegment("attack_prefever_focused_throw", true);
                         attack_clock.restart();
@@ -125,16 +122,16 @@ bool Tatepon::doAttack()
                 }
             }
 
-            if(attackmode == 1) ///attack continuously
+            if (attackmode == 1) ///attack continuously
             {
-                if(isFever)
+                if (isFever)
                 {
                     float anim_speed_multiplier = float(1) / attack_speed;
                     framerate = float(1) * anim_speed_multiplier;
 
-                    if(getAnimationPos() > 0.285)
+                    if (getAnimationPos() > 0.285)
                     {
-                        if(canAttack)
+                        if (canAttack)
                         {
                             cur_sound.stop();
                             cur_sound.setBuffer(sword_swing);
@@ -145,12 +142,12 @@ bool Tatepon::doAttack()
                         }
                     }
 
-                    if(attack_clock.getElapsedTime().asSeconds() > attack_speed)
+                    if (attack_clock.getElapsedTime().asSeconds() > attack_speed)
                     {
-                        if(canAttack)
+                        if (canAttack)
                         {
-                            if(attacked == false)
-                            attacked = true;
+                            if (attacked == false)
+                                attacked = true;
                         }
 
                         AnimatedObject::setAnimationSegment("attack_fever_throw", true);
@@ -159,19 +156,18 @@ bool Tatepon::doAttack()
                         canAttack = true;
                     }
 
-                    if(local_y >= 0)
+                    if (local_y >= 0)
                     {
                         AnimatedObject::setAnimationSegment("idle_armed_focused", true);
                         attackmode = 2;
                     }
-                }
-                else
+                } else
                 {
                     framerate = 1;
 
-                    if(getAnimationPos() > 0.066)
+                    if (getAnimationPos() > 0.066)
                     {
-                        if(canAttack)
+                        if (canAttack)
                         {
                             cur_sound.stop();
                             cur_sound.setBuffer(sword_swing);
@@ -182,14 +178,14 @@ bool Tatepon::doAttack()
                         }
                     }
 
-                    if(AnimatedObject::getAnimationSegment() == "attack_prefever_focused_end")
+                    if (AnimatedObject::getAnimationSegment() == "attack_prefever_focused_end")
                     {
                         attackmode = 2;
                     }
                 }
             }
 
-            if(attackmode == 2)
+            if (attackmode == 2)
             {
                 canAttack = true;
                 action = IDLE;
@@ -197,12 +193,11 @@ bool Tatepon::doAttack()
         }
     }
 
-    if(attacked)
+    if (attacked)
     {
         attacked = false;
         return true;
-    }
-    else
+    } else
     {
         return false;
     }
@@ -210,148 +205,139 @@ bool Tatepon::doAttack()
 
 void Tatepon::doRhythm(std::string current_song, std::string current_drum, int combo)
 {
-    if(!dead)
+    if (!dead)
     {
-        if(enemy_in_range)
-        focus = true;
+        if (enemy_in_range)
+            focus = true;
         else
-        focus = false;
+            focus = false;
 
-        if((current_song == "patapata") || (current_song == "chakapata"))
+        if ((current_song == "patapata") || (current_song == "chakapata"))
         {
             action = WALK;
 
             dest_local_x = 0;
 
-            if(!focus)
+            if (!focus)
             {
-                if(getAnimationSegment() != "walk")
-                setAnimationSegment("walk", true);
-            }
-            else
+                if (getAnimationSegment() != "walk")
+                    setAnimationSegment("walk", true);
+            } else
             {
-                if(getAnimationSegment() != "walk_focused")
-                setAnimationSegment("walk_focused", true);
+                if (getAnimationSegment() != "walk_focused")
+                    setAnimationSegment("walk_focused", true);
             }
-        }
-        else
+        } else
         {
-            if(getAnimationSegment() == "walk")
+            if (getAnimationSegment() == "walk")
             {
-                if(!getback)
+                if (!getback)
                 {
-                    if(!focus)
-                    setAnimationSegment("idle_armed", true);
+                    if (!focus)
+                        setAnimationSegment("idle_armed", true);
                     else
-                    setAnimationSegment("idle_armed_focused", true);
+                        setAnimationSegment("idle_armed_focused", true);
                 }
             }
         }
 
-        if(current_song == "ponpon")
+        if (current_song == "ponpon")
         {
             ///use attack only once
-            if(attackmode != 2)
-            startAttack();
-        }
-        else if(current_song == "chakachaka")
+            if (attackmode != 2)
+                startAttack();
+        } else if (current_song == "chakachaka")
         {
             defend = true;
-        }
-        else
+        } else
         {
             ///refresh attack mode
             attackmode = -1;
         }
 
-        if(current_song != "")
+        if (current_song != "")
         {
-            if(current_song == "ponchaka")
+            if (current_song == "ponchaka")
             {
-                if((getAnimationSegment() != "charge_start") && (getAnimationSegment() != "charge_intact"))
-                setAnimationSegment("charge_start", true);
+                if ((getAnimationSegment() != "charge_start") && (getAnimationSegment() != "charge_intact"))
+                    setAnimationSegment("charge_start", true);
 
                 charge_m1 = true;
                 charged = false;
-            }
-            else
+            } else
             {
-                if(charge_m1)
+                if (charge_m1)
                 {
-                    if(charged == false)
-                    charged = true;
+                    if (charged == false)
+                        charged = true;
                     else
-                    charge_m1 = false;
-                }
-                else if(current_song != old_current_song)
+                        charge_m1 = false;
+                } else if (current_song != old_current_song)
                 {
                     charged = false;
                 }
             }
 
-            if((current_song != "ponpon") && (current_song != "chakachaka"))
+            if ((current_song != "ponpon") && (current_song != "chakachaka"))
             {
                 dest_local_x = 0;
             }
 
-            if(current_song != "chakachaka")
-            defend = false;
+            if (current_song != "chakachaka")
+                defend = false;
         }
 
         old_current_song = current_song;
 
         //cout << "new comms: " << charged << " " << charge_m1 << " " << defend << endl;
 
-        if((current_drum == "pata") or (current_drum == "pon") or (current_drum == "chaka") or (current_drum == "don"))
+        if ((current_drum == "pata") or (current_drum == "pon") or (current_drum == "chaka") or (current_drum == "don"))
         {
             //cout << current_drum << endl;
             attackmode = -1;
             action = IDLE;
 
-            if(!focus)
-            setAnimationSegment(current_drum, true);
+            if (!focus)
+                setAnimationSegment(current_drum, true);
             else
-            setAnimationSegment(current_drum+"_focused", true);
+                setAnimationSegment(current_drum + "_focused", true);
         }
 
-        if((getAnimationSegment().find("pata") != std::string::npos) || (getAnimationSegment().find("pon") != std::string::npos) || (getAnimationSegment().find("don") != std::string::npos) || (getAnimationSegment().find("chaka") != std::string::npos))
+        if ((getAnimationSegment().find("pata") != std::string::npos) || (getAnimationSegment().find("pon") != std::string::npos) || (getAnimationSegment().find("don") != std::string::npos) || (getAnimationSegment().find("chaka") != std::string::npos))
         {
-            if(cur_pos >= anim_end-0.0333)
+            if (cur_pos >= anim_end - 0.0333)
             {
-                if(!focus)
+                if (!focus)
                 {
                     setAnimationSegment("idle_armed", true);
-                }
-                else
+                } else
                 {
                     setAnimationSegment("idle_armed_focused", true);
                 }
             }
         }
 
-        if(combo < 2)
+        if (combo < 2)
         {
-            if((getAnimationSegment() == "charge_intact") || (getAnimationSegment() == "walk") || (getAnimationSegment() == "walk_focused"))
+            if ((getAnimationSegment() == "charge_intact") || (getAnimationSegment() == "walk") || (getAnimationSegment() == "walk_focused"))
             {
-                if(!focus)
+                if (!focus)
                 {
                     setAnimationSegment("idle_armed", true);
-                }
-                else
+                } else
                 {
                     setAnimationSegment("idle_armed_focused", true);
                 }
             }
 
-            if(focus)
+            if (focus)
             {
-                if(getAnimationSegment() == "idle_armed")
-                setAnimationSegment("idle_armed_focused", true);
-            }
-            else
+                if (getAnimationSegment() == "idle_armed")
+                    setAnimationSegment("idle_armed_focused", true);
+            } else
             {
-                if(getAnimationSegment() == "idle_armed_focused")
-                setAnimationSegment("idle_armed", true);
+                if (getAnimationSegment() == "idle_armed_focused")
+                    setAnimationSegment("idle_armed", true);
             }
 
             defend = false;
@@ -359,35 +345,34 @@ void Tatepon::doRhythm(std::string current_song, std::string current_drum, int c
             charge_m1 = false;
         }
 
-        if(combo >= 11)
-        isFever = true;
+        if (combo >= 11)
+            isFever = true;
         else
-        isFever = false;
+            isFever = false;
     }
 }
 
 void Tatepon::doMissionEnd()
 {
-    if(getAnimationSegment().find("dance") == std::string::npos)
+    if (getAnimationSegment().find("dance") == std::string::npos)
     {
         setAnimationSegment("walk");
 
-        if(partyClock.getElapsedTime().asMilliseconds() > 250)
+        if (partyClock.getElapsedTime().asMilliseconds() > 250)
         {
-            if(rand() % 4 == 1)
+            if (rand() % 4 == 1)
             {
                 int a = rand() % 5 + 1;
-                string anim = "dance_var"+to_string(a);
+                string anim = "dance_var" + to_string(a);
 
                 setAnimationSegment(anim, true);
             }
 
             partyClock.restart();
         }
-    }
-    else
+    } else
     {
-        if(cur_pos > anim_end)
+        if (cur_pos > anim_end)
         {
             setAnimationSegment("walk");
         }
@@ -398,18 +383,17 @@ void Tatepon::Draw(sf::RenderWindow& window)
 {
     //cout << "Patapon: " << getAnimationSegment() << " " << getAnimationPos() << "/" << getAnimationLength(getAnimationSegment()) << " " << curFrame << " " << index << " " << floor(getAnimationLength(getAnimationSegment()) * animation_framerate) - 1 << " " << animation_framerate << endl;
 
-    if(AnimatedObject::getAnimationSegment() == "walk")
+    if (AnimatedObject::getAnimationSegment() == "walk")
     {
         framerate = 0.8;
-    }
-    else
+    } else
     {
         framerate = 1;
     }
 
-    if(getUnitHP() <= 0)
+    if (getUnitHP() <= 0)
     {
-        if(!dead)
+        if (!dead)
         {
             dead = true;
             deathClock.restart();
@@ -422,15 +406,15 @@ void Tatepon::Draw(sf::RenderWindow& window)
         }
     }
 
-    if(dead)
+    if (dead)
     {
         cout << "I'm dead now" << endl;
 
-        if(getAnimationSegment() == "stagger_var5")
+        if (getAnimationSegment() == "stagger_var5")
         {
             cout << "Animation segment is stagger_var5 " << cur_pos << " " << anim_end << endl;
 
-            if(cur_pos >= anim_end)
+            if (cur_pos >= anim_end)
             {
                 cout << "Setting death animation" << endl;
 
@@ -442,28 +426,27 @@ void Tatepon::Draw(sf::RenderWindow& window)
             }
         }
 
-        if(deathClock.getElapsedTime().asSeconds() > 3)
+        if (deathClock.getElapsedTime().asSeconds() > 3)
         {
             cout << "Death clock passed 3 seconds. Time to bury into the ground" << endl;
 
-            if(getAnimationSegment() == "death_corpse")
+            if (getAnimationSegment() == "death_corpse")
             {
                 cout << "I am despawning" << endl;
                 setAnimationSegment("death_despawn", true);
             }
 
-            if(getAnimationSegment() == "death_despawn")
+            if (getAnimationSegment() == "death_despawn")
             {
-                if(cur_pos >= anim_end)
+                if (cur_pos >= anim_end)
                 {
                     ready_to_erase = true;
                 }
             }
         }
-    }
-    else
+    } else
     {
-        if(old_current_song == "chakachaka")
+        if (old_current_song == "chakachaka")
         {
             cout << "[DEBUG] ChakaChaka in draw function" << endl;
             //thisConfig->thisCore->saveReader.ponreg.GetPonByID(0);
@@ -474,14 +457,14 @@ void Tatepon::Draw(sf::RenderWindow& window)
 
     vspeed += gravity / fps;
 
-    if(hspeed < 0)
-    hspeed += 230.0 / fps;
+    if (hspeed < 0)
+        hspeed += 230.0 / fps;
     else
-    hspeed = 0;
+        hspeed = 0;
 
-    if(vspeed >= 0)
+    if (vspeed >= 0)
     {
-        if(local_y >= 0)
+        if (local_y >= 0)
         {
             vspeed = 0;
             local_y = 0;
@@ -498,19 +481,19 @@ void Tatepon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
 {
     cout << "Patapon::OnCollide" << endl;
 
-    if(collisionData.size() > 0)
+    if (collisionData.size() > 0)
     {
-        if(isCollidable)
+        if (isCollidable)
         {
             ///collisionData received from Projectile, process it
             int dmgDealt = atoi(collisionData[0].c_str());
 
-            if(defend)
+            if (defend)
             {
-                if(charged)
-                dmgDealt = round(dmgDealt / 4);
+                if (charged)
+                    dmgDealt = round(dmgDealt / 4);
                 else
-                dmgDealt = round(dmgDealt / 2);
+                    dmgDealt = round(dmgDealt / 2);
             }
 
             current_hp -= dmgDealt;
@@ -521,19 +504,19 @@ void Tatepon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
 
             int a = rand() % 3;
 
-            switch(a)
+            switch (a)
             {
                 case 0:
-                cur_sound.setBuffer(hit_1);
-                break;
+                    cur_sound.setBuffer(hit_1);
+                    break;
 
                 case 1:
-                cur_sound.setBuffer(hit_2);
-                break;
+                    cur_sound.setBuffer(hit_2);
+                    break;
 
                 case 2:
-                cur_sound.setBuffer(hit_3);
-                break;
+                    cur_sound.setBuffer(hit_3);
+                    break;
             }
 
             cur_sound.play();
@@ -543,4 +526,3 @@ void Tatepon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
     /// note we don't call the parent function. It does nothing, it just serves
     /// as an incomplete function to be overridden by child classes.
 }
-

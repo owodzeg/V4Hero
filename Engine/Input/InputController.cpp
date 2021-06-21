@@ -5,7 +5,6 @@ using namespace std;
 
 InputController::InputController()
 {
-
 }
 
 /**
@@ -17,14 +16,14 @@ stonks
 
 void InputController::LoadKeybinds(Config& config)
 {
-    for(int k=0; k<12; k++)
+    for (int k = 0; k < 12; k++)
     {
-        for(int i=1; i<=9; i++)
+        for (int i = 1; i <= 9; i++)
         {
-            string confkey = "keybind"+keyLabels[k]+to_string(i);
+            string confkey = "keybind" + keyLabels[k] + to_string(i);
             cout << "Checking confkey " << confkey << endl;
 
-            if(config.keyExists(confkey))
+            if (config.keyExists(confkey))
             {
                 keybinds[k].push_back(config.GetInt(confkey));
                 cout << "Loading keybind " << k << " with key id " << confkey << endl;
@@ -54,29 +53,28 @@ bool InputController::isAnyKeyPressed()
 ///Returns what key is being currently pressed (for input detection)
 int InputController::whatKeyPressed(int restrictMode)
 {
-    if(keyRegistered)
+    if (keyRegistered)
     {
         keyRegistered = false;
 
-        if(restrictMode == 1)
+        if (restrictMode == 1)
         {
-            if(currentKey >= 1000)
+            if (currentKey >= 1000)
             {
                 return -2;
             }
         }
 
-        if(restrictMode == 2)
+        if (restrictMode == 2)
         {
-            if(currentKey < 1000)
+            if (currentKey < 1000)
             {
                 return -2;
             }
         }
 
         return currentKey;
-    }
-    else
+    } else
     {
         return -2;
     }
@@ -89,27 +87,27 @@ bool InputController::isKeyPressed(int keyID, int restrictMode)
     ///RestrictMode = 1 - only keyboard
     ///RestrictMode = 2 - only joystick
 
-    for(int i=0; i<keybinds[keyID].size(); i++)
+    for (int i = 0; i < keybinds[keyID].size(); i++)
     {
         int realKey = keybinds[keyID][i];
 
-        if(restrictMode == 1)
+        if (restrictMode == 1)
         {
-            if(realKey >= 1000)
+            if (realKey >= 1000)
             {
                 return false;
             }
         }
 
-        if(restrictMode == 2)
+        if (restrictMode == 2)
         {
-            if(realKey < 1000)
+            if (realKey < 1000)
             {
                 return false;
             }
         }
 
-        if(keyMap[realKey] == true)
+        if (keyMap[realKey] == true)
         {
             keyMap[realKey] = false;
             return true;
@@ -121,27 +119,27 @@ bool InputController::isKeyPressed(int keyID, int restrictMode)
 
 bool InputController::isKeyHeld(int keyID, int restrictMode)
 {
-    for(int i=0; i<keybinds[keyID].size(); i++)
+    for (int i = 0; i < keybinds[keyID].size(); i++)
     {
         int realKey = keybinds[keyID][i];
 
-        if(restrictMode == 1)
+        if (restrictMode == 1)
         {
-            if(realKey >= 1000)
+            if (realKey >= 1000)
             {
                 return false;
             }
         }
 
-        if(restrictMode == 2)
+        if (restrictMode == 2)
         {
-            if(realKey < 1000)
+            if (realKey < 1000)
             {
                 return false;
             }
         }
 
-        if(keyMapHeld[realKey] == true)
+        if (keyMapHeld[realKey] == true)
         {
             return true;
         }

@@ -7,10 +7,10 @@
 
 class Hitbox
 {
-    private:
+private:
     bool debug = false;
 
-    public:
+public:
     float g_x; ///global x pos
     float g_y; ///global y pos
     HitboxFrame hitboxObject;

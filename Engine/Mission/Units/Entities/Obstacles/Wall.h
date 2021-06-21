@@ -1,18 +1,17 @@
 #ifndef WALL_H
 #define WALL_H
 
-#include <SFML/Graphics.hpp>
 #include "../../../../Config.h"
 #include "../../Entity.h"
+#include <SFML/Graphics.hpp>
 
 using namespace std;
 
 class Wall : public Entity
 {
-    public:
-
+public:
     Wall();
-    void LoadConfig(Config *thisConfigs);
+    void LoadConfig(Config* thisConfigs);
     void Draw(sf::RenderWindow& window);
     void OnCollide(CollidableObject otherObject);
 };

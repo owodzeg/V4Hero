@@ -1,12 +1,12 @@
 #ifndef SCREENFADE_H
 #define SCREENFADE_H
 
-#include <SFML/Graphics.hpp>
 #include "../Config.h"
+#include <SFML/Graphics.hpp>
 
 class ScreenFade
 {
-    public:
+public:
     sf::RectangleShape r_rect;
     int cur_mode = 0; ///0 - fade in, 1 - fade out
     float cur_speed = 512;
