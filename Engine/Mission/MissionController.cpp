@@ -2383,26 +2383,29 @@ void MissionController::DoMovement(sf::RenderWindow& window, float fps, InputCon
             }
         }
 
-        switch (unit->getUnitID())
-        {
-            case 0: ///Hatapon
+        float x_offset;
+        float y_value;
+
+        if (unit->getUnitID() == 0) { // Hatapon
+            y_value = 500;
+        } else {
+            y_value = patapon_y;
+        }
+
+        switch (unit->getUnitID()) {
+            case 1: // Yaripon
             {
-                unit->setGlobalPosition(sf::Vector2f(army_x, 500));
+                x_offset = 100 + (50 * i);
                 break;
             }
-
-            case 1: ///Yaripon
+            case 2: // Tatepon
             {
-                unit->setGlobalPosition(sf::Vector2f(army_x + 100 + (50 * i), patapon_y));
-                break;
-            }
-
-            case 2: ///Tatepon
-            {
-                unit->setGlobalPosition(sf::Vector2f(army_x + 200 + (50 * i), patapon_y));
+                x_offset = 200 + (50 * i);
                 break;
             }
         }
+
+        unit->setGlobalPosition(sf::Vector2f(army_x + x_offset, y_value));
     }
 }
 
