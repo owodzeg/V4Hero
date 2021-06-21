@@ -1,13 +1,13 @@
 #include "TipsUtil.h"
-#include "Func.h"
+#include "Config.h"
 #include "DebugOut.h"
-#include <fstream>
-#include <iostream>
+#include "Func.h"
 #include <algorithm>
 #include <cassert>
 #include <cctype>
+#include <fstream>
+#include <iostream>
 #include <string>
-#include "config.h"
 using namespace std;
 
 TipsUtil::TipsUtil()
@@ -40,40 +40,44 @@ void TipsUtil::LoadBackgrounds(Config& tconfig)
     debugOut = config->debugOut;
 
     ifstream conf("resources/graphics/ui/tips/tip_backgrounds.txt");
-    if(conf.good())
+    if (conf.good())
     {
         string line;
-        while(getline(conf, line))
+        while (getline(conf, line))
         {
             ///ignore comments and empty lines
-            if(line.find("#") == std::string::npos && line.find("//") == std::string::npos && line.length()>0)
+            if (line.find("#") == std::string::npos && line.find("//") == std::string::npos && line.length() > 0)
             {
                 ///Split the Key and Value
+                if (line.back() == '\r')
+                {
+                    line.pop_back();
+                }
                 backgroundFileNames.push_back(line);
             }
         }
-    }
-    else
+    } else
     {
         cout << "ERROR! Could not load tips background file!" << endl;
     }
     conf.close();
-    for (auto it = backgroundFileNames.begin(); it != backgroundFileNames.end(); ++it){
+    for (auto it = backgroundFileNames.begin(); it != backgroundFileNames.end(); ++it)
+    {
         ///             ####   BARRACKS MENU BACKGROUND
         PSprite ps_temp;
-        ps_temp.loadFromFile("resources/graphics/ui/tips/"+*it,tconfig.GetInt("textureQuality"),1);
+        ps_temp.loadFromFile("resources/graphics/ui/tips/" + *it, tconfig.GetInt("textureQuality"), 1);
         ps_temp.setRepeated(true);
-        ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
-        ps_temp.setOrigin(0,0);
-        ps_temp.setColor(sf::Color(255,255,255,255));
+        ps_temp.setTextureRect(sf::IntRect(0, 0, ps_temp.t.getSize().x, ps_temp.t.getSize().y)); ///affect later with ratio
+        ps_temp.setOrigin(0, 0);
+        ps_temp.setColor(sf::Color(255, 255, 255, 255));
 
         sf::Vector2f tmpp;
         //float xRatio = (thisConfig->GetInt("resX")/1600.0);
         tmpp.x = 0;
         tmpp.y = 0;
 
-        ps_temp.scaleX=1.0f;
-        ps_temp.scaleY=1.0f;
+        ps_temp.scaleX = 1.0f;
+        ps_temp.scaleY = 1.0f;
         t_backgrounds.push_back(ps_temp);
     }
 }
@@ -85,40 +89,44 @@ void TipsUtil::LoadIcons(Config& tconfig)
     config = &tconfig;
     debugOut = config->debugOut;
     ifstream conf("resources/graphics/ui/tips/tip_icons.txt");
-    if(conf.good())
+    if (conf.good())
     {
         string line;
-        while(getline(conf, line))
+        while (getline(conf, line))
         {
             ///ignore comments and empty lines
-            if(line.find("#") == std::string::npos && line.find("//") == std::string::npos && line.length()>0)
+            if (line.find("#") == std::string::npos && line.find("//") == std::string::npos && line.length() > 0)
             {
+                if (line.back() == '\r')
+                {
+                    line.pop_back();
+                }
                 ///Split the Key and Value
                 iconFileNames.push_back(line);
             }
         }
-    }
-    else
+    } else
     {
         cout << "ERROR! Could not load tips icon file!" << endl;
     }
     conf.close();
-    for (auto it = iconFileNames.begin(); it != iconFileNames.end(); ++it){
+    for (auto it = iconFileNames.begin(); it != iconFileNames.end(); ++it)
+    {
         ///             ####   BARRACKS MENU BACKGROUND
         PSprite ps_temp;
-        ps_temp.loadFromFile("resources/graphics/ui/tips/"+*it,tconfig.GetInt("textureQuality"),1);
+        ps_temp.loadFromFile("resources/graphics/ui/tips/" + *it, tconfig.GetInt("textureQuality"), 1);
         ps_temp.setRepeated(true);
-        ps_temp.setTextureRect(sf::IntRect(0,0,ps_temp.t.getSize().x,ps_temp.t.getSize().y)); ///affect later with ratio
-        ps_temp.setOrigin(0,0);
-        ps_temp.setColor(sf::Color(255,255,255,255));
+        ps_temp.setTextureRect(sf::IntRect(0, 0, ps_temp.t.getSize().x, ps_temp.t.getSize().y)); ///affect later with ratio
+        ps_temp.setOrigin(0, 0);
+        ps_temp.setColor(sf::Color(255, 255, 255, 255));
 
         sf::Vector2f tmpp;
         //float xRatio = (thisConfig->GetInt("resX")/1600.0);
         tmpp.x = 0;
         tmpp.y = 0;
 
-        ps_temp.scaleX=1.0f;
-        ps_temp.scaleY=1.0f;
+        ps_temp.scaleX = 1.0f;
+        ps_temp.scaleY = 1.0f;
         t_icons.push_back(ps_temp);
     }
 }

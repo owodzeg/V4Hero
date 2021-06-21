@@ -1,15 +1,14 @@
 #ifndef PLAYABLEUNIT_H
 #define PLAYABLEUNIT_H
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
 #include "../../Config.h"
 #include "CollidableObject.h"
+#include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
 
 class PlayableUnit : public CollidableObject
 {
-    public:
-
+public:
     enum Classes
     {
         DUMMY = -1,
@@ -63,7 +62,7 @@ class PlayableUnit : public CollidableObject
     virtual float getUnitMaxHP();
     virtual void setUnitHP(float hp);
     virtual bool doAttack();
-    virtual void doRhythm(std::string current_song="", std::string current_drum="", int combo=0);
+    virtual void doRhythm(std::string current_song = "", std::string current_drum = "", int combo = 0);
     virtual void doMissionEnd();
 };
 

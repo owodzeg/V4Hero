@@ -3,40 +3,40 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "../Config.h"
 #include "../Rhythm/Rhythm.h"
 #include "Background.h"
 #include "Camera.h"
-#include "../Config.h"
 
-#include "../Graphics/PText.h"
 #include "../Graphics/PSpritesheet.h"
+#include "../Graphics/PText.h"
 
+#include <random>
 #include <string>
 #include <thread>
-#include <random>
 
 #include "Units/EntityList.h"
 #include "Units/PlayableUnitList.h"
 #include "Units/ProjectileList.h"
 
-#include "Units/HitboxFrame.h"
 #include "Units/AnimatedObject.h"
-#include "Units/Projectile.h"
 #include "Units/CollidableObject.h"
+#include "Units/HitboxFrame.h"
 #include "Units/PlayableUnit.h"
+#include "Units/Projectile.h"
 
 #include "../Dialog/ControlTips.h"
 #include "../Dialog/DialogBox.h"
 #include "../Dialog/MessageCloud.h"
 
-#include "../Json/json.hpp"
+#include <nlohmann/json.hpp>
 
 
 class V4Core;
 class MissionController
 {
-    public:
-    int qualitySetting=1, resSetting=1;
+public:
+    int qualitySetting = 1, resSetting = 1;
 
     float fps = 60;
 
@@ -46,8 +46,8 @@ class MissionController
 
     Background test_bg;
     Rhythm rhythm;
-    bool isInitialized=false;
-    bool isFinishedLoading=false;
+    bool isInitialized = false;
+    bool isFinishedLoading = false;
 
     sf::RectangleShape fade_box;
     float fade_alpha = 255;
@@ -69,8 +69,8 @@ class MissionController
     PSprite bar_win;
     PSprite bar_lose;
 
-    PText t_win,t_win_outline;
-    PText t_lose,t_lose_outline;
+    PText t_win, t_win_outline;
+    PText t_lose, t_lose_outline;
 
     sf::Time startTime;
     sf::Clock missionTimer;
@@ -85,32 +85,32 @@ class MissionController
     sf::Font f_moji;
     sf::Font f_unicode;
     /// Things for the cutscenes
-		//std::vector<Cutscene> cutscenes;
-        std::vector<sf::Text> t_cutscene_text;
-        int startAlpha;
-        int endAlpha;
-        sf::Time targetTime;
-        sf::Clock timer;
-        sf::RectangleShape fade;
-        bool inCutscene;
-        bool inFadeTransition;
-        bool isBlackScreenCutscene;
-        bool cutscenesLeft=false;
-        bool showTimer=false;
-        int currentCutsceneId;
-        std::vector<std::wstring> cutscene_text_identifiers;
-        std::vector<int> cutscene_lengths;
-        std::vector<bool> cutscene_blackscreens;
+    //std::vector<Cutscene> cutscenes;
+    std::vector<sf::Text> t_cutscene_text;
+    int startAlpha;
+    int endAlpha;
+    sf::Time targetTime;
+    sf::Clock timer;
+    sf::RectangleShape fade;
+    bool inCutscene;
+    bool inFadeTransition;
+    bool isBlackScreenCutscene;
+    bool cutscenesLeft = false;
+    bool showTimer = false;
+    int currentCutsceneId;
+    std::vector<std::wstring> cutscene_text_identifiers;
+    std::vector<int> cutscene_lengths;
+    std::vector<bool> cutscene_blackscreens;
     /// this is a list of things in the level that
     /// we need to check against for collision (but not always damage)
 
-	enum LAYERS // Stuffs
-	{
-		BUILDINGS = 0,
-		NATURE = 50,
-		ANIMALS = 150,
-		UI = 9999
-	};
+    enum LAYERS // Stuffs
+    {
+        BUILDINGS = 0,
+        NATURE = 50,
+        ANIMALS = 150,
+        UI = 9999
+    };
 
     ///object lists
     std::vector<std::unique_ptr<PlayableUnit>> units;
@@ -121,7 +121,7 @@ class MissionController
     std::vector<std::unique_ptr<Kirajin_Yari_2>> kirajins;
 
     float patapon_y = 600; ///temp
-    float wall_y = 200; ///temp
+    float wall_y = 200;    ///temp
     float gravity = 981;
     float floor_y = 200;
 
@@ -134,10 +134,9 @@ class MissionController
     bool startWalking = false;
     bool walkBackwards = false;
 
-    struct DamageCounter
-    {
-        int type=0; ///0 - regular, 1 - high, 2 - crit
-        int damage=0; ///damage to display
+    struct DamageCounter {
+        int type = 0;            ///0 - regular, 1 - high, 2 - crit
+        int damage = 0;          ///damage to display
         sf::Clock display_timer; ///timer for displaying later digits
 
         ///vectors containing texture, pos and scale for every digit
@@ -150,7 +149,7 @@ class MissionController
     };
 
     PSpritesheet dmg_spritesheet;
-    std::map<std::string,PSpritesheet> droppeditem_spritesheet;
+    std::map<std::string, PSpritesheet> droppeditem_spritesheet;
 
     std::vector<DamageCounter> dmgCounters;
     std::vector<DroppedItem> droppedItems;
@@ -170,11 +169,11 @@ class MissionController
 
     struct CollisionEvent ///used to retrieve more data about the collision between objects
     {
-        bool collided = false; ///did collision event happen?
+        bool collided = false;     ///did collision event happen?
         int collidedEntityID = -1; ///id of entity that has been collided with
-        bool isCollidable = true; ///is the entity collidable?
-        bool isAttackable = true; ///is the entity attackable?
-        float defend_factor = 1; ///how much did the entity defended off?
+        bool isCollidable = true;  ///is the entity collidable?
+        bool isAttackable = true;  ///is the entity attackable?
+        float defend_factor = 1;   ///how much did the entity defended off?
         int collidedEntityCategory = -1;
     };
 
@@ -227,8 +226,7 @@ class MissionController
     /// Okay so this right here will cache the animations
     /// So we can make more efficient loading times and less work
     /// It's purpose is to store everything that is drawable, so Objects and Spritesheets
-    struct AnimationCache
-    {
+    struct AnimationCache {
         shared_ptr<vector<vector<sf::Image>>> swaps;
         shared_ptr<vector<AnimatedObject::Animation>> spritesheet;
         shared_ptr<vector<Object>> objects;
@@ -238,18 +236,18 @@ class MissionController
     std::map<int, bool> isCached; ///Check if entities have been cached already, so we can make automatic caching inside spawnEntity function
 
 
-	/** Resolve enums **/
-	int layerStr2Enum(string layer);
+    /** Resolve enums **/
+    int layerStr2Enum(string layer);
 
     /** Collisions **/
-    bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame,AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY);
-    vector<CollisionEvent> DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY,int collisionObjectID,vector<string> collisionData = {});
-    vector<CollisionEvent> DoCollisionForUnit(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY,int collisionObjectID,vector<string> collisionData = {});
+    bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame, AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float CurrentObjectY);
+    vector<CollisionEvent> DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float CurrentObjectY, int collisionObjectID, vector<string> collisionData = {});
+    vector<CollisionEvent> DoCollisionForUnit(HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float CurrentObjectY, int collisionObjectID, vector<string> collisionData = {});
     float pataponMaxProjection(float axisAngle, int id);
     float pataponMinProjection(float axisAngle, int id);
 
     /** Cutscenes **/
-    void StartCutscene(const std::wstring& text,bool isBlackScreen,int TimeToShow);
+    void StartCutscene(const std::wstring& text, bool isBlackScreen, int TimeToShow);
     void FinishLastCutscene();
     bool isMoreCutscenes();
 
@@ -266,20 +264,20 @@ class MissionController
     void addItemsCounter(int id, float baseX, float baseY);
     void parseEntityLoot(std::mt19937& gen, std::uniform_real_distribution<double>& roll, nlohmann::json loot, std::vector<Entity::Loot>& to_drop);
     void cacheEntity(int entityID, shared_ptr<vector<vector<sf::Image>>> swaps, shared_ptr<vector<AnimatedObject::Animation>> spritesheet, shared_ptr<vector<Object>> objects);
-    void spawnEntity(int id, bool collidable, bool attackable, int xpos, int xrange, bool cloneable, float clone_delay, float spawnrate, float stat_mult, int mindmg, int maxdmg, int hp, float ypos, float baseY, sf::Color color = sf::Color::White, int layer = 9999, int parent = -1, nlohmann::json loot = {}, nlohmann::json additional_data = {}); 
+    void spawnEntity(int id, bool collidable, bool attackable, int xpos, int xrange, bool cloneable, float clone_delay, float spawnrate, float stat_mult, int mindmg, int maxdmg, int hp, float ypos, float baseY, sf::Color color = sf::Color::White, int layer = 9999, int parent = -1, nlohmann::json loot = {}, nlohmann::json additional_data = {});
     void addPickedItem(std::string spritesheet, int spritesheet_id, std::string picked_item);
     void addUnitThumb(int unit_id);
-    void spawnProjectile(PSprite& sprite, float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit, bool enemy=false);
+    void spawnProjectile(PSprite& sprite, float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit, bool enemy = false);
 
     /** Load up the mission **/
-    void Initialise(Config &config,std::string backgroundName,V4Core &v4core_);
-    void StartMission(std::string missionFile, bool showCutscene=false, int missionID=0, float mission_multiplier=1);
+    void Initialise(Config& config, std::string backgroundName, V4Core& v4core_);
+    void StartMission(std::string missionFile, bool showCutscene = false, int missionID = 0, float mission_multiplier = 1);
 
     /** Stop the mission **/
     void StopMission();
 
     /** Mission update stuff **/
-    void DoMovement(sf::RenderWindow &window, float fps, InputController& inputCtrl);
+    void DoMovement(sf::RenderWindow& window, float fps, InputController& inputCtrl);
     void DoRhythm(InputController& inputCtrl);
     void ClearMissionMemory();
     void DoMissionEnd(sf::RenderWindow& window, float fps);
@@ -294,10 +292,10 @@ class MissionController
     std::vector<int> DrawUnits(sf::RenderWindow& window);
 
     /** Main update function **/
-    void Update(sf::RenderWindow &window, float cfps, InputController& inputCtrl);
+    void Update(sf::RenderWindow& window, float cfps, InputController& inputCtrl);
 
     /** Events **/
-    void DoKeyboardEvents(sf::RenderWindow &window, float fps, InputController& inputCtrl);
+    void DoKeyboardEvents(sf::RenderWindow& window, float fps, InputController& inputCtrl);
 
 
     MissionController();

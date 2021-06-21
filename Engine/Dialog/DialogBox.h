@@ -1,15 +1,15 @@
 #ifndef DIALOGBOX_H
 #define DIALOGBOX_H
 
-#include <SFML/Graphics.hpp>
-#include "RoundedRect.h"
-#include "../Graphics/PText.h"
 #include "../Graphics/PSprite.h"
+#include "../Graphics/PText.h"
 #include "../Input/InputController.h"
+#include "RoundedRect.h"
+#include <SFML/Graphics.hpp>
 
 class PataDialogBox
 {
-    public:
+public:
     int id = 0; ///for finding what dialog box is what
 
     bool rendered = false;
@@ -27,8 +27,8 @@ class PataDialogBox
 
     float arrow_x;
 
-    float width=0, height=0;
-    float x=0, y=0;
+    float width = 0, height = 0;
+    float x = 0, y = 0;
 
     bool closed = false;
 

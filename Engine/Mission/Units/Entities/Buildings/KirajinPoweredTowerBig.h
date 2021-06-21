@@ -1,15 +1,15 @@
 #ifndef KIRAJINPOWEREDTOWERBIG_H
 #define KIRAJINPOWEREDTOWERBIG_H
 
-#include <SFML/Graphics.hpp>
 #include "../../../../Config.h"
 #include "../../Entity.h"
+#include <SFML/Graphics.hpp>
 
 using namespace std;
 
 class KirajinPoweredTowerBig : public Entity
 {
-    public:
+public:
     bool droppeditem = false;
     float shake = 0;
     bool negative = false;
@@ -20,10 +20,10 @@ class KirajinPoweredTowerBig : public Entity
     sf::SoundBuffer s_broken;
 
     KirajinPoweredTowerBig();
-    void LoadConfig(Config *thisConfigs);
+    void LoadConfig(Config* thisConfigs);
     void parseAdditionalData(nlohmann::json additional_data);
     void Draw(sf::RenderWindow& window);
-    void OnCollide(CollidableObject* otherObject, int collidedWith=-1, vector<string> collisionData = {});
+    void OnCollide(CollidableObject* otherObject, int collidedWith = -1, vector<string> collisionData = {});
 };
 
 #endif // KIRAJINPOWEREDTOWERBIG_H

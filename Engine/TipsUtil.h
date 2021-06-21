@@ -1,15 +1,15 @@
 #ifndef TIPSUTIL_H
 #define TIPSUTIL_H
-#include <SFML/Graphics.hpp>
-#include "StringRepository.h"
-#include <vector>
-#include <map>
-#include <string>
 #include "DebugOut.h"
 #include "Graphics/PSprite.h"
+#include "StringRepository.h"
+#include <SFML/Graphics.hpp>
+#include <map>
+#include <string>
+#include <vector>
 class TipsUtil
 {
-    public:
+public:
     DebugOut* debugOut;
     Config* config;
     std::vector<std::string> backgroundFileNames;

@@ -5,9 +5,9 @@
 
 class Mission
 {
-    public:
-        Mission();
-        ~Mission();
+public:
+    Mission();
+    ~Mission();
 };
 
 

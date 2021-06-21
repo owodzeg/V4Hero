@@ -5,7 +5,6 @@ using namespace std;
 
 Pon::Pon()
 {
-
 }
 
 Pon::Pon(SaveReader* core)
@@ -15,10 +14,9 @@ Pon::Pon(SaveReader* core)
 
 void Pon::recalculateStats()
 {
-    switch(pon_id)
+    switch (pon_id)
     {
-        case 0:
-        {
+        case 0: {
             pon_base_hp = 100;
             pon_base_min_dmg = 0;
             pon_base_max_dmg = 0;
@@ -34,11 +32,11 @@ void Pon::recalculateStats()
     pon_crit = pon_base_crit;
     pon_attack_speed = pon_base_attack_speed;
 
-    for(int i = 0; i < slots.size(); i++)
+    for (int i = 0; i < slots.size(); i++)
     {
         cout << "i: " << i << " slots[" << i << "]: " << slots[i] << endl;
 
-        if(slots[i] > -1)
+        if (slots[i] > -1)
         {
             pon_hp += saveReader->invData.items[slots[i]].item->equip->hp;
             pon_min_dmg += saveReader->invData.items[slots[i]].item->equip->min_dmg;
@@ -53,37 +51,32 @@ void Pon::giveItem(int inv_item_id, int where)
 {
 
     cout << "Pon::GiveItem(" << inv_item_id << ", " << where << ")" << endl;
-    if(canEquip(saveReader->invData.items[inv_item_id].item->order_id, where))
+    if (canEquip(saveReader->invData.items[inv_item_id].item->order_id, where))
     {
         slots[where] = inv_item_id;
         recalculateStats();
-    }
-    else
+    } else
     {
         cout << "Couldn't equip item " << saveReader->invData.items[inv_item_id].item->item_name << " in slot " << where << endl;
     }
 }
 void Pon::removeItem(int where)
 {
-    switch(where)
+    switch (where)
     {
-        case 0:
-        {
+        case 0: {
             slot_1_invItem_id = -1;
             break;
         }
-        case 1:
-        {
+        case 1: {
             slot_2_invItem_id = -1;
             break;
         }
-        case 2:
-        {
+        case 2: {
             slot_3_invItem_id = -1;
             break;
         }
-        case 4:
-        {
+        case 4: {
             slot_5_invItem_id = -1;
             break;
         }
@@ -94,7 +87,7 @@ void Pon::removeItem(int where)
 
 int Pon::getSlotCount()
 {
-    switch(pon_class)
+    switch (pon_class)
     {
         case 0: // Yaripon
         {
@@ -113,26 +106,31 @@ int Pon::getSlotCount()
 
 bool Pon::canEquip(vector<int> eq_id, int where)
 {
-    if(eq_id.size() < 2 || eq_id[0] == 0)
+    if (eq_id.size() < 2 || eq_id[0] == 0)
     {
         cout << "[DEBUG] Attempted to equip a key item?" << endl;
         return false; // Why would you attempt to equip a key item
     }
     cout << "Asking if equipping {" << eq_id[0] << ", " << eq_id[1] << ", " << eq_id[2] << "} is viable (where=" << where << ")" << endl;
-    switch(pon_class)
+    switch (pon_class)
     {
         case 0: // Yaripon
         {
-            if(eq_id[0] == 3 && eq_id[1] == 0 && where == 0) return true; // Spears
-            if(eq_id[0] == 4 && eq_id[1] == 1 && where == 1) return true; // Helmets
+            if (eq_id[0] == 3 && eq_id[1] == 0 && where == 0)
+                return true; // Spears
+            if (eq_id[0] == 4 && eq_id[1] == 1 && where == 1)
+                return true; // Helmets
             break;
         }
 
         case 1: // Tatepon
         {
-            if(eq_id[0] == 3 && eq_id[1] == 1 && where == 0) return true; // Swords
-            if(eq_id[0] == 4 && (eq_id[1] == 1 && where == 1)) return true; // Helmets
-            if(eq_id[0] == 4 && (eq_id[1] == 0 && where == 2)) return true; // Shields
+            if (eq_id[0] == 3 && eq_id[1] == 1 && where == 0)
+                return true; // Swords
+            if (eq_id[0] == 4 && (eq_id[1] == 1 && where == 1))
+                return true; // Helmets
+            if (eq_id[0] == 4 && (eq_id[1] == 0 && where == 2))
+                return true; // Shields
             break;
         }
     }

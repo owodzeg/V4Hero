@@ -1,18 +1,18 @@
 #ifndef SAVEREADER_H
 #define SAVEREADER_H
-#include <SFML/Graphics.hpp>
-#include "StringRepository.h"
-#include <vector>
-#include <map>
-#include <string>
-#include "Json/json.hpp"
 #include "DebugOut.h"
+#include "Item/InventoryData.h"
 #include "Item/ItemRegistry.h"
 #include "Pon/PonRegistry.h"
-#include "Item/InventoryData.h"
+#include "StringRepository.h"
+#include <SFML/Graphics.hpp>
+#include <map>
+#include <nlohmann/json.hpp>
+#include <string>
+#include <vector>
 class SaveReader
 {
-    public:
+public:
     ItemRegistry itemReg;
     PonRegistry ponReg;
     InventoryData invData;
@@ -24,7 +24,7 @@ class SaveReader
     bool hero_unlocked = false;
 
     std::vector<int> missions_unlocked = {1};
-    int locations_unlocked=1;
+    int locations_unlocked = 1;
     std::map<int, int> mission_levels; // Storing the mission level
 
     std::string save_ver = "2.0";

@@ -7,7 +7,7 @@
 
 class PText
 {
-    public:
+public:
     sf::Font f;
     sf::Text t;
 
@@ -20,10 +20,10 @@ class PText
     float ratioX, ratioY;
     float resRatioX, resRatioY;
 
-    float orX=0, orY=0;
-    float scaleX=1, scaleY=1;
-    float lx=0,ly=0;
-    float angle=0;
+    float orX = 0, orY = 0;
+    float scaleX = 1, scaleY = 1;
+    float lx = 0, ly = 0;
+    float angle = 0;
 
     bool wide = false;
     bool rendered = false;

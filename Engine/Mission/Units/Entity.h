@@ -1,17 +1,17 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include "../../Json/json.hpp"
 #include "../../Config.h"
-#include "../../Input/InputController.h"
 #include "../../Dialog/MessageCloud.h"
+#include "../../Input/InputController.h"
 #include "CollidableObject.h"
+#include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
+#include <nlohmann/json.hpp>
 
 class Entity : public CollidableObject
 {
-    public:
+public:
     int entityID = -1;
     int spawnOrderID = -1;
     bool dead = false;
@@ -44,8 +44,7 @@ class Entity : public CollidableObject
     int entityType = DUMMY;
     int entityCategory = NO_CATEGORY;
 
-    struct Loot
-    {
+    struct Loot {
         std::vector<int> order_id;
     };
 
@@ -61,7 +60,7 @@ class Entity : public CollidableObject
 
     bool custom_dmg = false;
 
-    int layer = 0; ///rendering priority
+    int layer = 0;   ///rendering priority
     int parent = -1; ///if entity is bound to any other entity
 
     float distance_to_unit = 0;
@@ -96,7 +95,7 @@ class Entity : public CollidableObject
     virtual bool doAttack();
     virtual void doMessages(sf::RenderWindow& window, float fps, InputController& inputCtrl); ///manage message clouds
     virtual void die();
-    virtual void LoadConfig(Config *thisConfigs, std::string unitParamPath);
+    virtual void LoadConfig(Config* thisConfigs, std::string unitParamPath);
     virtual void parseAdditionalData(nlohmann::json additional_data);
     virtual void dropItem();
 };

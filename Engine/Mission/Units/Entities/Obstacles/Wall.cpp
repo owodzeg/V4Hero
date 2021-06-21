@@ -1,16 +1,15 @@
 #include "Wall.h"
+#include "../../../../Func.h"
 #include "math.h"
 #include <fstream>
 #include <iostream>
-#include "../../../../Func.h"
 #include <sstream>
 Wall::Wall()
 {
-
 }
-void Wall::LoadConfig(Config *thisConfigs)
+void Wall::LoadConfig(Config* thisConfigs)
 {
-    AnimatedObject::LoadConfig(thisConfigs,"resources/graphics/units/kacheek/");
+    AnimatedObject::LoadConfig(thisConfigs, "resources/graphics/units/kacheek/");
 }
 void Wall::Draw(sf::RenderWindow& window)
 {

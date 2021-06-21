@@ -1,17 +1,18 @@
 #ifndef ANIMATEDOBJECT_H
 #define ANIMATEDOBJECT_H
 
-#include <SFML/Graphics.hpp>
 #include "../../Config.h"
 #include "../../P4A.h"
-#include "Object.h"
 #include "Hitbox.h"
+#include "Object.h"
+#include <SFML/Graphics.hpp>
+#include <memory>
 
 using namespace std;
 
 class AnimatedObject
 {
-    public:
+public:
     int ao_version = 0;
     int entityID = -1;
 
@@ -43,7 +44,7 @@ class AnimatedObject
 
     float animation_framerate = 30;
 
-    sf::Color color = sf::Color(255,255,255,255);
+    sf::Color color = sf::Color(255, 255, 255, 255);
 
     float framerate = 1;
     sf::Rect<float> hitBox;
@@ -59,7 +60,7 @@ class AnimatedObject
 
     bool manual_spritesheet = false;
 
-    map<string,vector<sf::Texture>> animation_textures;
+    map<string, vector<sf::Texture>> animation_textures;
 
     vector<float> animation_begin;
     vector<float> animation_end;
@@ -72,14 +73,12 @@ class AnimatedObject
     map<string, int> animation_index;
 
     ///for new spritesheet implementation
-    struct Animation
-    {
+    struct Animation {
         string name;
         sf::Image spritesheet; ///data
     };
 
-    struct AnimationFrameBound
-    {
+    struct AnimationFrameBound {
         sf::Image image;
         sf::IntRect rect;
         sf::Vector2f origin;
@@ -90,7 +89,7 @@ class AnimatedObject
 
     //unique_ptr<vector<vector<sf::Image>>> swap_ptr;
 
-    float xBound=0, yBound=0;
+    float xBound = 0, yBound = 0;
 
     map<int, map<int, sf::IntRect>> animation_bounds;
     map<int, map<int, sf::Vector2f>> animation_origins;
@@ -104,12 +103,12 @@ class AnimatedObject
     int curFrame, lastFrame, index;
     bool force_origin_null = false;
 
-    map<int,sf::Vector2f> slots_origins;
+    map<int, sf::Vector2f> slots_origins;
 
     bool cached = false;
 
     vector<int> animation_frames;
-    Config *thisConfig;
+    Config* thisConfig;
     AnimatedObject();
     ~AnimatedObject();
     void loadAnim(std::string data, P4A handle);

@@ -4,8 +4,7 @@
 class SaveReader;
 class Pon
 {
-    public:
-
+public:
     int pon_id;
     int pon_class;
     int pon_squad_position;
@@ -34,15 +33,13 @@ class Pon
     float pon_attack_speed = 2.00;
 
 
-
     void recalculateStats();
     void giveItem(int inv_item_id, int where = 0);
     void removeItem(int where = 0);
-    int getSlotCount(); // add an int pon_class argument to make static
+    int getSlotCount();                             // add an int pon_class argument to make static
     bool canEquip(std::vector<int>, int where = 0); // add an int pon_class argument to make static
     Pon(SaveReader* core);
     Pon();
-
 };
 
 #endif // PON_H

@@ -1,19 +1,19 @@
 #ifndef GRASS2_H
 #define GRASS2_H
 
-#include <SFML/Graphics.hpp>
 #include "../../../../Config.h"
 #include "../../Entity.h"
+#include <SFML/Graphics.hpp>
 
 using namespace std;
 
 class Grass2 : public Entity
 {
-    public:
+public:
     Grass2();
-    void LoadConfig(Config *thisConfigs);
+    void LoadConfig(Config* thisConfigs);
     void Draw(sf::RenderWindow& window);
-    void OnCollide(CollidableObject* otherObject, int collidedWith=-1, vector<string> collisionData = {});
+    void OnCollide(CollidableObject* otherObject, int collidedWith = -1, vector<string> collisionData = {});
 };
 
 #endif // GRASS2_H

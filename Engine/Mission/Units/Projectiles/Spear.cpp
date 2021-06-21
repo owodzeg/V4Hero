@@ -1,13 +1,13 @@
 #include "Spear.h"
-#include "../Projectile.h"
-#include "../../../Item/Item.h"
-#include "../../../Item/Equipment.h"
 #include "../../../Graphics/PSprite.h"
+#include "../../../Item/Equipment.h"
+#include "../../../Item/Item.h"
+#include "../Projectile.h"
 
 
 using namespace std;
 
-Spear* Spear::FromItem(Item* item,PSprite sprite)
+Spear* Spear::FromItem(Item* item, PSprite sprite)
 {
     Spear* spear = new Spear(sprite);
     spear->max_dmg = item->equip->max_dmg;
@@ -17,7 +17,7 @@ Spear* Spear::FromItem(Item* item,PSprite sprite)
 
     return spear;
 }
-Spear::Spear(PSprite& tsprite) : Projectile(tsprite)
+Spear::Spear(PSprite& tsprite)
+    : Projectile(tsprite)
 {
-
 }

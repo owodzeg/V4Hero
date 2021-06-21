@@ -1,19 +1,18 @@
 #include "NewGameMenuButtonList.h"
-#include "string"
-#include "../MenuButton.h"
-#include<iostream>
 #include "../../Mission/MissionController.h"
 #include "../MainMenu.h"
+#include "../MenuButton.h"
+#include "string"
+#include <iostream>
 using namespace std;
 NewGameMenuButtonList::NewGameMenuButtonList()
 {
-
 }
-void NewGameMenuButtonList::Initialise(sf::Font *font,Config &newConfig, MissionController *controller,Menu *mainMenu, Menu *CurOptionsMenu, Menu *CurNameEntryMenu)
+void NewGameMenuButtonList::Initialise(sf::Font* font, Config& newConfig, MissionController* controller, Menu* mainMenu, Menu* CurOptionsMenu, Menu* CurNameEntryMenu)
 {
-    ButtonList::Initialise(font,newConfig,controller,mainMenu);
-    MenuButton* level1Button = new MenuButton(L"menu_button_newgame",font,42,350,this,0);
-    MenuButton* optionsButton = new MenuButton(L"menu_button_3",font,42,400,this,1);
+    ButtonList::Initialise(font, newConfig, controller, mainMenu);
+    MenuButton* level1Button = new MenuButton(L"menu_button_newgame", font, 42, 350, this, 0);
+    MenuButton* optionsButton = new MenuButton(L"menu_button_3", font, 42, 400, this, 1);
     buttons.push_back(*level1Button);
     buttons.push_back(*optionsButton);
     buttons[0].SetSelected(true);
@@ -21,23 +20,23 @@ void NewGameMenuButtonList::Initialise(sf::Font *font,Config &newConfig, Mission
     nameEntryMenu = CurNameEntryMenu;
     this->SelectButtons = true;
 }
-void NewGameMenuButtonList::SelectButton(int index){
+void NewGameMenuButtonList::SelectButton(int index)
+{
     currentIndex = index;
-    switch (currentIndex){
-            case 0:
-                // start level 1
-                parentMenu->Hide();
-                nameEntryMenu->Show();
-                break;
-            case 1:
-                // start options
-                parentMenu->Hide();
-                optionsMenu->Show();
-                break;
-
-        }
+    switch (currentIndex)
+    {
+        case 0:
+            // start level 1
+            parentMenu->Hide();
+            nameEntryMenu->Show();
+            break;
+        case 1:
+            // start options
+            parentMenu->Hide();
+            optionsMenu->Show();
+            break;
+    }
 }
 NewGameMenuButtonList::~NewGameMenuButtonList()
 {
-
 }

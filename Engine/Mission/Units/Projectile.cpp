@@ -1,33 +1,37 @@
 #include "Projectile.h"
 #include "../../Item/Item.h"
 #include "CollidableObject.h"
-#include <math.h>
 #include "HitboxFrame.h"
+#include <math.h>
 
 using namespace std;
 
-float Projectile::GetXSpeed(){
+float Projectile::GetXSpeed()
+{
     /// get the x speed of the projectile
     //return speed*cos(angle);
     return hspeed;
 }
-float Projectile::GetYSpeed(){
+float Projectile::GetYSpeed()
+{
     /// get the y speed of the projectile
     //return speed*sin(angle);
     return vspeed;
 }
-void Projectile::SetNewSpeedVector(float xSpeed, float ySpeed){
+void Projectile::SetNewSpeedVector(float xSpeed, float ySpeed)
+{
     /// set the speed and angle of the projectile
 
-    speed = sqrt(pow(xSpeed,2)+pow(ySpeed,2));
+    speed = sqrt(pow(xSpeed, 2) + pow(ySpeed, 2));
     //angle = asin(ySpeed/speed);
     angle = atan2(ySpeed, xSpeed);
 }
-void Projectile::OnCollide(CollidableObject* otherObject){
+void Projectile::OnCollide(CollidableObject* otherObject)
+{
     // this space intentionally left blank
-    cout<<"[COLLISION_SYSTEM]: Class derived from Projectile has not overridden OnCollide() method"<<endl;
+    cout << "[COLLISION_SYSTEM]: Class derived from Projectile has not overridden OnCollide() method" << endl;
 }
-void Projectile::Update(sf::RenderWindow &window, float fps)
+void Projectile::Update(sf::RenderWindow& window, float fps)
 {
     vspeed += float(981) / fps;
 
@@ -35,33 +39,32 @@ void Projectile::Update(sf::RenderWindow &window, float fps)
     /// make a better unified system for projectile flight
     /// this is just a temporary workaround
 
-    if(!enemy)
+    if (!enemy)
     {
         hspeed -= float(166) / fps;
 
-        if(hspeed < 0)
-        hspeed = 0;
-    }
-    else
+        if (hspeed < 0)
+            hspeed = 0;
+    } else
     {
         hspeed += float(166) / fps;
 
-        if(hspeed > 0)
-        hspeed = 0;
+        if (hspeed > 0)
+            hspeed = 0;
     }
 
-    xPos+=GetXSpeed()/fps;
-    yPos+=GetYSpeed()/fps;
+    xPos += GetXSpeed() / fps;
+    yPos += GetYSpeed() / fps;
 }
 
 Projectile::Projectile(PSprite& tsprite)
 {
     nsprite = tsprite;
-    sprite=&nsprite;
-    sprite->setOrigin(sprite->getLocalBounds().width/2,sprite->getLocalBounds().height/2);
+    sprite = &nsprite;
+    sprite->setOrigin(sprite->getLocalBounds().width / 2, sprite->getLocalBounds().height / 2);
 }
 
-void Projectile::Draw(sf::RenderWindow &window, float fps)
+void Projectile::Draw(sf::RenderWindow& window, float fps)
 {
 
     /*HitboxFrame tmp;
@@ -87,7 +90,7 @@ void Projectile::Draw(sf::RenderWindow &window, float fps)
         window.draw(shape);
     }*/
 
-    sprite->setPosition(xPos,yPos);
-    sprite->setRotation(3.14159265358/2+angle);
+    sprite->setPosition(xPos, yPos);
+    sprite->setRotation(3.14159265358 / 2 + angle);
     sprite->draw(window);
 }

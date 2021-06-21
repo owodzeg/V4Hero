@@ -1,28 +1,28 @@
 #include "Weather.h"
 
-#include <string>
+#include <cmath>
 #include <iostream>
+#include <string>
 
 using namespace std;
+using std::floor;
 
 Weather::Weather()
 {
-
 }
 
 void Weather::loadWeather(int type)
 {
     cout << "[Weather] Loading weather " << type << endl;
 
-    switch(type)
+    switch (type)
     {
-        case 1:
-        {
+        case 1: {
             cout << "[Weather] Loading snowflakes" << endl;
-            for(int i=0; i<3; i++)
+            for (int i = 0; i < 3; i++)
             {
-                ps_snowflakes[i].loadFromFile("resources/graphics/weather/snowflake_"+std::to_string(i+1)+".png", thisConfig->GetInt("textureQuality"), 1);
-                ps_snowflakes[i].setOrigin(ps_snowflakes[i].getLocalBounds().width/2, ps_snowflakes[i].getLocalBounds().height/2);
+                ps_snowflakes[i].loadFromFile("resources/graphics/weather/snowflake_" + std::to_string(i + 1) + ".png", thisConfig->GetInt("textureQuality"), 1);
+                ps_snowflakes[i].setOrigin(ps_snowflakes[i].getLocalBounds().width / 2, ps_snowflakes[i].getLocalBounds().height / 2);
             }
 
             break;
@@ -34,7 +34,7 @@ void Weather::loadWeather(int type)
 
 void Weather::draw(sf::RenderWindow& window, float fps)
 {
-    switch(weatherType)
+    switch (weatherType)
     {
         case 1: ///Snow
         {
@@ -46,23 +46,23 @@ void Weather::draw(sf::RenderWindow& window, float fps)
 
             snowflakesToRender += weatherIntensivity / fps;
 
-            for(int i=0; i<floor(snowflakesToRender); i++)
+            for (int i = 0; i < floor(snowflakesToRender); i++)
             {
                 Snowflake tmp;
 
                 int ra = rand() % 100;
                 int flake = 2;
-                if(ra < 60)
-                flake = 1;
-                if(ra < 15)
-                flake = 0;
+                if (ra < 60)
+                    flake = 1;
+                if (ra < 15)
+                    flake = 0;
 
                 tmp.flake = ps_snowflakes[flake];
-                tmp.x = rand() % 1400 - 180 - 6*weatherIntensivity;
+                tmp.x = rand() % 1400 - 180 - 6 * weatherIntensivity;
                 tmp.y = -100;
                 tmp.r = (rand() % 1000) / float(1000);
-                tmp.xspeed = 6*weatherIntensivity;
-                tmp.yspeed = 30*weatherIntensivity;
+                tmp.xspeed = 6 * weatherIntensivity;
+                tmp.yspeed = 30 * weatherIntensivity;
                 tmp.rspeed = (rand() % 50) / float(50);
 
                 snowflakes.push_back(tmp);
@@ -80,29 +80,29 @@ void Weather::draw(sf::RenderWindow& window, float fps)
 
             raindropsToRender += weatherIntensivity / fps;
 
-            for(int i=0; i<floor(raindropsToRender); i++)
+            for (int i = 0; i < floor(raindropsToRender); i++)
             {
                 Raindrop tmp;
 
                 int ra = rand() % 100;
                 int d = 1;
-                if(ra < 30)
-                d = 0;
+                if (ra < 30)
+                    d = 0;
 
                 sf::RectangleShape r_drop;
-                r_drop.setSize(sf::Vector2f(3.0*resRatioX, 64.0*resRatioY));
+                r_drop.setSize(sf::Vector2f(3.0 * resRatioX, 64.0 * resRatioY));
 
-                if(d == 1)
-                r_drop.setFillColor(sf::Color(240,240,240,255));
-                if(d == 0)
-                r_drop.setFillColor(sf::Color(210,210,210,255));
+                if (d == 1)
+                    r_drop.setFillColor(sf::Color(240, 240, 240, 255));
+                if (d == 0)
+                    r_drop.setFillColor(sf::Color(210, 210, 210, 255));
 
                 tmp.droplet = r_drop;
-                tmp.x = rand() % 1400 - 180 - 6*weatherIntensivity;
+                tmp.x = rand() % 1400 - 180 - 6 * weatherIntensivity;
                 tmp.y = -100;
                 tmp.r = (rand() % 1000) / float(1000);
-                tmp.xspeed = 0*weatherIntensivity;
-                tmp.yspeed = 60*weatherIntensivity;
+                tmp.xspeed = 0 * weatherIntensivity;
+                tmp.yspeed = 60 * weatherIntensivity;
 
                 raindrops.push_back(tmp);
 
@@ -119,7 +119,7 @@ void Weather::draw(sf::RenderWindow& window, float fps)
     vector<int> s_rm;
     vector<int> r_rm;
 
-    for(int i=0; i<snowflakes.size(); i++)
+    for (int i = 0; i < snowflakes.size(); i++)
     {
         snowflakes[i].x += snowflakes[i].xspeed / fps;
         snowflakes[i].y += snowflakes[i].yspeed / fps;
@@ -128,35 +128,34 @@ void Weather::draw(sf::RenderWindow& window, float fps)
         snowflakes[i].flake.setPosition(snowflakes[i].x, snowflakes[i].y);
         snowflakes[i].flake.setRotation(snowflakes[i].r);
 
-        if((snowflakes[i].x > 1320) || (snowflakes[i].y > 800))
-        s_rm.push_back(i);
+        if ((snowflakes[i].x > 1320) || (snowflakes[i].y > 800))
+            s_rm.push_back(i);
 
         snowflakes[i].flake.draw(window);
     }
 
-    for(int i=0; i<raindrops.size(); i++)
+    for (int i = 0; i < raindrops.size(); i++)
     {
         raindrops[i].x += raindrops[i].xspeed / fps;
         raindrops[i].y += raindrops[i].yspeed / fps;
 
         raindrops[i].droplet.setPosition(raindrops[i].x, raindrops[i].y);
 
-        if((raindrops[i].x > 1320) || (raindrops[i].y > 800))
-        r_rm.push_back(i);
+        if ((raindrops[i].x > 1320) || (raindrops[i].y > 800))
+            r_rm.push_back(i);
 
         window.draw(raindrops[i].droplet);
     }
 
-    for(int i=0; i<s_rm.size(); i++)
+    for (int i = 0; i < s_rm.size(); i++)
     {
         snowflakes.erase(snowflakes.begin() + s_rm[i] - i);
     }
 
-    for(int i=0; i<r_rm.size(); i++)
+    for (int i = 0; i < r_rm.size(); i++)
     {
         raindrops.erase(raindrops.begin() + r_rm[i] - i);
     }
 
     window.setView(view);
-
 }
