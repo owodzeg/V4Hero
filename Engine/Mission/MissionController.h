@@ -306,6 +306,8 @@ public:
 
     MissionController();
     ~MissionController();
+private:
+    bool isColliding(PlayableUnit* farthest_unit, const unique_ptr<Entity>& tangibleLevelObject);
 };
 
 
