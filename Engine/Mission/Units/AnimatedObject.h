@@ -112,7 +112,7 @@ public:
     vector<int> animation_frames;
     Config* thisConfig;
     AnimatedObject();
-    ~AnimatedObject();
+    virtual ~AnimatedObject();
     void loadAnim(std::string data, P4A handle);
     int getSegmentIndex(std::string segment_name);
     void setAnimationSegment(std::string new_segment_name);
