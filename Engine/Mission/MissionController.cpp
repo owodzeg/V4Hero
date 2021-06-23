@@ -3528,19 +3528,12 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
         }
 
         /** Find the farthest unit in your army (for calculations) **/
-        int farthest_id = -1;
-        float temp_pos = -9999;
-
-        for (int i = 0; i < units.size(); i++)
-        {
-            PlayableUnit* unit = units[i].get();
-
-            if (temp_pos <= unit->getGlobalPosition().x)
-            {
-                temp_pos = unit->getGlobalPosition().x;
-                farthest_id = i;
-            }
-        }
+        const auto& farthestUnit = *std::min_element(units.begin(),
+                                             units.end(),
+                                             less_by([](const std::unique_ptr<PlayableUnit>& unit) {
+                                               return unit->getGlobalPosition().x;
+                                             }));
+        float temp_pos = farthestUnit->getGlobalPosition().x;
 
         entity->distance_to_unit = abs(temp_pos - entity->getGlobalPosition().x);
 
