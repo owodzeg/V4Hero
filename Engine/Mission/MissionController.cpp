@@ -4,13 +4,11 @@
 #include "Units/HitboxFrame.h"
 #include "Units/Projectile.h"
 #include <algorithm>
-#include <chrono>
 #include <iostream>
 #include <random>
 #include <spdlog/spdlog.h>
 #include <string>
 #include <thread>
-#include <time.h>
 
 using json = nlohmann::json;
 
@@ -1851,8 +1849,7 @@ vector<MissionController::CollisionEvent> MissionController::computeCollisions(H
                     else
                         cevent.defend_factor = 0.5;
                 }
-            }
-            else if ((entity = dynamic_cast<Entity*>(collisionObject)))
+            } else if ((entity = dynamic_cast<Entity*>(collisionObject)))
             {
                 cevent.collidedEntityCategory = entity->entityCategory;
             }
@@ -2059,7 +2056,7 @@ void MissionController::DoMovement(sf::RenderWindow& window, float fps, InputCon
 
         bool foundCollision = false;
 
-        for (auto & tangibleLevelObject : tangibleLevelObjects)
+        for (auto& tangibleLevelObject : tangibleLevelObjects)
         {
             foundCollision = foundCollision || isColliding(unit, tangibleLevelObject);
         }
@@ -2136,7 +2133,8 @@ bool MissionController::isColliding(PlayableUnit* unit, const unique_ptr<Entity>
     const int collisionObjectID = -1;
     std::vector<string> collisionData;
     CollidableObject* collisionObject = entity.get();
-    std::vector<CollisionEvent> collisionEvents = computeCollisions(&hitboxFrame, unitX, unitY, collisionObjectID, collisionData, collisionObject);;
+    std::vector<CollisionEvent> collisionEvents = computeCollisions(&hitboxFrame, unitX, unitY, collisionObjectID, collisionData, collisionObject);
+    ;
 
     collisionEvents.erase(std::remove_if(collisionEvents.begin(), collisionEvents.end(), [](const auto& event) { return !event.isCollidable; }), collisionEvents.end());
 
@@ -2669,7 +2667,8 @@ std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
                 ///Do collisions for all entities (ally projectiles)
                 std::vector<CollidableObject*> objectPointers;
                 objectPointers.reserve(tangibleLevelObjects.size());
-                for (auto& object : tangibleLevelObjects) {
+                for (auto& object : tangibleLevelObjects)
+                {
                     objectPointers.push_back(object.get());
                 }
                 cevent = DoCollisions(&tmp, xpos, ypos, p->projectile_id, objectPointers, collisionData);
@@ -2678,7 +2677,8 @@ std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
                 ///Do collisions for all units (enemy projectiles)
                 std::vector<CollidableObject*> unitPointers;
                 unitPointers.reserve(units.size());
-                for (auto& unit : units) {
+                for (auto& unit : units)
+                {
                     unitPointers.push_back(unit.get());
                 }
                 cevent = DoCollisions(&tmp, xpos, ypos, p->projectile_id, unitPointers, collisionData);
