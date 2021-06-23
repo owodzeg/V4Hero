@@ -246,9 +246,8 @@ public:
     int layerStr2Enum(string layer);
 
     /** Collisions **/
-    bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame, AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float CurrentObjectY);
-    vector<CollisionEvent> DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float CurrentObjectY, int collisionObjectID, vector<string> collisionData = {});
-    vector<CollisionEvent> DoCollisionForUnit(HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float CurrentObjectY, int collisionObjectID, vector<string> collisionData = {});
+    static bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame, AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float CurrentObjectY) ;
+    static vector<MissionController::CollisionEvent> DoCollisions(HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float currentObjectY, int collisionObjectID, vector<CollidableObject*> collisionObjects, vector<string> collisionData = {}) ;
     float pataponMaxProjection(float axisAngle, int id);
     float pataponMinProjection(float axisAngle, int id);
 
@@ -307,7 +306,8 @@ public:
     MissionController();
     ~MissionController();
 private:
-    bool isColliding(PlayableUnit* farthest_unit, const unique_ptr<Entity>& tangibleLevelObject);
+    static bool isColliding(PlayableUnit* unit, const unique_ptr<Entity>& entity);
+    static vector<CollisionEvent> computeCollisions(HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float currentObjectY, int collisionObjectID, vector<string>& collisionData, CollidableObject* collisionObject);
 };
 
 

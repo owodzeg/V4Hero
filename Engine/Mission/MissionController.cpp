@@ -7,6 +7,7 @@
 #include <chrono>
 #include <iostream>
 #include <random>
+#include <spdlog/spdlog.h>
 #include <string>
 #include <thread>
 #include <time.h>
@@ -1761,207 +1762,90 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow& window, float fps, In
     }
 }
 
-vector<MissionController::CollisionEvent> MissionController::DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float currentObjectY, int collisionObjectID, vector<string> collisionData)
+vector<MissionController::CollisionEvent> MissionController::DoCollisions(HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float currentObjectY, int collisionObjectID, vector<CollidableObject*> collisionObjects, vector<string> collisionData)
 {
     ///Added vector because there can be more than just one collision events! Like colliding with grass AND with opponent
     vector<MissionController::CollisionEvent> collisionEvents;
 
-    for (int i = 0; i < tangibleLevelObjects.size(); i++)
+    for (auto& collisionObject : collisionObjects)
     {
-        for (int h = 0; h < tangibleLevelObjects[i]->hitboxes.size(); h++)
-        {
-            //cout << "tangibleLevelObjects[" << i << "][" << h << "]" << endl;
-
-            /// NEW COLLISION SYSTEM:
-            /// Separating axis theorem
-            /// we check an axis at a time
-            /// 8 axes in total, aligned with the normal of each face of each shape
-            /// thankfully because we are only using rectangles, there are two pairs of parallel sides
-            /// so we only need to check 4 axes, as the other 4 are all parallel.
-            ///
-            /// in each axis we calculate the vector projection onto the axis between the origin and each corner of each box
-            /// and find the maximum projection and minimum projection for each shape
-            /// then we check if min2>max1 or min1>max2 there has been a collision in this axis
-            /// there has to be a collision in ALL axes for actual collision to be confirmed,
-            /// so we can stop checking if we find a single non-collision.
-
-
-            /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
-            //cout<<"Collision step for projectile at X: "<<currentObjectX<<" against object at x: "<<tangibleLevelObjects[i]->global_x<<endl;
-
-            float currentAxisAngle = currentObjectHitBoxFrame->rotation;
-            vector<sf::Vector2f> currentVertices = currentObjectHitBoxFrame->getCurrentVertices();
-            PVector pv1 = PVector::getVectorCartesian(0, 0, currentVertices[0].x + currentObjectX, currentVertices[0].y + currentObjectY);
-            PVector pv2 = PVector::getVectorCartesian(0, 0, currentVertices[1].x + currentObjectX, currentVertices[1].y + currentObjectY);
-            PVector pv3 = PVector::getVectorCartesian(0, 0, currentVertices[2].x + currentObjectX, currentVertices[2].y + currentObjectY);
-            PVector pv4 = PVector::getVectorCartesian(0, 0, currentVertices[3].x + currentObjectX, currentVertices[3].y + currentObjectY);
-
-            pv1.angle = -atan2(currentVertices[0].y + currentObjectY, currentVertices[0].x + currentObjectX);
-            pv2.angle = -atan2(currentVertices[1].y + currentObjectY, currentVertices[1].x + currentObjectX);
-            pv3.angle = -atan2(currentVertices[2].y + currentObjectY, currentVertices[2].x + currentObjectX);
-            pv4.angle = -atan2(currentVertices[3].y + currentObjectY, currentVertices[3].x + currentObjectX);
-
-            float proj1 = pv1.GetScalarProjectionOntoAxis(currentAxisAngle);
-            float proj2 = pv2.GetScalarProjectionOntoAxis(currentAxisAngle);
-            float proj3 = pv3.GetScalarProjectionOntoAxis(currentAxisAngle);
-            float proj4 = pv4.GetScalarProjectionOntoAxis(currentAxisAngle);
-
-            CollidableObject* target = tangibleLevelObjects[i].get();
-
-            bool isCollision = DoCollisionStepInAxis(currentAxisAngle, &(target->hitboxes[h].hitboxObject), target, currentObjectHitBoxFrame, currentObjectX, currentObjectY);
-            if (!isCollision)
-            {
-                continue;
-            }
-            //cout<<"COLLISION FOUND IN axis 1"<<endl;
-
-            /// axis 2: obj1 "up"
-            currentAxisAngle = 3.14159265358 / 2 + currentObjectHitBoxFrame->rotation;
-            bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle, &(target->hitboxes[h].hitboxObject), target, currentObjectHitBoxFrame, currentObjectX, currentObjectY);
-            if (!isCollision2)
-            {
-                continue;
-            }
-            //cout<<"COLLISION FOUND IN axis 2 (up)"<<endl;
-
-            /// axis 3: obj2 "up" (we add the 90 degrees from before to its current rotation)
-            currentAxisAngle = target->hitboxes[h].hitboxObject.rotation + 3.14159265358 / 2;
-
-            bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle, &(target->hitboxes[h].hitboxObject), target, currentObjectHitBoxFrame, currentObjectX, currentObjectY);
-            if (!isCollision3)
-            {
-                continue;
-            }
-            //cout<<"COLLISION FOUND IN axis 3 (up2)"<<endl;
-
-            /// axis 4: obj2 "sideways"
-            currentAxisAngle = target->hitboxes[h].hitboxObject.rotation;
-
-            bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle, &(target->hitboxes[h].hitboxObject), target, currentObjectHitBoxFrame, currentObjectX, currentObjectY);
-            if (!isCollision4)
-            {
-                continue;
-            }
-
-            /// we have a collision
-            if (isCollision && isCollision2 && isCollision3 && isCollision4)
-            {
-                Entity* entity = tangibleLevelObjects[i].get();
-
-                //std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
-                CollisionEvent cevent;
-                cevent.collided = true;
-                //cevent.collidedEntityID = -1;
-                cevent.isAttackable = target->isAttackable;
-                cevent.isCollidable = target->isCollidable;
-                cevent.collidedEntityCategory = entity->entityCategory;
-
-                target->OnCollide(target, collisionObjectID, collisionData);
-
-                collisionEvents.push_back(cevent);
-            } else
-            {
-                cout << "Something is very wrong" << endl;
-            }
-        }
+        auto objectCollisionEvents = computeCollisions(currentObjectHitBoxFrame, currentObjectX, currentObjectY, collisionObjectID, collisionData, collisionObject);
+        collisionEvents.insert(collisionEvents.end(), objectCollisionEvents.begin(), objectCollisionEvents.end());
     }
 
     return collisionEvents;
 }
-
-vector<MissionController::CollisionEvent> MissionController::DoCollisionForUnit(HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float currentObjectY, int collisionObjectID, vector<string> collisionData)
+vector<MissionController::CollisionEvent> MissionController::computeCollisions(HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float currentObjectY, int collisionObjectID, vector<string>& collisionData, CollidableObject* collisionObject)
 {
-    ///Added vector because there can be more than just one collision events! Like colliding with grass AND with opponent
-    vector<MissionController::CollisionEvent> collisionEvents;
+    std::vector<CollisionEvent> collisionEvents;
 
-    for (int i = 0; i < units.size(); i++)
+    for (int h = 0; h < collisionObject->hitboxes.size(); h++)
     {
-        for (int h = 0; h < units[i]->hitboxes.size(); h++)
+        //cout << "tangibleLevelObjects[" << i << "][" << h << "]" << endl;
+
+        /// NEW COLLISION SYSTEM:
+        /// Separating axis theorem
+        /// we check an axis at a time
+        /// 8 axes in total, aligned with the normal of each face of each shape
+        /// thankfully because we are only using rectangles, there are two pairs of parallel sides
+        /// so we only need to check 4 axes, as the other 4 are all parallel.
+        ///
+        /// in each axis we calculate the vector projection onto the axis between the origin and each corner of each box
+        /// and find the maximum projection and minimum projection for each shape
+        /// then we check if min2>max1 or min1>max2 there has been a collision in this axis
+        /// there has to be a collision in ALL axes for actual collision to be confirmed,
+        /// so we can stop checking if we find a single non-collision.
+
+
+        /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
+        // Here we make a collision step for projectile at x = currentObjectX against object at x = tangibleLevelObjects[i]->global_x
+
+        float currentAxisAngle = currentObjectHitBoxFrame->rotation;
+
+        bool isCollision = DoCollisionStepInAxis(currentAxisAngle, &(collisionObject->hitboxes[h].hitboxObject), collisionObject, currentObjectHitBoxFrame, currentObjectX, currentObjectY);
+        if (!isCollision)
         {
-            //cout << "tangibleLevelObjects[" << i << "][" << h << "]" << endl;
+            continue;
+        }
 
-            /// NEW COLLISION SYSTEM:
-            /// Separating axis theorem
-            /// we check an axis at a time
-            /// 8 axes in total, aligned with the normal of each face of each shape
-            /// thankfully because we are only using rectangles, there are two pairs of parallel sides
-            /// so we only need to check 4 axes, as the other 4 are all parallel.
-            ///
-            /// in each axis we calculate the vector projection onto the axis between the origin and each corner of each box
-            /// and find the maximum projection and minimum projection for each shape
-            /// then we check if min2>max1 or min1>max2 there has been a collision in this axis
-            /// there has to be a collision in ALL axes for actual collision to be confirmed,
-            /// so we can stop checking if we find a single non-collision.
+        /// axis 2: obj1 "up"
+        currentAxisAngle = 3.14159265358 / 2 + currentObjectHitBoxFrame->rotation;
+        bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle, &(collisionObject->hitboxes[h].hitboxObject), collisionObject, currentObjectHitBoxFrame, currentObjectX, currentObjectY);
+        if (!isCollision2)
+        {
+            continue;
+        }
 
+        /// axis 3: obj2 "up" (we add the 90 degrees from before to its current rotation)
+        currentAxisAngle = collisionObject->hitboxes[h].hitboxObject.rotation + 3.14159265358 / 2;
 
-            /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
-            //cout<<"Collision step for projectile at X: "<<currentObjectX<<" against object at x: "<<tangibleLevelObjects[i]->global_x<<endl;
+        bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle, &(collisionObject->hitboxes[h].hitboxObject), collisionObject, currentObjectHitBoxFrame, currentObjectX, currentObjectY);
+        if (!isCollision3)
+        {
+            continue;
+        }
 
-            float currentAxisAngle = currentObjectHitBoxFrame->rotation;
-            vector<sf::Vector2f> currentVertices = currentObjectHitBoxFrame->getCurrentVertices();
-            PVector pv1 = PVector::getVectorCartesian(0, 0, currentVertices[0].x + currentObjectX, currentVertices[0].y + currentObjectY);
-            PVector pv2 = PVector::getVectorCartesian(0, 0, currentVertices[1].x + currentObjectX, currentVertices[1].y + currentObjectY);
-            PVector pv3 = PVector::getVectorCartesian(0, 0, currentVertices[2].x + currentObjectX, currentVertices[2].y + currentObjectY);
-            PVector pv4 = PVector::getVectorCartesian(0, 0, currentVertices[3].x + currentObjectX, currentVertices[3].y + currentObjectY);
+        /// axis 4: obj2 "sideways"
+        currentAxisAngle = collisionObject->hitboxes[h].hitboxObject.rotation;
 
-            pv1.angle = -atan2(currentVertices[0].y + currentObjectY, currentVertices[0].x + currentObjectX);
-            pv2.angle = -atan2(currentVertices[1].y + currentObjectY, currentVertices[1].x + currentObjectX);
-            pv3.angle = -atan2(currentVertices[2].y + currentObjectY, currentVertices[2].x + currentObjectX);
-            pv4.angle = -atan2(currentVertices[3].y + currentObjectY, currentVertices[3].x + currentObjectX);
+        bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle, &(collisionObject->hitboxes[h].hitboxObject), collisionObject, currentObjectHitBoxFrame, currentObjectX, currentObjectY);
+        if (!isCollision4)
+        {
+            continue;
+        }
 
-            float proj1 = pv1.GetScalarProjectionOntoAxis(currentAxisAngle);
-            float proj2 = pv2.GetScalarProjectionOntoAxis(currentAxisAngle);
-            float proj3 = pv3.GetScalarProjectionOntoAxis(currentAxisAngle);
-            float proj4 = pv4.GetScalarProjectionOntoAxis(currentAxisAngle);
+        /// we have a collision
+        if (isCollision && isCollision2 && isCollision3 && isCollision4)
+        {
+            PlayableUnit* unit;
+            Entity* entity;
+            CollisionEvent cevent;
+            cevent.collided = true;
+            cevent.isAttackable = collisionObject->isAttackable;
+            cevent.isCollidable = collisionObject->isCollidable;
 
-            CollidableObject* target = units[i].get();
-
-            bool isCollision = DoCollisionStepInAxis(currentAxisAngle, &(target->hitboxes[h].hitboxObject), target, currentObjectHitBoxFrame, currentObjectX, currentObjectY);
-            if (!isCollision)
+            if ((unit = dynamic_cast<PlayableUnit*>(collisionObject)))
             {
-                continue;
-            }
-            //cout<<"COLLISION FOUND IN axis 1"<<endl;
-
-            /// axis 2: obj1 "up"
-            currentAxisAngle = 3.14159265358 / 2 + currentObjectHitBoxFrame->rotation;
-            bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle, &(target->hitboxes[h].hitboxObject), target, currentObjectHitBoxFrame, currentObjectX, currentObjectY);
-            if (!isCollision2)
-            {
-                continue;
-            }
-            //cout<<"COLLISION FOUND IN axis 2 (up)"<<endl;
-
-            /// axis 3: obj2 "up" (we add the 90 degrees from before to its current rotation)
-            currentAxisAngle = target->hitboxes[h].hitboxObject.rotation + 3.14159265358 / 2;
-
-            bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle, &(target->hitboxes[h].hitboxObject), target, currentObjectHitBoxFrame, currentObjectX, currentObjectY);
-            if (!isCollision3)
-            {
-                continue;
-            }
-            //cout<<"COLLISION FOUND IN axis 3 (up2)"<<endl;
-
-            /// axis 4: obj2 "sideways"
-            currentAxisAngle = target->hitboxes[h].hitboxObject.rotation;
-
-            bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle, &(target->hitboxes[h].hitboxObject), target, currentObjectHitBoxFrame, currentObjectX, currentObjectY);
-            if (!isCollision4)
-            {
-                continue;
-            }
-
-            /// we have a collision
-            if (isCollision && isCollision2 && isCollision3 && isCollision4)
-            {
-                //std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
-                PlayableUnit* unit = units[i].get();
-
-                CollisionEvent cevent;
-                cevent.collided = true;
-                //cevent.collidedEntityID = -1;
-                cevent.isAttackable = target->isAttackable;
-                cevent.isCollidable = target->isCollidable;
                 cevent.collidedEntityCategory = 2;
 
                 if (unit->defend)
@@ -1971,14 +1855,18 @@ vector<MissionController::CollisionEvent> MissionController::DoCollisionForUnit(
                     else
                         cevent.defend_factor = 0.5;
                 }
-
-                target->OnCollide(target, collisionObjectID, collisionData);
-
-                collisionEvents.push_back(cevent);
-            } else
-            {
-                cout << "Something is very wrong" << endl;
             }
+            else if ((entity = dynamic_cast<Entity*>(collisionObject)))
+            {
+                cevent.collidedEntityCategory = entity->entityCategory;
+            }
+
+            collisionObject->OnCollide(collisionObject, collisionObjectID, collisionData);
+
+            collisionEvents.push_back(cevent);
+        } else
+        {
+            SPDLOG_ERROR("Found object with no collisions on any axes");
         }
     }
 
@@ -2244,98 +2132,30 @@ void MissionController::DoMovement(sf::RenderWindow& window, float fps, InputCon
     }
 }
 
-bool MissionController::isColliding(PlayableUnit* farthest_unit, const unique_ptr<Entity>& tangibleLevelObject)
+bool MissionController::isColliding(PlayableUnit* unit, const unique_ptr<Entity>& entity)
 {
-    bool foundCollision;
-    for (int h = 0; h < tangibleLevelObject->hitboxes.size(); h++)
+    auto hitboxFrame = unit->hitboxes[0].getRect();
+    const float unitX = unit->getGlobalPosition().x;
+    const float unitY = unit->getGlobalPosition().y;
+    const int collisionObjectID = -1;
+    std::vector<string> collisionData;
+    CollidableObject* collisionObject = entity.get();
+    std::vector<CollisionEvent> collisionEvents = computeCollisions(&hitboxFrame, unitX, unitY, collisionObjectID, collisionData, collisionObject);;
+
+    collisionEvents.erase(std::remove_if(collisionEvents.begin(), collisionEvents.end(), [](const auto& event) { return !event.isCollidable; }), collisionEvents.end());
+
+    bool foundCollision = !collisionEvents.empty();
+    bool forceCollision = false;
+
+    if (collisionObject->entityID != 5)
     {
-        //cout << "tangibleLevelObjects[" << i << "][" << h << "]" << endl;
-
-        float proposedXPos = farthest_unit->getGlobalPosition().x;
-
-        /// NEW COLLISION SYSTEM:
-        /// Separating axis theorem
-        /// we check an axis at a time
-        /// 8 axes in total, aligned with the normal of each face of each shape
-        /// thankfully because we are only using rectangles, there are two pairs of parallel sides
-        /// so we only need to check 4 axes, as the other 4 are all parallel.
-        ///
-        /// in each axis we calculate the vector projection onto the axis between the origin and each corner of each box
-        /// and find the maximum projection and minimum projection for each shape
-        /// then we check if min2>max1 or min1>max2 there has been a collision in this axis
-        /// there has to be a collision in ALL axes for actual collision to be confirmed,
-        /// so we can stop checking if we find a single non-collision.
-
-        /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
-
-        float currentAxisAngle = 0;
-        HitboxFrame tmp = farthest_unit->hitboxes[0].getRect();
-
-        CollidableObject* target = tangibleLevelObject.get();
-        Entity* entity = tangibleLevelObject.get();
-
-        if (entity->entityID != 5)
+        if (collisionObject->isCollidable)
         {
-            if (entity->isCollidable)
-            {
-                if (farthest_unit->getGlobalPosition().x >= entity->getGlobalPosition().x + entity->hitboxes[0].o_x)
-                    foundCollision = true;
-            }
-        }
-
-        bool isCollision = DoCollisionStepInAxis(currentAxisAngle, &(target->hitboxes[h].hitboxObject), target, &tmp, proposedXPos, farthest_unit->getGlobalPosition().y);
-        if (!isCollision)
-        {
-            continue;
-        }
-        //cout<<"COLLISION FOUND IN axis 1"<<endl;
-
-        /// axis 2: obj1 "up"
-        currentAxisAngle = 3.14159265358 / 2;
-        bool isCollision2 = DoCollisionStepInAxis(currentAxisAngle, &(target->hitboxes[h].hitboxObject), target, &tmp, proposedXPos, farthest_unit->getGlobalPosition().y);
-        if (!isCollision2)
-        {
-            continue;
-        }
-        //cout<<"COLLISION FOUND IN axis 2 (up)"<<endl;
-
-        /// axis 3: obj2 "up" (we add the 90 degrees from before to its current rotation)
-        currentAxisAngle = target->hitboxes[h].hitboxObject.rotation + currentAxisAngle;
-
-        bool isCollision3 = DoCollisionStepInAxis(currentAxisAngle, &(target->hitboxes[h].hitboxObject), target, &tmp, proposedXPos, farthest_unit->getGlobalPosition().y);
-        if (!isCollision3)
-        {
-            continue;
-        }
-        //cout<<"COLLISION FOUND IN axis 3 (up2)"<<endl;
-
-        /// axis 4: obj2 "sideways"
-        currentAxisAngle = target->hitboxes[h].hitboxObject.rotation;
-
-        bool isCollision4 = DoCollisionStepInAxis(currentAxisAngle, &(target->hitboxes[h].hitboxObject), target, &tmp, proposedXPos, farthest_unit->getGlobalPosition().y);
-        if (!isCollision4)
-        {
-            continue;
-        }
-
-        /// we have a collision
-        if (isCollision && isCollision2 && isCollision3 && isCollision4)
-        {
-            ///check if unit should be prevented from passing through
-            if (target->isCollidable)
-                foundCollision = true;
-
-            ///the entity can still react
-            target->OnCollide(target);
-
-            //std::cout << "[COLLISION_SYSTEM]: Found a collision"<<endl;
-        } else
-        {
-            cout << "Something is very wrong" << endl;
+            forceCollision = unit->getGlobalPosition().x >= collisionObject->getGlobalPosition().x + collisionObject->hitboxes[0].o_x;
         }
     }
 
-    return foundCollision;
+    return foundCollision || forceCollision;
 }
 
 void MissionController::DoRhythm(InputController& inputCtrl)
@@ -2852,11 +2672,21 @@ std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
             if (!p->enemy)
             {
                 ///Do collisions for all entities (ally projectiles)
-                cevent = DoCollisionForObject(&tmp, xpos, ypos, p->projectile_id, collisionData);
+                std::vector<CollidableObject*> objectPointers;
+                objectPointers.reserve(tangibleLevelObjects.size());
+                for (auto& object : tangibleLevelObjects) {
+                    objectPointers.push_back(object.get());
+                }
+                cevent = DoCollisions(&tmp, xpos, ypos, p->projectile_id, objectPointers, collisionData);
             } else
             {
                 ///Do collisions for all units (enemy projectiles)
-                cevent = DoCollisionForUnit(&tmp, xpos, ypos, p->projectile_id, collisionData);
+                std::vector<CollidableObject*> unitPointers;
+                unitPointers.reserve(units.size());
+                for (auto& unit : units) {
+                    unitPointers.push_back(unit.get());
+                }
+                cevent = DoCollisions(&tmp, xpos, ypos, p->projectile_id, unitPointers, collisionData);
             }
 
             for (int e = 0; e < cevent.size(); e++)
