@@ -1254,9 +1254,14 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 
     while (getline(elist, buff))
     {
+        if (buff.back() == '\r')
+        {
+            buff.pop_back();
+        }
+
         if (buff[0] != '#')
         {
-            if (buff.size() > 0)
+            if (!buff.empty())
             {
                 entity_list.push_back(buff.substr(buff.find_last_of(',') + 1));
             }
