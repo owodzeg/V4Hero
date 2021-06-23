@@ -1,5 +1,6 @@
 #include "MissionController.h"
 #include "../Math/PVector.h"
+#include "../Utils.h"
 #include "../V4Core.h"
 #include "Units/HitboxFrame.h"
 #include "Units/Projectile.h"
@@ -1989,25 +1990,15 @@ void MissionController::DoMovement(sf::RenderWindow& window, float fps, InputCon
     }
 
     /** Find the farthest unit in your army (for calculations) **/
-    int farthest_id = -1;
-    float temp_pos = -9999;
-
-    for (int i = 0; i < units.size(); i++)
-    {
-        PlayableUnit* unit = units[i].get();
-
-        if (temp_pos <= unit->getGlobalPosition().x + unit->local_x)
-        {
-            temp_pos = unit->getGlobalPosition().x + unit->local_x;
-            farthest_id = i;
-        }
-    }
-
     /** Patapon movement **/
 
-    if (farthest_id != -1)
+    if (!units.empty())
     {
-        PlayableUnit* farthest_unit = units[farthest_id].get();
+        PlayableUnit* farthest_unit = std::min_element(units.begin(),
+                                                    units.end(),
+                                                    less_by([](const unique_ptr<PlayableUnit>& unit) {
+                                                      return unit->getGlobalPosition().x + unit->local_x;
+                                                    }))->get();
 
         bool foundCollision = false;
         for (auto& tangibleLevelObject : tangibleLevelObjects)
