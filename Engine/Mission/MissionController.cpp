@@ -3112,7 +3112,10 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
             entity->doRhythm(rhythm.current_song, rhythm.rhythmController.current_drum, rhythm.GetCombo(), rhythm.GetRealCombo(), rhythm.advanced_prefever, rhythm.r_gui.beatBounce, rhythm.GetSatisfaction());
 
             if (!missionEnd)
+            {
+                entity->Update();
                 entity->Draw(window);
+            }
         } else
         {
             ///Check if entity is off bounds, if yes, don't render it.
@@ -3182,6 +3185,7 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
             }
 
             //cout << "[MissionController::DrawEntities] Draw entity" << endl;
+            entity->Update();
             entity->Draw(window);
         }
 

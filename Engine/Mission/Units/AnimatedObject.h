@@ -127,6 +127,7 @@ public:
     virtual void LoadConfig(Config* thisConfigs, std::string unitParamPath);
     void applyEquipment(std::vector<int> item_id, int slot, bool offhand = false);
     virtual void Draw(sf::RenderWindow& window);
+    virtual void Update();
 };
 
 #endif // ANIMATEDOBJECT_H
