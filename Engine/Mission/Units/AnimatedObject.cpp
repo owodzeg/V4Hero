@@ -1224,3 +1224,5 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
 
     lastFrame = curFrame;
 }
+
+void AnimatedObject::Update() {}
