@@ -1995,10 +1995,11 @@ void MissionController::DoMovement(sf::RenderWindow& window, float fps, InputCon
     if (!units.empty())
     {
         PlayableUnit* farthest_unit = std::min_element(units.begin(),
-                                                    units.end(),
-                                                    less_by([](const unique_ptr<PlayableUnit>& unit) {
-                                                      return unit->getGlobalPosition().x + unit->local_x;
-                                                    }))->get();
+                                                       units.end(),
+                                                       less_by([](const unique_ptr<PlayableUnit>& unit) {
+                                                           return unit->getGlobalPosition().x + unit->local_x;
+                                                       }))
+                                              ->get();
 
         bool foundCollision = false;
         for (auto& tangibleLevelObject : tangibleLevelObjects)
@@ -3091,10 +3092,12 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
 
     /** Find the farthest unit in your army (for calculations) **/
     float farthestUnitPosition = (*std::max_element(units.begin(),
-                                  units.end(),
-                                  less_by([](const std::unique_ptr<PlayableUnit>& unit) {
-                                      return unit->getGlobalPosition().x;
-                                  })))->getGlobalPosition().x;
+                                                    units.end(),
+                                                    less_by([](const std::unique_ptr<PlayableUnit>& unit) {
+                                                        return unit->getGlobalPosition().x;
+                                                    })))
+                                         ->getGlobalPosition()
+                                         .x;
 
     for (int i = 0; i < tangibleLevelObjects.size(); i++)
     {
@@ -3198,37 +3201,32 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
 {
     vector<int> units_rm;
 
-    int farthest_id = -1;
-    int closest_entity_id = -1;
-    int closest_entity_pos = 9999;
-
     bool hatapon = false;
-
-    auto max_distance = std::max_element(units.begin(), units.end(),
-                                         [](unique_ptr<PlayableUnit>& a, unique_ptr<PlayableUnit>& b) {
-                                             return a->global_x < b->global_x;
-                                         });
-
-    farthest_id = distance(units.begin(), max_distance);
-
-    /** Units draw loop and entity range detection **/
-
-    for (int i = 0; i < tangibleLevelObjects.size(); i++)
+    if (!units.empty())
     {
-        Entity* entity = tangibleLevelObjects[i].get();
+        auto max_distance = std::max_element(units.begin(),
+                                             units.end(),
+                                             less_by([](const std::unique_ptr<PlayableUnit>& unit) {
+                                                 return unit->global_x;
+                                             }));
 
-        if ((entity->entityType == Entity::EntityTypes::HOSTILE) && (!entity->dead))
+        /** Units draw loop and entity range detection **/
+        int closest_entity_id = -1;
+        int closest_entity_pos = 9999;
+
+        for (int i = 0; i < tangibleLevelObjects.size(); i++)
         {
-            if (entity->getGlobalPosition().x + entity->hitboxes[0].o_x < closest_entity_pos)
+            Entity* entity = tangibleLevelObjects[i].get();
+
+            if ((entity->entityType == Entity::EntityTypes::HOSTILE) && (!entity->dead))
             {
-                closest_entity_pos = entity->getGlobalPosition().x + entity->hitboxes[0].o_x;
-                closest_entity_id = i;
+                if (entity->getGlobalPosition().x + entity->hitboxes[0].o_x < closest_entity_pos)
+                {
+                    closest_entity_pos = entity->getGlobalPosition().x + entity->hitboxes[0].o_x;
+                    closest_entity_id = i;
+                }
             }
         }
-    }
-
-    if (farthest_id != -1)
-    {
         bool inRange = true;
 
         if (closest_entity_id == -1)
@@ -3526,10 +3524,10 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
 
         /** Find the farthest unit in your army (for calculations) **/
         const auto& farthestUnit = *std::min_element(units.begin(),
-                                             units.end(),
-                                             less_by([](const std::unique_ptr<PlayableUnit>& unit) {
-                                               return unit->getGlobalPosition().x;
-                                             }));
+                                                     units.end(),
+                                                     less_by([](const std::unique_ptr<PlayableUnit>& unit) {
+                                                         return unit->getGlobalPosition().x;
+                                                     }));
         float temp_pos = farthestUnit->getGlobalPosition().x;
 
         entity->distance_to_unit = abs(temp_pos - entity->getGlobalPosition().x);
