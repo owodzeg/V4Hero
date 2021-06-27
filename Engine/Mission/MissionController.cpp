@@ -3090,20 +3090,11 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
     vector<int> tlo_rm;
 
     /** Find the farthest unit in your army (for calculations) **/
-    int farthest_id = -1;
-    float temp_pos = -9999;
-
-    //cout << "[MissionController::DrawEntities] Find farthest" << endl;
-    for (int i = 0; i < units.size(); i++)
-    {
-        PlayableUnit* unit = units[i].get();
-
-        if (temp_pos <= unit->getGlobalPosition().x)
-        {
-            temp_pos = unit->getGlobalPosition().x;
-            farthest_id = i;
-        }
-    }
+    float farthestUnitPosition = (*std::max_element(units.begin(),
+                                  units.end(),
+                                  less_by([](const std::unique_ptr<PlayableUnit>& unit) {
+                                      return unit->getGlobalPosition().x;
+                                  })))->getGlobalPosition().x;
 
     for (int i = 0; i < tangibleLevelObjects.size(); i++)
     {
@@ -3132,7 +3123,7 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
             if (entity->getGlobalPosition().x < (camera.followobject_x) / (window.getSize().x / float(1280)) - 1000)
                 entity->offbounds = true;
 
-            entity->distance_to_unit = abs(temp_pos - entity->getGlobalPosition().x);
+            entity->distance_to_unit = abs(farthestUnitPosition - entity->getGlobalPosition().x);
 
             ///Check for entity attack measures
             if (entity->doAttack())
