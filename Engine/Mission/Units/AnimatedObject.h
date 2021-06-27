@@ -127,6 +127,10 @@ public:
     virtual void LoadConfig(Config* thisConfigs, std::string unitParamPath);
     void applyEquipment(std::vector<int> item_id, int slot, bool offhand = false);
     virtual void Draw(sf::RenderWindow& window);
+
+    /**
+     * Updates the `AnimationObject` internal state. Should be called each frame.
+     */
     virtual void Update();
 };
 
