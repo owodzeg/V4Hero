@@ -47,8 +47,8 @@ void ItemRegistry::readItemFiles()
                             new_item->item_name = item_data["items"][i][j][k]["name"];
                             new_item->item_description = item_data["items"][i][j][k]["desc"];
                             new_item->icon_path = item_data["items"][i][j][k]["icon"];
-                            new_item->spritesheet = item_data["items"][i][j][k]["spritesheet"];
-                            new_item->spritesheet_id = item_data["items"][i][j][k]["spritesheet_id"];
+                            new_item->spritesheet = item_data["items"][i][j][k]["item_group"];
+                            new_item->spritesheet_id = item_data["items"][i][j][k]["item_id"];
                             new_item->order_id.push_back(i);
                             new_item->order_id.push_back(j);
                             new_item->order_id.push_back(k);
@@ -92,8 +92,8 @@ void ItemRegistry::readItemFiles()
                             new_item->item_name = item_data["items"][i][j][k]["name"];
                             new_item->item_description = item_data["items"][i][j][k]["desc"];
                             new_item->icon_path = item_data["items"][i][j][k]["icon"];
-                            new_item->spritesheet = item_data["items"][i][j][k]["spritesheet"];
-                            new_item->spritesheet_id = item_data["items"][i][j][k]["spritesheet_id"];
+                            new_item->spritesheet = item_data["items"][i][j][k]["item_group"];
+                            new_item->spritesheet_id = item_data["items"][i][j][k]["item_id"];
                             new_item->order_id.push_back(i);
                             new_item->order_id.push_back(j);
                             new_item->order_id.push_back(k);
@@ -117,8 +117,8 @@ void ItemRegistry::readItemFiles()
                             new_item->item_name = item_data["items"][i][j][k]["name"];
                             new_item->item_description = item_data["items"][i][j][k]["desc"];
                             new_item->icon_path = item_data["items"][i][j][k]["icon"];
-                            new_item->spritesheet = item_data["items"][i][j][k]["spritesheet"];
-                            new_item->spritesheet_id = item_data["items"][i][j][k]["spritesheet_id"];
+                            new_item->spritesheet = item_data["items"][i][j][k]["item_group"];
+                            new_item->spritesheet_id = item_data["items"][i][j][k]["item_id"];
                             new_item->order_id.push_back(i);
                             new_item->order_id.push_back(j);
                             new_item->order_id.push_back(k);
@@ -148,8 +148,8 @@ void ItemRegistry::readItemFiles()
                             new_weapon->item_name = item_data["items"][i][j][k]["name"];
                             new_weapon->item_description = item_data["items"][i][j][k]["desc"];
                             new_weapon->icon_path = item_data["items"][i][j][k]["icon"];
-                            new_weapon->spritesheet = item_data["items"][i][j][k]["spritesheet"];
-                            new_weapon->spritesheet_id = item_data["items"][i][j][k]["spritesheet_id"];
+                            new_weapon->spritesheet = item_data["items"][i][j][k]["item_group"];
+                            new_weapon->spritesheet_id = item_data["items"][i][j][k]["item_id"];
                             new_weapon->equip = new Equipment();
                             new_weapon->equip->hp = item_data["items"][i][j][k]["hp"];
                             new_weapon->equip->min_dmg = item_data["items"][i][j][k]["min_dmg"];
@@ -190,8 +190,8 @@ void ItemRegistry::readItemFiles()
                             new_armour->item_name = item_data["items"][i][j][k]["name"];
                             new_armour->item_description = item_data["items"][i][j][k]["desc"];
                             new_armour->icon_path = item_data["items"][i][j][k]["icon"];
-                            new_armour->spritesheet = item_data["items"][i][j][k]["spritesheet"];
-                            new_armour->spritesheet_id = item_data["items"][i][j][k]["spritesheet_id"];
+                            new_armour->spritesheet = item_data["items"][i][j][k]["item_group"];
+                            new_armour->spritesheet_id = item_data["items"][i][j][k]["item_id"];
                             new_armour->equip = new Equipment();
                             new_armour->equip->hp = item_data["items"][i][j][k]["hp"];
                             new_armour->equip->min_dmg = item_data["items"][i][j][k]["min_dmg"];
@@ -225,8 +225,8 @@ void ItemRegistry::readItemFiles()
                         new_item->item_name = item_data["items"][i][j]["name"];
                         new_item->item_description = item_data["items"][i][j]["desc"];
                         new_item->icon_path = item_data["items"][i][j]["icon"];
-                        new_item->spritesheet = item_data["items"][i][j]["spritesheet"];
-                        new_item->spritesheet_id = item_data["items"][i][j]["spritesheet_id"];
+                        new_item->spritesheet = item_data["items"][i][j]["item_group"];
+                        new_item->spritesheet_id = item_data["items"][i][j]["item_id"];
                         new_item->order_id.push_back(i);
                         new_item->order_id.push_back(j);
                         items.push_back(new_item);

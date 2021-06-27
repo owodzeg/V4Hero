@@ -138,7 +138,8 @@ void AltarMenu::reloadInventory()
                     tmp.r_inner.setFillColor(sf::Color(146, 173, 217, 255));
 
                     ///look up material's icon
-                    tmp.icon.loadFromFile("resources/graphics/ui/altar/materials/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q, 1);
+                    //tmp.icon.loadFromFile("resources/graphics/ui/altar/materials/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q, 1);
+                    tmp.icon.loadFromFile("resources/graphics/item/textures/" + cur_item->spritesheet + "/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q, 1);
                     tmp.icon.setOrigin(tmp.icon.getLocalBounds().width / 2, tmp.icon.getLocalBounds().height / 2);
 
                     break;
@@ -171,7 +172,7 @@ void AltarMenu::reloadInventory()
                     tmp.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
                     ///look up material's icon
-                    tmp.icon.loadFromFile("resources/graphics/ui/altar/materials/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q, 1);
+                    tmp.icon.loadFromFile("resources/graphics/item/textures/" + cur_item->spritesheet + "/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q, 1);
                     tmp.icon.setOrigin(tmp.icon.getLocalBounds().width / 2, tmp.icon.getLocalBounds().height / 2);
 
                     break;

@@ -960,7 +960,7 @@ void AnimatedObject::applyEquipment(vector<int> item_id, int slot, bool offhand)
     Item* equip = thisConfig->thisCore->saveReader.itemReg.getItemByID(item_id);
     string category = equip->item_category;
     string type = equip->item_type;
-    string path = "resources/graphics/item/" + category + "/" + type + "/" + type + "_" + to_string(item_id[item_id.size() - 1] + 1) + "_";
+    string path = "resources/graphics/item/textures/" + equip->spritesheet + "/" + Func::num_padding(equip->spritesheet_id, 4) + "_";
 
     switch (q)
     {
@@ -996,7 +996,9 @@ void AnimatedObject::applyEquipment(vector<int> item_id, int slot, bool offhand)
 
     sf::Vector2f a;
 
-    ifstream file("resources/graphics/item/" + category + "/" + type + "/" + type + "_" + to_string(item_id[item_id.size() - 1] + 1) + ".spr");
+    /// make some check here if .spr file exists, if not, then go defaults
+
+    ifstream file("resources/graphics/item/alignment/" + equip->spritesheet + "/" + Func::num_padding(equip->spritesheet_id, 4) + ".spr");
     string buff;
     for (int i = 0; getline(file, buff); i++)
     {
