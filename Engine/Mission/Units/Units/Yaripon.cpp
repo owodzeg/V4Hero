@@ -312,7 +312,7 @@ void Yaripon::doRhythm(std::string current_song, std::string current_drum, int c
 
         //cout << "new comms: " << charged << " " << charge_m1 << " " << defend << endl;
 
-        if ((current_drum == "pata") or (current_drum == "pon") or (current_drum == "chaka") or (current_drum == "don"))
+        if ((current_drum == "pata") || (current_drum == "pon") || (current_drum == "chaka") || (current_drum == "don"))
         {
             //cout << current_drum << endl;
             attackmode = -1;

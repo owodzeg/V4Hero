@@ -2431,7 +2431,7 @@ void MissionController::DoRhythm(InputController& inputCtrl)
         startWalking = false;
     }
 
-    if ((rhythm.rhythmController.current_drum == "pata") or (rhythm.rhythmController.current_drum == "pon") or (rhythm.rhythmController.current_drum == "chaka") or (rhythm.rhythmController.current_drum == "don"))
+    if ((rhythm.rhythmController.current_drum == "pata") || (rhythm.rhythmController.current_drum == "pon") || (rhythm.rhythmController.current_drum == "chaka") || (rhythm.rhythmController.current_drum == "don"))
     {
         rhythm.rhythmController.current_drum = "";
         rhythm.current_song = "";
