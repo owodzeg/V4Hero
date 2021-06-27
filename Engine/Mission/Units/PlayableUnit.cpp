@@ -44,3 +44,7 @@ void PlayableUnit::doMissionEnd()
 {
     cout << "PlayableUnit::doMissionEnd() was not overriden by child class" << endl;
 }
+
+void PlayableUnit::UpdateRhythm(std::string current_song, std::string current_drum, int combo)
+{
+}

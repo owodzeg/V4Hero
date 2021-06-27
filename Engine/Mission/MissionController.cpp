@@ -3329,6 +3329,7 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
             /** Execute unit features when mission is not over **/
             if (!missionEnd)
             {
+                unit->UpdateRhythm(rhythm.current_song, rhythm.rhythmController.current_drum, rhythm.GetCombo());
                 unit->doRhythm(rhythm.current_song, rhythm.rhythmController.current_drum, rhythm.GetCombo());
 
                 if (unit->getUnitID() != 0) /// Yaripon
@@ -3402,6 +3403,7 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
             }
 
             unit->fps = fps;
+            unit->Update();
             unit->Draw(window);
 
             if (unit->ready_to_erase)
