@@ -208,14 +208,14 @@ void SaveReader::CreateBlankSave() ///Creates a blank save data for use
         Pon newPon = Pon(this);
 
         newPon.pon_id = i;
-        newPon.pon_class = 1;
+        newPon.pon_class = 0;
         newPon.pon_squad_position = i;
 
         newPon.pon_exp = 0;
         newPon.pon_level = 1;
 
-        newPon.giveItem(0 + i);
-        newPon.giveItem(3 + i);
+        newPon.giveItem(0 + i, 0);
+        newPon.giveItem(3 + i, 1);
 
         ponReg.pons.push_back(newPon);
     }
