@@ -760,7 +760,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             entity->loot_table = new_loot;
 
             /// hacky code to obtain sf::Image for item cache
-            for (int i=0; i<new_loot.size(); i++)
+            for (int i = 0; i < new_loot.size(); i++)
             {
                 vector<int> loot_id = new_loot[i].order_id;
                 Item* itm = v4Core->saveReader.itemReg.getItemByID(loot_id);
@@ -1994,7 +1994,7 @@ void MissionController::DoMovement(sf::RenderWindow& window, float fps, InputCon
 
     if (!units.empty())
     {
-        PlayableUnit* farthest_unit = std::min_element(units.begin(),
+        PlayableUnit* farthest_unit = std::max_element(units.begin(),
                                                        units.end(),
                                                        less_by([](const unique_ptr<PlayableUnit>& unit) {
                                                            return unit->getGlobalPosition().x + unit->local_x;
