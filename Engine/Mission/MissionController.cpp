@@ -2092,8 +2092,8 @@ void MissionController::DoMovement(sf::RenderWindow& window, float fps, InputCon
             }
         }
 
-        float x_offset;
-        float y_value;
+        float x_offset = 0;
+        float y_value = 0;
 
         if (unit->getUnitID() == 0)
         { // Hatapon
