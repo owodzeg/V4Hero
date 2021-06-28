@@ -1,6 +1,7 @@
 #include <filesystem>
 #include <iostream>
 #include "Engine/V4Core.h"
+#include <spdlog/cfg/env.h>
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -16,6 +17,7 @@ void setupPlatform() {}
 
 int main(int argc, char *argv[])
 {
+    spdlog::cfg::load_env_levels();
     std::cout << SFML_VERSION_MAJOR << "." << SFML_VERSION_MINOR << "." << SFML_VERSION_PATCH << std::endl;
     setupPlatform();
 

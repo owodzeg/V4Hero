@@ -53,6 +53,11 @@ public:
     void doMissionEnd();
     void Draw(sf::RenderWindow& window);
     void OnCollide(CollidableObject* otherObject, int collidedWith = -1, vector<string> collisionData = {});
+    void Update() override;
+    void UpdateRhythm(std::string current_song, std::string current_drum, int combo) override;
+
+private:
+    bool dying = false;
 };
 
 #endif // YARIPON_H

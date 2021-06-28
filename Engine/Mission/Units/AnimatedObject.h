@@ -112,7 +112,7 @@ public:
     vector<int> animation_frames;
     Config* thisConfig;
     AnimatedObject();
-    ~AnimatedObject();
+    virtual ~AnimatedObject();
     void loadAnim(std::string data, P4A handle);
     int getSegmentIndex(std::string segment_name);
     void setAnimationSegment(std::string new_segment_name);
@@ -129,6 +129,11 @@ public:
     virtual void LoadConfig(Config* thisConfigs, std::string unitParamPath);
     void applyEquipment(std::vector<int> item_id, int slot, bool offhand = false);
     virtual void Draw(sf::RenderWindow& window);
+
+    /**
+     * Updates the `AnimationObject` internal state. Should be called each frame.
+     */
+    virtual void Update();
 };
 
 #endif // ANIMATEDOBJECT_H

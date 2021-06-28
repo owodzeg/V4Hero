@@ -62,6 +62,14 @@ public:
     virtual float getUnitMaxHP();
     virtual void setUnitHP(float hp);
     virtual bool doAttack();
+
+    /**
+     * Updates the unit internal state regarding to song/drum changes.
+     * @param current_song the current song being played, if any.
+     * @param current_drum the current drum being played, if any.
+     * @param combo combo counter
+     */
+    virtual void UpdateRhythm(std::string current_song = "", std::string current_drum = "", int combo = 0);
     virtual void doRhythm(std::string current_song = "", std::string current_drum = "", int combo = 0);
     virtual void doMissionEnd();
 };
