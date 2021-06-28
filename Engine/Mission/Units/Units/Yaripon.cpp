@@ -360,7 +360,7 @@ void Yaripon::UpdateRhythm(std::string current_song, std::string current_drum, i
             defend = false;
         }
 
-        if ((current_drum == "pata") or (current_drum == "pon") or (current_drum == "chaka") or (current_drum == "don"))
+        if ((current_drum == "pata") || (current_drum == "pon") || (current_drum == "chaka") || (current_drum == "don"))
         {
             attackmode = -1;
             action = IDLE;
@@ -438,7 +438,7 @@ void Yaripon::doRhythm(std::string current_song, std::string current_drum, int c
             }
         }
 
-        if ((current_drum == "pata") or (current_drum == "pon") or (current_drum == "chaka") or (current_drum == "don"))
+        if ((current_drum == "pata") || (current_drum == "pon") || (current_drum == "chaka") || (current_drum == "don"))
         {
             if (!focus)
                 setAnimationSegment(current_drum, true);
