@@ -23,14 +23,13 @@ float PVector::GetScalarProjectionOntoAxis(float axisAngle)
 
     /// we might run into issues if the angles are clamped between 0 and 360?
     float angleDiff = angle + axisAngle;
-    float pi = 3.14159265358;
-    if (angleDiff > pi)
+    if (angleDiff > M_PI)
     {
-        angleDiff = angleDiff - 2 * pi;
+        angleDiff = angleDiff - 2 * M_PI;
     }
-    if (angleDiff < -pi)
+    if (angleDiff < -M_PI)
     {
-        angleDiff = angleDiff + 2 * pi;
+        angleDiff = angleDiff + 2 * M_PI;
     }
     /// the angle difference should be clamped between -180 and 180 now
 
