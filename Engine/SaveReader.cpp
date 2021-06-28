@@ -185,7 +185,7 @@ void SaveReader::CreateBlankSave() ///Creates a blank save data for use
     times_launched = 0;
 
     ///Adding starter items
-    vector<string> starter_items = {"wooden_spear", "wooden_spear", "wooden_spear", "wooden_helmet", "wooden_helmet", "wooden_helmet"};
+    vector<string> starter_items = {"item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet"};
 
     for (int i = 0; i < starter_items.size(); i++)
     {
