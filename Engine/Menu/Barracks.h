@@ -13,11 +13,7 @@
 class V4Core;
 class Barracks : public Menu
 {
-public:
-    MissionController* currentController;
-    Config* thisConfig;
-    std::string mission_file;
-
+private:
     ControlTips ctrlTips;
 
     sf::RectangleShape rs_cover;
@@ -37,17 +33,11 @@ public:
     float patapon_y;
     float floor_y;
 
-    int mission_id = 0;
-    float mission_multiplier = 1;
-
-    bool obelisk = false;
-    bool mission_started = false;
-
     int quality_setting = 0;
 
     sf::Font f_font;
     PText t_title;
-    int current_item_position;
+    int current_item_position = 0;
     std::vector<bool> enabled_positons;
 
     RoundedRect rr_main, rr_main_sh;
@@ -138,15 +128,9 @@ public:
     int active_category = 0;
     int active_subcategory = 0;
 
-    Camera camera;
-    Menu* parentMenu;
     int current_menu_position;
     std::vector<float> possible_menu_positions;
-    void initialise(Config* thisConfig, V4Core* v4Core, Menu* curParentMenu);
-    void update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
-    void updateInputControls();
-    void eventFired(sf::Event event);
-    void setTitle(int menu_position);
+
     sf::RectangleShape mm_description_background;
     sf::RectangleShape mm_highlighted_tile;
 
@@ -156,6 +140,25 @@ public:
     std::vector<PText> t_item_description;
 
     std::vector<PataDialogBox> dialog_boxes;
+
+public:
+    MissionController* currentController;
+    Config* thisConfig;
+    std::string mission_file;
+    Camera camera;
+    Menu* parentMenu;
+
+    int mission_id = 0;
+    float mission_multiplier = 1;
+
+    bool obelisk = false;
+    bool mission_started = false;
+    
+    void initialise(Config* thisConfig, V4Core* v4Core, Menu* curParentMenu);
+    void update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
+    void updateInputControls();
+    void eventFired(sf::Event event);
+    void setTitle(int menu_position);
 
     void onExit();
     int countOccupied(std::vector<int>);

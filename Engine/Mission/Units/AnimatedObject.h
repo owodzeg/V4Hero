@@ -16,6 +16,8 @@ public:
     int ao_version = 0;
     int entityID = -1;
 
+    int qualitySetting = -1; ///only for custom atm
+
     shared_ptr<vector<Object>> objects;
     vector<Hitbox> hitboxes;
     float max_time = 0;
