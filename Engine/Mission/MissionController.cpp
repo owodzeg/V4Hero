@@ -449,12 +449,12 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                 entity.get()->entityType = Entity::EntityTypes::NEUTRAL;
                 entity.get()->entityCategory = Entity::EntityCategories::MISC;
 
-                string spritesheet = additional_data["spritesheet"];
-                int spritesheet_id = additional_data["spritesheet_id"];
+                string item_group = additional_data["spritesheet"];
+                int item_id = additional_data["spritesheet_id"];
                 string picked_item = additional_data["picked_item"];
 
-                entity->spritesheet = spritesheet;
-                entity->spritesheet_id = spritesheet_id;
+                entity->item_group = item_group;
+                entity->item_id = item_id;
                 entity->picked_item = picked_item;
 
                 if (!cloneable)
@@ -758,6 +758,24 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             parseEntityLoot(v4Core->gen, roll, loot, new_loot);
 
             entity->loot_table = new_loot;
+
+            /// hacky code to obtain sf::Image for item cache
+            for (int i=0; i<new_loot.size(); i++)
+            {
+                vector<int> loot_id = new_loot[i].order_id;
+                Item* itm = v4Core->saveReader.itemReg.getItemByID(loot_id);
+                PSprite ps_itm;
+
+                ps_itm.loadFromFile("resources/graphics/item/textures/" + itm->spritesheet + "/" + Func::num_padding(itm->spritesheet_id, 4) + ".png", qualitySetting, resSetting);
+                sf::Image i_itm = ps_itm.t.copyToImage();
+
+                DroppableCache tmp;
+                tmp.img = i_itm;
+                tmp.cached = true;
+
+                droppable_cache[itm->spritesheet][itm->spritesheet_id] = tmp;
+            }
+
             entity->curHP = hp * mission_diff;
             entity->maxHP = hp * mission_diff;
 
@@ -782,38 +800,20 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
         } else
         {
             entity->setEntityID(id);
-            entity->manual_mode = true;
 
             ///This unique entity needs to be loaded differently, read additional data for spritesheet info to be passed from the item registry.
-            string spritesheet = additional_data["spritesheet"];
-            int spritesheet_id = additional_data["spritesheet_id"];
-            string picked_item = additional_data["picked_item"];
+            string item_group = additional_data["spritesheet"];
+            int item_id = additional_data["spritesheet_id"];
 
-            cout << "[DroppedItem] Selecting spritesheet " << spritesheet << " with id " << spritesheet_id << endl;
+            /// create a fake animation
+            vector<sf::Image> tmp;
+            tmp.push_back(droppable_cache[item_group][item_id].img);
+            tmp.push_back(droppable_cache[item_group][item_id].img);
 
-            vector<Object>* obj;
-            obj = entity->objects.get();
+            entity->all_swaps_img->clear();
+            entity->all_swaps_img->push_back(tmp);
 
-            cout << "[DroppedItem] Loading from memory" << endl;
-            vector<char> di_data = droppeditem_spritesheet[spritesheet].retrieve_char();
-            cout << "[DroppedItem] Vector loaded. Size: " << di_data.size() << endl;
-            (*obj)[0].tex_obj.loadFromMemory(&di_data[0], di_data.size());
-            cout << "[DroppedItem] Setting smooth" << endl;
-            (*obj)[0].tex_obj.setSmooth(true);
-            cout << "[DroppedItem] Setting texture" << endl;
-            (*obj)[0].s_obj.setTexture((*obj)[0].tex_obj);
-            cout << "[DroppedItem] Marking as unexported" << endl;
-            (*obj)[0].exported = false;
-            cout << "[DroppedItem] Loading done." << endl;
-
-            (*obj)[0].s_obj.qualitySetting = qualitySetting;
-            (*obj)[0].s_obj.resSetting = resSetting;
-
-            //entity->(*objects)[0].s_obj.setOrigin(entity->(*objects)[0].s_obj.getLocalBounds().width/2, entity->(*objects)[0].s_obj.getLocalBounds().height/2);
-
-            entity->cur_pos = float(spritesheet_id - 1) / 60.0;
-
-            entity->animation_bounds[0] = droppeditem_spritesheet[spritesheet].retrieve_rect_as_map();
+            entity->qualitySetting = qualitySetting;
 
             entity->setGlobalPosition(sf::Vector2f(xpos, ypos));
 
@@ -860,16 +860,20 @@ void MissionController::addPickedItem(std::string spritesheet, int spritesheet_i
         ///set radius in draw loop to get appropriate resratiox size
         tmp.item_name = picked_item;
 
+        Item* itm = v4Core->saveReader.itemReg.getItemByName(tmp.item_name);
+
         ///This unique entity needs to be loaded differently, read additional data for spritesheet info to be passed from the item registry.
-        vector<char> di_data = droppeditem_spritesheet[spritesheet].retrieve_char();
+        //vector<char> di_data = droppeditem_spritesheet[spritesheet].retrieve_char();
 
         sf::Texture tex_obj;
-        tex_obj.loadFromMemory(&di_data[0], di_data.size());
+        tex_obj.loadFromImage(droppable_cache[itm->spritesheet][itm->spritesheet_id].img);
         tex_obj.setSmooth(true);
 
         tmp.item.setTexture(tex_obj);
-        tmp.item.setTextureRect(droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id - 1]);
-        tmp.bounds = sf::Vector2f(droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id - 1].width, droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id - 1].height);
+        //tmp.item.setTextureRect(droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id - 1]);
+        //tmp.bounds = sf::Vector2f(droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id - 1].width, droppeditem_spritesheet[spritesheet].retrieve_rect_as_map()[spritesheet_id - 1].height);
+
+        tmp.bounds = sf::Vector2f(droppable_cache[itm->spritesheet][itm->spritesheet_id].img.getSize().x, droppable_cache[itm->spritesheet][itm->spritesheet_id].img.getSize().y);
 
         tmp.item.qualitySetting = qualitySetting;
         tmp.item.resSetting = resSetting;
@@ -2457,6 +2461,7 @@ void MissionController::ClearMissionMemory()
     droppedItems.clear();
     pickedItems.clear();
     unitThumbs.clear();
+    droppable_cache.clear();
 }
 
 void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)

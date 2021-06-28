@@ -235,6 +235,12 @@ public:
     std::map<int, std::shared_ptr<AnimationCache>> animation_cache;
     std::map<int, bool> isCached; ///Check if entities have been cached already, so we can make automatic caching inside spawnEntity function
 
+    struct DroppableCache {
+        sf::Image img;
+        bool cached = false;
+    };
+
+    std::map<std::string, std::map<int, DroppableCache>> droppable_cache; ///this map stores images for droppable items. droppable_cache[item_group][item_id] = sf::Image;
 
     /** Resolve enums **/
     int layerStr2Enum(string layer);

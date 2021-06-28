@@ -38,8 +38,8 @@ public:
     bool pickedup = false;
 
     ///picked item data
-    string spritesheet;
-    int spritesheet_id;
+    string item_group;
+    int item_id;
     string picked_item;
 
     sf::SoundBuffer s_item, s_keyitem;

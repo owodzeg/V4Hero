@@ -53,7 +53,7 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
             version = line.substr(line.find("V4Mater-ver-") + 12);
             legit = true;
 
-            //cout << "[AnimatedObject] Anim format legit. Version " << version << endl;
+            cout << "[AnimatedObject] Anim format legit. Version " << version << endl;
         }
 
         /**
@@ -208,82 +208,85 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
 
                             //cout << "[PixelSwap] Length: " << length << " bytes" << endl;
 
-                            vector<Object::Pixel> one_swap;                ///one frame swap
-                            vector<vector<Object::Pixel>> animation_swaps; ///one full animation
-
-                            //cout << "[PixelSwap] Reading file..." << endl;
-
-                            while (offset < length)
+                            if (length > 0)
                             {
-                                uint16_t check = Binary::get_uint16(pxswap, offset);
+                                vector<Object::Pixel> one_swap;            ///one frame swap
+                                vector<vector<Object::Pixel>> animation_swaps; ///one full animation
 
-                                //cout << "offset: " << std::hex << offset << std::dec << endl;
+                                //cout << "[PixelSwap] Reading file..." << endl;
 
-                                //if((offset >= 130900) && (offset <= 131000))
-                                //cout << "offset " << offset << ": " << std::hex << check << std::dec << endl;
-
-                                if (int(check) == 52445)
+                                while (offset < length)
                                 {
-                                    //cout << "Check found @ 0x" << std::hex << offset << std::dec << endl;
+                                    uint16_t check = Binary::get_uint16(pxswap, offset);
 
-                                    if (checks >= 1)
+                                    //cout << "offset: " << std::hex << offset << std::dec << endl;
+
+                                    //if((offset >= 130900) && (offset <= 131000))
+                                    //cout << "offset " << offset << ": " << std::hex << check << std::dec << endl;
+
+                                    if (int(check) == 52445)
                                     {
-                                        animation_swaps.push_back(one_swap);
-                                        one_swap.clear();
+                                        //cout << "Check found @ 0x" << std::hex << offset << std::dec << endl;
 
-                                        //cout << "Swap " << animation_swaps.size()-1 << " saved. Offset: 0x" << std::hex << offset << std::dec << endl;
+                                        if (checks >= 1)
+                                        {
+                                            animation_swaps.push_back(one_swap);
+                                            one_swap.clear();
+
+                                            //cout << "Swap " << animation_swaps.size()-1 << " saved. Offset: 0x" << std::hex << offset << std::dec << endl;
+                                        }
+
+                                        checks++;
+
+                                        offset += 8;
+
+                                        //cout << "Check " << checks << " has been executed (" << animation_swaps.size() << ")" << endl;
+                                    } else
+                                    {
+                                        uint16_t x = Binary::get_uint16(pxswap, offset);
+                                        uint16_t y = Binary::get_uint16(pxswap, offset + 2);
+
+                                        uint32_t c = Binary::get_uint32_r(pxswap, offset + 4);
+
+                                        Object::Pixel px;
+                                        px.x = x;
+                                        px.y = y;
+                                        px.color = sf::Color(c);
+
+                                        one_swap.push_back(px);
+
+                                        //cout << "Added a new swap " << int(x) << " " << int(y) << " " << int(r) << " " << int(g) << " " << int(b) << " " << int(a) << " (" << one_swap.size() << ")" << endl;
+
+                                        offset += 8;
+                                    }
+                                }
+
+                                animation_swaps.push_back(one_swap);
+                                //cout << "Swap " << animation_swaps.size()-1 << " saved. Offset: 0x" << std::hex << offset << std::dec << endl;
+
+                                /// New code potentially dangerous
+                                // Idea: Create all swaps in loading function, and store finished images
+                                // Downside: more RAM usage | Upside: less CPU usage
+                                // all_swaps animIndex frame
+                                // all_swaps[index][curFrame-1]
+
+                                vector<sf::Image> frames;
+
+                                for (int a = 0; a < animation_swaps.size(); a++)
+                                {
+                                    sf::Image nw = tmp.spritesheet;
+                                    for (int i = 0; i < animation_swaps[a].size(); i++)
+                                    {
+                                        nw.setPixel(animation_swaps[a][i].x, animation_swaps[a][i].y, animation_swaps[a][i].color);
                                     }
 
-                                    checks++;
-
-                                    offset += 8;
-
-                                    //cout << "Check " << checks << " has been executed (" << animation_swaps.size() << ")" << endl;
-                                } else
-                                {
-                                    uint16_t x = Binary::get_uint16(pxswap, offset);
-                                    uint16_t y = Binary::get_uint16(pxswap, offset + 2);
-
-                                    uint32_t c = Binary::get_uint32_r(pxswap, offset + 4);
-
-                                    Object::Pixel px;
-                                    px.x = x;
-                                    px.y = y;
-                                    px.color = sf::Color(c);
-
-                                    one_swap.push_back(px);
-
-                                    //cout << "Added a new swap " << int(x) << " " << int(y) << " " << int(r) << " " << int(g) << " " << int(b) << " " << int(a) << " (" << one_swap.size() << ")" << endl;
-
-                                    offset += 8;
-                                }
-                            }
-
-                            animation_swaps.push_back(one_swap);
-                            //cout << "Swap " << animation_swaps.size()-1 << " saved. Offset: 0x" << std::hex << offset << std::dec << endl;
-
-                            /// New code potentially dangerous
-                            // Idea: Create all swaps in loading function, and store finished images
-                            // Downside: more RAM usage | Upside: less CPU usage
-                            // all_swaps animIndex frame
-                            // all_swaps[index][curFrame-1]
-
-                            vector<sf::Image> frames;
-
-                            for (int a = 0; a < animation_swaps.size(); a++)
-                            {
-                                sf::Image nw = tmp.spritesheet;
-                                for (int i = 0; i < animation_swaps[a].size(); i++)
-                                {
-                                    nw.setPixel(animation_swaps[a][i].x, animation_swaps[a][i].y, animation_swaps[a][i].color);
+                                    frames.push_back(nw);
+                                    //cout << "frame " << frames.size() - 1 << " for animation " << a << " created" << endl;
                                 }
 
-                                frames.push_back(nw);
-                                //cout << "frame " << frames.size() - 1 << " for animation " << a << " created" << endl;
+                                //all_swaps.push_back(animation_swaps);
+                                all_swaps_img.get()->push_back(frames);
                             }
-
-                            //all_swaps.push_back(animation_swaps);
-                            all_swaps_img.get()->push_back(frames);
 
                             //cout << "[AnimatedObject] PixelSwap animation loaded: " << animation_swaps.size() << " swaps (animation no. " << all_swaps_img.get()->size() << ")" << endl;
                         }
@@ -1109,6 +1112,10 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
         for (int i = 0; i < objects.get()->size(); i++)
         {
             //cout << "[AnimatedObject::Draw] Object " << i << endl;
+
+            if (qualitySetting != -1)
+            (*objects)[i].s_obj.qualitySetting = qualitySetting;
+
             (*objects)[i].g_x = global_x;
             (*objects)[i].g_y = global_y;
             (*objects)[i].gl_x = local_x;
@@ -1159,6 +1166,7 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
 
                             //if(curFrame < (*all_swaps_img)[index].size())
                             //cout << "[AnimatedObject::Draw] Type 3" << endl;
+                            //cout << "[AnimatedObject::Draw] path: " << anim_path << endl;
                             //cout << "[AnimatedObject::Draw] index: " << index << endl;
                             //cout << "[AnimatedObject::Draw] curFramePX: " << curFramePX << endl;
                             //cout << "[AnimatedObject::Draw] (*all_swaps_img).size(): " << (*all_swaps_img).size() << endl;
@@ -1173,6 +1181,10 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
                             //cout << "B " << anim_path << ", swapping texture to: " << index << " " << curFrame - 1 << endl;
                             //cout << "[AnimatedObject::Draw] Type 4" << endl;
                             (*objects)[i].swapTexture((*all_swaps_img)[index][curFrame - 1]);
+                        } else
+                        {
+                            ///what?
+                            //cout << "C " << anim_path << ", unknown behavior " << index << " " << curFrame - 1 << " " << bound << endl;
                         }
                     }
 
@@ -1180,7 +1192,7 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
 
                     if (force_origin_null) ///nullify the origin when the object is inanimate or you set a custom origin
                     {
-                        (*objects)[i].Draw(window, 0, 0);
+                        (*objects)[i].Draw(window, animation_origins[index][curFrame].x, animation_origins[index][curFrame].y);
                     } else
                     {
                         if (ao_version != 3)
