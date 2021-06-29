@@ -33,7 +33,7 @@ Note that currently we only support the proprietary NVidia driver for NVidia GPU
 
 You should enable [Developer Mode](https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development) in order to successfully configure the project.
 
-Please also make sure that the environment variable `SFML_ROOT` points to a valid SFML installation.
+Please also make sure that the environment variable `SFML_ROOT` points to a valid SFML installation and that the SFML installation is also added to PATH.
 
 
 ## Contributing
