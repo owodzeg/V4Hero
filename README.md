@@ -8,6 +8,7 @@ An official client for PatafourV4.
 
 - [Setup](#setup)
   - [Required Libraries and Tools](#required-libraries-and-tools)
+  - [Note for Linux Users](#note-for-linux-users)
   - [Note for Windows Users](#note-for-windows-users)
 - [Contributing](#contributing)
 - [License](#license)
@@ -21,6 +22,12 @@ After cloning the repo, get a copy the `resources` folder from an existing Pataf
 
  * [CMake](https://cmake.org/download/) >= 3.19
  * [SFML](https://www.sfml-dev.org/download.php) >= 2.5
+
+### Note for Linux users
+
+On Linux also the X11 library needs to be installed (if you're on Ubuntu it's the `libx11-dev` package and you can install it with `sudo apt install libx11-dev`).
+
+Note that currently we only support the proprietary NVidia driver for NVidia GPUs.
 
 ### Note for Windows users
 
