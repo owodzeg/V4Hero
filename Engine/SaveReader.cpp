@@ -58,8 +58,6 @@ void SaveReader::LoadSave(Config& tconfig)
         cout << "Fetching save metadata" << endl;
         save_ver = save_data["details"]["version"];
         kami_name = sf::String(to_string(save_data["details"]["name"]));
-        times_launched = save_data["details"]["times_launched"];
-        times_launched++;
         locations_unlocked = save_data["details"]["locations_unlocked"];
 
         cout << "Fetching owned items" << endl;
@@ -181,9 +179,6 @@ void SaveReader::CreateBlankSave() ///Creates a blank save data for use
     ///name of god
     kami_name = "Kamipon";
 
-    ///times launched (unnecessary?)
-    times_launched = 0;
-
     ///Adding starter items
     vector<string> starter_items = {"item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet"};
 
@@ -234,7 +229,6 @@ void SaveReader::Save()
 
     save_json["save"]["details"]["version"] = 2.0;
     save_json["save"]["details"]["name"] = kami_name;
-    save_json["save"]["details"]["times_launched"] = times_launched;
     save_json["save"]["details"]["locations_unlocked"] = locations_unlocked;
 
     for (int i = 0; i < invData.items.size(); i++)
