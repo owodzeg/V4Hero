@@ -20,7 +20,6 @@ public:
     nlohmann::json save_data;
 
     sf::String kami_name;
-    int times_launched;
     bool hero_unlocked = false;
 
     std::vector<int> missions_unlocked = {1};
