@@ -51,7 +51,6 @@ void NameEntryButtonList::SelectButton(int index)
                 savMenu->savefilecreated.UpdateKamiName(savMenu->GetEnteredString());
                 savMenu->v4Core->saveReader.kami_name = savMenu->GetEnteredString();
                 savMenu->v4Core->saveReader.hero_unlocked = 0;
-                savMenu->v4Core->saveReader.times_launched = 1;
 
                 for (int i = 0; i < 3; i++)
                 {
