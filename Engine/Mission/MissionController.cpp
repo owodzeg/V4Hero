@@ -736,7 +736,8 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
         {
             entity->setEntityID(id);
 
-            entity->floorY = ypos; ///in case Y gets overriden, save the position where the floor is
+            entity->floorY = baseY; ///in case Y gets overriden, save the position where the floor is
+			baseY = ypos;
 
             if (xrange != 0)
                 entity->setGlobalPosition(sf::Vector2f(xpos + (rand() % xrange), ypos));
