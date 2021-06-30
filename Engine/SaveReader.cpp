@@ -41,8 +41,6 @@ SaveReader::SaveReader()
     itemReg.readItemFiles(); ///load up items
 
     invData.saveReader = this;
-
-    cout << invData.itemReg.items.size() << endl; ///says 35
 }
 
 void SaveReader::LoadSave(Config& tconfig)
@@ -56,12 +54,10 @@ void SaveReader::LoadSave(Config& tconfig)
         conf >> save_data;
         save_data = save_data["save"];
 
-        cout << "Fetching save metadata" << endl;
         save_ver = save_data["details"]["version"];
         kami_name = sf::String(to_string(save_data["details"]["name"]));
         locations_unlocked = save_data["details"]["locations_unlocked"];
 
-        cout << "Fetching owned items" << endl;
         for (int i = 0; i < save_data["items"].size(); i++)
         {
             vector<int> cur_item_id;
@@ -72,7 +68,6 @@ void SaveReader::LoadSave(Config& tconfig)
             invData.addItem(cur_item_id);
         }
 
-        cout << "Fetching hero data" << endl;
         if (save_data["army"][0]["rarepon"] != -1) // Is hero unlocked?
         {
             hero_unlocked = true;
@@ -106,8 +101,6 @@ void SaveReader::LoadSave(Config& tconfig)
                 new_pon.pon_exp = save_data["army"][i][o]["exp"];
                 for (int p = 0; p < save_data["army"][i][o]["slots"].size(); p++)
                 {
-                    cout << "save_data[\"army\"][" << i << "][" << o << "][\"slots\"][" << p << "] = " << save_data["army"][i][o]["slots"][p] << endl;
-
                     if (save_data["army"][i][o]["slots"][p][0] != -1) // Is this necessary?
                     {
                         new_pon.giveItem(invData.getInvIDByItemID(save_data["army"][i][o]["slots"][p]), p);
@@ -142,7 +135,6 @@ void SaveReader::LoadSave(Config& tconfig)
             ponReg.squads_available.push_back(save_data["army"][i][0]["class"]); // Save to available squads for choosing in barracks / prep
         }
 
-        cout << "Fetching unlocked missions" << endl;
         for (int i = 0; i < save_data["missions"].size(); i++) // Each mission is stored as a single array so it can be handled elegantly (slightly increases file size, but shouldn't be a problem)
         {
             if (save_data["missions"][i][2]) // Is unlocked?
@@ -153,7 +145,7 @@ void SaveReader::LoadSave(Config& tconfig)
         }
     } else
     {
-        cout << "ERROR! Could not load save file!" << endl;
+		spdlog::error("Could not load save file");
     }
     conf.close();
 }
@@ -224,8 +216,6 @@ void SaveReader::Save()
     save_json["save"]["details"]["name"] = kami_name;
     save_json["save"]["details"]["locations_unlocked"] = locations_unlocked;
 
-	cout << "After details: " << save_json << endl;
-
     for (int i = 0; i < invData.items.size(); i++)
     {
         for (int o = 0; o < invData.items[i].item_count; o++)
@@ -233,7 +223,6 @@ void SaveReader::Save()
             save_json["save"]["items"] += invData.items[i].item->order_id;
         }
     }
-	cout << "After items: " << save_json << endl;
 
     if (hero_unlocked)
     {
@@ -260,17 +249,14 @@ void SaveReader::Save()
 	{
 		save_json["save"]["army"][0]["rarepon"] = -1; // This is the laziest way to fix this crash that I could possibly think of
 	}
-	cout << "After hero: " << save_json << endl;
 
-    int squad_pos = 0; // fix pls?
-	cout << "Squads available: " << ponReg.squads_available.size() << endl;
-    for (int i = 1; i <= ponReg.squads_available.size(); i++) // Skip hero?
+    int squad_pos = 0;
+    for (int i = 1; i <= ponReg.squads_available.size(); i++) // Skip hero
     {
         for (int o = 0; o < ponReg.pons.size(); o++)
         {
             if (ponReg.pons[o].pon_class == ponReg.squads_available[i - 1])
             {
-				cout << save_json["save"]["army"][i] << endl;
                 save_json["save"]["army"][i][squad_pos]["rarepon"] = ponReg.pons[o].pon_id;
                 save_json["save"]["army"][i][squad_pos]["class"] = ponReg.pons[o].pon_class;
                 save_json["save"]["army"][i][squad_pos]["level"] = ponReg.pons[o].pon_level;
@@ -296,7 +282,6 @@ void SaveReader::Save()
         }
         squad_pos = 0;
     }
-	cout << "After army: " << save_json << endl;
 
 	std::vector<json> missions; // Doing this like so skips saving an accidental null value in the array
     map<int, int>::iterator it;
@@ -310,11 +295,10 @@ void SaveReader::Save()
     }
 	save_json["save"]["missions"] = missions;
 
-	cout << "At end: " << save_json << endl;
     save_file << save_json;
     save_file.close();
 
-	cout << "Done saving." << endl;
+	spdlog::info("Done saving.");
 }
 
 bool SaveReader::isMissionUnlocked(int mission)
