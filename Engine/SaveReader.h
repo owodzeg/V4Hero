@@ -21,7 +21,7 @@ public:
 
     sf::String kami_name;
     bool hero_unlocked = false;
-	int story_point = 0;
+    int story_point = 0;
 
     std::vector<int> missions_unlocked = {1};
     std::vector<int> locations_unlocked = {1};
@@ -38,7 +38,7 @@ public:
     bool isNewSave;
     void Save();
     bool isMissionUnlocked(int mission);
-	bool isLocationUnlocked(int location);
+    bool isLocationUnlocked(int location);
 };
 
 #endif // SAVEREADER_H
