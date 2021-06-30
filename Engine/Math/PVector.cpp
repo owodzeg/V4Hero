@@ -1,6 +1,8 @@
+#define _USE_MATH_DEFINES
+
 #include "PVector.h";
 #include "SFML/Graphics.hpp"
-#include <math.h>
+#include <cmath>
 #include <stdlib.h> /* abs */
 PVector& PVector::getVectorCartesian(float x1, float y1, float x2, float y2)
 {
