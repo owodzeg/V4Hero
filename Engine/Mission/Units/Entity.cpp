@@ -95,8 +95,8 @@ void Entity::dropItem()
                 {
                     Loot tmp;
                     tmp.order_id = force_drop_id;
-                    // check if the item is scheduled to drop anyway
-                    if (willDrop(force_drop_id))
+                    // only add to loot if the item isn't scheduled to drop
+                    if (!willDrop(force_drop_id))
                     {
                         loot_table.push_back(tmp);
                     }
