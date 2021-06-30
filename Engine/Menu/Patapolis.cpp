@@ -31,9 +31,7 @@ void PatapolisMenu::addL6(std::string variant, float x, float y, int q, int r)
 	PSprite tmp;
 	tmp.loadFromFile("resources/graphics/bg/patapolis/6" + variant + ".png", q, r);
 	tmp.setPosition(x, y);
-	cout << "Test" << endl;
 	layer_6.push_back(tmp);
-	cout << "Done" << endl;
 }
 
 void PatapolisMenu::addL2(std::string variant, float x, float y, int q, int r)
@@ -41,9 +39,7 @@ void PatapolisMenu::addL2(std::string variant, float x, float y, int q, int r)
 	PSprite tmp;
 	tmp.loadFromFile("resources/graphics/bg/patapolis/2" + variant + ".png", q, r);
 	tmp.setPosition(x, y);
-	cout << "Test" << endl;
 	layer_2.push_back(tmp);
-	cout << "Done" << endl;
 }
 
 void PatapolisMenu::addSparkle(float x, float y)
