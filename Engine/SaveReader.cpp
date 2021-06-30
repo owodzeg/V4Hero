@@ -56,7 +56,12 @@ void SaveReader::LoadSave(Config& tconfig)
 
         save_ver = save_data["details"]["version"];
         kami_name = sf::String(to_string(save_data["details"]["name"]));
-        locations_unlocked = save_data["details"]["locations_unlocked"];
+		story_point = save_data["details"]["story_point"];
+		locations_unlocked.clear(); // Clear the defaul from SaveReader.h
+		for (int i = 0; i < save_data["details"]["locations_unlocked"].size(); i++)
+		{
+			locations_unlocked.push_back(save_data["details"]["locations_unlocked"][i]);
+		}
 
         for (int i = 0; i < save_data["items"].size(); i++)
         {
@@ -154,7 +159,7 @@ void SaveReader::Flush() ///Empties the save data.
 {
     missions_unlocked.clear();
     mission_levels.clear();
-    locations_unlocked = 1;
+    locations_unlocked = {1};
 
     //invdata.items.clear();
 
@@ -200,7 +205,9 @@ void SaveReader::CreateBlankSave()
 
     // Worldmap data
     missions_unlocked.push_back(1);
-    locations_unlocked = 1;
+    locations_unlocked = {1};
+
+	story_point = 1;
 
 	spdlog::info("Finished creating blank save");
 }
@@ -215,6 +222,7 @@ void SaveReader::Save()
     save_json["save"]["details"]["version"] = "2.0";
     save_json["save"]["details"]["name"] = kami_name;
     save_json["save"]["details"]["locations_unlocked"] = locations_unlocked;
+	save_json["save"]["details"]["story_point"] = story_point;
 
     for (int i = 0; i < invData.items.size(); i++)
     {
@@ -304,6 +312,17 @@ void SaveReader::Save()
 bool SaveReader::isMissionUnlocked(int mission)
 {
     if (std::find(missions_unlocked.begin(), missions_unlocked.end(), mission) != missions_unlocked.end())
+    {
+        return true;
+    } else
+    {
+        return false;
+    }
+}
+
+bool SaveReader::isLocationUnlocked(int location)
+{
+    if (std::find(locations_unlocked.begin(), locations_unlocked.end(), location) != locations_unlocked.end())
     {
         return true;
     } else
