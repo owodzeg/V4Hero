@@ -113,7 +113,7 @@ bool InventoryData::checkItemObtainedByName(string item_name)
     return false;
 }
 
-void InventoryData::addItem(vector<int> item_id, int count)
+void InventoryData::addItem(vector<int> item_id)
 {
     cout << "InventoryData::addItem({" << item_id[0];
     for (int i = 1; i < item_id.size(); i++)
@@ -124,12 +124,12 @@ void InventoryData::addItem(vector<int> item_id, int count)
 
     if (checkItemObtained(item_id))
     {
-        items[getInvIDByItemID(item_id)].item_count += count;
+        items[getInvIDByItemID(item_id)].item_count++;
     } else
     {
         InventoryData::InventoryItem new_item;
         new_item.item = itemReg.getItemByID(item_id);
-        new_item.item_count = count;
+        new_item.item_count = 1;
         items.push_back(new_item);
     }
 }

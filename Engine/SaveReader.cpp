@@ -65,7 +65,12 @@ void SaveReader::LoadSave(Config& tconfig)
 
         for (int i = 0; i < save_data["items"].size(); i++)
         {
-            invData.addItem(itemReg.getItemByName(save_data["items"][i]["name"])->order_id, save_data["items"][i]["count"]);
+            vector<int> cur_item_id;
+            for (int o = 0; o < save_data["items"][i].size(); o++)
+            {
+                cur_item_id.push_back(save_data["items"][i][o]);
+            }
+            invData.addItem(cur_item_id);
         }
 
         if (save_data["army"][0]["rarepon"] != -1) // Is hero unlocked?
@@ -221,12 +226,10 @@ void SaveReader::Save()
 
     for (int i = 0; i < invData.items.size(); i++)
     {
-        json item;
-
-        item["name"] = invData.items[i].item->item_name;
-        item["count"] = invData.items[i].item_count;
-
-        save_json["save"]["items"] += item;
+        for (int o = 0; o < invData.items[i].item_count; o++)
+        {
+            save_json["save"]["items"] += invData.items[i].item->order_id;
+        }
     }
 
     if (hero_unlocked)
