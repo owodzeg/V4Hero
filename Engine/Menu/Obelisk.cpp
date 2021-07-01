@@ -146,22 +146,32 @@ void ObeliskMenu::Reload()
     cout << "Location_bgs capacity: " << location_bgs.capacity() << endl;
 
     ///Access the save data
-    field_unlocked = v4Core->saveReader.locations_unlocked;
+    fields_unlocked = v4Core->saveReader.locations_unlocked;
     missions_unlocked = v4Core->saveReader.missions_unlocked;
 
     PSprite fld;
     fld.loadFromFile("resources/graphics/ui/worldmap/location_field.png", quality, 1);
 
     ///worldmap contents
-    for (int i = 1; i <= field_unlocked; i++)
+    // i is location id, not an idx in fields_unlocked
+    for (int i = 1; i <= *std::max_element(fields_unlocked.begin(), fields_unlocked.end()); i++)
     {
-        PSprite bg;
-        location_bgs.push_back(bg);
-        location_bgs[location_bgs.size() - 1].loadFromFile("resources/graphics/ui/worldmap/locationbg_" + to_string(i) + ".png", quality, 1);
+        if (std::find(fields_unlocked.begin(), fields_unlocked.end(), i) != fields_unlocked.end())
+        {
+            int curIdx = std::find(fields_unlocked.begin(), fields_unlocked.end(), i) - fields_unlocked.begin();
 
-        PSprite loc;
-        location_icons.push_back(loc);
-        location_icons[location_icons.size() - 1].loadFromFile("resources/graphics/ui/worldmap/location_" + to_string(i) + ".png", quality, 1);
+            PSprite bg;
+            location_bgs.push_back(bg);
+            location_bgs[location_bgs.size() - 1].loadFromFile("resources/graphics/ui/worldmap/locationbg_" + to_string(fields_unlocked[curIdx]) + ".png", quality, 1);
+
+            PSprite loc;
+            loc.loadFromFile("resources/graphics/ui/worldmap/location_" + to_string(fields_unlocked[curIdx]) + ".png", quality, 1);
+            worldmap_icons.push_back(loc);
+        } else
+        {
+            worldmap_fields.push_back(fld);
+            worldmap_icons.push_back(dullpon);
+        }
     }
 
     for (int i = 1; i <= 20; i++)
@@ -177,15 +187,18 @@ void ObeliskMenu::Reload()
         }
     }
 
-    cout << "sel_location: " << sel_location << endl;
-
-    location_bg_a = location_bgs[sel_location - 1];
-    location_bg_b = location_bgs[sel_location - 1];
+    if (sel_location > 0 && sel_location < location_bgs.size())
+    {
+        location_bg_a = location_bgs[sel_location - 1];
+        location_bg_b = location_bgs[sel_location - 1];
+    }
 
     unlocked.clear();
 
-    for (int i = 0; i < field_unlocked; i++)
-        unlocked.push_back(i);
+    for (const auto& field : fields_unlocked)
+    {
+        unlocked.push_back(field - 1);
+    }
 
     //vector<int> unlocked = {0};
 }

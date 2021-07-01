@@ -13,6 +13,19 @@ PatapolisMenu::PatapolisMenu()
     is_active = false;
 }
 
+void PatapolisMenu::updateStoryPoint()
+{
+    // While currently just doing
+    //v4Core->saveReader.story_point = *std::max_element(v4Core->saveReader.missions_unlocked.begin(), v4Core->saveReader.missions_unlocked.end());
+    // would suffice, we do this in case at some point we want a story point to change without unlocking a mission
+    // for example, after a mission you're supposed to fail
+    int last_mission = *std::max_element(v4Core->saveReader.missions_unlocked.begin(), v4Core->saveReader.missions_unlocked.end());
+    if (v4Core->saveReader.story_point < 6) // story_point 0-5 can just do that
+    {
+        v4Core->saveReader.story_point = last_mission;
+    }
+}
+
 void PatapolisMenu::addL6(std::string variant, float x, float y, int q, int r)
 {
     PSprite tmp;
@@ -198,8 +211,10 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
 {
     parent->saveToDebugLog("Initializing Patapolis...");
 
+
     //sf::Context context;
     Scene::Initialise(_thisConfig, parent);
+    updateStoryPoint(); // Update story_point before anything else
     altar_menu.initialise(_thisConfig, parent, this);
     barracks_menu.initialise(_thisConfig, parent, this);
     obelisk_menu.Initialise(_thisConfig, parent, this);
@@ -665,50 +680,49 @@ void PatapolisMenu::SetTitle(int menuPosition)
 
             vector<int> missions = v4Core->saveReader.missions_unlocked;
 
-            if (std::find(missions.begin(), missions.end(), 1) != missions.end())
+            switch (v4Core->saveReader.story_point)
             {
-                ///shida valley is unlocked
-
-                if (missions.size() == 1) ///if it's the only mission
-                {
-                    ///shida valley dialogue
+                case 0:
+                default: {
+                    // Start of game, shouldn't be accessible
+                    break;
+                }
+                case 1: {
+                    // Shida Valley
                     tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_1")), true);
                     tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_4")), true);
                     tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_5")), true);
-                } else
-                {
-                    if (std::find(missions.begin(), missions.end(), 2) != missions.end()) ///patapine fortress STORY mission (non-repeatable)
-                    {
-                        ///patapine unlocked dialogue
-                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_3")), true);
-                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_6")), true);
-                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_7")), true);
-                    } else if (std::find(missions.begin(), missions.end(), 3) != missions.end()) ///patapine fortress REPEATABLE mission
-                    {
-                        if (missions.size() == 2) ///ejiji cliffs not unlocked yet (only shida and patapine)
-                        {
-                            ///ejiji locked dialogue
-                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_2")), true);
-                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_8")), true);
-                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_9")), true);
-                        } else
-                        {
-                            if (std::find(missions.begin(), missions.end(), 4) != missions.end()) ///ejiji cliff STORY mission
-                            {
-                                ///ejiji unlocked dialogue
-                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_3")), true);
-                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_10")), true);
-                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_11")), true);
-                            } else ///ejiji cliff REPEATABLE mission
-                            {
-                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_1")), true);
-                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_12")), true);
-                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_13")), true);
+                    break;
+                }
+                case 2: {
+                    // Patapin Grove Unlocked
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_3")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_6")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_7")), true);
+                    break;
+                }
+                case 3: {
+                    // Patapine Grove Beaten
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_2")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_8")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_9")), true);
+                    break;
+                }
+                case 4: {
+                    // Ejiji Cliffs Unlocked
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_3")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_10")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_11")), true);
+                    break;
+                }
+                case 5: {
+                    // Ejiji Cliffs Beaten
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_1")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_12")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_13")), true);
 
-                                tmp.msgcloud_ID = 2;
-                            }
-                        }
-                    }
+                    tmp.msgcloud_ID = 2;
+                    break;
                 }
             }
 

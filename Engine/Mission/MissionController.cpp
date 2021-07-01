@@ -179,16 +179,16 @@ json parseLootArray(mt19937& gen, uniform_real_distribution<double>& roll, json 
             loot[i]["chance"] = total;
         } else
         {
-            cout << "[WARNING] Undefined behavior detected while parsing loot: " << loot << " | (Element of array is neither an array nor an object)" << endl;
+			spdlog::warn("Undefined behavior detected while parsing loot: {} | (Element of array is neither an array nor an object)", loot);
         }
     }
 
     if (total < 100)
     {
-        cout << "[WARNING] Undefined behavior detected while parsing loot: " << loot << " | (Total chances in array less than 100)" << endl;
+		spdlog::warn("Undefined behavior detected while parsing loot: {} | (Total chances in array less than 100)", loot);
     } else if (total > 100)
     {
-        cout << "[WARNING] Potential data loss detected while parsing loot: " << loot << " | (Total chances in array more than 100)" << endl;
+		spdlog::warn("Undefined behavior detected while parsing loot: {} | (Total chances in array more than 100)", loot);
     }
 
     float n = roll(gen);
@@ -210,7 +210,7 @@ json parseLootArray(mt19937& gen, uniform_real_distribution<double>& roll, json 
             }
         } else
         {
-            cout << "[WARNING] Undefined behavior detected while parsing loot: " << loot << " | (Element of array is neither an array nor an object)" << endl;
+			spdlog::warn("Undefined behavior detected while parsing loot: {} | (Element of array is neither an array nor an object)", loot);
         }
     }
 }
@@ -226,7 +226,6 @@ void MissionController::parseEntityLoot(mt19937& gen, uniform_real_distribution<
         {
             Entity::Loot tmp;
             json parsedArray = parseLootArray(gen, roll, loot);
-            cout << "parsedArray: " << parsedArray << endl;
             tmp.order_id = v4Core->saveReader.itemReg.getItemByName(parsedArray["item"])->order_id;
             to_drop.push_back(tmp);
         }
@@ -279,7 +278,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
     uniform_real_distribution<double> roll(0.0, 1.0);
 
     int mission_level = v4Core->saveReader.mission_levels[curMissionID];
-    int mission_diff = 0.85 + v4Core->saveReader.mission_levels[curMissionID] * 0.15;
+    float mission_diff = 0.85 + mission_level * 0.15;
 
     ///need to somehow optimize this to not copy paste the same code over and over
 
@@ -737,7 +736,8 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
         {
             entity->setEntityID(id);
 
-            entity->floorY = ypos; ///in case Y gets overriden, save the position where the floor is
+            entity->floorY = baseY; ///in case Y gets overriden, save the position where the floor is
+			baseY = ypos;
 
             if (xrange != 0)
                 entity->setGlobalPosition(sf::Vector2f(xpos + (rand() % xrange), ypos));
@@ -827,7 +827,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
         }
     }
 
-    cout << "[MissionController] Loading finished. Loading took " << bm.getElapsedTime().asSeconds() << " seconds" << endl;
+	spdlog::info("[MissionController] Loading finished. Loading took {} seconds", bm.getElapsedTime().asSeconds());
 }
 
 void MissionController::spawnProjectile(PSprite& sprite, float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float max_dmg, float min_dmg, float crit, bool enemy)
@@ -908,25 +908,25 @@ void MissionController::submitPickedItems()
     {
         InventoryData::InventoryItem invItem;
         v4Core->saveReader.invData.addItem(v4Core->saveReader.itemReg.getItemByName(pickedItems[i].item_name)->order_id);
-        if (pickedItems[i].item_name == "item_grubby_map") ///Grubby map
+        if (pickedItems[i].item_name == "item_soggy_map") ///Grubby map
         {
             ///Check if Patapine Grove missions doesnt exist, and if Patapine Grove is not unlocked already
-            if ((!v4Core->saveReader.isMissionUnlocked(3)) && (!v4Core->saveReader.isMissionUnlocked(2)) && (v4Core->saveReader.locations_unlocked == 1))
+            if (!v4Core->saveReader.isMissionUnlocked(3) && !v4Core->saveReader.isMissionUnlocked(2) && !v4Core->saveReader.isLocationUnlocked(2))
             {
                 ///Add first patapine mission and unlock second location
                 v4Core->saveReader.missions_unlocked.push_back(2);
-                v4Core->saveReader.locations_unlocked = 2;
+                v4Core->saveReader.locations_unlocked.push_back(2);
             }
         }
 
         if (pickedItems[i].item_name == "item_digital_blueprint")
         {
             ///Check if Ejiji Cliffs missions doesnt exist, and if Ejiji Cliffs is not unlocked already
-            if ((!v4Core->saveReader.isMissionUnlocked(5)) && (!v4Core->saveReader.isMissionUnlocked(4)) && (v4Core->saveReader.locations_unlocked == 2))
+            if (!v4Core->saveReader.isMissionUnlocked(5) && !v4Core->saveReader.isMissionUnlocked(4) && !v4Core->saveReader.isLocationUnlocked(3))
             {
                 ///Add first patapine mission and unlock second location
                 v4Core->saveReader.missions_unlocked.push_back(4);
-                v4Core->saveReader.locations_unlocked = 3;
+                v4Core->saveReader.locations_unlocked.push_back(3);
             }
         }
     }
@@ -1137,7 +1137,7 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
     spear_hit_solid.loadFromFile("resources/sfx/level/spear_hit_solid.ogg");
     s_heal.loadFromFile("resources/sfx/level/picked_heal.ogg");
 
-    cout << "initialization finished" << endl;
+	spdlog::info("Mission initialization finished");
 }
 void MissionController::StartMission(std::string missionFile, bool showCutscene, int missionID, float mission_multiplier)
 {
@@ -1554,22 +1554,22 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
                         // Do nothing
                     }
 
-                    cout << "[MissionController] Spawning an entity: " << id << endl;
+					spdlog::info("[MissionController] Spawning an entity: {}", id); // Candidate for removal?
                     spawnEntity(id, collidable, attackable, xpos, xrange, cloneable, clone_delay, spawnrate, stat_mult, mindmg, maxdmg, hp, ypos, baseY, *color, layer, parent, loot, ent_custom_params);
                 } catch (const exception& e)
                 {
-                    cerr << "[ERROR] An error occured while loading mission entity params from: resources/missions/" << missionFile << ". Error: " << e.what() << endl;
+					spdlog::error("An error occured while loading mission entity params from: resources/missions/{}. Error: {}", missionFile, e.what());
                 }
 
                 ent_default_params.close();
             } catch (const exception& e)
             {
-                cerr << "[ERROR] An error occured while loading default entity params from: resources/units/entity/" << entity_list[id] << ". Error: " << e.what() << endl;
+				spdlog::error("An error occured while loading default entity params from: resources/units/entity/{}. Error: {}", entity_list[id], e.what());
             }
         }
     } catch (const exception& e)
     {
-        cerr << "[ERROR] An error occured while loading mission entities from: resources/missions/" << missionFile << ". Error: " << e.what() << endl;
+		spdlog::error("An error occured while loading mission entities from: resources/missions/{}. Error: {}", missionFile, e.what());
     }
 
     ///make this unit load based on how the army is built later
@@ -1583,17 +1583,18 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 
     for (int i = 0; i < army_size; i++)
     {
-        cout << "[DEBUG] Trying to find pon: " << i << endl;
+		spdlog::debug("Trying to find pon: {}", i);
         Pon* current_pon = v4Core->saveReader.ponReg.GetPonByID(i);
-        cout << "[DEBUG] Making pon with class: " << current_pon->pon_class << endl;
+		spdlog::debug("Making pon with class: {}", current_pon->pon_class);
         switch (current_pon->pon_class)
         {
             case -1: ///this was earlier 0 which i dont understand because pon class 0 = yaripon lol
             {
-                cout << "[DEBUG] What? Hatapon detected in saveReader.ponreg.pons" << endl;
+				spdlog::warn("Hatapon detected in saveReader.ponreg.pons");
                 break;
             }
-            case 0: {
+            case 0:
+			{
                 unique_ptr<Yaripon> wip_pon = make_unique<Yaripon>();
                 wip_pon.get()->LoadConfig(thisConfig);
                 wip_pon.get()->setUnitID(current_pon->pon_class + 1); ///have to set unit ID from 0 to 1 because 0 is already occupied by Hatapon
@@ -1602,21 +1603,23 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
                 wip_pon.get()->current_hp = current_pon->pon_hp;
                 wip_pon.get()->max_hp = current_pon->pon_hp;
 
-                cout << "Checking equipment slots: ";
-                for (int s = 0; s < current_pon->slots.size(); s++)
-                    cout << current_pon->slots[s] << " ";
-
-                cout << endl;
-
                 if (current_pon->slots[0] != -1)
+				{
                     wip_pon.get()->applyEquipment(v4Core->saveReader.invData.items[current_pon->slots[0]].item->order_id, 0);
+				}
                 else
-                    cout << "[ERROR] Yaripon has an empty equipment slot 1" << endl;
+				{
+					spdlog::error("Yaripon has an empty equipment slot 1");
+				}
 
                 if (current_pon->slots[1] != -1)
+				{
                     wip_pon.get()->applyEquipment(v4Core->saveReader.invData.items[current_pon->slots[1]].item->order_id, 1);
+				}
                 else
-                    cout << "[ERROR] Yaripon has an empty equipment slot 2" << endl;
+				{
+					spdlog::error("Yaripon has an empty equipment slot 2");
+				}
 
                 units.push_back(std::move(wip_pon));
                 break;
@@ -1689,7 +1692,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     rhythm.LoadTheme(songName); // thisConfig->GetString("debugTheme")
     missionTimer.restart();
 
-    cout << "MissionController::StartMission(): finished" << endl;
+	spdlog::debug("Mission loading finished.");
     thisConfig->thisCore->saveToDebugLog("Mission loading finished.");
 
     isFinishedLoading = true;
@@ -1940,7 +1943,9 @@ bool MissionController::DoCollisionStepInAxis(float currentAxisAngle, HitboxFram
     std::vector<sf::Vector2f> currentVertices = currentObjectHitBoxFrame->getCurrentVertices();
 
     if (currentVertices.size() < 4)
-        cout << "Vertices alert!!! " << currentVertices.size() << endl;
+	{
+		spdlog::warn("Vertices alert!!! {}", currentVertices.size());
+	}
 
     if (currentVertices.size() >= 4)
     {
@@ -2405,11 +2410,6 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
             if (missionEndTimer.getElapsedTime().asMilliseconds() > 19000)
             {
                 cout << "End mission" << endl;
-                /// A wall is unyielding, so it does nothing when collided with.
-
-                /// note we don't call the parent function. It does nothing, it just serves
-                /// as an incomplete function to be overridden by child classes.
-                /// end the mission
 
                 StopMission();
 
@@ -2433,7 +2433,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 if (!v4Core->mainMenu.patapolisMenu.initialised)
                 {
                     /// patapolis might not be initialised because we could be running the pre-patapolis scripted first mission.
-                    cout << "[ENDFLAG] Initialize Patapolis for the first time" << endl;
+					spdlog::info("[ENDFLAG] Initialize Patapolis for the first time");
                     v4Core->mainMenu.patapolisMenu.Initialise(thisConfig, v4Core, &v4Core->mainMenu);
                 } else
                 {
@@ -2532,7 +2532,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 if (!v4Core->mainMenu.patapolisMenu.initialised)
                 {
                     /// patapolis might not be initialised because we could be running the pre-patapolis scripted first mission.
-                    cout << "[ENDFLAG] Initialize Patapolis for the first time" << endl;
+                    spdlog::info("[ENDFLAG] Initialize Patapolis for the first time");
                     v4Core->mainMenu.patapolisMenu.Initialise(thisConfig, v4Core, &v4Core->mainMenu);
                 } else
                 {
