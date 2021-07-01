@@ -56,7 +56,12 @@ void SaveReader::LoadSave(Config& tconfig)
 
         save_ver = save_data["details"]["version"];
         kami_name = sf::String(to_string(save_data["details"]["name"]));
-        locations_unlocked = save_data["details"]["locations_unlocked"];
+        story_point = save_data["details"]["story_point"];
+        locations_unlocked.clear(); // Clear the defaul from SaveReader.h
+        for (int i = 0; i < save_data["details"]["locations_unlocked"].size(); i++)
+        {
+            locations_unlocked.push_back(save_data["details"]["locations_unlocked"][i]);
+        }
 
         for (int i = 0; i < save_data["items"].size(); i++)
         {
@@ -145,7 +150,7 @@ void SaveReader::LoadSave(Config& tconfig)
         }
     } else
     {
-		spdlog::error("Could not load save file");
+        spdlog::error("Could not load save file");
     }
     conf.close();
 }
@@ -154,7 +159,7 @@ void SaveReader::Flush() ///Empties the save data.
 {
     missions_unlocked.clear();
     mission_levels.clear();
-    locations_unlocked = 1;
+    locations_unlocked = {1};
 
     //invdata.items.clear();
 
@@ -167,14 +172,14 @@ void SaveReader::Flush() ///Empties the save data.
 
 void SaveReader::CreateBlankSave()
 {
-	spdlog::info("Creating blank save...");
+    spdlog::info("Creating blank save...");
 
     kami_name = "Kamipon";
 
     vector<string> starter_items = {"item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet"};
     for (int i = 0; i < starter_items.size(); i++)
     {
-		invData.addItem(itemReg.getItemByName(starter_items[i])->order_id);
+        invData.addItem(itemReg.getItemByName(starter_items[i])->order_id);
     }
 
     // Defining 3 Yaripons
@@ -196,13 +201,15 @@ void SaveReader::CreateBlankSave()
         ponReg.pons.push_back(newPon);
     }
 
-	ponReg.squads_available.push_back(0);
+    ponReg.squads_available.push_back(0);
 
     // Worldmap data
     missions_unlocked.push_back(1);
-    locations_unlocked = 1;
+    locations_unlocked = {1};
 
-	spdlog::info("Finished creating blank save");
+    story_point = 1;
+
+    spdlog::info("Finished creating blank save");
 }
 
 void SaveReader::Save()
@@ -215,6 +222,7 @@ void SaveReader::Save()
     save_json["save"]["details"]["version"] = "2.0";
     save_json["save"]["details"]["name"] = kami_name;
     save_json["save"]["details"]["locations_unlocked"] = locations_unlocked;
+    save_json["save"]["details"]["story_point"] = story_point;
 
     for (int i = 0; i < invData.items.size(); i++)
     {
@@ -231,24 +239,22 @@ void SaveReader::Save()
         save_json["save"]["army"][0]["level"] = ponReg.pons[0].pon_id;
         save_json["save"]["army"][0]["exp"] = ponReg.pons[0].pon_id;
         std::vector<std::vector<int>> slots;
-		for(int p = 0; p < 5; p++) // Potentially dangerous magic number. Use ponReg.pons[o].slots.size() in case it causes trouble
-		{
-			if(ponReg.pons[0].slots[p] != -1)
-			{
-				std::vector<int> curItem = invData.items[ponReg.pons[0].slots[p]].item->order_id;
-				slots.push_back(curItem);
-			}
-			else
-			{
-				slots.push_back(std::vector<int>(1, -1)); // empty or doesn't exist
-			}
-		}
-		save_json["save"]["army"][0]["slots"] = slots;
+        for (int p = 0; p < 5; p++) // Potentially dangerous magic number. Use ponReg.pons[o].slots.size() in case it causes trouble
+        {
+            if (ponReg.pons[0].slots[p] != -1)
+            {
+                std::vector<int> curItem = invData.items[ponReg.pons[0].slots[p]].item->order_id;
+                slots.push_back(curItem);
+            } else
+            {
+                slots.push_back(std::vector<int>(1, -1)); // empty or doesn't exist
+            }
+        }
+        save_json["save"]["army"][0]["slots"] = slots;
+    } else
+    {
+        save_json["save"]["army"][0]["rarepon"] = -1; // This is the laziest way to fix this crash that I could possibly think of
     }
-	else
-	{
-		save_json["save"]["army"][0]["rarepon"] = -1; // This is the laziest way to fix this crash that I could possibly think of
-	}
 
     int squad_pos = 0;
     for (int i = 1; i <= ponReg.squads_available.size(); i++) // Skip hero
@@ -262,20 +268,19 @@ void SaveReader::Save()
                 save_json["save"]["army"][i][squad_pos]["level"] = ponReg.pons[o].pon_level;
                 save_json["save"]["army"][i][squad_pos]["exp"] = ponReg.pons[o].pon_exp;
 
-				std::vector<std::vector<int>> slots;
-				for(int p = 0; p < 5; p++) // Potentially dangerous magic number. Use ponReg.pons[o].slots.size() in case it causes trouble
-				{
-					if(ponReg.pons[o].slots[p] != -1)
-					{
-						std::vector<int> curItem = invData.items[ponReg.pons[o].slots[p]].item->order_id;
-						slots.push_back(curItem);
-					}
-					else
-					{
-						slots.push_back(std::vector<int>(1, -1)); // empty
-					}
-				}
-				save_json["save"]["army"][i][squad_pos]["slots"] = slots;
+                std::vector<std::vector<int>> slots;
+                for (int p = 0; p < 5; p++) // Potentially dangerous magic number. Use ponReg.pons[o].slots.size() in case it causes trouble
+                {
+                    if (ponReg.pons[o].slots[p] != -1)
+                    {
+                        std::vector<int> curItem = invData.items[ponReg.pons[o].slots[p]].item->order_id;
+                        slots.push_back(curItem);
+                    } else
+                    {
+                        slots.push_back(std::vector<int>(1, -1)); // empty
+                    }
+                }
+                save_json["save"]["army"][i][squad_pos]["slots"] = slots;
 
                 squad_pos++;
             }
@@ -283,22 +288,22 @@ void SaveReader::Save()
         squad_pos = 0;
     }
 
-	std::vector<json> missions; // Doing this like so skips saving an accidental null value in the array
+    std::vector<json> missions; // Doing this like so skips saving an accidental null value in the array
     map<int, int>::iterator it;
     for (it = mission_levels.begin(); it != mission_levels.end(); it++)
     {
-		json tmp;
-		tmp[0] = it->first;
-		tmp[1] = it->second;
-		tmp[2] = isMissionUnlocked(it->first);
-		missions.push_back(tmp);
+        json tmp;
+        tmp[0] = it->first;
+        tmp[1] = it->second;
+        tmp[2] = isMissionUnlocked(it->first);
+        missions.push_back(tmp);
     }
-	save_json["save"]["missions"] = missions;
+    save_json["save"]["missions"] = missions;
 
     save_file << save_json;
     save_file.close();
 
-	spdlog::info("Done saving.");
+    spdlog::info("Done saving.");
 }
 
 bool SaveReader::isMissionUnlocked(int mission)
@@ -310,4 +315,9 @@ bool SaveReader::isMissionUnlocked(int mission)
     {
         return false;
     }
+}
+
+bool SaveReader::isLocationUnlocked(int location)
+{
+    return std::find(locations_unlocked.begin(), locations_unlocked.end(), location) != locations_unlocked.end();
 }
