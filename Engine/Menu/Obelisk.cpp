@@ -3,32 +3,29 @@
 #include "ButtonList.h"
 #include "iostream"
 #include "math.h"
-#include <nlohmann/json.hpp>
 #include <sstream>
 #include <string>
-
-using json = nlohmann::json;
 
 ObeliskMenu::ObeliskMenu()
 {
     is_active = false;
 }
 
-void ObeliskMenu::addMission(json missiondata)
+void ObeliskMenu::addMission(string missiondata)
 {
-    cout << "Adding mission: " << missiondata << endl;
+    vector<string> mission = Func::Split(missiondata, '|');
 
     Mission tmp;
-    tmp.mis_ID = missiondata["mission_id"];
-    tmp.loc_ID = missiondata["location_id"];
+    tmp.mis_ID = atoi(mission[0].c_str());
+    tmp.loc_ID = atoi(mission[1].c_str());
 
-    std::string title_key = missiondata["mission_title"];
-    std::string desc_key = missiondata["mission_description"];
+    wstring title_key = wstring(mission[2].begin(), mission[2].end());
+    wstring desc_key = wstring(mission[3].begin(), mission[3].end());
 
     tmp.title = thisConfig->strRepo.GetUnicodeString(title_key);
     tmp.desc = thisConfig->strRepo.GetUnicodeString(desc_key);
 
-    tmp.mission_file = missiondata["mission_file"];
+    tmp.mission_file = mission[4];
 
     string level = "";
 
@@ -416,17 +413,29 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
                 missions.clear();
 
-                ifstream wmap("resources/missions/worldmap.dat", std::ios::in);
-                json wmap_data;
-                if (wmap.good())
-                {
-                    wmap >> wmap_data;
+                ifstream wmap("resources/missions/worldmap.dat");
+                string buff;
 
-                    for (const auto& missiondata : wmap_data)
+                while (getline(wmap, buff))
+                {
+                    if (buff.back() == '\r')
                     {
-                        if (missiondata["location_id"] == sel_location && v4Core->saveReader.isMissionUnlocked(missiondata["mission_id"]))
+                        buff.pop_back();
+                    }
+                    cout << "[WorldMap] Read: " << buff << endl;
+
+                    if (buff.find("#") == std::string::npos)
+                    {
+                        vector<string> mission = Func::Split(buff, '|');
+
+                        cout << "[WorldMap] Checking " << atoi(mission[1].c_str()) << " vs " << sel_location << endl;
+                        if (atoi(mission[1].c_str()) == sel_location)
                         {
-                            addMission(missiondata);
+                            if (std::find(missions_unlocked.begin(), missions_unlocked.end(), atoi(mission[0].c_str())) != missions_unlocked.end())
+                            {
+                                cout << "Mission in location " << sel_location << " detected with ID " << mission[0] << endl;
+                                addMission(buff);
+                            }
                         }
                     }
                 }
