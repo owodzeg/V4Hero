@@ -16,19 +16,48 @@ ObeliskMenu::ObeliskMenu()
 
 void ObeliskMenu::addMission(json missiondata)
 {
-    cout << "Adding mission: " << missiondata << endl;
-
     Mission tmp;
-    tmp.mis_ID = missiondata["mission_id"];
-    tmp.loc_ID = missiondata["location_id"];
+    try
+    {
+        tmp.mis_ID = missiondata["mission_id"];
+    } catch (const std::exception& e)
+    {
+        tmp.mis_ID = 0;
+    }
+    try
+    {
+        tmp.loc_ID = missiondata["location_id"];
+    } catch (const std::exception& e)
+    {
+        tmp.loc_ID = 1;
+    }
 
-    std::string title_key = missiondata["mission_title"];
-    std::string desc_key = missiondata["mission_description"];
+    try
+    {
+        std::string title_key = missiondata["mission_title"];
+        tmp.title = thisConfig->strRepo.GetUnicodeString(title_key);
+    } catch (const std::exception& e)
+    {
+        std::string title = "No Data";
+        tmp.title = wstring(title.begin(), title.end());
+    }
+    try
+    {
+        std::string desc_key = missiondata["mission_description"];
+        tmp.desc = thisConfig->strRepo.GetUnicodeString(desc_key);
+    } catch (const std::exception& e)
+    {
+        std::string desc = "No Data";
+        tmp.desc = wstring(desc.begin(), desc.end());
+    }
 
-    tmp.title = thisConfig->strRepo.GetUnicodeString(title_key);
-    tmp.desc = thisConfig->strRepo.GetUnicodeString(desc_key);
-
-    tmp.mission_file = missiondata["mission_file"];
+    try
+    {
+        tmp.mission_file = missiondata["mission_file"];
+    } catch (const std::exception& e)
+    {
+        tmp.mission_file = "mis1_1.p4m";
+    }
 
     string level = "";
 
