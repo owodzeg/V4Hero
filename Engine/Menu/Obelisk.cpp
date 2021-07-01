@@ -3,9 +3,9 @@
 #include "ButtonList.h"
 #include "iostream"
 #include "math.h"
+#include <nlohmann/json.hpp>
 #include <sstream>
 #include <string>
-#include <nlohmann/json.hpp>
 
 using json = nlohmann::json;
 
@@ -16,7 +16,7 @@ ObeliskMenu::ObeliskMenu()
 
 void ObeliskMenu::addMission(json missiondata)
 {
-	cout << "Adding mission: " << missiondata << endl;
+    cout << "Adding mission: " << missiondata << endl;
 
     Mission tmp;
     tmp.mis_ID = missiondata["mission_id"];
@@ -417,18 +417,18 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 missions.clear();
 
                 ifstream wmap("resources/missions/worldmap.dat", std::ios::in);
-				json wmap_data;
-				if (wmap.good())
-				{
-					wmap >> wmap_data;
+                json wmap_data;
+                if (wmap.good())
+                {
+                    wmap >> wmap_data;
 
-					for (const auto& missiondata : wmap_data)
-					{
-						if(missiondata["location_id"] == sel_location && v4Core->saveReader.isMissionUnlocked(missiondata["mission_id"]))
-						{
-							addMission(missiondata);
-						}
-					}
+                    for (const auto& missiondata : wmap_data)
+                    {
+                        if (missiondata["location_id"] == sel_location && v4Core->saveReader.isMissionUnlocked(missiondata["mission_id"]))
+                        {
+                            addMission(missiondata);
+                        }
+                    }
                 }
 
                 wmap.close();
