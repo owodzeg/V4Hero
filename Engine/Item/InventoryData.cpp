@@ -113,7 +113,7 @@ bool InventoryData::checkItemObtainedByName(string item_name)
     return false;
 }
 
-void InventoryData::addItem(vector<int> item_id, int count = 1)
+void InventoryData::addItem(vector<int> item_id, int count)
 {
     cout << "InventoryData::addItem({" << item_id[0];
     for (int i = 1; i < item_id.size(); i++)
