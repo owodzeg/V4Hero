@@ -5,6 +5,7 @@
 #include "../Graphics/Menu.h"
 #include "../Graphics/PText.h"
 #include <SFML/Graphics.hpp>
+#include <nlohmann/json.hpp>
 
 class V4Core;
 class PatapolisMenu;
@@ -17,11 +18,11 @@ public:
     ControlTips ctrlTips;
 
     ///worldmap contents
-    vector<PSprite> location_bgs;
-    vector<PSprite> location_icons;
-    vector<PSprite> mission_icons;
-    vector<PSprite> worldmap_icons;
-    vector<PSprite> worldmap_fields;
+    std::vector<PSprite> location_bgs;
+    std::vector<PSprite> location_icons;
+    std::vector<PSprite> mission_icons;
+    std::vector<PSprite> worldmap_icons;
+    std::vector<PSprite> worldmap_fields;
     PSprite location_bg_a, location_bg_b;
     PSprite dullpon;
 
@@ -54,10 +55,10 @@ public:
     int sel_location = 1;
     int sel_mission = 0;
 
-    vector<int> unlocked = {0};
-    vector<int> missions_unlocked = {1, 2, 3, 6};
+    std::vector<int> unlocked = {0};
+    std::vector<int> missions_unlocked = {1, 2, 3, 6};
 
-    int field_unlocked = 1;
+    std::vector<int> fields_unlocked = {1};
 
     struct Mission {
         PText p_mis;
@@ -68,7 +69,7 @@ public:
         std::string mission_file;
     };
 
-    vector<Mission> missions; ///Missions returned for a specific location
+    std::vector<Mission> missions; ///Missions returned for a specific location
 
     sf::Texture test_tex;
     sf::Sprite test_spr;
@@ -81,7 +82,7 @@ public:
 
     PatapolisMenu* parentMenu;
 
-    void addMission(string missiondata);
+    void addMission(nlohmann::json missiondata);
     void Initialise(Config* thisConfig, V4Core* parent, PatapolisMenu* curParentMenu);
     void Reload();
     void Update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
