@@ -41,3 +41,4 @@ public:
 };
 
 #endif // INVENTORY_DATA_H
+
