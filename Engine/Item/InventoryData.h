@@ -26,7 +26,7 @@ public:
     int getInvIDByItemID(std::vector<int> item_id);
     bool checkItemObtained(std::vector<int> item_id);
     bool checkItemObtainedByName(std::string item_name);
-    void addItem(std::vector<int>);
+    void addItem(std::vector<int>, int count = 1);
     InventoryData();
     ~InventoryData();
 
@@ -41,3 +41,4 @@ public:
 };
 
 #endif // INVENTORY_DATA_H
+
