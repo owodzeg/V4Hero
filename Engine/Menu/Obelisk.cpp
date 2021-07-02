@@ -445,29 +445,18 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
                 missions.clear();
 
-                ifstream wmap("resources/missions/worldmap.dat");
-                string buff;
+                ifstream wmap("resources/missions/worldmap.dat", std::ios::in);
+                json wmap_data;
 
-                while (getline(wmap, buff))
+                if (wmap.good())
                 {
-                    if (buff.back() == '\r')
-                    {
-                        buff.pop_back();
-                    }
-                    cout << "[WorldMap] Read: " << buff << endl;
+                    wmap >> wmap_data;
 
-                    if (buff.find("#") == std::string::npos)
+                    for (const auto& missiondata : wmap_data)
                     {
-                        vector<string> mission = Func::Split(buff, '|');
-
-                        cout << "[WorldMap] Checking " << atoi(mission[1].c_str()) << " vs " << sel_location << endl;
-                        if (atoi(mission[1].c_str()) == sel_location)
+                        if (missiondata["location_id"] == sel_location && v4Core->saveReader.isMissionUnlocked(missiondata["mission_id"]))
                         {
-                            if (std::find(missions_unlocked.begin(), missions_unlocked.end(), atoi(mission[0].c_str())) != missions_unlocked.end())
-                            {
-                                cout << "Mission in location " << sel_location << " detected with ID " << mission[0] << endl;
-                                addMission(buff);
-                            }
+                            addMission(missiondata);
                         }
                     }
                 }
