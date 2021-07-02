@@ -20,7 +20,7 @@ void PatapolisMenu::updateStoryPoint()
     // would suffice, we do this in case at some point we want a story point to change without unlocking a mission
     // for example, after a mission you're supposed to fail
     int last_mission = *std::max_element(v4Core->saveReader.missions_unlocked.begin(), v4Core->saveReader.missions_unlocked.end());
-    if (v4Core->saveReader.story_point < 6) // story_point 0-5 can just do that
+    if (last_mission < 6) // story_point 0-5 can just do that
     {
         v4Core->saveReader.story_point = last_mission;
     }
