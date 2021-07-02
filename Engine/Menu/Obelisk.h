@@ -64,11 +64,9 @@ public:
         PText p_mis;
         int mis_ID = 0; ///mission ID
         int loc_ID = 0; ///location ID
-        bool hasLevels = false;
         std::wstring title;
         std::wstring desc;
         std::string mission_file;
-        std::string mission_path = "resources/missions/";
     };
 
     std::vector<Mission> missions; ///Missions returned for a specific location
