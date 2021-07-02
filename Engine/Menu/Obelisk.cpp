@@ -3,15 +3,18 @@
 #include "ButtonList.h"
 #include "iostream"
 #include "math.h"
+#include <nlohmann/json.hpp>
 #include <sstream>
 #include <string>
+
+using json = nlohmann::json;
 
 ObeliskMenu::ObeliskMenu()
 {
     is_active = false;
 }
 
-void ObeliskMenu::addMission(string missiondata)
+void ObeliskMenu::addMission(json missiondata)
 {
     Mission tmp;
     try

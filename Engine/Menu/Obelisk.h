@@ -4,6 +4,7 @@
 #include "../Dialog/ControlTips.h"
 #include "../Graphics/Menu.h"
 #include "../Graphics/PText.h"
+#include <nlohmann/json.hpp>
 #include <SFML/Graphics.hpp>
 
 class V4Core;
@@ -81,7 +82,7 @@ public:
 
     PatapolisMenu* parentMenu;
 
-    void addMission(string missiondata);
+    void addMission(nlohmann::json missiondata);
     void Initialise(Config* thisConfig, V4Core* parent, PatapolisMenu* curParentMenu);
     void Reload();
     void Update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
