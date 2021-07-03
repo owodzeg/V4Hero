@@ -1,6 +1,6 @@
 #ifndef TIPSUTIL_H
 #define TIPSUTIL_H
-#include "DebugOut.h"
+#include "Config.h"
 #include "Graphics/PSprite.h"
 #include "StringRepository.h"
 #include <SFML/Graphics.hpp>
@@ -10,7 +10,6 @@
 class TipsUtil
 {
 public:
-    DebugOut* debugOut;
     Config* config;
     std::vector<std::string> backgroundFileNames;
     std::vector<std::string> iconFileNames;

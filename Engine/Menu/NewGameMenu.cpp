@@ -2,6 +2,7 @@
 #include "../V4Core.h"
 #include "ButtonList.h"
 #include "iostream"
+#include <spdlog/spdlog.h>
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Time.hpp>
 NewGameMenu::NewGameMenu()
@@ -59,7 +60,7 @@ void NewGameMenu::EventFired(sf::Event event)
             buttonList.KeyPressedEvent(event);
             if (event.key.code == sf::Keyboard::Escape)
             {
-                thisConfig->debugOut->DebugMessage("Returning to patapolis menu...");
+                spdlog::debug("Returning to patapolis menu...");
                 v4Core->currentController.StopMission();
                 v4Core->mainMenu.Show();
                 v4Core->mainMenu.patapolisMenu.Hide();
@@ -73,7 +74,7 @@ void NewGameMenu::EventFired(sf::Event event)
             buttonList.KeyPressedEvent(event);
             if (event.key.code == sf::Keyboard::Escape)
             {
-                thisConfig->debugOut->DebugMessage("Returning to main menu...");
+                spdlog::debug("Returning to main menu...");
                 v4Core->currentController.StopMission();
                 is_active = true;
             }

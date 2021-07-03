@@ -1,11 +1,7 @@
 #include "TipsUtil.h"
 #include "Config.h"
-#include "DebugOut.h"
 #include "Func.h"
 #include <algorithm>
-#include <cassert>
-#include <cctype>
-#include <fstream>
 #include <iostream>
 #include <string>
 using namespace std;
@@ -37,7 +33,6 @@ void TipsUtil::LoadBackgrounds(Config& tconfig)
 
     //sf::Context context;
     config = &tconfig;
-    debugOut = config->debugOut;
 
     ifstream conf("resources/graphics/ui/tips/tip_backgrounds.txt");
     if (conf.good())
@@ -87,7 +82,6 @@ void TipsUtil::LoadIcons(Config& tconfig)
 
     //sf::Context context;
     config = &tconfig;
-    debugOut = config->debugOut;
     ifstream conf("resources/graphics/ui/tips/tip_icons.txt");
     if (conf.good())
     {

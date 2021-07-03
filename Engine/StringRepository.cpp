@@ -1,14 +1,7 @@
 #include "StringRepository.h"
-#include "DebugOut.h"
 #include "Func.h"
-#include <algorithm>
-#include <cassert>
-#include <cctype>
 #include <codecvt>
-#include <fstream>
-#include <iomanip>
 #include <iostream>
-#include <locale>
 #include <string>
 #include <vector>
 using namespace std;

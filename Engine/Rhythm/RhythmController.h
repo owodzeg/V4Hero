@@ -10,6 +10,8 @@
 #include "../Input/InputController.h"
 
 #include <SFML/Audio.hpp>
+#include <spdlog/logger.h>
+#include <spdlog/spdlog.h>
 
 using namespace std;
 
@@ -58,6 +60,8 @@ public:
     RhythmController();
     bool checkForInput(InputController& inputCtrl);
     void resetValues();
+private:
+    std::shared_ptr<spdlog::logger> logger = spdlog::get("rhythm");
 };
 
 #endif // RHYTHMCONTROLLER_H

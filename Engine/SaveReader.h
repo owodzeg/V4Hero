@@ -1,6 +1,5 @@
 #ifndef SAVEREADER_H
 #define SAVEREADER_H
-#include "DebugOut.h"
 #include "Item/InventoryData.h"
 #include "Item/ItemRegistry.h"
 #include "Pon/PonRegistry.h"
@@ -10,6 +9,9 @@
 #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
+
+class Config;
+
 class SaveReader
 {
 public:
@@ -33,7 +35,6 @@ public:
     void LoadSave(Config& tconfig);
     void Flush();
     void CreateBlankSave();
-    DebugOut* debugOut;
     Config* thisConfig;
     bool isNewSave;
     void Save();
