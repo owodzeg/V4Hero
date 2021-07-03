@@ -1,14 +1,7 @@
 #include "StringRepository.h"
-#include "DebugOut.h"
 #include "Func.h"
-#include <algorithm>
-#include <cassert>
-#include <cctype>
 #include <codecvt>
-#include <fstream>
-#include <iomanip>
 #include <iostream>
-#include <locale>
 #include <string>
 #include <vector>
 using namespace std;
@@ -146,26 +139,26 @@ std::wstring StringRepository::GetUnicodeString(std::wstring key)
 {
     std::string s(key.begin(), key.end());
 
-    std::string c(stringMap[s].begin(), stringMap[s].end());
-    std::string nodata = s + "__no_data";
-
-    if (c != "")
+    if (!stringMap[s].empty())
+    {
         return stringMap[s];
-    else
+    } else
+    {
+        std::string nodata = s + "__no_data";
         return std::wstring(nodata.begin(), nodata.end());
+    }
 }
 
 std::wstring StringRepository::GetUnicodeString(std::string key)
 {
-    std::string s = key;
-
-    std::string c(stringMap[s].begin(), stringMap[s].end());
-    std::string nodata = s + "__no_data";
-
-    if (c != "")
-        return stringMap[s];
-    else
+    if (!stringMap[key].empty())
+    {
+        return stringMap[key];
+    } else
+    {
+        std::string nodata = key + "__no_data";
         return std::wstring(nodata.begin(), nodata.end());
+    }
 }
 
 std::string StringRepository::GetString(std::wstring key)

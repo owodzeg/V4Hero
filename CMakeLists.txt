@@ -27,7 +27,6 @@ FetchContent_Declare(spdlog
 FetchContent_MakeAvailable(spdlog)
 
 set(ENGINE_FILES
-        Engine/DebugOut.cpp
         Engine/Func.cpp
         Engine/V4Core.cpp
         Engine/Item/Item.cpp

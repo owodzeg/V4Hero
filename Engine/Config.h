@@ -1,6 +1,5 @@
 #ifndef CONFIG_H
 #define CONFIG_H
-#include "DebugOut.h"
 #include "StringRepository.h"
 #include <SFML/Graphics.hpp>
 #include <map>
@@ -120,7 +119,6 @@ public:
     Config();
     void LoadConfig(V4Core* core);
     void ReloadLanguages();
-    DebugOut* debugOut;
     V4Core* thisCore;
 
     StringRepository strRepo;
