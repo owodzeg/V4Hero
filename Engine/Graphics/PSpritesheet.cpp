@@ -20,7 +20,7 @@ void PSpritesheet::load(std::string file, int q, int r)
     switch (q)
     {
         case 0:
-            sq = "L";
+            sq = "";
             break;
 
         case 1:

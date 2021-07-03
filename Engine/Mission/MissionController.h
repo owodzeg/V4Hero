@@ -98,7 +98,7 @@ public:
     bool cutscenesLeft = false;
     bool showTimer = false;
     int currentCutsceneId;
-    std::vector<std::wstring> cutscene_text_identifiers;
+    std::vector<std::string> cutscene_text_identifiers;
     std::vector<int> cutscene_lengths;
     std::vector<bool> cutscene_blackscreens;
     /// this is a list of things in the level that
@@ -252,7 +252,7 @@ public:
     float pataponMinProjection(float axisAngle, int id);
 
     /** Cutscenes **/
-    void StartCutscene(const std::wstring& text, bool isBlackScreen, int TimeToShow);
+    void StartCutscene(const std::string& text, bool isBlackScreen, int TimeToShow);
     void FinishLastCutscene();
     bool isMoreCutscenes();
 

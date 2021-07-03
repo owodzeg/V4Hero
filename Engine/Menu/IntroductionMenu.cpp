@@ -16,20 +16,20 @@ void IntroductionMenu::Initialise(Config* thisConfig, V4Core* parent, Menu* curP
     cout << "Initial values loaded, loading assets" << endl;
 
     msgcloud.Create(45, sf::Vector2f(640, 480), sf::Color::White, true, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_intro_1")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_intro_2")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_intro_3")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_intro_4")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_intro_5")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_intro_6")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_intro_7")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_intro_8")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_intro_9")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_intro_10")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_intro_11")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_intro_12")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_intro_13")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_intro_14")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("newgame_intro_1")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("newgame_intro_2")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("newgame_intro_3")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("newgame_intro_4")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("newgame_intro_5")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("newgame_intro_6")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("newgame_intro_7")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("newgame_intro_8")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("newgame_intro_9")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("newgame_intro_10")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("newgame_intro_11")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("newgame_intro_12")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("newgame_intro_13")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("newgame_intro_14")), true);
 
     timeout.restart();
 

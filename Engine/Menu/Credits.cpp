@@ -52,16 +52,16 @@ void Credits::Initialise(Config* thisConfig, V4Core* parent)
     teaser_2.loadFromFile("resources/graphics/ui/credits/teaser_2.png", thisConfig->GetInt("textureQuality"), 1);
     teaser_3.loadFromFile("resources/graphics/ui/credits/teaser_3.png", thisConfig->GetInt("textureQuality"), 1);
 
-    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"credits_creator")));
+    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetString("credits_creator")));
     addRegularText("Owocek");
     addRegularText("");
-    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"credits_programmers")));
+    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetString("credits_programmers")));
     addRegularText("Owocek");
     addRegularText("RugnirTheViking");
     addRegularText("Golem1903");
     addRegularText("MightyTheJa");
     addRegularText("");
-    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"credits_artists")));
+    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetString("credits_artists")));
     addRegularText("Shockturtle");
     addRegularText("Fabierex");
     addRegularText("Xandis");
@@ -71,28 +71,28 @@ void Credits::Initialise(Config* thisConfig, V4Core* parent)
     addRegularText("Patahero");
     addRegularText("Maciek1704");
     addRegularText("");
-    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"credits_animators")));
+    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetString("credits_animators")));
     addRegularText("DriftStar");
     addRegularText("Topaz-The-CrossCat");
     addRegularText("");
-    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"credits_musicians")));
+    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetString("credits_musicians")));
     addRegularText("Zephyr5D");
     addRegularText("Kotklopot");
     addRegularText("");
-    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"credits_gameplay")));
+    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetString("credits_gameplay")));
     addRegularText("Magam");
     addRegularText("");
-    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"credits_writers")));
+    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetString("credits_writers")));
     addRegularText("Arciel");
     addRegularText("Supercharger");
     addRegularText("");
-    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"credits_community")));
+    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetString("credits_community")));
     addRegularText("SymphonyBlue");
     addRegularText("Arciel");
     addRegularText("Alyssa");
     addRegularText("0Modd0");
     addRegularText("");
-    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"credits_translators")));
+    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetString("credits_translators")));
     addRegularText("Kyron Finder");
     addRegularText("Amonimus");
     addRegularText("Fables Ash");
@@ -109,18 +109,18 @@ void Credits::Initialise(Config* thisConfig, V4Core* parent)
     addRegularText("NGy14");
     addRegularText("");
     ///add different font parameter maybe? would be cool!
-    addRegularText(L"纯洁的菲那", 1);
-    addRegularText(L"7君", 1);
-    addRegularText(L"永远的盾拉杰", 1);
-    addRegularText(L"短信蛾", 1);
-    addRegularText(L"LanT");
-    addRegularText(L"冥蓝幽风", 1);
-    addRegularText(L"Mr.F");
-    addRegularText(L"Hammer Princess Meden");
+    addRegularText("纯洁的菲那", 1);
+    addRegularText("7君", 1);
+    addRegularText("永远的盾拉杰", 1);
+    addRegularText("短信蛾", 1);
+    addRegularText("LanT");
+    addRegularText("冥蓝幽风", 1);
+    addRegularText("Mr.F");
+    addRegularText("Hammer Princess Meden");
     addRegularText("");
     addRegularText("HarryR");
     addRegularText("");
-    addRegularText(L"Artur Płatkowski");
+    addRegularText("Artur Płatkowski");
     addRegularText("");
     addRegularText("TBAdriel");
     addRegularText("");
@@ -128,7 +128,7 @@ void Credits::Initialise(Config* thisConfig, V4Core* parent)
     addRegularText("");
     addRegularText("Gagu2000");
     addRegularText("");
-    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"credits_supporters")));
+    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetString("credits_supporters")));
     addRegularText("Rugnir");
     addRegularText("Abu_Ali");
     addRegularText("Adri-chan2");
@@ -168,18 +168,18 @@ void Credits::Initialise(Config* thisConfig, V4Core* parent)
     addRegularText("Tommy");
     addRegularText("Topaz-The-CrossCat");
     addRegularText("tosutosu");
-    addRegularText(L"Twoshimaetiyoshiko");
+    addRegularText("Twoshimaetiyoshiko");
     addRegularText("Vengeance");
     addRegularText("washio hands or catch plague");
     addRegularText("Xibral");
     addRegularText("MrNuckMAn");
-    addRegularText(L"樹皮");
+    addRegularText("樹皮");
     addRegularText("The Maxilimit");
     addRegularText("bigbrainben");
     addRegularText("Chersi Sutalinov");
     addRegularText("Hiroyuki Kotani");
     addRegularText("");
-    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"credits_special")));
+    addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetString("credits_special")));
     addRegularText("Mitsuki");
     addRegularText("WondaOxigen");
     addRegularText("");
@@ -193,7 +193,7 @@ void Credits::Initialise(Config* thisConfig, V4Core* parent)
     addRegularText("");
     addRegularText("");
     addRegularText("");
-    addRegularText(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"credits_all")));
+    addRegularText(Func::ConvertToUtf8String(config->strRepo.GetString("credits_all")));
     addRegularText("");
     addRegularText("");
     addRegularText("");
@@ -236,28 +236,28 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
 
         if (startTimer.getElapsedTime().asSeconds() > 3.2)
         {
-            outro_text.setString(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"outro_cutscene_1")));
+            outro_text.setString(Func::ConvertToUtf8String(config->strRepo.GetString("outro_cutscene_1")));
             outro_text.setPosition(640, 360);
             outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height / 2);
         }
 
         if (startTimer.getElapsedTime().asSeconds() > 7)
         {
-            outro_text.setString(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"outro_cutscene_2")));
+            outro_text.setString(Func::ConvertToUtf8String(config->strRepo.GetString("outro_cutscene_2")));
             outro_text.setPosition(640, 360);
             outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height / 2);
         }
 
         if (startTimer.getElapsedTime().asSeconds() > 9)
         {
-            outro_text.setString(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"outro_cutscene_3")));
+            outro_text.setString(Func::ConvertToUtf8String(config->strRepo.GetString("outro_cutscene_3")));
             outro_text.setPosition(640, 360);
             outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height / 2);
         }
 
         if (startTimer.getElapsedTime().asSeconds() > 12.8)
         {
-            outro_text.setString(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"outro_cutscene_4")));
+            outro_text.setString(Func::ConvertToUtf8String(config->strRepo.GetString("outro_cutscene_4")));
             outro_text.setPosition(640, 680);
             outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height);
 
@@ -266,7 +266,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
 
         if (startTimer.getElapsedTime().asSeconds() > 16.6)
         {
-            outro_text.setString(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"outro_cutscene_5")));
+            outro_text.setString(Func::ConvertToUtf8String(config->strRepo.GetString("outro_cutscene_5")));
             outro_text.setPosition(640, 700);
             outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height);
 
@@ -275,7 +275,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
 
         if (startTimer.getElapsedTime().asSeconds() > 20.5)
         {
-            outro_text.setString(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"outro_cutscene_6")));
+            outro_text.setString(Func::ConvertToUtf8String(config->strRepo.GetString("outro_cutscene_6")));
             outro_text.setPosition(640, 700);
             outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height);
 
@@ -284,7 +284,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
 
         if (startTimer.getElapsedTime().asSeconds() > 24.2)
         {
-            outro_text.setString(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"outro_cutscene_7")));
+            outro_text.setString(Func::ConvertToUtf8String(config->strRepo.GetString("outro_cutscene_7")));
             outro_text.setPosition(640, 360);
             outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height / 2);
             window.draw(r_black);
@@ -292,7 +292,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
 
         if (startTimer.getElapsedTime().asSeconds() > 26.2)
         {
-            outro_text.setString(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"outro_cutscene_8")));
+            outro_text.setString(Func::ConvertToUtf8String(config->strRepo.GetString("outro_cutscene_8")));
             outro_text.setPosition(640, 360);
             outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height / 2);
             window.draw(r_black);
@@ -300,7 +300,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
 
         if (startTimer.getElapsedTime().asSeconds() > 29.4)
         {
-            outro_text.setString(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"outro_end")));
+            outro_text.setString(Func::ConvertToUtf8String(config->strRepo.GetString("outro_end")));
             outro_text.setPosition(640, 360);
             outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height / 2);
             window.draw(r_black);
@@ -334,7 +334,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
         {
             flash_x += 1.0 / fps;
 
-            anykey.setString(Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"tips_anykey")));
+            anykey.setString(Func::ConvertToUtf8String(config->strRepo.GetString("tips_anykey")));
             anykey.setOrigin(anykey.getLocalBounds().width / 2, anykey.getLocalBounds().height / 2);
             anykey.setColor(sf::Color(255, 255, 255, 127 + (cos(flash_x) * 127)));
             anykey.setPosition(640, 360);

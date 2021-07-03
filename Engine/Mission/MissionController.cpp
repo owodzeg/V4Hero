@@ -1043,7 +1043,7 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
 
     //t_cutscene_text.setCharacterSize(35);
     //t_cutscene_text.setFillColor(sf::Color::White);
-    //t_cutscene_text.setString(Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"intro_cutscene_1")));
+    //t_cutscene_text.setString(Func::ConvertToUtf8String(config.strRepo.GetString("intro_cutscene_1")));
     //t_cutscene_text.setOrigin(t_cutscene_text.getGlobalBounds().width/2,t_cutscene_text.getGlobalBounds().height/2);
     thisConfig = &config;
 
@@ -1063,14 +1063,14 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
     command_inputs.clear();
 
     std::vector<std::string> command_lang_keys = {"nav_onward", "nav_attack", "nav_defend", "nav_charge", "nav_retreat", "nav_jump", "nav_party", "nav_summon"};
-    std::vector<sf::String> command_lang_buttons = {L"□-□-□-〇", L"〇-〇-□-〇", L"△-△-□-〇", L"〇-〇-△-△", L"〇-□-〇-□", L"×-×-△-△", L"□-〇-×-△", L"×-××-××"};
+    std::vector<sf::String> command_lang_buttons = {"□-□-□-〇", "〇-〇-□-〇", "△-△-□-〇", "〇-〇-△-△", "〇-□-〇-□", "×-×-△-△", "□-〇-×-△", "×-××-××"};
 
     ///first four
     for (int i = 0; i < 4; i++)
     {
 
         PText t_command_desc;
-        t_command_desc.createText(f_font, 28, sf::Color(128, 128, 128, 255), Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(command_lang_keys[i])) + ":", qualitySetting, 1);
+        t_command_desc.createText(f_font, 28, sf::Color(128, 128, 128, 255), Func::ConvertToUtf8String(thisConfig->strRepo.GetString(command_lang_keys[i])) + ":", qualitySetting, 1);
         command_descs.push_back(t_command_desc);
 
         PText t_command;
@@ -1083,7 +1083,7 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
     {
 
         PText t_command_desc;
-        t_command_desc.createText(f_font, 28, sf::Color(128, 128, 128, 255), Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(command_lang_keys[i])) + ":", qualitySetting, 1);
+        t_command_desc.createText(f_font, 28, sf::Color(128, 128, 128, 255), Func::ConvertToUtf8String(thisConfig->strRepo.GetString(command_lang_keys[i])) + ":", qualitySetting, 1);
         command_descs.push_back(t_command_desc);
 
         PText t_command;
@@ -1111,12 +1111,12 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
     sb_cheer2.loadFromFile("resources/sfx/level/cheer2.ogg");
     sb_cheer3.loadFromFile("resources/sfx/level/cheer1.ogg");
 
-    t_win.createText(f_moji, 56, sf::Color(222, 83, 0, 255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"mission_complete")), q, 1);
-    t_win_outline.createText(f_moji, 56, sf::Color(255, 171, 0, 255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"mission_complete")), q, 1);
+    t_win.createText(f_moji, 56, sf::Color(222, 83, 0, 255), Func::ConvertToUtf8String(config.strRepo.GetString("mission_complete")), q, 1);
+    t_win_outline.createText(f_moji, 56, sf::Color(255, 171, 0, 255), Func::ConvertToUtf8String(config.strRepo.GetString("mission_complete")), q, 1);
     t_win_outline.setOutlineColor(sf::Color(255, 171, 0, 255));
     t_win_outline.setOutlineThickness(10);
-    t_lose.createText(f_moji, 56, sf::Color(138, 15, 26, 255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"mission_failed")), q, 1);
-    t_lose_outline.createText(f_moji, 56, sf::Color(254, 48, 55, 255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"mission_failed")), q, 1);
+    t_lose.createText(f_moji, 56, sf::Color(138, 15, 26, 255), Func::ConvertToUtf8String(config.strRepo.GetString("mission_failed")), q, 1);
+    t_lose_outline.createText(f_moji, 56, sf::Color(254, 48, 55, 255), Func::ConvertToUtf8String(config.strRepo.GetString("mission_failed")), q, 1);
     t_lose_outline.setOutlineColor(sf::Color(254, 48, 55, 255));
     t_lose_outline.setOutlineThickness(10);
 
@@ -1145,7 +1145,7 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
             droppeditem_spritesheet[buff].load("resources/graphics/item/itemdata/" + buff + ".png", qualitySetting, resSetting);
         }
     }
-    ctrlTips.create(110, f_font, 28, sf::String(L"Onward: □-□-□-O	   Attack: O-O-□-O		Defend: △-△-□-O			  Charge: O-O-△-△\nRetreat: O-□-O-□		  Jump: X-X-△-△		  Party: □-O-X-△		  Summon: X-XX-XX"), q, sf::Color(128, 128, 128, 255));
+    ctrlTips.create(110, f_font, 28, sf::String("Onward: □-□-□-O	   Attack: O-O-□-O		Defend: △-△-□-O			  Charge: O-O-△-△\nRetreat: O-□-O-□		  Jump: X-X-△-△		  Party: □-O-X-△		  Summon: X-XX-XX"), q, sf::Color(128, 128, 128, 255));
 
     spear_hit_enemy.loadFromFile("resources/sfx/level/spear_hit_enemy.ogg");
     spear_hit_iron.loadFromFile("resources/sfx/level/spear_hit_iron.ogg");
@@ -1224,11 +1224,11 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     /**
 	if(showCutscene)
 	{
-		cutscene_text_identifiers.push_back(L"intro_cutscene_1");
-		cutscene_text_identifiers.push_back(L"intro_cutscene_2");
-		cutscene_text_identifiers.push_back(L"intro_cutscene_3");
-		cutscene_text_identifiers.push_back(L"intro_cutscene_4");
-		cutscene_text_identifiers.push_back(L"intro_cutscene_5");
+		cutscene_text_identifiers.push_back("intro_cutscene_1");
+		cutscene_text_identifiers.push_back("intro_cutscene_2");
+		cutscene_text_identifiers.push_back("intro_cutscene_3");
+		cutscene_text_identifiers.push_back("intro_cutscene_4");
+		cutscene_text_identifiers.push_back("intro_cutscene_5");
 		cutscene_lengths.push_back(4);
 		cutscene_lengths.push_back(4);
 		cutscene_lengths.push_back(3);
@@ -1771,10 +1771,10 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow& window, float fps, In
             }
         } else if (inputCtrl.isKeyPressed(InputController::Keys::START))
         {
-            std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")), Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
+            std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_yes")), Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_no"))};
 
             PataDialogBox db;
-            db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"mission_backtopatapolis")), a, thisConfig->GetInt("textureQuality"));
+            db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("mission_backtopatapolis")), a, thisConfig->GetInt("textureQuality"));
             dialog_boxes.push_back(db);
         }
     }
@@ -3830,11 +3830,11 @@ bool MissionController::isMoreCutscenes()
     /// returns true if there are more cutscenes
     return currentCutsceneId < cutscene_text_identifiers.size() - 1;
 }
-void MissionController::StartCutscene(const std::wstring& text, bool isBlackScreen, int TimeToShow)
+void MissionController::StartCutscene(const std::string& text, bool isBlackScreen, int TimeToShow)
 {
     /// because the description needs to be able to go over multiple lines, we have to split it into a series of lines
     t_cutscene_text.clear();
-    std::vector<std::wstring> wordsinDesc = Func::Split(thisConfig->strRepo.GetUnicodeString(text), ' ');
+    std::vector<std::string> wordsinDesc = Func::Split(thisConfig->strRepo.GetString(text), ' ');
     sf::String oldTotalString;
     sf::String currentTotalString;
     int maxWidth = thisConfig->GetInt("resX") * 0.4;
@@ -3845,8 +3845,8 @@ void MissionController::StartCutscene(const std::wstring& text, bool isBlackScre
     /// we split it into words, then go word by word testing the width of the string
     for (int i = 0; i < wordsinDesc.size(); i++)
     {
-        std::wstring currentWord = wordsinDesc[i];
-        currentTotalString = currentTotalString + Func::ConvertToUtf8String(currentWord) + L" ";
+        std::string currentWord = wordsinDesc[i];
+        currentTotalString = currentTotalString + Func::ConvertToUtf8String(currentWord) + " ";
         sf::Text t_newLine;
         t_newLine.setFont(f_font);
         t_newLine.setCharacterSize(35);
@@ -3859,8 +3859,8 @@ void MissionController::StartCutscene(const std::wstring& text, bool isBlackScre
             t_newLine.setString(currentTotalString);
             t_newLine.setOrigin(t_newLine.getGlobalBounds().width / 2, t_newLine.getGlobalBounds().height / 2);
             t_cutscene_text.push_back(t_newLine);
-            oldTotalString = currentWord + L" ";
-            currentTotalString = currentWord + L" ";
+            oldTotalString = currentWord + " ";
+            currentTotalString = currentWord + " ";
         }
         oldTotalString = currentTotalString;
         /// if there are no more words, finish up the current line

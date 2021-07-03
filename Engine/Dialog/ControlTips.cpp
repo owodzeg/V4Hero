@@ -4,7 +4,7 @@ ControlTips::ControlTips()
 {
 }
 
-void ControlTips::create(float ysz, sf::Font font, int characterSize, std::wstring displayText, int qualitySetting, sf::Color color)
+void ControlTips::create(float ysz, sf::Font font, int characterSize, std::string displayText, int qualitySetting, sf::Color color)
 {
     ySize = ysz;
 

@@ -572,7 +572,7 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
     addCloud("A", 8800, 240, 0, 0, quality, 1);
     addCloud("A", 8000, 170, 0, 0, quality, 1);
 
-    ctrlTips.create(54, f_font, 20, sf::String(L"L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
+    ctrlTips.create(54, f_font, 20, sf::String("L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
 
     altar_menu.save_loaded = save_loaded;
     altar_menu.reloadInventory();
@@ -634,7 +634,7 @@ void PatapolisMenu::EventFired(sf::Event event)
 }
 void PatapolisMenu::SetTitle(int menuPosition)
 {
-    sf::String a = L"L/R: Move      ";
+    sf::String a = "L/R: Move      ";
 
     if (draw_ID.size() <= 1)
     {
@@ -655,21 +655,21 @@ void PatapolisMenu::SetTitle(int menuPosition)
     switch (menuPosition)
     {
         case 0:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_trader")));
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_trader")));
             break;
         case 1:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_blacksmith")));
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_blacksmith")));
             break;
         case 2:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_barracks")));
-            a += L"X: Interact      ";
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_barracks")));
+            a += "X: Interact      ";
             break;
         case 3:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_festival")));
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_festival")));
             break;
         case 4: {
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_sen")));
-            a += L"X: Interact      ";
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_sen")));
+            a += "X: Interact      ";
 
             ///activate her dialogue
             messageclouds.clear();
@@ -689,37 +689,37 @@ void PatapolisMenu::SetTitle(int menuPosition)
                 }
                 case 1: {
                     // Shida Valley
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_1")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_4")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_5")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_1")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_4")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_5")), true);
                     break;
                 }
                 case 2: {
                     // Patapin Grove Unlocked
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_3")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_6")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_7")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_3")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_6")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_7")), true);
                     break;
                 }
                 case 3: {
                     // Patapine Grove Beaten
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_2")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_8")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_9")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_2")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_8")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_9")), true);
                     break;
                 }
                 case 4: {
                     // Ejiji Cliffs Unlocked
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_3")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_10")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_11")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_3")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_10")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_11")), true);
                     break;
                 }
                 case 5: {
                     // Ejiji Cliffs Beaten
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_1")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_12")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_13")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_1")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_12")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_13")), true);
 
                     tmp.msgcloud_ID = 2;
                     break;
@@ -733,20 +733,20 @@ void PatapolisMenu::SetTitle(int menuPosition)
             break;
         }
         case 5:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_altar")));
-            a += L"X: Interact      ";
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_altar")));
+            a += "X: Interact      ";
             break;
         case 6:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_obelisk")));
-            a += L"X: Interact      ";
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_obelisk")));
+            a += "X: Interact      ";
             break;
         case 7:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_paraget")));
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_paraget")));
             break;
         case 8: {
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_wakapon")));
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_wakapon")));
 
-            a += L"X: Interact      ";
+            a += "X: Interact      ";
 
             ///activate her dialogue
             messageclouds.clear();
@@ -763,38 +763,38 @@ void PatapolisMenu::SetTitle(int menuPosition)
                 if (missions.size() == 1) ///if it's the only mission
                 {
                     ///shida valley dialogue
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_2")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_3")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_wakapon_1")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_wakapon_2")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_wakapon_3")), true);
                 } else
                 {
                     if (std::find(missions.begin(), missions.end(), 2) != missions.end()) ///patapine fortress STORY mission (non-repeatable)
                     {
                         ///patapine unlocked dialogue
-                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
-                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_4")), true);
-                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_5")), true);
+                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_wakapon_1")), true);
+                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_wakapon_4")), true);
+                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_wakapon_5")), true);
                     } else if (std::find(missions.begin(), missions.end(), 3) != missions.end()) ///patapine fortress REPEATABLE mission
                     {
                         if (missions.size() == 2) ///ejiji cliffs not unlocked yet (only shida and patapine)
                         {
                             ///ejiji locked dialogue
-                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
-                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_6")), true);
-                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_7")), true);
+                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_wakapon_1")), true);
+                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_wakapon_6")), true);
+                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_wakapon_7")), true);
                         } else
                         {
                             if (std::find(missions.begin(), missions.end(), 4) != missions.end()) ///ejiji cliff STORY mission
                             {
                                 ///ejiji unlocked dialogue
-                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
-                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_8")), true);
-                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_9")), true);
+                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_wakapon_1")), true);
+                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_wakapon_8")), true);
+                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_wakapon_9")), true);
                             } else ///ejiji cliff REPEATABLE mission
                             {
-                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
-                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_10")), true);
-                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_11")), true);
+                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_wakapon_1")), true);
+                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_wakapon_10")), true);
+                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_wakapon_11")), true);
                             }
                         }
                     }
@@ -809,14 +809,14 @@ void PatapolisMenu::SetTitle(int menuPosition)
             break;
         }
         case 9:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_egg")));
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_egg")));
             break;
         default:
-            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis")));
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis")));
             break;
     }
 
-    a += L"Select: Save      Start: Title screen";
+    a += "Select: Save      Start: Title screen";
 
     ctrlTips.create(54, f_font, 20, a, quality);
 }
@@ -1370,10 +1370,10 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                             if (messageclouds[i].msgcloud_ID == 2)
                             {
                                 ///Create ending dialogbox here
-                                std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick1")), Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick2"))};
+                                std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_demo_pick1")), Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_demo_pick2"))};
 
                                 PataDialogBox db;
-                                db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demofinish")), a, thisConfig->GetInt("textureQuality"));
+                                db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_demofinish")), a, thisConfig->GetInt("textureQuality"));
                                 db.id = 4;
                                 dialogboxes.push_back(db);
 
@@ -1666,18 +1666,18 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
 
                 if (inputCtrl.isKeyPressed(InputController::Keys::START))
                 {
-                    std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")), Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
+                    std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_yes")), Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_no"))};
 
                     PataDialogBox db;
-                    db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_returntomain")), a, thisConfig->GetInt("textureQuality"));
+                    db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_returntomain")), a, thisConfig->GetInt("textureQuality"));
                     db.id = 0;
                     dialogboxes.push_back(db);
                 } else if (inputCtrl.isKeyPressed(InputController::Keys::SELECT))
                 {
-                    std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")), Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
+                    std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_yes")), Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_no"))};
 
                     PataDialogBox db;
-                    db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_save")), a, thisConfig->GetInt("textureQuality"));
+                    db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_save")), a, thisConfig->GetInt("textureQuality"));
                     db.id = 2;
                     dialogboxes.push_back(db);
                 }
@@ -1694,10 +1694,10 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                             cout << "Open second dialogbox" << endl;
                             dialogboxes[dialogboxes.size() - 1].Close();
 
-                            std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")), Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
+                            std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_yes")), Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_no"))};
 
                             PataDialogBox db;
-                            db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_returntomainsave")), a, thisConfig->GetInt("textureQuality"));
+                            db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_returntomainsave")), a, thisConfig->GetInt("textureQuality"));
                             db.id = 1;
                             dialogboxes.push_back(db);
 
@@ -1714,10 +1714,10 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
 
                             dialogboxes[dialogboxes.size() - 1].Close();
 
-                            std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_understood"))};
+                            std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_understood"))};
 
                             PataDialogBox db;
-                            db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_saved")), a, thisConfig->GetInt("textureQuality"));
+                            db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_saved")), a, thisConfig->GetInt("textureQuality"));
                             db.id = 3;
                             dialogboxes.push_back(db);
 

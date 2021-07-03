@@ -39,10 +39,9 @@ public:
     void setOutlineThickness(int thick);
     void setPosition(float x, float y);
     void setString(std::string text_string);
-    void setString(std::wstring text_string);
     void setString(sf::String text_string);
     void setString(const char* text_string);
-    void setWString(std::wstring text_string);
+    void setWString(std::string text_string);
     sf::Vector2f getPosition();
     sf::FloatRect getLocalBounds();
     sf::FloatRect getGlobalBounds();

@@ -7,8 +7,8 @@ class ButtonList;
 class MenuButton
 {
 public:
-    std::wstring buttonText;
-    std::wstring endString;
+    std::string buttonText;
+    std::string endString;
     sf::Text t_buttonText;
     bool selected = false;
     float originX;
@@ -20,10 +20,10 @@ public:
     void SetSelected(bool isSelected);
     void MouseUp(int xPos, int yPos);
     void UpdateText();
-    void AddEndString(std::wstring text);
-    std::wstring GetEndString(std::wstring text);
+    void AddEndString(std::string text);
+    std::string GetEndString(std::string text);
 
-    MenuButton(std::wstring text, sf::Font* font, int fontSize, float y, ButtonList* p_list, int index, float x = -1);
+    MenuButton(std::string text, sf::Font* font, int fontSize, float y, ButtonList* p_list, int index, float x = -1);
     ~MenuButton();
 };
 
