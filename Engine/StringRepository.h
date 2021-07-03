@@ -10,15 +10,16 @@
 class StringRepository
 {
 public:
-    std::vector<std::string> langFiles;
     std::vector<std::string> langNames;
     std::vector<std::string> langFonts;
-    std::map<std::string, std::string> stringMap;
     int configDebugID = 0;
     StringRepository();
     void LoadLanguageFiles(int langNum);
     std::string GetString(std::string key);
 private:
+    std::map<std::string, std::string> stringMap;
+    std::vector<std::string> langFiles;
+
     void LoadLanguageFile(std::ifstream* conf);
 };
 
