@@ -1,6 +1,5 @@
 #ifndef STRINGREPOSITORY_H
 #define STRINGREPOSITORY_H
-#include "DebugOut.h"
 #include <SFML/Graphics.hpp>
 #include <fstream>
 #include <iostream>

@@ -3,6 +3,8 @@
 
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
+#include <spdlog/logger.h>
+#include <spdlog/spdlog.h>
 
 #include "../Config.h"
 #include "../Func.h"
@@ -25,6 +27,7 @@ public:
     sf::Clock rhythmClock;    ///Main clock for Rhythm purposes
 
 private:
+    std::shared_ptr<spdlog::logger> logger = spdlog::get("rhythm");
     /// Theme and chant buffers ///
     std::map<std::string, sf::SoundBuffer> b_chant; ///Sound buffer for Patapon chants
     std::vector<std::unique_ptr<SongController>> songController;

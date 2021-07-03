@@ -3,6 +3,8 @@
 #include "../Func.h"
 #include <fstream>
 #include <iostream>
+#include <spdlog/spdlog.h>
+
 using namespace std;
 
 Background::Background()
@@ -17,7 +19,7 @@ void Background::setCamera(Camera newCamera)
 void Background::Load(string bg_name, Config& thisConfigs)
 {
     thisConfig = &thisConfigs;
-    thisConfig->debugOut->DebugMessage("Background loaded: " + bg_name);
+    spdlog::debug("Background loaded: {}", bg_name);
 
     quality = thisConfig->GetInt("textureQuality");
 
@@ -120,7 +122,7 @@ void Background::Load(string bg_name, Config& thisConfigs)
             v_background = tmp;
         } else
         {
-            thisConfig->debugOut->DebugMessage("Loading texture...\n");
+            spdlog::debug("Loading texture...");
 
             vector<string> v_params = Func::Split(buff, ',');
 

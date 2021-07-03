@@ -4,6 +4,8 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <spdlog/spdlog.h>
+
 using namespace std;
 
 Rhythm::Rhythm()
@@ -50,7 +52,7 @@ void Rhythm::LoadTheme(string theme)
     high_range = config->GetInt("highRange");
     cout << "[DEBUG] Low Range: " << low_range << ", High Range: " << high_range << endl;
 
-    config->debugOut->DebugMessage("theme:" + theme + "\n");
+    spdlog::debug("theme:" + theme + "\n");
 
     Stop();
     ///Load the BGM
@@ -114,7 +116,7 @@ void Rhythm::BreakCombo()
     rl_combo = 0;
     advanced_prefever = false;
 
-    config->debugOut->RhythmnDebugMessage("Oops! You broke your combo!\n");
+    logger->debug("Oops! You broke your combo!");
 
     rhythmClock.restart();
 
@@ -360,7 +362,7 @@ void Rhythm::doRhythm(InputController& inputCtrl)
 
             if (combo >= 2) /// If combo is not idle bgm
             {
-                config->debugOut->RhythmnDebugMessage("Combo: " + std::to_string(combo) + "\n");
+                logger->debug("Combo: {}", combo);
 
                 string fullcom = rhythmController.commandInput[0] + rhythmController.commandInput[1] + rhythmController.commandInput[2] + rhythmController.commandInput[3]; ///Create a full command using 4 individual hits
 
@@ -414,7 +416,7 @@ void Rhythm::doRhythm(InputController& inputCtrl)
                         cout << "Satisfaction: " << satisfaction << ", requirement: " << satisfaction_requirement[rl_combo] << " adv_pre: " << advanced_prefever << " theme_combo: " << combo << endl;
                         last_satisfaction = satisfaction;
 
-                        config->debugOut->RhythmnDebugMessage("Accuracy: " + std::to_string(acc / 16 * 100) + "%\n");
+                        logger->debug("Accuracy: {}%", acc / 16 * 100);
 
                         if ((rl_combo >= 2) && (combo < 6))
                         {

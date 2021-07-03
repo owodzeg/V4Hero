@@ -1,6 +1,5 @@
 #include "SaveReader.h"
 #include "Config.h"
-#include "DebugOut.h"
 #include "Func.h"
 #include <algorithm>
 #include <cassert>
@@ -47,7 +46,6 @@ SaveReader::SaveReader()
 void SaveReader::LoadSave(Config& tconfig)
 {
     thisConfig = &tconfig;
-    debugOut = thisConfig->debugOut;
 
     ifstream conf("resources/data/sv1.p4sv", std::ios::in);
     if (conf.good())

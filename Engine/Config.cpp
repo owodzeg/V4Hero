@@ -1,11 +1,7 @@
 #include "Config.h"
-#include "DebugOut.h"
 #include "Func.h"
 #include "V4Core.h"
 #include <algorithm>
-#include <cassert>
-#include <cctype>
-#include <fstream>
 #include <iostream>
 #include <string>
 
@@ -14,7 +10,6 @@ using namespace std;
 Config::Config()
 {
     configDebugID = 0;
-    debugOut = new DebugOut(this);
     ///check if config file already exists
     ifstream check("config.ini");
     bool exists = check.good();
