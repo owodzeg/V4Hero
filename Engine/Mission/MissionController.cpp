@@ -2444,6 +2444,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 v4Core->mainMenu.patapolisMenu.SetTitle(3);
                 v4Core->mainMenu.patapolisMenu.camPos = v4Core->mainMenu.patapolisMenu.locations[3];
                 v4Core->mainMenu.patapolisMenu.fade_alpha = 255;
+                v4Core->mainMenu.patapolisMenu.updateStoryPoint(); ///update NPC dialogues
 
                 while (missionEndTimer.getElapsedTime().asMilliseconds() < 21000)
                 {
@@ -2543,6 +2544,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 v4Core->mainMenu.patapolisMenu.SetTitle(3);
                 v4Core->mainMenu.patapolisMenu.camPos = v4Core->mainMenu.patapolisMenu.locations[3];
                 v4Core->mainMenu.patapolisMenu.fade_alpha = 255;
+                v4Core->mainMenu.patapolisMenu.updateStoryPoint(); ///update NPC dialogues
 
                 while (missionEndTimer.getElapsedTime().asMilliseconds() < 10000)
                 {

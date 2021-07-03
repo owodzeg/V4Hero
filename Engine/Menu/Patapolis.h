@@ -222,12 +222,10 @@ class PatapolisMenu : public Menu
 		void EventFired(sf::Event event);
 		void SetTitle(int menuPosition);
 		void OnExit();
-		void UpdateButtons();
+        void UpdateButtons();
+        void updateStoryPoint();
 		PatapolisMenu();
 		~PatapolisMenu();
-	
-	private:
-		void updateStoryPoint();
 };
 
 
