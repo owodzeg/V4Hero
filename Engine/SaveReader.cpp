@@ -7,6 +7,7 @@
 #include <cctype>
 #include <fstream>
 #include <iostream>
+#include <iomanip>
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
 #include <string>
@@ -297,7 +298,8 @@ void SaveReader::Save()
     }
     save_json["save"]["missions"] = missions;
 
-    save_file << save_json;
+    /// make sure to prettify the output json because otherwise it's pain in the ass
+    save_file << std::setw(4) << save_json;
     save_file.close();
 
     spdlog::info("Done saving.");
