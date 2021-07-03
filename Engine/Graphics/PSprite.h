@@ -7,17 +7,18 @@
 
 class PSprite
 {
-    public:
+public:
     sf::Texture t;
     sf::Sprite s;
-    int qualitySetting=1;
-    int resSetting=1;
-    float ratioX=1,ratioY=1;
-    float resRatioX=1,resRatioY=1;
-    float scaleX=1,scaleY=1;
-    float orX=0, orY=0;
-    float baseX=-999, baseY=-999;
-    float lx=0,ly=0;
+    std::string texname;
+    int qualitySetting = 1;
+    int resSetting = 1;
+    float ratioX = 1, ratioY = 1;
+    float resRatioX = 1, resRatioY = 1;
+    float scaleX = 1, scaleY = 1;
+    float orX = 0, orY = 0;
+    float baseX = -999, baseY = -999;
+    float lx = 0, ly = 0;
     float angle = 0;
     bool exported = false;
     PSprite();
@@ -42,6 +43,7 @@ class PSprite
     void setSmooth(bool smooth);
     void draw(sf::RenderWindow& window);
     void update(sf::RenderWindow& window);
+    void saveToFile(std::string file);
 };
 
 #endif // PSPRITE_H

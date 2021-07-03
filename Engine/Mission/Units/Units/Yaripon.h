@@ -1,21 +1,21 @@
 #ifndef YARIPON_H
 #define YARIPON_H
 
-#include <SFML/Graphics.hpp>
 #include "../../../Config.h"
 #include "../PlayableUnit.h"
+#include <SFML/Graphics.hpp>
 
 using namespace std;
 
 class Yaripon : public PlayableUnit
 {
-    public:
+public:
     int action = 0;
     float attack_speed = 1;
     sf::Clock attack_clock;
-    bool threw = false;
-    bool stopthrew = false;
-    bool canThrow = true;
+    bool attacked = false;
+    bool stopAttack = false;
+    bool canAttack = true;
 
     int attackmode = -2;
 
@@ -44,15 +44,20 @@ class Yaripon : public PlayableUnit
     sf::SoundBuffer spear_throw;
     sf::SoundBuffer hit_1, hit_2, hit_3, s_dead;
 
-    Config *thisConfig;
+    Config* thisConfig;
     Yaripon();
     void startAttack();
-    void LoadConfig(Config *thisConfigs);
+    void LoadConfig(Config* thisConfigs);
     bool doAttack();
-    void doRhythm(std::string current_song="", std::string current_drum="", int combo=0);
+    void doRhythm(std::string current_song = "", std::string current_drum = "", int combo = 0);
     void doMissionEnd();
     void Draw(sf::RenderWindow& window);
-    void OnCollide(CollidableObject* otherObject, int collidedWith=-1, vector<string> collisionData = {});
+    void OnCollide(CollidableObject* otherObject, int collidedWith = -1, vector<string> collisionData = {});
+    void Update() override;
+    void UpdateRhythm(std::string current_song, std::string current_drum, int combo) override;
+
+private:
+    bool dying = false;
 };
 
 #endif // YARIPON_H

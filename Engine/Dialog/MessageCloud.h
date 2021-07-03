@@ -9,12 +9,12 @@
 
 class MessageCloud
 {
-    public:
+public:
     PSprite cloud[4];
     PSprite cross, cross_highlight, cross_arrow;
     sf::ConvexShape triangle;
 
-    std::vector<PText> ptext; ///text used for determining display sizes
+    std::vector<PText> ptext;    ///text used for determining display sizes
     std::vector<PText> showtext; ///text that is being shown on screen
 
     sf::Font font;
@@ -32,17 +32,17 @@ class MessageCloud
     sf::Clock text_timeout;
     sf::Clock arrow_timeout;
 
-    float x=0,y=0;
+    float x = 0, y = 0;
 
     bool active = false;
     std::vector<bool> next_dialog;
 
     int cur_dialog = 0;
 
-    float old_xsize=0, old_ysize=0;
-    float xsize=0, ysize=0;
-    float dest_xsize=0, dest_ysize=0;
-    float arrow_y=0;
+    float old_xsize = 0, old_ysize = 0;
+    float xsize = 0, ysize = 0;
+    float dest_xsize = 0, dest_ysize = 0;
+    float arrow_y = 0;
 
     int quality = 0;
 

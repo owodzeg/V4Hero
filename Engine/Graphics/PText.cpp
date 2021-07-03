@@ -5,7 +5,6 @@ using namespace std;
 
 PText::PText()
 {
-
 }
 
 void PText::createText(sf::Font& font, float characterSize, sf::Color color, sf::String text_string, int q, int r)
@@ -17,10 +16,10 @@ void PText::createText(sf::Font& font, float characterSize, sf::Color color, sf:
     c = color;
     txt = text_string;
 
-    //t.setFont(f);
-    //t.setCharacterSize(cS);
-    //t.setFillColor(c);
-    //t.setString(txt);
+    t.setFont(f);
+    t.setCharacterSize(cS);
+    t.setFillColor(c);
+    t.setString(txt);
 
     qualitySetting = q;
     resSetting = r;
@@ -100,7 +99,7 @@ void PText::setString(const char* text_string)
 
 sf::Vector2f PText::getPosition()
 {
-    return sf::Vector2f(lx,ly);
+    return sf::Vector2f(lx, ly);
 }
 
 void PText::setScale(float s)
@@ -111,11 +110,19 @@ void PText::setScale(float s)
 
 sf::FloatRect PText::getLocalBounds()
 {
+    t.setFont(f);
+    t.setCharacterSize(cS);
+    t.setFillColor(c);
+    t.setString(txt);
     return t.getLocalBounds();
 }
 
 sf::FloatRect PText::getGlobalBounds()
 {
+    t.setFont(f);
+    t.setCharacterSize(cS);
+    t.setFillColor(c);
+    t.setString(txt);
     return t.getGlobalBounds();
 }
 
@@ -124,11 +131,12 @@ sf::FloatRect PText::getGlobalBoundsScaled()
     float nw = 1;
     float nh = 1;
 
-    if(t.getGlobalBounds().width > 0)
-    nw = t.getGlobalBounds().width / resRatioX;
+    t.setFont(f);
+    if (t.getGlobalBounds().width > 0)
+        nw = t.getGlobalBounds().width / resRatioX;
 
-    if(t.getGlobalBounds().height > 0)
-    nh = t.getGlobalBounds().height / resRatioY;
+    if (t.getGlobalBounds().height > 0)
+        nh = t.getGlobalBounds().height / resRatioY;
 
     return sf::FloatRect(t.getGlobalBounds().left, t.getGlobalBounds().top, nw, nh);
     //return t.getGlobalBounds();
@@ -136,7 +144,7 @@ sf::FloatRect PText::getGlobalBoundsScaled()
 
 void PText::draw(sf::RenderWindow& window)
 {
-    switch(qualitySetting)
+    switch (qualitySetting)
     {
         case 0: ///low
         {
@@ -167,7 +175,7 @@ void PText::draw(sf::RenderWindow& window)
         }
     }
 
-    switch(resSetting)
+    switch (resSetting)
     {
         case 0: ///low
         {
@@ -199,19 +207,24 @@ void PText::draw(sf::RenderWindow& window)
     }
 
     t.setFont(f);
-    t.setColor(c);
+    t.setFillColor(c);
     t.setCharacterSize(cS);
     t.setString(txt);
-    t.setScale(resRatioX*scaleX, resRatioY*scaleY);
-    t.setOrigin(orX,orY);
-    t.setPosition(lx*resRatioX, ly*resRatioY);
-    t.setRotation(angle*(180/3.14159265358));
-    window.draw(t);
+    t.setScale(resRatioX * scaleX, resRatioY * scaleY);
+    t.setOrigin(orX, orY);
+    t.setPosition(lx * resRatioX, ly * resRatioY);
+    t.setRotation(angle * (180 / 3.14159265358));
+
+    if (rendered)
+        window.draw(t);
+
+    if (!rendered)
+        rendered = true;
 }
 
 void PText::update(sf::RenderWindow& window)
 {
-    switch(qualitySetting)
+    switch (qualitySetting)
     {
         case 0: ///low
         {
@@ -242,7 +255,7 @@ void PText::update(sf::RenderWindow& window)
         }
     }
 
-    switch(resSetting)
+    switch (resSetting)
     {
         case 0: ///low
         {
@@ -274,13 +287,13 @@ void PText::update(sf::RenderWindow& window)
     }
 
     t.setFont(f);
-    t.setColor(c);
+    t.setFillColor(c);
     t.setCharacterSize(cS);
     t.setString(txt);
-    t.setScale(resRatioX*scaleX, resRatioY*scaleY);
-    t.setOrigin(orX,orY);
-    t.setPosition(lx*resRatioX, ly*resRatioY);
-    t.setRotation(angle*(180/3.14159265358));
+    t.setScale(resRatioX * scaleX, resRatioY * scaleY);
+    t.setOrigin(orX, orY);
+    t.setPosition(lx * resRatioX, ly * resRatioY);
+    t.setRotation(angle * (180 / 3.14159265358));
 }
 
 sf::Text PText::getText()

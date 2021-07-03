@@ -1,48 +1,45 @@
 #include "Kacheek.h"
+#include "../../../../Func.h"
+#include "../../../../V4Core.h"
 #include "math.h"
 #include <fstream>
 #include <iostream>
-#include "../../../../Func.h"
 #include <sstream>
-#include "../../../../V4Core.h"
 
 Kacheek::Kacheek()
 {
-
 }
 
-void Kacheek::LoadConfig(Config *thisConfigs)
+void Kacheek::LoadConfig(Config* thisConfigs)
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\kacheek.p4a");
+    AnimatedObject::LoadConfig(thisConfigs, "resources/units/entity/kacheek.p4a");
     AnimatedObject::setAnimationSegment("idle");
 
     s_startle.loadFromFile("resources/sfx/level/kacheek_startled.ogg");
     s_dead.loadFromFile("resources/sfx/level/kacheek_dead.ogg");
 
-    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
+    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("sfxVolume")) / 100.f));
 }
 
-void Kacheek::parseAdditionalData(std::vector<std::string> additional_data)
+void Kacheek::parseAdditionalData(nlohmann::json additional_data)
 {
-    for(int i=0; i<additional_data.size(); i++)
+    cout << "Kacheek::parseAdditionalData() -> " << additional_data << endl;
+
+    if (additional_data.contains("forceSpawnOnLvl"))
     {
-        if(additional_data[i].find("forceSpawnOnLvl") != std::string::npos)
+        force_spawn = true;
+        force_spawn_lvl = additional_data["forceSpawnOnLvl"];
+    }
+
+    if (additional_data.contains("forceDropIfNotObtained"))
+    {
+        force_drop = true;
+        force_drop_item = additional_data["forceDropIfNotObtained"][0];
+
+        if (additional_data["forceDropIfNotObtained"][1] != "any")
         {
-            vector<string> eq = Func::Split(additional_data[i], ':');
-
-            force_spawn = true;
-            force_spawn_lvl = stoi(eq[1]);
-        }
-        else if(additional_data[i].find("forceDropIfNotObtained") != std::string::npos)
-        {
-            vector<string> eq = Func::Split(additional_data[i], ':');
-
-            force_drop = true;
-            force_drop_item = stoi(eq[1]);
-
-            if(eq[2] != "any")
-            force_drop_mission_lvl = 0;
+            force_drop_mission_lvl = additional_data["forceDropIfNotObtained"][1];
         }
     }
 }
@@ -50,13 +47,13 @@ void Kacheek::parseAdditionalData(std::vector<std::string> additional_data)
 void Kacheek::Draw(sf::RenderWindow& window)
 {
     /// before we draw the object, check if we are walking and
-    if(AnimatedObject::getAnimationSegment() != "death")
+    if (AnimatedObject::getAnimationSegment() != "death")
     {
-        if(react_timer.getElapsedTime().asSeconds() > react_time)
+        if (react_timer.getElapsedTime().asSeconds() > react_time)
         {
             react_time = 1.0 + ((rand() % 3000) / 1000.0);
 
-            if(distance_to_unit <= 500)
+            if (distance_to_unit <= 500)
             {
                 ///we want to make kacheek more prone to escape the closest the patapon gets.
                 /// 800 - minimal range, not likely to escape
@@ -69,20 +66,20 @@ void Kacheek::Draw(sf::RenderWindow& window)
 
                 cout << "Should kacheek react? " << chance << ": " << roll << " rolled" << endl;
 
-                if(roll < chance)
+                if (roll < chance)
                 {
                     ///run!!!!
                     walk_timer.restart();
                     walk_time = 2.5 + (rand() % 1500) / 1000;
 
                     /// don't start the animation again if kacheek is still running
-                    if(AnimatedObject::getAnimationSegment() != "walk")
+                    if (AnimatedObject::getAnimationSegment() != "walk")
                     {
                         AnimatedObject::setAnimationSegment("walk");
                         current_frame = 0;
                     }
 
-                    if(!run)
+                    if (!run)
                     {
                         cur_sound.stop();
                         cur_sound.setBuffer(s_startle);
@@ -96,107 +93,104 @@ void Kacheek::Draw(sf::RenderWindow& window)
             react_timer.restart();
         }
 
-        if(run)
+        if (run)
         {
             AnimatedObject::moveGlobalPosition(sf::Vector2f(float(160) / fps, 0));
 
-            if(walk_timer.getElapsedTime().asSeconds() >= walk_time)
+            if (walk_timer.getElapsedTime().asSeconds() >= walk_time)
             {
                 AnimatedObject::setAnimationSegment("idle");
                 run = false;
-            }
-            else
+            } else
             {
                 AnimatedObject::setAnimationSegment("walk");
             }
         }
-    }
-    else
+    } else
     {
-        if(cur_pos >= anim_end)
+        if (cur_pos >= anim_end)
         {
-            if(death_timer.getElapsedTime().asSeconds() >= 3)
+            if (death_timer.getElapsedTime().asSeconds() >= 3)
             {
                 sf::Color c = AnimatedObject::getColor();
                 float alpha = c.a;
 
                 alpha -= 510.0 / fps;
 
-                if(alpha <= 0)
+                if (alpha <= 0)
                 {
                     alpha = 0;
                     ready_to_erase = true;
                 }
 
-                AnimatedObject::setColor(sf::Color(c.r,c.g,c.b,alpha));
+                AnimatedObject::setColor(sf::Color(c.r, c.g, c.b, alpha));
 
                 dropItem();
             }
-        }
-        else
+        } else
         {
             isCollidable = false;
             isAttackable = false;
 
             ///Animate the tumble here
-            if((getAnimationPos() >= 0.2) && (getAnimationPos() <= 1))
+            if ((getAnimationPos() >= 0.2) && (getAnimationPos() <= 1))
             {
                 ///Make it do a 180 spin based on frames 12 - 60
                 float percentage = (getAnimationPos() - 0.2) / (1 - 0.2);
                 rotation = 190 * percentage;
 
-                if(rotation >= 190)
-                rotation = 190;
+                if (rotation >= 190)
+                    rotation = 190;
 
                 rotation = rotation * 3.1415928 / 180;
 
                 local_x = 280 * percentage;
             }
 
-            if((getAnimationPos() >= 0.2) && (getAnimationPos() <= 0.4))
+            if ((getAnimationPos() >= 0.2) && (getAnimationPos() <= 0.4))
             {
                 ///Make it do a 180 spin based on frames 12 - 60
                 float percentage = (getAnimationPos() - 0.2) / (0.4 - 0.2);
                 float raise = -60 * percentage;
 
-                if(raise <= -60)
-                raise = -60;
+                if (raise <= -60)
+                    raise = -60;
 
                 local_y = raise;
             }
 
-            if((getAnimationPos() >= 0.4) && (getAnimationPos() <= 0.6))
+            if ((getAnimationPos() >= 0.4) && (getAnimationPos() <= 0.6))
             {
                 ///Make it do a 180 spin based on frames 12 - 60
                 float percentage = (getAnimationPos() - 0.4) / (0.6 - 0.4);
                 float raise = -60 * (1 - percentage);
 
-                if(raise >= 0)
-                raise = 0;
+                if (raise >= 0)
+                    raise = 0;
 
                 local_y = raise;
             }
 
-            if((getAnimationPos() >= 0.6) && (getAnimationPos() <= 0.8))
+            if ((getAnimationPos() >= 0.6) && (getAnimationPos() <= 0.8))
             {
                 ///Make it do a 180 spin based on frames 12 - 60
                 float percentage = (getAnimationPos() - 0.6) / (0.8 - 0.6);
                 float raise = -60 * percentage;
 
-                if(raise <= -60)
-                raise = -60;
+                if (raise <= -60)
+                    raise = -60;
 
                 local_y = raise;
             }
 
-            if((getAnimationPos() >= 0.8) && (getAnimationPos() <= 1))
+            if ((getAnimationPos() >= 0.8) && (getAnimationPos() <= 1))
             {
                 ///Make it do a 180 spin based on frames 12 - 60
                 float percentage = (getAnimationPos() - 0.8) / (1 - 0.8);
                 float raise = 28 + (-100 * (1 - percentage));
 
-                if(raise >= 28)
-                raise = 28;
+                if (raise >= 28)
+                    raise = 28;
 
                 local_y = raise;
             }
@@ -210,28 +204,28 @@ void Kacheek::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
 {
     cout << "Kacheek::OnCollide" << endl;
 
-    if(AnimatedObject::getAnimationSegment() != "death")
+    if (AnimatedObject::getAnimationSegment() != "death")
     {
         walk_timer.restart();
         walk_time = 2.5 + (rand() % 1500) / 1000;
 
         /// don't start the animation again if kacheek is still running
-        if(AnimatedObject::getAnimationSegment() != "walk")
+        if (AnimatedObject::getAnimationSegment() != "walk")
         {
             AnimatedObject::setAnimationSegment("walk");
             current_frame = 0;
         }
 
-        if(collisionData.size() > 0)
+        if (collisionData.size() > 0)
         {
             ///collisionData received from Projectile, process it
             int dmgDealt = atoi(collisionData[0].c_str());
             curHP -= dmgDealt;
         }
 
-        if(curHP <= 0)
+        if (curHP <= 0)
         {
-            if(AnimatedObject::getAnimationSegment() != "death")
+            if (AnimatedObject::getAnimationSegment() != "death")
             {
                 AnimatedObject::setAnimationSegment("death", true);
                 death_timer.restart();
@@ -240,10 +234,9 @@ void Kacheek::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
                 cur_sound.setBuffer(s_dead);
                 cur_sound.play();
             }
-        }
-        else
+        } else
         {
-            if(!run)
+            if (!run)
             {
                 cur_sound.stop();
                 cur_sound.setBuffer(s_startle);

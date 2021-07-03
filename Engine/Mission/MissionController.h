@@ -3,14 +3,15 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "../Config.h"
 #include "../Rhythm/Rhythm.h"
 #include "Background.h"
 #include "Camera.h"
-#include "../Config.h"
 
-#include "../Graphics/PText.h"
 #include "../Graphics/PSpritesheet.h"
+#include "../Graphics/PText.h"
 
+#include <random>
 #include <string>
 #include <thread>
 
@@ -18,24 +19,24 @@
 #include "Units/PlayableUnitList.h"
 #include "Units/ProjectileList.h"
 
-#include "Units/HitboxFrame.h"
 #include "Units/AnimatedObject.h"
-#include "Units/Projectile.h"
 #include "Units/CollidableObject.h"
+#include "Units/HitboxFrame.h"
 #include "Units/PlayableUnit.h"
+#include "Units/Projectile.h"
 
 #include "../Dialog/ControlTips.h"
 #include "../Dialog/DialogBox.h"
 #include "../Dialog/MessageCloud.h"
 
-#include "Weather.h"
+#include <nlohmann/json.hpp>
 
 
 class V4Core;
 class MissionController
 {
-    public:
-    int qualitySetting=1, resSetting=1;
+public:
+    int qualitySetting = 1, resSetting = 1;
 
     float fps = 60;
 
@@ -45,8 +46,8 @@ class MissionController
 
     Background test_bg;
     Rhythm rhythm;
-    bool isInitialized=false;
-    bool isFinishedLoading=false;
+    bool isInitialized = false;
+    bool isFinishedLoading = false;
 
     sf::RectangleShape fade_box;
     float fade_alpha = 255;
@@ -68,65 +69,74 @@ class MissionController
     PSprite bar_win;
     PSprite bar_lose;
 
-    PText t_win,t_win_outline;
-    PText t_lose,t_lose_outline;
+    PText t_win, t_win_outline;
+    PText t_lose, t_lose_outline;
 
     sf::Time startTime;
     sf::Clock missionTimer;
 
     sf::Text t_timerMenu;
     Camera camera;
-    Config* missionConfig;
-    V4Core* v4core;
+    Config* thisConfig;
+    V4Core* v4Core;
 
     PSprite s_proj;
     sf::Font f_font;
     sf::Font f_moji;
+    sf::Font f_unicode;
     /// Things for the cutscenes
-        std::vector<sf::Text> t_cutscene_text;
-        int startAlpha;
-        int endAlpha;
-        sf::Time targetTime;
-        sf::Clock timer;
-        sf::RectangleShape fade;
-        bool inCutscene;
-        bool inFadeTransition;
-        bool isBlackScreenCutscene;
-        bool cutscenesLeft=false;
-        bool showTimer=false;
-        int currentCutsceneId;
-        std::vector<std::wstring> cutscene_text_identifiers;
-        std::vector<int> cutscene_lengths;
-        std::vector<bool> cutscene_blackscreens;
+    //std::vector<Cutscene> cutscenes;
+    std::vector<sf::Text> t_cutscene_text;
+    int startAlpha;
+    int endAlpha;
+    sf::Time targetTime;
+    sf::Clock timer;
+    sf::RectangleShape fade;
+    bool inCutscene;
+    bool inFadeTransition;
+    bool isBlackScreenCutscene;
+    bool cutscenesLeft = false;
+    bool showTimer = false;
+    int currentCutsceneId;
+    std::vector<std::wstring> cutscene_text_identifiers;
+    std::vector<int> cutscene_lengths;
+    std::vector<bool> cutscene_blackscreens;
     /// this is a list of things in the level that
     /// we need to check against for collision (but not always damage)
 
+    enum LAYERS // Stuffs
+    {
+        BUILDINGS = 0,
+        NATURE = 50,
+        ANIMALS = 150,
+        UI = 9999
+    };
 
     ///object lists
     std::vector<std::unique_ptr<PlayableUnit>> units;
     std::vector<std::unique_ptr<Entity>> tangibleLevelObjects;
     std::vector<std::unique_ptr<Projectile>> levelProjectiles;
 
-    ///clonables
+    ///cloneables
     std::vector<std::unique_ptr<Kirajin_Yari_2>> kirajins;
 
-    float pataponY = 600; ///temp
-    float wallY = 200; ///temp
-    float gravity=981;
-    float floorY=200;
+    float patapon_y = 600; ///temp
+    float wall_y = 200;    ///temp
+    float gravity = 981;
+    float floor_y = 200;
 
-    float army_X = 800;
-    float army_X_dest = 800;
+    float army_x = 800;
+    float army_x_dest = 800;
+    float army_width = 200;
 
     float prevTime = 0;
     sf::Clock walkClock;
     bool startWalking = false;
     bool walkBackwards = false;
 
-    struct DamageCounter
-    {
-        int type=0; ///0 - regular, 1 - high, 2 - crit
-        int damage=0; ///damage to display
+    struct DamageCounter {
+        int type = 0;            ///0 - regular, 1 - high, 2 - crit
+        int damage = 0;          ///damage to display
         sf::Clock display_timer; ///timer for displaying later digits
 
         ///vectors containing texture, pos and scale for every digit
@@ -139,7 +149,7 @@ class MissionController
     };
 
     PSpritesheet dmg_spritesheet;
-    std::map<std::string,PSpritesheet> droppeditem_spritesheet;
+    std::map<std::string, PSpritesheet> droppeditem_spritesheet;
 
     std::vector<DamageCounter> dmgCounters;
     std::vector<DroppedItem> droppedItems;
@@ -159,18 +169,18 @@ class MissionController
 
     struct CollisionEvent ///used to retrieve more data about the collision between objects
     {
-        bool collided = false; ///did collision event happen?
+        bool collided = false;     ///did collision event happen?
         int collidedEntityID = -1; ///id of entity that has been collided with
-        bool isCollidable = true; ///is the entity collidable?
-        bool isAttackable = true; ///is the entity attackable?
-        float defend_factor = 1; ///how much did the entity defended off?
+        bool isCollidable = true;  ///is the entity collidable?
+        bool isAttackable = true;  ///is the entity attackable?
+        float defend_factor = 1;   ///how much did the entity defended off?
         int collidedEntityCategory = -1;
     };
 
     struct PickedItem ///used for item display in the top right corner
     {
         ///data
-        int item_id;
+        string item_name;
 
         ///visuals
         sf::CircleShape circle;
@@ -181,7 +191,7 @@ class MissionController
     struct UnitThumb ///used for unit display in the top left corner
     {
         ///data
-        int unit_id;
+        int unit_class;
 
         ///visuals
         sf::CircleShape circle;
@@ -205,20 +215,44 @@ class MissionController
     int curMissionID = 0;
     int spawnOrder = 0;
 
-    vector<PataDialogBox> dialogboxes;
-    vector<MessageCloud> messageclouds;
+    vector<PataDialogBox> dialog_boxes;
+    vector<MessageCloud> message_clouds;
 
-    Weather weather;
+    float command_padding;
+    vector<PText> command_descs;
+    vector<PText> command_inputs;
+
+
+    /// Okay so this right here will cache the animations
+    /// So we can make more efficient loading times and less work
+    /// It's purpose is to store everything that is drawable, so Objects and Spritesheets
+    struct AnimationCache {
+        shared_ptr<vector<vector<sf::Image>>> swaps;
+        shared_ptr<vector<AnimatedObject::Animation>> spritesheet;
+        shared_ptr<vector<Object>> objects;
+    };
+
+    std::map<int, std::shared_ptr<AnimationCache>> animation_cache;
+    std::map<int, bool> isCached; ///Check if entities have been cached already, so we can make automatic caching inside spawnEntity function
+
+    struct DroppableCache {
+        sf::Image img;
+        bool cached = false;
+    };
+
+    std::map<std::string, std::map<int, DroppableCache>> droppable_cache; ///this map stores images for droppable items. droppable_cache[item_group][item_id] = sf::Image;
+
+    /** Resolve enums **/
+    int layerStr2Enum(string layer);
 
     /** Collisions **/
-    bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame,AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY);
-    vector<CollisionEvent> DoCollisionForObject(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY,int collisionObjectID,vector<string> collisionData = {});
-    vector<CollisionEvent> DoCollisionForUnit(HitboxFrame* currentObjectHitBoxFrame,float currentObjectX,float CurrentObjectY,int collisionObjectID,vector<string> collisionData = {});
+    static bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame, AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float CurrentObjectY) ;
+    static vector<MissionController::CollisionEvent> DoCollisions(HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float currentObjectY, int collisionObjectID, vector<CollidableObject*> collisionObjects, vector<string> collisionData = {}) ;
     float pataponMaxProjection(float axisAngle, int id);
     float pataponMinProjection(float axisAngle, int id);
 
     /** Cutscenes **/
-    void StartCutscene(const std::wstring& text,bool isBlackScreen,int TimeToShow);
+    void StartCutscene(const std::wstring& text, bool isBlackScreen, int TimeToShow);
     void FinishLastCutscene();
     bool isMoreCutscenes();
 
@@ -233,23 +267,27 @@ class MissionController
     /** Load up the assets **/
     void addDmgCounter(int type, int damage, float baseX, float baseY, int q, int r);
     void addItemsCounter(int id, float baseX, float baseY);
-    void spawnEntity(string entityName, int entityID, int baseHP, int baseX, int randX, int baseY, int spr_goal, int spr_range, int statLevel, sf::Color color, bool collidable, bool attackable, int layer, int parent, float overrideY, float overrideHP, float mission_multiplier, float mindmg, float maxdmg, bool clonable, int spawn_delay, vector<Entity::Loot> loot_table, vector<string> additional_data={});
-    void addPickedItem(std::string spritesheet, int spritesheet_id, int picked_item);
+    void parseEntityLoot(std::mt19937& gen, std::uniform_real_distribution<double>& roll, nlohmann::json loot, std::vector<Entity::Loot>& to_drop);
+    void cacheEntity(int entityID, shared_ptr<vector<vector<sf::Image>>> swaps, shared_ptr<vector<AnimatedObject::Animation>> spritesheet, shared_ptr<vector<Object>> objects);
+    void spawnEntity(int id, bool collidable, bool attackable, int xpos, int xrange, bool cloneable, float clone_delay, float spawnrate, float stat_mult, int mindmg, int maxdmg, int hp, float ypos, float baseY, sf::Color color = sf::Color::White, int layer = 9999, int parent = -1, nlohmann::json loot = {}, nlohmann::json additional_data = {});
+    void addPickedItem(std::string spritesheet, int spritesheet_id, std::string picked_item);
     void addUnitThumb(int unit_id);
-    void spawnProjectile(PSprite& sprite, float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit, bool enemy=false);
+    void spawnProjectile(PSprite& sprite, float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit, bool enemy = false);
 
     /** Load up the mission **/
-    void Initialise(Config &config,std::string backgroundName,V4Core &v4core_);
-    void StartMission(std::string missionFile, bool showCutscene=false, int missionID=0, float mission_multiplier=1);
+    void Initialise(Config& config, std::string backgroundName, V4Core& v4core_);
+    void StartMission(std::string missionFile, bool showCutscene = false, int missionID = 0, float mission_multiplier = 1);
 
     /** Stop the mission **/
     void StopMission();
 
     /** Mission update stuff **/
-    void DoMovement(sf::RenderWindow &window, float fps, InputController& inputCtrl);
+    void DoMovement(sf::RenderWindow& window, float fps, InputController& inputCtrl);
     void DoRhythm(InputController& inputCtrl);
+    void ClearMissionMemory();
     void DoMissionEnd(sf::RenderWindow& window, float fps);
     void DoVectorCleanup(std::vector<int> units_rm, std::vector<int> dmg_rm, std::vector<int> tlo_rm, std::vector<int> pr_rm);
+    void drawCommandList(sf::RenderWindow& window);
     std::vector<int> DrawProjectiles(sf::RenderWindow& window);
     void DrawUnitThumbs(sf::RenderWindow& window);
     void DrawPickedItems(sf::RenderWindow& window);
@@ -259,14 +297,17 @@ class MissionController
     std::vector<int> DrawUnits(sf::RenderWindow& window);
 
     /** Main update function **/
-    void Update(sf::RenderWindow &window, float cfps, InputController& inputCtrl);
+    void Update(sf::RenderWindow& window, float cfps, InputController& inputCtrl);
 
     /** Events **/
-    void DoKeyboardEvents(sf::RenderWindow &window, float fps, InputController& inputCtrl);
+    void DoKeyboardEvents(sf::RenderWindow& window, float fps, InputController& inputCtrl);
 
 
     MissionController();
     ~MissionController();
+private:
+    static bool isColliding(PlayableUnit* unit, const unique_ptr<Entity>& entity);
+    static vector<CollisionEvent> computeCollisions(HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float currentObjectY, int collisionObjectID, vector<string>& collisionData, CollidableObject* collisionObject);
 };
 
 

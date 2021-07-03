@@ -1,10 +1,10 @@
 #include "Kirajin_Yari_1.h"
+#include "../../../../Func.h"
+#include "../../../../V4Core.h"
 #include "math.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include "../../../../Func.h"
-#include "../../../../V4Core.h"
 
 Kirajin_Yari_1::Kirajin_Yari_1()
 {
@@ -12,17 +12,14 @@ Kirajin_Yari_1::Kirajin_Yari_1()
     /// No significant AI other than occasionally throwing spears is necessary.
 }
 
-void Kirajin_Yari_1::LoadConfig(Config *thisConfigs)
+void Kirajin_Yari_1::LoadConfig(Config* thisConfigs)
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\kirajin.p4a");
+    AnimatedObject::LoadConfig(thisConfigs, "resources/units/entity/kirajin.p4a");
     AnimatedObject::setAnimationSegment("idle_armed_focused");
-
-    if(thisConfigs->se_christmas)
-    se_christmas = true;
 }
 
-void Kirajin_Yari_1::parseAdditionalData(std::vector<std::string> additional_data)
+void Kirajin_Yari_1::parseAdditionalData(nlohmann::json additional_data)
 {
     action = IDLE;
     swap_layer = 0;
@@ -31,70 +28,63 @@ void Kirajin_Yari_1::parseAdditionalData(std::vector<std::string> additional_dat
     custom_dmg = false;
     view_range = 750;
 
-    for(int i=0; i<additional_data.size(); i++)
+    if (additional_data.contains("forceSpawnOnLvl"))
     {
-        if(additional_data[i].find("hidden") != std::string::npos)
-        {
-            action = HIDING;
-            string a = additional_data[i].substr(additional_data[i].find_first_of(":")+1);
-            swap_layer = stoi(a);
-        }
-        else if(additional_data[i].find("talk") != std::string::npos)
-        {
-            talk_id = additional_data[i].substr(additional_data[i].find_first_of(":")+1);
-            talk = true;
-        }
-        else if(additional_data[i].find("equip") != std::string::npos)
-        {
-            vector<string> eq = Func::Split(additional_data[i], ':');
+        force_spawn = true;
+        force_spawn_lvl = additional_data["forceSpawnOnLvl"];
+    }
 
-            applySpear(stoi(eq[1]));
-            applyHelm(stoi(eq[2]));
+    if (additional_data.contains("forceDropIfNotObtained"))
+    {
+        force_drop = true;
+        force_drop_item = additional_data["forceDropIfNotObtained"][0];
 
-            if(se_christmas)
+        if (additional_data["forceDropIfNotObtained"][1] != "any")
+        {
+            force_drop_mission_lvl = additional_data["forceDropIfNotObtained"][1];
+        }
+    }
+
+    if (additional_data.contains("hidden"))
+    {
+        action = HIDING;
+        swap_layer = additional_data["hidden"];
+    }
+
+    if (additional_data.contains("talk"))
+    {
+        talk = true;
+        talk_id = additional_data["talk"];
+    }
+
+    if (additional_data.contains("equip"))
+    {
+        for (int i = 0; i < additional_data["equip"].size(); i++)
+        {
+            if (additional_data["equip"][i] != "") // allows for overriding helmet but not spear etc.
             {
-                if((rand() % 3) == 1)
-                applyHelm(7);
+                applyEquipment(thisConfig->thisCore->saveReader.itemReg.getItemByName(additional_data["equip"][i])->order_id, i);
             }
         }
-        else if(additional_data[i].find("damage") != std::string::npos)
-        {
-            vector<string> eq = Func::Split(additional_data[i], ':');
+    }
 
-            mindmg = stoi(eq[1]);
-            maxdmg = stoi(eq[2]);
+    if (additional_data.contains("damage"))
+    {
+        custom_dmg = true;
 
-            custom_dmg = true;
-        }
-        else if(additional_data[i].find("range") != std::string::npos)
-        {
-            vector<string> eq = Func::Split(additional_data[i], ':');
+        mindmg = additional_data["damage"][0];
+        maxdmg = additional_data["damage"][1];
+    }
 
-            view_range = stoi(eq[1]);
-        }
-        else if(additional_data[i].find("forceSpawnOnLvl") != std::string::npos)
-        {
-            vector<string> eq = Func::Split(additional_data[i], ':');
-
-            force_spawn = true;
-            force_spawn_lvl = stoi(eq[1]);
-        }
-        else if(additional_data[i].find("forceDropIfNotObtained") != std::string::npos)
-        {
-            vector<string> eq = Func::Split(additional_data[i], ':');
-
-            force_drop = true;
-            force_drop_item = stoi(eq[1]);
-
-            if(eq[2] != "any")
-            force_drop_mission_lvl = 0;
-        }
+    if (additional_data.contains("range"))
+    {
+        view_range = additional_data["range"];
     }
 }
 
 bool Kirajin_Yari_1::doAttack()
 {
-    if(threw)
+    if (threw)
     {
         threw = false;
         return true;
@@ -106,42 +96,42 @@ void Kirajin_Yari_1::doMessages(sf::RenderWindow& window, float fps, InputContro
 {
     vector<int> m_rm;
 
-    for(int i=0; i<messageclouds.size(); i++)
+    for (int i = 0; i < messageclouds.size(); i++)
     {
-        messageclouds[i].startpos = sf::Vector2f(getGlobalPosition().x-5, getGlobalPosition().y-25);
+        messageclouds[i].startpos = sf::Vector2f(getGlobalPosition().x - 5, getGlobalPosition().y - 25);
 
-        if(messageclouds[i].firstrender)
-        messageclouds[i].Show();
+        if (messageclouds[i].firstrender)
+            messageclouds[i].Show();
 
-        if(message_clock.getElapsedTime().asSeconds() >= 5)
-        messageclouds[i].End();
+        if (message_clock.getElapsedTime().asSeconds() >= 5)
+            messageclouds[i].End();
 
-        if((messageclouds[i].done) && (floor(messageclouds[i].xsize) == 0) && (floor(messageclouds[i].ysize) == 0))
-        messageclouds[i].Hide();
+        if ((messageclouds[i].done) && (floor(messageclouds[i].xsize) == 0) && (floor(messageclouds[i].ysize) == 0))
+            messageclouds[i].Hide();
 
         messageclouds[i].Draw(window, fps, inputCtrl);
 
-        if((!messageclouds[i].active) && (messageclouds[i].done))
-        m_rm.push_back(i);
+        if ((!messageclouds[i].active) && (messageclouds[i].done))
+            m_rm.push_back(i);
     }
 
-    for(int i=0; i<m_rm.size(); i++)
+    for (int i = 0; i < m_rm.size(); i++)
     {
-        messageclouds.erase(messageclouds.begin()+m_rm[i]-i);
+        messageclouds.erase(messageclouds.begin() + m_rm[i] - i);
     }
 }
 
 void Kirajin_Yari_1::Draw(sf::RenderWindow& window)
 {
-    if(dead)
+    if (dead)
     {
         cout << "I'm dead now" << endl;
 
-        if(getAnimationSegment() == "stagger")
+        if (getAnimationSegment() == "stagger")
         {
             cout << "Animation segment is stagger " << cur_pos << " " << anim_end << endl;
 
-            if(cur_pos >= anim_end)
+            if (cur_pos >= anim_end)
             {
                 cout << "Setting death animation" << endl;
 
@@ -149,11 +139,11 @@ void Kirajin_Yari_1::Draw(sf::RenderWindow& window)
             }
         }
 
-        if(death_timer.getElapsedTime().asSeconds() > 5)
+        if (death_timer.getElapsedTime().asSeconds() > 5)
         {
             cout << "Death clock passed 3 seconds. Time to bury into the ground" << endl;
 
-            if(getAnimationSegment() == "death")
+            if (getAnimationSegment() == "death")
             {
                 cout << "I am despawning" << endl;
                 setAnimationSegment("death_despawn", true);
@@ -161,88 +151,85 @@ void Kirajin_Yari_1::Draw(sf::RenderWindow& window)
                 dropItem();
             }
 
-            if(getAnimationSegment() == "death_despawn")
+            if (getAnimationSegment() == "death_despawn")
             {
-                if(cur_pos >= anim_end)
+                if (cur_pos >= anim_end)
                 {
                     ready_to_erase = true;
                 }
             }
         }
-    }
-    else
+    } else
     {
         ///Not dead
-        if(getAnimationSegment() == "stagger")
+        if (getAnimationSegment() == "stagger")
         {
-            if(cur_pos >= anim_end)
+            if (cur_pos >= anim_end)
             {
                 setAnimationSegment("idle_armed_focused", true);
             }
-        }
-        else
+        } else
         {
-            if(enemy_in_range)
+            if (enemy_in_range)
             {
-                if(local_x > 5)
+                if (local_x > 5)
                 {
-                    if(getAnimationSegment() != "walk_yari_focused")
-                    setAnimationSegment("walk_yari_focused");
+                    if (getAnimationSegment() != "walk_yari_focused")
+                        setAnimationSegment("walk_yari_focused");
 
                     local_x -= float(100) / fps;
                 }
 
-                if(local_x < -5)
+                if (local_x < -5)
                 {
-                    if(getAnimationSegment() != "walk_yari_focused")
-                    setAnimationSegment("walk_yari_focused");
+                    if (getAnimationSegment() != "walk_yari_focused")
+                        setAnimationSegment("walk_yari_focused");
 
                     local_x += float(100) / fps;
                 }
 
-                if((local_x <= 5) && (local_x >= -5))
+                if ((local_x <= 5) && (local_x >= -5))
                 {
-                    if(attack_timer.getElapsedTime().asSeconds() >= 6)
+                    if (attack_timer.getElapsedTime().asSeconds() >= 6)
                     {
-                        if(getAnimationSegment() != "attack_prefever")
-                        setAnimationSegment("attack_prefever", true);
+                        if (getAnimationSegment() != "attack_prefever")
+                            setAnimationSegment("attack_prefever", true);
 
-                        if(getAnimationSegment() == "attack_prefever")
+                        if (getAnimationSegment() == "attack_prefever")
                         {
-                            if(getAnimationPos() >= 0.4666)
+                            if (getAnimationPos() >= 0.4666)
                             {
-                                if(canThrow)
+                                if (canThrow)
                                 {
                                     threw = true;
                                     canThrow = false;
                                 }
                             }
 
-                            if(cur_pos >= anim_end)
+                            if (cur_pos >= anim_end)
                             {
                                 canThrow = true;
                                 threw = false;
                                 attack_timer.restart();
                             }
                         }
-                    }
-                    else
+                    } else
                     {
-                        if(getAnimationSegment() != "idle_armed_focused")
-                        setAnimationSegment("idle_armed_focused");
+                        if (getAnimationSegment() != "idle_armed_focused")
+                            setAnimationSegment("idle_armed_focused");
                     }
                 }
             }
         }
 
-        if(enemy_in_range)
+        if (enemy_in_range)
         {
-            if(action != HIDING)
+            if (action != HIDING)
             {
-                if(talk)
+                if (talk)
                 {
                     MessageCloud tmp;
-                    tmp.Create(20, sf::Vector2f(getGlobalPosition().x-5, getGlobalPosition().y-25), sf::Color(222,102,102,255), false, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
+                    tmp.Create(20, sf::Vector2f(getGlobalPosition().x - 5, getGlobalPosition().y - 25), sf::Color(222, 102, 102, 255), false, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
                     tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(talk_id)), false);
                     messageclouds.push_back(tmp);
 
@@ -254,25 +241,24 @@ void Kirajin_Yari_1::Draw(sf::RenderWindow& window)
         }
     }
 
-    if(distance_to_unit <= view_range)
+    if (distance_to_unit <= view_range)
     {
         enemy_in_range = true;
-    }
-    else
+    } else
     {
         enemy_in_range = false;
     }
 
     vspeed += gravity / fps;
 
-    if(hspeed > 0)
-    hspeed -= 230.0 / fps;
+    if (hspeed > 0)
+        hspeed -= 230.0 / fps;
     else
-    hspeed = 0;
+        hspeed = 0;
 
-    if(vspeed >= 0)
+    if (vspeed >= 0)
     {
-        if(local_y >= 0)
+        if (local_y >= 0)
         {
             vspeed = 0;
             local_y = 0;
@@ -288,7 +274,7 @@ void Kirajin_Yari_1::Draw(sf::RenderWindow& window)
 
 void Kirajin_Yari_1::die()
 {
-    if(!dead)
+    if (!dead)
     {
         //cout << "Kirajin_Yari_1::die()" << endl;
 
@@ -314,11 +300,11 @@ void Kirajin_Yari_1::OnCollide(CollidableObject* otherObject, int collidedWith, 
 {
     cout << "Kirajin_Yari_1::OnCollide" << endl;
 
-    if(AnimatedObject::getAnimationSegment() != "death")
+    if (AnimatedObject::getAnimationSegment() != "death")
     {
-        if(collisionData.size() > 0)
+        if (collisionData.size() > 0)
         {
-            if(isCollidable)
+            if (isCollidable)
             {
                 ///collisionData received from Projectile, process it
                 int dmgDealt = atoi(collisionData[0].c_str());
@@ -332,7 +318,7 @@ void Kirajin_Yari_1::OnCollide(CollidableObject* otherObject, int collidedWith, 
             }
         }
 
-        if(curHP <= 0)
+        if (curHP <= 0)
         {
             die();
         }

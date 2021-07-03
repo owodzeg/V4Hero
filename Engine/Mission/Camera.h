@@ -1,12 +1,12 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include <SFML/Graphics.hpp>
 #include "../Input/InputController.h"
+#include <SFML/Graphics.hpp>
 
 class Camera
 {
-    public:
+public:
     float zoom = 1, dest_zoom = 1;
     float camera_x = 0, camera_y = 360;
     float zoom_x = 0, zoom_y = 0;
@@ -19,8 +19,8 @@ class Camera
     bool walk = false;
 
     Camera();
-    void zoomViewAt(sf::Vector2i pixel, sf::RenderWindow& window, float zoom,float fps);
-    void Work(sf::RenderWindow& window,float fps, InputController& inputCtrl);
+    void zoomViewAt(sf::Vector2i pixel, sf::RenderWindow& window, float zoom, float fps);
+    void Work(sf::RenderWindow& window, float fps, InputController& inputCtrl);
 };
 
 

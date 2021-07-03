@@ -1,15 +1,16 @@
 #ifndef P4A_H
 #define P4A_H
 
-#include <vector>
-#include <string>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <math.h>
+#include <string>
+#include <vector>
 
 class P4A
 {
-    public:
+public:
     ///For output
     std::vector<std::string> original_path;
     std::vector<std::string> filenames;
@@ -26,11 +27,7 @@ class P4A
     ///For input
     std::string p4a_filename;
 
-    std::vector<std::string> in_fnames;
-    std::vector<int> in_fsizes;
-    std::vector<int> in_foffsets;
-
-    std::vector<char> bin_data;
+    std::map<std::string, std::vector<unsigned char>> files;
 
     P4A();
 
@@ -45,8 +42,7 @@ class P4A
     ///Unpacking functions
     void ReadDictionary(std::string filename);
     std::string ReadToMemory(std::string name);
-    std::vector<char> ReadToMemoryChar(std::string name);
-    void Extract(std::string name);
+    std::vector<unsigned char> ReadToMemoryChar(std::string name);
     void ImageToData();
     void DecryptImage();
 };

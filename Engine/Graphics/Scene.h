@@ -1,23 +1,22 @@
 #ifndef SCENE_H
 #define SCENE_H
-#include <SFML/Graphics.hpp>
 #include "../Config.h"
+#include <SFML/Graphics.hpp>
 
 class V4Core;
 class Scene
 {
-    public:
-        V4Core *v4core;
+public:
+    V4Core* v4Core;
 
-        Config *thisConfig;
+    Config* thisConfig;
 
-        virtual void Initialise(Config *thisConfig, V4Core *parent);
-        virtual void Update(sf::RenderWindow &window, float fps);
-        virtual void EventFired(sf::Event event);
-        virtual void OnExit();
-        Scene();
-        ~Scene();
-
+    virtual void Initialise(Config* thisConfig, V4Core* parent);
+    virtual void Update(sf::RenderWindow& window, float fps);
+    virtual void EventFired(sf::Event event);
+    virtual void OnExit();
+    Scene();
+    ~Scene();
 };
 
 

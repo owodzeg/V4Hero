@@ -1,17 +1,18 @@
 #include "Yaripon.h"
-#include "math.h"
-#include <fstream>
-#include <iostream>
 #include "../../../Func.h"
-#include <sstream>
+#include "../../../V4Core.h"
+#include <cmath>
+#include <iostream>
+#include <spdlog/spdlog.h>
+
+
 Yaripon::Yaripon()
 {
-
 }
-void Yaripon::LoadConfig(Config *thisConfigs)
+void Yaripon::LoadConfig(Config* thisConfigs)
 {
     /// load patapon from p4a file
-    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\unit\\yaripon.p4a");
+    AnimatedObject::LoadConfig(thisConfigs, "resources/units/unit/yaripon.p4a");
     setAnimationSegment("idle_armed");
 
     spear_throw.loadFromFile("resources/sfx/level/spear_throw.ogg");
@@ -22,7 +23,7 @@ void Yaripon::LoadConfig(Config *thisConfigs)
 
     s_dead.loadFromFile("resources/sfx/level/dead_2.ogg");
 
-    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
+    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("sfxVolume")) / 100.f));
 
     isCollidable = true;
     isAttackable = true;
@@ -30,7 +31,7 @@ void Yaripon::LoadConfig(Config *thisConfigs)
 
 void Yaripon::startAttack()
 {
-    if(action != ATTACK)
+    if (action != ATTACK)
     {
         action = ATTACK;
         attackmode = -2;
@@ -41,25 +42,23 @@ void Yaripon::startAttack()
 
 bool Yaripon::doAttack()
 {
-    if(action == ATTACK)
+    if (action == ATTACK)
     {
-        if(enemy_in_range)
+        if (enemy_in_range)
         {
-            if(attackmode == -2) ///prepare the attack (move around)
+            if (attackmode == -2) ///prepare the attack (move around)
             {
                 ///Calculate the local x
-                if(!dest_set)
+                if (!dest_set)
                 {
-                    if(entity_distance < low_throw_range) ///unit is too close, go back (distance = 250)
+                    if (entity_distance < low_throw_range) ///unit is too close, go back (distance = 250)
                     {
-                        dest_local_x = -(low_throw_range-entity_distance) - (rand() % 50); ///take a random position farther from the enemy
-                    }
-                    else if((entity_distance >= low_throw_range) && (entity_distance <= high_throw_range)) ///perfect spot, make some tiny adjustments and start attacking
+                        dest_local_x = -(low_throw_range - entity_distance) - (rand() % 50);                  ///take a random position farther from the enemy
+                    } else if ((entity_distance >= low_throw_range) && (entity_distance <= high_throw_range)) ///perfect spot, make some tiny adjustments and start attacking
                     {
                         ///320-370
                         dest_local_x += rand() % 40 - 20;
-                    }
-                    else if(entity_distance > high_throw_range) ///unit is too far, get closer (distance = 400)
+                    } else if (entity_distance > high_throw_range) ///unit is too far, get closer (distance = 400)
                     {
                         dest_local_x = (entity_distance - high_throw_range) + (rand() % 50); ///take a random position closer the enemy
                     }
@@ -71,49 +70,51 @@ bool Yaripon::doAttack()
 
                 //dest_local_x = entity_distance;
 
-                if((local_x >= dest_local_x-5) && (local_x <= dest_local_x+5)) ///When you are set at your position, start the attack
-                attackmode = -1;
+                if ((local_x >= dest_local_x - 5) && (local_x <= dest_local_x + 5)) ///When you are set at your position, start the attack
+                    attackmode = -1;
 
-                if(walkClock.getElapsedTime().asMilliseconds() >= 750) ///If walking takes you too long, stop and start the attack
+                if (walkClock.getElapsedTime().asMilliseconds() >= 750) ///If walking takes you too long, stop and start the attack
                 {
                     attackmode = -1;
                     dest_local_x = local_x;
                 }
             }
 
-            if(attackmode == -1) ///start the attack
+            if (attackmode == -1) ///start the attack
             {
                 prev_dest_local_x = dest_local_x;
 
                 attack_clock.restart();
                 attackmode = 0;
 
-                if(isFever)
-                vspeed = -683;
+                if (isFever)
+                    vspeed = -683;
             }
 
-            if(attackmode == 0) ///begin the attack
+            if (attackmode == 0) ///begin the attack
             {
-                canThrow = true;
+                canAttack = true;
 
-                if(isFever)
+                if (isFever)
                 {
-                    if(AnimatedObject::getAnimationSegment() != "attack_fever_jump")
-                    AnimatedObject::setAnimationSegment("attack_fever_jump", true);
+                    if (AnimatedObject::getAnimationSegment() != "attack_fever_jump")
+                    {
+                        spdlog::trace("Attacking jump in fever mode");
+                        AnimatedObject::setAnimationSegment("attack_fever_jump", true);
+                    }
 
-                    if(attack_clock.getElapsedTime().asMilliseconds() > 500)
+                    if (attack_clock.getElapsedTime().asMilliseconds() > 500)
                     {
                         AnimatedObject::setAnimationSegment("attack_fever_throw", true);
                         attack_clock.restart();
                         attackmode = 1;
                     }
-                }
-                else
+                } else
                 {
-                    if(AnimatedObject::getAnimationSegment() != "attack_prefever_focused_start")
-                    AnimatedObject::setAnimationSegment("attack_prefever_focused_start", true);
+                    if (AnimatedObject::getAnimationSegment() != "attack_prefever_focused_start")
+                        AnimatedObject::setAnimationSegment("attack_prefever_focused_start", true);
 
-                    if(attack_clock.getElapsedTime().asMilliseconds() > 400)
+                    if (attack_clock.getElapsedTime().asMilliseconds() > 400)
                     {
                         AnimatedObject::setAnimationSegment("attack_prefever_focused_throw", true);
                         attack_clock.restart();
@@ -122,340 +123,147 @@ bool Yaripon::doAttack()
                 }
             }
 
-            if(attackmode == 1) ///attack continously
+            if (attackmode == 1) ///attack continously
             {
-                if(isFever)
+                if (isFever)
                 {
                     float anim_speed_multiplier = float(1) / attack_speed;
                     framerate = float(1) * anim_speed_multiplier;
 
-                    if(getAnimationPos() > 0.285)
+                    if (getAnimationPos() > 0.285)
                     {
-                        if(canThrow)
+                        if (canAttack)
                         {
                             cur_sound.stop();
                             cur_sound.setBuffer(spear_throw);
                             cur_sound.play();
 
-                            threw = true;
-                            canThrow = false;
+                            attacked = true;
+                            canAttack = false;
                         }
                     }
 
-                    if(attack_clock.getElapsedTime().asSeconds() > attack_speed)
+                    if (attack_clock.getElapsedTime().asSeconds() > attack_speed)
                     {
-                        if(canThrow)
+                        if (canAttack)
                         {
-                            if(threw == false)
-                            threw = true;
+                            if (!attacked)
+                                attacked = true;
                         }
 
                         AnimatedObject::setAnimationSegment("attack_fever_throw", true);
                         attack_clock.restart();
 
-                        canThrow = true;
+                        canAttack = true;
                     }
 
-                    if(local_y >= 0)
+                    if (local_y >= 0)
                     {
                         AnimatedObject::setAnimationSegment("idle_armed_focused", true);
                         attackmode = 2;
                     }
-                }
-                else
+                } else
                 {
                     framerate = 1;
 
-                    if(getAnimationPos() > 0.066)
+                    if (getAnimationPos() > 0.066)
                     {
-                        if(canThrow)
+                        if (canAttack)
                         {
                             cur_sound.stop();
                             cur_sound.setBuffer(spear_throw);
                             cur_sound.play();
 
-                            threw = true;
-                            canThrow = false;
+                            attacked = true;
+                            canAttack = false;
                         }
                     }
 
-                    if(AnimatedObject::getAnimationSegment() == "attack_prefever_focused_end")
+                    if (AnimatedObject::getAnimationSegment() == "attack_prefever_focused_end")
                     {
                         attackmode = 2;
                     }
                 }
             }
 
-            if(attackmode == 2)
+            if (attackmode == 2)
             {
-                canThrow = true;
+                canAttack = true;
                 action = IDLE;
             }
         }
     }
 
-    if(threw)
+    if (attacked)
     {
-        threw = false;
+        attacked = false;
         return true;
-    }
-    else
+    } else
     {
         return false;
     }
 }
 
-void Yaripon::doRhythm(std::string current_song, std::string current_drum, int combo)
+void Yaripon::Update()
 {
-    if(!dead)
+    if (current_hp <= 0)
     {
-        if(enemy_in_range)
-        focus = true;
-        else
-        focus = false;
-
-        if((current_song == "patapata") || (current_song == "chakapata"))
+        if (!dead)
         {
-            action = WALK;
-
-            dest_local_x = 0;
-
-            if(!focus)
-            {
-                if(getAnimationSegment() != "walk")
-                setAnimationSegment("walk", true);
-            }
-            else
-            {
-                if(getAnimationSegment() != "walk_focused")
-                setAnimationSegment("walk_focused", true);
-            }
-        }
-        else
-        {
-            if(getAnimationSegment() == "walk")
-            {
-                if(!getback)
-                {
-                    if(!focus)
-                    setAnimationSegment("idle_armed", true);
-                    else
-                    setAnimationSegment("idle_armed_focused", true);
-                }
-            }
-        }
-
-        if(current_song == "ponpon")
-        {
-            ///use attack only once
-            if(attackmode != 2)
-            startAttack();
-
-            if(isFever)
-            {
-                high_throw_range = 410;
-                low_throw_range = 360;
-            }
-            else
-            {
-                high_throw_range = 320;
-                low_throw_range = 270;
-            }
-        }
-        else if(current_song == "chakachaka")
-        {
-            defend = true;
-
-            ///use attack only once
-            if(attackmode != 2)
-            startAttack();
-
-            if(isFever)
-            {
-                high_throw_range = 250;
-                low_throw_range = 200;
-            }
-            else
-            {
-                high_throw_range = 320;
-                low_throw_range = 270;
-            }
-        }
-        else
-        {
-            ///refresh attack mode
-            attackmode = -1;
-        }
-
-        if(current_song != "")
-        {
-            if(current_song == "ponchaka")
-            {
-                if((getAnimationSegment() != "charge_start") && (getAnimationSegment() != "charge_intact"))
-                setAnimationSegment("charge_start", true);
-
-                charge_m1 = true;
-                charged = false;
-            }
-            else
-            {
-                if(charge_m1)
-                {
-                    if(charged == false)
-                    charged = true;
-                    else
-                    charge_m1 = false;
-                }
-                else if(current_song != old_current_song)
-                {
-                    charged = false;
-                }
-            }
-
-            if((current_song != "ponpon") && (current_song != "chakachaka"))
-            {
-                dest_local_x = 0;
-            }
-
-            if(current_song != "chakachaka")
-            defend = false;
-        }
-
-        old_current_song = current_song;
-
-        //cout << "new comms: " << charged << " " << charge_m1 << " " << defend << endl;
-
-        if((current_drum == "pata") or (current_drum == "pon") or (current_drum == "chaka") or (current_drum == "don"))
-        {
-            //cout << current_drum << endl;
-            attackmode = -1;
-            action = IDLE;
-
-            if(!focus)
-            setAnimationSegment(current_drum, true);
-            else
-            setAnimationSegment(current_drum+"_focused", true);
-        }
-
-        if((getAnimationSegment().find("pata") != std::string::npos) || (getAnimationSegment().find("pon") != std::string::npos) || (getAnimationSegment().find("don") != std::string::npos) || (getAnimationSegment().find("chaka") != std::string::npos))
-        {
-            if(cur_pos >= anim_end-0.0333)
-            {
-                if(!focus)
-                {
-                    setAnimationSegment("idle_armed", true);
-                }
-                else
-                {
-                    setAnimationSegment("idle_armed_focused", true);
-                }
-            }
-        }
-
-        if(combo < 2)
-        {
-            if((getAnimationSegment() == "charge_intact") || (getAnimationSegment() == "walk") || (getAnimationSegment() == "walk_focused"))
-            {
-                if(!focus)
-                {
-                    setAnimationSegment("idle_armed", true);
-                }
-                else
-                {
-                    setAnimationSegment("idle_armed_focused", true);
-                }
-            }
-
-            if(focus)
-            {
-                if(getAnimationSegment() == "idle_armed")
-                setAnimationSegment("idle_armed_focused", true);
-            }
-            else
-            {
-                if(getAnimationSegment() == "idle_armed_focused")
-                setAnimationSegment("idle_armed", true);
-            }
-
-            defend = false;
-            charged = false;
-            charge_m1 = false;
-        }
-
-        if(combo >= 11)
-        isFever = true;
-        else
-        isFever = false;
-    }
-}
-
-void Yaripon::doMissionEnd()
-{
-    if(getAnimationSegment().find("dance") == std::string::npos)
-    {
-        setAnimationSegment("walk");
-
-        if(partyClock.getElapsedTime().asMilliseconds() > 250)
-        {
-            if(rand() % 4 == 1)
-            {
-                int a = rand() % 5 + 1;
-                string anim = "dance_var"+to_string(a);
-
-                setAnimationSegment(anim, true);
-            }
-
-            partyClock.restart();
-        }
-    }
-    else
-    {
-        if(cur_pos > anim_end)
-        {
-            setAnimationSegment("walk");
-        }
-    }
-}
-
-void Yaripon::Draw(sf::RenderWindow& window)
-{
-    //cout << "Patapon: " << getAnimationSegment() << " " << getAnimationPos() << "/" << getAnimationLength(getAnimationSegment()) << " " << curFrame << " " << index << " " << floor(getAnimationLength(getAnimationSegment()) * animation_framerate) - 1 << " " << animation_framerate << endl;
-
-    if(AnimatedObject::getAnimationSegment() == "walk")
-    {
-        framerate = 0.8;
-    }
-    else
-    {
-        framerate = 1;
-    }
-
-    if(getUnitHP() <= 0)
-    {
-        if(!dead)
-        {
-            dead = true;
-            deathClock.restart();
+            dying = true;
             hspeed = -400;
             vspeed = -250;
             action = IDLE;
             attackmode = -1;
-
-            setAnimationSegment("stagger_var5", true);
         }
     }
 
-    if(dead)
+    vspeed += gravity / fps;
+
+    if (hspeed < 0)
+        hspeed += 230.0f / fps;
+    else
+        hspeed = 0;
+
+    if (vspeed >= 0)
     {
-        cout << "I'm dead now" << endl;
-
-        if(getAnimationSegment() == "stagger_var5")
+        if (local_y >= 0)
         {
-            cout << "Animation segment is stagger_var5 " << cur_pos << " " << anim_end << endl;
+            vspeed = 0;
+            local_y = 0;
+        }
+    }
 
-            if(cur_pos >= anim_end)
+    local_x += hspeed / fps;
+    local_y += vspeed / fps;
+}
+
+// State update -> Animation -> Draw
+void Yaripon::Draw(sf::RenderWindow& window)
+{
+    if (AnimatedObject::getAnimationSegment() == "walk")
+    {
+        framerate = 0.8;
+    } else
+    {
+        framerate = 1;
+    }
+
+    if (dying)
+    {
+        deathClock.restart();
+        setAnimationSegment("stagger_var5", true);
+    } else if (dead)
+    {
+        spdlog::trace("I'm dead now");
+
+        if (getAnimationSegment() == "stagger_var5")
+        {
+            spdlog::trace("Animation segment is stagger_var5 {} {}", cur_pos, anim_end);
+
+            if (cur_pos >= anim_end)
             {
-                cout << "Setting death animation" << endl;
+                spdlog::trace("Setting death animation");
 
                 setAnimationSegment("death", true);
 
@@ -465,19 +273,19 @@ void Yaripon::Draw(sf::RenderWindow& window)
             }
         }
 
-        if(deathClock.getElapsedTime().asSeconds() > 5)
+        if (deathClock.getElapsedTime().asSeconds() > 5)
         {
-            cout << "Death clock passed 3 seconds. Time to bury into the ground" << endl;
+            spdlog::trace("Death clock passed 3 seconds. Time to bury into the ground");
 
-            if(getAnimationSegment() == "death_corpse")
+            if (getAnimationSegment() == "death_corpse")
             {
-                cout << "I am despawning" << endl;
+                spdlog::trace("I am despawning");
                 setAnimationSegment("death_despawn", true);
             }
 
-            if(getAnimationSegment() == "death_despawn")
+            if (getAnimationSegment() == "death_despawn")
             {
-                if(cur_pos >= anim_end)
+                if (cur_pos >= anim_end)
                 {
                     ready_to_erase = true;
                 }
@@ -485,47 +293,243 @@ void Yaripon::Draw(sf::RenderWindow& window)
         }
     }
 
-    //cout << "gclosest: " << gclosest << " lclosest: " << lclosest << " global_x: " << global_x << " local_x: " << local_x << endl;
+    AnimatedObject::Draw(window);
+}
 
-    vspeed += gravity / fps;
-
-    if(hspeed < 0)
-    hspeed += 230.0 / fps;
-    else
-    hspeed = 0;
-
-    if(vspeed >= 0)
+void Yaripon::UpdateRhythm(std::string current_song, std::string current_drum, int combo)
+{
+    if (!dead)
     {
-        if(local_y >= 0)
+        if (!dead)
         {
-            vspeed = 0;
-            local_y = 0;
+            focus = enemy_in_range;
+        }
+
+        if ((current_song == "patapata") || (current_song == "chakapata"))
+        {
+            action = WALK;
+
+            dest_local_x = 0;
+        }
+
+        if (current_song == "ponpon")
+        {
+            ///use attack only once
+            if (attackmode != 2)
+                startAttack();
+
+            if (isFever)
+            {
+                high_throw_range = 410;
+                low_throw_range = 360;
+            } else
+            {
+                high_throw_range = 320;
+                low_throw_range = 270;
+            }
+        } else if (current_song == "chakachaka")
+        {
+            defend = true;
+
+            ///use attack only once
+            if (attackmode != 2)
+                startAttack();
+
+            if (isFever)
+            {
+                high_throw_range = 250;
+                low_throw_range = 200;
+            } else
+            {
+                high_throw_range = 320;
+                low_throw_range = 270;
+            }
+        } else
+        {
+            ///refresh attack mode
+            attackmode = -1;
+        }
+
+        if ((current_song != "ponpon") && (current_song != "chakachaka"))
+        {
+            dest_local_x = 0;
+        }
+
+        if (current_song != "chakachaka")
+        {
+            defend = false;
+        }
+
+        if ((current_drum == "pata") || (current_drum == "pon") || (current_drum == "chaka") || (current_drum == "don"))
+        {
+            attackmode = -1;
+            action = IDLE;
+        }
+
+        if (!current_song.empty())
+        {
+            if (current_song == "ponchaka")
+            {
+                charge_m1 = true;
+                charged = false;
+            } else
+            {
+                if (charge_m1)
+                {
+                    if (!charged)
+                        charged = true;
+                    else
+                        charge_m1 = false;
+                } else if (current_song != old_current_song)
+                {
+                    charged = false;
+                }
+            }
+        }
+
+        old_current_song = current_song;
+
+        if (combo < 2)
+        {
+            defend = false;
+            charged = false;
+            charge_m1 = false;
+        }
+
+        isFever = combo >= 11;
+    }
+}
+
+void Yaripon::doRhythm(std::string current_song, std::string current_drum, int combo)
+{
+    if (!dead)
+    {
+        if ((current_song == "patapata") || (current_song == "chakapata"))
+        {
+            if (!focus)
+            {
+                if (getAnimationSegment() != "walk")
+                    setAnimationSegment("walk", true);
+            } else
+            {
+                if (getAnimationSegment() != "walk_focused")
+                    setAnimationSegment("walk_focused", true);
+            }
+        } else
+        {
+            if (getAnimationSegment() == "walk")
+            {
+                if (!getback)
+                {
+                    if (!focus)
+                        setAnimationSegment("idle_armed", true);
+                    else
+                        setAnimationSegment("idle_armed_focused", true);
+                }
+            }
+        }
+
+        if (!current_song.empty())
+        {
+            if (current_song == "ponchaka")
+            {
+                if ((getAnimationSegment() != "charge_start") && (getAnimationSegment() != "charge_intact"))
+                    setAnimationSegment("charge_start", true);
+            }
+        }
+
+        if ((current_drum == "pata") || (current_drum == "pon") || (current_drum == "chaka") || (current_drum == "don"))
+        {
+            if (!focus)
+                setAnimationSegment(current_drum, true);
+            else
+                setAnimationSegment(current_drum + "_focused", true);
+        }
+
+        if ((getAnimationSegment().find("pata") != std::string::npos) || (getAnimationSegment().find("pon") != std::string::npos) || (getAnimationSegment().find("don") != std::string::npos) || (getAnimationSegment().find("chaka") != std::string::npos))
+        {
+            if (cur_pos >= anim_end - 0.0333)
+            {
+                if (!focus)
+                {
+                    setAnimationSegment("idle_armed", true);
+                } else
+                {
+                    setAnimationSegment("idle_armed_focused", true);
+                }
+            }
+        }
+
+        if (combo < 2)
+        {
+            if ((getAnimationSegment() == "charge_intact") || (getAnimationSegment() == "walk") || (getAnimationSegment() == "walk_focused"))
+            {
+                if (!focus)
+                {
+                    setAnimationSegment("idle_armed", true);
+                } else
+                {
+                    setAnimationSegment("idle_armed_focused", true);
+                }
+            }
+
+            if (focus)
+            {
+                if (getAnimationSegment() == "idle_armed")
+                    setAnimationSegment("idle_armed_focused", true);
+            } else
+            {
+                if (getAnimationSegment() == "idle_armed_focused")
+                    setAnimationSegment("idle_armed", true);
+            }
         }
     }
+}
 
-    local_x += hspeed / fps;
-    local_y += vspeed / fps;
+void Yaripon::doMissionEnd()
+{
+    if (getAnimationSegment().find("dance") == std::string::npos)
+    {
+        setAnimationSegment("walk");
 
-    AnimatedObject::Draw(window);
+        if (partyClock.getElapsedTime().asMilliseconds() > 250)
+        {
+            if (rand() % 4 == 1)
+            {
+                int a = rand() % 5 + 1;
+                string anim = "dance_var" + to_string(a);
+
+                setAnimationSegment(anim, true);
+            }
+
+            partyClock.restart();
+        }
+    } else
+    {
+        if (cur_pos > anim_end)
+        {
+            setAnimationSegment("walk");
+        }
+    }
 }
 
 void Yaripon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<string> collisionData)
 {
     cout << "Patapon::OnCollide" << endl;
 
-    if(collisionData.size() > 0)
+    if (collisionData.size() > 0)
     {
-        if(isCollidable)
+        if (isCollidable)
         {
             ///collisionData received from Projectile, process it
             int dmgDealt = atoi(collisionData[0].c_str());
 
-            if(defend)
+            if (defend)
             {
-                if(charged)
-                dmgDealt = round(dmgDealt / 4);
+                if (charged)
+                    dmgDealt = round(dmgDealt / 4);
                 else
-                dmgDealt = round(dmgDealt / 2);
+                    dmgDealt = round(dmgDealt / 2);
             }
 
             current_hp -= dmgDealt;
@@ -536,19 +540,19 @@ void Yaripon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
 
             int a = rand() % 3;
 
-            switch(a)
+            switch (a)
             {
                 case 0:
-                cur_sound.setBuffer(hit_1);
-                break;
+                    cur_sound.setBuffer(hit_1);
+                    break;
 
                 case 1:
-                cur_sound.setBuffer(hit_2);
-                break;
+                    cur_sound.setBuffer(hit_2);
+                    break;
 
                 case 2:
-                cur_sound.setBuffer(hit_3);
-                break;
+                    cur_sound.setBuffer(hit_3);
+                    break;
             }
 
             cur_sound.play();

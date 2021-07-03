@@ -1,20 +1,22 @@
 #ifndef PLAYABLEUNIT_H
 #define PLAYABLEUNIT_H
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
 #include "../../Config.h"
 #include "CollidableObject.h"
+#include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
 
 class PlayableUnit : public CollidableObject
 {
-    public:
-
+public:
     enum Classes
     {
         DUMMY = -1,
-        HATAPON = 0,
-        YARIPON = 1
+        HATAPON = 0, // What the frick no
+        YARIPON = 1,
+        TATEPON = 2,
+        YUMIPON = 3,
+        HERO = 4
     };
 
     int unitID = DUMMY;
@@ -37,6 +39,10 @@ class PlayableUnit : public CollidableObject
     float prev_dest_local_x = 0;
 
     int army_id = 0; ///ID the unit has in the army, not it's global ID
+
+    bool can_two_weapons = false;
+    bool can_shield = false;
+
     bool enemy_in_range = false;
 
     bool charged = false;
@@ -56,7 +62,15 @@ class PlayableUnit : public CollidableObject
     virtual float getUnitMaxHP();
     virtual void setUnitHP(float hp);
     virtual bool doAttack();
-    virtual void doRhythm(std::string current_song="", std::string current_drum="", int combo=0);
+
+    /**
+     * Updates the unit internal state regarding to song/drum changes.
+     * @param current_song the current song being played, if any.
+     * @param current_drum the current drum being played, if any.
+     * @param combo combo counter
+     */
+    virtual void UpdateRhythm(std::string current_song = "", std::string current_drum = "", int combo = 0);
+    virtual void doRhythm(std::string current_song = "", std::string current_drum = "", int combo = 0);
     virtual void doMissionEnd();
 };
 

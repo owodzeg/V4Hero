@@ -16,7 +16,9 @@ class Binary
     static uint8_t get_uint8(const std::vector<unsigned char>& source, int offset);
     static uint16_t get_uint16(const std::vector<unsigned char>& source, int offset);
     static uint32_t get_uint32(const std::vector<unsigned char>& source, int offset);
+    static uint32_t get_uint32_r(const std::vector<unsigned char>& source, int offset);
     static std::string get_string(const std::vector<unsigned char>& source, int offset);
+    static std::string to_string(const std::vector<unsigned char>& source);
     static std::vector<unsigned char> get_block(const std::vector<unsigned char>& source, int offset, int block_size);
 };
 

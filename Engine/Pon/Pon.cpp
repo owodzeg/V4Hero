@@ -1,182 +1,140 @@
 #include "Pon.h"
-#include "../Item/InventoryItem.h"
-#include "../Item/Weapon.h"
-#include "../Item/Mask.h"
-#include "../Item/Armour.h"
 #include "../SaveReader.h"
+
 using namespace std;
+
+Pon::Pon()
+{
+}
 
 Pon::Pon(SaveReader* core)
 {
-    savReader=core;
+    saveReader = core;
 }
 
-void Pon::GiveItem(int InvItemId,int where)
+void Pon::recalculateStats()
 {
-    /** REWORK NEEDED!!! Make this more clean **/
-
-    cout << "Pon::GiveItem(" << InvItemId << ", " << where << ")" << endl;
-
-    ///occupy the current equipment
-    savReader->invdata.items[InvItemId].occupied = true;
-
-    InventoryItem currentItem = savReader->invdata.GetItemByInvID(InvItemId);
-
-    cout << "Category ID: " << currentItem.item->category_id << endl;
-
-    switch(currentItem.item->category_id)
+    switch (pon_id)
     {
-        case 1: /// weapons
-        {
-            cout << "Set weapon" << endl;
-
-            if(where!=0)
-            {
-                if (weapon2_invItem_id!=-1)
-                {
-                    ///make previous item unoccupied
-                    savReader->invdata.items[weapon2_invItem_id].occupied = false;
-
-                    InventoryItem oldItem = savReader->invdata.GetItemByInvID(weapon2_invItem_id);
-                    Weapon* owep = static_cast<Weapon*>(oldItem.item);
-                    pon_min_dmg-=owep->mindmg;
-                    pon_max_dmg-=owep->maxdmg;
-                    pon_crit-=owep->crit;
-                    pon_attack_speed=pon_attack_speed/(1-(owep->attackspeed/100));
-                }
-
-                weapon2_invItem_id=InvItemId;
-                currentItem.PonIdRegistered = pon_id;
-                Weapon* wep = static_cast<Weapon*>(currentItem.item);
-                pon_min_dmg+=wep->mindmg;
-                pon_max_dmg+=wep->maxdmg;
-                pon_crit+=wep->crit;
-                pon_attack_speed=pon_attack_speed-pon_attack_speed*wep->attackspeed/100;
-
-                cout << "Setting weapon2_invItem_id to " << weapon2_invItem_id << endl;
-            }
-            else
-            {
-                if (weapon_invItem_id!=-1)
-                {
-                    ///make previous item unoccupied
-                    savReader->invdata.items[weapon_invItem_id].occupied = false;
-
-                    InventoryItem oldItem = savReader->invdata.GetItemByInvID(weapon_invItem_id);
-                    Weapon* owep = static_cast<Weapon*>(oldItem.item);
-                    pon_min_dmg-=owep->mindmg;
-                    pon_max_dmg-=owep->maxdmg;
-                    pon_crit-=owep->crit;
-                    pon_attack_speed=pon_attack_speed/(1-(owep->attackspeed/100));
-                }
-
-                this->weapon_invItem_id=InvItemId;
-                currentItem.PonIdRegistered = pon_id;
-                Weapon* wep = static_cast<Weapon*>(currentItem.item);
-                pon_min_dmg+=wep->mindmg;
-                pon_max_dmg+=wep->maxdmg;
-                pon_crit+=wep->crit;
-                pon_attack_speed=pon_attack_speed-pon_attack_speed*wep->attackspeed/100;
-
-                cout << "Setting weapon_invItem_id to " << weapon_invItem_id << endl;
-            }
-
+        case 0: {
+            pon_base_hp = 100;
+            pon_base_min_dmg = 0;
+            pon_base_max_dmg = 0;
+            pon_base_crit = 0;
+            pon_base_attack_speed = 2.00;
             break;
         }
+    }
 
-        case 2: /// mask
+    pon_hp = pon_base_hp;
+    pon_min_dmg = pon_base_min_dmg;
+    pon_max_dmg = pon_base_max_dmg;
+    pon_crit = pon_base_crit;
+    pon_attack_speed = pon_base_attack_speed;
+
+    for (int i = 0; i < slots.size(); i++)
+    {
+        cout << "i: " << i << " slots[" << i << "]: " << slots[i] << endl;
+
+        if (slots[i] > -1)
         {
-            if (mask_invItem_id!=-1)
-            {
-                ///make previous item unoccupied
-                savReader->invdata.items[mask_invItem_id].occupied = false;
-
-                InventoryItem oldItem = savReader->invdata.GetItemByInvID(mask_invItem_id);
-                Mask* omask = static_cast<Mask*>(oldItem.item);
-                pon_min_dmg-=omask->mindmg;
-                pon_max_dmg-=omask->maxdmg;
-                pon_crit-=omask->crit;
-                pon_attack_speed=pon_attack_speed/(1-(omask->attackspeed/100));
-            }
-
-            mask_invItem_id=InvItemId;
-            currentItem.PonIdRegistered = pon_id;
-
-            Mask* mask = static_cast<Mask*>(currentItem.item);
-            pon_min_dmg+=mask->mindmg;
-            pon_max_dmg+=mask->maxdmg;
-            pon_crit+=mask->crit;
-            pon_attack_speed=pon_attack_speed-pon_attack_speed*mask->attackspeed/100;
-            break;
+            pon_hp += saveReader->invData.items[slots[i]].item->equip->hp;
+            pon_min_dmg += saveReader->invData.items[slots[i]].item->equip->min_dmg;
+            pon_max_dmg += saveReader->invData.items[slots[i]].item->equip->max_dmg;
+            pon_crit += saveReader->invData.items[slots[i]].item->equip->crit;
+            pon_attack_speed += saveReader->invData.items[slots[i]].item->equip->attack_speed;
         }
-        case 3: /// armour
-        {
-            if (armour_invItem_id!=-1)
-            {
-                ///make previous item unoccupied
-                savReader->invdata.items[armour_invItem_id].occupied = false;
-
-                InventoryItem oldItem = savReader->invdata.GetItemByInvID(armour_invItem_id);
-                Armour* oarmour = static_cast<Armour*>(oldItem.item);
-                pon_min_dmg-=oarmour->mindmg;
-                pon_max_dmg-=oarmour->maxdmg;
-                pon_crit-=oarmour->crit;
-                pon_attack_speed=pon_attack_speed/(1-(oarmour->attackspeed/100));
-                pon_hp-=oarmour->hp;
-            }
-
-            armour_invItem_id=InvItemId;
-            currentItem.PonIdRegistered = pon_id;
-            Armour* armour = static_cast<Armour*>(currentItem.item);
-            cout<<armour_invItem_id<<" -> "<<armour->item_id<<" -> "<<armour->mindmg<<"|"<<armour->maxdmg<<"|"<<armour->crit<<"|"<<armour->attackspeed<<"|"<<armour->hp<<'\n';
-            pon_min_dmg+=armour->mindmg;
-            pon_max_dmg+=armour->maxdmg;
-            pon_crit+=armour->crit;
-            pon_attack_speed=pon_attack_speed-pon_attack_speed*armour->attackspeed/100;
-            pon_hp+=armour->hp;
-
-            cout << "Setting armour_invItem_id to " << armour_invItem_id << endl;
-            break;
-        }
-
-        case 0: /// regular material item
-        default:
-            break;
     }
 }
-void Pon::RemoveItem(int InvItemId,int where)
+
+void Pon::giveItem(int inv_item_id, int where)
 {
-    InventoryItem currentItem = savReader->invdata.GetItemByInvID(InvItemId);
-    switch(currentItem.item->category_id)
+
+    cout << "Pon::GiveItem(" << inv_item_id << ", " << where << ")" << endl;
+    if (canEquip(saveReader->invData.items[inv_item_id].item->order_id, where))
     {
-        case 1: /// weapons
-        {
-            if(where!=0)
-            {
-                weapon2_invItem_id=InvItemId;
-                currentItem.PonIdRegistered = pon_id;
-            }
-            else
-            {
-                weapon_invItem_id=InvItemId;
-                currentItem.PonIdRegistered = pon_id;
-            }
-            break;
-        }
-        case 2: /// mask
-        {
-            mask_invItem_id=InvItemId;
-            currentItem.PonIdRegistered = pon_id;
-            break;
-        }
-        case 3: /// armour
-        {
-            armour_invItem_id=InvItemId;
-            currentItem.PonIdRegistered = pon_id;
-            break;
-        }
-        case 0: /// regular material item
-        default:
-            break;
+        slots[where] = inv_item_id;
+        recalculateStats();
+    } else
+    {
+        cout << "Couldn't equip item " << saveReader->invData.items[inv_item_id].item->item_name << " in slot " << where << endl;
     }
 }
+void Pon::removeItem(int where)
+{
+    switch (where)
+    {
+        case 0: {
+            slot_1_invItem_id = -1;
+            break;
+        }
+        case 1: {
+            slot_2_invItem_id = -1;
+            break;
+        }
+        case 2: {
+            slot_3_invItem_id = -1;
+            break;
+        }
+        case 4: {
+            slot_5_invItem_id = -1;
+            break;
+        }
+    }
+
+    recalculateStats();
+}
+
+int Pon::getSlotCount()
+{
+    switch (pon_class)
+    {
+        case 0: // Yaripon
+        {
+            return 2;
+        }
+        case 1: // Tatepon
+        {
+            return 3;
+        }
+        case 2: // Yumipon
+        {
+            return 2;
+        }
+    }
+}
+
+bool Pon::canEquip(vector<int> eq_id, int where)
+{
+    if (eq_id.size() < 2 || eq_id[0] == 0)
+    {
+        cout << "[DEBUG] Attempted to equip a key item?" << endl;
+        return false; // Why would you attempt to equip a key item
+    }
+    cout << "Asking if equipping {" << eq_id[0] << ", " << eq_id[1] << ", " << eq_id[2] << "} is viable (where=" << where << ")" << endl;
+    switch (pon_class)
+    {
+        case 0: // Yaripon
+        {
+            if (eq_id[0] == 3 && eq_id[1] == 0 && where == 0)
+                return true; // Spears
+            if (eq_id[0] == 4 && eq_id[1] == 1 && where == 1)
+                return true; // Helmets
+            break;
+        }
+
+        case 1: // Tatepon
+        {
+            if (eq_id[0] == 3 && eq_id[1] == 1 && where == 0)
+                return true; // Swords
+            if (eq_id[0] == 4 && (eq_id[1] == 1 && where == 1))
+                return true; // Helmets
+            if (eq_id[0] == 4 && (eq_id[1] == 0 && where == 2))
+                return true; // Shields
+            break;
+        }
+    }
+    return false;
+}
+
+//void Pon::()

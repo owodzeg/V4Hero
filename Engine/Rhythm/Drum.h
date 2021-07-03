@@ -1,12 +1,12 @@
 #ifndef DRUM_H
 #define DRUM_H
 
-#include <SFML/Graphics.hpp>
 #include "../Graphics/PSprite.h"
+#include <SFML/Graphics.hpp>
 
 class Drum
 {
-    public:
+public:
     PSprite s_drum;
     PSprite s_flash;
 
@@ -16,10 +16,10 @@ class Drum
     sf::Clock drumClock;
     float alpha = 255;
 
-    float x=0,y=0;
-    float x_scale=1,y_scale=1;
+    float x = 0, y = 0;
+    float x_scale = 1, y_scale = 1;
 
-    float x_flashscale=0.01,y_flashscale=0.01;
+    float x_flashscale = 0.01, y_flashscale = 0.01;
     float flashalpha = 125;
 
     float shockwaveSize = 100;
@@ -30,7 +30,7 @@ class Drum
 
 
     float rotation = 0;
-    float fps=60;
+    float fps = 60;
     bool isBest = false;
     bool isDon = false;
 

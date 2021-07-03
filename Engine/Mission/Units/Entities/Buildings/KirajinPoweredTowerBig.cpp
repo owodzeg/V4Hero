@@ -1,91 +1,86 @@
 #include "KirajinPoweredTowerBig.h"
+#include "../../../../Func.h"
+#include "../../../../V4Core.h"
 #include "math.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include "../../../../Func.h"
-#include "../../../../V4Core.h"
 
 KirajinPoweredTowerBig::KirajinPoweredTowerBig()
 {
-
 }
 
-void KirajinPoweredTowerBig::parseAdditionalData(std::vector<std::string> additional_data)
+void KirajinPoweredTowerBig::parseAdditionalData(nlohmann::json additional_data)
 {
-    for(int i=0; i<additional_data.size(); i++)
+    if (additional_data.contains("forceSpawnOnLvl"))
     {
-        if(additional_data[i].find("forceSpawnOnLvl") != std::string::npos)
+        force_spawn = true;
+        force_spawn_lvl = additional_data["forceSpawnOnLvl"];
+    }
+
+    if (additional_data.contains("forceDropIfNotObtained"))
+    {
+        force_drop = true;
+        force_drop_item = additional_data["forceDropIfNotObtained"][0];
+
+        if (additional_data["forceDropIfNotObtained"][1] != "any")
         {
-            vector<string> eq = Func::Split(additional_data[i], ':');
-
-            force_spawn = true;
-            force_spawn_lvl = stoi(eq[1]);
-        }
-        else if(additional_data[i].find("forceDropIfNotObtained") != std::string::npos)
-        {
-            vector<string> eq = Func::Split(additional_data[i], ':');
-
-            force_drop = true;
-            force_drop_item = stoi(eq[1]);
-
-            if(eq[2] != "any")
-            force_drop_mission_lvl = 0;
+            force_drop_mission_lvl = additional_data["forceDropIfNotObtained"][1];
         }
     }
 }
 
-void KirajinPoweredTowerBig::LoadConfig(Config *thisConfigs)
+void KirajinPoweredTowerBig::LoadConfig(Config* thisConfigs)
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs,"resources\\units\\entity\\kirajin_poweredtower_big.p4a");
+    AnimatedObject::LoadConfig(thisConfigs, "resources/units/entity/kirajin_poweredtower_big.p4a");
     AnimatedObject::setAnimationSegment("idle");
 
-    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("sfxVolume"))/100.f));
+    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("sfxVolume")) / 100.f));
 
     s_broken.loadFromFile("resources/sfx/level/building_big_broken.ogg");
 }
 
 void KirajinPoweredTowerBig::Draw(sf::RenderWindow& window)
 {
-    if(dead)
+    if (dead)
     {
-        shake += 2/fps;
+        shake += 2 / fps;
 
-        if(shake >= 15)
-        shake = 15;
+        if (shake >= 15)
+            shake = 15;
 
-        if(shake_timer.getElapsedTime().asMilliseconds() > shake_delay)
+        if (shake_timer.getElapsedTime().asMilliseconds() > shake_delay)
         {
             negative = !negative;
 
-            if(negative)
-            local_x = shake * (-1);
+            if (negative)
+                local_x = shake * (-1);
             else
-            local_x = shake;
+                local_x = shake;
 
             shake_timer.restart();
         }
 
-        if(death_timer.getElapsedTime().asSeconds() >= 1.5)
+        if (death_timer.getElapsedTime().asSeconds() >= 1.5)
         {
             local_y += 50.0 / fps;
         }
 
-        if(death_timer.getElapsedTime().asSeconds() >= 3)
+        if (death_timer.getElapsedTime().asSeconds() >= 3)
         {
             sf::Color c = AnimatedObject::getColor();
             float alpha = c.a;
 
             alpha -= 250.0 / fps;
 
-            if(alpha <= 0)
+            if (alpha <= 0)
             {
                 alpha = 0;
                 ready_to_erase = true;
             }
 
-            AnimatedObject::setColor(sf::Color(c.r,c.g,c.b,alpha));
+            AnimatedObject::setColor(sf::Color(c.r, c.g, c.b, alpha));
         }
     }
 
@@ -96,11 +91,11 @@ void KirajinPoweredTowerBig::OnCollide(CollidableObject* otherObject, int collid
 {
     cout << "KirajinPoweredTowerBig::OnCollide" << endl;
 
-    if(!dead)
+    if (!dead)
     {
-        if(collisionData.size() > 0)
+        if (collisionData.size() > 0)
         {
-            if(isCollidable)
+            if (isCollidable)
             {
                 ///collisionData received from Projectile, process it
                 int dmgDealt = atoi(collisionData[0].c_str());
@@ -110,16 +105,16 @@ void KirajinPoweredTowerBig::OnCollide(CollidableObject* otherObject, int collid
             }
         }
 
-        if((curHP > 0) && (curHP <= maxHP/4))
+        if ((curHP > 0) && (curHP <= maxHP / 4))
         {
-            if(AnimatedObject::getAnimationSegment() != "idle_damaged")
-            AnimatedObject::setAnimationSegment("idle_damaged", true);
+            if (AnimatedObject::getAnimationSegment() != "idle_damaged")
+                AnimatedObject::setAnimationSegment("idle_damaged", true);
         }
 
-        if(curHP <= 0)
+        if (curHP <= 0)
         {
-            if(AnimatedObject::getAnimationSegment() != "idle_damaged")
-            AnimatedObject::setAnimationSegment("idle_damaged", true);
+            if (AnimatedObject::getAnimationSegment() != "idle_damaged")
+                AnimatedObject::setAnimationSegment("idle_damaged", true);
 
             dead = true;
 

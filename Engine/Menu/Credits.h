@@ -1,16 +1,16 @@
 #ifndef CREDITS_H
 #define CREDITS_H
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include "../Input/InputController.h"
+#include "../Func.h"
 #include "../Graphics/PSprite.h"
 #include "../Graphics/PText.h"
-#include "../Func.h"
+#include "../Input/InputController.h"
+#include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
 
 class Credits
 {
-    public:
+public:
     Config* config;
     int quality = 0;
 
@@ -19,7 +19,7 @@ class Credits
 
     sf::RectangleShape r_black;
 
-    bool isActive = false;
+    bool is_active = false;
 
     sf::Clock startTimer;
 
@@ -38,7 +38,7 @@ class Credits
 
     Credits();
     void addHeaderText(sf::String text);
-    void addRegularText(sf::String text, int font=0);
+    void addRegularText(sf::String text, int font = 0);
     void Initialise(Config* thisConfig, V4Core* parent);
     void restart();
     void draw(sf::RenderWindow& window, float fps, InputController& inputCtrl);

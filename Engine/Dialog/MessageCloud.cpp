@@ -1,12 +1,11 @@
 #include "MessageCloud.h"
-
 #include <iostream>
+#include <math.h>
 
 using namespace std;
 
 MessageCloud::MessageCloud()
 {
-
 }
 
 void MessageCloud::setSize(float new_x, float new_y)
@@ -52,12 +51,12 @@ void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bo
     cloud[2].setOrigin(cloud[2].getLocalBounds().width, cloud[2].getLocalBounds().height);
     cloud[3].setOrigin(cloud[3].getLocalBounds().width, cloud[3].getLocalBounds().height);
 
-    cloud[1].setScale(-1,1);
-    cloud[2].setScale(1,-1);
-    cloud[3].setScale(-1,-1);
+    cloud[1].setScale(-1, 1);
+    cloud[2].setScale(1, -1);
+    cloud[3].setScale(-1, -1);
 
-    for(int i=0; i<4; i++)
-    cloud[i].setColor(color);
+    for (int i = 0; i < 4; i++)
+        cloud[i].setColor(color);
 
     cur_color = color;
 
@@ -77,10 +76,10 @@ void MessageCloud::AddDialog(sf::String text, bool nextdialog)
 {
     cout << "MessageCloud::AddDialog()" << endl;
 
-    PText a,b;
+    PText a, b;
 
-    a.createText(font, 28, sf::Color(32,32,32,255), text, quality, 1);
-    b.createText(font, 28, sf::Color(32,32,32,255), "", quality, 1);
+    a.createText(font, 28, sf::Color(32, 32, 32, 255), text, quality, 1);
+    b.createText(font, 28, sf::Color(32, 32, 32, 255), "", quality, 1);
 
     ptext.push_back(a);
     showtext.push_back(b);
@@ -95,14 +94,14 @@ void MessageCloud::AddDialog(sf::String text, bool nextdialog)
 
 void MessageCloud::Show()
 {
-    if(!active)
+    if (!active)
     {
         cout << "MessageCloud::Show()" << endl;
 
         active = true;
 
-        dest_xsize = ptext[cur_dialog].getLocalBounds().width+64+(ptext[cur_dialog].getLocalBounds().width / 10);
-        dest_ysize = ptext[cur_dialog].getLocalBounds().height+64+(ptext[cur_dialog].getLocalBounds().height / 1.5);
+        dest_xsize = ptext[cur_dialog].getLocalBounds().width + 64 + (ptext[cur_dialog].getLocalBounds().width / 10);
+        dest_ysize = ptext[cur_dialog].getLocalBounds().height + 64 + (ptext[cur_dialog].getLocalBounds().height / 1.5);
 
         text_timeout.restart();
 
@@ -125,7 +124,7 @@ void MessageCloud::End()
 
 void MessageCloud::NextDialog()
 {
-    if(cur_dialog < ptext.size()-1)
+    if (cur_dialog < ptext.size() - 1)
     {
         ready = false;
 
@@ -136,12 +135,11 @@ void MessageCloud::NextDialog()
         old_xsize = dest_xsize;
         old_ysize = dest_ysize;
 
-        dest_xsize = ptext[cur_dialog].getLocalBounds().width+64+(ptext[cur_dialog].getLocalBounds().width / 10);
-        dest_ysize = ptext[cur_dialog].getLocalBounds().height+64+(ptext[cur_dialog].getLocalBounds().height / 1.5);
+        dest_xsize = ptext[cur_dialog].getLocalBounds().width + 64 + (ptext[cur_dialog].getLocalBounds().width / 10);
+        dest_ysize = ptext[cur_dialog].getLocalBounds().height + 64 + (ptext[cur_dialog].getLocalBounds().height / 1.5);
 
         text_timeout.restart();
-    }
-    else
+    } else
     {
         dest_xsize = 0;
         dest_ysize = 0;
@@ -157,30 +155,30 @@ void MessageCloud::SpeedUp()
 
 void MessageCloud::Draw(sf::RenderWindow& window, float fps, InputController& inputCtrl)
 {
-    if(!firstrender)
-    firstrender = true;
+    if (!firstrender)
+        firstrender = true;
 
-    if(speedable)
+    if (speedable)
     {
-        if(inputCtrl.isKeyHeld(InputController::Keys::CIRCLE))
-        SpeedUp();
+        if (inputCtrl.isKeyHeld(InputController::Keys::CIRCLE))
+            SpeedUp();
     }
 
-    if(ready)
+    if (ready)
     {
-        if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+        if (inputCtrl.isKeyPressed(InputController::Keys::CROSS))
         {
             NextDialog();
         }
     }
 
-    for(int i=0; i<ptext.size(); i++)
-    ptext[i].update(window);
+    for (int i = 0; i < ptext.size(); i++)
+        ptext[i].update(window);
 
-    if(active)
+    if (active)
     {
-        x = startpos.x-xsize/40;
-        y = startpos.y-ysize;
+        x = startpos.x - xsize / 40;
+        y = startpos.y - ysize;
 
         float xsize_diff = (dest_xsize - xsize) * 10 / fps;
         float ysize_diff = (dest_ysize - ysize) * 10 / fps;
@@ -189,43 +187,42 @@ void MessageCloud::Draw(sf::RenderWindow& window, float fps, InputController& in
 
         setSize(xsize + xsize_diff, ysize + ysize_diff);
 
-        if(((floor(xsize) <= 1) || (floor(ysize) <= 1)) && (done))
-        active = false;
+        if (((floor(xsize) <= 1) || (floor(ysize) <= 1)) && (done))
+            active = false;
 
-        if((abs(xsize-dest_xsize) < 50) && (abs(ysize-dest_ysize) < 50))
+        if ((abs(xsize - dest_xsize) < 50) && (abs(ysize - dest_ysize) < 50))
         {
             canwrite = true;
-        }
-        else
+        } else
         {
             canwrite = false;
             text_timeout.restart();
         }
 
-        for(int i=0; i<4; i++)
+        for (int i = 0; i < 4; i++)
         {
             cloud[i].setColor(cur_color);
-            cloud[i].setPosition(x,y);
+            cloud[i].setPosition(x, y);
             cloud[i].draw(window);
         }
 
-        if(canwrite)
+        if (canwrite)
         {
-            if(loaded_text[cur_dialog].getSize() != viewed_text[cur_dialog].getSize())
+            if (loaded_text[cur_dialog].getSize() != viewed_text[cur_dialog].getSize())
             {
                 float ms = text_timeout.getElapsedTime().asMilliseconds();
 
-                if(speedup)
-                timeout = speed_timeout;
+                if (speedup)
+                    timeout = speed_timeout;
                 else
-                timeout = regular_timeout;
+                    timeout = regular_timeout;
 
                 int addchar = floor(ms / timeout);
 
-                for(int i=0; i<addchar; i++)
+                for (int i = 0; i < addchar; i++)
                 {
                     ///second check to not add out of bounds characters
-                    if(loaded_text[cur_dialog].getSize() != viewed_text[cur_dialog].getSize())
+                    if (loaded_text[cur_dialog].getSize() != viewed_text[cur_dialog].getSize())
                     {
                         viewed_text[cur_dialog] += loaded_text[cur_dialog][cur_char];
                         cur_char++;
@@ -241,49 +238,49 @@ void MessageCloud::Draw(sf::RenderWindow& window, float fps, InputController& in
         float rX = window.getSize().x / float(1280);
         float rY = window.getSize().y / float(720);
 
-        triangle.setPoint(0, sf::Vector2f(startpos.x*rX, startpos.y*rY));
-        triangle.setPoint(1, sf::Vector2f((x-(xsize/25))*rX,y*rY));
-        triangle.setPoint(2, sf::Vector2f((x+(xsize/25))*rX,y*rY));
+        triangle.setPoint(0, sf::Vector2f(startpos.x * rX, startpos.y * rY));
+        triangle.setPoint(1, sf::Vector2f((x - (xsize / 25)) * rX, y * rY));
+        triangle.setPoint(2, sf::Vector2f((x + (xsize / 25)) * rX, y * rY));
 
         triangle.setFillColor(cur_color);
         window.draw(triangle);
 
-        if(!done)
+        if (!done)
         {
 
-            showtext[cur_dialog].setPosition(x-ptext[cur_dialog].getLocalBounds().width/2,y-4-ptext[cur_dialog].getLocalBounds().height/2);
+            showtext[cur_dialog].setPosition(x - ptext[cur_dialog].getLocalBounds().width / 2, y - 4 - ptext[cur_dialog].getLocalBounds().height / 2);
             showtext[cur_dialog].setString(viewed_text[cur_dialog]);
             showtext[cur_dialog].draw(window);
 
-            if(next_dialog[cur_dialog])
+            if (next_dialog[cur_dialog])
             {
-                if(loaded_text[cur_dialog].getSize() == viewed_text[cur_dialog].getSize())
+                if (loaded_text[cur_dialog].getSize() == viewed_text[cur_dialog].getSize())
                 {
                     ready = true;
 
                     arrow_y -= 36 / fps;
 
-                    if(arrow_y <= -20)
-                    arrow_y = -20;
+                    if (arrow_y <= -20)
+                        arrow_y = -20;
 
-                    if(arrow_timeout.getElapsedTime().asSeconds() >= 0.75)
+                    if (arrow_timeout.getElapsedTime().asSeconds() >= 0.75)
                     {
                         arrow_y = 0;
                         arrow_timeout.restart();
                     }
 
-                    cross.setOrigin(cross.getLocalBounds().width/2, cross.getLocalBounds().height/2);
-                    cross_highlight.setOrigin(cross_highlight.getLocalBounds().width/2, cross_highlight.getLocalBounds().height/2);
-                    cross_arrow.setOrigin(cross_highlight.getLocalBounds().width/2, cross_highlight.getLocalBounds().height);
+                    cross.setOrigin(cross.getLocalBounds().width / 2, cross.getLocalBounds().height / 2);
+                    cross_highlight.setOrigin(cross_highlight.getLocalBounds().width / 2, cross_highlight.getLocalBounds().height / 2);
+                    cross_arrow.setOrigin(cross_highlight.getLocalBounds().width / 2, cross_highlight.getLocalBounds().height);
 
-                    float cross_x = x+xsize/2-8;
-                    float cross_y = y+ysize/2-20;
+                    float cross_x = x + xsize / 2 - 8;
+                    float cross_y = y + ysize / 2 - 20;
 
-                    cross.setPosition(cross_x,cross_y);
-                    cross_highlight.setPosition(cross_x,cross_y);
-                    cross_arrow.setPosition(cross_x-2,cross_y+20+arrow_y);
+                    cross.setPosition(cross_x, cross_y);
+                    cross_highlight.setPosition(cross_x, cross_y);
+                    cross_arrow.setPosition(cross_x - 2, cross_y + 20 + arrow_y);
 
-                    cross_highlight.setColor(sf::Color(255,255,255,128+(arrow_y*6.4)));
+                    cross_highlight.setColor(sf::Color(255, 255, 255, 128 + (arrow_y * 6.4)));
 
                     cross.draw(window);
                     cross_highlight.draw(window);

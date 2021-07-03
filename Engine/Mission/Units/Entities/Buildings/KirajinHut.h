@@ -1,15 +1,15 @@
 #ifndef KIRAJINHUT_H
 #define KIRAJINHUT_H
 
-#include <SFML/Graphics.hpp>
 #include "../../../../Config.h"
 #include "../../Entity.h"
+#include <SFML/Graphics.hpp>
 
 using namespace std;
 
 class KirajinHut : public Entity
 {
-    public:
+public:
     bool droppeditem = false;
     float shake = 0;
     bool negative = false;
@@ -20,10 +20,10 @@ class KirajinHut : public Entity
     sf::SoundBuffer s_broken;
 
     KirajinHut();
-    void LoadConfig(Config *thisConfigs);
-    void parseAdditionalData(std::vector<std::string> additional_data);
+    void LoadConfig(Config* thisConfigs);
+    void parseAdditionalData(nlohmann::json additional_data);
     void Draw(sf::RenderWindow& window);
-    void OnCollide(CollidableObject* otherObject, int collidedWith=-1, vector<string> collisionData = {});
+    void OnCollide(CollidableObject* otherObject, int collidedWith = -1, vector<string> collisionData = {});
 };
 
 #endif // KIRAJINHUT_H

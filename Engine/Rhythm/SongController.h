@@ -1,20 +1,20 @@
 #ifndef SONGCONTROLLER_H
 #define SONGCONTROLLER_H
+#include "Song.h"
 #include <SFML/Graphics.hpp>
-#include <vector>
 #include <map>
 #include <string>
-#include "Song.h"
+#include <vector>
 struct SimpleSong {
-    public:
+public:
     std::string themeFilePath;
     std::string chantsFilePath;
 };
 class SongController
 {
-    public:
+public:
     std::vector<Song> songs;
-    std::map<std::string,SimpleSong> songListings;
+    std::map<std::string, SimpleSong> songListings;
     SongController();
 
     void SaveControllerIniSettings();
@@ -25,7 +25,7 @@ class SongController
     const sf::SoundBuffer& GetSongByName(std::string songName, int songNumber);
     const sf::SoundBuffer& GetChantByName(std::string songName, std::string chantName);
 
-    private:
+private:
     void SaveSongsConfig();
     void LoadSongsConfig();
     std::string configPath;

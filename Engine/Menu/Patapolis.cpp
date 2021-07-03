@@ -1,24 +1,35 @@
 #include "Patapolis.h"
+#include "../V4Core.h"
+#include "Altar.h"
 #include "ButtonList.h"
 #include "iostream"
-#include "../V4Core.h"
 #include <sstream>
-#include <ctime>
-#include "Altar.h"
-
 PatapolisMenu::PatapolisMenu()
 {
     //ctor
 
     //f_font.loadFromFile("resources/fonts/arial.ttf");
 
-    isActive=false;
+    is_active = false;
+}
+
+void PatapolisMenu::updateStoryPoint()
+{
+    // While currently just doing
+    //v4Core->saveReader.story_point = *std::max_element(v4Core->saveReader.missions_unlocked.begin(), v4Core->saveReader.missions_unlocked.end());
+    // would suffice, we do this in case at some point we want a story point to change without unlocking a mission
+    // for example, after a mission you're supposed to fail
+    int last_mission = *std::max_element(v4Core->saveReader.missions_unlocked.begin(), v4Core->saveReader.missions_unlocked.end());
+    if (last_mission < 6) // story_point 0-5 can just do that
+    {
+        v4Core->saveReader.story_point = last_mission;
+    }
 }
 
 void PatapolisMenu::addL6(std::string variant, float x, float y, int q, int r)
 {
     PSprite tmp;
-    tmp.loadFromFile("resources/graphics/bg/patapolis/6"+variant+".png", q, r);
+    tmp.loadFromFile("resources/graphics/bg/patapolis/6" + variant + ".png", q, r);
     tmp.setPosition(x, y);
     layer_6.push_back(tmp);
 }
@@ -26,7 +37,7 @@ void PatapolisMenu::addL6(std::string variant, float x, float y, int q, int r)
 void PatapolisMenu::addL2(std::string variant, float x, float y, int q, int r)
 {
     PSprite tmp;
-    tmp.loadFromFile("resources/graphics/bg/patapolis/2"+variant+".png", q, r);
+    tmp.loadFromFile("resources/graphics/bg/patapolis/2" + variant + ".png", q, r);
     tmp.setPosition(x, y);
     layer_2.push_back(tmp);
 }
@@ -63,12 +74,12 @@ void PatapolisMenu::addParagetSparkle(float x, float y)
     PSprite sprk;
 
     int choice = rand() % 3 + 1;
-    string nm = "paraget_sparkle_"+to_string(choice)+".png";
+    string nm = "paraget_sparkle_" + to_string(choice) + ".png";
 
-    sprk.loadFromFile("resources/graphics/bg/patapolis/"+nm, quality, 1);
+    sprk.loadFromFile("resources/graphics/bg/patapolis/" + nm, quality, 1);
 
     sprk.setPosition(x, y);
-    sprk.setOrigin(sprk.getLocalBounds().width/2, sprk.getLocalBounds().height/2);
+    sprk.setOrigin(sprk.getLocalBounds().width / 2, sprk.getLocalBounds().height / 2);
     sprk.setRotation(angle);
     sprk.setScale(scale);
     //sparkles.push_back(sprk);
@@ -105,52 +116,47 @@ PatapolisMenu::Fire PatapolisMenu::addFire(int type, float x, float y, bool add)
 
     string str_type = "";
 
-    switch(type)
+    switch (type)
     {
-        case 0:
-        {
+        case 0: {
             str_type = "small";
             break;
         }
 
-        case 1:
-        {
+        case 1: {
             str_type = "med";
             break;
         }
 
-        case 2:
-        {
+        case 2: {
             str_type = "large";
             break;
         }
 
-        case 3:
-        {
+        case 3: {
             str_type = "purple";
             break;
         }
 
-        case 4:
-        {
+        case 4: {
             str_type = "market";
             break;
         }
     }
 
-    tmp.fire[0].loadFromFile("resources/graphics/bg/patapolis/"+str_type+"_fire1.png", quality, 1);
-    tmp.fire[1].loadFromFile("resources/graphics/bg/patapolis/"+str_type+"_fire2.png", quality, 1);
-    tmp.fire[2].loadFromFile("resources/graphics/bg/patapolis/"+str_type+"_fire3.png", quality, 1);
+    tmp.fire[0].loadFromFile("resources/graphics/bg/patapolis/" + str_type + "_fire1.png", quality, 1);
+    tmp.fire[1].loadFromFile("resources/graphics/bg/patapolis/" + str_type + "_fire2.png", quality, 1);
+    tmp.fire[2].loadFromFile("resources/graphics/bg/patapolis/" + str_type + "_fire3.png", quality, 1);
 
-    tmp.glow.loadFromFile("resources/graphics/bg/patapolis/"+str_type+"_glow.png", quality, 1);
+    tmp.glow.loadFromFile("resources/graphics/bg/patapolis/" + str_type + "_glow.png", quality, 1);
 
     tmp.baseX = x;
     tmp.baseY = y;
     tmp.x = x;
     tmp.y = y;
 
-    if(add)
-    fires.push_back(tmp);
+    if (add)
+        fires.push_back(tmp);
 
     return tmp;
 }
@@ -171,7 +177,7 @@ void PatapolisMenu::addCloud(std::string type, float x, float y, float xsize, fl
 {
     cout << "Adding cloud " << type << " " << x << " " << y << " " << xsize << " " << ysize << endl;
 
-    if(type == "A")
+    if (type == "A")
     {
         CloudA cloud;
         cloud.cloud.loadFromFile("resources/graphics/bg/patapolis/1a.png", q, r);
@@ -181,19 +187,18 @@ void PatapolisMenu::addCloud(std::string type, float x, float y, float xsize, fl
         cloud.y = y;
 
         clouds_A.push_back(cloud);
-    }
-    else if(type == "B")
+    } else if (type == "B")
     {
         float resRatio = float(thisConfig->GetInt("resX")) / float(1280);
 
         CloudB cloud;
         cloud.cloud.setFillColor(sf::Color::White);
-        cloud.cloud.setRadius(640*resRatio);
+        cloud.cloud.setRadius(640 * resRatio);
 
         float scale_x = xsize / 640.f;
         float scale_y = ysize / 640.f;
 
-        cloud.cloud.setScale(scale_x*resRatio, scale_y*resRatio);
+        cloud.cloud.setScale(scale_x * resRatio, scale_y * resRatio);
 
         cloud.base_x = x;
         cloud.base_y = y;
@@ -202,99 +207,38 @@ void PatapolisMenu::addCloud(std::string type, float x, float y, float xsize, fl
     }
 }
 
-void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curParentMenu)
+void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMenu)
 {
-    parent->SaveToDebugLog("Initializing Patapolis...");
+    parent->saveToDebugLog("Initializing Patapolis...");
+
 
     //sf::Context context;
-    Scene::Initialise(thisConfigs,parent);
-    altar_menu.Initialise(thisConfigs,parent,this);
-    barracks_menu.Initialise(thisConfigs,parent,this);
-    obelisk_menu.Initialise(thisConfigs,parent,this);
+    Scene::Initialise(_thisConfig, parent);
+    updateStoryPoint(); // Update story_point before anything else
+    altar_menu.initialise(_thisConfig, parent, this);
+    barracks_menu.initialise(_thisConfig, parent, this);
+    obelisk_menu.Initialise(_thisConfig, parent, this);
     parentMenu = curParentMenu;
     quality = thisConfig->GetInt("textureQuality");
-
-    if(thisConfig->GetInt("seasonalEvents") == 1)
-    {
-        auto start = std::time(0);
-        std::time_t t = std::time(0);   // get time now
-        std::tm* now = std::localtime(&t);
-
-        se_christmas = false;
-        thisConfigs->se_christmas = false;
-
-        cout << "Current month: " << now->tm_mon+1 << " current day: " << now->tm_mday << endl;
-
-        if(now->tm_mon+1 >= 12)
-        {
-            if(now->tm_mday >= 14)
-            {
-                se_christmas = true;
-                thisConfigs->se_christmas = true;
-            }
-        }
-        else if(now->tm_mon+1 <= 1)
-        {
-            if(now->tm_mday <= 14)
-            {
-                se_christmas = true;
-                thisConfigs->se_christmas = true;
-            }
-        }
-
-        if(se_christmas)
-        {
-            cout << "Merry christmas! :)" << endl;
-        }
-    }
-
-    weather.thisConfig = thisConfig;
-
-    ///Enable winter weather
-    if(se_christmas)
-    weather.loadWeather(1);
-
-    ///Unlock special mission
-    if(se_christmas)
-    {
-        if(!v4core->savereader.isMissionUnlocked(6))
-        {
-            v4core->savereader.missionsUnlocked.push_back(6);
-            v4core->savereader.missionLevels[6] = 0;
-        }
-    }
-    else
-    {
-        if(std::find(v4core->savereader.missionsUnlocked.begin(), v4core->savereader.missionsUnlocked.end(), 6) != v4core->savereader.missionsUnlocked.end())
-        {
-            auto it = std::find(v4core->savereader.missionsUnlocked.begin(), v4core->savereader.missionsUnlocked.end(), 6);
-            v4core->savereader.missionsUnlocked.erase(it);
-        }
-    }
 
     float resRatioX = thisConfig->GetInt("resX") / float(1280);
     float resRatioY = thisConfig->GetInt("resY") / float(720);
 
-    f_font.loadFromFile(thisConfigs->fontPath);
+    f_font.loadFromFile(_thisConfig->fontPath);
 
     t_title.createText(f_font, 38, sf::Color::White, "", quality, 1);
     t_title.t.setOutlineThickness(2);
     t_title.t.setOutlineColor(sf::Color::Black);
 
-    string vx_params = "";
+    string vx_params = "0,24,128,238;66,24,128,238;444,184,243,202;591,184,243,202;592,255,255,255;710,171,243,214;720,171,243,214";
 
-    if(!se_christmas)
-    vx_params = "0,24,128,238;66,24,128,238;444,184,243,202;591,184,243,202;592,255,255,255;710,171,243,214;720,171,243,214";
-    else
-    vx_params = "0,70,124,190;66,70,124,190;444,184,243,202;591,184,243,202;592,255,255,255;710,171,243,214;720,171,243,214";
-
-    vector<string> v_vxparams = Func::Split(vx_params,';');
+    vector<string> v_vxparams = Func::Split(vx_params, ';');
     std::vector<sf::Vector2f> vx_pos;
     std::vector<sf::Color> vx_color;
 
-    for(int i=0; i<v_vxparams.size(); i++)
+    for (int i = 0; i < v_vxparams.size(); i++)
     {
-        vector<string> tmp = Func::Split(v_vxparams[i],',');
+        vector<string> tmp = Func::Split(v_vxparams[i], ',');
 
         sf::Vector2f tmp_vector;
         sf::Color tmp_color;
@@ -302,7 +246,7 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
         tmp_vector.x = 0;
         tmp_vector.y = atof(tmp[0].c_str()) * resRatioY;
 
-        if(tmp[0] == "-1")
+        if (tmp[0] == "-1")
         {
             tmp_vector.y = 720 * resRatioY;
         }
@@ -316,7 +260,7 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
         tmp_vector2.x = 1280 * resRatioX;
         tmp_vector2.y = atof(tmp[0].c_str()) * resRatioY;
 
-        if(tmp[0] == "-1")
+        if (tmp[0] == "-1")
         {
             tmp_vector2.y = 720 * resRatioY;
         }
@@ -328,10 +272,10 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
         vx_color.push_back(tmp_color);
     }
 
-    sf::VertexArray tmp(sf::TrianglesStrip,vx_pos.size());
+    sf::VertexArray tmp(sf::TrianglesStrip, vx_pos.size());
     v_background = tmp;
 
-    for(int i=0; i<vx_pos.size(); i++)
+    for (int i = 0; i < vx_pos.size(); i++)
     {
         v_background[i].position = vx_pos[i];
         v_background[i].color = vx_color[i];
@@ -340,138 +284,106 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     }
 
     floor_height = 54;
-    r_ground.setSize(sf::Vector2f(11500*resRatioX, floor_height*resRatioY));
+    r_ground.setSize(sf::Vector2f(11500 * resRatioX, floor_height * resRatioY));
     r_ground.setFillColor(sf::Color::Black);
 
-    addL6("a", 0, 722-floor_height, quality, 1);
-    addL6("a", 2700, 722-floor_height, quality, 1);
+    addL6("a", 0, 722 - floor_height, quality, 1);
+    addL6("a", 2700, 722 - floor_height, quality, 1);
 
-    addL6("d", 3840, 726-floor_height, quality, 1);
-    addL6("c", 3800, 722-floor_height, quality, 1);
+    addL6("d", 3840, 726 - floor_height, quality, 1);
+    addL6("c", 3800, 722 - floor_height, quality, 1);
 
-    addL6("d", 4400, 740-floor_height, quality, 1);
-    addL6("c", 4650, 740-floor_height, quality, 1);
-    addL6("b", 4900, 726-floor_height, quality, 1);
-    addL6("d", 5100, 737-floor_height, quality, 1);
-    addL6("c", 5050, 725-floor_height, quality, 1);
-    addL6("d", 5500, 745-floor_height, quality, 1);
-    addL6("c", 5700, 723-floor_height, quality, 1);
-    addL6("d", 5760, 724-floor_height, quality, 1);
-    addL6("a", 5850, 722-floor_height, quality, 1);
-    addL6("c", 6100, 722-floor_height, quality, 1);
-    addL6("d", 6150, 733-floor_height, quality, 1);
-    addL6("c", 6400, 755-floor_height, quality, 1);
-    addL6("b", 6650, 722-floor_height, quality, 1);
+    addL6("d", 4400, 740 - floor_height, quality, 1);
+    addL6("c", 4650, 740 - floor_height, quality, 1);
+    addL6("b", 4900, 726 - floor_height, quality, 1);
+    addL6("d", 5100, 737 - floor_height, quality, 1);
+    addL6("c", 5050, 725 - floor_height, quality, 1);
+    addL6("d", 5500, 745 - floor_height, quality, 1);
+    addL6("c", 5700, 723 - floor_height, quality, 1);
+    addL6("d", 5760, 724 - floor_height, quality, 1);
+    addL6("a", 5850, 722 - floor_height, quality, 1);
+    addL6("c", 6100, 722 - floor_height, quality, 1);
+    addL6("d", 6150, 733 - floor_height, quality, 1);
+    addL6("c", 6400, 755 - floor_height, quality, 1);
+    addL6("b", 6650, 722 - floor_height, quality, 1);
 
-    addL6("e", 7640, 722-floor_height, quality, 1);
-    addL6("d", 7700, 731-floor_height, quality, 1);
-    addL6("c", 7670, 724-floor_height, quality, 1);
-    addL6("c", 7900, 750-floor_height, quality, 1);
+    addL6("e", 7640, 722 - floor_height, quality, 1);
+    addL6("d", 7700, 731 - floor_height, quality, 1);
+    addL6("c", 7670, 724 - floor_height, quality, 1);
+    addL6("c", 7900, 750 - floor_height, quality, 1);
 
-    addL6("d", 8250, 727-floor_height, quality, 1);
-    addL6("c", 8480, 742-floor_height, quality, 1);
-    addL6("d", 8710, 734-floor_height, quality, 1);
-    addL6("c", 8880, 723-floor_height, quality, 1);
-    addL6("d", 8930, 733-floor_height, quality, 1);
-    addL6("c", 9040, 757-floor_height, quality, 1);
-    addL6("d", 9180, 736-floor_height, quality, 1);
-    addL6("a", 9120, 722-floor_height, quality, 1);
-    addL6("c", 9260, 743-floor_height, quality, 1);
+    addL6("d", 8250, 727 - floor_height, quality, 1);
+    addL6("c", 8480, 742 - floor_height, quality, 1);
+    addL6("d", 8710, 734 - floor_height, quality, 1);
+    addL6("c", 8880, 723 - floor_height, quality, 1);
+    addL6("d", 8930, 733 - floor_height, quality, 1);
+    addL6("c", 9040, 757 - floor_height, quality, 1);
+    addL6("d", 9180, 736 - floor_height, quality, 1);
+    addL6("a", 9120, 722 - floor_height, quality, 1);
+    addL6("c", 9260, 743 - floor_height, quality, 1);
 
-    addL6("c", 9700, 728-floor_height, quality, 1);
-    addL6("d", 9740, 735-floor_height, quality, 1);
-    addL6("c", 9880, 760-floor_height, quality, 1);
-    addL6("d", 9930, 750-floor_height, quality, 1);
-    addL6("d", 10040, 737-floor_height, quality, 1);
+    addL6("c", 9700, 728 - floor_height, quality, 1);
+    addL6("d", 9740, 735 - floor_height, quality, 1);
+    addL6("c", 9880, 760 - floor_height, quality, 1);
+    addL6("d", 9930, 750 - floor_height, quality, 1);
+    addL6("d", 10040, 737 - floor_height, quality, 1);
 
     L5.loadFromFile("resources/graphics/bg/patapolis/5.png", quality, 1);
     L4.loadFromFile("resources/graphics/bg/patapolis/4.png", quality, 1);
 
-    L5.setPosition(3060, 740-floor_height);
-    L4.setPosition(2530, 750-floor_height);
+    L5.setPosition(3060, 740 - floor_height);
+    L4.setPosition(2530, 750 - floor_height);
 
-    addL2("a", 800, 766-floor_height, quality, 1);
-    addL2("b", 2900, 740-floor_height, quality, 1);
+    addL2("a", 800, 766 - floor_height, quality, 1);
+    addL2("b", 2900, 740 - floor_height, quality, 1);
+    addL2("c", 3900, 720 - floor_height, quality, 1);
+    addL2("c", 4300, 770 - floor_height, quality, 1);
 
-    if(!se_christmas)
-    {
-        addL2("c", 4300, 770-floor_height, quality, 1);
-        addL2("c", 5220, 720-floor_height, quality, 1);
-        addL2("c", 5600, 770-floor_height, quality, 1);
-        addL2("c", 6150, 760-floor_height, quality, 1);
-        addL2("c", 6320, 720-floor_height, quality, 1);
-        addL2("c", 7540, 760-floor_height, quality, 1);
-        addL2("c", 8900, 770-floor_height, quality, 1);
-        addL2("c", 9060, 740-floor_height, quality, 1);
-        addL2("c", 10300, 770-floor_height, quality, 1);
-        addL2("c", 10470, 740-floor_height, quality, 1);
+    addL2("c", 5080, 750 - floor_height, quality, 1);
+    addL2("c", 5220, 720 - floor_height, quality, 1);
 
-        addL2("c", 3900, 720-floor_height, quality, 1);
-        addL2("c", 5080, 750-floor_height, quality, 1);
-        addL2("c", 5740, 720-floor_height, quality, 1);
-        addL2("c", 6540, 760-floor_height, quality, 1);
-        addL2("c", 7800, 720-floor_height, quality, 1);
-        addL2("c", 8000, 750-floor_height, quality, 1);
-        addL2("c", 9760, 740-floor_height, quality, 1);
-        addL2("c", 11000, 750-floor_height, quality, 1);
-    }
-    else
-    {
-        addL2("c_winter1", 4300, 770-floor_height, quality, 1);
-        addL2("c_winter2", 5220, 720-floor_height, quality, 1);
-        addL2("c_winter1", 5600, 770-floor_height, quality, 1);
-        addL2("c_winter1", 6150, 760-floor_height, quality, 1);
-        addL2("c_winter2", 6320, 720-floor_height, quality, 1);
-        addL2("c_winter1", 7540, 760-floor_height, quality, 1);
-        addL2("c_winter2", 8900, 770-floor_height, quality, 1);
-        addL2("c_winter2", 9060, 740-floor_height, quality, 1);
-        addL2("c_winter1", 10300, 770-floor_height, quality, 1);
-        addL2("c_winter2", 10470, 740-floor_height, quality, 1);
+    addL2("c", 5600, 770 - floor_height, quality, 1);
+    addL2("c", 5740, 720 - floor_height, quality, 1);
 
-        addL2("c_winter2", 3900, 720-floor_height, quality, 1);
-        addL2("c_winter1", 5080, 750-floor_height, quality, 1);
-        addL2("c_winter2", 5740, 720-floor_height, quality, 1);
-        addL2("c_winter1", 6540, 760-floor_height, quality, 1);
-        addL2("c_winter1", 7800, 720-floor_height, quality, 1);
-        addL2("c_winter2", 8000, 750-floor_height, quality, 1);
-        addL2("c_winter1", 9760, 740-floor_height, quality, 1);
-        addL2("c_winter2", 11000, 750-floor_height, quality, 1);
+    addL2("c", 6150, 760 - floor_height, quality, 1);
+    addL2("c", 6320, 720 - floor_height, quality, 1);
 
-        addL2("_snowman", 11100, 720-floor_height, quality, 1);
-        addL2("_present1", 10200, 720-floor_height, quality, 1);
-        addL2("_present3", 10100, 720-floor_height, quality, 1);
-        addL2("_present2", 9500, 720-floor_height, quality, 1);
-        addL2("_present1", 9400, 720-floor_height, quality, 1);
-        addL2("_present3", 8500, 720-floor_height, quality, 1);
-        addL2("_present2", 8100, 720-floor_height, quality, 1);
-        addL2("_present3", 8060, 720-floor_height, quality, 1);
-        addL2("_present3", 6800, 720-floor_height, quality, 1);
-        addL2("_present2", 6700, 720-floor_height, quality, 1);
-        addL2("_present3", 6560, 720-floor_height, quality, 1);
-        addL2("_present1", 6400, 720-floor_height, quality, 1);
-        addL2("_present1", 6330, 720-floor_height, quality, 1);
-        addL2("_present2", 6200, 720-floor_height, quality, 1);
-    }
+    addL2("c", 6540, 760 - floor_height, quality, 1);
 
-    addL2("d", 300, 728-floor_height, quality, 1);
-    addL2("d", 940, 728-floor_height, quality, 1);
-    addL2("e", 1400, 728-floor_height, quality, 1);
-    addL2("f", 1800, 728-floor_height, quality, 1);
-    addL2("d", 4200, 728-floor_height, quality, 1);
-    addL2("d", 5000, 728-floor_height, quality, 1);
-    addL2("d", 5580, 728-floor_height, quality, 1);
-    addL2("d", 6400, 728-floor_height, quality, 1);
-    addL2("d", 7700, 728-floor_height, quality, 1);
-    addL2("d", 9000, 728-floor_height, quality, 1);
-    addL2("d", 10500, 728-floor_height, quality, 1);
+    addL2("c", 7540, 760 - floor_height, quality, 1);
+
+    addL2("c", 7800, 720 - floor_height, quality, 1);
+    addL2("c", 8000, 750 - floor_height, quality, 1);
+
+    addL2("c", 8900, 770 - floor_height, quality, 1);
+    addL2("c", 9060, 740 - floor_height, quality, 1);
+
+    addL2("c", 9760, 740 - floor_height, quality, 1);
+
+    addL2("c", 10300, 770 - floor_height, quality, 1);
+    addL2("c", 10470, 740 - floor_height, quality, 1);
+
+    addL2("c", 11000, 750 - floor_height, quality, 1);
+
+    addL2("d", 300, 728 - floor_height, quality, 1);
+    addL2("d", 940, 728 - floor_height, quality, 1);
+    addL2("e", 1400, 728 - floor_height, quality, 1);
+    addL2("f", 1800, 728 - floor_height, quality, 1);
+    addL2("d", 4200, 728 - floor_height, quality, 1);
+    addL2("d", 5000, 728 - floor_height, quality, 1);
+    addL2("d", 5580, 728 - floor_height, quality, 1);
+    addL2("d", 6400, 728 - floor_height, quality, 1);
+    addL2("d", 7700, 728 - floor_height, quality, 1);
+    addL2("d", 9000, 728 - floor_height, quality, 1);
+    addL2("d", 10500, 728 - floor_height, quality, 1);
 
     edge.loadFromFile("resources/graphics/bg/patapolis/edge.png", quality, 1);
     bridge.loadFromFile("resources/graphics/bg/patapolis/bridge.png", quality, 1);
     rainbow.loadFromFile("resources/graphics/bg/patapolis/rainbow.png", quality, 1);
 
-    for(int i=0; i<4; i++)
+    for (int i = 0; i < 4; i++)
     {
-        back_layer[i].loadFromFile("resources/graphics/bg/patapolis/back_"+to_string(i+1)+".png", quality, 1);
+        back_layer[i].loadFromFile("resources/graphics/bg/patapolis/back_" + to_string(i + 1) + ".png", quality, 1);
         back_layer[i].setOrigin(0, back_layer[i].getLocalBounds().height);
         back_layer[i].setPosition(back_pos[i], 715);
     }
@@ -496,31 +408,31 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
 
     wakapon.loadFromFile("resources/graphics/bg/patapolis/wakapon.png", quality, 1);
     wakapon.setPosition(11920, 462);
-    wakapon.setOrigin(wakapon.getLocalBounds().width/2, wakapon.getLocalBounds().height);
+    wakapon.setOrigin(wakapon.getLocalBounds().width / 2, wakapon.getLocalBounds().height);
 
-    a_wakapon.LoadConfig(thisConfigs, "resources/units/unit/wakapon.p4a");
+    a_wakapon.LoadConfig(_thisConfig, "resources/units/unit/wakapon.p4a");
     a_wakapon.setAnimationSegment("idle");
     a_wakapon.global_y = 395;
 
-    a_sen.LoadConfig(thisConfigs, "resources/units/unit/ranpurupon.p4a");
+    a_sen.LoadConfig(_thisConfig, "resources/units/unit/ranpurupon.p4a");
     a_sen.setAnimationSegment("idle");
     a_sen.global_y = 629;
 
     world_egg.loadFromFile("resources/graphics/bg/patapolis/egg.png", quality, 1);
     world_egg.setPosition(12215, 462);
-    world_egg.setOrigin(world_egg.getLocalBounds().width/2, world_egg.getLocalBounds().height);
+    world_egg.setOrigin(world_egg.getLocalBounds().width / 2, world_egg.getLocalBounds().height);
 
     light_1.loadFromFile("resources/graphics/bg/patapolis/light.png", quality, 1);
     light_1.setPosition(11715, 161);
-    light_1.setOrigin(light_1.getLocalBounds().width/2, light_1.getLocalBounds().height/2);
+    light_1.setOrigin(light_1.getLocalBounds().width / 2, light_1.getLocalBounds().height / 2);
 
     light_2.loadFromFile("resources/graphics/bg/patapolis/light.png", quality, 1);
     light_2.setPosition(12720, 161);
-    light_2.setOrigin(light_2.getLocalBounds().width/2, light_2.getLocalBounds().height/2);
+    light_2.setOrigin(light_2.getLocalBounds().width / 2, light_2.getLocalBounds().height / 2);
 
     egg_light.loadFromFile("resources/graphics/bg/patapolis/egg_light.png", quality, 1);
     egg_light.setPosition(12217, 288);
-    egg_light.setOrigin(egg_light.getLocalBounds().width/2, egg_light.getLocalBounds().height/2);
+    egg_light.setOrigin(egg_light.getLocalBounds().width / 2, egg_light.getLocalBounds().height / 2);
 
     addRay(10, 331, 18, 321);
     addRay(21, 321, 25, 316);
@@ -535,7 +447,7 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     addRay(7, 214, 0, 211);
     addRay(2, 210, -2, 210);
 
-    for(int i=11; i>=0; i--)
+    for (int i = 11; i >= 0; i--)
     {
         float x1 = coords[i].ox2 * (-1);
         float x2 = coords[i].ox1 * (-1);
@@ -543,23 +455,22 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
         addRay(x1, coords[i].y2, x2, coords[i].y1);
     }
 
-    for(int i=0; i<coords.size(); i++)
+    for (int i = 0; i < coords.size(); i++)
     {
         LightRay tmp;
-        tmp.angle = 30 + (i * (float(300)/float(coords.size())));
+        tmp.angle = 30 + (i * (float(300) / float(coords.size())));
         tmp.max_distance = 110 + rand() % 20;
         tmp.min_distance = 10 + rand() % 20;
         tmp.cur_distance = rand() % 110 + 20;
 
 
-
         sf::VertexArray vtmp(sf::TrianglesStrip, 3);
         vtmp[0].position = sf::Vector2f(coords[i].x1, coords[i].y1);
-        vtmp[0].color = sf::Color(215,246,255,255);
+        vtmp[0].color = sf::Color(215, 246, 255, 255);
         vtmp[1].position = sf::Vector2f(coords[i].x2, coords[i].y2);
-        vtmp[1].color = sf::Color(215,246,255,255);
-        vtmp[2].position = sf::Vector2f(((coords[i].x1 + coords[i].x2) / 2) + (tmp.cur_distance * sin(tmp.angle*3.14159265/180)), ((coords[i].y1 + coords[i].y2) / 2) + (tmp.cur_distance * cos(tmp.angle*3.14159265/180)));
-        vtmp[2].color = sf::Color(215,246,255,255);
+        vtmp[1].color = sf::Color(215, 246, 255, 255);
+        vtmp[2].position = sf::Vector2f(((coords[i].x1 + coords[i].x2) / 2) + (tmp.cur_distance * sin(tmp.angle * 3.14159265 / 180)), ((coords[i].y1 + coords[i].y2) / 2) + (tmp.cur_distance * cos(tmp.angle * 3.14159265 / 180)));
+        vtmp[2].color = sf::Color(215, 246, 255, 255);
         tmp.triangle = vtmp;
 
         cout << "[coord #" << i << "]" << vtmp[0].position.x << " " << vtmp[0].position.y << " " << vtmp[1].position.x << " " << vtmp[1].position.y << " " << vtmp[2].position.x << " " << vtmp[2].position.y << " " << tmp.angle << " " << tmp.cur_distance << " " << tmp.min_distance << " " << tmp.max_distance << endl;
@@ -568,64 +479,60 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     }
 
     barracks.loadFromFile("resources/graphics/bg/patapolis/barracks.png", quality, 1);
-    barracks.setPosition(640, 765-floor_height);
-    barracks.setOrigin(barracks.getLocalBounds().width/2, barracks.getLocalBounds().height);
+    barracks.setPosition(640, 765 - floor_height);
+    barracks.setOrigin(barracks.getLocalBounds().width / 2, barracks.getLocalBounds().height);
 
     forge_main.loadFromFile("resources/graphics/bg/patapolis/forge_main.png", quality, 1);
-    forge_main.setPosition(2300, 720-floor_height);
-    forge_main.setOrigin(forge_main.getLocalBounds().width/2, forge_main.getLocalBounds().height);
+    forge_main.setPosition(2300, 720 - floor_height);
+    forge_main.setOrigin(forge_main.getLocalBounds().width / 2, forge_main.getLocalBounds().height);
 
     forge_back.loadFromFile("resources/graphics/bg/patapolis/blacksmith_forge.png", quality, 1);
-    forge_back.setPosition(2300, 720-floor_height-29);
-    forge_back.setOrigin(forge_back.getLocalBounds().width/2, forge_back.getLocalBounds().height);
+    forge_back.setPosition(2300, 720 - floor_height - 29);
+    forge_back.setOrigin(forge_back.getLocalBounds().width / 2, forge_back.getLocalBounds().height);
 
     forge_glow.loadFromFile("resources/graphics/bg/patapolis/blacksmith_forge_glow.png", quality, 1);
-    forge_glow.setPosition(2300, 720-floor_height-178);
-    forge_glow.setOrigin(forge_glow.getLocalBounds().width/2, forge_glow.getLocalBounds().height);
+    forge_glow.setPosition(2300, 720 - floor_height - 178);
+    forge_glow.setOrigin(forge_glow.getLocalBounds().width / 2, forge_glow.getLocalBounds().height);
 
     forge_fence.loadFromFile("resources/graphics/bg/patapolis/blacksmith_fence.png", quality, 1);
-    forge_fence.setPosition(2043, 720-floor_height-306);
-    forge_fence.setOrigin(forge_fence.getLocalBounds().width/2, 0);
+    forge_fence.setPosition(2043, 720 - floor_height - 306);
+    forge_fence.setOrigin(forge_fence.getLocalBounds().width / 2, 0);
 
     forge_slab.loadFromFile("resources/graphics/bg/patapolis/slab.png", quality, 1);
-    forge_slab.setPosition(2300-65, 720-floor_height-84);
-    forge_slab.setOrigin(forge_slab.getLocalBounds().width/2, forge_slab.getLocalBounds().height);
+    forge_slab.setPosition(2300 - 65, 720 - floor_height - 84);
+    forge_slab.setOrigin(forge_slab.getLocalBounds().width / 2, forge_slab.getLocalBounds().height);
 
     forge_slab_glow.loadFromFile("resources/graphics/bg/patapolis/slab_glow.png", quality, 1);
-    forge_slab_glow.setPosition(2300-72, 720-floor_height-92);
-    forge_slab_glow.setOrigin(forge_slab_glow.getLocalBounds().width/2, forge_slab_glow.getLocalBounds().height);
+    forge_slab_glow.setPosition(2300 - 72, 720 - floor_height - 92);
+    forge_slab_glow.setOrigin(forge_slab_glow.getLocalBounds().width / 2, forge_slab_glow.getLocalBounds().height);
 
     market.loadFromFile("resources/graphics/bg/patapolis/market.png", quality, 1);
-    market.setPosition(3960, 728-floor_height);
-    market.setOrigin(market.getLocalBounds().width/2, market.getLocalBounds().height);
+    market.setPosition(3960, 728 - floor_height);
+    market.setOrigin(market.getLocalBounds().width / 2, market.getLocalBounds().height);
 
     festival_main.loadFromFile("resources/graphics/bg/patapolis/festival_main.png", quality, 1);
-    festival_main.setPosition(5620, 720-floor_height);
-    festival_main.setOrigin(festival_main.getLocalBounds().width/2, festival_main.getLocalBounds().height);
-
-    se_ornament.loadFromFile("resources/graphics/bg/patapolis/ornament.png", quality, 1);
-    se_ornament.setPosition(5620, 500-floor_height);
-    se_ornament.setOrigin(se_ornament.getLocalBounds().width/2, se_ornament.getLocalBounds().height);
+    festival_main.setPosition(5620, 720 - floor_height);
+    festival_main.setOrigin(festival_main.getLocalBounds().width / 2, festival_main.getLocalBounds().height);
 
     altar.loadFromFile("resources/graphics/bg/patapolis/altar.png", quality, 1);
-    altar.setPosition(7280, 720-floor_height);
-    altar.setOrigin(altar.getLocalBounds().width/2, altar.getLocalBounds().height);
+    altar.setPosition(7280, 720 - floor_height);
+    altar.setOrigin(altar.getLocalBounds().width / 2, altar.getLocalBounds().height);
 
     obelisk.loadFromFile("resources/graphics/bg/patapolis/obelisk.png", quality, 1);
-    obelisk.setPosition(8940, 720-floor_height);
-    obelisk.setOrigin(obelisk.getLocalBounds().width/2, obelisk.getLocalBounds().height);
+    obelisk.setPosition(8940, 720 - floor_height);
+    obelisk.setOrigin(obelisk.getLocalBounds().width / 2, obelisk.getLocalBounds().height);
 
     paraget_main.loadFromFile("resources/graphics/bg/patapolis/paraget_main.png", quality, 1);
-    paraget_main.setPosition(10600, 722-floor_height);
-    paraget_main.setOrigin(paraget_main.getLocalBounds().width/2, paraget_main.getLocalBounds().height);
+    paraget_main.setPosition(10600, 722 - floor_height);
+    paraget_main.setOrigin(paraget_main.getLocalBounds().width / 2, paraget_main.getLocalBounds().height);
 
     paraget_crystal_glow.loadFromFile("resources/graphics/bg/patapolis/paraget_crystal_glow.png", quality, 1);
     paraget_crystal_glow.setPosition(10600, 430);
-    paraget_crystal_glow.setOrigin(paraget_crystal_glow.getLocalBounds().width/2, paraget_crystal_glow.getLocalBounds().height/2);
+    paraget_crystal_glow.setOrigin(paraget_crystal_glow.getLocalBounds().width / 2, paraget_crystal_glow.getLocalBounds().height / 2);
 
     paraget_crystal.loadFromFile("resources/graphics/bg/patapolis/paraget_crystal.png", quality, 1);
     paraget_crystal.setPosition(10600, 430);
-    paraget_crystal.setOrigin(paraget_crystal.getLocalBounds().width/2, paraget_crystal.getLocalBounds().height/2);
+    paraget_crystal.setOrigin(paraget_crystal.getLocalBounds().width / 2, paraget_crystal.getLocalBounds().height / 2);
 
     locations.push_back(barracks.getPosition().x - 640);
     locations.push_back(forge_main.getPosition().x - 640);
@@ -639,9 +546,9 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     locations.push_back(11569);
 
     int range = rand() % 30 + 50;
-    for(int i=0; i<range; i++)
+    for (int i = 0; i < range; i++)
     {
-        addParagetSparkle(10549 + (rand()%100), 330 + (rand() % 200));
+        addParagetSparkle(10549 + (rand() % 100), 330 + (rand() % 200));
     }
 
     addFire(4, 3903, 583, true);
@@ -659,58 +566,56 @@ void PatapolisMenu::Initialise(Config *thisConfigs,V4Core *parent, Menu *curPare
     forge_purple = addFire(3, 2370, 404, false);
 
     p_smoke.loadFromFile("resources/graphics/bg/patapolis/smoke.png", quality, 1);
-    p_smoke.setOrigin(p_smoke.getLocalBounds().width/2, p_smoke.getLocalBounds().height/2);
+    p_smoke.setOrigin(p_smoke.getLocalBounds().width / 2, p_smoke.getLocalBounds().height / 2);
 
     addCloud("A", 9500, 140, 0, 0, quality, 1);
     addCloud("A", 8800, 240, 0, 0, quality, 1);
     addCloud("A", 8000, 170, 0, 0, quality, 1);
 
-    float volume = (float(thisConfigs->GetInt("masterVolume"))*(float(thisConfigs->GetInt("bgmVolume"))/100.f));
+    ctrlTips.create(54, f_font, 20, sf::String(L"L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
+
+    altar_menu.save_loaded = save_loaded;
+    altar_menu.reloadInventory();
+
+    credits.Initialise(_thisConfig, v4Core);
+
+    screenFade.Create(_thisConfig, 0, 512);
+
+    float volume = (float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("bgmVolume")) / 100.f));
 
     sb_city_loop.loadFromFile("resources/sfx/bgm/patapolis.ogg");
     city_loop.setBuffer(sb_city_loop);
     city_loop.setLoop(true);
     city_loop.setVolume(volume);
 
-    ctrlTips.create(54, f_font, 20, sf::String(L"L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
-
-    altar_menu.loadedSave = loadedSave;
-    altar_menu.ReloadInventory();
-
-    credits.Initialise(thisConfigs, v4core);
-
-    screenFade.Create(thisConfigs, 0, 512);
-
-    initialised=true;
+    initialised = true;
 
     SetTitle(location);
     camPos = locations[location];
 
     if (doWaitKeyPress)
     {
-        v4core->LoadingWaitForKeyPress();
-        v4core->ChangeRichPresence("In Patapolis", "logo", "");
+        v4Core->loadingWaitForKeyPress();
+        v4Core->changeRichPresence("In Patapolis", "logo", "");
     }
 
-    parent->SaveToDebugLog("Initializing Patapolis finished.");
+    parent->saveToDebugLog("Initializing Patapolis finished.");
 }
+
 void PatapolisMenu::EventFired(sf::Event event)
 {
-    if (altar_menu.isActive)
+    if (altar_menu.is_active)
     {
         altar_menu.EventFired(event);
-    }
-    else if (barracks_menu.isActive)
+    } else if (barracks_menu.is_active)
     {
         barracks_menu.EventFired(event);
-    }
-    else if (obelisk_menu.isActive)
+    } else if (obelisk_menu.is_active)
     {
         obelisk_menu.EventFired(event);
-    }
-    else if(isActive)
+    } else if (is_active)
     {
-        if(event.type == sf::Event::KeyPressed)
+        if (event.type == sf::Event::KeyPressed)
         {
             /*if (event.key.code == thisConfig->GetInt("keybindBack"))
             {
@@ -721,198 +626,201 @@ void PatapolisMenu::EventFired(sf::Event event)
                 parentMenu->isActive=true;
             }*/
 
-        }
-        else if (event.type == sf::Event::MouseButtonReleased)
+        } else if (event.type == sf::Event::MouseButtonReleased)
         {
             // We use mouse released so a user can change their mind by keeping the mouse held and moving away.
         }
     }
-
 }
 void PatapolisMenu::SetTitle(int menuPosition)
 {
     sf::String a = L"L/R: Move      ";
 
-    switch(menuPosition)
+    if (draw_ID.size() <= 1)
     {
-    case 0:
-        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_trader")));
-        break;
-    case 1:
-        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_blacksmith")));
-        break;
-    case 2:
-        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_barracks")));
-        a += L"X: Interact      ";
-        break;
-    case 3:
-        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_festival")));
-        break;
-    case 4:
+        draw_ID.push_back(menuPosition);
+    } else
     {
-        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_sen")));
-        a += L"X: Interact      ";
+        draw_ID.erase(draw_ID.begin());
+        draw_ID.push_back(menuPosition);
+    }
 
-        ///activate her dialogue
-        messageclouds.clear();
+    cout << "draw_ID: ";
 
-        MessageCloud tmp;
-        tmp.Create(20, sf::Vector2f(a_sen.getGlobalPosition().x-5, a_sen.getGlobalPosition().y-25), sf::Color(170,182,250,255), false, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
-        tmp.msgcloud_ID = 0;
+    for (auto i : draw_ID)
+        cout << i;
 
-        vector<int> missions = v4core->savereader.missionsUnlocked;
+    cout << endl;
 
-        if(std::find(missions.begin(), missions.end(), 1) != missions.end())
-        {
-            ///shida valley is unlocked
+    switch (menuPosition)
+    {
+        case 0:
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_trader")));
+            break;
+        case 1:
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_blacksmith")));
+            break;
+        case 2:
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_barracks")));
+            a += L"X: Interact      ";
+            break;
+        case 3:
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_festival")));
+            break;
+        case 4: {
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_sen")));
+            a += L"X: Interact      ";
 
-            if((std::find(missions.begin(), missions.end(), 1) != missions.end()) && (std::find(missions.begin(), missions.end(), 2) == missions.end()) && (std::find(missions.begin(), missions.end(), 3) == missions.end())) ///if it's the only mission and patapine story is not unlocked
+            ///activate her dialogue
+            messageclouds.clear();
+
+            MessageCloud tmp;
+            tmp.Create(20, sf::Vector2f(a_sen.getGlobalPosition().x - 5, a_sen.getGlobalPosition().y - 25), sf::Color(170, 182, 250, 255), false, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
+            tmp.msgcloud_ID = 0;
+
+            vector<int> missions = v4Core->saveReader.missions_unlocked;
+
+            switch (v4Core->saveReader.story_point)
             {
-                ///shida valley dialogue
-                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_1")), true);
-                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_4")), true);
-                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_5")), true);
-            }
-            else
-            {
-                if(std::find(missions.begin(), missions.end(), 2) != missions.end()) ///patapine fortress STORY mission (non-repeatable)
-                {
-                    ///patapine unlocked dialogue
+                case 0:
+                default: {
+                    // Start of game, shouldn't be accessible
+                    break;
+                }
+                case 1: {
+                    // Shida Valley
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_1")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_4")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_5")), true);
+                    break;
+                }
+                case 2: {
+                    // Patapin Grove Unlocked
                     tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_3")), true);
                     tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_6")), true);
                     tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_7")), true);
+                    break;
                 }
-                else if(std::find(missions.begin(), missions.end(), 3) != missions.end()) ///patapine fortress REPEATABLE mission
-                {
-                    if((std::find(missions.begin(), missions.end(), 1) != missions.end()) && (std::find(missions.begin(), missions.end(), 4) == missions.end()) && (std::find(missions.begin(), missions.end(), 5) == missions.end())) ///neither of ejiji cliffs are unlocked yet (only shida and patapine)
-                    {
-                        ///ejiji locked dialogue
-                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_2")), true);
-                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_8")), true);
-                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_9")), true);
-                    }
-                    else
-                    {
-                        if(std::find(missions.begin(), missions.end(), 4) != missions.end()) ///ejiji cliff STORY mission
-                        {
-                            ///ejiji unlocked dialogue
-                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_3")), true);
-                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_10")), true);
-                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_11")), true);
-                        }
-                        else ///ejiji cliff REPEATABLE mission
-                        {
-                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_1")), true);
-                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_12")), true);
-                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_13")), true);
+                case 3: {
+                    // Patapine Grove Beaten
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_2")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_8")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_9")), true);
+                    break;
+                }
+                case 4: {
+                    // Ejiji Cliffs Unlocked
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_3")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_10")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_11")), true);
+                    break;
+                }
+                case 5: {
+                    // Ejiji Cliffs Beaten
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_1")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_12")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_sen_13")), true);
 
-                            tmp.msgcloud_ID = 2;
-                        }
-                    }
+                    tmp.msgcloud_ID = 2;
+                    break;
                 }
             }
+
+            messageclouds.push_back(tmp);
+
+            cout << "Creating message cloud at " << a_sen.getGlobalPosition().x - 5 << " " << a_sen.getGlobalPosition().y - 25 << endl;
+
+            break;
         }
+        case 5:
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_altar")));
+            a += L"X: Interact      ";
+            break;
+        case 6:
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_obelisk")));
+            a += L"X: Interact      ";
+            break;
+        case 7:
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_paraget")));
+            break;
+        case 8: {
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_wakapon")));
 
-        messageclouds.push_back(tmp);
+            a += L"X: Interact      ";
 
-        cout << "Creating message cloud at " << a_sen.getGlobalPosition().x-5 << " " << a_sen.getGlobalPosition().y-25 << endl;
+            ///activate her dialogue
+            messageclouds.clear();
 
-        break;
-    }
-    case 5:
-        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_altar")));
-        a += L"X: Interact      ";
-        break;
-    case 6:
-        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_obelisk")));
-        a += L"X: Interact      ";
-        break;
-    case 7:
-        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_paraget")));
-        break;
-    case 8:
-    {
-        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_wakapon")));
+            MessageCloud tmp;
+            tmp.Create(20, sf::Vector2f(a_wakapon.getGlobalPosition().x - 5, a_wakapon.getGlobalPosition().y - 25), sf::Color(255, 255, 255, 255), false, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
 
-        a += L"X: Interact      ";
+            vector<int> missions = v4Core->saveReader.missions_unlocked;
 
-        ///activate her dialogue
-        messageclouds.clear();
-
-        MessageCloud tmp;
-        tmp.Create(20, sf::Vector2f(a_wakapon.getGlobalPosition().x-5, a_wakapon.getGlobalPosition().y-25), sf::Color(255,255,255,255), false, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
-
-        vector<int> missions = v4core->savereader.missionsUnlocked;
-
-        if(std::find(missions.begin(), missions.end(), 1) != missions.end())
-        {
-            ///shida valley is unlocked
-
-            if((std::find(missions.begin(), missions.end(), 1) != missions.end()) && (std::find(missions.begin(), missions.end(), 2) == missions.end()) && (std::find(missions.begin(), missions.end(), 3) == missions.end())) ///if it's the only mission and patapine story is not unlocked
+            if (std::find(missions.begin(), missions.end(), 1) != missions.end())
             {
-                ///shida valley dialogue
-                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
-                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_2")), true);
-                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_3")), true);
-            }
-            else
-            {
-                if(std::find(missions.begin(), missions.end(), 2) != missions.end()) ///patapine fortress STORY mission (non-repeatable)
+                ///shida valley is unlocked
+
+                if (missions.size() == 1) ///if it's the only mission
                 {
-                    ///patapine unlocked dialogue
+                    ///shida valley dialogue
                     tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_4")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_5")), true);
-                }
-                else if(std::find(missions.begin(), missions.end(), 3) != missions.end()) ///patapine fortress REPEATABLE mission
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_2")), true);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_3")), true);
+                } else
                 {
-                    if((std::find(missions.begin(), missions.end(), 1) != missions.end()) && (std::find(missions.begin(), missions.end(), 4) == missions.end()) && (std::find(missions.begin(), missions.end(), 5) == missions.end())) ///neither of ejiji cliffs are unlocked yet (only shida and patapine)
+                    if (std::find(missions.begin(), missions.end(), 2) != missions.end()) ///patapine fortress STORY mission (non-repeatable)
                     {
-                        ///ejiji locked dialogue
+                        ///patapine unlocked dialogue
                         tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
-                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_6")), true);
-                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_7")), true);
-                    }
-                    else
+                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_4")), true);
+                        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_5")), true);
+                    } else if (std::find(missions.begin(), missions.end(), 3) != missions.end()) ///patapine fortress REPEATABLE mission
                     {
-                        if(std::find(missions.begin(), missions.end(), 4) != missions.end()) ///ejiji cliff STORY mission
+                        if (missions.size() == 2) ///ejiji cliffs not unlocked yet (only shida and patapine)
                         {
-                            ///ejiji unlocked dialogue
+                            ///ejiji locked dialogue
                             tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
-                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_8")), true);
-                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_9")), true);
-                        }
-                        else ///ejiji cliff REPEATABLE mission
+                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_6")), true);
+                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_7")), true);
+                        } else
                         {
-                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
-                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_10")), true);
-                            tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_11")), true);
+                            if (std::find(missions.begin(), missions.end(), 4) != missions.end()) ///ejiji cliff STORY mission
+                            {
+                                ///ejiji unlocked dialogue
+                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
+                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_8")), true);
+                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_9")), true);
+                            } else ///ejiji cliff REPEATABLE mission
+                            {
+                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_1")), true);
+                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_10")), true);
+                                tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"npc_wakapon_11")), true);
+                            }
                         }
                     }
                 }
             }
+
+            tmp.msgcloud_ID = 1;
+            messageclouds.push_back(tmp);
+
+            cout << "Creating message cloud at " << a_wakapon.getGlobalPosition().x - 5 << " " << a_wakapon.getGlobalPosition().y - 25 << endl;
+
+            break;
         }
-
-        tmp.msgcloud_ID = 1;
-        messageclouds.push_back(tmp);
-
-        cout << "Creating message cloud at " << a_wakapon.getGlobalPosition().x-5 << " " << a_wakapon.getGlobalPosition().y-25 << endl;
-
-        break;
-    }
-    case 9:
-        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_egg")));
-        break;
-    default:
-        t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis")));
-        break;
+        case 9:
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_egg")));
+            break;
+        default:
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis")));
+            break;
     }
 
     a += L"Select: Save      Start: Title screen";
 
     ctrlTips.create(54, f_font, 20, a, quality);
 }
-float EaseIn (float time, float startValue, float change, float duration)
+float EaseIn(float time, float startValue, float change, float duration)
 {
     time /= duration / 2;
     if (time < 1)
@@ -923,11 +831,10 @@ float EaseIn (float time, float startValue, float change, float duration)
     time--;
     return -change / 2 * (time * (time - 2) - 1) + startValue;
 };
-void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController& inputCtrl)
+void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController& inputCtrl)
 {
-    if(isActive)
+    if (is_active)
     {
-
         auto lastView = window.getView();
         window.setView(window.getDefaultView());
 
@@ -938,37 +845,36 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         float camDistance = abs(camDest - camPos);
         float camSpeed = camDistance * 3;
 
-        if(camPos != camDest)
+        if (camPos != camDest)
         {
-            if(left)
+            if (left)
             {
-                if(camPos < locations[location])
-                camPos += camSpeed / fps;
+                if (camPos < locations[location])
+                    camPos += camSpeed / fps;
                 else
-                camPos -= camSpeed / fps;
-            }
-            else
+                    camPos -= camSpeed / fps;
+            } else
             {
-                if(camPos > locations[location])
-                camPos -= camSpeed / fps;
+                if (camPos > locations[location])
+                    camPos -= camSpeed / fps;
                 else
-                camPos += camSpeed / fps;
+                    camPos += camSpeed / fps;
             }
         }
 
-        for(int i=0; i<clouds_A.size(); i++)
+        for (int i = 0; i < clouds_A.size(); i++)
         {
             clouds_A[i].cloud.lx = clouds_A[i].cloud.baseX - (camPos / 1.3);
             clouds_A[i].cloud.ly = clouds_A[i].cloud.baseY;
             clouds_A[i].cloud.draw(window);
         }
 
-        for(int i=0; i<clouds_B.size(); i++)
+        for (int i = 0; i < clouds_B.size(); i++)
         {
             float resRatio = window.getSize().x / float(1280);
 
             clouds_B[i].x = clouds_B[i].base_x - (camPos / 1.3);
-            clouds_B[i].cloud.setPosition(clouds_B[i].x*resRatio, clouds_B[i].y*resRatio);
+            clouds_B[i].cloud.setPosition(clouds_B[i].x * resRatio, clouds_B[i].y * resRatio);
             window.draw(clouds_B[i].cloud);
         }
 
@@ -976,18 +882,18 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         rainbow.setPosition(9000 - (camPos / 1.3), 592);
         rainbow.draw(window);
 
-        for(int i=0; i<4; i++)
+        for (int i = 0; i < 4; i++)
         {
             back_layer[i].lx = back_layer[i].baseX - (camPos / 1.3);
             back_layer[i].draw(window);
         }
 
-        for(int i=0; i<layer_6.size(); i++)
+        for (int i = 0; i < layer_6.size(); i++)
         {
             //cout << "layer_6[" << i << "]: " << layer_6[i].getGlobalBounds().width/2 << " " << layer_6[i].getGlobalBounds().height << " " << layer_6[i].getPosition().x << " " << layer_6[i].getPosition().y << endl;
             layer_6[i].lx = layer_6[i].baseX - (camPos / 1.1428571428571428571428571428571);
 
-            layer_6[i].setOrigin(layer_6[i].getLocalBounds().width/2, layer_6[i].getLocalBounds().height);
+            layer_6[i].setOrigin(layer_6[i].getLocalBounds().width / 2, layer_6[i].getLocalBounds().height);
             layer_6[i].draw(window);
         }
 
@@ -1010,7 +916,6 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         forge_slab_glow.lx = forge_slab_glow.baseX - camPos;
         barracks.lx = barracks.baseX - camPos;
         festival_main.lx = festival_main.baseX - camPos;
-        se_ornament.lx = se_ornament.baseX - camPos;
         altar.lx = altar.baseX - camPos;
         obelisk.lx = obelisk.baseX - camPos;
         paraget_main.lx = paraget_main.baseX - camPos;
@@ -1021,230 +926,261 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
         floor_x = floor_x_base - camPos;
 
-        L5.setOrigin(L5.getLocalBounds().width/2, L5.getLocalBounds().height);
-        L4.setOrigin(L4.getLocalBounds().width/2, L4.getLocalBounds().height);
+        L5.setOrigin(L5.getLocalBounds().width / 2, L5.getLocalBounds().height);
+        L4.setOrigin(L4.getLocalBounds().width / 2, L4.getLocalBounds().height);
 
         L5.draw(window);
         L4.draw(window);
 
 
-        for(int i=0; i<layer_2.size(); i++)
+        for (int i = 0; i < layer_2.size(); i++)
         {
             //cout << "layer_6[" << i << "]: " << layer_6[i].getGlobalBounds().width/2 << " " << layer_6[i].getGlobalBounds().height << " " << layer_6[i].getPosition().x << " " << layer_6[i].getPosition().y << endl;
             layer_2[i].lx = layer_2[i].baseX - camPos;
 
-            layer_2[i].setOrigin(layer_2[i].getLocalBounds().width/2, layer_2[i].getLocalBounds().height);
+            layer_2[i].setOrigin(layer_2[i].getLocalBounds().width / 2, layer_2[i].getLocalBounds().height);
             layer_2[i].draw(window);
         }
 
         float resRatioX = window.getSize().x / float(1280);
         float resRatioY = window.getSize().y / float(720);
 
-        market.draw(window);
-
-        forge_big.id += float(12) / fps;
-
-        if(round(forge_big.id) >= 3)
-        forge_big.id = 0;
-
-        int id = round(forge_big.id);
-
-        forge_big.glowsize += float(90) / fps;
-
-        if(forge_big.glowsize >= 360)
-        forge_big.glowsize -= 360;
-
-        forge_big.glow.setOrigin(forge_big.glow.getLocalBounds().width/2, forge_big.glow.getLocalBounds().height/2);
-        forge_big.glow.setScale(1.05 + (cos(forge_big.glowsize * 3.141592 / 180) / 10));
-        forge_big.glow.setPosition(forge_big.baseX - camPos, forge_big.baseY);
-
-        forge_big.glow.draw(window);
-
-        forge_big.fire[id].setOrigin(forge_big.fire[id].getLocalBounds().width/2, forge_big.fire[id].getLocalBounds().height/2);
-        forge_big.fire[id].setPosition(forge_big.baseX - camPos, forge_big.baseY);
-
-        forge_big.fire[id].draw(window);
-
-        forge_back.draw(window);
-
-        forge_glowsize += float(90) / fps;
-
-        if(forge_glowsize >= 360)
-        forge_glowsize = 0;
-
-        forge_glow.setOrigin(forge_glow.getLocalBounds().width/2, forge_glow.getLocalBounds().height/2);
-        forge_glow.setScale(1.05 + (cos(forge_glowsize * 3.141592 / 180) / 10));
-        forge_glow.draw(window);
-
-        forge_purple.id += float(12) / fps;
-
-        if(round(forge_purple.id) >= 3)
-        forge_purple.id = 0;
-
-        id = round(forge_purple.id);
-
-        forge_purple.glowsize += float(90) / fps;
-
-        if(forge_purple.glowsize >= 360)
-        forge_purple.glowsize -= 360;
-
-        forge_purple.glow.setOrigin(forge_purple.glow.getLocalBounds().width/2, forge_purple.glow.getLocalBounds().height/2);
-        forge_purple.glow.setScale(1.05 + (cos(forge_purple.glowsize * 3.141592 / 180) / 10));
-        forge_purple.glow.setPosition(forge_purple.baseX - camPos, forge_purple.baseY);
-
-        forge_purple.glow.draw(window);
-
-        forge_purple.fire[id].setOrigin(forge_purple.fire[id].getLocalBounds().width/2, forge_purple.fire[id].getLocalBounds().height/2);
-        forge_purple.fire[id].setPosition(forge_purple.baseX - camPos, forge_purple.baseY);
-
-        forge_purple.fire[id].draw(window);
-
-        forge_slab_glow.setOrigin(forge_slab_glow.getLocalBounds().width/2, forge_slab_glow.getLocalBounds().height/2);
-        forge_slab_glow.setScale(1.05 + (cos(forge_glowsize * 3.141592 / 180) / 10));
-        forge_slab_glow.draw(window);
-
-        forge_main.draw(window);
-
-        forge_slab.draw(window);
-
-        forge_fence.draw(window);
-
-        barracks.draw(window);
-
-        crystal_y += float(90) / fps;
-
-        if(crystal_y >= 360)
-        crystal_y -= 360;
-
-        crystal_y2 += float(30) / fps;
-
-        if(crystal_y2 >= 360)
-        crystal_y2 -= 360;
-
-        paraget_crystal.ly = paraget_crystal.baseY + sin(crystal_y * 3.141592 / 180) * 10;
-        paraget_crystal_glow.ly = paraget_crystal.baseY + sin(crystal_y * 3.141592 / 180) * 10;
-
-        paraget_crystal_glow.setScale(1.05 + (cos(crystal_y2 * 3.141592 / 180) / 10));
-        paraget_crystal_glow.draw(window);
-        paraget_main.draw(window);
-        paraget_crystal.draw(window);
-
-        for(int i=0; i<paraget_sparkles.size(); i++)
-        {
-            paraget_sparkles[i].x = paraget_sparkles[i].baseX - camPos;
-
-            if(paraget_sparkles[i].alpha > 0)
-            {
-                paraget_sparkles[i].alpha -= float(300) / fps;
-            }
-            else
-            {
-                paraget_sparkles[i].alpha = 0;
-            }
-
-            if(paraget_sparkles[i].curScale > 0)
-            {
-                paraget_sparkles[i].curScale -= float(1.35) / fps;
-            }
-            else
-            {
-                paraget_sparkles[i].curScale = 0;
-            }
-
-            if(paraget_sparkles[i].curScale <= 0)
-            {
-                paraget_sparkles[i].timer -= float(1000) / fps;
-            }
-
-            if(paraget_sparkles[i].timer <= 0)
-            {
-                paraget_sparkles[i].curScale = paraget_sparkles[i].initScale;
-                paraget_sparkles[i].alpha = 255;
-                paraget_sparkles[i].timer = 400 + (rand() % 200);
-                paraget_sparkles[i].y = paraget_sparkles[i].baseY + sin(crystal_y * 3.141592 / 180) * 10;
-            }
-
-            paraget_sparkles[i].sprk.setColor(sf::Color(255,255,255,paraget_sparkles[i].alpha));
-            paraget_sparkles[i].sprk.setScale(paraget_sparkles[i].curScale);
-            paraget_sparkles[i].sprk.setOrigin(paraget_sparkles[i].sprk.getLocalBounds().width/2, paraget_sparkles[i].sprk.getLocalBounds().height/2);
-            paraget_sparkles[i].sprk.setPosition(paraget_sparkles[i].x, paraget_sparkles[i].y);
-            paraget_sparkles[i].sprk.draw(window);
-        }
-
-        for(int i=0; i<fires.size(); i++)
+        /// Fires
+        for (int i = 0; i < fires.size(); i++)
         {
             fires[i].id += float(10) / fps;
 
-            if(round(fires[i].id) >= 3)
-            fires[i].id = 0;
+            if (round(fires[i].id) >= 3)
+                fires[i].id = 0;
 
             int id = round(fires[i].id);
 
             fires[i].glowsize += float(90) / fps;
 
-            if(fires[i].glowsize >= 360)
-            fires[i].glowsize -= 360;
+            if (fires[i].glowsize >= 360)
+                fires[i].glowsize -= 360;
 
-            fires[i].glow.setOrigin(fires[i].glow.getLocalBounds().width/2, fires[i].glow.getLocalBounds().height/2);
+            fires[i].glow.setOrigin(fires[i].glow.getLocalBounds().width / 2, fires[i].glow.getLocalBounds().height / 2);
             fires[i].glow.setScale(1.05 + (cos(fires[i].glowsize * 3.141592 / 180) / 10));
             fires[i].glow.setPosition(fires[i].baseX - camPos, fires[i].baseY);
 
             fires[i].glow.draw(window);
 
-            fires[i].fire[id].setOrigin(fires[i].fire[id].getLocalBounds().width/2, fires[i].fire[id].getLocalBounds().height/2);
+            fires[i].fire[id].setOrigin(fires[i].fire[id].getLocalBounds().width / 2, fires[i].fire[id].getLocalBounds().height / 2);
             fires[i].fire[id].setPosition(fires[i].baseX - camPos, fires[i].baseY);
 
             fires[i].fire[id].draw(window);
         }
 
-        festival_main.draw(window);
-        if(se_christmas)
-        se_ornament.draw(window);
-        obelisk.draw(window);
+        //cout << "for: " << endl;
 
-        smokepath1 += float(40) / fps;
-
-        if(smokepath1 >= 360)
-        smokepath1 = 0;
-
-        if(rand() % 100 == 1)
-        addSmokeParticle(altar.baseX - 186 + (cos(smokepath1 * 3.141592 / 180) * 2), 410, p_smoke);
-        if(rand() % 100 == 1)
-        addSmokeParticle(altar.baseX + 186 + (sin(smokepath1 * 3.141592 / 180) * 2), 410, p_smoke);
-
-        //cout << smoke.size() << endl;
-
-        for(auto i=smoke.begin(); i!=smoke.end(); i++)
+        for (auto i : draw_ID)
         {
-            int s = std::distance(smoke.begin(), i);
+            //cout << i << endl;
 
-            smoke[s].y -= float(20) / fps;
-            smoke[s].x = smoke[s].baseX - camPos;
-
-            smoke[s].alpha -= float(60) / fps;
-
-            if(smoke[s].alpha <= 0)
-            smoke[s].alpha = 0;
-
-            smoke[s].curScale += float(0.14) / fps;
-
-            smoke[s].smk.setPosition(smoke[s].x, smoke[s].y);
-            smoke[s].smk.setColor(sf::Color(255,255,255,smoke[s].alpha));
-            smoke[s].smk.setScale(smoke[s].curScale);
-
-            //cout << "[SMOKE " << i << "] " << smoke[s].smk.lx << " " << smoke[s].smk.ly << endl;
-            smoke[s].smk.draw(window);
-
-            if(smoke[s].alpha <= 0)
+            switch (i)
             {
-                smoke.erase(i--);
+                case Buildings::MARKET: ///Marketplace
+                {
+                    //for some reason, barracks are marketplace. what the fuck?
+                    barracks.draw(window);
+                    break;
+                }
+
+                case Buildings::FORGE: ///Blacksmith
+                {
+                    forge_big.id += float(12) / fps;
+
+                    if (round(forge_big.id) >= 3)
+                        forge_big.id = 0;
+
+                    int id = round(forge_big.id);
+
+                    forge_big.glowsize += float(90) / fps;
+
+                    if (forge_big.glowsize >= 360)
+                        forge_big.glowsize -= 360;
+
+                    forge_big.glow.setOrigin(forge_big.glow.getLocalBounds().width / 2, forge_big.glow.getLocalBounds().height / 2);
+                    forge_big.glow.setScale(1.05 + (cos(forge_big.glowsize * 3.141592 / 180) / 10));
+                    forge_big.glow.setPosition(forge_big.baseX - camPos, forge_big.baseY);
+
+                    forge_big.glow.draw(window);
+
+                    forge_big.fire[id].setOrigin(forge_big.fire[id].getLocalBounds().width / 2, forge_big.fire[id].getLocalBounds().height / 2);
+                    forge_big.fire[id].setPosition(forge_big.baseX - camPos, forge_big.baseY);
+
+                    forge_big.fire[id].draw(window);
+
+                    forge_back.draw(window);
+
+                    forge_glowsize += float(90) / fps;
+
+                    if (forge_glowsize >= 360)
+                        forge_glowsize = 0;
+
+                    forge_glow.setOrigin(forge_glow.getLocalBounds().width / 2, forge_glow.getLocalBounds().height / 2);
+                    forge_glow.setScale(1.05 + (cos(forge_glowsize * 3.141592 / 180) / 10));
+                    forge_glow.draw(window);
+
+                    forge_purple.id += float(12) / fps;
+
+                    if (round(forge_purple.id) >= 3)
+                        forge_purple.id = 0;
+
+                    id = round(forge_purple.id);
+
+                    forge_purple.glowsize += float(90) / fps;
+
+                    if (forge_purple.glowsize >= 360)
+                        forge_purple.glowsize -= 360;
+
+                    forge_purple.glow.setOrigin(forge_purple.glow.getLocalBounds().width / 2, forge_purple.glow.getLocalBounds().height / 2);
+                    forge_purple.glow.setScale(1.05 + (cos(forge_purple.glowsize * 3.141592 / 180) / 10));
+                    forge_purple.glow.setPosition(forge_purple.baseX - camPos, forge_purple.baseY);
+
+                    forge_purple.glow.draw(window);
+
+                    forge_purple.fire[id].setOrigin(forge_purple.fire[id].getLocalBounds().width / 2, forge_purple.fire[id].getLocalBounds().height / 2);
+                    forge_purple.fire[id].setPosition(forge_purple.baseX - camPos, forge_purple.baseY);
+
+                    forge_purple.fire[id].draw(window);
+
+                    forge_slab_glow.setOrigin(forge_slab_glow.getLocalBounds().width / 2, forge_slab_glow.getLocalBounds().height / 2);
+                    forge_slab_glow.setScale(1.05 + (cos(forge_glowsize * 3.141592 / 180) / 10));
+                    forge_slab_glow.draw(window);
+
+                    forge_main.draw(window);
+
+                    forge_slab.draw(window);
+
+                    forge_fence.draw(window);
+                    break;
+                }
+
+                case Buildings::BARRACKS: ///Barracks
+                {
+                    //for some reason, marketplace is barracks. ??????
+                    market.draw(window);
+                    break;
+                }
+
+                case Buildings::PARAGET: ///Paraget
+                {
+                    crystal_y += float(90) / fps;
+
+                    if (crystal_y >= 360)
+                        crystal_y -= 360;
+
+                    crystal_y2 += float(30) / fps;
+
+                    if (crystal_y2 >= 360)
+                        crystal_y2 -= 360;
+
+                    paraget_crystal.ly = paraget_crystal.baseY + sin(crystal_y * 3.141592 / 180) * 10;
+                    paraget_crystal_glow.ly = paraget_crystal.baseY + sin(crystal_y * 3.141592 / 180) * 10;
+
+                    paraget_crystal_glow.setScale(1.05 + (cos(crystal_y2 * 3.141592 / 180) / 10));
+                    paraget_crystal_glow.draw(window);
+                    paraget_main.draw(window);
+                    paraget_crystal.draw(window);
+
+                    for (int i = 0; i < paraget_sparkles.size(); i++)
+                    {
+                        paraget_sparkles[i].x = paraget_sparkles[i].baseX - camPos;
+
+                        if (paraget_sparkles[i].alpha > 0)
+                        {
+                            paraget_sparkles[i].alpha -= float(300) / fps;
+                        } else
+                        {
+                            paraget_sparkles[i].alpha = 0;
+                        }
+
+                        if (paraget_sparkles[i].curScale > 0)
+                        {
+                            paraget_sparkles[i].curScale -= float(1.35) / fps;
+                        } else
+                        {
+                            paraget_sparkles[i].curScale = 0;
+                        }
+
+                        if (paraget_sparkles[i].curScale <= 0)
+                        {
+                            paraget_sparkles[i].timer -= float(1000) / fps;
+                        }
+
+                        if (paraget_sparkles[i].timer <= 0)
+                        {
+                            paraget_sparkles[i].curScale = paraget_sparkles[i].initScale;
+                            paraget_sparkles[i].alpha = 255;
+                            paraget_sparkles[i].timer = 400 + (rand() % 200);
+                            paraget_sparkles[i].y = paraget_sparkles[i].baseY + sin(crystal_y * 3.141592 / 180) * 10;
+                        }
+
+                        paraget_sparkles[i].sprk.setColor(sf::Color(255, 255, 255, paraget_sparkles[i].alpha));
+                        paraget_sparkles[i].sprk.setScale(paraget_sparkles[i].curScale);
+                        paraget_sparkles[i].sprk.setOrigin(paraget_sparkles[i].sprk.getLocalBounds().width / 2, paraget_sparkles[i].sprk.getLocalBounds().height / 2);
+                        paraget_sparkles[i].sprk.setPosition(paraget_sparkles[i].x, paraget_sparkles[i].y);
+                        paraget_sparkles[i].sprk.draw(window);
+                    }
+
+                    break;
+                }
+
+                case Buildings::OBELISK: {
+                    obelisk.draw(window);
+                    break;
+                }
             }
         }
 
-        altar.draw(window);
+        festival_main.draw(window);
 
-        ///Weather here
-        weather.draw(window, fps);
+        /// Smoke
+        smokepath1 += float(40) / fps;
+
+        if (smokepath1 >= 360)
+            smokepath1 = 0;
+
+        if (rand() % 100 == 1)
+            addSmokeParticle(altar.baseX - 186 + (cos(smokepath1 * 3.141592 / 180) * 2), 410, p_smoke);
+        if (rand() % 100 == 1)
+            addSmokeParticle(altar.baseX + 186 + (sin(smokepath1 * 3.141592 / 180) * 2), 410, p_smoke);
+
+        vector<int> e_s;
+
+        for (int i = 0; i < smoke.size(); i++)
+        {
+            smoke[i].y -= float(20) / fps;
+            smoke[i].x = smoke[i].baseX - camPos;
+
+            smoke[i].alpha -= float(60) / fps;
+
+            if (smoke[i].alpha <= 0)
+                smoke[i].alpha = 0;
+
+            smoke[i].curScale += float(0.14) / fps;
+
+            smoke[i].smk.setPosition(smoke[i].x, smoke[i].y);
+            smoke[i].smk.setColor(sf::Color(255, 255, 255, smoke[i].alpha));
+            smoke[i].smk.setScale(smoke[i].curScale);
+
+            smoke[i].smk.draw(window);
+
+            if (smoke[i].alpha <= 0)
+            {
+                e_s.push_back(i);
+            }
+        }
+
+        for (int i = 0; i < e_s.size(); i++)
+        {
+            smoke.erase(smoke.begin() + e_s[i] - i);
+        }
+
+        /// Altar
+        altar.draw(window);
 
         r_ground.setPosition(floor_x * resRatioX, (float(720) - floor_height) * resRatioY);
         window.draw(r_ground);
@@ -1253,68 +1189,67 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         edge.setPosition(floor_x + 11500, 720);
         edge.draw(window);
 
-        for(int i=0; i<sparkles.size(); i++)
+        /// Remaining sparkles
+        for (int i = 0; i < sparkles.size(); i++)
         {
             sparkles[i].x = sparkles[i].baseX - camPos;
 
-            if(sparkles[i].alpha > 0)
+            if (sparkles[i].alpha > 0)
             {
                 sparkles[i].alpha -= float(300) / fps;
-            }
-            else
+            } else
             {
                 sparkles[i].alpha = 0;
             }
 
-            if(sparkles[i].curScale > 0)
+            if (sparkles[i].curScale > 0)
             {
                 sparkles[i].curScale -= float(1.35) / fps;
-            }
-            else
+            } else
             {
                 sparkles[i].curScale = 0;
             }
 
-            if(sparkles[i].curScale <= 0)
+            if (sparkles[i].curScale <= 0)
             {
                 sparkles[i].timer -= float(1000) / fps;
             }
 
-            if(sparkles[i].timer <= 0)
+            if (sparkles[i].timer <= 0)
             {
                 sparkles[i].curScale = sparkles[i].initScale;
                 sparkles[i].alpha = 255;
                 sparkles[i].timer = 900 + (rand() % 200);
             }
 
-            sparkles[i].sprk.setColor(sf::Color(255,255,255,sparkles[i].alpha));
+            sparkles[i].sprk.setColor(sf::Color(255, 255, 255, sparkles[i].alpha));
             sparkles[i].sprk.setScale(sparkles[i].curScale);
-            sparkles[i].sprk.setOrigin(sparkles[i].sprk.getLocalBounds().width/2, sparkles[i].sprk.getLocalBounds().height/2);
+            sparkles[i].sprk.setOrigin(sparkles[i].sprk.getLocalBounds().width / 2, sparkles[i].sprk.getLocalBounds().height / 2);
             sparkles[i].sprk.setPosition(sparkles[i].x, sparkles[i].y);
             sparkles[i].sprk.draw(window);
         }
 
-        if(!light)
+        /// Egg light and light rays
+        if (!light)
         {
             light_1.setScale(light_1.scaleX + (float(0.15) / fps));
             light_2.setScale(light_2.scaleX + (float(0.15) / fps));
             egg_light.setScale(egg_light.scaleX + (float(0.15) / fps));
 
-            if(light_1.scaleX > 1.15)
+            if (light_1.scaleX > 1.15)
             {
                 light = true;
                 light_1.setScale(1.15);
                 light_2.setScale(1.15);
                 egg_light.setScale(1.15);
             }
-        }
-        else
+        } else
         {
             light_1.setScale(light_1.scaleX - (float(0.15) / fps));
             light_2.setScale(light_2.scaleX - (float(0.15) / fps));
             egg_light.setScale(egg_light.scaleX - (float(0.15) / fps));
 
-            if(light_1.scaleX < 0.9)
+            if (light_1.scaleX < 0.9)
             {
                 light = false;
                 light_1.setScale(0.9);
@@ -1327,25 +1262,24 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         light_2.draw(window);
         egg_light.draw(window);
 
-        for(int i=0; i<lightrays.size(); i++)
+        for (int i = 0; i < lightrays.size(); i++)
         {
-            if(i != 11)
+            if (i != 11)
             {
-                if(!lightrays[i].rise)
+                if (!lightrays[i].rise)
                 {
                     lightrays[i].cur_distance -= float(80) / fps;
 
-                    if(lightrays[i].cur_distance <= lightrays[i].min_distance)
+                    if (lightrays[i].cur_distance <= lightrays[i].min_distance)
                     {
                         lightrays[i].cur_distance = lightrays[i].min_distance;
                         lightrays[i].rise = true;
                     }
-                }
-                else
+                } else
                 {
                     lightrays[i].cur_distance += float(80) / fps;
 
-                    if(lightrays[i].cur_distance >= lightrays[i].max_distance)
+                    if (lightrays[i].cur_distance >= lightrays[i].max_distance)
                     {
                         lightrays[i].cur_distance = lightrays[i].max_distance;
                         lightrays[i].rise = false;
@@ -1358,9 +1292,9 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                 float x2 = coords[i].x2 + rayX;
                 float y2 = coords[i].y2;
 
-                lightrays[i].triangle[0].position = sf::Vector2f(x1*resRatioX, y1*resRatioY);
-                lightrays[i].triangle[1].position = sf::Vector2f(x2*resRatioX, y2*resRatioY);
-                lightrays[i].triangle[2].position = sf::Vector2f((((x1 + x2) / 2) + (lightrays[i].cur_distance * sin(lightrays[i].angle*3.14159265/180))) * resRatioX, (((y1 + y2) / 2) + (lightrays[i].cur_distance * cos(lightrays[i].angle*3.14159265/180))) * resRatioY);
+                lightrays[i].triangle[0].position = sf::Vector2f(x1 * resRatioX, y1 * resRatioY);
+                lightrays[i].triangle[1].position = sf::Vector2f(x2 * resRatioX, y2 * resRatioY);
+                lightrays[i].triangle[2].position = sf::Vector2f((((x1 + x2) / 2) + (lightrays[i].cur_distance * sin(lightrays[i].angle * 3.14159265 / 180))) * resRatioX, (((y1 + y2) / 2) + (lightrays[i].cur_distance * cos(lightrays[i].angle * 3.14159265 / 180))) * resRatioY);
 
                 //cout << "[coord #" << i << "]" << lightrays[i].triangle[0].position.x << " " << lightrays[i].triangle[0].position.y << " " << lightrays[i].triangle[1].position.x << " " << lightrays[i].triangle[1].position.y << " " << lightrays[i].triangle[2].position.x << " " << lightrays[i].triangle[2].position.y << endl;
 
@@ -1372,73 +1306,71 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         bridge.setPosition(floor_x + 11200, 720);
         bridge.draw(window);
 
+        /// Wakapon
         a_wakapon.fps = fps;
         a_wakapon.Draw(window);
 
+        /// Sen
         a_sen.fps = fps;
         a_sen.Draw(window);
 
         world_egg.draw(window);
 
-        if(barracks_menu.missionStarted)
+        if (barracks_menu.mission_started)
         {
             obelisk_menu.displayMissions = false;
             //obelisk_menu.sel_location = 1;
             obelisk_menu.sel_mission = 0;
             obelisk_menu.Hide();
-            barracks_menu.missionStarted = false;
+            barracks_menu.mission_started = false;
         }
 
-        if(barracks_menu.isActive)
+        if (barracks_menu.is_active)
         {
-            barracks_menu.Update(window,fps,inputCtrl);
-        }
-        else if(altar_menu.isActive)
+            barracks_menu.update(window, fps, inputCtrl);
+        } else if (altar_menu.is_active)
         {
-            altar_menu.Update(window,fps, inputCtrl);
-        }
-        else if(obelisk_menu.isActive)
+            altar_menu.update(window, fps, inputCtrl);
+        } else if (obelisk_menu.is_active)
         {
-            obelisk_menu.Update(window,fps,inputCtrl);
-        }
-        else if(credits.isActive)
+            obelisk_menu.Update(window, fps, inputCtrl);
+        } else if (credits.is_active)
         {
-            credits.draw(window,fps,inputCtrl);
-        }
-        else
+            credits.draw(window, fps, inputCtrl);
+        } else
         {
-            if(city_loop.getStatus() == sf::Sound::Status::Stopped)
+            if (city_loop.getStatus() == sf::Sound::Status::Stopped)
             {
                 cout << "I am playing" << endl;
                 city_loop.play();
             }
 
-            t_title.setOrigin(t_title.getLocalBounds().width/2,t_title.getLocalBounds().height/2);
-            t_title.setPosition(640,80);
+            t_title.setOrigin(t_title.getLocalBounds().width / 2, t_title.getLocalBounds().height / 2);
+            t_title.setPosition(640, 80);
             t_title.draw(window);
 
             vector<int> m_rm;
 
-            if(dialogboxes.size() <= 0)
+            if (dialogboxes.size() <= 0)
             {
-                for(int i=0; i<messageclouds.size(); i++)
+                for (int i = 0; i < messageclouds.size(); i++)
                 {
-                    if(messageclouds[i].firstrender)
-                    messageclouds[i].Show();
+                    if (messageclouds[i].firstrender)
+                        messageclouds[i].Show();
 
-                    if((messageclouds[i].msgcloud_ID == 0) || (messageclouds[i].msgcloud_ID == 2))
-                    messageclouds[i].startpos = sf::Vector2f(a_sen.getGlobalPosition().x-5, a_sen.getGlobalPosition().y-25);
-                    else if(messageclouds[i].msgcloud_ID == 1)
-                    messageclouds[i].startpos = sf::Vector2f(a_wakapon.getGlobalPosition().x-5, a_wakapon.getGlobalPosition().y-25);
+                    if ((messageclouds[i].msgcloud_ID == 0) || (messageclouds[i].msgcloud_ID == 2))
+                        messageclouds[i].startpos = sf::Vector2f(a_sen.getGlobalPosition().x - 5, a_sen.getGlobalPosition().y - 25);
+                    else if (messageclouds[i].msgcloud_ID == 1)
+                        messageclouds[i].startpos = sf::Vector2f(a_wakapon.getGlobalPosition().x - 5, a_wakapon.getGlobalPosition().y - 25);
 
-                    if(messageclouds[i].done)
+                    if (messageclouds[i].done)
                     {
-                        if(location == 4)
+                        if (location == 4)
                         {
-                            if(messageclouds[i].msgcloud_ID == 2)
+                            if (messageclouds[i].msgcloud_ID == 2)
                             {
                                 ///Create ending dialogbox here
-                                std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick1")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick2"))};
+                                std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick1")), Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demo_pick2"))};
 
                                 PataDialogBox db;
                                 db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_demofinish")), a, thisConfig->GetInt("textureQuality"));
@@ -1450,39 +1382,39 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                         }
                     }
 
-                    if((messageclouds[i].done) && (floor(messageclouds[i].xsize) == 0) && (floor(messageclouds[i].ysize) == 0))
+                    if ((messageclouds[i].done) && (floor(messageclouds[i].xsize) == 0) && (floor(messageclouds[i].ysize) == 0))
                     {
                         messageclouds[i].Hide();
                     }
 
                     messageclouds[i].Draw(window, fps, inputCtrl);
 
-                    if((!messageclouds[i].active) && (messageclouds[i].done))
-                    m_rm.push_back(i);
+                    if ((!messageclouds[i].active) && (messageclouds[i].done))
+                        m_rm.push_back(i);
                 }
             }
 
-            for(int i=0; i<m_rm.size(); i++)
+            for (int i = 0; i < m_rm.size(); i++)
             {
-                messageclouds.erase(messageclouds.begin()+m_rm[i]-i);
+                messageclouds.erase(messageclouds.begin() + m_rm[i] - i);
             }
         }
 
         vector<int> db_e; ///dialog box erase
 
-        for(int i=0; i<dialogboxes.size(); i++)
+        for (int i = 0; i < dialogboxes.size(); i++)
         {
             dialogboxes[i].x = 640;
             dialogboxes[i].y = 360;
             dialogboxes[i].Draw(window, fps, inputCtrl);
 
-            if(dialogboxes[i].closed)
-            db_e.push_back(i);
+            if (dialogboxes[i].closed)
+                db_e.push_back(i);
         }
 
-        for(int i=0; i<db_e.size(); i++)
+        for (int i = 0; i < db_e.size(); i++)
         {
-            dialogboxes.erase(dialogboxes.begin()+db_e[i]-i);
+            dialogboxes.erase(dialogboxes.begin() + db_e[i] - i);
         }
 
         window.setView(lastView);
@@ -1490,10 +1422,10 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
         lastView = window.getView();
         window.setView(window.getDefaultView());
 
-        if((!barracks_menu.isActive) && (!altar_menu.isActive) && (!obelisk_menu.isActive) && (!credits.isActive))
+        if ((!barracks_menu.is_active) && (!altar_menu.is_active) && (!obelisk_menu.is_active) && (!credits.is_active))
         {
             ctrlTips.x = 0;
-            ctrlTips.y = (720-ctrlTips.ySize);
+            ctrlTips.y = (720 - ctrlTips.ySize);
             ctrlTips.draw(window);
         }
 
@@ -1513,20 +1445,20 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
         screenFade.draw(window, fps);
 
-        if(screenFade.checkFinished())
+        if (screenFade.checkFinished())
         {
-            if(goto_id != -1)
+            if (goto_id != -1)
             {
-                switch(goto_id)
+                switch (goto_id)
                 {
                     case 0: ///Barracks
                     {
                         city_loop.stop();
                         barracks_menu.Show();
-                        barracks_menu.isActive = true;
+                        barracks_menu.is_active = true;
                         barracks_menu.obelisk = false;
-                        barracks_menu.ReloadInventory();
-                        barracks_menu.UpdateInputControls();
+                        barracks_menu.loadInventory();
+                        barracks_menu.updateInputControls();
 
                         screenFade.Create(thisConfig, 0, 1536);
 
@@ -1538,7 +1470,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                         city_loop.stop();
                         obelisk_menu.Reload();
                         obelisk_menu.Show();
-                        obelisk_menu.isActive = true;
+                        obelisk_menu.is_active = true;
 
                         screenFade.Create(thisConfig, 0, 1536);
 
@@ -1549,9 +1481,9 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     {
                         city_loop.stop();
                         barracks_menu.Hide();
-                        barracks_menu.isActive = false;
+                        barracks_menu.is_active = false;
                         Show();
-                        isActive=true;
+                        is_active = true;
 
                         screenFade.Create(thisConfig, 0, 1536);
 
@@ -1562,9 +1494,9 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     {
                         city_loop.stop();
                         obelisk_menu.Hide();
-                        obelisk_menu.isActive = false;
+                        obelisk_menu.is_active = false;
                         Show();
-                        isActive=true;
+                        is_active = true;
 
                         screenFade.Create(thisConfig, 0, 1536);
 
@@ -1575,18 +1507,18 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     {
                         city_loop.stop();
                         barracks_menu.Show();
-                        barracks_menu.isActive = true;
+                        barracks_menu.is_active = true;
                         barracks_menu.obelisk = true;
-                        barracks_menu.missionID = obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID;
+                        barracks_menu.mission_id = obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID;
                         barracks_menu.mission_file = obelisk_menu.missions[obelisk_menu.sel_mission].mission_file;
 
-                        if(thisConfig->thisCore->savereader.missionLevels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID] != 0)
-                        barracks_menu.mission_multiplier = 0.85 + thisConfig->thisCore->savereader.missionLevels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID]*0.15;
+                        if (thisConfig->thisCore->saveReader.mission_levels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID] != 0)
+                            barracks_menu.mission_multiplier = 0.85 + thisConfig->thisCore->saveReader.mission_levels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID] * 0.15;
                         else
-                        barracks_menu.mission_multiplier = 1;
+                            barracks_menu.mission_multiplier = 1;
 
-                        barracks_menu.ReloadInventory();
-                        barracks_menu.UpdateInputControls();
+                        barracks_menu.loadInventory();
+                        barracks_menu.updateInputControls();
 
                         screenFade.Create(thisConfig, 0, 1536);
 
@@ -1596,19 +1528,19 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     case 5: ///Enter mission
                     {
                         city_loop.stop();
-                        sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
-                        v4core->continueLoading=true;
-                        v4core->window.setActive(false);
+                        sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
+                        v4Core->continue_loading = true;
+                        v4Core->window.setActive(false);
                         loadingThreadInstance.launch();
 
-                        barracks_menu.currentController->Initialise(*thisConfig,thisConfig->GetString("mission1Background"),*v4core);
-                        barracks_menu.currentController->StartMission(barracks_menu.mission_file,1,barracks_menu.missionID,barracks_menu.mission_multiplier);
+                        barracks_menu.currentController->Initialise(*thisConfig, thisConfig->GetString("mission1Background"), *v4Core);
+                        barracks_menu.currentController->StartMission(barracks_menu.mission_file, 1, barracks_menu.mission_id, barracks_menu.mission_multiplier);
                         barracks_menu.Hide();
-                        barracks_menu.isActive = false;
+                        barracks_menu.is_active = false;
 
-                        barracks_menu.missionStarted = true;
+                        barracks_menu.mission_started = true;
 
-                        v4core->continueLoading=false;
+                        v4Core->continue_loading = false;
 
                         screenFade.Create(thisConfig, 0, 1536);
 
@@ -1618,7 +1550,7 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     case 6: ///credits
                     {
                         city_loop.stop();
-                        credits.isActive = true;
+                        credits.is_active = true;
                         credits.restart();
 
                         screenFade.Create(thisConfig, 0, 512);
@@ -1630,9 +1562,9 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     {
                         city_loop.stop();
                         this->Hide();
-                        this->isActive = false;
+                        this->is_active = false;
                         parentMenu->Show();
-                        parentMenu->isActive=true;
+                        parentMenu->is_active = true;
 
                         parentMenu->screenFade.Create(thisConfig, 0, 512);
 
@@ -1646,106 +1578,103 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
 
         window.setView(lastView);
 
-        if(dialogboxes.size() <= 0)
+        if (dialogboxes.size() <= 0)
         {
-            if((!barracks_menu.isActive) && (!altar_menu.isActive) && (!obelisk_menu.isActive) && (!credits.isActive) && (screenFade.checkFinished()))
+            if ((!barracks_menu.is_active) && (!altar_menu.is_active) && (!obelisk_menu.is_active) && (!credits.is_active) && (screenFade.checkFinished()))
             {
-                if((inputCtrl.isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl.isKeyPressed(InputController::Keys::LTRIGGER)))
+                if ((inputCtrl.isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl.isKeyPressed(InputController::Keys::LTRIGGER)))
                 {
-                    if(location > 0)
+                    if (location > 0)
                     {
                         location--;
                         left = true;
 
-                        for(int i=0; i<messageclouds.size(); i++)
-                        messageclouds[i].End();
+                        for (int i = 0; i < messageclouds.size(); i++)
+                            messageclouds[i].End();
 
                         SetTitle(location);
-                        thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
+                        thisConfig->thisCore->saveToDebugLog("Changing Patapolis location to " + to_string(location));
                     }
-                }
-                else if((inputCtrl.isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl.isKeyPressed(InputController::Keys::RTRIGGER)))
+                } else if ((inputCtrl.isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl.isKeyPressed(InputController::Keys::RTRIGGER)))
                 {
-                    if(location < locations.size()-1)
+                    if (location < locations.size() - 1)
                     {
                         location++;
                         left = false;
 
-                        for(int i=0; i<messageclouds.size(); i++)
-                        messageclouds[i].End();
+                        for (int i = 0; i < messageclouds.size(); i++)
+                            messageclouds[i].End();
 
                         SetTitle(location);
-                        thisConfig->thisCore->SaveToDebugLog("Changing Patapolis location to "+to_string(location));
+                        thisConfig->thisCore->saveToDebugLog("Changing Patapolis location to " + to_string(location));
                     }
-                }
-                else if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+                } else if (inputCtrl.isKeyPressed(InputController::Keys::CROSS))
                 {
                     // select the current menu item
                     switch (location)
                     {
-                    case 0:
-                        /// trader/random
-                        // open the world map
-                        break;
-                    case 2:
-                        /// armory/barracks
-                        thisConfig->thisCore->SaveToDebugLog("Entering Barracks...");
+                        case 0:
+                            /// trader/random
+                            // open the world map
+                            break;
+                        case 2:
+                            /// armory/barracks
+                            thisConfig->thisCore->saveToDebugLog("Entering Barracks...");
 
-                        screenFade.Create(thisConfig, 1, 1536);
-                        goto_id = 0;
+                            screenFade.Create(thisConfig, 1, 1536);
+                            goto_id = 0;
 
-                        /*barracks_menu.Show();
-                        barracks_menu.isActive = true;
+                            /*barracks_menu.Show();
+                        barracks_menu.is_active = true;
                         barracks_menu.obelisk = false;
                         barracks_menu.ReloadInventory();
                         barracks_menu.UpdateInputControls();*/
-                        thisConfig->thisCore->SaveToDebugLog("Barracks entered.");
-                        break;
-                    case 3:
-                        /// festival
-                        // open barracks screen
-                        break;
-                    case 5:
-                        /// altar
-                        // open mater menu
-                        thisConfig->thisCore->SaveToDebugLog("Entering Altar...");
-                        altar_menu.loadedSave = loadedSave;
-                        altar_menu.ReloadInventory();
-                        altar_menu.Show();
-                        altar_menu.isActive = true;
-                        altar_menu.ShowAltar();
-                        thisConfig->thisCore->SaveToDebugLog("Altar entered.");
-                        break;
-                    case 6:
-                        /// obelisk
-                        thisConfig->thisCore->SaveToDebugLog("Entering Obelisk...");
+                            thisConfig->thisCore->saveToDebugLog("Barracks entered.");
+                            break;
+                        case 3:
+                            /// festival
+                            // open barracks screen
+                            break;
+                        case 5:
+                            /// altar
+                            // open mater menu
+                            thisConfig->thisCore->saveToDebugLog("Entering Altar...");
+                            altar_menu.save_loaded = save_loaded;
+                            altar_menu.reloadInventory();
+                            altar_menu.showAltar();
+                            altar_menu.is_active = true;
+                            altar_menu.showAltar();
+                            thisConfig->thisCore->saveToDebugLog("Altar entered.");
+                            break;
+                        case 6:
+                            /// obelisk
+                            thisConfig->thisCore->saveToDebugLog("Entering Obelisk...");
 
-                        screenFade.Create(thisConfig, 1, 1536);
-                        goto_id = 1;
+                            screenFade.Create(thisConfig, 1, 1536);
+                            goto_id = 1;
 
-                        /*obelisk_menu.Reload();
+                            /*obelisk_menu.Reload();
                         obelisk_menu.Show();
                         obelisk_menu.isActive = true;*/
-                        thisConfig->thisCore->SaveToDebugLog("Obelisk entered.");
-                        break;
-                    default:
-                        /// nothing
-                        break;
+                            thisConfig->thisCore->saveToDebugLog("Obelisk entered.");
+                            break;
+                        default:
+                            /// nothing
+                            break;
                     }
                 }
 
-                if(inputCtrl.isKeyPressed(InputController::Keys::START))
+                if (inputCtrl.isKeyPressed(InputController::Keys::START))
                 {
-                    std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
+                    std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")), Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
 
                     PataDialogBox db;
                     db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_returntomain")), a, thisConfig->GetInt("textureQuality"));
                     db.id = 0;
                     dialogboxes.push_back(db);
-                }
-                else if(inputCtrl.isKeyPressed(InputController::Keys::SELECT))
+                } else if (inputCtrl.isKeyPressed(InputController::Keys::SELECT))
                 {
-                    std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
+                    std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")), Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
 
                     PataDialogBox db;
                     db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_save")), a, thisConfig->GetInt("textureQuality"));
@@ -1753,21 +1682,19 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                     dialogboxes.push_back(db);
                 }
             }
-        }
-        else
+        } else
         {
-            if(inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+            if (inputCtrl.isKeyPressed(InputController::Keys::CROSS))
             {
-                switch(dialogboxes[dialogboxes.size()-1].CheckSelectedOption())
+                switch (dialogboxes[dialogboxes.size() - 1].CheckSelectedOption())
                 {
-                    case 0:
-                    {
-                        if(dialogboxes[dialogboxes.size()-1].id == 0)
+                    case 0: {
+                        if (dialogboxes[dialogboxes.size() - 1].id == 0)
                         {
                             cout << "Open second dialogbox" << endl;
-                            dialogboxes[dialogboxes.size()-1].Close();
+                            dialogboxes[dialogboxes.size() - 1].Close();
 
-                            std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")),Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
+                            std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")), Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
 
                             PataDialogBox db;
                             db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"patapolis_returntomainsave")), a, thisConfig->GetInt("textureQuality"));
@@ -1775,19 +1702,17 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                             dialogboxes.push_back(db);
 
                             break;
-                        }
-                        else if(dialogboxes[dialogboxes.size()-1].id == 1)
+                        } else if (dialogboxes[dialogboxes.size() - 1].id == 1)
                         {
-                            thisConfig->thisCore->SaveToDebugLog("Left from Patapolis to Title screen.");
+                            thisConfig->thisCore->saveToDebugLog("Left from Patapolis to Title screen.");
                             screenFade.Create(thisConfig, 1, 512);
                             goto_id = 7;
-                        }
-                        else if(dialogboxes[dialogboxes.size()-1].id == 2)
+                        } else if (dialogboxes[dialogboxes.size() - 1].id == 2)
                         {
                             cout << "Saving game should happen here. Game not saving yet." << endl;
-                            v4core->savereader.Save();
+                            v4Core->saveReader.Save();
 
-                            dialogboxes[dialogboxes.size()-1].Close();
+                            dialogboxes[dialogboxes.size() - 1].Close();
 
                             std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_understood"))};
 
@@ -1797,37 +1722,33 @@ void PatapolisMenu::Update(sf::RenderWindow &window, float fps, InputController&
                             dialogboxes.push_back(db);
 
                             break;
-                        }
-                        else if(dialogboxes[dialogboxes.size()-1].id == 3)
+                        } else if (dialogboxes[dialogboxes.size() - 1].id == 3)
                         {
                             cout << "Done." << endl;
 
-                            dialogboxes[dialogboxes.size()-1].Close();
+                            dialogboxes[dialogboxes.size() - 1].Close();
                             break;
-                        }
-                        else if(dialogboxes[dialogboxes.size()-1].id == 4)
+                        } else if (dialogboxes[dialogboxes.size() - 1].id == 4)
                         {
                             cout << "Open credits!" << endl;
                             screenFade.Create(thisConfig, 1, 512);
                             goto_id = 6;
 
-                            dialogboxes[dialogboxes.size()-1].Close();
+                            dialogboxes[dialogboxes.size() - 1].Close();
                             break;
                         }
                     }
 
-                    case 1:
-                    {
+                    case 1: {
                         cout << "Back to Patapolis" << endl;
-                        dialogboxes[dialogboxes.size()-1].Close();
+                        dialogboxes[dialogboxes.size() - 1].Close();
 
                         break;
                     }
                 }
             }
         }
-    }
-    else
+    } else
     {
         fade_alpha = 255;
     }

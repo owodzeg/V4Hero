@@ -1,13 +1,12 @@
 #include "Background.h"
 
-#include <fstream>
 #include "../Func.h"
+#include <fstream>
 #include <iostream>
 using namespace std;
 
 Background::Background()
 {
-
 }
 
 void Background::setCamera(Camera newCamera)
@@ -15,15 +14,15 @@ void Background::setCamera(Camera newCamera)
     camera = newCamera;
 }
 
-void Background::Load(string bg_name,Config &thisConfigs)
+void Background::Load(string bg_name, Config& thisConfigs)
 {
     thisConfig = &thisConfigs;
-    thisConfig->debugOut->DebugMessage("Background loaded: "+bg_name);
+    thisConfig->debugOut->DebugMessage("Background loaded: " + bg_name);
 
     quality = thisConfig->GetInt("textureQuality");
 
     float ratioX, ratioY;
-    switch(quality)
+    switch (quality)
     {
         case 0: ///low
         {
@@ -59,32 +58,31 @@ void Background::Load(string bg_name,Config &thisConfigs)
 
     cout << resRatioX << " " << resRatioY << endl;
 
-    /*v_background.clear();
-    vx_pos.clear();
+    v_background.clear();
     vx_pos.clear();
     vx_color.clear();
     p_background.clear();
     t_background.clear();
     s_background.clear();
     background_xspeed.clear();
-    background_y.clear();*/
+    background_y.clear();
 
     temp_camerax = 0;
-    ifstream param_file("resources/graphics/bg/"+bg_name+"/param.dat");
+    ifstream param_file("resources/graphics/bg/" + bg_name + "/param.dat");
 
     string buff;
-    while(getline(param_file,buff))
+    while (getline(param_file, buff))
     {
-        if(buff.find("@back:") != std::string::npos)
+        if (buff.find("@back:") != std::string::npos)
         {
-            string vx_params = buff.substr(buff.find_first_of(":")+1);
-            vector<string> v_vxparams = Func::Split(vx_params,';');
+            string vx_params = buff.substr(buff.find_first_of(":") + 1);
+            vector<string> v_vxparams = Func::Split(vx_params, ';');
 
             //float resRatioY = float(720) / float(720);
 
-            for(int i=0; i<v_vxparams.size(); i++)
+            for (int i = 0; i < v_vxparams.size(); i++)
             {
-                vector<string> tmp = Func::Split(v_vxparams[i],',');
+                vector<string> tmp = Func::Split(v_vxparams[i], ',');
 
                 sf::Vector2f tmp_vector;
                 sf::Color tmp_color;
@@ -92,7 +90,7 @@ void Background::Load(string bg_name,Config &thisConfigs)
                 tmp_vector.x = 0;
                 tmp_vector.y = atof(tmp[0].c_str()) * resRatioY;
 
-                if(tmp[0] == "-1")
+                if (tmp[0] == "-1")
                 {
                     tmp_vector.y = float(610) * resRatioY;
                 }
@@ -106,7 +104,7 @@ void Background::Load(string bg_name,Config &thisConfigs)
                 tmp_vector2.x = float(1280) * resRatioX;
                 tmp_vector2.y = atof(tmp[0].c_str()) * resRatioY;
 
-                if(tmp[0] == "-1")
+                if (tmp[0] == "-1")
                 {
                     tmp_vector2.y = float(610) * resRatioY;
                 }
@@ -118,30 +116,31 @@ void Background::Load(string bg_name,Config &thisConfigs)
                 vx_color.push_back(tmp_color);
             }
 
-            sf::VertexArray tmp(sf::TrianglesStrip,vx_pos.size());
+            sf::VertexArray tmp(sf::TrianglesStrip, vx_pos.size());
             v_background = tmp;
-        }
-        else
+        } else
         {
             thisConfig->debugOut->DebugMessage("Loading texture...\n");
 
-            vector<string> v_params = Func::Split(buff,',');
+            vector<string> v_params = Func::Split(buff, ',');
 
             PSprite ps_temp;
-            ps_temp.loadFromFile("resources/graphics/bg/"+bg_name+"/"+v_params[0],quality);
-            ps_temp.setRepeated(true);
-            ps_temp.setTextureRect(sf::IntRect(0,0,500000,ps_temp.t.getSize().y));
-            ps_temp.setOrigin(10000,ps_temp.getGlobalBounds().height);
-            ps_temp.setColor(sf::Color(atoi(v_params[3].c_str()),atoi(v_params[4].c_str()),atoi(v_params[5].c_str()),255));
-            ps_temp.setPosition(-1000,atoi(v_params[1].c_str()));
-            ps_temp.setSmooth(false);
+            s_background.push_back(ps_temp);
+            int id = s_background.size() - 1;
+
+            s_background[id].loadFromFile("resources/graphics/bg/" + bg_name + "/" + v_params[0], quality);
+            s_background[id].setRepeated(true);
+            s_background[id].setTextureRect(sf::IntRect(0, 0, 500000, s_background[id].t.getSize().y));
+            s_background[id].setOrigin(10000, s_background[id].getGlobalBounds().height);
+            s_background[id].setColor(sf::Color(atoi(v_params[3].c_str()), atoi(v_params[4].c_str()), atoi(v_params[5].c_str()), 255));
+            s_background[id].setPosition(-1000, atoi(v_params[1].c_str()));
+            s_background[id].setSmooth(false);
 
             sf::Vector2f tmpp;
 
             tmpp.x = -1000;
             tmpp.y = atoi(v_params[1].c_str());
 
-            s_background.push_back(ps_temp);
             p_background.push_back(tmpp);
             background_xspeed.push_back(atof(v_params[2].c_str()));
         }
@@ -157,7 +156,7 @@ void Background::Draw(sf::RenderWindow& window)
     float resRatioX = window.getSize().x / float(1280);
     float resRatioY = window.getSize().y / float(720);
 
-    for(int i=0; i<vx_pos.size(); i++)
+    for (int i = 0; i < vx_pos.size(); i++)
     {
         v_background[i].position = vx_pos[i];
         v_background[i].color = vx_color[i];
@@ -171,11 +170,11 @@ void Background::Draw(sf::RenderWindow& window)
 
     window.setView(lastView);
 
-    for(int i=0; i<s_background.size(); i++)
+    for (int i = 0; i < s_background.size(); i++)
     {
         //s_background[i].setTexture(t_background[i]);
 
-        s_background[i].setPosition((-(background_xspeed[i]*camera.camera_x)-(background_xspeed[i]*camera.manual_x)-(background_xspeed[i]*camera.debug_x))/resRatioX,p_background[i].y);
+        s_background[i].setPosition((-(background_xspeed[i] * camera.camera_x) - (background_xspeed[i] * camera.manual_x) - (background_xspeed[i] * camera.debug_x)) / resRatioX, p_background[i].y);
         //cout << s_background[i].ly << endl;
         s_background[i].draw(window);
     }

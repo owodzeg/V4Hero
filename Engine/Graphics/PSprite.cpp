@@ -1,47 +1,47 @@
 #include "PSprite.h"
+#include <fstream>
 #include <iostream>
 #include <string>
-#include <fstream>
 
 PSprite::PSprite()
 {
-
 }
 
 void PSprite::loadFromFile(std::string file, int q)
 {
-    std::cout<<file<<std::endl;
-    std::string a = file.substr(0,file.find_last_of("."));
+    std::cout << file << std::endl;
+    std::string a = file.substr(0, file.find_last_of("."));
     std::string b = file.substr(file.find_last_of("."));
     std::string sq = "";
 
-    switch(q)
+    switch (q)
     {
         case 0:
-        sq = "L";
-        break;
+            sq = "L";
+            break;
 
         case 1:
-        sq = "M";
-        break;
+            sq = "M";
+            break;
 
         case 2:
-        sq = "H";
-        break;
+            sq = "H";
+            break;
 
         case 3:
-        sq = "U";
-        break;
+            sq = "U";
+            break;
     }
 
-    std::string c = a+"_"+sq+b;
+    std::string c = a + "_" + sq + b;
 
     qualitySetting = q;
     resSetting = 1;
 
     std::cout << "[PSPRITE] Loading " << c << std::endl;
+    texname = c;
 
-    if(!t.loadFromFile(c))
+    if (!t.loadFromFile(c))
     {
         std::ofstream dbg("V4Hero-errors.log", std::ios::app);
         dbg << "Failed to load " << c;
@@ -53,42 +53,41 @@ void PSprite::loadFromFile(std::string file, int q)
     s.setTexture(t, true);
 }
 
-void PSprite::loadFromFile(std::string file, int q, int r=1)
+void PSprite::loadFromFile(std::string file, int q, int r = 1)
 {
-    std::cout<<file<<std::endl;
-    std::string a = file.substr(0,file.find_last_of("."));
+    std::cout << file << std::endl;
+    std::string a = file.substr(0, file.find_last_of("."));
     std::string b = file.substr(file.find_last_of("."));
     std::string sq = "";
 
-    switch(q)
+    switch (q)
     {
         case 0:
-        sq = "L";
-        break;
+            sq = "L";
+            break;
 
         case 1:
-        sq = "M";
-        break;
+            sq = "M";
+            break;
 
         case 2:
-        sq = "H";
-        break;
+            sq = "H";
+            break;
 
         case 3:
-        sq = "U";
-        break;
+            sq = "U";
+            break;
     }
 
-    std::string c = a+"_"+sq+b;
+    std::string c = a + "_" + sq + b;
 
     qualitySetting = q;
     resSetting = r;
 
     std::cout << "[PSPRITE] Loading " << c << std::endl;
+    texname = c;
 
-    t.loadFromFile(c);
-
-    if(!t.loadFromFile(c))
+    if (!t.loadFromFile(c))
     {
         std::ofstream dbg("V4Hero-errors.log", std::ios::app);
         dbg << "Failed to load " << c;
@@ -122,7 +121,7 @@ void PSprite::setScale(float x, float y)
 {
     scaleX = x;
     scaleY = y;
-    s.setScale(ratioX*scaleX, ratioY*scaleY);
+    s.setScale(ratioX * scaleX, ratioY * scaleY);
 }
 
 void PSprite::setRotation(float a)
@@ -143,7 +142,7 @@ sf::Color PSprite::getColor()
 void PSprite::setTexture(sf::Texture& texture)
 {
     t = texture;
-    s.setTexture(t,true);
+    s.setTexture(t, true);
 
     exported = false;
 }
@@ -162,11 +161,11 @@ void PSprite::setSprite(sf::Sprite& sprite)
 void PSprite::setPosition(float x, float y)
 {
     //s.setPosition(x*ratioX,y*ratioY);
-    if(baseX == -999)
-    baseX = x;
+    if (baseX == -999)
+        baseX = x;
 
-    if(baseY == -999)
-    baseY = y;
+    if (baseY == -999)
+        baseY = y;
 
     lx = x;
     ly = y;
@@ -176,14 +175,14 @@ void PSprite::setPosition(float x, float y)
 
 sf::Vector2f PSprite::getPosition()
 {
-    return sf::Vector2f(lx,ly);
+    return sf::Vector2f(lx, ly);
 }
 
 void PSprite::setScale(float ss)
 {
     scaleX = ss;
     scaleY = ss;
-    s.setScale(ratioX*scaleX, ratioY*scaleY);
+    s.setScale(ratioX * scaleX, ratioY * scaleY);
 }
 
 sf::FloatRect PSprite::getLocalBounds()
@@ -201,11 +200,11 @@ sf::FloatRect PSprite::getGlobalBoundsScaled()
     float nw = 1;
     float nh = 1;
 
-    if(s.getGlobalBounds().width > 0)
-    nw = s.getGlobalBounds().width / resRatioX;
+    if (s.getGlobalBounds().width > 0)
+        nw = s.getGlobalBounds().width / resRatioX;
 
-    if(s.getGlobalBounds().height > 0)
-    nh = s.getGlobalBounds().height / resRatioY;
+    if (s.getGlobalBounds().height > 0)
+        nh = s.getGlobalBounds().height / resRatioY;
 
     return sf::FloatRect(s.getGlobalBounds().left, s.getGlobalBounds().top, nw, nh);
     //return s.getGlobalBounds();
@@ -219,7 +218,7 @@ void PSprite::setSmooth(bool smooth)
 
 void PSprite::draw(sf::RenderWindow& window)
 {
-    switch(qualitySetting)
+    switch (qualitySetting)
     {
         case 0: ///low
         {
@@ -250,7 +249,7 @@ void PSprite::draw(sf::RenderWindow& window)
         }
     }
 
-    switch(resSetting)
+    switch (resSetting)
     {
         case 0: ///low
         {
@@ -282,22 +281,25 @@ void PSprite::draw(sf::RenderWindow& window)
     }
 
     s.setTexture(t);
-    s.setScale(ratioX*scaleX, ratioY*scaleY);
-    s.setOrigin(orX,orY);
-    s.setPosition(lx*resRatioX, ly*resRatioY);
-    s.setRotation(angle*(180/3.14159265358));
+    s.setScale(ratioX * scaleX, ratioY * scaleY);
+    s.setOrigin(orX, orY);
+    s.setPosition(lx * resRatioX, ly * resRatioY);
+    s.setRotation(angle * (180 / 3.14159265358));
     window.draw(s);
 
-    if((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
+    if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
     {
-        if(!exported)
+        if (!exported)
         {
-            sf::Image img;
-            img = t.copyToImage();
-            int rrr = rand() % 100000000;
-            img.saveToFile("texDump/"+std::to_string(rrr)+".png");
+            if (texname.find("locationbg") != std::string::npos)
+            {
+                sf::Image img;
+                img = t.copyToImage();
+                int rrr = rand() % 100000000;
+                img.saveToFile("texDump/" + std::to_string(rrr) + ".png");
 
-            exported = true;
+                exported = true;
+            }
         }
     }
 }
@@ -306,7 +308,7 @@ void PSprite::update(sf::RenderWindow& window)
 {
     ///Update updates the sprite without drawing it on screen. Useful for RenderTexture
 
-    switch(qualitySetting)
+    switch (qualitySetting)
     {
         case 0: ///low
         {
@@ -337,7 +339,7 @@ void PSprite::update(sf::RenderWindow& window)
         }
     }
 
-    switch(resSetting)
+    switch (resSetting)
     {
         case 0: ///low
         {
@@ -369,21 +371,25 @@ void PSprite::update(sf::RenderWindow& window)
     }
 
     s.setTexture(t);
-    s.setScale(ratioX*scaleX, ratioY*scaleY);
-    s.setOrigin(orX,orY);
-    s.setPosition(lx*resRatioX, ly*resRatioY);
-    s.setRotation(angle*(180/3.14159265358));
+    s.setScale(ratioX * scaleX, ratioY * scaleY);
+    s.setOrigin(orX, orY);
+    s.setPosition(lx * resRatioX, ly * resRatioY);
+    s.setRotation(angle * (180 / 3.14159265358));
 
-    if((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
+    if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
     {
-        if(!exported)
+        if (!exported)
         {
             sf::Image img;
             img = t.copyToImage();
             int rrr = rand() % 100000000;
-            img.saveToFile("texDump/"+std::to_string(rrr)+".png");
+            img.saveToFile("texDump/" + std::to_string(rrr) + ".png");
 
             exported = true;
         }
     }
+}
+
+void saveToFile(std::string file)
+{
 }

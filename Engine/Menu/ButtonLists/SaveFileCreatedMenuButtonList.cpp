@@ -1,47 +1,46 @@
 #include "SaveFileCreatedMenuButtonList.h"
-#include "string"
-#include "../MenuButton.h"
-#include<iostream>
 #include "../../Mission/MissionController.h"
-#include "../MainMenu.h"
-#include "../SaveFileCreated.h"
 #include "../../V4Core.h"
+#include "../MainMenu.h"
+#include "../MenuButton.h"
+#include "../SaveFileCreated.h"
+#include "string"
+#include <iostream>
 using namespace std;
 SaveFileCreatedMenuButtonList::SaveFileCreatedMenuButtonList()
 {
-
 }
-void SaveFileCreatedMenuButtonList::Initialise(sf::Font *font,Config &newConfig,MissionController *controller,SaveFileCreatedMenu *parMenu)
+void SaveFileCreatedMenuButtonList::Initialise(sf::Font* font, Config& newConfig, MissionController* controller, SaveFileCreatedMenu* parMenu)
 {
-    ButtonList::Initialise(font,newConfig,controller,parMenu);
-    MenuButton* level1Button = new MenuButton(L"menu_button_confirm",font,42,550,this,0);
+    ButtonList::Initialise(font, newConfig, controller, parMenu);
+    MenuButton* level1Button = new MenuButton(L"menu_button_confirm", font, 42, 550, this, 0);
     buttons.push_back(*level1Button);
     buttons[0].SetSelected(false);
 
     this->SelectButtons = false;
     svCrtMnu = parMenu;
 }
-void SaveFileCreatedMenuButtonList::SelectButton(int index){
+void SaveFileCreatedMenuButtonList::SelectButton(int index)
+{
     currentIndex = index;
-    switch (currentIndex){
-            case 0:
-                sf::Thread loadingThreadInstance(parentMenu->v4core->LoadingThread,parentMenu->v4core);
-                parentMenu->v4core->continueLoading=true;
-                parentMenu->v4core->window.setActive(false);
-                loadingThreadInstance.launch();
+    switch (currentIndex)
+    {
+        case 0:
+            sf::Thread loadingThreadInstance(&V4Core::loadingThread, parentMenu->v4Core);
+            parentMenu->v4Core->continue_loading = true;
+            parentMenu->v4Core->window.setActive(false);
+            loadingThreadInstance.launch();
 
-                parentMenu->Hide();
-                parentMenu->isActive = false;
-                svCrtMnu->nameEntryMenu->Hide();
+            parentMenu->Hide();
+            parentMenu->is_active = false;
+            svCrtMnu->nameEntryMenu->Hide();
 
-                currentController->Initialise(*config,config->GetString("mission1Background"),*parentMenu->v4core);
-                currentController->StartMission(config->GetString("mission1Theme"),1,1);
+            currentController->Initialise(*config, config->GetString("mission1Background"), *parentMenu->v4Core);
+            currentController->StartMission(config->GetString("mission1Theme"), 1, 1);
 
-                break;
-
-        }
+            break;
+    }
 }
 SaveFileCreatedMenuButtonList::~SaveFileCreatedMenuButtonList()
 {
-
 }
