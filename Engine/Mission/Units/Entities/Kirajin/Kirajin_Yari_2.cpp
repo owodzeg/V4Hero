@@ -350,7 +350,7 @@ void Kirajin_Yari_2::Draw(sf::RenderWindow& window)
                 {
                     MessageCloud tmp;
                     tmp.Create(20, sf::Vector2f(getGlobalPosition().x - 5, getGlobalPosition().y - 25), sf::Color(222, 102, 102, 255), false, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(talk_id)), false);
+                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(talk_id)), false);
                     messageclouds.push_back(tmp);
 
                     message_clock.restart();
@@ -403,7 +403,7 @@ void Kirajin_Yari_2::die()
 
         MessageCloud tmp;
         tmp.Create(20, sf::Vector2f(getGlobalPosition().x - 5, getGlobalPosition().y - 25), sf::Color(222, 102, 102, 255), false, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
-        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(death_id)), false);
+        tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(death_id)), false);
         messageclouds.push_back(tmp);
 
         message_clock.restart();

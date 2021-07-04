@@ -13,7 +13,7 @@ SaveFileCreatedMenuButtonList::SaveFileCreatedMenuButtonList()
 void SaveFileCreatedMenuButtonList::Initialise(sf::Font* font, Config& newConfig, MissionController* controller, SaveFileCreatedMenu* parMenu)
 {
     ButtonList::Initialise(font, newConfig, controller, parMenu);
-    MenuButton* level1Button = new MenuButton(L"menu_button_confirm", font, 42, 550, this, 0);
+    MenuButton* level1Button = new MenuButton("menu_button_confirm", font, 42, 550, this, 0);
     buttons.push_back(*level1Button);
     buttons[0].SetSelected(false);
 

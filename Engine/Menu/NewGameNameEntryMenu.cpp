@@ -47,10 +47,10 @@ void NewGameNameEntryMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu*
 
     f_font.loadFromFile(_thisConfig->fontPath);
 
-    t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_what_is_your_name")));
+    t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("newgame_what_is_your_name")));
     t_title.setOrigin(t_title.getGlobalBounds().width / 2, t_title.getGlobalBounds().height / 2);
 
-    t_promptText.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"newgame_name_error_prompt")));
+    t_promptText.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("newgame_name_error_prompt")));
     t_promptText.setOrigin(t_promptText.getGlobalBounds().width / 2, t_promptText.getGlobalBounds().height / 2);
 }
 string NewGameNameEntryMenu::GetEnteredString()

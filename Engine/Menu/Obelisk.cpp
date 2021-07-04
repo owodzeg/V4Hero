@@ -35,20 +35,20 @@ void ObeliskMenu::addMission(json missiondata)
     try
     {
         std::string title_key = missiondata["mission_title"];
-        tmp.title = thisConfig->strRepo.GetUnicodeString(title_key);
+        tmp.title = thisConfig->strRepo.GetString(title_key);
     } catch (const std::exception& e)
     {
         std::string title = "No Data";
-        tmp.title = wstring(title.begin(), title.end());
+        tmp.title = string(title.begin(), title.end());
     }
     try
     {
         std::string desc_key = missiondata["mission_description"];
-        tmp.desc = thisConfig->strRepo.GetUnicodeString(desc_key);
+        tmp.desc = thisConfig->strRepo.GetString(desc_key);
     } catch (const std::exception& e)
     {
         std::string desc = "No Data";
-        tmp.desc = wstring(desc.begin(), desc.end());
+        tmp.desc = string(desc.begin(), desc.end());
     }
 
     try
@@ -144,12 +144,12 @@ void ObeliskMenu::Initialise(Config* thisConfigs, V4Core* parent, PatapolisMenu*
     missionbox.setPosition(290, 542);
     missionselect.loadFromFile("resources/graphics/ui/worldmap/mission_select.png", quality, 1);
 
-    worldmap_title.createText(font, 34, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"worldmap_header_1")), quality, 1);
-    location_title.createText(font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"worldmap_location_1_title")), quality, 1);
-    wstring desc = Func::wrap_text(thisConfig->strRepo.GetUnicodeString(L"worldmap_location_1_description"), 800, font, 18);
+    worldmap_title.createText(font, 34, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("worldmap_header_1")), quality, 1);
+    location_title.createText(font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("worldmap_location_1_title")), quality, 1);
+    string desc = Func::wrap_text(thisConfig->strRepo.GetString("worldmap_location_1_description"), 800, font, 18);
 
     location_desc.createText(font, 19, sf::Color::Black, Func::ConvertToUtf8String(desc), quality, 1);
-    select_quest.createText(font, 18, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"worldmap_select")), quality, 1);
+    select_quest.createText(font, 18, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("worldmap_select")), quality, 1);
     mission_title.createText(font, 18, sf::Color::Black, "Hunting Kacheek", quality, 1);
     mission_desc.createText(font, 18, sf::Color::Black, "(no translation needed)", quality, 1);
 
@@ -159,7 +159,7 @@ void ObeliskMenu::Initialise(Config* thisConfigs, V4Core* parent, PatapolisMenu*
 
     mission_select.loadFromFile("resources/graphics/ui/worldmap/mission_select.png", quality, 1);
 
-    ctrlTips.create(66, font, 20, sf::String(L"Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
+    ctrlTips.create(66, font, 20, sf::String("Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
 
     float resRatioX = thisConfigs->GetInt("resX") / float(1280);
     float resRatioY = thisConfigs->GetInt("resY") / float(720);
@@ -421,7 +421,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
         {
             if (displayMissions)
             {
-                ctrlTips.create(66, font, 20, sf::String(L"Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
+                ctrlTips.create(66, font, 20, sf::String("Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
 
                 displayMissions = false;
                 thisConfig->thisCore->saveToDebugLog("Exited mission selection.");
@@ -465,7 +465,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
                 if (missions.size() > 0)
                 {
-                    ctrlTips.create(66, font, 20, sf::String(L"Up/Down: Select mission      X: Enter mission      O: Return to field select"), quality);
+                    ctrlTips.create(66, font, 20, sf::String("Up/Down: Select mission      X: Enter mission      O: Return to field select"), quality);
 
                     displayMissions = true;
 
@@ -477,7 +477,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     }
 
                     mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title) + level);
-                    wstring desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
+                    string desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
                     mission_desc.setString(Func::ConvertToUtf8String(desc));
                 }
             } else
@@ -560,19 +560,19 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 {
                     string L1 = "worldmap_location_" + to_string(sel_location) + "_title";
                     string L2 = "worldmap_location_" + to_string(sel_location) + "_description";
-                    wstring wL1 = wstring(L1.begin(), L1.end());
-                    wstring wL2 = wstring(L2.begin(), L2.end());
+                    string wL1 = string(L1.begin(), L1.end());
+                    string wL2 = string(L2.begin(), L2.end());
 
-                    wstring desc = Func::wrap_text(thisConfig->strRepo.GetUnicodeString(wL2), 800, font, 18);
+                    string desc = Func::wrap_text(thisConfig->strRepo.GetString(wL2), 800, font, 18);
 
-                    location_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(wL1)));
+                    location_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(wL1)));
                     location_desc.setString(Func::ConvertToUtf8String(desc));
                 } else
                 {
                     string L1 = "worldmap_location_locked";
-                    wstring wL1 = wstring(L1.begin(), L1.end());
+                    string wL1 = string(L1.begin(), L1.end());
 
-                    location_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(wL1)));
+                    location_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(wL1)));
                     location_desc.setString("");
                 }
             }
@@ -622,19 +622,19 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 {
                     string L1 = "worldmap_location_" + to_string(sel_location) + "_title";
                     string L2 = "worldmap_location_" + to_string(sel_location) + "_description";
-                    wstring wL1 = wstring(L1.begin(), L1.end());
-                    wstring wL2 = wstring(L2.begin(), L2.end());
+                    string wL1 = string(L1.begin(), L1.end());
+                    string wL2 = string(L2.begin(), L2.end());
 
-                    wstring desc = Func::wrap_text(thisConfig->strRepo.GetUnicodeString(wL2), 800, font, 18);
+                    string desc = Func::wrap_text(thisConfig->strRepo.GetString(wL2), 800, font, 18);
 
-                    location_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(wL1)));
+                    location_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(wL1)));
                     location_desc.setString(Func::ConvertToUtf8String(desc));
                 } else
                 {
                     string L1 = "worldmap_location_locked";
-                    wstring wL1 = wstring(L1.begin(), L1.end());
+                    string wL1 = string(L1.begin(), L1.end());
 
-                    location_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(wL1)));
+                    location_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(wL1)));
                     location_desc.setString("");
                 }
             }
@@ -655,7 +655,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 }
 
                 mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title) + level);
-                wstring desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
+                string desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
                 mission_desc.setString(Func::ConvertToUtf8String(desc));
             }
         } else if (inputCtrl.isKeyPressed(InputController::Keys::DOWN))
@@ -675,7 +675,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 }
 
                 mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title) + level);
-                wstring desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
+                string desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
                 mission_desc.setString(Func::ConvertToUtf8String(desc));
             }
         }

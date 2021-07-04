@@ -7,7 +7,7 @@
 /// PLEASE NOTE: The functionality of actually pressing a button is held in the ButtonList. This class just deals with display and mouse events.
 
 
-MenuButton::MenuButton(std::wstring text, sf::Font* font, int fontSize, float y, ButtonList* p_Menu, int menuListIndex, float x)
+MenuButton::MenuButton(std::string text, sf::Font* font, int fontSize, float y, ButtonList* p_Menu, int menuListIndex, float x)
 {
     buttonListIndex = menuListIndex;
     buttonText = text;
@@ -15,7 +15,7 @@ MenuButton::MenuButton(std::wstring text, sf::Font* font, int fontSize, float y,
     t_buttonText.setFont(*font);
     t_buttonText.setCharacterSize(fontSize);
     t_buttonText.setFillColor(sf::Color(100, 100, 100));
-    t_buttonText.setString(Func::ConvertToUtf8String(parentList->config->strRepo.GetUnicodeString(text)));
+    t_buttonText.setString(Func::ConvertToUtf8String(parentList->config->strRepo.GetString(text)));
 
     debug_text_bounding_box.setFillColor(sf::Color::Red);
     //originX = x;
@@ -29,11 +29,11 @@ MenuButton::MenuButton(std::wstring text, sf::Font* font, int fontSize, float y,
         t_buttonText.setOrigin(t_buttonText.getGlobalBounds().width / 2, t_buttonText.getGlobalBounds().height / 2);
     }
 }
-void MenuButton::AddEndString(std::wstring text)
+void MenuButton::AddEndString(std::string text)
 {
     endString = text;
     ///t_buttonText.setString(Func::ConvertToUtf8String(text)+"EGG");
-    t_buttonText.setString(Func::ConvertToUtf8String(parentList->config->strRepo.GetUnicodeString(buttonText)) + " " + Func::ConvertToUtf8String(endString));
+    t_buttonText.setString(Func::ConvertToUtf8String(parentList->config->strRepo.GetString(buttonText)) + " " + Func::ConvertToUtf8String(endString));
     if (originX != -1)
     {
         t_buttonText.setOrigin(0, t_buttonText.getGlobalBounds().height / 2);
@@ -42,7 +42,7 @@ void MenuButton::AddEndString(std::wstring text)
         t_buttonText.setOrigin(t_buttonText.getGlobalBounds().width / 2, t_buttonText.getGlobalBounds().height / 2);
     }
 }
-std::wstring MenuButton::GetEndString(std::wstring text)
+std::string MenuButton::GetEndString(std::string text)
 {
     return endString;
 }
@@ -97,10 +97,10 @@ void MenuButton::UpdateText()
 {
     if (endString.size())
     {
-        t_buttonText.setString(Func::ConvertToUtf8String(parentList->config->strRepo.GetUnicodeString(buttonText)) + " " + Func::ConvertToUtf8String(endString));
+        t_buttonText.setString(Func::ConvertToUtf8String(parentList->config->strRepo.GetString(buttonText)) + " " + Func::ConvertToUtf8String(endString));
     } else
     {
-        t_buttonText.setString(Func::ConvertToUtf8String(parentList->config->strRepo.GetUnicodeString(buttonText)));
+        t_buttonText.setString(Func::ConvertToUtf8String(parentList->config->strRepo.GetString(buttonText)));
     }
     t_buttonText.setOrigin(t_buttonText.getGlobalBounds().width / 2, t_buttonText.getGlobalBounds().height / 2);
 }

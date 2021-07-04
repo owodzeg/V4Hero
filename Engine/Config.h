@@ -127,7 +127,7 @@ public:
     int GetInt(std::string key);
     std::string GetString(std::string key);
     void SetString(std::string key, std::string val);
-    std::wstring GetLanguageName();
+    std::string GetLanguageName();
     void SaveConfig();
     bool keyExists(std::string key);
 };

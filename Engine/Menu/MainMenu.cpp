@@ -67,7 +67,7 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
     logow_shadow.setColor(sf::Color(64, 64, 64, ui_alpha));
     logow_text.setColor(sf::Color(255, 255, 255, ui_alpha));
 
-    t_pressanykey.createText(f_font, 26, sf::Color(255, 255, 255, t_alpha), Func::ConvertToUtf8String(thisConfigs->strRepo.GetUnicodeString(L"menu_pressanykey")), q, r);
+    t_pressanykey.createText(f_font, 26, sf::Color(255, 255, 255, t_alpha), Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("menu_pressanykey")), q, r);
 
     sb_smash.loadFromFile("resources/sfx/menu/smash.ogg");
     s_smash.setBuffer(sb_smash);
@@ -210,20 +210,20 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
     }
 
     msgcloud.Create(45, sf::Vector2f(640, 480), sf::Color::White, true, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_1")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_2")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_3")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_4")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_5")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_6")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_7")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_8")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"firstrun_dialog_9")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_1")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_2")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_3")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_4")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_5")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_6")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_7")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_8")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_9")), true);
 
-    temp_menu.push_back(thisConfig->strRepo.GetUnicodeString(L"menu_newgame"));
-    temp_menu.push_back(thisConfig->strRepo.GetUnicodeString(L"menu_continue"));
-    temp_menu.push_back(thisConfig->strRepo.GetUnicodeString(L"menu_options"));
-    temp_menu.push_back(thisConfig->strRepo.GetUnicodeString(L"menu_exit"));
+    temp_menu.push_back(thisConfig->strRepo.GetString("menu_newgame"));
+    temp_menu.push_back(thisConfig->strRepo.GetString("menu_continue"));
+    temp_menu.push_back(thisConfig->strRepo.GetString("menu_options"));
+    temp_menu.push_back(thisConfig->strRepo.GetString("menu_exit"));
 
     introductionMenu.Initialise(thisConfig, v4Core, this);
 
@@ -323,10 +323,10 @@ void MainMenu::SelectMenuOption()
             {
                 cout << "There is an existing save data. Ask if overwrite" << endl;
 
-                std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_yes")), Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_no"))};
+                std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetString("nav_yes")), Func::ConvertToUtf8String(config->strRepo.GetString("nav_no"))};
 
                 PataDialogBox db;
-                db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"menu_saveexists")), a, config->GetInt("textureQuality"));
+                db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetString("menu_saveexists")), a, config->GetInt("textureQuality"));
                 db.id = 0;
                 dialogboxes.push_back(db);
             }
@@ -349,10 +349,10 @@ void MainMenu::SelectMenuOption()
                 {
                     cout << "Invalid save data!" << endl;
 
-                    std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_understood"))};
+                    std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetString("nav_understood"))};
 
                     PataDialogBox db;
-                    db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"menu_nosupportdata")), a, config->GetInt("textureQuality"));
+                    db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetString("menu_nosupportdata")), a, config->GetInt("textureQuality"));
                     db.id = 2;
                     dialogboxes.push_back(db);
                 } else
@@ -364,10 +364,10 @@ void MainMenu::SelectMenuOption()
             {
                 cout << "There is no savedata. Error" << endl;
 
-                std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"nav_understood"))};
+                std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetString("nav_understood"))};
 
                 PataDialogBox db;
-                db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetUnicodeString(L"menu_nodata")), a, config->GetInt("textureQuality"));
+                db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetString("menu_nodata")), a, config->GetInt("textureQuality"));
                 db.id = 1;
                 dialogboxes.push_back(db);
             }
@@ -835,7 +835,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                                 patapolisMenu.screenFade.Create(thisConfig, 0, 512);
 
                                 patapolisMenu.location = 3;
-                                patapolisMenu.ctrlTips.create(54, patapolisMenu.f_font, 20, sf::String(L"L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
+                                patapolisMenu.ctrlTips.create(54, patapolisMenu.f_font, 20, sf::String("L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
                                 patapolisMenu.SetTitle(patapolisMenu.location);
                                 patapolisMenu.camPos = patapolisMenu.locations[patapolisMenu.location];
 
