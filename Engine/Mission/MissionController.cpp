@@ -1063,7 +1063,7 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
     command_inputs.clear();
 
     std::vector<std::string> command_lang_keys = {"nav_onward", "nav_attack", "nav_defend", "nav_charge", "nav_retreat", "nav_jump", "nav_party", "nav_summon"};
-    std::vector<sf::String> command_lang_buttons = {"□-□-□-〇", "〇-〇-□-〇", "△-△-□-〇", "〇-〇-△-△", "〇-□-〇-□", "×-×-△-△", "□-〇-×-△", "×-××-××"};
+    std::vector<std::string> command_lang_buttons = {"□-□-□-〇", "〇-〇-□-〇", "△-△-□-〇", "〇-〇-△-△", "〇-□-〇-□", "×-×-△-△", "□-〇-×-△", "×-××-××"};
 
     ///first four
     for (int i = 0; i < 4; i++)
@@ -1074,7 +1074,7 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
         command_descs.push_back(t_command_desc);
 
         PText t_command;
-        t_command.createText(f_unicode, 28, sf::Color(128, 128, 128, 255), command_lang_buttons[i], qualitySetting, 1);
+        t_command.createText(f_unicode, 28, sf::Color(128, 128, 128, 255), Func::ConvertToUtf8String(command_lang_buttons[i]), qualitySetting, 1);
         command_inputs.push_back(t_command);
     }
 
@@ -1087,7 +1087,7 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
         command_descs.push_back(t_command_desc);
 
         PText t_command;
-        t_command.createText(f_unicode, 28, sf::Color(128, 128, 128, 255), command_lang_buttons[i], qualitySetting, 1);
+        t_command.createText(f_unicode, 28, sf::Color(128, 128, 128, 255), Func::ConvertToUtf8String(command_lang_buttons[i]), qualitySetting, 1);
         command_inputs.push_back(t_command);
     }
 
@@ -1145,7 +1145,7 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
             droppeditem_spritesheet[buff].load("resources/graphics/item/itemdata/" + buff + ".png", qualitySetting, resSetting);
         }
     }
-    ctrlTips.create(110, f_font, 28, sf::String("Onward: □-□-□-O	   Attack: O-O-□-O		Defend: △-△-□-O			  Charge: O-O-△-△\nRetreat: O-□-O-□		  Jump: X-X-△-△		  Party: □-O-X-△		  Summon: X-XX-XX"), q, sf::Color(128, 128, 128, 255));
+    ctrlTips.create(110, f_font, 28, "Onward: □-□-□-O	   Attack: O-O-□-O		Defend: △-△-□-O			  Charge: O-O-△-△\nRetreat: O-□-O-□		  Jump: X-X-△-△		  Party: □-O-X-△		  Summon: X-XX-XX", q, sf::Color(128, 128, 128, 255));
 
     spear_hit_enemy.loadFromFile("resources/sfx/level/spear_hit_enemy.ogg");
     spear_hit_iron.loadFromFile("resources/sfx/level/spear_hit_iron.ogg");
