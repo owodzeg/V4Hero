@@ -1,4 +1,4 @@
-#include <math.h> /* to introduce M_PI */
+#include <cmath> /* to introduce M_PI */
 
 #include "PVector.h";
 #include "SFML/Graphics.hpp"
