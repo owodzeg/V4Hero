@@ -124,6 +124,7 @@ endif()
 
 if(MSVC)
     target_compile_options(V4Hero PRIVATE /W4)
+    target_compile_definitions(V4Hero PRIVATE _USE_MATH_DEFINES=1)
 else()
     target_compile_options(V4Hero PRIVATE -Wall -Wextra)
 endif()

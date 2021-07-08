@@ -1,9 +1,9 @@
-#define _USE_MATH_DEFINES
+#include <math.h> /* to introduce M_PI */
 
 #include "PVector.h";
 #include "SFML/Graphics.hpp"
-#include <cmath>
 #include <stdlib.h> /* abs */
+
 PVector& PVector::getVectorCartesian(float x1, float y1, float x2, float y2)
 {
     static PVector myObj;
