@@ -219,11 +219,11 @@ void ObeliskMenu::Reload()
         }
     }
 
-    if (sel_location > 0 && sel_location < location_bgs.size())
-    {
-        location_bg_a = location_bgs[sel_location - 1];
-        location_bg_b = location_bgs[sel_location - 1];
-    }
+    //if (sel_location > 0 && sel_location < location_bgs.size())
+    //{
+    //    location_bg_a = location_bgs[sel_location - 1];
+    //    location_bg_b = location_bgs[sel_location - 1];
+    //}
 
     unlocked.clear();
 
@@ -299,11 +299,24 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
         alphaB = 255 - alphaA;
 
-        location_bg_a.setColor(sf::Color(255, 255, 255, 255));
-        location_bg_b.setColor(sf::Color(255, 255, 255, alphaB));
+        int renderPrev = sel_prevlocation - 1;
 
-        location_bg_a.draw(window);
-        location_bg_b.draw(window);
+        if (renderPrev > location_bgs.size() - 1)
+            renderPrev = location_bgs.size() - 1;
+
+        int renderCur = sel_location - 1;
+
+        if (renderCur > location_bgs.size() - 1)
+            renderCur = location_bgs.size() - 1;
+
+        if (location_bgs.size() > 0)
+        {
+            location_bgs[renderPrev].setColor(sf::Color(255, 255, 255, 255));
+            location_bgs[renderPrev].draw(window);
+
+            location_bgs[renderCur].setColor(sf::Color(255, 255, 255, alphaB));
+            location_bgs[renderCur].draw(window);
+        }
 
         if ((sf::Keyboard::isKeyPressed(sf::Keyboard::L)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
         {
@@ -528,6 +541,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 //if(mapXdest >= 0)
                 //mapXdest = 0;
 
+                sel_prevlocation = sel_location;
                 sel_location--;
                 sel_mission = 0;
 
@@ -546,9 +560,6 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
                 if (sel_location - 1 < location_bgs.size())
                 {
-                    location_bg_a = location_bg_b;
-                    location_bg_b = location_bgs[sel_location - 1];
-
                     alphaA = 255;
                     alphaB = 0;
 
@@ -587,6 +598,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 //if(mapXdest <= maxBound)
                 //mapXdest = maxBound;
 
+                sel_prevlocation = sel_location;
                 sel_location++;
                 sel_mission = 0;
 
@@ -608,9 +620,6 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
                 if (sel_location - 1 < location_bgs.size())
                 {
-                    location_bg_a = location_bg_b;
-                    location_bg_b = location_bgs[sel_location - 1];
-
                     alphaA = 255;
                     alphaB = 0;
 

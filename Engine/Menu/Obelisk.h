@@ -52,6 +52,7 @@ public:
     PSprite location_highlight;
     PSprite mission_select;
 
+    int sel_prevlocation = 1;
     int sel_location = 1;
     int sel_mission = 0;
 
