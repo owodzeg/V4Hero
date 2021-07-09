@@ -309,7 +309,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
         if (renderCur > location_bgs.size() - 1)
             renderCur = location_bgs.size() - 1;
 
-        if (location_bgs.size() > 0)
+        if (!location_bgs.empty())
         {
             location_bgs[renderPrev].setColor(sf::Color(255, 255, 255, 255));
             location_bgs[renderPrev].draw(window);
