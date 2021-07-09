@@ -616,8 +616,11 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     resolutions[i].setPosition(810, 520 + 40 * i);
                     resolutions[i].setColor(sf::Color::White);
 
-                    if ((float_resolutions[i].width == thisConfig->GetInt("resX")) && (float_resolutions[i].height == thisConfig->GetInt("resY")))
-                        resolutions[i].setColor(sf::Color(0, 192, 0, 255));
+                    if (i < float_resolutions.size())
+                    {
+                        if ((float_resolutions[i].width == thisConfig->GetInt("resX")) && (float_resolutions[i].height == thisConfig->GetInt("resY")))
+                            resolutions[i].setColor(sf::Color(0, 192, 0, 255));
+                    }
 
                     if (mouseY / window.getSize().y * 1080 >= (resolutions[i].getPosition().y - resolutions[i].getGlobalBoundsScaled().height / 2 + 8))
                     {
@@ -686,8 +689,11 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     framerates[i].setPosition(810, 520 + 40 * i);
                     framerates[i].setColor(sf::Color::White);
 
-                    if ((thisConfig->GetInt("framerateLimit") == float_framerates[i]) && (i != 4))
-                        framerates[i].setColor(sf::Color(0, 192, 0, 255));
+                    if (i < float_framerates.size())
+                    {
+                        if ((thisConfig->GetInt("framerateLimit") == float_framerates[i]) && (i != 4))
+                            framerates[i].setColor(sf::Color(0, 192, 0, 255));
+                    }
 
                     if (mouseY / window.getSize().y * 1080 >= (framerates[i].getPosition().y - framerates[i].getGlobalBoundsScaled().height / 2 + 8))
                     {
