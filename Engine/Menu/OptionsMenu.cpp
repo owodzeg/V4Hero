@@ -223,8 +223,10 @@ void OptionsMenu::Initialise(Config* thisConfigs, V4Core* parent, Menu* curParen
     {
         vector<string> param = Func::Split(buf, '|');
 
-        opt.createText(m_font, 25, sf::Color::White, param[0], q, 2);
+        opt.createText(m_font, 25, sf::Color::White, param[1], q, 2);
         langs[page].push_back(opt);
+
+        langIDs.push_back(atoi(param[0].c_str()));
 
         langcount++;
 
@@ -1545,7 +1547,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
         if ((state >= 40) && (state <= 40 + langs[lang_current].size() - 2))
         {
             cout << "Select lang ID: " << lang_current * 5 + (state - 40) << endl;
-            SetConfigValue("lang", to_string(lang_current * 5 + (state - 40)), false);
+            SetConfigValue("lang", to_string(langIDs[lang_current * 5 + (state - 40) - 1]), false);
 
             GoBackMenuOption(1);
         }

@@ -9,6 +9,7 @@
 class StringRepository
 {
 public:
+    std::vector<int> langIDs;
     std::vector<std::string> langNames;
     std::vector<std::string> langFonts;
     int configDebugID = 0;
