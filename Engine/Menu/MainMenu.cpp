@@ -270,7 +270,7 @@ void MainMenu::EventFired(sf::Event event)
                     mouseX = event.mouseMove.x;
                     mouseY = event.mouseMove.y;
 
-                    cout << mouseX << " " << mouseY << endl;
+                    //cout << mouseX << " " << mouseY << endl;
 
                     UsingMouseSelection = true;
                 }
