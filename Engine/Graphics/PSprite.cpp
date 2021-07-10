@@ -17,7 +17,7 @@ void PSprite::loadFromFile(std::string file, int q)
     switch (q)
     {
         case 0:
-            sq = "";
+            sq = "L";
             break;
 
         case 1:
@@ -63,7 +63,7 @@ void PSprite::loadFromFile(std::string file, int q, int r = 1)
     switch (q)
     {
         case 0:
-            sq = "";
+            sq = "L";
             break;
 
         case 1:
