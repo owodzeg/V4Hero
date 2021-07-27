@@ -203,8 +203,8 @@ void DroppedItem::Draw(sf::RenderWindow& window)
 
     if (curFrame >= 0 && curFrame < animation_origins[index].size())
     {
-        animation_origins[index][curFrame].x = (*objects)[0].s_obj.getGlobalBounds().width / 2;
-        animation_origins[index][curFrame].y = (*objects)[0].s_obj.getGlobalBounds().height - 26;
+        animation_origins[index][curFrame].x = ((*objects)[0].s_obj.getLocalBounds().width / 2);
+        animation_origins[index][curFrame].y = ((*objects)[0].s_obj.getLocalBounds().height-26);
     }
     scaleX = curXscale;
     scaleY = curYscale;
