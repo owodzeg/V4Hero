@@ -34,7 +34,7 @@ void Yaripon::startAttack()
     if (action != ATTACK)
     {
         action = ATTACK;
-        attackmode = -2;
+        attackMode = AttackMode::Preparing;
         walkClock.restart();
         dest_set = false;
     }
@@ -46,7 +46,7 @@ bool Yaripon::doAttack()
     {
         if (enemy_in_range)
         {
-            if (attackmode == -2) ///prepare the attack (move around)
+            if (attackMode == AttackMode::Preparing) ///prepare the attack (move around)
             {
                 ///Calculate the local x
                 if (!dest_set)
@@ -71,27 +71,27 @@ bool Yaripon::doAttack()
                 //dest_local_x = entity_distance;
 
                 if ((local_x >= dest_local_x - 5) && (local_x <= dest_local_x + 5)) ///When you are set at your position, start the attack
-                    attackmode = -1;
+                    attackMode = AttackMode::Ready;
 
                 if (walkClock.getElapsedTime().asMilliseconds() >= 750) ///If walking takes you too long, stop and start the attack
                 {
-                    attackmode = -1;
+                    attackMode = AttackMode::Ready;
                     dest_local_x = local_x;
                 }
             }
 
-            if (attackmode == -1) ///start the attack
+            if (attackMode == AttackMode::Ready) ///start the attack
             {
                 prev_dest_local_x = dest_local_x;
 
                 attack_clock.restart();
-                attackmode = 0;
+                attackMode = AttackMode::Start;
 
                 if (isFever)
                     vspeed = -683;
             }
 
-            if (attackmode == 0) ///begin the attack
+            if (attackMode == AttackMode::Start) ///begin the attack
             {
                 canAttack = true;
 
@@ -107,7 +107,7 @@ bool Yaripon::doAttack()
                     {
                         AnimatedObject::setAnimationSegment("attack_fever_throw", true);
                         attack_clock.restart();
-                        attackmode = 1;
+                        attackMode = AttackMode::Attacking;
                     }
                 } else
                 {
@@ -118,12 +118,12 @@ bool Yaripon::doAttack()
                     {
                         AnimatedObject::setAnimationSegment("attack_prefever_focused_throw", true);
                         attack_clock.restart();
-                        attackmode = 1;
+                        attackMode = AttackMode::Attacking;
                     }
                 }
             }
 
-            if (attackmode == 1) ///attack continously
+            if (attackMode == AttackMode::Attacking) ///attack continously
             {
                 if (isFever)
                 {
@@ -160,7 +160,7 @@ bool Yaripon::doAttack()
                     if (local_y >= 0)
                     {
                         AnimatedObject::setAnimationSegment("idle_armed_focused", true);
-                        attackmode = 2;
+                        attackMode = AttackMode::AfterAttack;
                     }
                 } else
                 {
@@ -181,12 +181,12 @@ bool Yaripon::doAttack()
 
                     if (AnimatedObject::getAnimationSegment() == "attack_prefever_focused_end")
                     {
-                        attackmode = 2;
+                        attackMode = AttackMode::AfterAttack;
                     }
                 }
             }
 
-            if (attackmode == 2)
+            if (attackMode == AttackMode::AfterAttack)
             {
                 canAttack = true;
                 action = IDLE;
@@ -214,7 +214,7 @@ void Yaripon::Update()
             hspeed = -400;
             vspeed = -250;
             action = IDLE;
-            attackmode = -1;
+            attackMode = AttackMode::Ready;
         }
     }
 
@@ -315,7 +315,7 @@ void Yaripon::UpdateRhythm(std::string current_song, std::string current_drum, i
         if (current_song == "ponpon")
         {
             ///use attack only once
-            if (attackmode != 2)
+            if (attackMode != AttackMode::AfterAttack)
                 startAttack();
 
             if (isFever)
@@ -332,7 +332,7 @@ void Yaripon::UpdateRhythm(std::string current_song, std::string current_drum, i
             defend = true;
 
             ///use attack only once
-            if (attackmode != 2)
+            if (attackMode != AttackMode::AfterAttack)
                 startAttack();
 
             if (isFever)
@@ -347,7 +347,7 @@ void Yaripon::UpdateRhythm(std::string current_song, std::string current_drum, i
         } else
         {
             ///refresh attack mode
-            attackmode = -1;
+            attackMode = AttackMode::Ready;
         }
 
         if ((current_song != "ponpon") && (current_song != "chakachaka"))
@@ -362,7 +362,7 @@ void Yaripon::UpdateRhythm(std::string current_song, std::string current_drum, i
 
         if ((current_drum == "pata") || (current_drum == "pon") || (current_drum == "chaka") || (current_drum == "don"))
         {
-            attackmode = -1;
+            attackMode = AttackMode::Ready;
             action = IDLE;
         }
 
