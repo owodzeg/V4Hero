@@ -17,8 +17,6 @@ public:
     bool stopAttack = false;
     bool canAttack = true;
 
-    int attackmode = -2;
-
     float hspeed = 0;
     float vspeed = 0;
     float gravity = 981;
@@ -57,7 +55,17 @@ public:
     void UpdateRhythm(std::string current_song, std::string current_drum, int combo) override;
 
 private:
+    enum class AttackMode
+    {
+        Preparing = -2,
+        Ready = -1,
+        Start = 0,
+        Attacking = 1,
+        AfterAttack = 2,
+    };
+
     bool dying = false;
+    AttackMode attackMode = AttackMode::Preparing;
 };
 
 #endif // YARIPON_H
