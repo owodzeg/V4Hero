@@ -2775,30 +2775,33 @@ std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
 
 void MissionController::drawCommandList(sf::RenderWindow& window)
 {
-    ///first four
-    for (int i = 0; i < 4; i++)
+    if (!missionEnd)
     {
-        command_inputs[i].setOrigin(command_inputs[i].getLocalBounds().width, command_inputs[i].getLocalBounds().height / 2);
-        command_inputs[i].setPosition(-21 + (i + 1) * ((1280 - 42) / 4.f), 644);
+        ///first four
+        for (int i = 0; i < 4; i++)
+        {
+            command_inputs[i].setOrigin(command_inputs[i].getLocalBounds().width, command_inputs[i].getLocalBounds().height / 2);
+            command_inputs[i].setPosition(-21 + (i + 1) * ((1280 - 42) / 4.f), 644);
 
-        command_descs[i].setOrigin(command_descs[i].getLocalBounds().width, command_descs[i].getLocalBounds().height / 2);
-        command_descs[i].setPosition(-21 + (i + 1) * ((1280 - 42) / 4.f) - command_inputs[i].getLocalBounds().width - 8, 644);
+            command_descs[i].setOrigin(command_descs[i].getLocalBounds().width, command_descs[i].getLocalBounds().height / 2);
+            command_descs[i].setPosition(-21 + (i + 1) * ((1280 - 42) / 4.f) - command_inputs[i].getLocalBounds().width - 8, 644);
 
-        command_descs[i].draw(window);
-        command_inputs[i].draw(window);
-    }
+            command_descs[i].draw(window);
+            command_inputs[i].draw(window);
+        }
 
-    ///second four
-    for (int i = 4; i < 8; i++)
-    {
-        command_inputs[i].setOrigin(command_inputs[i].getLocalBounds().width, command_inputs[i].getLocalBounds().height / 2);
-        command_inputs[i].setPosition(-21 + (i - 4 + 1) * ((1280 - 42) / 4.f), 673);
+        ///second four
+        for (int i = 4; i < 8; i++)
+        {
+            command_inputs[i].setOrigin(command_inputs[i].getLocalBounds().width, command_inputs[i].getLocalBounds().height / 2);
+            command_inputs[i].setPosition(-21 + (i - 4 + 1) * ((1280 - 42) / 4.f), 673);
 
-        command_descs[i].setOrigin(command_descs[i].getLocalBounds().width, command_descs[i].getLocalBounds().height / 2);
-        command_descs[i].setPosition(-21 + (i - 4 + 1) * ((1280 - 42) / 4.f) - command_inputs[i].getLocalBounds().width - 8, 673);
+            command_descs[i].setOrigin(command_descs[i].getLocalBounds().width, command_descs[i].getLocalBounds().height / 2);
+            command_descs[i].setPosition(-21 + (i - 4 + 1) * ((1280 - 42) / 4.f) - command_inputs[i].getLocalBounds().width - 8, 673);
 
-        command_descs[i].draw(window);
-        command_inputs[i].draw(window);
+            command_descs[i].draw(window);
+            command_inputs[i].draw(window);
+        }
     }
 }
 
@@ -3476,6 +3479,7 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
     /** Execute camera and background **/
 
     //cout << "[MissionController] Camera & BG" << endl;
+    camera.missionEnd = missionEnd; ///disable camera controls when needed
     camera.Work(window, fps, cur_inputCtrl);
     test_bg.setCamera(camera);
     test_bg.Draw(window);
