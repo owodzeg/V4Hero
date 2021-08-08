@@ -3297,7 +3297,7 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
                 unit->entity_distance = abs((unit->global_x) - (closest_entity->getGlobalPosition().x + (closest_entity->hitboxes[0].o_x - closest_entity->hitboxes[0].o_width / 2)));
                 //cout << "Distance to nearest entity for unit " << i << ": " << unit->entity_distance << " (" << unit->global_x << " " << closest_entity->getGlobalPosition().x << " " << closest_entity->hitboxes[0].o_x << ")" << endl;
 
-                if ((closest_entity->entityType == Entity::EntityTypes::HOSTILE) && (!closest_entity->dead) && (inRange))
+                if ((closest_entity->entityType == Entity::EntityTypes::HOSTILE) && (!closest_entity->dead) && (inRange) && (closest_entity->getAnimationSegment() != "death"))
                 {
                     unit->enemy_in_range = true;
                     //cout << "Unit " << i << " distance to closest enemy is " << unit->entity_distance << " pixels" << endl;
