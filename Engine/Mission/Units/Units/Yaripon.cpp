@@ -253,6 +253,8 @@ void Yaripon::Draw(sf::RenderWindow& window)
     {
         deathClock.restart();
         setAnimationSegment("stagger_var5", true);
+        dying = false;
+        dead = true;
     } else if (dead)
     {
         spdlog::trace("I'm dead now");
