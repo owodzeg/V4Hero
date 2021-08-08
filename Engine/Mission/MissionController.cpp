@@ -1599,18 +1599,17 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 
     for (int i = 0; i < army_size; i++)
     {
-		spdlog::debug("Trying to find pon: {}", i);
+        spdlog::debug("Trying to find pon: {}", i);
         Pon* current_pon = v4Core->saveReader.ponReg.GetPonByID(i);
-		spdlog::debug("Making pon with class: {}", current_pon->pon_class);
+        spdlog::debug("Making pon with class: {}", current_pon->pon_class);
         switch (current_pon->pon_class)
         {
             case -1: ///this was earlier 0 which i dont understand because pon class 0 = yaripon lol
             {
-				spdlog::warn("Hatapon detected in saveReader.ponreg.pons");
+                spdlog::warn("Hatapon detected in saveReader.ponreg.pons");
                 break;
             }
-            case 0:
-			{
+            case 0: {
                 unique_ptr<Yaripon> wip_pon = make_unique<Yaripon>();
                 wip_pon.get()->LoadConfig(thisConfig);
                 wip_pon.get()->setUnitID(current_pon->pon_class + 1); ///have to set unit ID from 0 to 1 because 0 is already occupied by Hatapon
@@ -1620,22 +1619,20 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
                 wip_pon.get()->max_hp = current_pon->pon_hp;
 
                 if (current_pon->slots[0] != -1)
-				{
+                {
                     wip_pon.get()->applyEquipment(v4Core->saveReader.invData.items[current_pon->slots[0]].item->order_id, 0);
-				}
-                else
-				{
-					spdlog::error("Yaripon has an empty equipment slot 1");
-				}
+                } else
+                {
+                    spdlog::error("Yaripon has an empty equipment slot 1");
+                }
 
                 if (current_pon->slots[1] != -1)
-				{
+                {
                     wip_pon.get()->applyEquipment(v4Core->saveReader.invData.items[current_pon->slots[1]].item->order_id, 1);
-				}
-                else
-				{
-					spdlog::error("Yaripon has an empty equipment slot 2");
-				}
+                } else
+                {
+                    spdlog::error("Yaripon has an empty equipment slot 2");
+                }
 
                 units.push_back(std::move(wip_pon));
                 break;
@@ -1681,7 +1678,8 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 		}*/
         ///-_-
 
-        bool has_thumb = false;
+        ///what the hell is this
+        /** bool has_thumb = false;
         for (int i = 0; i < unitThumbs.size(); i++)
         {
             if (unitThumbs[i].unit_class == current_pon->pon_class)
@@ -1690,8 +1688,10 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
         if (!has_thumb)
         {
             addUnitThumb(current_pon->pon_class);
-        }
+        }**/
     }
+
+    addUnitThumb(1);
 
     cout << "Loading background " << bgName << endl;
     Background bg_new;
@@ -2155,6 +2155,11 @@ bool MissionController::isColliding(PlayableUnit* unit, const unique_ptr<Entity>
 
     collisionEvents.erase(std::remove_if(collisionEvents.begin(), collisionEvents.end(), [](const auto& event) { return !event.isCollidable; }), collisionEvents.end());
 
+    for (int i=0; i<collisionEvents.size(); i++)
+    {
+        cout << "Is collidable? " << collisionEvents[i].isCollidable << " vs " << collisionObject->isCollidable << endl;
+    }
+
     bool foundCollision = !collisionEvents.empty();
     bool forceCollision = false;
 
@@ -2165,6 +2170,9 @@ bool MissionController::isColliding(PlayableUnit* unit, const unique_ptr<Entity>
             forceCollision = unit->getGlobalPosition().x >= collisionObject->getGlobalPosition().x + collisionObject->hitboxes[0].o_x;
         }
     }
+
+    if (!collisionObject->isCollidable)
+        foundCollision = false;
 
     return foundCollision || forceCollision;
 }
