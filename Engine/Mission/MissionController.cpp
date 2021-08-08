@@ -1762,7 +1762,7 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow& window, float fps, In
         {
             if (inputCtrl.isKeyPressed(InputController::Keys::SELECT))
             {
-                std::vector<sf::String> a = {"Show hitboxes", "Hide hitboxes", "Heal units"};
+                std::vector<sf::String> a = {"Show hitboxes", "Hide hitboxes", "Heal units", "Kill all player units", "Kill Hatapon"};
 
                 PataDialogBox db;
                 db.Create(f_font, "Debug menu", a, thisConfig->GetInt("textureQuality"));
@@ -3788,6 +3788,38 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
                         for (int u = 0; u < units.size(); u++)
                         {
                             units[u].get()->current_hp = units[u].get()->max_hp;
+                        }
+
+                        dialog_boxes[dialog_boxes.size() - 1].Close();
+                    }
+
+                    break;
+                }
+
+                case 3: {
+                    if (dialog_boxes[dialog_boxes.size() - 1].id == 999)
+                    {
+                        cout << "Kill all player units" << endl;
+                        for (int u = 0; u < units.size(); u++)
+                        {
+                            if (units[u].get()->getUnitID() == 1)
+                            units[u].get()->current_hp = 0;
+                        }
+
+                        dialog_boxes[dialog_boxes.size() - 1].Close();
+                    }
+
+                    break;
+                }
+
+                case 4: {
+                    if (dialog_boxes[dialog_boxes.size() - 1].id == 999)
+                    {
+                        cout << "Kill Hatapon" << endl;
+                        for (int u = 0; u < units.size(); u++)
+                        {
+                            if (units[u].get()->getUnitID() == 0)
+                            units[u].get()->current_hp = 0;
                         }
 
                         dialog_boxes[dialog_boxes.size() - 1].Close();
