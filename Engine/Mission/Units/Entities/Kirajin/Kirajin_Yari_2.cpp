@@ -205,7 +205,7 @@ void Kirajin_Yari_2::doMessages(sf::RenderWindow& window, float fps, InputContro
 
 void Kirajin_Yari_2::Draw(sf::RenderWindow& window)
 {
-    //cout << "Kirajin_Yari_2: " << action << " " << getAnimationSegment() << " " << cur_pos << " " << attackMode << " " << attack_timer.getElapsedTime().asSeconds() << " " << walk_clock.getElapsedTime().asSeconds() << " " << distance_to_unit << endl;
+    //cout << "Kirajin_Yari_2: " << action << " " << getAnimationSegment() << " " << cur_pos << " " << attackmode << " " << attack_timer.getElapsedTime().asSeconds() << " " << walk_clock.getElapsedTime().asSeconds() << " " << distance_to_unit << endl;
 
     if (dead)
     {
