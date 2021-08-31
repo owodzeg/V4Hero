@@ -337,6 +337,20 @@ void V4Core::showTip()
     continue_loading = true;
 }
 
+void V4Core::cacheEntity(int entityID, shared_ptr<vector<vector<sf::Image>>> swaps, shared_ptr<vector<AnimatedObject::Animation>> spritesheet, shared_ptr<vector<Object>> objects)
+{
+    cout << "[V4Core] cacheEntity id " << entityID << endl;
+
+    isCached[entityID] = true;
+
+    animation_cache[entityID] = make_shared<AnimationCache>();
+    animation_cache[entityID].get()->swaps = swaps;
+    animation_cache[entityID].get()->spritesheet = spritesheet;
+    //animation_cache[entityID].get()->objects = objects;
+
+    cout << "[V4Core] cache created" << endl;
+}
+
 void V4Core::init()
 {
     /// turned off because it doesn't work for owocek

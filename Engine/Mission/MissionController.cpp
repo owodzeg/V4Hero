@@ -257,20 +257,6 @@ void MissionController::parseEntityLoot(mt19937& gen, uniform_real_distribution<
     }
 }
 
-void MissionController::cacheEntity(int entityID, shared_ptr<vector<vector<sf::Image>>> swaps, shared_ptr<vector<AnimatedObject::Animation>> spritesheet, shared_ptr<vector<Object>> objects)
-{
-    cout << "[MissionController] cacheEntity id " << entityID << endl;
-
-    isCached[entityID] = true;
-
-    animation_cache[entityID] = make_shared<AnimationCache>();
-    animation_cache[entityID].get()->swaps = swaps;
-    animation_cache[entityID].get()->spritesheet = spritesheet;
-    animation_cache[entityID].get()->objects = objects;
-
-    cout << "[MissionController] cache created" << endl;
-}
-
 void MissionController::spawnEntity(int id, bool collidable, bool attackable, int xpos, int xrange, bool cloneable, float clone_delay, float spawnrate, float stat_mult, int mindmg, int maxdmg, int hp, float ypos, float baseY, sf::Color color, int layer, int parent, nlohmann::json loot, nlohmann::json additional_data)
 {
     sf::Clock bm; ///benchmark for spawnEntity function
@@ -344,9 +330,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -367,9 +353,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -390,9 +376,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -413,9 +399,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -436,9 +422,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -455,9 +441,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
                 entity.get()->LoadConfig(thisConfig);
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -486,9 +472,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -509,9 +495,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -532,9 +518,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -555,9 +541,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -578,9 +564,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -601,9 +587,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -624,9 +610,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -647,9 +633,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -670,9 +656,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -693,9 +679,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -716,9 +702,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -1611,8 +1597,15 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
             }
             case 0: {
                 unique_ptr<Yaripon> wip_pon = make_unique<Yaripon>();
-                wip_pon.get()->LoadConfig(thisConfig);
+                wip_pon.get()->entityID = -1001; ///lets say entity IDs for units will be -1000 and below, so -1001 is yaripon, -1002 will be tatepon etc
                 wip_pon.get()->setUnitID(current_pon->pon_class + 1); ///have to set unit ID from 0 to 1 because 0 is already occupied by Hatapon
+                wip_pon.get()->LoadConfig(thisConfig);
+
+                if (!v4Core->isCached[wip_pon.get()->entityID])
+                {
+                    v4Core->cacheEntity(wip_pon.get()->entityID, wip_pon.get()->all_swaps_img, wip_pon.get()->animation_spritesheet, wip_pon.get()->objects);
+                }
+
                 wip_pon.get()->mindmg = current_pon->pon_min_dmg;
                 wip_pon.get()->maxdmg = current_pon->pon_max_dmg;
                 wip_pon.get()->current_hp = current_pon->pon_hp;
