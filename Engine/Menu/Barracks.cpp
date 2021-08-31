@@ -49,10 +49,17 @@ void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMe
             case 0: {
                 unique_ptr<Yaripon> wip_pon = make_unique<Yaripon>();
                 wip_pon.get()->setUnitID(current_pon->pon_class);
+                wip_pon.get()->entityID = -1001; ///lets say entity IDs for units will be -1000 and below, so -1001 is yaripon, -1002 will be tatepon etc
 
                 cout << "Loading Pon..." << endl;
 
                 wip_pon.get()->LoadConfig(thisConfig);
+
+                if (!v4Core->isCached[wip_pon.get()->entityID])
+                {
+                    v4Core->cacheEntity(wip_pon.get()->entityID, wip_pon.get()->all_swaps_img, wip_pon.get()->animation_spritesheet, wip_pon.get()->objects);
+                }
+
                 wip_pon.get()->setAnimationSegment("idle_armed");
 
                 cout << "Assigning equipment to Pon (" << parent->saveReader.ponReg.GetPonByID(i)->slots.size() << " slots)" << endl;

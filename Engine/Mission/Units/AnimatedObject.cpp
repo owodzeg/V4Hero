@@ -28,12 +28,12 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
 
     bool cache_loaded = false;
 
-    if (thisConfig->thisCore->currentController.isCached[entityID])
+    if (thisConfig->thisCore->isCached[entityID])
     {
         ///Load cache here
-        all_swaps_img = thisConfig->thisCore->currentController.animation_cache[entityID]->swaps;
-        animation_spritesheet = thisConfig->thisCore->currentController.animation_cache[entityID]->spritesheet;
-        objects = thisConfig->thisCore->currentController.animation_cache[entityID]->objects;
+        all_swaps_img = thisConfig->thisCore->animation_cache[entityID]->swaps;
+        animation_spritesheet = thisConfig->thisCore->animation_cache[entityID]->spritesheet;
+        //objects = thisConfig->thisCore->currentController.animation_cache[entityID]->objects;
 
         cache_loaded = true;
         //cout << "[AnimatedObject] Cache loaded" << endl;
@@ -137,6 +137,47 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                     //cout << "Animation " << animation_names[animID] << " frame " << animFrame << " bounds: " << x1 << " " << y1 << " " << x2 << " " << y2 << endl;
                 }
 
+                if (line.find("OI:") != std::string::npos)
+                {
+                    //auto start = std::chrono::high_resolution_clock::now();
+
+                    string tex_file = line.substr(line.find_first_of(":") + 1);
+
+                    int parent = 0; ///unused yet
+
+                    objects.get()->emplace_back();
+                    (*objects)[objects.get()->size() - 1].object_name = tex_file;
+
+                    //auto elapsed = std::chrono::high_resolution_clock::now() - start;
+                    //cout << "Pushed to vector, took " << std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count() << endl;
+
+                    //cout << "Added new object from " << tex_file << endl;
+                }
+
+                if ((line.find("F:") != std::string::npos) && (line[0] == 'F'))
+                {
+                    string framedata = line.substr(line.find_first_of(":") + 1);
+                    vector<string> frame = Func::Split(framedata, ',');
+
+                    float time = atof(frame[0].c_str());
+                    int objectID = atoi(frame[1].c_str());
+
+                    float pos_x = atof(frame[2].c_str());
+                    float pos_y = atof(frame[3].c_str());
+                    float rotation = atof(frame[4].c_str());
+                    float or_x = atof(frame[5].c_str());
+                    float or_y = atof(frame[6].c_str());
+                    float scale_x = atof(frame[7].c_str());
+                    float scale_y = atof(frame[8].c_str());
+
+                    if (objectID == 0)
+                        (*objects)[objectID].SetCustomFrame(time, pos_x, pos_y, or_x, or_y, rotation, scale_x, scale_y);
+                    else
+                        (*objects)[objectID].SetCustomFrame(time, pos_x, pos_y, 0, 0, rotation, scale_x, scale_y);
+
+                    //(*objects)[objectID*2+1].SetCustomFrame(time,pos_x,pos_y,1,1,rotation,scale_x,scale_y);
+                }
+
                 if (!cache_loaded)
                 {
                     if (line.find("A:") != std::string::npos)
@@ -185,7 +226,7 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
 
                         //cout << "[AnimatedObject] result: " << !thisConfig->thisCore->currentController.isCached[entityID] << endl;
 
-                        if (!thisConfig->thisCore->currentController.isCached[entityID])
+                        if (!thisConfig->thisCore->isCached[entityID])
                         {
                             Animation tmp;
                             sf::Texture spr;
@@ -290,47 +331,6 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
 
                             //cout << "[AnimatedObject] PixelSwap animation loaded: " << animation_swaps.size() << " swaps (animation no. " << all_swaps_img.get()->size() << ")" << endl;
                         }
-                    }
-
-                    if (line.find("OI:") != std::string::npos)
-                    {
-                        //auto start = std::chrono::high_resolution_clock::now();
-
-                        string tex_file = line.substr(line.find_first_of(":") + 1);
-
-                        int parent = 0; ///unused yet
-
-                        objects.get()->emplace_back();
-                        (*objects)[objects.get()->size() - 1].object_name = tex_file;
-
-                        //auto elapsed = std::chrono::high_resolution_clock::now() - start;
-                        //cout << "Pushed to vector, took " << std::chrono::duration_cast<std::chrono::nanoseconds>(elapsed).count() << endl;
-
-                        //cout << "Added new object from " << tex_file << endl;
-                    }
-
-                    if ((line.find("F:") != std::string::npos) && (line[0] == 'F'))
-                    {
-                        string framedata = line.substr(line.find_first_of(":") + 1);
-                        vector<string> frame = Func::Split(framedata, ',');
-
-                        float time = atof(frame[0].c_str());
-                        int objectID = atoi(frame[1].c_str());
-
-                        float pos_x = atof(frame[2].c_str());
-                        float pos_y = atof(frame[3].c_str());
-                        float rotation = atof(frame[4].c_str());
-                        float or_x = atof(frame[5].c_str());
-                        float or_y = atof(frame[6].c_str());
-                        float scale_x = atof(frame[7].c_str());
-                        float scale_y = atof(frame[8].c_str());
-
-                        if (objectID == 0)
-                            (*objects)[objectID].SetCustomFrame(time, pos_x, pos_y, or_x, or_y, rotation, scale_x, scale_y);
-                        else
-                            (*objects)[objectID].SetCustomFrame(time, pos_x, pos_y, 0, 0, rotation, scale_x, scale_y);
-
-                        //(*objects)[objectID*2+1].SetCustomFrame(time,pos_x,pos_y,1,1,rotation,scale_x,scale_y);
                     }
                 } else
                 {
@@ -1099,7 +1099,8 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
         curFramePX = curFrame - 1;
     }
 
-    //cout << "file " << anim_path << " animation " << getAnimationSegment() << " frame " << curFrame << "/" << floor(getAnimationLength(getAnimationSegment()) * animation_framerate)-1 << " " << getAnimationLength(getAnimationSegment()) << " " << animation_framerate << " bounds: " << animation_bounds[index][curFrame].left << " " << animation_bounds[index][curFrame].top << " " << animation_bounds[index][curFrame].width << " " << animation_bounds[index][curFrame].height << endl;
+    //if (anim_path == "resources/units/entity/kirajin.p4a")
+    //cout << "file " << anim_path << " x: " << getGlobalPosition().x << " animation " << getAnimationSegment() << " frame " << curFrame << "/" << floor(getAnimationLength(getAnimationSegment()) * animation_framerate)-1 << " " << getAnimationLength(getAnimationSegment()) << " " << animation_framerate << " bounds: " << animation_bounds[index][curFrame].left << " " << animation_bounds[index][curFrame].top << " " << animation_bounds[index][curFrame].width << " " << animation_bounds[index][curFrame].height << endl;
 
     if (!offbounds)
     {
