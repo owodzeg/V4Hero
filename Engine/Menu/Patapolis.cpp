@@ -28,17 +28,27 @@ void PatapolisMenu::updateStoryPoint()
 
 void PatapolisMenu::addL6(std::string variant, float x, float y, int q, int r)
 {
-    PSprite tmp;
-    tmp.loadFromFile("resources/graphics/bg/patapolis/6" + variant + ".png", q, r);
-    tmp.setPosition(x, y);
+    //PSprite tmp;
+    //tmp.loadFromFile("resources/graphics/bg/patapolis/6" + variant + ".png", q, r);
+    //tmp.setPosition(x, y);
+
+    L tmp;
+    tmp.x = x;
+    tmp.y = y;
+    tmp.type = variant;
     layer_6.push_back(tmp);
 }
 
 void PatapolisMenu::addL2(std::string variant, float x, float y, int q, int r)
 {
-    PSprite tmp;
-    tmp.loadFromFile("resources/graphics/bg/patapolis/2" + variant + ".png", q, r);
-    tmp.setPosition(x, y);
+    //PSprite tmp;
+    //tmp.loadFromFile("resources/graphics/bg/patapolis/2" + variant + ".png", q, r);
+    //tmp.setPosition(x, y);
+
+    L tmp;
+    tmp.x = x;
+    tmp.y = y;
+    tmp.type = variant;
     layer_2.push_back(tmp);
 }
 
@@ -286,6 +296,20 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
     floor_height = 54;
     r_ground.setSize(sf::Vector2f(11500 * resRatioX, floor_height * resRatioY));
     r_ground.setFillColor(sf::Color::Black);
+
+    std::vector<string> l2_str = {"a", "b", "c", "c_winter1", "c_winter2", "d", "e", "f"};
+    std::vector<string> l6_str = {"a", "b", "c", "d", "e"};
+
+    for (int i = 0; i < l2_str.size(); i++)
+    {
+        ps_layer_2[l2_str[i]].loadFromFile("resources/graphics/bg/patapolis/2" + l2_str[i] + ".png", quality, 1);
+    }
+
+    for (int i = 0; i < l6_str.size(); i++)
+    {
+        ps_layer_6[l6_str[i]].loadFromFile("resources/graphics/bg/patapolis/6" + l6_str[i] + ".png", quality, 1);
+    }
+    
 
     addL6("a", 0, 722 - floor_height, quality, 1);
     addL6("a", 2700, 722 - floor_height, quality, 1);
@@ -891,10 +915,15 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
         for (int i = 0; i < layer_6.size(); i++)
         {
             //cout << "layer_6[" << i << "]: " << layer_6[i].getGlobalBounds().width/2 << " " << layer_6[i].getGlobalBounds().height << " " << layer_6[i].getPosition().x << " " << layer_6[i].getPosition().y << endl;
-            layer_6[i].lx = layer_6[i].baseX - (camPos / 1.1428571428571428571428571428571);
+            //layer_6[i].lx = layer_6[i].baseX - (camPos / 1.1428571428571428571428571428571);
 
-            layer_6[i].setOrigin(layer_6[i].getLocalBounds().width / 2, layer_6[i].getLocalBounds().height);
-            layer_6[i].draw(window);
+            //layer_6[i].setOrigin(layer_6[i].getLocalBounds().width / 2, layer_6[i].getLocalBounds().height);
+            //layer_6[i].draw(window);
+
+            ps_layer_6[layer_6[i].type].setPosition(layer_6[i].x, layer_6[i].y);
+            ps_layer_6[layer_6[i].type].lx = layer_6[i].x - (camPos / 1.1428571428571428571428571428571);
+            ps_layer_6[layer_6[i].type].setOrigin(ps_layer_6[layer_6[i].type].getLocalBounds().width / 2, ps_layer_6[layer_6[i].type].getLocalBounds().height);
+            ps_layer_6[layer_6[i].type].draw(window);
         }
 
         L5.lx = L5.baseX - (camPos / 1.1111111111111111111);
@@ -936,10 +965,16 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
         for (int i = 0; i < layer_2.size(); i++)
         {
             //cout << "layer_6[" << i << "]: " << layer_6[i].getGlobalBounds().width/2 << " " << layer_6[i].getGlobalBounds().height << " " << layer_6[i].getPosition().x << " " << layer_6[i].getPosition().y << endl;
-            layer_2[i].lx = layer_2[i].baseX - camPos;
+            
+            //layer_2[i].lx = layer_2[i].baseX - camPos;
 
-            layer_2[i].setOrigin(layer_2[i].getLocalBounds().width / 2, layer_2[i].getLocalBounds().height);
-            layer_2[i].draw(window);
+            //layer_2[i].setOrigin(layer_2[i].getLocalBounds().width / 2, layer_2[i].getLocalBounds().height);
+            //layer_2[i].draw(window);
+
+            ps_layer_2[layer_2[i].type].setPosition(layer_2[i].x, layer_2[i].y);
+            ps_layer_2[layer_2[i].type].lx = layer_2[i].x - camPos;
+            ps_layer_2[layer_2[i].type].setOrigin(ps_layer_2[layer_2[i].type].getLocalBounds().width / 2, ps_layer_2[layer_2[i].type].getLocalBounds().height);
+            ps_layer_2[layer_2[i].type].draw(window);
         }
 
         float resRatioX = window.getSize().x / float(1280);

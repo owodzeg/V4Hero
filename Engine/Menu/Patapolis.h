@@ -32,9 +32,15 @@ class PatapolisMenu : public Menu
 		sf::RectangleShape r_ground;
 		float floor_height = 0;
 
+        struct L {
+            float x;
+            float y;
+            std::string type;
+        };
+
 		///Patapolis components
-		std::vector<PSprite> layer_6;
-		std::vector<PSprite> layer_2;
+        std::map<std::string, PSprite> ps_layer_6, ps_layer_2; ///we split PSprites and the position vectors; we will use only one PSprite to draw all of the elements of the background
+        std::vector<L> layer_2, layer_6; ///here we store locations and type only
 
 		PSprite L5;
 		PSprite L4;
