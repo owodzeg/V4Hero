@@ -150,7 +150,9 @@ void MissionController::addDmgCounter(int type, int damage, float baseX, float b
         tmp.alpha.push_back(0);
     }
 
+    cout << "Adding new dmgCounter to the vector... ";
     dmgCounters.push_back(tmp);
+    cout << "done" << endl;
 }
 
 void MissionController::addItemsCounter(int id, float baseX, float baseY)
@@ -1755,7 +1757,7 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow& window, float fps, In
         {
             if (inputCtrl.isKeyPressed(InputController::Keys::SELECT))
             {
-                std::vector<sf::String> a = {"Show hitboxes", "Hide hitboxes", "Heal units", "Kill all player units", "Kill Hatapon"};
+                std::vector<sf::String> a = {"Show hitboxes", "Hide hitboxes", "Heal units", "Kill all player units", "Kill Hatapon", "Enable verbose logging"};
 
                 PataDialogBox db;
                 db.Create(f_font, "Debug menu", a, thisConfig->GetInt("textureQuality"));
@@ -2583,26 +2585,39 @@ void MissionController::DoVectorCleanup(vector<int> units_rm, vector<int> dmg_rm
     //cout << "MissionController::DoVectorCleanup" << endl;
     //cout << units_rm.size() << " " << dmg_rm.size() << " " << tlo_rm.size() << " " << pr_rm.size() << endl;
 
+    if (units_rm.size() > 0)
+        cout << "[MissionController::DoVectorCleanup] There are " << units_rm.size() << " units to clean up" << endl;
+    if (dmg_rm.size() > 0)
+        cout << "[MissionController::DoVectorCleanup] There are " << dmg_rm.size() << " dmgCounters to clean up" << endl;
+    if (tlo_rm.size() > 0)
+        cout << "[MissionController::DoVectorCleanup] There are " << tlo_rm.size() << " tangibleLevelObjects to clean up" << endl;
+    if (pr_rm.size() > 0)
+        cout << "[MissionController::DoVectorCleanup] There are " << pr_rm.size() << " levelProjectiles to clean up" << endl;
+
     for (int i = 0; i < units_rm.size(); i++)
     {
+        cout << "Erasing unit " << units_rm[i] << endl;
         units.erase(units.begin() + (units_rm[i] - i));
         cout << "Erased unit " << units_rm[i] << endl;
     }
 
     for (int i = 0; i < dmg_rm.size(); i++)
     {
+        cout << "Erasing dmgCounter " << dmg_rm[i] << endl;
         dmgCounters.erase(dmgCounters.begin() + (dmg_rm[i] - i));
         cout << "Erased dmgCounter " << dmg_rm[i] << endl;
     }
 
     for (int i = 0; i < tlo_rm.size(); i++)
     {
+        cout << "Erasing tangibleLevelObject " << tlo_rm[i] << endl;
         tangibleLevelObjects.erase(tangibleLevelObjects.begin() + (tlo_rm[i] - i));
         cout << "Erased tangibleLevelObject " << tlo_rm[i] << endl;
     }
 
     for (int i = 0; i < pr_rm.size(); i++)
     {
+        cout << "Erasing levelProjectile " << pr_rm[i] << endl;
         levelProjectiles.erase(levelProjectiles.begin() + (pr_rm[i] - i));
         cout << "Erased levelProjectile " << pr_rm[i] << endl;
     }
@@ -3436,7 +3451,8 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
 
 void MissionController::Update(sf::RenderWindow& window, float cfps, InputController& inputCtrl)
 {
-    //cout << "[MissionController] Update START FRAME" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] Update START FRAME" << endl;
 
     ///remove stopped sounds
     for (int i = projectile_sounds.size() - 1; i > 0; i--)
@@ -3450,7 +3466,8 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
         }
     }
 
-    //cout << "[MissionController] Sort" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] Sort" << endl;
 
     ///Sort tangibleLevelObjects to prioritize rendering layers
     std::sort(tangibleLevelObjects.begin(), tangibleLevelObjects.end(),
@@ -3478,22 +3495,25 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
     /** Apply the keyMap from parent class **/
 
     /** Execute camera and background **/
-
-    //cout << "[MissionController] Camera & BG" << endl;
+    
+    if (verboseLogs)
+        cout << "[MissionController] Camera & BG" << endl;
     camera.missionEnd = missionEnd; ///disable camera controls when needed
     camera.Work(window, fps, cur_inputCtrl);
     test_bg.setCamera(camera);
     test_bg.Draw(window);
 
     /** Execute Keyboard events and Movement **/
-
-    //cout << "[MissionController] Input & Movement" << endl;
+    
+    if (verboseLogs)
+        cout << "[MissionController] Input & Movement" << endl;
     DoKeyboardEvents(window, fps, cur_inputCtrl);
     DoMovement(window, fps, cur_inputCtrl);
 
     vector<int> k_e;
 
-    //cout << "[MissionController] Clones" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] Clones" << endl;
     /** Spawn cloneable entities **/
     for (int i = 0; i < kirajins.size(); i++)
     {
@@ -3582,21 +3602,26 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
     }
 
     /** Draw all Entities **/
-    //cout << "[MissionController] Entities" << endl;
+
+    if (verboseLogs)
+        cout << "[MissionController] Entities" << endl;
 
     vector<int> tlo_rm = DrawEntities(window);
 
     /** Draw all Units **/
 
-    //cout << "[MissionController] Units" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] Units" << endl;
     vector<int> units_rm = DrawUnits(window);
 
     /** Draw projectiles **/
 
-    //cout << "[MissionController] Projectiles" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] Projectiles" << endl;
     vector<int> pr_rm = DrawProjectiles(window);
 
-    //cout << "[MissionController] Clouds" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] Clouds" << endl;
     /** Draw message clouds **/
     for (int e = 0; e < tangibleLevelObjects.size(); e++)
     {
@@ -3608,12 +3633,16 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
 
     if (showHitboxes)
     {
-        //cout << "[MissionController] Hitboxes" << endl;
+
+        if (verboseLogs)
+        cout << "[MissionController] Hitboxes" << endl;
         DrawHitboxes(window);
     }
 
     /** Draw damage counters **/
-    //cout << "[MissionController] Damage" << endl;
+
+    if (verboseLogs)
+    cout << "[MissionController] Damage" << endl;
     vector<int> dmg_rm = DrawDamageCounters(window);
 
     /**  Draw static UI elements **/
@@ -3718,7 +3747,8 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
     r_floor.setPosition(0, 610 * resRatioY);
     window.draw(r_floor);
 
-    //cout << "[MissionController] UI" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] UI" << endl;
     drawCommandList(window);
     DrawUnitThumbs(window);
     DrawPickedItems(window);
@@ -3738,10 +3768,13 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
     }
 
     /** Execute all mission end related things **/
-    //cout << "[MissionController] Mission End" << endl;
+
+    if (verboseLogs)
+    cout << "[MissionController] Mission End" << endl;
     DoMissionEnd(window, fps);
 
-    //cout << "[MissionController] Dialogboxes" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] Dialogboxes" << endl;
     if (dialog_boxes.size() > 0)
     {
         if (o_inputCtrl.isKeyPressed(InputController::Keys::CROSS))
@@ -3820,9 +3853,20 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
                         for (int u = 0; u < units.size(); u++)
                         {
                             if (units[u].get()->getUnitID() == 0)
-                            units[u].get()->current_hp = 0;
+                                units[u].get()->current_hp = 0;
                         }
 
+                        dialog_boxes[dialog_boxes.size() - 1].Close();
+                    }
+
+                    break;
+                }
+
+                case 5: {
+                    if (dialog_boxes[dialog_boxes.size() - 1].id == 999)
+                    {
+                        cout << "Enable verbose logging" << endl;
+                        verboseLogs = !verboseLogs;
                         dialog_boxes[dialog_boxes.size() - 1].Close();
                     }
 
@@ -3853,10 +3897,12 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
 
     /** Remove vector objects that are no longer in use **/
 
-    //cout << "[MissionController] Cleanup" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] Cleanup" << endl;
     DoVectorCleanup(units_rm, dmg_rm, tlo_rm, pr_rm);
 
-    //cout << "[MissionController] FRAME END" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] FRAME END" << endl;
 }
 void MissionController::FinishLastCutscene()
 {

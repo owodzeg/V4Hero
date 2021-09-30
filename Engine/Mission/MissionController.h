@@ -229,6 +229,8 @@ public:
 
     std::map<std::string, std::map<int, DroppableCache>> droppable_cache; ///this map stores images for droppable items. droppable_cache[item_group][item_id] = sf::Image;
 
+    bool verboseLogs = false;
+
     /** Resolve enums **/
     int layerStr2Enum(string layer);
 
