@@ -83,12 +83,11 @@ void Object::LoadFromMemory(std::string mem, int xpos, int ypos)
     //cout << "Object loaded successfully" << endl;
 }
 
-void Object::swapTexture(sf::Image img)
+void Object::swapTexture(sf::Image& img)
 {
     //cout << "[AnimatedObject::swapTexture A] swapping texture" << endl;
     //cout << "[Object] Object::swapTexture(): " << texture_path << endl;
 
-    sf::Clock c;
     s_obj.t.loadFromImage(img);
     //cout << c.getElapsedTime().asMicroseconds() << "us ";
     s_obj.t.setSmooth(true);
