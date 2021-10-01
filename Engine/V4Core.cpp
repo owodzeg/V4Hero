@@ -100,7 +100,7 @@ V4Core::V4Core()
     t_debug.setFont(f_font);
     t_debug.setCharacterSize(24);
     t_debug.setFillColor(sf::Color::White);
-    t_debug.setString(config.strRepo.GetString(L"demo_string")); //+strDay+" "+months[month]+" "+to_string(year)+".");
+    t_debug.setString(config.strRepo.GetString("demo_string")); //+strDay+" "+months[month]+" "+to_string(year)+".");
     t_debug.setOrigin(t_debug.getGlobalBounds().width / 2, t_debug.getGlobalBounds().height / 2);
 
     t_version.setFont(f_font);
@@ -243,13 +243,13 @@ void V4Core::loadingThread()
     string title_key = "tip" + to_string(tipText) + "_title";
     string desc_key = "tip" + to_string(tipText) + "_desc";
 
-    wstring wtitle_key(title_key.begin(), title_key.end());
-    wstring wdesc_key(desc_key.begin(), desc_key.end());
+    string wtitle_key(title_key.begin(), title_key.end());
+    string wdesc_key(desc_key.begin(), desc_key.end());
 
     PText t_tipTitle;
-    t_tipTitle.createText(f_font, 48, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(wtitle_key)), config.GetInt("textureQuality"), 1);
+    t_tipTitle.createText(f_font, 48, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(config.strRepo.GetString(wtitle_key)), config.GetInt("textureQuality"), 1);
 
-    sf::String str_tipText = Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(wdesc_key));
+    sf::String str_tipText = Func::ConvertToUtf8String(config.strRepo.GetString(wdesc_key));
     //for(int t=0; t<str_tipText.size(); t++)
     //{
     //    if(str_tipText[t] == '\\')
@@ -260,10 +260,10 @@ void V4Core::loadingThread()
     t_tipText.createText(f_font, 32, sf::Color(255, 255, 255, 255), str_tipText, config.GetInt("textureQuality"), 1);
 
     PText t_pressAnyKey;
-    t_pressAnyKey.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"tips_anykey")), config.GetInt("textureQuality"), 1);
+    t_pressAnyKey.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(config.strRepo.GetString("tips_anykey")), config.GetInt("textureQuality"), 1);
 
     PText t_nowLoading;
-    t_nowLoading.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"tips_loading")), config.GetInt("textureQuality"), 1);
+    t_nowLoading.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(config.strRepo.GetString("tips_loading")), config.GetInt("textureQuality"), 1);
 
     float maxFps = config.GetInt("framerateLimit");
 
@@ -335,6 +335,20 @@ void V4Core::showTip()
     //loadingThreadInstance = sf::Thread(LoadingThread);
     //loadingThreadInstance.launch();
     continue_loading = true;
+}
+
+void V4Core::cacheEntity(int entityID, shared_ptr<vector<vector<sf::Image>>> swaps, shared_ptr<vector<AnimatedObject::Animation>> spritesheet, shared_ptr<vector<Object>> objects)
+{
+    cout << "[V4Core] cacheEntity id " << entityID << endl;
+
+    isCached[entityID] = true;
+
+    animation_cache[entityID] = make_shared<AnimationCache>();
+    animation_cache[entityID].get()->swaps = swaps;
+    animation_cache[entityID].get()->spritesheet = spritesheet;
+    //animation_cache[entityID].get()->objects = objects;
+
+    cout << "[V4Core] cache created" << endl;
 }
 
 void V4Core::init()

@@ -19,6 +19,9 @@
 
 #include "Input/InputController.h"
 
+#include "Mission/Units/AnimatedObject.h"
+#include "Mission/Units/Object.h"
+
 class V4Core
 {
 private:
@@ -41,6 +44,20 @@ public:
     std::mt19937::result_type seed;
     std::mt19937 gen;
 
+    /// Okay so this right here will cache the animations
+    /// So we can make more efficient loading times and less work
+    /// It's purpose is to store everything that is drawable, so Objects and Spritesheets
+    /// NOTE FROM 31.08.2021 /owocek
+    /// I've changed the location of AnimationCache to here so places like Barracks can also use it without having to use an inactive MissionController for that
+    struct AnimationCache {
+        shared_ptr<vector<vector<sf::Image>>> swaps;
+        shared_ptr<vector<AnimatedObject::Animation>> spritesheet;
+        shared_ptr<vector<Object>> objects;
+    };
+
+    std::map<int, std::shared_ptr<AnimationCache>> animation_cache;
+    std::map<int, bool> isCached; ///Check if entities have been cached already, so we can make automatic caching inside spawnEntity function
+
     NewGameMenu newGameMenu;
     MainMenu mainMenu;
     Config config;
@@ -48,6 +65,7 @@ public:
     SaveReader saveReader;
     MissionController currentController;
     V4Core();
+    void cacheEntity(int entityID, shared_ptr<vector<vector<sf::Image>>> swaps, shared_ptr<vector<AnimatedObject::Animation>> spritesheet, shared_ptr<vector<Object>> objects);
     void saveToDebugLog(string data);
     void changeRichPresence(string title, string bg_image, string sm_image);
     std::vector<Menu*> menus;

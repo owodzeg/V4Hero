@@ -9,20 +9,18 @@
 class StringRepository
 {
 public:
-    std::vector<std::string> langFiles;
+    std::vector<int> langIDs;
     std::vector<std::string> langNames;
     std::vector<std::string> langFonts;
-    std::map<std::string, std::wstring> stringMap;
     int configDebugID = 0;
     StringRepository();
     void LoadLanguageFiles(int langNum);
-    void LoadLanguageFile(std::wifstream* conf);
-    ///I wanted to overload these two in a single function, but somehow it just doesnt want to work...
-    ///Will change it into one someday
-    std::wstring GetUnicodeString(std::wstring key);
-    std::wstring GetUnicodeString(std::string key);
-    std::string GetString(std::wstring key);
     std::string GetString(std::string key);
+private:
+    std::map<std::string, std::string> stringMap;
+    std::vector<std::string> langFiles;
+
+    void LoadLanguageFile(std::ifstream* conf);
 };
 
 #endif // STRINGREPOSITORY_H

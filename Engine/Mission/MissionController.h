@@ -98,7 +98,7 @@ public:
     bool cutscenesLeft = false;
     bool showTimer = false;
     int currentCutsceneId;
-    std::vector<std::wstring> cutscene_text_identifiers;
+    std::vector<std::string> cutscene_text_identifiers;
     std::vector<int> cutscene_lengths;
     std::vector<bool> cutscene_blackscreens;
     /// this is a list of things in the level that
@@ -222,25 +222,14 @@ public:
     vector<PText> command_descs;
     vector<PText> command_inputs;
 
-
-    /// Okay so this right here will cache the animations
-    /// So we can make more efficient loading times and less work
-    /// It's purpose is to store everything that is drawable, so Objects and Spritesheets
-    struct AnimationCache {
-        shared_ptr<vector<vector<sf::Image>>> swaps;
-        shared_ptr<vector<AnimatedObject::Animation>> spritesheet;
-        shared_ptr<vector<Object>> objects;
-    };
-
-    std::map<int, std::shared_ptr<AnimationCache>> animation_cache;
-    std::map<int, bool> isCached; ///Check if entities have been cached already, so we can make automatic caching inside spawnEntity function
-
     struct DroppableCache {
         sf::Image img;
         bool cached = false;
     };
 
     std::map<std::string, std::map<int, DroppableCache>> droppable_cache; ///this map stores images for droppable items. droppable_cache[item_group][item_id] = sf::Image;
+
+    bool verboseLogs = false;
 
     /** Resolve enums **/
     int layerStr2Enum(string layer);
@@ -252,7 +241,7 @@ public:
     float pataponMinProjection(float axisAngle, int id);
 
     /** Cutscenes **/
-    void StartCutscene(const std::wstring& text, bool isBlackScreen, int TimeToShow);
+    void StartCutscene(const std::string& text, bool isBlackScreen, int TimeToShow);
     void FinishLastCutscene();
     bool isMoreCutscenes();
 
@@ -268,7 +257,6 @@ public:
     void addDmgCounter(int type, int damage, float baseX, float baseY, int q, int r);
     void addItemsCounter(int id, float baseX, float baseY);
     void parseEntityLoot(std::mt19937& gen, std::uniform_real_distribution<double>& roll, nlohmann::json loot, std::vector<Entity::Loot>& to_drop);
-    void cacheEntity(int entityID, shared_ptr<vector<vector<sf::Image>>> swaps, shared_ptr<vector<AnimatedObject::Animation>> spritesheet, shared_ptr<vector<Object>> objects);
     void spawnEntity(int id, bool collidable, bool attackable, int xpos, int xrange, bool cloneable, float clone_delay, float spawnrate, float stat_mult, int mindmg, int maxdmg, int hp, float ypos, float baseY, sf::Color color = sf::Color::White, int layer = 9999, int parent = -1, nlohmann::json loot = {}, nlohmann::json additional_data = {});
     void addPickedItem(std::string spritesheet, int spritesheet_id, std::string picked_item);
     void addUnitThumb(int unit_id);

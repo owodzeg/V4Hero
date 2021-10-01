@@ -354,10 +354,10 @@ Item* ItemRegistry::getItemByName(std::string name, bool lang_specific)
 {
     if (lang_specific) // By e.g. Wooden Spear (won't return if comparing between languages)
     {
-        string converted_name = Func::ConvertToUtf8String(saveReader->thisConfig->strRepo.GetUnicodeString(name));
+        string converted_name = Func::ConvertToUtf8String(saveReader->thisConfig->strRepo.GetString(name));
         for (int i = 0; i < items.size(); i++)
         {
-            if (Func::ConvertToUtf8String(saveReader->thisConfig->strRepo.GetUnicodeString(items[i]->item_name)) == converted_name)
+            if (Func::ConvertToUtf8String(saveReader->thisConfig->strRepo.GetString(items[i]->item_name)) == converted_name)
             {
                 return items[i];
             }

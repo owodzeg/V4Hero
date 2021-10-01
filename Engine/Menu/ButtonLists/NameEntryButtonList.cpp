@@ -18,7 +18,7 @@ NameEntryButtonList::NameEntryButtonList()
 void NameEntryButtonList::Initialise(sf::Font* font, Config& newConfig, MissionController* controller, NewGameNameEntryMenu* parMenu)
 {
     ButtonList::Initialise(font, newConfig, controller, parMenu);
-    MenuButton* level1Button = new MenuButton(L"menu_button_confirm", font, 42, 450, this, 0);
+    MenuButton* level1Button = new MenuButton("menu_button_confirm", font, 42, 450, this, 0);
     buttons.push_back(*level1Button);
     buttons[0].SetSelected(false);
     savMenu = parMenu;

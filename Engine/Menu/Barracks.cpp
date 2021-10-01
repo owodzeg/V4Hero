@@ -49,10 +49,17 @@ void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMe
             case 0: {
                 unique_ptr<Yaripon> wip_pon = make_unique<Yaripon>();
                 wip_pon.get()->setUnitID(current_pon->pon_class);
+                wip_pon.get()->entityID = -1001; ///lets say entity IDs for units will be -1000 and below, so -1001 is yaripon, -1002 will be tatepon etc
 
                 cout << "Loading Pon..." << endl;
 
                 wip_pon.get()->LoadConfig(thisConfig);
+
+                if (!v4Core->isCached[wip_pon.get()->entityID])
+                {
+                    v4Core->cacheEntity(wip_pon.get()->entityID, wip_pon.get()->all_swaps_img, wip_pon.get()->animation_spritesheet, wip_pon.get()->objects);
+                }
+
                 wip_pon.get()->setAnimationSegment("idle_armed");
 
                 cout << "Assigning equipment to Pon (" << parent->saveReader.ponReg.GetPonByID(i)->slots.size() << " slots)" << endl;
@@ -159,30 +166,30 @@ void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMe
 
     Pon* cur_pon = parentMenu->v4Core->saveReader.ponReg.GetPonByID(current_selected_pon);
     cout << "[DEBUG]" << parentMenu->v4Core->saveReader.ponReg.GetPonByID(current_selected_pon);
-    unit_status.createText(f_font, 22, sf::Color(239, 88, 98, 255), Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_unit_status")), quality, 1);
-    class_name.createText(f_font, 34, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_yaripon")), quality, 1);
+    unit_status.createText(f_font, 22, sf::Color(239, 88, 98, 255), Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_unit_status")), quality, 1);
+    class_name.createText(f_font, 34, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_yaripon")), quality, 1);
 
     /// Stat text
-    unit_stat_level_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_stat_level")), quality, 1);
+    unit_stat_level_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_level")), quality, 1);
     unit_stat_level_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
-    unit_stat_exp_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_stat_exp")), quality, 1);
+    unit_stat_exp_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_exp")), quality, 1);
     unit_stat_exp_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
-    unit_stat_hp_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_stat_hp")), quality, 1);
+    unit_stat_hp_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_hp")), quality, 1);
     unit_stat_hp_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
-    unit_stat_dmg_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_stat_damage")), quality, 1);
+    unit_stat_dmg_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_damage")), quality, 1);
     unit_stat_dmg_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
-    unit_stat_atkspd_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_stat_attackspeed")), quality, 1);
+    unit_stat_atkspd_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_attackspeed")), quality, 1);
     unit_stat_atkspd_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
 
-    unit_stat_critc_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_stat_critchance")), quality, 1);
+    unit_stat_critc_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_critchance")), quality, 1);
     unit_stat_critc_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
-    unit_stat_kbc_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_stat_knockbackchance")), quality, 1);
+    unit_stat_kbc_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_knockbackchance")), quality, 1);
     unit_stat_kbc_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
-    unit_stat_stgc_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_stat_staggerchance")), quality, 1);
+    unit_stat_stgc_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_staggerchance")), quality, 1);
     unit_stat_stgc_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
-    unit_stat_firec_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_stat_burnchance")), quality, 1);
+    unit_stat_firec_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_burnchance")), quality, 1);
     unit_stat_firec_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
-    unit_stat_icec_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_stat_freezechance")), quality, 1);
+    unit_stat_icec_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_freezechance")), quality, 1);
     unit_stat_icec_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
 
     int equip_height = 50;
@@ -205,12 +212,12 @@ void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMe
 
     /// unit + item name text
 
-    t_unit_rarepon_name.createText(f_font, 24, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"wooden_spear")), quality, 1);
+    t_unit_rarepon_name.createText(f_font, 24, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("wooden_spear")), quality, 1);
     t_unit_rarepon_name.setOrigin(0, t_unit_rarepon_name.getLocalBounds().height / 2);
 
     for (int i = 0; i < t_eq_names.size(); i++)
     {
-        t_eq_names[i].createText(f_font, 24, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"wooden_spear")), quality, 1); // Why always wooden spear? I assumed unimplemented and is gonna change?
+        t_eq_names[i].createText(f_font, 24, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("wooden_spear")), quality, 1); // Why always wooden spear? I assumed unimplemented and is gonna change?
         t_eq_names[i].setOrigin(0, t_eq_names[i].getLocalBounds().height / 2);
     }
 
@@ -516,15 +523,15 @@ void Barracks::refreshStats()
     switch (currentPon->pon_class)
     {
         case 1: {
-            class_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_yaripon")));
+            class_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_yaripon")));
             break;
         }
         case 2: {
-            class_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_tatepon")));
+            class_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_tatepon")));
             break;
         }
         case 3: {
-            class_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_yumipon")));
+            class_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_yumipon")));
             break;
         }
         case 4: {
@@ -532,14 +539,14 @@ void Barracks::refreshStats()
             break;
         }
     }
-    t_unit_rarepon_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"rarepon_normal")) + " " + Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_lvl")) + " " + std::to_string(currentPon->pon_level));
+    t_unit_rarepon_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("rarepon_normal")) + " " + Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_lvl")) + " " + std::to_string(currentPon->pon_level));
 
     for (int i = 0; i < currentPon->slots.size(); i++)
     {
         if (currentPon->slots[i] >= 0)
         {
             InventoryData::InventoryItem eq = parentMenu->v4Core->saveReader.invData.items[currentPon->slots[i]];
-            t_eq_names[i].setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(eq.item->item_name)));
+            t_eq_names[i].setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(eq.item->item_name)));
             t_eq_names[i].setOrigin(0, 0);
 
             cout << "currentPon->slots[" << i << "]: " << currentPon->slots[i] << " " << eq.item->item_name << endl;
@@ -570,12 +577,12 @@ void Barracks::refreshStats()
     {
         Item* starting_item = v4core->saveReader.invdata.ItemsByType(activeCategory)[inventoryGridXPos+inventoryGridYPos*numItemColumns].item;
 
-        t_itemtitle.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(starting_item->item_name)));
+        t_itemtitle.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(starting_item->item_name)));
         t_itemtitle.setOrigin(t_itemtitle.getLocalBounds().width/2,t_itemtitle.getLocalBounds().height/2);
     }
     else
     {
-        t_itemtitle.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"item_none")));
+        t_itemtitle.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("item_none")));
         t_itemtitle.setOrigin(t_itemtitle.getLocalBounds().width/2,t_itemtitle.getLocalBounds().height/2);
     }*/
 }
@@ -588,8 +595,8 @@ void Barracks::updatePreviewText()
     {
         if (invbox_id < inventory_boxes.size())
         {
-            item_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(inventory_boxes[invbox_id].data->item_name)));
-            item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(thisConfig->strRepo.GetUnicodeString(inventory_boxes[invbox_id].data->item_description), 340, f_font, 22)));
+            item_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(inventory_boxes[invbox_id].data->item_name)));
+            item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(thisConfig->strRepo.GetString(inventory_boxes[invbox_id].data->item_description), 340, f_font, 22)));
         } else
         {
             item_title.setString("");
@@ -643,7 +650,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
 
         class_icon.draw(window);
 
-        unit_status.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_unit_status")) + " " + to_string(current_selected_pon + 1) + "/3");
+        unit_status.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_unit_status")) + " " + to_string(current_selected_pon + 1) + "/3");
         unit_status.setPosition(1048, 38);
 
         Pon* currentPon = new Pon;
@@ -651,11 +658,11 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
         switch (currentPon->pon_class)
         {
             case 1: {
-                class_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_yaripon")));
+                class_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_yaripon")));
                 break;
             }
             case 2: {
-                class_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_tatepon")));
+                class_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_tatepon")));
                 break;
             }
         }
@@ -1204,10 +1211,10 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
             {
                 if (obelisk)
                 {
-                    std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")), Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
+                    std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_yes")), Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_no"))};
 
                     PataDialogBox db;
-                    db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"barracks_depart")), a, thisConfig->GetInt("textureQuality"));
+                    db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_depart")), a, thisConfig->GetInt("textureQuality"));
                     db.id = 0;
                     dialog_boxes.push_back(db);
                 }
@@ -1262,12 +1269,12 @@ void Barracks::updateInputControls()
     if (!menu_mode)
     {
         if (!obelisk)
-            ctrlTips.create(82, f_font, 20, sf::String(L"Left/Right: Select unit      Up/Down: Select equipment      X: Change equipment      O: Return to Patapolis"), quality_setting);
+            ctrlTips.create(82, f_font, 20, sf::String("Left/Right: Select unit      Up/Down: Select equipment      X: Change equipment      O: Return to Patapolis"), quality_setting);
         else
-            ctrlTips.create(82, f_font, 20, sf::String(L"Left/Right: Select unit      Up/Down: Select equipment      X: Change equipment      O: Return to World map      Start: Start mission"), quality_setting);
+            ctrlTips.create(82, f_font, 20, sf::String("Left/Right: Select unit      Up/Down: Select equipment      X: Change equipment      O: Return to World map      Start: Start mission"), quality_setting);
     } else
     {
-        ctrlTips.create(82, f_font, 20, sf::String(L"Left/Right/Up/Down: Navigate item      X: Equip item      O: Cancel"), quality_setting);
+        ctrlTips.create(82, f_font, 20, sf::String("Left/Right/Up/Down: Navigate item      X: Equip item      O: Cancel"), quality_setting);
     }
 }
 

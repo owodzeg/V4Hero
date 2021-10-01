@@ -1,14 +1,15 @@
 #include "ControlTips.h"
+#include "Func.h"
 
 ControlTips::ControlTips()
 {
 }
 
-void ControlTips::create(float ysz, sf::Font font, int characterSize, std::wstring displayText, int qualitySetting, sf::Color color)
+void ControlTips::create(float ysz, sf::Font font, int characterSize, std::string displayText, int qualitySetting, sf::Color color)
 {
     ySize = ysz;
 
-    text.createText(font, characterSize, color, displayText, qualitySetting, 1);
+    text.createText(font, characterSize, color, Func::ConvertToUtf8String(displayText), qualitySetting, 1);
 }
 
 void ControlTips::draw(sf::RenderWindow& window)

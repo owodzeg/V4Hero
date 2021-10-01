@@ -57,14 +57,14 @@ void AltarMenu::initialise(Config* _thisConfig, V4Core* parent, PatapolisMenu* c
 
     altar_main.loadFromFile("resources/graphics/ui/altar/altar_main.png", quality, 1);
 
-    altar_title.createText(f_font, 40, sf::Color(111, 71, 51, 255), Func::ConvertToUtf8String(_thisConfig->strRepo.GetUnicodeString(L"altar_title")), q, 1);
+    altar_title.createText(f_font, 40, sf::Color(111, 71, 51, 255), Func::ConvertToUtf8String(_thisConfig->strRepo.GetString("altar_title")), q, 1);
     altar_kaching.createText(f_font, 30, sf::Color(111, 71, 51, 255), "0 Ka-ching", q, 1);
 
     altar_item_title.createText(f_font, 24, sf::Color(111, 71, 51, 255), "", q, 1);
     altar_item_category.createText(f_font, 20, sf::Color(111, 71, 51, 255), "", q, 1);
     altar_item_desc.createText(f_font, 26, sf::Color(111, 71, 51, 255), "", q, 1);
 
-    ctrlTips.create(54, f_font, 20, sf::String(L"Left/Right/Up/Down: Navigate      O: Exit to Patapolis"), quality);
+    ctrlTips.create(54, f_font, 20, sf::String("Left/Right/Up/Down: Navigate      O: Exit to Patapolis"), quality);
 
     parent->saveToDebugLog("Initializing Altar finished.");
 }
@@ -82,9 +82,9 @@ void AltarMenu::updateAltarDescriptions()
 
     if (selItem < inventory_boxes.size())
     {
-        altar_item_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(inventory_boxes[selItem].data->item_name)));
-        altar_item_category.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString("altar_category_" + inventory_boxes[selItem].data->item_category)));
-        altar_item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(thisConfig->strRepo.GetUnicodeString(inventory_boxes[selItem].data->item_description), 420, f_font, 26)));
+        altar_item_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(inventory_boxes[selItem].data->item_name)));
+        altar_item_category.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("altar_category_" + inventory_boxes[selItem].data->item_category)));
+        altar_item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(thisConfig->strRepo.GetString(inventory_boxes[selItem].data->item_description), 420, f_font, 26)));
     } else
     {
         altar_item_title.setString("");

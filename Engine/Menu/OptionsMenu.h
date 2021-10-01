@@ -91,6 +91,7 @@ public:
     ///Languages
     int lang_pages = 0;
     int lang_current = 0;
+    vector<int> langIDs;
 
     Menu* parentMenu;
     void Initialise(Config* thisConfig, V4Core* parent, Menu* curParentMenu);

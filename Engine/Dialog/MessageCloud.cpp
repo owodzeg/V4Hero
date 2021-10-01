@@ -10,22 +10,6 @@ MessageCloud::MessageCloud()
 
 void MessageCloud::setSize(float new_x, float new_y)
 {
-    //cout << "MessageCloud::setSize(" << new_x << " " << new_y << "): scale ";
-
-    ///default x = 1080
-    ///new_x = 540
-    ///need to approprietly scale it
-
-    float scale_x = 1080.f / new_x;
-    float scale_y = 250.f / new_y;
-
-    //cout << scale_x << " " << scale_y << endl;
-
-    cloud[0].setScale(1.f / scale_x, 1.f / scale_y);
-    cloud[1].setScale(-1.f / scale_x, 1.f / scale_y);
-    cloud[2].setScale(1.f / scale_x, -1.f / scale_y);
-    cloud[3].setScale(-1.f / scale_x, -1.f / scale_y);
-
     xsize = new_x;
     ysize = new_y;
 }
@@ -41,22 +25,9 @@ void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bo
 
     font.loadFromFile(font_path);
 
-    cloud[0].loadFromFile("resources/graphics/ui/dialog/message.png", q);
-    cloud[1] = cloud[0];
-    cloud[2] = cloud[0];
-    cloud[3] = cloud[0];
-
-    cloud[0].setOrigin(cloud[0].getLocalBounds().width, cloud[0].getLocalBounds().height);
-    cloud[1].setOrigin(cloud[1].getLocalBounds().width, cloud[1].getLocalBounds().height);
-    cloud[2].setOrigin(cloud[2].getLocalBounds().width, cloud[2].getLocalBounds().height);
-    cloud[3].setOrigin(cloud[3].getLocalBounds().width, cloud[3].getLocalBounds().height);
-
-    cloud[1].setScale(-1, 1);
-    cloud[2].setScale(1, -1);
-    cloud[3].setScale(-1, -1);
-
-    for (int i = 0; i < 4; i++)
-        cloud[i].setColor(color);
+    cloud.loadFromFile("resources/graphics/ui/dialog/message.png", q);
+    cloud.setOrigin(cloud.getLocalBounds().width, cloud.getLocalBounds().height);
+    cloud.setColor(color);
 
     cur_color = color;
 
@@ -199,12 +170,26 @@ void MessageCloud::Draw(sf::RenderWindow& window, float fps, InputController& in
             text_timeout.restart();
         }
 
-        for (int i = 0; i < 4; i++)
-        {
-            cloud[i].setColor(cur_color);
-            cloud[i].setPosition(x, y);
-            cloud[i].draw(window);
-        }
+        /// adjusting the size of clouds and drawing them
+        /// they are no longer an array, instead we just transform the single texture 
+
+        float scale_x = 1080.f / xsize;
+        float scale_y = 250.f / ysize;
+
+        cloud.setColor(cur_color);
+        cloud.setPosition(x, y);
+
+        cloud.setScale(1.f / scale_x, 1.f / scale_y);
+        cloud.draw(window);
+
+        cloud.setScale(-1.f / scale_x, 1.f / scale_y);
+        cloud.draw(window);
+
+        cloud.setScale(1.f / scale_x, -1.f / scale_y);
+        cloud.draw(window);
+
+        cloud.setScale(-1.f / scale_x, -1.f / scale_y);
+        cloud.draw(window);
 
         if (canwrite)
         {

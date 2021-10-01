@@ -10,7 +10,7 @@
 class MessageCloud
 {
 public:
-    PSprite cloud[4];
+    PSprite cloud;
     PSprite cross, cross_highlight, cross_arrow;
     sf::ConvexShape triangle;
 

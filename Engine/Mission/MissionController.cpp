@@ -150,7 +150,9 @@ void MissionController::addDmgCounter(int type, int damage, float baseX, float b
         tmp.alpha.push_back(0);
     }
 
+    cout << "Adding new dmgCounter to the vector... ";
     dmgCounters.push_back(tmp);
+    cout << "done" << endl;
 }
 
 void MissionController::addItemsCounter(int id, float baseX, float baseY)
@@ -257,20 +259,6 @@ void MissionController::parseEntityLoot(mt19937& gen, uniform_real_distribution<
     }
 }
 
-void MissionController::cacheEntity(int entityID, shared_ptr<vector<vector<sf::Image>>> swaps, shared_ptr<vector<AnimatedObject::Animation>> spritesheet, shared_ptr<vector<Object>> objects)
-{
-    cout << "[MissionController] cacheEntity id " << entityID << endl;
-
-    isCached[entityID] = true;
-
-    animation_cache[entityID] = make_shared<AnimationCache>();
-    animation_cache[entityID].get()->swaps = swaps;
-    animation_cache[entityID].get()->spritesheet = spritesheet;
-    animation_cache[entityID].get()->objects = objects;
-
-    cout << "[MissionController] cache created" << endl;
-}
-
 void MissionController::spawnEntity(int id, bool collidable, bool attackable, int xpos, int xrange, bool cloneable, float clone_delay, float spawnrate, float stat_mult, int mindmg, int maxdmg, int hp, float ypos, float baseY, sf::Color color, int layer, int parent, nlohmann::json loot, nlohmann::json additional_data)
 {
     sf::Clock bm; ///benchmark for spawnEntity function
@@ -344,9 +332,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -367,9 +355,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -390,9 +378,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -413,9 +401,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -436,9 +424,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -455,9 +443,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
                 entity.get()->LoadConfig(thisConfig);
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -486,9 +474,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -509,9 +497,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -532,9 +520,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -555,9 +543,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -578,9 +566,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -601,9 +589,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -624,9 +612,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -647,9 +635,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -670,9 +658,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -693,9 +681,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -716,9 +704,9 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!isCached[id])
+                if (!v4Core->isCached[id])
                 {
-                    //cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -1043,7 +1031,7 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
 
     //t_cutscene_text.setCharacterSize(35);
     //t_cutscene_text.setFillColor(sf::Color::White);
-    //t_cutscene_text.setString(Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"intro_cutscene_1")));
+    //t_cutscene_text.setString(Func::ConvertToUtf8String(config.strRepo.GetString("intro_cutscene_1")));
     //t_cutscene_text.setOrigin(t_cutscene_text.getGlobalBounds().width/2,t_cutscene_text.getGlobalBounds().height/2);
     thisConfig = &config;
 
@@ -1063,18 +1051,18 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
     command_inputs.clear();
 
     std::vector<std::string> command_lang_keys = {"nav_onward", "nav_attack", "nav_defend", "nav_charge", "nav_retreat", "nav_jump", "nav_party", "nav_summon"};
-    std::vector<sf::String> command_lang_buttons = {L"□-□-□-〇", L"〇-〇-□-〇", L"△-△-□-〇", L"〇-〇-△-△", L"〇-□-〇-□", L"×-×-△-△", L"□-〇-×-△", L"×-××-××"};
+    std::vector<std::string> command_lang_buttons = {"□-□-□-〇", "〇-〇-□-〇", "△-△-□-〇", "〇-〇-△-△", "〇-□-〇-□", "×-×-△-△", "□-〇-×-△", "×-××-××"};
 
     ///first four
     for (int i = 0; i < 4; i++)
     {
 
         PText t_command_desc;
-        t_command_desc.createText(f_font, 28, sf::Color(128, 128, 128, 255), Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(command_lang_keys[i])) + ":", qualitySetting, 1);
+        t_command_desc.createText(f_font, 28, sf::Color(128, 128, 128, 255), Func::ConvertToUtf8String(thisConfig->strRepo.GetString(command_lang_keys[i])) + ":", qualitySetting, 1);
         command_descs.push_back(t_command_desc);
 
         PText t_command;
-        t_command.createText(f_unicode, 28, sf::Color(128, 128, 128, 255), command_lang_buttons[i], qualitySetting, 1);
+        t_command.createText(f_unicode, 28, sf::Color(128, 128, 128, 255), Func::ConvertToUtf8String(command_lang_buttons[i]), qualitySetting, 1);
         command_inputs.push_back(t_command);
     }
 
@@ -1083,11 +1071,11 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
     {
 
         PText t_command_desc;
-        t_command_desc.createText(f_font, 28, sf::Color(128, 128, 128, 255), Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(command_lang_keys[i])) + ":", qualitySetting, 1);
+        t_command_desc.createText(f_font, 28, sf::Color(128, 128, 128, 255), Func::ConvertToUtf8String(thisConfig->strRepo.GetString(command_lang_keys[i])) + ":", qualitySetting, 1);
         command_descs.push_back(t_command_desc);
 
         PText t_command;
-        t_command.createText(f_unicode, 28, sf::Color(128, 128, 128, 255), command_lang_buttons[i], qualitySetting, 1);
+        t_command.createText(f_unicode, 28, sf::Color(128, 128, 128, 255), Func::ConvertToUtf8String(command_lang_buttons[i]), qualitySetting, 1);
         command_inputs.push_back(t_command);
     }
 
@@ -1111,12 +1099,12 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
     sb_cheer2.loadFromFile("resources/sfx/level/cheer2.ogg");
     sb_cheer3.loadFromFile("resources/sfx/level/cheer1.ogg");
 
-    t_win.createText(f_moji, 56, sf::Color(222, 83, 0, 255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"mission_complete")), q, 1);
-    t_win_outline.createText(f_moji, 56, sf::Color(255, 171, 0, 255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"mission_complete")), q, 1);
+    t_win.createText(f_moji, 56, sf::Color(222, 83, 0, 255), Func::ConvertToUtf8String(config.strRepo.GetString("mission_complete")), q, 1);
+    t_win_outline.createText(f_moji, 56, sf::Color(255, 171, 0, 255), Func::ConvertToUtf8String(config.strRepo.GetString("mission_complete")), q, 1);
     t_win_outline.setOutlineColor(sf::Color(255, 171, 0, 255));
     t_win_outline.setOutlineThickness(10);
-    t_lose.createText(f_moji, 56, sf::Color(138, 15, 26, 255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"mission_failed")), q, 1);
-    t_lose_outline.createText(f_moji, 56, sf::Color(254, 48, 55, 255), Func::ConvertToUtf8String(config.strRepo.GetUnicodeString(L"mission_failed")), q, 1);
+    t_lose.createText(f_moji, 56, sf::Color(138, 15, 26, 255), Func::ConvertToUtf8String(config.strRepo.GetString("mission_failed")), q, 1);
+    t_lose_outline.createText(f_moji, 56, sf::Color(254, 48, 55, 255), Func::ConvertToUtf8String(config.strRepo.GetString("mission_failed")), q, 1);
     t_lose_outline.setOutlineColor(sf::Color(254, 48, 55, 255));
     t_lose_outline.setOutlineThickness(10);
 
@@ -1145,7 +1133,7 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
             droppeditem_spritesheet[buff].load("resources/graphics/item/itemdata/" + buff + ".png", qualitySetting, resSetting);
         }
     }
-    ctrlTips.create(110, f_font, 28, sf::String(L"Onward: □-□-□-O	   Attack: O-O-□-O		Defend: △-△-□-O			  Charge: O-O-△-△\nRetreat: O-□-O-□		  Jump: X-X-△-△		  Party: □-O-X-△		  Summon: X-XX-XX"), q, sf::Color(128, 128, 128, 255));
+    ctrlTips.create(110, f_font, 28, "Onward: □-□-□-O	   Attack: O-O-□-O		Defend: △-△-□-O			  Charge: O-O-△-△\nRetreat: O-□-O-□		  Jump: X-X-△-△		  Party: □-O-X-△		  Summon: X-XX-XX", q, sf::Color(128, 128, 128, 255));
 
     spear_hit_enemy.loadFromFile("resources/sfx/level/spear_hit_enemy.ogg");
     spear_hit_iron.loadFromFile("resources/sfx/level/spear_hit_iron.ogg");
@@ -1224,11 +1212,11 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     /**
 	if(showCutscene)
 	{
-		cutscene_text_identifiers.push_back(L"intro_cutscene_1");
-		cutscene_text_identifiers.push_back(L"intro_cutscene_2");
-		cutscene_text_identifiers.push_back(L"intro_cutscene_3");
-		cutscene_text_identifiers.push_back(L"intro_cutscene_4");
-		cutscene_text_identifiers.push_back(L"intro_cutscene_5");
+		cutscene_text_identifiers.push_back("intro_cutscene_1");
+		cutscene_text_identifiers.push_back("intro_cutscene_2");
+		cutscene_text_identifiers.push_back("intro_cutscene_3");
+		cutscene_text_identifiers.push_back("intro_cutscene_4");
+		cutscene_text_identifiers.push_back("intro_cutscene_5");
 		cutscene_lengths.push_back(4);
 		cutscene_lengths.push_back(4);
 		cutscene_lengths.push_back(3);
@@ -1599,43 +1587,47 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 
     for (int i = 0; i < army_size; i++)
     {
-		spdlog::debug("Trying to find pon: {}", i);
+        spdlog::debug("Trying to find pon: {}", i);
         Pon* current_pon = v4Core->saveReader.ponReg.GetPonByID(i);
-		spdlog::debug("Making pon with class: {}", current_pon->pon_class);
+        spdlog::debug("Making pon with class: {}", current_pon->pon_class);
         switch (current_pon->pon_class)
         {
             case -1: ///this was earlier 0 which i dont understand because pon class 0 = yaripon lol
             {
-				spdlog::warn("Hatapon detected in saveReader.ponreg.pons");
+                spdlog::warn("Hatapon detected in saveReader.ponreg.pons");
                 break;
             }
-            case 0:
-			{
+            case 0: {
                 unique_ptr<Yaripon> wip_pon = make_unique<Yaripon>();
-                wip_pon.get()->LoadConfig(thisConfig);
+                wip_pon.get()->entityID = -1001; ///lets say entity IDs for units will be -1000 and below, so -1001 is yaripon, -1002 will be tatepon etc
                 wip_pon.get()->setUnitID(current_pon->pon_class + 1); ///have to set unit ID from 0 to 1 because 0 is already occupied by Hatapon
+                wip_pon.get()->LoadConfig(thisConfig);
+
+                if (!v4Core->isCached[wip_pon.get()->entityID])
+                {
+                    v4Core->cacheEntity(wip_pon.get()->entityID, wip_pon.get()->all_swaps_img, wip_pon.get()->animation_spritesheet, wip_pon.get()->objects);
+                }
+
                 wip_pon.get()->mindmg = current_pon->pon_min_dmg;
                 wip_pon.get()->maxdmg = current_pon->pon_max_dmg;
                 wip_pon.get()->current_hp = current_pon->pon_hp;
                 wip_pon.get()->max_hp = current_pon->pon_hp;
 
                 if (current_pon->slots[0] != -1)
-				{
+                {
                     wip_pon.get()->applyEquipment(v4Core->saveReader.invData.items[current_pon->slots[0]].item->order_id, 0);
-				}
-                else
-				{
-					spdlog::error("Yaripon has an empty equipment slot 1");
-				}
+                } else
+                {
+                    spdlog::error("Yaripon has an empty equipment slot 1");
+                }
 
                 if (current_pon->slots[1] != -1)
-				{
+                {
                     wip_pon.get()->applyEquipment(v4Core->saveReader.invData.items[current_pon->slots[1]].item->order_id, 1);
-				}
-                else
-				{
-					spdlog::error("Yaripon has an empty equipment slot 2");
-				}
+                } else
+                {
+                    spdlog::error("Yaripon has an empty equipment slot 2");
+                }
 
                 units.push_back(std::move(wip_pon));
                 break;
@@ -1681,7 +1673,8 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 		}*/
         ///-_-
 
-        bool has_thumb = false;
+        ///what the hell is this
+        /** bool has_thumb = false;
         for (int i = 0; i < unitThumbs.size(); i++)
         {
             if (unitThumbs[i].unit_class == current_pon->pon_class)
@@ -1690,8 +1683,10 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
         if (!has_thumb)
         {
             addUnitThumb(current_pon->pon_class);
-        }
+        }**/
     }
+
+    addUnitThumb(1);
 
     cout << "Loading background " << bgName << endl;
     Background bg_new;
@@ -1762,7 +1757,7 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow& window, float fps, In
         {
             if (inputCtrl.isKeyPressed(InputController::Keys::SELECT))
             {
-                std::vector<sf::String> a = {"Show hitboxes", "Hide hitboxes", "Heal units"};
+                std::vector<sf::String> a = {"Show hitboxes", "Hide hitboxes", "Heal units", "Kill all player units", "Kill Hatapon", "Enable verbose logging"};
 
                 PataDialogBox db;
                 db.Create(f_font, "Debug menu", a, thisConfig->GetInt("textureQuality"));
@@ -1771,10 +1766,10 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow& window, float fps, In
             }
         } else if (inputCtrl.isKeyPressed(InputController::Keys::START))
         {
-            std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_yes")), Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"nav_no"))};
+            std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_yes")), Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_no"))};
 
             PataDialogBox db;
-            db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetUnicodeString(L"mission_backtopatapolis")), a, thisConfig->GetInt("textureQuality"));
+            db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("mission_backtopatapolis")), a, thisConfig->GetInt("textureQuality"));
             dialog_boxes.push_back(db);
         }
     }
@@ -2155,6 +2150,11 @@ bool MissionController::isColliding(PlayableUnit* unit, const unique_ptr<Entity>
 
     collisionEvents.erase(std::remove_if(collisionEvents.begin(), collisionEvents.end(), [](const auto& event) { return !event.isCollidable; }), collisionEvents.end());
 
+    for (int i=0; i<collisionEvents.size(); i++)
+    {
+        cout << "Is collidable? " << collisionEvents[i].isCollidable << " vs " << collisionObject->isCollidable << endl;
+    }
+
     bool foundCollision = !collisionEvents.empty();
     bool forceCollision = false;
 
@@ -2165,6 +2165,9 @@ bool MissionController::isColliding(PlayableUnit* unit, const unique_ptr<Entity>
             forceCollision = unit->getGlobalPosition().x >= collisionObject->getGlobalPosition().x + collisionObject->hitboxes[0].o_x;
         }
     }
+
+    if (!collisionObject->isCollidable)
+        foundCollision = false;
 
     return foundCollision || forceCollision;
 }
@@ -2582,26 +2585,39 @@ void MissionController::DoVectorCleanup(vector<int> units_rm, vector<int> dmg_rm
     //cout << "MissionController::DoVectorCleanup" << endl;
     //cout << units_rm.size() << " " << dmg_rm.size() << " " << tlo_rm.size() << " " << pr_rm.size() << endl;
 
+    if (units_rm.size() > 0)
+        cout << "[MissionController::DoVectorCleanup] There are " << units_rm.size() << " units to clean up" << endl;
+    if (dmg_rm.size() > 0)
+        cout << "[MissionController::DoVectorCleanup] There are " << dmg_rm.size() << " dmgCounters to clean up" << endl;
+    if (tlo_rm.size() > 0)
+        cout << "[MissionController::DoVectorCleanup] There are " << tlo_rm.size() << " tangibleLevelObjects to clean up" << endl;
+    if (pr_rm.size() > 0)
+        cout << "[MissionController::DoVectorCleanup] There are " << pr_rm.size() << " levelProjectiles to clean up" << endl;
+
     for (int i = 0; i < units_rm.size(); i++)
     {
+        cout << "Erasing unit " << units_rm[i] << endl;
         units.erase(units.begin() + (units_rm[i] - i));
         cout << "Erased unit " << units_rm[i] << endl;
     }
 
     for (int i = 0; i < dmg_rm.size(); i++)
     {
+        cout << "Erasing dmgCounter " << dmg_rm[i] << endl;
         dmgCounters.erase(dmgCounters.begin() + (dmg_rm[i] - i));
         cout << "Erased dmgCounter " << dmg_rm[i] << endl;
     }
 
     for (int i = 0; i < tlo_rm.size(); i++)
     {
+        cout << "Erasing tangibleLevelObject " << tlo_rm[i] << endl;
         tangibleLevelObjects.erase(tangibleLevelObjects.begin() + (tlo_rm[i] - i));
         cout << "Erased tangibleLevelObject " << tlo_rm[i] << endl;
     }
 
     for (int i = 0; i < pr_rm.size(); i++)
     {
+        cout << "Erasing levelProjectile " << pr_rm[i] << endl;
         levelProjectiles.erase(levelProjectiles.begin() + (pr_rm[i] - i));
         cout << "Erased levelProjectile " << pr_rm[i] << endl;
     }
@@ -2775,30 +2791,33 @@ std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
 
 void MissionController::drawCommandList(sf::RenderWindow& window)
 {
-    ///first four
-    for (int i = 0; i < 4; i++)
+    if (!missionEnd)
     {
-        command_inputs[i].setOrigin(command_inputs[i].getLocalBounds().width, command_inputs[i].getLocalBounds().height / 2);
-        command_inputs[i].setPosition(-21 + (i + 1) * ((1280 - 42) / 4.f), 644);
+        ///first four
+        for (int i = 0; i < 4; i++)
+        {
+            command_inputs[i].setOrigin(command_inputs[i].getLocalBounds().width, command_inputs[i].getLocalBounds().height / 2);
+            command_inputs[i].setPosition(-21 + (i + 1) * ((1280 - 42) / 4.f), 644);
 
-        command_descs[i].setOrigin(command_descs[i].getLocalBounds().width, command_descs[i].getLocalBounds().height / 2);
-        command_descs[i].setPosition(-21 + (i + 1) * ((1280 - 42) / 4.f) - command_inputs[i].getLocalBounds().width - 8, 644);
+            command_descs[i].setOrigin(command_descs[i].getLocalBounds().width, command_descs[i].getLocalBounds().height / 2);
+            command_descs[i].setPosition(-21 + (i + 1) * ((1280 - 42) / 4.f) - command_inputs[i].getLocalBounds().width - 8, 644);
 
-        command_descs[i].draw(window);
-        command_inputs[i].draw(window);
-    }
+            command_descs[i].draw(window);
+            command_inputs[i].draw(window);
+        }
 
-    ///second four
-    for (int i = 4; i < 8; i++)
-    {
-        command_inputs[i].setOrigin(command_inputs[i].getLocalBounds().width, command_inputs[i].getLocalBounds().height / 2);
-        command_inputs[i].setPosition(-21 + (i - 4 + 1) * ((1280 - 42) / 4.f), 673);
+        ///second four
+        for (int i = 4; i < 8; i++)
+        {
+            command_inputs[i].setOrigin(command_inputs[i].getLocalBounds().width, command_inputs[i].getLocalBounds().height / 2);
+            command_inputs[i].setPosition(-21 + (i - 4 + 1) * ((1280 - 42) / 4.f), 673);
 
-        command_descs[i].setOrigin(command_descs[i].getLocalBounds().width, command_descs[i].getLocalBounds().height / 2);
-        command_descs[i].setPosition(-21 + (i - 4 + 1) * ((1280 - 42) / 4.f) - command_inputs[i].getLocalBounds().width - 8, 673);
+            command_descs[i].setOrigin(command_descs[i].getLocalBounds().width, command_descs[i].getLocalBounds().height / 2);
+            command_descs[i].setPosition(-21 + (i - 4 + 1) * ((1280 - 42) / 4.f) - command_inputs[i].getLocalBounds().width - 8, 673);
 
-        command_descs[i].draw(window);
-        command_inputs[i].draw(window);
+            command_descs[i].draw(window);
+            command_inputs[i].draw(window);
+        }
     }
 }
 
@@ -3286,7 +3305,7 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
                 unit->entity_distance = abs((unit->global_x) - (closest_entity->getGlobalPosition().x + (closest_entity->hitboxes[0].o_x - closest_entity->hitboxes[0].o_width / 2)));
                 //cout << "Distance to nearest entity for unit " << i << ": " << unit->entity_distance << " (" << unit->global_x << " " << closest_entity->getGlobalPosition().x << " " << closest_entity->hitboxes[0].o_x << ")" << endl;
 
-                if ((closest_entity->entityType == Entity::EntityTypes::HOSTILE) && (!closest_entity->dead) && (inRange))
+                if ((closest_entity->entityType == Entity::EntityTypes::HOSTILE) && (!closest_entity->dead) && (inRange) && (closest_entity->getAnimationSegment() != "death"))
                 {
                     unit->enemy_in_range = true;
                     //cout << "Unit " << i << " distance to closest enemy is " << unit->entity_distance << " pixels" << endl;
@@ -3432,7 +3451,8 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
 
 void MissionController::Update(sf::RenderWindow& window, float cfps, InputController& inputCtrl)
 {
-    //cout << "[MissionController] Update START FRAME" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] Update START FRAME" << endl;
 
     ///remove stopped sounds
     for (int i = projectile_sounds.size() - 1; i > 0; i--)
@@ -3446,7 +3466,8 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
         }
     }
 
-    //cout << "[MissionController] Sort" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] Sort" << endl;
 
     ///Sort tangibleLevelObjects to prioritize rendering layers
     std::sort(tangibleLevelObjects.begin(), tangibleLevelObjects.end(),
@@ -3474,21 +3495,25 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
     /** Apply the keyMap from parent class **/
 
     /** Execute camera and background **/
-
-    //cout << "[MissionController] Camera & BG" << endl;
+    
+    if (verboseLogs)
+        cout << "[MissionController] Camera & BG" << endl;
+    camera.missionEnd = missionEnd; ///disable camera controls when needed
     camera.Work(window, fps, cur_inputCtrl);
     test_bg.setCamera(camera);
     test_bg.Draw(window);
 
     /** Execute Keyboard events and Movement **/
-
-    //cout << "[MissionController] Input & Movement" << endl;
+    
+    if (verboseLogs)
+        cout << "[MissionController] Input & Movement" << endl;
     DoKeyboardEvents(window, fps, cur_inputCtrl);
     DoMovement(window, fps, cur_inputCtrl);
 
     vector<int> k_e;
 
-    //cout << "[MissionController] Clones" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] Clones" << endl;
     /** Spawn cloneable entities **/
     for (int i = 0; i < kirajins.size(); i++)
     {
@@ -3577,21 +3602,26 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
     }
 
     /** Draw all Entities **/
-    //cout << "[MissionController] Entities" << endl;
+
+    if (verboseLogs)
+        cout << "[MissionController] Entities" << endl;
 
     vector<int> tlo_rm = DrawEntities(window);
 
     /** Draw all Units **/
 
-    //cout << "[MissionController] Units" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] Units" << endl;
     vector<int> units_rm = DrawUnits(window);
 
     /** Draw projectiles **/
 
-    //cout << "[MissionController] Projectiles" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] Projectiles" << endl;
     vector<int> pr_rm = DrawProjectiles(window);
 
-    //cout << "[MissionController] Clouds" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] Clouds" << endl;
     /** Draw message clouds **/
     for (int e = 0; e < tangibleLevelObjects.size(); e++)
     {
@@ -3603,12 +3633,16 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
 
     if (showHitboxes)
     {
-        //cout << "[MissionController] Hitboxes" << endl;
+
+        if (verboseLogs)
+        cout << "[MissionController] Hitboxes" << endl;
         DrawHitboxes(window);
     }
 
     /** Draw damage counters **/
-    //cout << "[MissionController] Damage" << endl;
+
+    if (verboseLogs)
+    cout << "[MissionController] Damage" << endl;
     vector<int> dmg_rm = DrawDamageCounters(window);
 
     /**  Draw static UI elements **/
@@ -3713,7 +3747,8 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
     r_floor.setPosition(0, 610 * resRatioY);
     window.draw(r_floor);
 
-    //cout << "[MissionController] UI" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] UI" << endl;
     drawCommandList(window);
     DrawUnitThumbs(window);
     DrawPickedItems(window);
@@ -3733,10 +3768,13 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
     }
 
     /** Execute all mission end related things **/
-    //cout << "[MissionController] Mission End" << endl;
+
+    if (verboseLogs)
+    cout << "[MissionController] Mission End" << endl;
     DoMissionEnd(window, fps);
 
-    //cout << "[MissionController] Dialogboxes" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] Dialogboxes" << endl;
     if (dialog_boxes.size() > 0)
     {
         if (o_inputCtrl.isKeyPressed(InputController::Keys::CROSS))
@@ -3791,6 +3829,49 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
 
                     break;
                 }
+
+                case 3: {
+                    if (dialog_boxes[dialog_boxes.size() - 1].id == 999)
+                    {
+                        cout << "Kill all player units" << endl;
+                        for (int u = 0; u < units.size(); u++)
+                        {
+                            if (units[u].get()->getUnitID() == 1)
+                            units[u].get()->current_hp = 0;
+                        }
+
+                        dialog_boxes[dialog_boxes.size() - 1].Close();
+                    }
+
+                    break;
+                }
+
+                case 4: {
+                    if (dialog_boxes[dialog_boxes.size() - 1].id == 999)
+                    {
+                        cout << "Kill Hatapon" << endl;
+                        for (int u = 0; u < units.size(); u++)
+                        {
+                            if (units[u].get()->getUnitID() == 0)
+                                units[u].get()->current_hp = 0;
+                        }
+
+                        dialog_boxes[dialog_boxes.size() - 1].Close();
+                    }
+
+                    break;
+                }
+
+                case 5: {
+                    if (dialog_boxes[dialog_boxes.size() - 1].id == 999)
+                    {
+                        cout << "Enable verbose logging" << endl;
+                        verboseLogs = !verboseLogs;
+                        dialog_boxes[dialog_boxes.size() - 1].Close();
+                    }
+
+                    break;
+                }
             }
         }
     }
@@ -3816,10 +3897,12 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
 
     /** Remove vector objects that are no longer in use **/
 
-    //cout << "[MissionController] Cleanup" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] Cleanup" << endl;
     DoVectorCleanup(units_rm, dmg_rm, tlo_rm, pr_rm);
 
-    //cout << "[MissionController] FRAME END" << endl;
+    if (verboseLogs)
+    cout << "[MissionController] FRAME END" << endl;
 }
 void MissionController::FinishLastCutscene()
 {
@@ -3830,11 +3913,11 @@ bool MissionController::isMoreCutscenes()
     /// returns true if there are more cutscenes
     return currentCutsceneId < cutscene_text_identifiers.size() - 1;
 }
-void MissionController::StartCutscene(const std::wstring& text, bool isBlackScreen, int TimeToShow)
+void MissionController::StartCutscene(const std::string& text, bool isBlackScreen, int TimeToShow)
 {
     /// because the description needs to be able to go over multiple lines, we have to split it into a series of lines
     t_cutscene_text.clear();
-    std::vector<std::wstring> wordsinDesc = Func::Split(thisConfig->strRepo.GetUnicodeString(text), ' ');
+    std::vector<std::string> wordsinDesc = Func::Split(thisConfig->strRepo.GetString(text), ' ');
     sf::String oldTotalString;
     sf::String currentTotalString;
     int maxWidth = thisConfig->GetInt("resX") * 0.4;
@@ -3845,8 +3928,8 @@ void MissionController::StartCutscene(const std::wstring& text, bool isBlackScre
     /// we split it into words, then go word by word testing the width of the string
     for (int i = 0; i < wordsinDesc.size(); i++)
     {
-        std::wstring currentWord = wordsinDesc[i];
-        currentTotalString = currentTotalString + Func::ConvertToUtf8String(currentWord) + L" ";
+        std::string currentWord = wordsinDesc[i];
+        currentTotalString = currentTotalString + Func::ConvertToUtf8String(currentWord) + " ";
         sf::Text t_newLine;
         t_newLine.setFont(f_font);
         t_newLine.setCharacterSize(35);
@@ -3859,8 +3942,8 @@ void MissionController::StartCutscene(const std::wstring& text, bool isBlackScre
             t_newLine.setString(currentTotalString);
             t_newLine.setOrigin(t_newLine.getGlobalBounds().width / 2, t_newLine.getGlobalBounds().height / 2);
             t_cutscene_text.push_back(t_newLine);
-            oldTotalString = currentWord + L" ";
-            currentTotalString = currentWord + L" ";
+            oldTotalString = currentWord + " ";
+            currentTotalString = currentWord + " ";
         }
         oldTotalString = currentTotalString;
         /// if there are no more words, finish up the current line

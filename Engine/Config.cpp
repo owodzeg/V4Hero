@@ -118,7 +118,7 @@ void Config::LoadConfig(V4Core* core)
     /** Load lang from resources/lang/str_ENG.cfg **/
     strRepo.LoadLanguageFiles(GetInt("lang"));
     fontPath = "resources/fonts/" + strRepo.langFonts[GetInt("lang") - 1];
-    cout << strRepo.GetString(L"language_file_loaded") << endl;
+    cout << strRepo.GetString("language_file_loaded") << endl;
 }
 
 void Config::SaveConfig()
@@ -154,7 +154,7 @@ void Config::ReloadLanguages()
     if (changedLang)
     {
         strRepo.LoadLanguageFiles(GetInt("lang"));
-        cout << strRepo.GetString(L"language_file_loaded") << endl;
+        cout << strRepo.GetString("language_file_loaded") << endl;
         changedLang = false;
     }
 }
@@ -172,10 +172,10 @@ void Config::SetString(std::string key, std::string val)
 {
     configMap[key] = val;
 }
-std::wstring Config::GetLanguageName()
+std::string Config::GetLanguageName()
 {
     std::string s = strRepo.langNames[atoi(configMap["lang"].c_str()) - 1];
-    std::wstring resws;
+    std::string resws;
     resws.assign(s.begin(), s.end());
     return resws;
 }

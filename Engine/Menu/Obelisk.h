@@ -52,6 +52,7 @@ public:
     PSprite location_highlight;
     PSprite mission_select;
 
+    int sel_prevlocation = 1;
     int sel_location = 1;
     int sel_mission = 0;
 
@@ -64,8 +65,8 @@ public:
         PText p_mis;
         int mis_ID = 0; ///mission ID
         int loc_ID = 0; ///location ID
-        std::wstring title;
-        std::wstring desc;
+        std::string title;
+        std::string desc;
         std::string mission_file;
     };
 

@@ -120,7 +120,7 @@ void Entity::dropItem()
             data["spritesheet_id"] = item->spritesheet_id;
             data["picked_item"] = id_out;
 
-            thisConfig->thisCore->currentController.spawnEntity(5, true, false, getGlobalPosition().x + hitboxes[0].o_x + (hitboxes[0].o_width / 2), 0, false, 10, 100, 1, 1, 1, 0, getGlobalPosition().y + hitboxes[0].o_y + (hitboxes[0].o_height / 2) - 60, 0, sf::Color::White, 9999, -1, {}, data);
+            thisConfig->thisCore->currentController.spawnEntity(5, false, false, getGlobalPosition().x + hitboxes[0].o_x + (hitboxes[0].o_width / 2), 0, false, 10, 100, 1, 1, 1, 0, getGlobalPosition().y + hitboxes[0].o_y + (hitboxes[0].o_height / 2) - 60, 0, sf::Color::White, 9999, -1, {}, data);
         }
 
         dropped_item = true;
