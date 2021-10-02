@@ -1792,6 +1792,8 @@ vector<MissionController::CollisionEvent> MissionController::computeCollisions(H
 {
     std::vector<CollisionEvent> collisionEvents;
 
+
+
     for (int h = 0; h < collisionObject->hitboxes.size(); h++)
     {
         //cout << "tangibleLevelObjects[" << i << "][" << h << "]" << endl;
@@ -1809,10 +1811,21 @@ vector<MissionController::CollisionEvent> MissionController::computeCollisions(H
         /// there has to be a collision in ALL axes for actual collision to be confirmed,
         /// so we can stop checking if we find a single non-collision.
 
+        
+        // new optimisation:
+        // check if the two objects are more than their diagonals added together away from each other
+        // if they are, then they can't possibly collide so we dont need to check
+        float max_distance_collision = currentObjectHitBoxFrame->max_width + collisionObject->hitboxes[h].hitboxObject.max_width;
+        float x_distance_apart = abs((collisionObject->global_x+collisionObject->hitBox.left) - currentObjectX);
+        if (x_distance_apart>max_distance_collision)
+        {
+            // objects too far apart - skip checking this collision
+            continue;
+        }
 
-        /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
+        
         // Here we make a collision step for projectile at x = currentObjectX against object at x = tangibleLevelObjects[i]->global_x
-
+        /// axis 1: obj1 "sideways" We start with sideways because it is less likely to contain a collision
         float currentAxisAngle = currentObjectHitBoxFrame->rotation;
 
         bool isCollision = DoCollisionStepInAxis(currentAxisAngle, &(collisionObject->hitboxes[h].hitboxObject), collisionObject, currentObjectHitBoxFrame, currentObjectX, currentObjectY);
@@ -1876,8 +1889,10 @@ vector<MissionController::CollisionEvent> MissionController::computeCollisions(H
             collisionObject->OnCollide(collisionObject, collisionObjectID, collisionData);
 
             collisionEvents.push_back(cevent);
-        } else
+        } 
+        else
         {
+            // should never happen
             SPDLOG_ERROR("Found object with no collisions on any axes");
         }
     }
@@ -1885,70 +1900,6 @@ vector<MissionController::CollisionEvent> MissionController::computeCollisions(H
     return collisionEvents;
 }
 
-float MissionController::pataponMaxProjection(float axisAngle, int id)
-{
-    PlayableUnit* target = units[id].get();
-
-    float currentAxisAngle = 0;
-    HitboxFrame tmp = target->hitboxes[0].getRect();
-
-    std::vector<sf::Vector2f> currentVertices = tmp.getCurrentVertices();
-
-    PVector pv1 = PVector::getVectorCartesian(0, 0, currentVertices[0].x + target->getGlobalPosition().x, currentVertices[0].y + target->getGlobalPosition().y);
-    PVector pv2 = PVector::getVectorCartesian(0, 0, currentVertices[1].x + target->getGlobalPosition().x, currentVertices[1].y + target->getGlobalPosition().y);
-    PVector pv3 = PVector::getVectorCartesian(0, 0, currentVertices[2].x + target->getGlobalPosition().x, currentVertices[2].y + target->getGlobalPosition().y);
-    PVector pv4 = PVector::getVectorCartesian(0, 0, currentVertices[3].x + target->getGlobalPosition().x, currentVertices[3].y + target->getGlobalPosition().y);
-
-    pv1.angle = -atan2(currentVertices[0].y + target->getGlobalPosition().y, currentVertices[0].x + target->getGlobalPosition().x);
-    pv2.angle = -atan2(currentVertices[1].y + target->getGlobalPosition().y, currentVertices[1].x + target->getGlobalPosition().x);
-    pv3.angle = -atan2(currentVertices[2].y + target->getGlobalPosition().y, currentVertices[2].x + target->getGlobalPosition().x);
-    pv4.angle = -atan2(currentVertices[3].y + target->getGlobalPosition().y, currentVertices[3].x + target->getGlobalPosition().x);
-
-    float proj1 = pv1.GetScalarProjectionOntoAxis(axisAngle);
-    float proj2 = pv2.GetScalarProjectionOntoAxis(axisAngle);
-    float proj3 = pv3.GetScalarProjectionOntoAxis(axisAngle);
-    float proj4 = pv4.GetScalarProjectionOntoAxis(axisAngle);
-
-    /*if(axisAngle!=0){
-		cout<<"NEW MAX TEST"<<endl;
-		cout<<"Angle: "<<pv1.angle<<" distance: "<<pv1.distance<<" current X: "<<currentVertices[0].x+target->x<<" current Y: "<<currentVertices[0].y+target->y<<" proj: "<<proj1<<endl;
-		cout<<"Angle: "<<pv2.angle<<" distance: "<<pv2.distance<<" current X: "<<currentVertices[1].x+target->x<<" current Y: "<<currentVertices[1].y+target->y<<" proj: "<<proj2<<endl;
-		cout<<"Angle: "<<pv3.angle<<" distance: "<<pv3.distance<<" current X: "<<currentVertices[2].x+target->x<<" current Y: "<<currentVertices[2].y+target->y<<" proj: "<<proj3<<endl;
-		cout<<"Angle: "<<pv4.angle<<" distance: "<<pv4.distance<<" current X: "<<currentVertices[3].x+target->x<<" current Y: "<<currentVertices[3].y+target->y<<" proj: "<<proj4<<endl;
-	}*/
-    float maxProjectionObj1 = max(max(max(proj1, proj2), proj3), proj4);
-    float minProjectionObj1 = min(min(min(proj1, proj2), proj3), proj4);
-    return maxProjectionObj1;
-}
-
-float MissionController::pataponMinProjection(float axisAngle, int id)
-{
-    PlayableUnit* target = units[id].get();
-
-    float currentAxisAngle = 0;
-    HitboxFrame tmp = target->hitboxes[0].getRect();
-
-    std::vector<sf::Vector2f> currentVertices = tmp.getCurrentVertices();
-
-    PVector pv1 = PVector::getVectorCartesian(0, 0, currentVertices[0].x + target->getGlobalPosition().x, currentVertices[0].y + target->getGlobalPosition().y);
-    PVector pv2 = PVector::getVectorCartesian(0, 0, currentVertices[1].x + target->getGlobalPosition().x, currentVertices[1].y + target->getGlobalPosition().y);
-    PVector pv3 = PVector::getVectorCartesian(0, 0, currentVertices[2].x + target->getGlobalPosition().x, currentVertices[2].y + target->getGlobalPosition().y);
-    PVector pv4 = PVector::getVectorCartesian(0, 0, currentVertices[3].x + target->getGlobalPosition().x, currentVertices[3].y + target->getGlobalPosition().y);
-    pv1.angle = -atan2(currentVertices[0].y + target->getGlobalPosition().y, currentVertices[0].x + target->getGlobalPosition().x);
-    pv2.angle = -atan2(currentVertices[1].y + target->getGlobalPosition().y, currentVertices[1].x + target->getGlobalPosition().x);
-    pv3.angle = -atan2(currentVertices[2].y + target->getGlobalPosition().y, currentVertices[2].x + target->getGlobalPosition().x);
-    pv4.angle = -atan2(currentVertices[3].y + target->getGlobalPosition().y, currentVertices[3].x + target->getGlobalPosition().x);
-
-    float proj1 = pv1.GetScalarProjectionOntoAxis(axisAngle);
-    float proj2 = pv2.GetScalarProjectionOntoAxis(axisAngle);
-    float proj3 = pv3.GetScalarProjectionOntoAxis(axisAngle);
-    float proj4 = pv4.GetScalarProjectionOntoAxis(axisAngle);
-
-
-    float maxProjectionObj1 = max(max(max(proj1, proj2), proj3), proj4);
-    float minProjectionObj1 = min(min(min(proj1, proj2), proj3), proj4);
-    return minProjectionObj1;
-}
 bool MissionController::DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame, AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float currentObjectY)
 {
     std::vector<sf::Vector2f> currentVertices = currentObjectHitBoxFrame->getCurrentVertices();
@@ -2020,7 +1971,10 @@ void MissionController::DoMovement(sf::RenderWindow& window, float fps, InputCon
         bool foundCollision = false;
         for (auto& tangibleLevelObject : tangibleLevelObjects)
         {
-            foundCollision = foundCollision || isColliding(farthest_unit, tangibleLevelObject);
+            if (!tangibleLevelObject->offbounds)
+            {
+                foundCollision = foundCollision || isColliding(farthest_unit, tangibleLevelObject);
+            }
         }
 
         if ((camera.walk) || ((missionEnd) && (!failure)))
@@ -2146,7 +2100,6 @@ bool MissionController::isColliding(PlayableUnit* unit, const unique_ptr<Entity>
     std::vector<string> collisionData;
     CollidableObject* collisionObject = entity.get();
     std::vector<CollisionEvent> collisionEvents = computeCollisions(&hitboxFrame, unitX, unitY, collisionObjectID, collisionData, collisionObject);
-    ;
 
     collisionEvents.erase(std::remove_if(collisionEvents.begin(), collisionEvents.end(), [](const auto& event) { return !event.isCollidable; }), collisionEvents.end());
 
@@ -2657,7 +2610,11 @@ std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
         tmp.addVertex(3, -1);  /// "top right"
         tmp.addVertex(-3, 1);  /// "bottom left"
         tmp.addVertex(3, 1);   /// "bottom right"
+
         tmp.rotation = -p->angle;
+
+        // projectile hitboxes are constant size, so their max width is constant too. Precalculated to 6.32456 (rounded up for good measure)
+        tmp.calcMaxWidth(6.325);
 
         if (ypos > floor_y)
         {
