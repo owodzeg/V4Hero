@@ -1782,8 +1782,11 @@ vector<MissionController::CollisionEvent> MissionController::DoCollisions(Hitbox
 
     for (auto& collisionObject : collisionObjects)
     {
-        auto objectCollisionEvents = computeCollisions(currentObjectHitBoxFrame, currentObjectX, currentObjectY, collisionObjectID, collisionData, collisionObject);
-        collisionEvents.insert(collisionEvents.end(), objectCollisionEvents.begin(), objectCollisionEvents.end());
+        if (!collisionObject->offbounds && collisionObject->isCollidable)
+        {
+            auto objectCollisionEvents = computeCollisions(currentObjectHitBoxFrame, currentObjectX, currentObjectY, collisionObjectID, collisionData, collisionObject);
+            collisionEvents.insert(collisionEvents.end(), objectCollisionEvents.begin(), objectCollisionEvents.end());
+        }
     }
 
     return collisionEvents;
@@ -1811,15 +1814,23 @@ vector<MissionController::CollisionEvent> MissionController::computeCollisions(H
         /// there has to be a collision in ALL axes for actual collision to be confirmed,
         /// so we can stop checking if we find a single non-collision.
 
-        
+        if (collisionObject->hitboxes[h].hitboxObject.max_width < 0) {
+            // not sure why kirajins werent getting their hitbox width updated anywhere else
+            // figured it was something to do with them jumping from behind a bush
+            // in any case, it seems best to double check and do the calculation here to make sure so we don't have to worry about other edge cases popping up
+            //collisionObject->hitboxes[h].hitboxObject.calcMaxWidth();
+            continue;
+        }
+
         // new optimisation:
         // check if the two objects are more than their diagonals added together away from each other
         // if they are, then they can't possibly collide so we dont need to check
+
         float max_distance_collision = currentObjectHitBoxFrame->max_width + collisionObject->hitboxes[h].hitboxObject.max_width;
-        float x_distance_apart = abs((collisionObject->global_x+collisionObject->hitBox.left) - currentObjectX);
+        float x_distance_apart = abs((collisionObject->getGlobalPosition().x + collisionObject->hitBox.left) - currentObjectX);
         if (x_distance_apart>max_distance_collision)
         {
-            // objects too far apart - skip checking this collision
+        //    // objects too far apart - skip checking this collision
             continue;
         }
 
@@ -2024,7 +2035,10 @@ void MissionController::DoMovement(sf::RenderWindow& window, float fps, InputCon
 
         for (auto& tangibleLevelObject : tangibleLevelObjects)
         {
-            foundCollision = foundCollision || isColliding(unit, tangibleLevelObject);
+            if (!tangibleLevelObject->offbounds)
+            {
+                foundCollision = foundCollision || isColliding(unit, tangibleLevelObject);
+            }
         }
 
         if (!unit->dead)

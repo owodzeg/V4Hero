@@ -42,7 +42,7 @@ public:
 
     ControlTips ctrlTips;
 
-    bool showHitboxes = false;
+    bool showHitboxes = true;
 
     Background test_bg;
     Rhythm rhythm;

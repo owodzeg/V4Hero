@@ -99,7 +99,24 @@ void HitboxFrame::calcMaxWidth(float maxWidth)
         }
     }
     max_width = maxlength;
-    
+
+    // bugfix for hitboxes where all the vertices are on one side of the origin (0,0)
+    // we gonna calc distance from origin to each vertex and if the biggest is larger than maxlength, use that as our max_width instead
+    float maxlength_origin = 0;
+    for (int i = 1; i < vertices.size(); i++)
+    {
+        sf::Vector2f currentVertex = vertices[i];
+        float dist = sqrt(pow(currentVertex.x - 0, 2) + pow(currentVertex.y - 0, 2) * 1.0);
+        if (dist > maxlength)
+        {
+            maxlength_origin = dist;
+        }
+    }
+    if (maxlength_origin > maxlength) 
+    {
+        max_width = maxlength_origin;
+    }
+
     return;
 }
 vector<sf::Vector2f> HitboxFrame::getCurrentVertices()
