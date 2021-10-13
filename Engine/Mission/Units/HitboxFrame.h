@@ -40,7 +40,7 @@ public:
     std::vector<sf::Vector2f>* getBaseVerticiesDontUseThisUnlessYouKnowWhy();
     float minProjection(float axisAngle, float object_x, float object_y);
     float maxProjection(float axisAngle, float object_x, float object_y);
-    void calcMaxWidth(float maxWidth = -1);
+    void calcMaxWidth(float maxWidth = -1,bool forceRecalc = false);
 
     HitboxFrame();
     ~HitboxFrame();

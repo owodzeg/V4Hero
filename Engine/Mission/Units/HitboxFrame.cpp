@@ -76,7 +76,7 @@ vector<sf::Vector2f>* HitboxFrame::getBaseVerticiesDontUseThisUnlessYouKnowWhy()
 /// calculate the maximum width
 /// </summary>
 /// <param name="maxWidth">Optional - provide a precalculated max width. Used for projectiles</param>
-void HitboxFrame::calcMaxWidth(float maxWidth)
+void HitboxFrame::calcMaxWidth(float maxWidth, bool forceRecalc)
 {
     // default argument maxWidth has a value of -1 if not provided. If it's not -1, it has been precalculated
     if (maxWidth != -1)
@@ -85,7 +85,11 @@ void HitboxFrame::calcMaxWidth(float maxWidth)
         return;
     }
     float maxlength = 0;
-
+    if (max_width > 0 && !forceRecalc)
+    {
+        // it has been calculated before: skip calculating it again
+        return;
+    }
     // check distance between each pair of vertices. on a rectangle shape, both diagonals are identical, so we can check distance from each vertex to the first vertex
     // note i=1 - we skip checking the distance from the first vertex to itself.
     sf::Vector2f firstVertex = vertices[0];
@@ -107,7 +111,7 @@ void HitboxFrame::calcMaxWidth(float maxWidth)
     {
         sf::Vector2f currentVertex = vertices[i];
         float dist = sqrt(pow(currentVertex.x - 0, 2) + pow(currentVertex.y - 0, 2) * 1.0);
-        if (dist > maxlength)
+        if (dist > maxlength_origin)
         {
             maxlength_origin = dist;
         }
