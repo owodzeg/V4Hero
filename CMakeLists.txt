@@ -6,24 +6,24 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 set(CMAKE_CXX_STANDARD 17)
 add_definitions(-DPATAFOUR_VERSION="${CMAKE_PROJECT_VERSION}")
 
-include(FetchContent)
-
 find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
 find_package(DiscordSDK 2.5.6 COMPONENTS x86_64 REQUIRED)
 
-FetchContent_Declare(nlohmann_json
-        GIT_REPOSITORY https://github.com/ArthurSonzogni/nlohmann_json_cmake_fetchcontent
-        GIT_TAG v3.9.1)
+include(FetchContent)
 
-FetchContent_GetProperties(nlohmann_json)
-if(NOT nlohmann_json_POPULATED)
-    FetchContent_Populate(nlohmann_json)
-    add_subdirectory(${nlohmann_json_SOURCE_DIR} ${nlohmann_json_BINARY_DIR} EXCLUDE_FROM_ALL)
+FetchContent_Declare(json
+  GIT_REPOSITORY https://github.com/ArthurSonzogni/nlohmann_json_cmake_fetchcontent
+  GIT_TAG v3.10.4)
+
+FetchContent_GetProperties(json)
+if(NOT json_POPULATED)
+  FetchContent_Populate(json)
+  add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
 FetchContent_Declare(spdlog
         GIT_REPOSITORY https://github.com/gabime/spdlog
-        GIT_TAG v1.8.5)
+        GIT_TAG v1.9.2)
 FetchContent_MakeAvailable(spdlog)
 
 set(ENGINE_FILES
