@@ -1,9 +1,13 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "StringRepository.h"
 #include "Func.h"
 #include <codecvt>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <spdlog/spdlog.h>
+
 using namespace std;
 
 StringRepository::StringRepository()
@@ -20,7 +24,6 @@ void StringRepository::LoadLanguageFile(ifstream* conf)
     std::locale old_locale;
     std::locale utf8_locale(old_locale, new std::codecvt_utf8<wchar_t>);
     conf->imbue(utf8_locale);
-
 
     if (conf->good())
     {
@@ -58,7 +61,7 @@ void StringRepository::LoadLanguageFile(ifstream* conf)
         }
     } else
     {
-        cout << "ERROR! Could not load lang file." << endl;
+        SPDLOG_ERROR("Could not load lang file.");
     }
 
     conf->close();
@@ -84,7 +87,8 @@ void StringRepository::LoadLanguageFiles(int langNum)
 
                 if (key.size() == 4)
                 {
-                    cout << "Loaded language id " << key[0] << " file '" << key[1] << "' with value '" << key[2] << "'" << endl;
+                    // why are you not working bro????????
+                    SPDLOG_DEBUG("Loaded language id {}, file {}, value {}", key[0], key[1], key[2]);
                     langIDs.push_back(atof(key[0].c_str()));
                     langFiles.push_back("" + key[2]);
                     langNames.push_back(key[1]);
@@ -102,7 +106,7 @@ void StringRepository::LoadLanguageFiles(int langNum)
         }
 
         ifstream conf2("resources/lang/" + langFiles[selID] + ".txt");
-        cout << "#### Loading language file: " << langNames[selID] << " " << langFiles[selID] << endl;
+        SPDLOG_INFO("Loading language file: {} {}", langNames[selID], langFiles[selID]);
         LoadLanguageFile(&conf2);
     } else
     {

@@ -1,9 +1,12 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
+
 #include "Config.h"
 #include "Func.h"
 #include "V4Core.h"
 #include <algorithm>
 #include <iostream>
 #include <string>
+#include <spdlog/spdlog.h>
 
 using namespace std;
 
@@ -67,7 +70,7 @@ void Config::LoadConfig(V4Core* core)
                 if (key.size() > 1)
                 {
                     configMap[key[0]] = key[1];
-                    cout << "Loaded key '" << key[0] << "' with value '" << key[1] << "'" << endl;
+                    SPDLOG_DEBUG("Loaded key '{}' with value '{}'", key[0], key[1]);
 
                     for (int i = 0; i < keysCheckList.size(); i++)
                     {
@@ -81,13 +84,13 @@ void Config::LoadConfig(V4Core* core)
                     }
                 } else
                 {
-                    cout << "Ignoring key '" << key[0] << ". Reason: invalid value or corrupted config" << endl;
+                    SPDLOG_WARN("Ignoring key '{}'. Reason: invalid value or corrupted config", key[0]);
                 }
             }
         }
     } else
     {
-        cout << "ERROR! Could not load config file." << endl;
+        SPDLOG_ERROR("Could not load config file.");
     }
 
     conf.close();
@@ -105,7 +108,7 @@ void Config::LoadConfig(V4Core* core)
             conf2 << keysCheckList[i] << ":" << keysCheckDefaults[i];
             configMap[keysCheckList[i]] = keysCheckDefaults[i];
 
-            cout << "Adding missing config entry: " << keysCheckList[i] << " = " << keysCheckDefaults[i] << endl;
+            SPDLOG_DEBUG("Adding missing config entry: '{}' = '{}'", keysCheckList[i], keysCheckDefaults[i]);
 
             ///remember to newline
             if (i != keysCheckList.size() - 1)
@@ -124,7 +127,7 @@ void Config::LoadConfig(V4Core* core)
 void Config::SaveConfig()
 {
     ofstream conf2("config.ini", ios::trunc);
-    cout << "Config Size: " << configMap.size() << "Config Keys: " << configKeys.size() << endl;
+    SPDLOG_DEBUG("Config Size: {}, Config Keys: {}", configMap.size(), configKeys.size());
 
     if (conf2.is_open())
     {
@@ -138,7 +141,7 @@ void Config::SaveConfig()
             ///save all keys and defaults
             conf2 << configKeys[i] << ":" << configMap[configKeys[i]];
 
-            cout << "Saving config entry: " << configKeys[i] << " = " << configMap[configKeys[i]] << endl;
+            SPDLOG_DEBUG("Saving config entry '{}' = '{}'", configKeys[i], configMap[configKeys[i]]);
 
             ///remember to newline
             if (i != configMap.size() - 1)

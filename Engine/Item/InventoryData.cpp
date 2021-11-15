@@ -1,3 +1,5 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "InventoryData.h"
 #include "../SaveReader.h"
 #include "Item.h"
@@ -10,7 +12,7 @@ using namespace std;
 
 InventoryData::InventoryData()
 {
-    cout << "InventoryData::InventoryData() constructor" << endl;
+    SPDLOG_TRACE("InventoryData::InventoryData() constructor");
     itemReg.readItemFiles();
 }
 
@@ -75,10 +77,10 @@ bool InventoryData::checkItemObtained(vector<int> item_id)
 {
     if (item_id.size() > 2)
     {
-        cout << "InventoryData::checkItemObtained({" << item_id[0] << ", " << item_id[1] << ", " << item_id[2] << "})" << endl;
+        SPDLOG_DEBUG("InventoryData::checkItemObtained({}, {}, {})", item_id[0], item_id[1], item_id[2]);
     } else
     {
-        cout << "InventoryData::checkItemObtained({" << item_id[0] << ", " << item_id[1] << "})" << endl;
+        SPDLOG_DEBUG("InventoryData::checkItemObtained({}, {})", item_id[0], item_id[1]);
     }
 
     for (int i = 0; i < items.size(); i++)
@@ -87,12 +89,12 @@ bool InventoryData::checkItemObtained(vector<int> item_id)
 
         if (current_item.item->order_id == item_id)
         {
-            cout << "Found" << endl;
+            SPDLOG_TRACE("Found");
             return true;
         }
     }
 
-    cout << "Not found" << endl;
+    SPDLOG_TRACE("Not found");
     return false;
 }
 
@@ -104,23 +106,25 @@ bool InventoryData::checkItemObtainedByName(string item_name)
 
         if (current_item.item->item_name == item_name)
         {
-            cout << "Found" << endl;
+            SPDLOG_TRACE("Found");
             return true;
         }
     }
 
-    cout << "Not found" << endl;
+    SPDLOG_TRACE("Not found");
     return false;
 }
 
 void InventoryData::addItem(vector<int> item_id, int count)
 {
-    cout << "InventoryData::addItem({" << item_id[0];
+    std::string str_item_id = std::to_string(item_id[0]);
+
     for (int i = 1; i < item_id.size(); i++)
     {
-        cout << ", " << item_id[i];
+        str_item_id += "," + std::to_string(item_id[i]);
     }
-    cout << "});" << endl;
+
+    SPDLOG_INFO("Adding item with ID {}", str_item_id);
 
     if (checkItemObtained(item_id))
     {

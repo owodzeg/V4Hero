@@ -1,3 +1,5 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "ItemRegistry.h"
 #include "../Config.h"
 #include "../Func.h"
@@ -7,6 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include <spdlog/spdlog.h>
 
 using namespace std;
 using json = nlohmann::json; // Convenience recommended by the library
@@ -53,7 +56,8 @@ void ItemRegistry::readItemFiles()
                             new_item->order_id.push_back(j);
                             new_item->order_id.push_back(k);
                             items.push_back(new_item);
-                            cout << "[DEBUG] Item Registered: " << new_item->order_id[0] << ", " << new_item->order_id[1] << ", " << new_item->order_id[2] << " " << new_item->item_name << endl;
+
+                            SPDLOG_DEBUG("Item registered! ID: {} {} {} Name: {}", new_item->order_id[0], new_item->order_id[1], new_item->order_id[2], new_item->item_name);
 
                             break;
                         }
@@ -97,7 +101,7 @@ void ItemRegistry::readItemFiles()
                             new_item->order_id.push_back(i);
                             new_item->order_id.push_back(j);
                             new_item->order_id.push_back(k);
-                            cout << "[DEBUG] Item Registered: " << new_item->order_id[0] << ", " << new_item->order_id[1] << ", " << new_item->order_id[2] << " " << new_item->item_name << endl;
+                            SPDLOG_DEBUG("Item registered! ID: {} {} {} Name: {}", new_item->order_id[0], new_item->order_id[1], new_item->order_id[2], new_item->item_name);
                             items.push_back(new_item);
 
                             break;
@@ -122,7 +126,7 @@ void ItemRegistry::readItemFiles()
                             new_item->order_id.push_back(i);
                             new_item->order_id.push_back(j);
                             new_item->order_id.push_back(k);
-                            cout << "[DEBUG] Item Registered: " << new_item->order_id[0] << ", " << new_item->order_id[1] << ", " << new_item->order_id[2] << " " << new_item->item_name << endl;
+                            SPDLOG_DEBUG("Item registered! ID: {} {} {} Name: {}", new_item->order_id[0], new_item->order_id[1], new_item->order_id[2], new_item->item_name);
                             items.push_back(new_item);
 
                             break;
@@ -159,7 +163,7 @@ void ItemRegistry::readItemFiles()
                             new_weapon->order_id.push_back(i);
                             new_weapon->order_id.push_back(j);
                             new_weapon->order_id.push_back(k);
-                            cout << "[DEBUG] Item Registered: " << new_weapon->order_id[0] << ", " << new_weapon->order_id[1] << ", " << new_weapon->order_id[2] << ", " << new_weapon->icon_path << ", " << new_weapon->icon_path << endl;
+                            SPDLOG_DEBUG("Item registered! ID: {} {} {} Name: {} {}", new_weapon->order_id[0], new_weapon->order_id[1], new_weapon->order_id[2], new_weapon->icon_path, new_weapon->item_name);
                             items.push_back(new_weapon);
 
                             break;
@@ -201,7 +205,7 @@ void ItemRegistry::readItemFiles()
                             new_armour->order_id.push_back(i);
                             new_armour->order_id.push_back(j);
                             new_armour->order_id.push_back(k);
-                            cout << "[DEBUG] Item Registered: " << new_armour->order_id[0] << ", " << new_armour->order_id[1] << ", " << new_armour->order_id[2] << ", " << new_armour->icon_path << ", " << new_armour->item_name << endl;
+                            SPDLOG_DEBUG("Item registered! ID: {} {} {} Name: {} {}", new_armour->order_id[0], new_armour->order_id[1], new_armour->order_id[2], new_armour->icon_path, new_armour->item_name);
                             items.push_back(new_armour);
 
                             break;
@@ -230,35 +234,35 @@ void ItemRegistry::readItemFiles()
                         new_item->order_id.push_back(i);
                         new_item->order_id.push_back(j);
                         items.push_back(new_item);
-                        cout << "[DEBUG] Item Registered: " << new_item->order_id[0] << ", " << new_item->order_id[1] << endl;
+                        SPDLOG_DEBUG("Item registered! ID: {} {}", new_item->order_id[0], new_item->order_id[1]);
                         //item_counts[0]++;
                         break;
                     }
 
                     case 1: /// Materials
                     {
-                        cout << "[ERROR] Materials section of item_data.json thought to be only 2 levels of arrays" << endl;
+                        SPDLOG_ERROR("Materials section of item_data.json thought to be only 2 levels of arrays");
                         //item_counts[type_counts[1] + j]++; // I dunno but I might as well see if it works
                         break;
                     }
 
                     case 2: /// Consumables
                     {
-                        cout << "[ERROR] Consumables section of item_data.json thought to be only 2 levels of arrays" << endl;
+                        SPDLOG_ERROR("[ERROR] Consumables section of item_data.json thought to be only 2 levels of arrays");
                         //item_counts[type_counts[2] + j]++;
                         break;
                     }
 
                     case 3: /// Weapons
                     {
-                        cout << "[ERROR] Weapons section of item_data.json thought to be only 2 levels of arrays" << endl;
+                        SPDLOG_ERROR("[ERROR] Weapons section of item_data.json thought to be only 2 levels of arrays");
                         //item_counts[type_counts[4] + j]++;
                         break;
                     }
 
                     case 4: /// Armour
                     {
-                        cout << "[ERROR] Armour section of item_data.json thought to be only 2 levels of arrays" << endl;
+                        SPDLOG_ERROR("[ERROR] Armour section of item_data.json thought to be only 2 levels of arrays");
                         //item_counts[type_counts[5] + j]++;
                         break;
                     }
@@ -267,7 +271,7 @@ void ItemRegistry::readItemFiles()
         }
     }
 
-    cout << "ItemRegistry::readItemFiles(): amount of items: " << items.size() << endl;
+    SPDLOG_INFO("ItemRegistry registered {} items", items.size());
 
     /*
     cout << "Loaded items:" << endl;
@@ -329,10 +333,10 @@ Item* ItemRegistry::getItemByID(std::vector<int> id)
     */
     if (id.size() > 2)
     {
-        cout << "[ERROR] Item registry failed to found item of id{" << id[0] << " " << id[1] << " " << id[2] << endl;
+        SPDLOG_ERROR("Item registry failed to found item of id {} {} {}", id[0], id[1], id[2]);
     } else
     {
-        cout << "[ERROR] Item registry failed to found item of id{" << id[0] << " " << id[1] << endl;
+        SPDLOG_ERROR("Item registry failed to found item of id {} {}", id[0], id[1]);
     }
 }
 
