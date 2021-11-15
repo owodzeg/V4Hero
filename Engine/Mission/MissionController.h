@@ -42,7 +42,7 @@ public:
 
     ControlTips ctrlTips;
 
-    bool showHitboxes = false;
+    bool showHitboxes = true;
 
     Background test_bg;
     Rhythm rhythm;
@@ -120,8 +120,7 @@ public:
     ///cloneables
     std::vector<std::unique_ptr<Kirajin_Yari_2>> kirajins;
 
-    float patapon_y = 600; ///temp
-    float wall_y = 200;    ///temp
+    float patapon_y = 600;
     float gravity = 981;
     float floor_y = 200;
 
@@ -237,8 +236,6 @@ public:
     /** Collisions **/
     static bool DoCollisionStepInAxis(float currentAxisAngle, HitboxFrame* currentHitboxFrame, AnimatedObject* targetObject, HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float CurrentObjectY) ;
     static vector<MissionController::CollisionEvent> DoCollisions(HitboxFrame* currentObjectHitBoxFrame, float currentObjectX, float currentObjectY, int collisionObjectID, vector<CollidableObject*> collisionObjects, vector<string> collisionData = {}) ;
-    float pataponMaxProjection(float axisAngle, int id);
-    float pataponMinProjection(float axisAngle, int id);
 
     /** Cutscenes **/
     void StartCutscene(const std::string& text, bool isBlackScreen, int TimeToShow);

@@ -21,6 +21,7 @@ void Hitbox::SetFrame(float time)
     }
     tmp.rotation = 0;
 
+    tmp.calcMaxWidth();
     frames.push_back(tmp);
 
     std::sort(frames.begin(), frames.end(), [](auto const& a, auto const& b) { return a.time < b.time; });
@@ -39,6 +40,7 @@ void Hitbox::SetCustomFrame(float in_time, float in_gx, float in_gy, float in_x,
     tmp.addVertex(in_x + in_width / 2, in_y + in_height / 2); /// "bottom right"
     tmp.rotation = angle;
 
+    tmp.calcMaxWidth();
     frames.push_back(tmp);
 
     std::sort(frames.begin(), frames.end(), [](auto const& a, auto const& b) { return a.time < b.time; });
@@ -94,6 +96,7 @@ void Hitbox::SetPos(float time)
                         tmp.addVertex(t_x, t_y);
                     }
                     tmp.rotation = rotation;
+                    tmp.calcMaxWidth();
 
                     hitboxObject = tmp;
 
@@ -118,6 +121,7 @@ void Hitbox::SetPos(float time)
                     }
                     tmp.rotation = frames[frames.size() - 1].rotation;
 
+                    tmp.calcMaxWidth();
                     hitboxObject = tmp;
                 }
             } else
@@ -125,6 +129,7 @@ void Hitbox::SetPos(float time)
                 if (debug)
                     cout << "[OBJ] HANDLER 2: last frame, get last pos" << endl;
 
+                frames[i].calcMaxWidth();
                 hitboxObject = frames[i];
 
                 break;
