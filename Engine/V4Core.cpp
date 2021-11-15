@@ -1,3 +1,5 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
+
 #include "V4Core.h"
 #include <chrono>
 #include <cstdlib>
@@ -19,21 +21,12 @@ inline bool exists(const std::string& name)
 
 V4Core::V4Core()
 {
-    std::cout << SFML_VERSION_MAJOR << "." << SFML_VERSION_MINOR << "." << SFML_VERSION_PATCH << std::endl;
-
-    ofstream dbg("V4Hero-" + hero_version + "-latest.log", ios::trunc);
-    dbg.close();
-
     rpc_details = "Running Patafour " + hero_version;
-    saveToDebugLog(rpc_details);
 
     const unsigned int maxSize = sf::Texture::getMaximumSize();
-    cout << "[Debug] Max texture size: " << maxSize << endl;
-    saveToDebugLog("[GPU] Max texture size: " + to_string(maxSize));
-
+    SPDLOG_DEBUG("Max allowed texture size: {}", maxSize);
     sf::RenderTexture rtx;
-    cout << "[Debug] Maximum antialiasing level: " << rtx.getMaximumAntialiasingLevel() << endl;
-    saveToDebugLog("[GPU] Maximum antialiasing level: " + to_string(rtx.getMaximumAntialiasingLevel()));
+    SPDLOG_DEBUG("Max antialiasing level: {}", rtx.getMaximumAntialiasingLevel());
 
     /*auto result = discord::Core::Create(712761245752623226, DiscordCreateFlags_NoRequireDiscord, &core);
     state.core.reset(core);
@@ -339,7 +332,7 @@ void V4Core::showTip()
 
 void V4Core::cacheEntity(int entityID, shared_ptr<vector<vector<sf::Image>>> swaps, shared_ptr<vector<AnimatedObject::Animation>> spritesheet, shared_ptr<vector<Object>> objects)
 {
-    cout << "[V4Core] cacheEntity id " << entityID << endl;
+    SPDLOG_DEBUG("Caching entity with id {}", entityID);
 
     isCached[entityID] = true;
 
@@ -348,7 +341,7 @@ void V4Core::cacheEntity(int entityID, shared_ptr<vector<vector<sf::Image>>> swa
     animation_cache[entityID].get()->spritesheet = spritesheet;
     //animation_cache[entityID].get()->objects = objects;
 
-    cout << "[V4Core] cache created" << endl;
+    SPDLOG_DEBUG("Cache created");
 }
 
 void V4Core::init()
@@ -400,8 +393,7 @@ void V4Core::init()
             if (event.type == sf::Event::KeyPressed)
             {
                 ///keyMap[event.key.code] = true/false??? would that do the trick?
-                cout << "[DEBUG] Key pressed: " << event.key.code << endl;
-                saveToDebugLog("[DEBUG] Key pressed: " + to_string(event.key.code));
+                SPDLOG_DEBUG("Key pressed: {}", event.key.code);
 
                 inputCtrl.keyRegistered = true;
                 inputCtrl.currentKey = event.key.code;
@@ -411,8 +403,7 @@ void V4Core::init()
 
             if (event.type == sf::Event::KeyReleased)
             {
-                cout << "[DEBUG] Key released: " << event.key.code << endl;
-                saveToDebugLog("[DEBUG] Key released: " + to_string(event.key.code));
+                SPDLOG_DEBUG("Key released: {}", event.key.code);
 
                 inputCtrl.keyMapHeld[event.key.code] = false;
             }
@@ -423,7 +414,7 @@ void V4Core::init()
             {
                 if (event.joystickButton.joystickId == 0)
                 {
-                    std::cout << "[DEBUG] Joystick (" << event.joystickButton.joystickId << ") key pressed: " << event.joystickButton.button << std::endl;
+                    SPDLOG_DEBUG("Joystick ({}) key pressed: {}", event.joystickButton.joystickId, event.joystickButton.button);
 
                     inputCtrl.keyRegistered = true;
                     inputCtrl.currentKey = 1000 + event.joystickButton.button;
@@ -436,7 +427,7 @@ void V4Core::init()
             {
                 if (event.joystickButton.joystickId == 0)
                 {
-                    std::cout << "[DEBUG] Joystick (" << event.joystickButton.joystickId << ") key pressed: " << event.joystickButton.button << std::endl;
+                    SPDLOG_DEBUG("Joystick ({}) key released: {}", event.joystickButton.joystickId, event.joystickButton.button);
 
                     inputCtrl.keyMapHeld[1000 + event.joystickButton.button] = false;
                 }
@@ -556,5 +547,5 @@ void V4Core::init()
         //if(state.core)
         //state.core->RunCallbacks();
     }
-    cout << "Main game loop exited. Shutting down..." << endl;
+    SPDLOG_INFO("Main game loop exited. Shutting down...");
 }

@@ -831,7 +831,8 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
         }
     }
 
-	spdlog::info("[MissionController] Loading finished. Loading took {} seconds", bm.getElapsedTime().asSeconds());
+    auto logger = spdlog::get("patalogger");
+    SPDLOG_INFO("Loading finished. Loading took {} seconds", bm.getElapsedTime().asSeconds());
 }
 
 void MissionController::spawnProjectile(PSprite& sprite, float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float max_dmg, float min_dmg, float crit, bool enemy)
