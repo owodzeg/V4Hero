@@ -9,7 +9,6 @@ PSprite::PSprite()
 
 void PSprite::loadFromFile(std::string file, int q)
 {
-    std::cout << file << std::endl;
     std::string a = file.substr(0, file.find_last_of("."));
     std::string b = file.substr(file.find_last_of("."));
     std::string sq = "";
@@ -38,15 +37,12 @@ void PSprite::loadFromFile(std::string file, int q)
     qualitySetting = q;
     resSetting = 1;
 
-    std::cout << "[PSPRITE] Loading " << c << std::endl;
+    SPDLOG_DEBUG("Loading PSprite: {}", c);
     texname = c;
 
     if (!t.loadFromFile(c))
     {
-        std::ofstream dbg("V4Hero-errors.log", std::ios::app);
-        dbg << "Failed to load " << c;
-        dbg << "\r\n";
-        dbg.close();
+        SPDLOG_ERROR("Failed to load: {}", c);
     }
 
     t.setSmooth(true);
@@ -55,7 +51,6 @@ void PSprite::loadFromFile(std::string file, int q)
 
 void PSprite::loadFromFile(std::string file, int q, int r = 1)
 {
-    std::cout << file << std::endl;
     std::string a = file.substr(0, file.find_last_of("."));
     std::string b = file.substr(file.find_last_of("."));
     std::string sq = "";
@@ -84,15 +79,12 @@ void PSprite::loadFromFile(std::string file, int q, int r = 1)
     qualitySetting = q;
     resSetting = r;
 
-    std::cout << "[PSPRITE] Loading " << c << std::endl;
+    SPDLOG_DEBUG("Loading PSprite: {}", c);
     texname = c;
 
     if (!t.loadFromFile(c))
     {
-        std::ofstream dbg("V4Hero-errors.log", std::ios::app);
-        dbg << "Failed to load " << c;
-        dbg << "\r\n";
-        dbg.close();
+        SPDLOG_ERROR("Failed to load: {}", c);
     }
 
     t.setSmooth(true);

@@ -1,3 +1,5 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "Yaripon.h"
 #include "../../../Func.h"
 #include "../../../V4Core.h"

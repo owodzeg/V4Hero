@@ -1,6 +1,8 @@
 #ifndef RHYTHM_H
 #define RHYTHM_H
 
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <spdlog/logger.h>

@@ -1,3 +1,5 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "SaveReader.h"
 #include "Config.h"
 #include "Func.h"

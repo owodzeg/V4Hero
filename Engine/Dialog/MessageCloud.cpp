@@ -1,3 +1,5 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
+
 #include "MessageCloud.h"
 #include <iostream>
 #include <math.h>
@@ -16,7 +18,7 @@ void MessageCloud::setSize(float new_x, float new_y)
 
 void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bool can_speedup, int q, std::string font_path)
 {
-    cout << "MessageCloud::Create()" << endl;
+    SPDLOG_DEBUG("MessageCloud::Create()");
 
     timeout = speed;
     regular_timeout = timeout;
@@ -40,12 +42,12 @@ void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bo
 
     startpos = start_pos;
 
-    cout << "MessageCloud::Create(): finished" << endl;
+    SPDLOG_DEBUG("MessageCloud::Create(): finished");
 }
 
 void MessageCloud::AddDialog(sf::String text, bool nextdialog)
 {
-    cout << "MessageCloud::AddDialog()" << endl;
+    SPDLOG_DEBUG("MessageCloud::AddDialog()");
 
     PText a, b;
 
@@ -60,14 +62,14 @@ void MessageCloud::AddDialog(sf::String text, bool nextdialog)
 
     next_dialog.push_back(nextdialog);
 
-    cout << "MessageCloud::AddDialog(): finished" << endl;
+    SPDLOG_DEBUG("MessageCloud::AddDialog(): finished");
 }
 
 void MessageCloud::Show()
 {
     if (!active)
     {
-        cout << "MessageCloud::Show()" << endl;
+        SPDLOG_DEBUG("MessageCloud::Show()");
 
         active = true;
 
@@ -76,7 +78,7 @@ void MessageCloud::Show()
 
         text_timeout.restart();
 
-        cout << "MessageCloud::Show(): finished" << endl;
+        SPDLOG_DEBUG("MessageCloud::Show(): finished");
     }
 }
 

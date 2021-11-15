@@ -1,3 +1,5 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "MissionController.h"
 #include "../Math/PVector.h"
 #include "../Utils.h"

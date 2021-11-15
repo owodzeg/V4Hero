@@ -12,7 +12,7 @@ using namespace std;
 
 StringRepository::StringRepository()
 {
-    configDebugID = 0;
+    configDebugID = 0; 
     ///check if config file already exists
     ifstream check("config.ini");
     bool exists = check.good();
@@ -87,7 +87,6 @@ void StringRepository::LoadLanguageFiles(int langNum)
 
                 if (key.size() == 4)
                 {
-                    // why are you not working bro????????
                     SPDLOG_DEBUG("Loaded language id {}, file {}, value {}", key[0], key[1], key[2]);
                     langIDs.push_back(atof(key[0].c_str()));
                     langFiles.push_back("" + key[2]);

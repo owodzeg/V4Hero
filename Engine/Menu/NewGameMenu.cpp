@@ -1,3 +1,5 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
+
 #include "NewGameMenu.h"
 #include "../V4Core.h"
 #include "ButtonList.h"

@@ -1,3 +1,4 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
 #include "Scene.h"
 #include "../V4Core.h"
 #include <iostream>
@@ -7,15 +8,11 @@ Scene::Scene()
 }
 void Scene::Initialise(Config* thisConfigs, V4Core* parent)
 {
-    parent->saveToDebugLog("Initializing a new Scene...");
-
-    std::cout << "[SCENE] Initializing...";
+    SPDLOG_TRACE("Initializing a new Scene...");
     thisConfig = thisConfigs;
 
     v4Core = parent;
-    std::cout << " done" << std::endl;
-
-    parent->saveToDebugLog("Scene initialized.");
+    SPDLOG_TRACE("Scene initialized successfully.");
 }
 
 void Scene::EventFired(sf::Event event)

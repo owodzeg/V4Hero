@@ -1,6 +1,8 @@
 #ifndef RHYTHMCONTROLLER_H
 #define RHYTHMCONTROLLER_H
 
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include <deque>
 #include <map>
 #include <string>

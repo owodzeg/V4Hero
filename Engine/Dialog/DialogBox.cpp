@@ -1,3 +1,5 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
+
 #include "DialogBox.h"
 #include <iostream>
 
@@ -26,7 +28,7 @@ PataDialogBox::PataDialogBox()
 
 void PataDialogBox::Create(sf::Font font, sf::String text, std::vector<sf::String> options, int qualitySetting)
 {
-    cout << "Creating new PataDialogBox" << endl;
+    SPDLOG_DEBUG("Creating new PataDialogBox");
 
     t_dialogType.createText(font, 16, sf::Color::Red, "Information", qualitySetting, 1);
     t_dialogText.createText(font, 30, sf::Color::Black, text, qualitySetting, 1);

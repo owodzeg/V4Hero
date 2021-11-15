@@ -1,3 +1,5 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
+
 #include "MainMenu.h"
 #include "../V4Core.h"
 #include "ButtonList.h"
@@ -9,7 +11,7 @@ MainMenu::MainMenu()
 }
 void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
 {
-    parent->saveToDebugLog("Initializing Main Menu...");
+    SPDLOG_DEBUG("Initializing main menu...");
 
     f_font.loadFromFile(thisConfigs->fontPath);
     config = thisConfigs;
@@ -179,7 +181,7 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
         v_background[i].position = vx_pos[i];
         v_background[i].color = vx_color[i];
 
-        cout << "vx_pos: " << vx_pos[i].x << " " << vx_pos[i].y << endl;
+        SPDLOG_TRACE("main menu background vx_pos: {} {}", vx_pos[i].x, vx_pos[i].y);
     }
 
     g_x[0] = 0;
@@ -205,7 +207,7 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
         premenu = true;
     } else
     {
-        cout << "It's your first time running the game!" << endl;
+        SPDLOG_INFO("It's your first time running the game!");
         firstrun = true;
     }
 
@@ -227,7 +229,7 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
 
     introductionMenu.Initialise(thisConfig, v4Core, this);
 
-    parent->saveToDebugLog("Main menu initialized.");
+    SPDLOG_DEBUG("Main menu initialized.");
     //title_loop.play();
     startClock.restart();
     frClock.restart();
@@ -304,7 +306,7 @@ void MainMenu::SelectMenuOption()
 
             if (!exists)
             {
-                cout << "There is no save. Start new game!" << endl;
+                SPDLOG_INFO("There is no save. Start new game!");
 
                 screenFade.Create(thisConfig, 1, 512);
                 goto_id = 0;
@@ -321,7 +323,7 @@ void MainMenu::SelectMenuOption()
                 patapolisMenu.loadedSave = false;*/
             } else
             {
-                cout << "There is an existing save data. Ask if overwrite" << endl;
+                SPDLOG_INFO("There is an existing save data. Ask if overwrite");
 
                 std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetString("nav_yes")), Func::ConvertToUtf8String(config->strRepo.GetString("nav_no"))};
 
@@ -347,7 +349,7 @@ void MainMenu::SelectMenuOption()
 
                 if (v4Core->saveReader.save_ver != "2.0")
                 {
-                    cout << "Invalid save data!" << endl;
+                    SPDLOG_WARN("Outdated save data!");
 
                     std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetString("nav_understood"))};
 
@@ -362,7 +364,7 @@ void MainMenu::SelectMenuOption()
                 }
             } else
             {
-                cout << "There is no savedata. Error" << endl;
+                SPDLOG_WARN("There is no savedata.");
 
                 std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetString("nav_understood"))};
 
@@ -727,7 +729,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
 
             if (old_sel != totem_sel)
             {
-                cout << "Totem changed to " << totem_sel << endl;
+                SPDLOG_TRACE("Totem changed to {}", totem_sel);
                 t_option[totem_sel].setScale(1.2, 1.2);
             }
 
@@ -929,7 +931,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                         case 0: {
                             if (dialogboxes[dialogboxes.size() - 1].id == 0)
                             {
-                                cout << "Starting new game!" << endl;
+                                SPDLOG_INFO("Starting new game!");
                                 dialogboxes[dialogboxes.size() - 1].Close();
 
                                 screenFade.Create(thisConfig, 1, 512);
@@ -948,7 +950,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                         }
 
                         case 1: {
-                            cout << "Returning to title screen!" << endl;
+                            SPDLOG_INFO("Returning to title screen!");
                             dialogboxes[dialogboxes.size() - 1].Close();
 
                             break;

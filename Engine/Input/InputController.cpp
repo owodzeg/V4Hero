@@ -1,5 +1,8 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
+
 #include "InputController.h"
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 using namespace std;
 
@@ -21,12 +24,12 @@ void InputController::LoadKeybinds(Config& config)
         for (int i = 1; i <= 9; i++)
         {
             string confkey = "keybind" + keyLabels[k] + to_string(i);
-            cout << "Checking confkey " << confkey << endl;
+            SPDLOG_TRACE("Checking confkey {}", confkey);
 
             if (config.keyExists(confkey))
             {
                 keybinds[k].push_back(config.GetInt(confkey));
-                cout << "Loading keybind " << k << " with key id " << confkey << endl;
+                SPDLOG_DEBUG("Loading keybind {} with key id {}", k, confkey);
             }
         }
     }

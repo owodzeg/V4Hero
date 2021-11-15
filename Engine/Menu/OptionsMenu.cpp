@@ -1,6 +1,9 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "OptionsMenu.h"
 #include "ButtonList.h"
 #include <iostream>
+#include <spdlog/spdlog.h>
 //#include <windows.h>
 #include "../V4Core.h"
 #include "math.h"
@@ -42,11 +45,11 @@ OptionsMenu::OptionsMenu()
 void OptionsMenu::Initialise(Config* thisConfigs, V4Core* parent, Menu* curParentMenu)
 {
     parent->saveToDebugLog("Initializing Options menu...");
-    cout << "Initialize Options menu" << endl;
+    SPDLOG_DEBUG("Initialize Options menu");
     Scene::Initialise(thisConfigs, parent);
     //buttonList.Initialise(&m_font,*thisConfig,keymap,&(v4core->currentController),this);
     parentMenu = curParentMenu;
-    cout << "Initial values loaded, loading assets" << endl;
+    SPDLOG_DEBUG("Initial values loaded, loading assets");
     /*t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("menu_button_3")));
 
     t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
@@ -56,7 +59,7 @@ void OptionsMenu::Initialise(Config* thisConfigs, V4Core* parent, Menu* curParen
     m_font.loadFromFile(thisConfigs->fontPath);
 
     int q = thisConfigs->GetInt("textureQuality");
-    cout << "Quality:" << q << endl;
+    SPDLOG_TRACE("Quality: {}", q);
     bg.loadFromFile("resources/graphics/ui/options/options.png", q, 1);
     sword.loadFromFile("resources/graphics/ui/options/sword.png", q, 2);
 
@@ -287,7 +290,7 @@ void OptionsMenu::Initialise(Config* thisConfigs, V4Core* parent, Menu* curParen
     t_cs_bigbutton.createText(m_font, 30, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_bigbutton")), q, 1);
     t_cs_tip.createText(m_font, 15, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_tip2")), q, 1);
 
-    parent->saveToDebugLog("Options menu initialized.");
+    SPDLOG_DEBUG("Options menu initialized.");
 }
 
 void OptionsMenu::SelectMenuOption()
@@ -312,7 +315,7 @@ void OptionsMenu::SelectMenuOption()
 
     sel = 0;
 
-    cout << "OptionsMenu::SelectMenuOption(): State switched to " << state << endl;
+    SPDLOG_INFO("State switched to {}", state);
 }
 
 void OptionsMenu::GoBackMenuOption(int a)
@@ -335,14 +338,14 @@ void OptionsMenu::GoBackMenuOption(int a)
 
     sel = 0;
 
-    cout << "OptionsMenu::GoBackMenuOption(): State switched to " << state << endl;
+    SPDLOG_INFO("State switched to ", state);
 }
 
 void OptionsMenu::SetConfigValue(std::string key, std::string value, bool selectmenu)
 {
     if (thisConfig->GetString(key) != value)
     {
-        cout << "Changing key " << key << " to " << value << endl;
+        SPDLOG_DEBUG("Changing key {} to {}", key, value);
 
         ///Save the original key first, if not already saved
         bool found = false;
@@ -355,7 +358,7 @@ void OptionsMenu::SetConfigValue(std::string key, std::string value, bool select
 
         if (!found)
         {
-            cout << "Past changes not found; save original config" << endl;
+            SPDLOG_DEBUG("Past changes not found; save original config");
 
             ConfigValue tmp;
             tmp.index = key;
@@ -592,7 +595,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 {
                     if (goto_id == -1)
                     {
-                        cout << "Create a screenFade" << endl;
+                        SPDLOG_DEBUG("Create a screenFade");
                         screenFade.Create(thisConfig, 1, 512);
                         goto_id = 0;
                     }
@@ -1198,7 +1201,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 {
                     if (high_range > beat_length / 2)
                     {
-                        cout << "[DEBUG] Trying to push high range, but bar is full" << endl;
+                        SPDLOG_DEBUG("Trying to push high range, but bar is full");
                         if (low_range > 1)
                             low_range -= 1;
                         else
@@ -1208,17 +1211,17 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                         }
                     } else if (high_range < 1)
                     {
-                        cout << "[DEBUG] Trying to make high range 0" << endl;
+                        SPDLOG_DEBUG("Trying to make high range 0");
                         high_range = 1;
                     }
-                    cout << "[DEBUG] Best range changed to: " << high_range << endl;
+                    SPDLOG_DEBUG("Best range changed to: {}", high_range);
                     ;
-                    cout << "[DEBUG] Good range changed to: " << low_range << endl;
+                    SPDLOG_DEBUG("Good range changed to: {}", low_range);
                 } else if (diff_sel == 2)
                 {
                     if (low_range > beat_length / 2)
                     {
-                        cout << "[DEBUG] Trying to push low range, but bar is full" << endl;
+                        SPDLOG_DEBUG("Trying to push low range, but bar is full");
                         if (high_range > 1)
                             high_range -= 1;
                         else
@@ -1228,14 +1231,13 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                         }
                     } else if (low_range < 1)
                     {
-                        cout << "[DEBUG] Trying to make low range 0" << endl;
+                        SPDLOG_DEBUG("Trying to make low range 0");
                         if (high_range > 1)
                             high_range -= 1;
                         low_range = 1;
                     }
-                    cout << "[DEBUG] Best range changed to: " << high_range << endl;
-                    ;
-                    cout << "[DEBUG] Good range changed to: " << low_range << endl;
+                    SPDLOG_DEBUG("Best range changed to: {}", high_range);
+                    SPDLOG_DEBUG("Good range changed to: {}", low_range);
                 }
 
                 thisConfig->thisCore->currentController.rhythm.high_range = high_range; // Apply (current session only) (to be able to load next update)
@@ -1552,7 +1554,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
         if ((state >= 40) && (state <= 40 + langs[lang_current].size() - 2))
         {
-            cout << "Select lang ID: " << lang_current * 5 + (state - 40) << endl;
+            SPDLOG_INFO("Select lang ID: {}", lang_current * 5 + (state - 40));
             SetConfigValue("lang", to_string(langIDs[lang_current * 5 + (state - 40) - 1]), false);
 
             GoBackMenuOption(1);
@@ -1575,7 +1577,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
         if ((state >= 111) && (state <= 110 + resolutions.size() - 1))
         {
-            cout << "Apply the resolution" << endl;
+            SPDLOG_INFO("Apply the resolution");
 
             int resID = state - 111;
 
@@ -1586,7 +1588,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
         if (state == 110 + resolutions.size())
         {
-            cout << "Leave the resolution options" << endl;
+            SPDLOG_INFO("Leave the resolution options");
 
             GoBackMenuOption();
         }
@@ -1713,7 +1715,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 {
                     case 0: ///Back to main menu
                     {
-                        cout << "Back to main menu" << endl;
+                        SPDLOG_INFO("Back to main menu");
 
                         Back();
 

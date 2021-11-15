@@ -1,4 +1,7 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "PText.h"
+#include <regex>
 #include <iostream>
 
 using namespace std;
@@ -9,7 +12,9 @@ PText::PText()
 
 void PText::createText(sf::Font& font, float characterSize, sf::Color color, sf::String text_string, int q, int r)
 {
-    cout << "[PText] Creating a new PText object: " << characterSize << " " << text_string.toAnsiString() << " " << q << " " << r << endl;
+    std::string log_str = text_string.toAnsiString();
+    log_str = std::regex_replace(log_str, std::regex("\n"), "\\n");
+    SPDLOG_DEBUG("Creating a new PText object: size: {} text: {} q: {} r: {}", characterSize, log_str, q, r);
 
     f = font;
     cS = characterSize;

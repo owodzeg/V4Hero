@@ -1,3 +1,5 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
+
 #include "IntroductionMenu.h"
 #include "../V4Core.h"
 
@@ -8,12 +10,11 @@ IntroductionMenu::IntroductionMenu()
 
 void IntroductionMenu::Initialise(Config* thisConfig, V4Core* parent, Menu* curParentMenu)
 {
-    parent->saveToDebugLog("Initializing Introduction menu...");
-    cout << "Initialize Introduction menu" << endl;
+    SPDLOG_DEBUG("Initialize Introduction menu");
     Scene::Initialise(thisConfig, parent);
     //buttonList.Initialise(&m_font,*thisConfig,keymap,&(v4core->currentController),this);
     parentMenu = curParentMenu;
-    cout << "Initial values loaded, loading assets" << endl;
+    SPDLOG_DEBUG("Initial values loaded, loading assets");
 
     msgcloud.Create(45, sf::Vector2f(640, 480), sf::Color::White, true, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
     msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("newgame_intro_1")), true);
@@ -33,7 +34,7 @@ void IntroductionMenu::Initialise(Config* thisConfig, V4Core* parent, Menu* curP
 
     timeout.restart();
 
-    parent->saveToDebugLog("Introduction menu initialized.");
+    SPDLOG_DEBUG("Introduction menu initialized.");
 }
 
 void IntroductionMenu::EventFired(sf::Event event)
