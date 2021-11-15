@@ -30,8 +30,8 @@ int main(int argc, char *argv[])
 
     /// Create a multi-sink logger to output for console and the logfile
     std::vector<spdlog::sink_ptr> sinks;
-    sinks.push_back(std::make_shared<spdlog::sinks::stdout_color_sink_st>());
-    sinks.push_back(std::make_shared<spdlog::sinks::basic_file_sink_st>(log_file));
+    sinks.push_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
+    sinks.push_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>(log_file));
 
     // Combine them and set as default
     auto combined_logger = std::make_shared<spdlog::logger>("patalogger", begin(sinks), end(sinks));
