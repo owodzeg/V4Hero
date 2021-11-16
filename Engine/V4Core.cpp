@@ -87,6 +87,30 @@ V4Core::V4Core()
     /** Load config from config.cfg **/
     config.LoadConfig(this);
 
+    /** Apply logging level from config **/
+    switch (config.GetInt("logLevel")) //i can't get int to convert to a spdlog::set_level argument, so i'm making a switch
+    {
+        case 0: {
+            spdlog::set_level(spdlog::level::trace);
+            SPDLOG_INFO("Logging level set to TRACE");
+            break;
+        }
+        case 1: {
+            spdlog::set_level(spdlog::level::debug);
+            SPDLOG_INFO("Logging level set to DEBUG");
+            break;
+        }
+        case 2: {
+            spdlog::set_level(spdlog::level::info);
+            SPDLOG_INFO("Logging level set to INFO");
+            break;
+        }
+    }
+
+    /** Load language data and appropriate font **/
+    config.strRepo.LoadLanguageFiles(config.GetInt("lang"));
+    config.fontPath = "resources/fonts/" + config.strRepo.langFonts[config.GetInt("lang") - 1];
+
     /** Load item registry **/
     saveReader.itemReg.readItemFiles();
 
