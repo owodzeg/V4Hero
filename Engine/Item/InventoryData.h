@@ -10,7 +10,6 @@ class InventoryData
 {
 public:
     SaveReader* saveReader;
-    ItemRegistry itemReg;
 
     struct InventoryItem {
         Item* item;

@@ -13,7 +13,6 @@ using namespace std;
 InventoryData::InventoryData()
 {
     SPDLOG_TRACE("InventoryData::InventoryData() constructor");
-    itemReg.readItemFiles();
 }
 
 InventoryData::~InventoryData()
@@ -132,7 +131,7 @@ void InventoryData::addItem(vector<int> item_id, int count)
     } else
     {
         InventoryData::InventoryItem new_item;
-        new_item.item = itemReg.getItemByID(item_id);
+        new_item.item = saveReader->itemReg.getItemByID(item_id);
         new_item.item_count = count;
         items.push_back(new_item);
     }
