@@ -2,6 +2,7 @@
 
 #include "DialogBox.h"
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 using namespace std;
 

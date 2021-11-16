@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <spdlog/spdlog.h>
 
 PSprite::PSprite()
 {

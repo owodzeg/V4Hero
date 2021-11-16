@@ -3,6 +3,7 @@
 #include "PText.h"
 #include <regex>
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 using namespace std;
 

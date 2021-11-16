@@ -3,6 +3,7 @@
 #include "MessageCloud.h"
 #include <iostream>
 #include <math.h>
+#include <spdlog/spdlog.h>
 
 using namespace std;
 
