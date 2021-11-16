@@ -52,7 +52,7 @@ void NameEntryButtonList::SelectButton(int index)
                 savMenu->v4Core->saveReader.kami_name = savMenu->GetEnteredString();
                 savMenu->v4Core->saveReader.hero_unlocked = 0;
 
-                for (int i = 0; i < 3; i++)
+                /*for (int i = 0; i < 3; i++)
                 {
                     savMenu->v4Core->saveReader.invData.addItem(savMenu->v4Core->saveReader.itemReg.getItemByName("item_wooden_spear")->order_id);
                     savMenu->v4Core->saveReader.invData.addItem(savMenu->v4Core->saveReader.itemReg.getItemByName("item_wooden_helmet")->order_id);
@@ -68,7 +68,7 @@ void NameEntryButtonList::SelectButton(int index)
                 savMenu->v4Core->saveReader.invData.addItem(savMenu->v4Core->saveReader.itemReg.getItemByName("item_pon_drum")->order_id);
                 savMenu->v4Core->saveReader.invData.addItem(savMenu->v4Core->saveReader.itemReg.getItemByName("item_pata_drum")->order_id);
                 savMenu->v4Core->saveReader.invData.addItem(savMenu->v4Core->saveReader.itemReg.getItemByName("item_chaka_drum")->order_id);
-                savMenu->v4Core->saveReader.invData.addItem(savMenu->v4Core->saveReader.itemReg.getItemByName("item_don_drum")->order_id);
+                savMenu->v4Core->saveReader.invData.addItem(savMenu->v4Core->saveReader.itemReg.getItemByName("item_don_drum")->order_id);*/
 
 
                 Pon starterPon = Pon(&savMenu->v4Core->saveReader);

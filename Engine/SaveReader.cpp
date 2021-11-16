@@ -41,8 +41,6 @@ SaveReader::SaveReader()
 
     itemReg.saveReader = this;
     itemReg.readItemFiles(); ///load up items
-
-    invData.saveReader = this;
 }
 
 void SaveReader::LoadSave(Config& tconfig)
@@ -66,7 +64,7 @@ void SaveReader::LoadSave(Config& tconfig)
 
         for (int i = 0; i < save_data["items"].size(); i++)
         {
-            invData.addItem(itemReg.getItemByName(save_data["items"][i]["name"])->order_id, save_data["items"][i]["count"]);
+            invData.addItem(itemReg.getItemByName(save_data["items"][i]["name"])->order_id, itemReg, save_data["items"][i]["count"]);
         }
 
         if (save_data["army"][0]["rarepon"] != -1) // Is hero unlocked?
@@ -175,7 +173,7 @@ void SaveReader::CreateBlankSave()
     vector<string> starter_items = {"item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet"};
     for (int i = 0; i < starter_items.size(); i++)
     {
-        invData.addItem(itemReg.getItemByName(starter_items[i])->order_id);
+        invData.addItem(itemReg.getItemByName(starter_items[i])->order_id, itemReg);
     }
 
     // Defining 3 Yaripons

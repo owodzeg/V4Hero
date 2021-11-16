@@ -914,7 +914,7 @@ void MissionController::submitPickedItems()
     for (int i = 0; i < pickedItems.size(); i++)
     {
         InventoryData::InventoryItem invItem;
-        v4Core->saveReader.invData.addItem(v4Core->saveReader.itemReg.getItemByName(pickedItems[i].item_name)->order_id);
+        v4Core->saveReader.invData.addItem(v4Core->saveReader.itemReg.getItemByName(pickedItems[i].item_name)->order_id, v4Core->saveReader.itemReg);
         if (pickedItems[i].item_name == "item_soggy_map") ///Grubby map
         {
             ///Check if Patapine Grove missions doesnt exist, and if Patapine Grove is not unlocked already

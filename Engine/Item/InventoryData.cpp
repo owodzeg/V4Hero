@@ -5,6 +5,7 @@
 #include "Item.h"
 #include "ItemRegistry.h"
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 /** Needs some rework **/
 
@@ -114,7 +115,7 @@ bool InventoryData::checkItemObtainedByName(string item_name)
     return false;
 }
 
-void InventoryData::addItem(vector<int> item_id, int count)
+void InventoryData::addItem(vector<int> item_id, ItemRegistry& itemReg, int count)
 {
     std::string str_item_id = std::to_string(item_id[0]);
 
@@ -131,7 +132,7 @@ void InventoryData::addItem(vector<int> item_id, int count)
     } else
     {
         InventoryData::InventoryItem new_item;
-        new_item.item = saveReader->itemReg.getItemByID(item_id);
+        new_item.item = itemReg.getItemByID(item_id);
         new_item.item_count = count;
         items.push_back(new_item);
     }
