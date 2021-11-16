@@ -399,13 +399,15 @@ void V4Core::init()
     else
         window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::Titlebar | sf::Style::Close, settings);
 
-    window.setFramerateLimit(config.GetInt("framerateLimit"));
-    window.setKeyRepeatEnabled(false);
-    window.setVerticalSyncEnabled(config.GetInt("verticalSync"));
-
     framerate_limit = config.GetInt("framerateLimit");
     if (framerate_limit == 0)
-        framerate_limit = 1000;
+        framerate_limit = 500;
+    if (framerate_limit > 500)
+        framerate_limit = 500;
+
+    window.setFramerateLimit(framerate_limit);
+    window.setKeyRepeatEnabled(false);
+    window.setVerticalSyncEnabled(config.GetInt("verticalSync"));
 
     inputCtrl.LoadKeybinds(config);
 
