@@ -87,6 +87,9 @@ V4Core::V4Core()
     /** Load config from config.cfg **/
     config.LoadConfig(this);
 
+    /** Load item registry **/
+    saveReader.itemReg.readItemFiles();
+
     /** "Alpha release" text **/
     f_font.loadFromFile(config.fontPath);
 

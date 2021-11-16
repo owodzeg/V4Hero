@@ -58,9 +58,9 @@ public:
     std::map<int, std::shared_ptr<AnimationCache>> animation_cache;
     std::map<int, bool> isCached; ///Check if entities have been cached already, so we can make automatic caching inside spawnEntity function
 
+    Config config;
     NewGameMenu newGameMenu;
     MainMenu mainMenu;
-    Config config;
     TipsUtil tipsUtil;
     SaveReader saveReader;
     MissionController currentController;

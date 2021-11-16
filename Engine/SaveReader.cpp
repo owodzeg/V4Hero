@@ -40,7 +40,6 @@ SaveReader::SaveReader()
     isNewSave = !exists;
 
     itemReg.saveReader = this;
-    itemReg.readItemFiles(); ///load up items
 }
 
 void SaveReader::LoadSave(Config& tconfig)
