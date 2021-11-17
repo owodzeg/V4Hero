@@ -1,9 +1,12 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "Barracks.h"
 #include "../V4Core.h"
 #include "Altar.h"
 #include "ButtonList.h"
 #include <iostream>
 #include <sstream>
+#include <spdlog/spdlog.h>
 
 template<typename T>
 std::string to_string_with_precision(const T a_value, const int n = 2)
@@ -23,7 +26,7 @@ Barracks::Barracks()
 }
 void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMenu)
 {
-    parent->saveToDebugLog("Initializing Barracks...");
+    SPDLOG_INFO("Initializing Barracks");
     Scene::Initialise(_thisConfig, parent);
     parentMenu = curParentMenu;
     currentController = &(v4Core->currentController);
@@ -33,16 +36,16 @@ void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMe
 
     int army_size = v4Core->saveReader.ponReg.pons.size();
 
-    cout << "Barracks army size: " << army_size << endl;
+    SPDLOG_DEBUG("Barracks army size: {}", army_size);
 
     for (int i = 0; i < army_size; i++)
     {
-        cout << "Checking Pon " << i << endl;
+        SPDLOG_DEBUG("Checking Pon {}", i);
 
         Pon* current_pon = new Pon;
         current_pon = v4Core->saveReader.ponReg.GetPonByID(i);
 
-        cout << "Pon class: " << current_pon->pon_class << endl;
+        SPDLOG_DEBUG("Pon class: {}", current_pon->pon_class);
 
         switch (current_pon->pon_class)
         {
@@ -51,7 +54,7 @@ void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMe
                 wip_pon.get()->setUnitID(current_pon->pon_class);
                 wip_pon.get()->entityID = -1001; ///lets say entity IDs for units will be -1000 and below, so -1001 is yaripon, -1002 will be tatepon etc
 
-                cout << "Loading Pon..." << endl;
+                SPDLOG_DEBUG("Loading Pon");
 
                 wip_pon.get()->LoadConfig(thisConfig);
 
@@ -62,15 +65,15 @@ void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMe
 
                 wip_pon.get()->setAnimationSegment("idle_armed");
 
-                cout << "Assigning equipment to Pon (" << parent->saveReader.ponReg.GetPonByID(i)->slots.size() << " slots)" << endl;
+                SPDLOG_DEBUG("Assigning equipment to Pon ({} slots)", parent->saveReader.ponReg.GetPonByID(i)->slots.size());
 
                 for (int o = 0; o < parent->saveReader.ponReg.GetPonByID(i)->slots.size(); o++)
                 {
-                    cout << "Slot " << o << ": " << parent->saveReader.ponReg.GetPonByID(i)->slots[o] << endl;
+                    SPDLOG_DEBUG("Slot {}: {}", o, parent->saveReader.ponReg.GetPonByID(i)->slots[o]);
 
                     if (parent->saveReader.ponReg.GetPonByID(i)->slots[o] != -1)
                     {
-                        cout << "Applying equipment" << endl;
+                        SPDLOG_DEBUG("Applying equipment");
                         wip_pon.get()->applyEquipment(parent->saveReader.invData.items[parent->saveReader.ponReg.GetPonByID(i)->slots[o]].item->order_id, o);
                     }
                 }
@@ -165,7 +168,6 @@ void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMe
     s_unit_icon.setPosition(946, 82);
 
     Pon* cur_pon = parentMenu->v4Core->saveReader.ponReg.GetPonByID(current_selected_pon);
-    cout << "[DEBUG]" << parentMenu->v4Core->saveReader.ponReg.GetPonByID(current_selected_pon);
     unit_status.createText(f_font, 22, sf::Color(239, 88, 98, 255), Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_unit_status")), quality, 1);
     class_name.createText(f_font, 34, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_yaripon")), quality, 1);
 

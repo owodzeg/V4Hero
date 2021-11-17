@@ -1,9 +1,13 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "Patapolis.h"
 #include "../V4Core.h"
 #include "Altar.h"
 #include "ButtonList.h"
 #include "iostream"
 #include <sstream>
+#include <spdlog/spdlog.h>
+
 PatapolisMenu::PatapolisMenu()
 {
     //ctor
@@ -15,6 +19,7 @@ PatapolisMenu::PatapolisMenu()
 
 void PatapolisMenu::updateStoryPoint()
 {
+    SPDLOG_TRACE("Updating story point");
     // While currently just doing
     //v4Core->saveReader.story_point = *std::max_element(v4Core->saveReader.missions_unlocked.begin(), v4Core->saveReader.missions_unlocked.end());
     // would suffice, we do this in case at some point we want a story point to change without unlocking a mission
@@ -28,6 +33,7 @@ void PatapolisMenu::updateStoryPoint()
 
 void PatapolisMenu::addL6(std::string variant, float x, float y, int q, int r)
 {
+    SPDLOG_TRACE("Adding L6 layer: variant {} x {} y {} q {} r {}", variant, x, y, q, r);
     //PSprite tmp;
     //tmp.loadFromFile("resources/graphics/bg/patapolis/6" + variant + ".png", q, r);
     //tmp.setPosition(x, y);
@@ -41,6 +47,7 @@ void PatapolisMenu::addL6(std::string variant, float x, float y, int q, int r)
 
 void PatapolisMenu::addL2(std::string variant, float x, float y, int q, int r)
 {
+    SPDLOG_TRACE("Adding L2 layer: variant {} x {} y {} q {} r {}", variant, x, y, q, r);
     //PSprite tmp;
     //tmp.loadFromFile("resources/graphics/bg/patapolis/2" + variant + ".png", q, r);
     //tmp.setPosition(x, y);
@@ -54,6 +61,8 @@ void PatapolisMenu::addL2(std::string variant, float x, float y, int q, int r)
 
 void PatapolisMenu::addSparkle(float x, float y)
 {
+    SPDLOG_TRACE("Adding Sparkle: x {} y {}", x, y);
+
     float scale = ((rand() % 400) + 750) / float(1000);
 
     Sparkle tmp;
@@ -76,6 +85,8 @@ void PatapolisMenu::addSparkle(float x, float y)
 
 void PatapolisMenu::addParagetSparkle(float x, float y)
 {
+    SPDLOG_TRACE("Adding Paraget Sparkle: x {} y {}", x, y);
+
     float scale = ((rand() % 400) + 750) / float(1000);
     float angle = (rand() % 36000) / float(100);
 
@@ -108,6 +119,8 @@ void PatapolisMenu::addParagetSparkle(float x, float y)
 
 void PatapolisMenu::addRay(float x1, float y1, float x2, float y2)
 {
+    SPDLOG_TRACE("Adding Light Ray: x1 {} y1 {} x2 {} y2 {}", x1, y1, x2, y2);
+
     RayStart rs;
     rs.x1 = x1;
     rs.y1 = 5 + y1;
@@ -122,6 +135,7 @@ void PatapolisMenu::addRay(float x1, float y1, float x2, float y2)
 
 PatapolisMenu::Fire PatapolisMenu::addFire(int type, float x, float y, bool add)
 {
+    SPDLOG_TRACE("Adding Fire: type {} x {} y {} add {}", type, x, y, add);
     Fire tmp;
 
     string str_type = "";
@@ -173,6 +187,8 @@ PatapolisMenu::Fire PatapolisMenu::addFire(int type, float x, float y, bool add)
 
 void PatapolisMenu::addSmokeParticle(float x, float y, PSprite& refer)
 {
+    SPDLOG_TRACE("Adding Smoke Particle: x {} y {}", x, y);
+
     SmokeParticle tmp;
     tmp.smk = refer;
     tmp.x = x;
@@ -185,7 +201,7 @@ void PatapolisMenu::addSmokeParticle(float x, float y, PSprite& refer)
 
 void PatapolisMenu::addCloud(std::string type, float x, float y, float xsize, float ysize, int q, int r)
 {
-    cout << "Adding cloud " << type << " " << x << " " << y << " " << xsize << " " << ysize << endl;
+    SPDLOG_TRACE("Adding cloud type {} x {} y {} xsize {} ysize {} q {} r {}", type, x, y, xsize, ysize, q, r);
 
     if (type == "A")
     {
@@ -219,8 +235,7 @@ void PatapolisMenu::addCloud(std::string type, float x, float y, float xsize, fl
 
 void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMenu)
 {
-    parent->saveToDebugLog("Initializing Patapolis...");
-
+    SPDLOG_INFO("Initializing Patapolis");
 
     //sf::Context context;
     Scene::Initialise(_thisConfig, parent);
@@ -290,7 +305,7 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
         v_background[i].position = vx_pos[i];
         v_background[i].color = vx_color[i];
 
-        cout << "vx_pos: " << vx_pos[i].x << " " << vx_pos[i].y << endl;
+        SPDLOG_TRACE("patapolis background vx_pos: {} {}", vx_pos[i].x, vx_pos[i].y);
     }
 
     floor_height = 54;
@@ -497,7 +512,7 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
         vtmp[2].color = sf::Color(215, 246, 255, 255);
         tmp.triangle = vtmp;
 
-        cout << "[coord #" << i << "]" << vtmp[0].position.x << " " << vtmp[0].position.y << " " << vtmp[1].position.x << " " << vtmp[1].position.y << " " << vtmp[2].position.x << " " << vtmp[2].position.y << " " << tmp.angle << " " << tmp.cur_distance << " " << tmp.min_distance << " " << tmp.max_distance << endl;
+        SPDLOG_TRACE("[coord #{}] {} {} {} {} {} {} {} {} {} {}", i, vtmp[0].position.x, vtmp[0].position.y, vtmp[1].position.x, vtmp[1].position.y, vtmp[2].position.x, vtmp[2].position.y, tmp.angle, tmp.cur_distance, tmp.min_distance, tmp.max_distance);
 
         lightrays.push_back(tmp);
     }
@@ -669,12 +684,12 @@ void PatapolisMenu::SetTitle(int menuPosition)
         draw_ID.push_back(menuPosition);
     }
 
-    cout << "draw_ID: ";
+    std::string draw_ID_log = "";
 
     for (auto i : draw_ID)
-        cout << i;
+        draw_ID_log += to_string(i);
 
-    cout << endl;
+    SPDLOG_TRACE("draw_ID: {}", draw_ID_log);
 
     switch (menuPosition)
     {
@@ -752,7 +767,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
 
             messageclouds.push_back(tmp);
 
-            cout << "Creating message cloud at " << a_sen.getGlobalPosition().x - 5 << " " << a_sen.getGlobalPosition().y - 25 << endl;
+            SPDLOG_DEBUG("Creating message cloud at {} {}", a_sen.getGlobalPosition().x - 5, a_sen.getGlobalPosition().y - 25);
 
             break;
         }
@@ -828,7 +843,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
             tmp.msgcloud_ID = 1;
             messageclouds.push_back(tmp);
 
-            cout << "Creating message cloud at " << a_wakapon.getGlobalPosition().x - 5 << " " << a_wakapon.getGlobalPosition().y - 25 << endl;
+            SPDLOG_DEBUG("Creating message cloud at {} {}", a_wakapon.getGlobalPosition().x - 5, a_wakapon.getGlobalPosition().y - 25);
 
             break;
         }
@@ -1376,7 +1391,7 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
         {
             if (city_loop.getStatus() == sf::Sound::Status::Stopped)
             {
-                cout << "I am playing" << endl;
+                SPDLOG_DEBUG("Play city_loop");
                 city_loop.play();
             }
 
@@ -1726,7 +1741,7 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                     case 0: {
                         if (dialogboxes[dialogboxes.size() - 1].id == 0)
                         {
-                            cout << "Open second dialogbox" << endl;
+                            SPDLOG_DEBUG("Open second dialogbox");
                             dialogboxes[dialogboxes.size() - 1].Close();
 
                             std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_yes")), Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_no"))};
@@ -1739,13 +1754,14 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                             break;
                         } else if (dialogboxes[dialogboxes.size() - 1].id == 1)
                         {
-                            thisConfig->thisCore->saveToDebugLog("Left from Patapolis to Title screen.");
+                            SPDLOG_INFO("Left from Patapolis to Title screen.");
                             screenFade.Create(thisConfig, 1, 512);
                             goto_id = 7;
                         } else if (dialogboxes[dialogboxes.size() - 1].id == 2)
                         {
-                            cout << "Saving game should happen here. Game not saving yet." << endl;
+                            SPDLOG_DEBUG("Saving game should happen here. Game not saving yet.");
                             v4Core->saveReader.Save();
+                            SPDLOG_INFO("Saved the game.");
 
                             dialogboxes[dialogboxes.size() - 1].Close();
 
@@ -1759,13 +1775,13 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                             break;
                         } else if (dialogboxes[dialogboxes.size() - 1].id == 3)
                         {
-                            cout << "Done." << endl;
+                            SPDLOG_DEBUG("Done.");
 
                             dialogboxes[dialogboxes.size() - 1].Close();
                             break;
                         } else if (dialogboxes[dialogboxes.size() - 1].id == 4)
                         {
-                            cout << "Open credits!" << endl;
+                            SPDLOG_INFO("Going into credits!");
                             screenFade.Create(thisConfig, 1, 512);
                             goto_id = 6;
 
@@ -1775,7 +1791,7 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                     }
 
                     case 1: {
-                        cout << "Back to Patapolis" << endl;
+                        SPDLOG_DEBUG("Back to Patapolis");
                         dialogboxes[dialogboxes.size() - 1].Close();
 
                         break;

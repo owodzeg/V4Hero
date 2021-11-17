@@ -1,5 +1,8 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "Pon.h"
 #include "../SaveReader.h"
+#include <spdlog/spdlog.h>
 
 using namespace std;
 
@@ -34,7 +37,7 @@ void Pon::recalculateStats()
 
     for (int i = 0; i < slots.size(); i++)
     {
-        cout << "i: " << i << " slots[" << i << "]: " << slots[i] << endl;
+        SPDLOG_TRACE("i: {} slots[{}]: {}", i, i, slots[i]);
 
         if (slots[i] > -1)
         {
@@ -50,14 +53,14 @@ void Pon::recalculateStats()
 void Pon::giveItem(int inv_item_id, int where)
 {
 
-    cout << "Pon::GiveItem(" << inv_item_id << ", " << where << ")" << endl;
+    SPDLOG_DEBUG("Pon::GiveItem({}, {})", inv_item_id, where);
     if (canEquip(saveReader->invData.items[inv_item_id].item->order_id, where))
     {
         slots[where] = inv_item_id;
         recalculateStats();
     } else
     {
-        cout << "Couldn't equip item " << saveReader->invData.items[inv_item_id].item->item_name << " in slot " << where << endl;
+        SPDLOG_ERROR("Couldn't equip item {} in slot {}", saveReader->invData.items[inv_item_id].item->item_name, where);
     }
 }
 void Pon::removeItem(int where)
@@ -108,10 +111,12 @@ bool Pon::canEquip(vector<int> eq_id, int where)
 {
     if (eq_id.size() < 2 || eq_id[0] == 0)
     {
-        cout << "[DEBUG] Attempted to equip a key item?" << endl;
+        SPDLOG_WARN("Attempted to equip a key item?");
         return false; // Why would you attempt to equip a key item
     }
-    cout << "Asking if equipping {" << eq_id[0] << ", " << eq_id[1] << ", " << eq_id[2] << "} is viable (where=" << where << ")" << endl;
+
+    SPDLOG_DEBUG("Asking if equipping {}, {}, {}, is viable (where={})", eq_id[0], eq_id[1], eq_id[2], where);
+
     switch (pon_class)
     {
         case 0: // Yaripon

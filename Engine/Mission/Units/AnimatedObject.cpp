@@ -1,3 +1,5 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "AnimatedObject.h"
 #include "../../Binary.hpp"
 #include "../../Func.h"
@@ -11,6 +13,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <spdlog/spdlog.h>
 
 AnimatedObject::AnimatedObject()
 {
@@ -18,7 +21,7 @@ AnimatedObject::AnimatedObject()
 
 AnimatedObject::~AnimatedObject()
 {
-    cout << "AnimatedObject::~AnimatedObject(): destructor" << endl;
+    SPDLOG_TRACE("AnimatedObject::~AnimatedObject(): destructor");
 }
 
 void AnimatedObject::loadAnim(std::string data, P4A handle)
@@ -53,7 +56,7 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
             version = line.substr(line.find("V4Mater-ver-") + 12);
             legit = true;
 
-            cout << "[AnimatedObject] Anim format legit. Version " << version << endl;
+            SPDLOG_DEBUG("[AnimatedObject] Anim format legit. Version {}", version);
         }
 
         /**
@@ -756,7 +759,7 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
 
     for (int i = 0; i < animation_names.size(); i++)
     {
-        cout << "animation_names[" << i << "] = " << animation_names[i] << endl;
+        SPDLOG_TRACE("animation_names[{}] = {}", i, animation_names[i]);
 
         if (animation_names[i] == "idle")
         {
@@ -770,14 +773,14 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
     if (!found)
         setAnimationSegment(animation_names[0]);
 
-    cout << "Starting with animation segment " << getAnimationSegment() << endl;
+    SPDLOG_DEBUG("Starting with animation segment {}", getAnimationSegment());
 
     ///add some randomness to the animations so it looks more natural
     int anim_size = floor((anim_end - anim_begin) * 100000);
     int rand_pos = (rand() << 15 | rand()) % anim_size;
 
     cur_pos = anim_begin + (float(rand_pos) / 100000);
-    cout << "Random cur_pos: " << anim_size << " " << rand_pos << " " << cur_pos << endl;
+    SPDLOG_DEBUG("Random cur_pos: anim_size {} rand_pos {} cur_pos {}", anim_size, rand_pos, cur_pos);
     //setPositions(0);
 }
 
@@ -952,12 +955,14 @@ sf::Color AnimatedObject::getColor()
 
 void AnimatedObject::applyEquipment(vector<int> item_id, int slot, bool offhand)
 {
-    cout << "AnimatedObject::applyEquipment(): item_id(";
+    std::string str_item_id = std::to_string(item_id[0]);
 
-    for (int i = 0; i < item_id.size(); i++)
-        cout << item_id[i] << ",";
+    for (int i = 1; i < item_id.size(); i++)
+    {
+        str_item_id += "," + std::to_string(item_id[i]);
+    }
 
-    cout << "), slot: " << slot << " offhand: " << offhand << endl;
+    SPDLOG_INFO("Applying equipment with id {}, slot: {}, offhand: {}", str_item_id, slot, offhand);
 
     int q = stoi(thisConfig->configMap["textureQuality"]);
     Item* equip = thisConfig->thisCore->saveReader.itemReg.getItemByID(item_id);
@@ -989,7 +994,7 @@ void AnimatedObject::applyEquipment(vector<int> item_id, int slot, bool offhand)
         q += 4; // If is in offhand, use lines 5-8 instead
     }
 
-    cout << "category: " << category << " type: " << type << " path: " << path << " slot: " << slot << endl;
+    SPDLOG_INFO("Applied equipment: category: {}, type: {}, path: {}, slot: {}", category, type, path, slot);
 
     (*objects)[slot + 1].tex_obj.loadFromFile(path);
     (*objects)[slot + 1].s_obj.setTexture((*objects)[slot + 1].tex_obj);

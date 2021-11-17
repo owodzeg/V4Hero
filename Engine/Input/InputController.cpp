@@ -19,6 +19,8 @@ stonks
 
 void InputController::LoadKeybinds(Config& config)
 {
+    SPDLOG_INFO("Loading keybinds for InputController");
+
     for (int k = 0; k < 12; k++)
     {
         for (int i = 1; i <= 9; i++)

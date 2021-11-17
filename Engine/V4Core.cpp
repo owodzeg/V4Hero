@@ -392,6 +392,8 @@ void V4Core::init()
     sf::ContextSettings settings;
     settings.antialiasingLevel = 16;
 
+    SPDLOG_INFO("Creating window");
+
     if (config.GetInt("enableFullscreen"))
         window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::Fullscreen, settings);
     else if (config.GetInt("enableBorderlessWindow"))
@@ -405,6 +407,7 @@ void V4Core::init()
     if (framerate_limit > 500)
         framerate_limit = 500;
 
+    SPDLOG_INFO("Applying window settings");
     window.setFramerateLimit(framerate_limit);
     window.setKeyRepeatEnabled(false);
     window.setVerticalSyncEnabled(config.GetInt("verticalSync"));

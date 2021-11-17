@@ -1,6 +1,9 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "P4A.h"
 #include "Binary.hpp"
 #include <algorithm>
+#include <spdlog/spdlog.h>
 
 using namespace std;
 
@@ -131,7 +134,7 @@ void P4A::ReadDictionary(std::string filename)
 {
     p4a_filename = filename;
 
-    cout << "[P4A] Reading " << p4a_filename << endl;
+    SPDLOG_INFO("Reading file: {}", p4a_filename);
 
     ifstream file(filename, std::ifstream::binary);
 
@@ -150,11 +153,11 @@ void P4A::ReadDictionary(std::string filename)
 
         if (file_version == 1)
         {
-            cout << "[P4A] Detected Archive version 1" << endl;
+            SPDLOG_DEBUG("Detected Archive version 1");
 
             uint32_t file_dictionary_size = Binary::get_uint32(bin_data, 4);
 
-            cout << "[P4A] Dictionary size is: " << file_dictionary_size << endl;
+            SPDLOG_DEBUG("Dictionary size is: {}", file_dictionary_size);
 
             int file_data_pointer = file_dictionary_size + 8;
 
@@ -178,11 +181,11 @@ void P4A::ReadDictionary(std::string filename)
             }
         } else
         {
-            cout << "[P4A] Incorrect file version!" << endl;
+            SPDLOG_ERROR("Incorrect file version!");
         }
     } else
     {
-        cout << "[P4A] Incorrect file type" << endl;
+        SPDLOG_ERROR("Incorrect file type");
         ///exit
     }
 
@@ -191,7 +194,7 @@ void P4A::ReadDictionary(std::string filename)
 
 std::string P4A::ReadToMemory(std::string name)
 {
-    cout << "[P4A] Reading " << name << " from memory" << endl;
+    SPDLOG_INFO("Reading file from memory: {}", name);
 
     return string(files[name].begin(), files[name].end());
 }

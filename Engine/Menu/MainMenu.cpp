@@ -554,7 +554,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
         {
             if (title_loop.getStatus() == sf::Sound::Status::Stopped)
             {
-                cout << "I am playing" << endl;
+                SPDLOG_DEBUG("Playing title_loop");
                 title_loop.play();
             }
 

@@ -1,14 +1,17 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "Binary.hpp"
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 using namespace std;
 
 ///Read entire binary file to std::string
 std::string Binary::get_file(const std::string& path)
 {
-    cout << "[Binary] get_file(" << path << ")" << endl;
+    SPDLOG_TRACE("[Binary] get_file({})", path);
 
     //cout << "Get the file located at " << path << endl;
 
@@ -16,7 +19,7 @@ std::string Binary::get_file(const std::string& path)
 
     if (!file)
     {
-        cout << "Error when loading file" << endl;
+        SPDLOG_ERROR("Error when loading file");
     }
 
     auto sz = std::filesystem::file_size(path);
