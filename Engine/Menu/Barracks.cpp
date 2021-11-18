@@ -290,7 +290,7 @@ void Barracks::eventFired(sf::Event event)
 
 int Barracks::countOccupied(vector<int> order_id)
 {
-    cout << "Barracks::countOccupied(" << order_id[0] << " " << order_id[1] << " " << order_id[2] << ")" << endl;
+    SPDLOG_DEBUG("Barracks::countOccupied({} {} {})", order_id[0], order_id[1], order_id[2]);
     int occ = 0;
 
     for (int i = 0; i < v4Core->saveReader.ponReg.pons.size(); i++) // Go through every pon
@@ -304,7 +304,7 @@ int Barracks::countOccupied(vector<int> order_id)
         }
     }
 
-    cout << "Item is occupied " << occ << " times" << endl;
+    SPDLOG_DEBUG("Item is occupied {} times", occ);
 
     return occ;
 }
@@ -442,8 +442,7 @@ void Barracks::loadInventory()
                           return a.data->order_id[2] < b.data->order_id[2];
                       } else
                       {
-                          cout << "[ERROR]: Inventory boxes sorting in barrack.cpp has reached a point it shouldn't have." << '\n'
-                               << "[ The items may or may not appear in the correct order because of this.";
+                          SPDLOG_ERROR("Inventory boxes sorting in barrack.cpp has reached a point it shouldn't have. The items may or may not appear in the correct order because of this.");
                       }
                   });
     }
@@ -486,7 +485,7 @@ void Barracks::setInventoryPosition()
 
             grid_sel_y = ceil(((invbox_id + 1) - (grid_offset_y * 4)) / 4.0) - 1;
 
-            cout << "invbox_id: " << invbox_id << " gridSelX: " << grid_sel_x << " gridSelY: " << grid_sel_y << " gridOffsetY: " << grid_offset_y << endl;
+            SPDLOG_TRACE("invbox_id: {} gridSelX: {} gridSelY: {} gridOffsetY: {}", invbox_id, grid_sel_x, grid_sel_y, grid_offset_y);
         } else
         {
             grid_sel_x = 0;
@@ -551,7 +550,7 @@ void Barracks::refreshStats()
             t_eq_names[i].setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(eq.item->item_name)));
             t_eq_names[i].setOrigin(0, 0);
 
-            cout << "currentPon->slots[" << i << "]: " << currentPon->slots[i] << " " << eq.item->item_name << endl;
+            SPDLOG_TRACE("currentPon->slots[{}]: {} {}", i, currentPon->slots[i], eq.item->item_name);
         }
     }
 
@@ -964,7 +963,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                         current_item_position -=1;
                     }*/
 
-                    cout << "Current item position: " << current_item_position << endl;
+                    SPDLOG_DEBUG("Current item position: {}", current_item_position);
 
                     if (current_item_position >= 0)
                     {
@@ -979,7 +978,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                                 if (enabled_positons[current_item_position])
                                 {
                                     found = true;
-                                    cout << "Going to current_item_position=" << current_item_position << endl;
+                                    SPDLOG_DEBUG("Going to current_item_position={}", current_item_position);
                                     break;
                                 }
                             } else
@@ -1017,7 +1016,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                         current_item_position = 0;
                     }*/
 
-                    cout << "Current item position: " << current_item_position << endl;
+                    SPDLOG_DEBUG("Current item position: {}", current_item_position);
 
                     // if (4 < 4) ok
                     if (current_item_position < enabled_positons.size() - 1)
@@ -1033,7 +1032,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                                 if (enabled_positons[current_item_position])
                                 {
                                     found = true;
-                                    cout << "Going to current_item_position=" << current_item_position << endl;
+                                    SPDLOG_DEBUG("Going to current_item_position={}", current_item_position);
                                     break;
                                 }
                             } else
@@ -1161,14 +1160,16 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                             {
                                 InventoryData::InventoryItem currentItem = v4Core->saveReader.invData.items[inventory_boxes[invbox_id].inv_id];
 
-                                cout << "InvID: " << inventory_boxes[invbox_id].inv_id << endl;
+                                SPDLOG_TRACE("InvID: {}", inventory_boxes[invbox_id].inv_id);
 
-                                cout << "order_id is: ";
+                                std::string str_order_id;
 
-                                for (int i = 0; i < currentItem.item->order_id.size(); i++)
-                                    cout << currentItem.item->order_id[i] << " ";
+                                for (int i = 1; i < currentItem.item->order_id.size(); i++)
+                                {
+                                    str_order_id += " " + std::to_string(currentItem.item->order_id[i]);
+                                }
 
-                                cout << endl;
+                                SPDLOG_TRACE("Order_id is {}", str_order_id);
 
                                 if ((inventory_boxes[invbox_id].amount > inventory_boxes[invbox_id].occ_amount) && (v4Core->saveReader.ponReg.pons[current_selected_pon].canEquip(currentItem.item->order_id, active_category - 3))) ///I have put active_category-2 here because where=0 when you wanna equip spear and where=1 when you wanna equip helm. theres some confusion between gui slots and equipment slots in ponregistry. gotta fix it someday.
                                 {
@@ -1182,7 +1183,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                                 }
                             } else
                             {
-                                cout << "Cannot apply. All items are occupied." << endl;
+                                SPDLOG_WARN("Cannot apply. All items are occupied.");
                             }
                         }
                     }
@@ -1255,7 +1256,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                     }
 
                     case 1: {
-                        cout << "Back to Barracks" << endl;
+                        SPDLOG_DEBUG("Back to Barracks");
                         dialog_boxes[dialog_boxes.size() - 1].Close();
 
                         break;

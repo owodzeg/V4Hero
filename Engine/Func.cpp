@@ -1,3 +1,5 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "Func.h"
 #include <codecvt>
 #include <iomanip>
@@ -6,6 +8,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <spdlog/spdlog.h>
 
 using namespace std;
 
@@ -97,7 +100,7 @@ std::string Func::wrap_text(std::string input, int box_width, sf::Font& font, in
                 full += prefull;
             }
 
-            cout << "Added \"" << prevtemp + words[i] << "\" to the output" << endl;
+            SPDLOG_TRACE("Added \"{}\" to the output", prevtemp + words[i]);
 
             i++;
             temp = "";

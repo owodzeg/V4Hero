@@ -152,7 +152,7 @@ void Config::ReloadLanguages()
     if (changedLang)
     {
         strRepo.LoadLanguageFiles(GetInt("lang"));
-        cout << strRepo.GetString("language_file_loaded") << endl;
+        SPDLOG_DEBUG("Language changed to {}", strRepo.GetString("language_file_loaded"));
         changedLang = false;
     }
 }

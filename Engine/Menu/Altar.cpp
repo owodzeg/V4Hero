@@ -1,8 +1,11 @@
+#define SDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "Altar.h"
 #include "../V4Core.h"
 #include "ButtonList.h"
 #include "iostream"
 #include "math.h"
+#include <spdlog/spdlog.h>
 
 
 AltarMenu::AltarMenu()
@@ -12,7 +15,7 @@ AltarMenu::AltarMenu()
 
 void AltarMenu::initialise(Config* _thisConfig, V4Core* parent, PatapolisMenu* curParentMenu)
 {
-    parent->saveToDebugLog("Initializing Altar...");
+    SPDLOG_INFO("Initializing Altar...");
     Scene::Initialise(_thisConfig, parent);
     parentMenu = curParentMenu;
 
@@ -66,7 +69,7 @@ void AltarMenu::initialise(Config* _thisConfig, V4Core* parent, PatapolisMenu* c
 
     ctrlTips.create(54, f_font, 20, sf::String("Left/Right/Up/Down: Navigate      O: Exit to Patapolis"), quality);
 
-    parent->saveToDebugLog("Initializing Altar finished.");
+    SPDLOG_INFO("Initializing Altar finished.");
 }
 void AltarMenu::showCategory()
 {
@@ -106,13 +109,13 @@ void AltarMenu::eventFired(sf::Event event)
 
 void AltarMenu::reloadInventory()
 {
-    cout << "AltarMenu::reloadInventory();" << endl;
+    SPDLOG_DEBUG("AltarMenu::reloadInventory();");
 
     vector<InvBox> old_invboxes = inventory_boxes; ///for comparison and new item highlight
 
     inventory_boxes.clear();
 
-    cout << "Fetching inventory entries: " << v4Core->saveReader.invData.items.size() << " entries" << endl;
+    SPDLOG_INFO("Fetching inventory entries: {} entries", v4Core->saveReader.invData.items.size());
     for (int i = 0; i < v4Core->saveReader.invData.items.size(); i++)
     {
         Item* cur_item = v4Core->saveReader.invData.items[i].item;
@@ -217,7 +220,7 @@ void AltarMenu::reloadInventory()
                 }
             }
 
-            cout << "Check invbox " << a << " found " << found << " highlight " << highlight << endl;
+            SPDLOG_TRACE("Check invbox {} found {} highlight {}", a, found, highlight);
 
             if (!found)
                 highlight = true;

@@ -1,8 +1,11 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "PSpritesheet.h"
 #include "../Func.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <spdlog/spdlog.h>
 
 using namespace std;
 
@@ -12,7 +15,7 @@ PSpritesheet::PSpritesheet()
 
 void PSpritesheet::load(std::string file, int q, int r)
 {
-    std::cout << file << std::endl;
+    SPDLOG_DEBUG("Loading spritesheet: {}", file);
     std::string a = file.substr(0, file.find_last_of("."));
     std::string b = file.substr(file.find_last_of("."));
     std::string sq = "";
@@ -42,7 +45,7 @@ void PSpritesheet::load(std::string file, int q, int r)
     qualitySetting = q;
     resSetting = r;
 
-    std::cout << "[PSPRITESHEET] Loading " << c << std::endl;
+    SPDLOG_DEBUG("Loading {}", c);
 
     std::ifstream sfile(c, ios::binary);
     std::ostringstream ss;
@@ -51,7 +54,7 @@ void PSpritesheet::load(std::string file, int q, int r)
     std::vector<char> vec(s.begin(), s.end());
     t_c = vec;
 
-    cout << "[PSPRITESHEET] Loading the binary buffer from " << c << " size: " << t_c.size() << endl;
+    SPDLOG_DEBUG("Loading the binary buffer from {} size: {}", c, t_c.size());
 
     t.loadFromFile(c);
     t.setSmooth(true);
