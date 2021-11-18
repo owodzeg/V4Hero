@@ -1,3 +1,5 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "Obelisk.h"
 #include "../V4Core.h"
 #include "ButtonList.h"
@@ -6,6 +8,7 @@
 #include <nlohmann/json.hpp>
 #include <sstream>
 #include <string>
+#include <spdlog/spdlog.h>
 
 using json = nlohmann::json;
 
@@ -72,14 +75,14 @@ void ObeliskMenu::addMission(json missiondata)
     tm.setOrigin(tm.getLocalBounds().width / 2, tm.getLocalBounds().height / 2);
     tmp.p_mis = tm;
 
-    cout << "[WorldMap] Making text " << Func::ConvertToUtf8String(tmp.title).toAnsiString() << " " << endl;
+    SPDLOG_DEBUG("[WorldMap] Making text {}", Func::ConvertToUtf8String(tmp.title).toAnsiString());
 
     missions.push_back(tmp);
 }
 
 void ObeliskMenu::Initialise(Config* thisConfigs, V4Core* parent, PatapolisMenu* curParentMenu)
 {
-    parent->saveToDebugLog("Initializing Obelisk...");
+    SPDLOG_INFO("Initializing Obelisk...");
 
     Scene::Initialise(thisConfigs, parent);
     parentMenu = curParentMenu;
@@ -164,7 +167,7 @@ void ObeliskMenu::Initialise(Config* thisConfigs, V4Core* parent, PatapolisMenu*
     float resRatioX = thisConfigs->GetInt("resX") / float(1280);
     float resRatioY = thisConfigs->GetInt("resY") / float(720);
 
-    parent->saveToDebugLog("Initializing Obelisk finished.");
+    SPDLOG_INFO("Initializing Obelisk finished.");
 }
 
 void ObeliskMenu::Reload()
@@ -175,7 +178,7 @@ void ObeliskMenu::Reload()
     worldmap_fields.clear();
     worldmap_icons.clear();
 
-    cout << "Location_bgs capacity: " << location_bgs.capacity() << endl;
+    SPDLOG_TRACE("Location_bgs capacity: {}", location_bgs.capacity());
 
     ///Access the save data
     fields_unlocked = v4Core->saveReader.locations_unlocked;
@@ -320,7 +323,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
         if ((sf::Keyboard::isKeyPressed(sf::Keyboard::L)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
         {
-            cout << "Breakpoint!" << endl;
+            SPDLOG_WARN("Special texture dump executed");
 
             for (int i = 0; i < location_bgs.size(); i++)
             {
@@ -437,7 +440,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 ctrlTips.create(66, font, 20, sf::String("Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
 
                 displayMissions = false;
-                thisConfig->thisCore->saveToDebugLog("Exited mission selection.");
+                SPDLOG_DEBUG("Exited mission selection.");
             } else
             {
                 parentMenu->screenFade.Create(thisConfig, 1, 1536);
@@ -445,16 +448,16 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
                 //this->Hide();
                 //this->isActive = false;
-                thisConfig->thisCore->saveToDebugLog("Exited Obelisk.");
+                SPDLOG_INFO("Exited Obelisk.");
             }
         } else if (inputCtrl.isKeyPressed(InputController::Keys::CROSS))
         {
             if (!displayMissions)
             {
-                thisConfig->thisCore->saveToDebugLog("Displaying missions on Worldmap for location " + to_string(sel_location) + ".");
+                SPDLOG_INFO("Displaying missions on Worldmap for location {}.", sel_location);
 
                 ///(re)load missions here
-                cout << "Displaying missions" << endl;
+                SPDLOG_DEBUG("Displaying missions");
 
                 missions.clear();
 
@@ -511,12 +514,11 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
                 parentMenu->barracks_menu.ReloadInventory();
                 parentMenu->barracks_menu.UpdateInputControls();*/
-                cout << "Set barracks mission to ID " << missions[sel_mission].mis_ID << endl;
-                thisConfig->thisCore->saveToDebugLog("Barracks (In Obelisk) entered. Mission file: " + missions[sel_mission].mission_file);
+                SPDLOG_INFO("Set barracks mission to ID {}, mission file: {}", missions[sel_mission].mis_ID, missions[sel_mission].mission_file);
             }
         } else if (inputCtrl.isKeyPressed(InputController::Keys::LTRIGGER))
         {
-            thisConfig->thisCore->saveToDebugLog("Skipping maps to the left (Q key).");
+            SPDLOG_DEBUG("Skipping maps to the left (Q key).");
 
             mapXdest += float(123) * 6;
 
@@ -524,7 +526,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 mapXdest = 0;
         } else if (inputCtrl.isKeyPressed(InputController::Keys::RTRIGGER))
         {
-            thisConfig->thisCore->saveToDebugLog("Skipping maps to the right (E key).");
+            SPDLOG_DEBUG("Skipping maps to the right (E key).");
 
             mapXdest -= float(123) * 6;
 
@@ -548,7 +550,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 if (sel_location <= 1)
                     sel_location = 1;
 
-                thisConfig->thisCore->saveToDebugLog("Selecting Obelisk location " + to_string(sel_location) + ".");
+                SPDLOG_DEBUG("Selecting Obelisk location {}", sel_location);
 
                 //if((sel_location*123 + mapX - 62) < 0)
                 //{
@@ -605,7 +607,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 if (sel_location >= worldmap_fields.size())
                     sel_location = worldmap_fields.size();
 
-                thisConfig->thisCore->saveToDebugLog("Selecting Obelisk location " + to_string(sel_location) + ".");
+                SPDLOG_DEBUG("Selecting Obelisk location {}", sel_location);
 
                 //if((sel_location*123 + mapX - 62 + 176 + 246) > 1012)
                 //{
@@ -654,7 +656,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 if (sel_mission > 0)
                     sel_mission--;
 
-                thisConfig->thisCore->saveToDebugLog("Selecting Obelisk mission " + to_string(sel_mission) + ".");
+                SPDLOG_DEBUG("Selecting Obelisk mission {}", sel_mission);
 
                 string level = "";
 
@@ -674,7 +676,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 if (sel_mission < missions.size() - 1)
                     sel_mission++;
 
-                thisConfig->thisCore->saveToDebugLog("Selecting Obelisk mission " + to_string(sel_mission) + ".");
+                SPDLOG_DEBUG("Selecting Obelisk mission {}", sel_mission);
 
                 string level = "";
 

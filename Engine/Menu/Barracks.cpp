@@ -1231,7 +1231,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                     case 0: {
                         if (dialog_boxes[dialog_boxes.size() - 1].id == 0)
                         {
-                            cout << "Go on mission!" << endl;
+                            SPDLOG_DEBUG("Go on mission!");
                             dialog_boxes[dialog_boxes.size() - 1].Close();
 
                             parentMenu->screenFade.Create(thisConfig, 1, 1536);

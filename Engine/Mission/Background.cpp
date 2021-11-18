@@ -21,7 +21,7 @@ void Background::setCamera(Camera newCamera)
 void Background::Load(string bg_name, Config& thisConfigs)
 {
     thisConfig = &thisConfigs;
-    spdlog::debug("Background loaded: {}", bg_name);
+    SPDLOG_DEBUG("Loading background: {}", bg_name);
 
     quality = thisConfig->GetInt("textureQuality");
 
@@ -59,8 +59,6 @@ void Background::Load(string bg_name, Config& thisConfigs)
 
     float resRatioX = thisConfig->GetInt("resX") / float(1280);
     float resRatioY = thisConfig->GetInt("resY") / float(720);
-
-    cout << resRatioX << " " << resRatioY << endl;
 
     v_background.clear();
     vx_pos.clear();
@@ -124,9 +122,9 @@ void Background::Load(string bg_name, Config& thisConfigs)
             v_background = tmp;
         } else
         {
-            spdlog::debug("Loading texture...");
-
             vector<string> v_params = Func::Split(buff, ',');
+
+            SPDLOG_DEBUG("Loading texture: {}/{}", bg_name, v_params[0]);
 
             PSprite ps_temp;
             s_background.push_back(ps_temp);

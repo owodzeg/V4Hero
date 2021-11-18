@@ -1395,7 +1395,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
                 if (goto_id == -1)
                 {
-                    cout << "Create a screenFade" << endl;
+                    SPDLOG_DEBUG("Create a screenFade");
                     screenFade.Create(thisConfig, 1, 512);
                     goto_id = 0;
                 }
