@@ -52,9 +52,8 @@ void Rhythm::LoadTheme(string theme)
 {
     low_range = config->GetInt("lowRange");
     high_range = config->GetInt("highRange");
-    cout << "[DEBUG] Low Range: " << low_range << ", High Range: " << high_range << endl;
-
-    spdlog::debug("theme:" + theme + "\n");
+    SPDLOG_INFO("Low Range: {} ms, High Range: {} ms", low_range, high_range);
+    SPDLOG_INFO("Selected theme: {}", theme);
 
     Stop();
     ///Load the BGM
@@ -103,12 +102,12 @@ void Rhythm::Start()
     rhythmClock.restart();
 
     s_theme[0].setBuffer(songController[0].get()->GetSongByNumber(0, 0));
-    cout << "Volume is " << float(config->GetInt("masterVolume")) * (float(config->GetInt("bgmVolume")) / 100.f) << " " << config->GetInt("masterVolume") << " " << config->GetInt("bgmVolume") << endl;
+    SPDLOG_INFO("Volume is {} {} {}", float(config->GetInt("masterVolume")) * (float(config->GetInt("bgmVolume")) / 100.f), config->GetInt("masterVolume"), config->GetInt("bgmVolume"));
     s_theme[0].setVolume(float(config->GetInt("masterVolume")) * (float(config->GetInt("bgmVolume")) / 100.f));
     s_theme[0].play();
 
     beat_timer = floor(songController[0].get()->GetSongByNumber(0, 0).getDuration().asMilliseconds() / float(8.08));
-    cout << "Beat timer set to: " << beat_timer << endl;
+    SPDLOG_INFO("Beat timer set to: {}", beat_timer);
 }
 
 void Rhythm::BreakCombo()
@@ -118,7 +117,7 @@ void Rhythm::BreakCombo()
     rl_combo = 0;
     advanced_prefever = false;
 
-    logger->debug("Oops! You broke your combo!");
+    SPDLOG_DEBUG("Oops! You broke your combo!");
 
     rhythmClock.restart();
 
@@ -280,7 +279,7 @@ void Rhythm::doRhythm(InputController& inputCtrl)
                     if (index < av_commands.size()) ///Check if the command exists in available commands
                     {
                         rl_combo++;
-                        cout << "rl_combo: " << rl_combo << endl;
+                        SPDLOG_DEBUG("rl_combo: {}", rl_combo);
 
                         ///Clear user input
                         rhythmController.commandInput.clear();
@@ -295,7 +294,7 @@ void Rhythm::doRhythm(InputController& inputCtrl)
                         float acc = current_perfect;
                         satisfaction_value.push_back(perfects_reward[acc]);
 
-                        cout << "acc: " << acc << " reward: " << perfects_reward[acc] << endl;
+                        SPDLOG_DEBUG("acc: {} reward: {}", acc, perfects_reward[acc]);
 
                         if (satisfaction_value.size() > 3)
                             satisfaction_value.erase(satisfaction_value.begin());
@@ -309,7 +308,7 @@ void Rhythm::doRhythm(InputController& inputCtrl)
                         if (satisfaction_value.size() == 1)
                             satisfaction = satisfaction_value[0] * 0.05;
 
-                        cout << "Satisfaction: " << satisfaction << endl;
+                        SPDLOG_DEBUG("Satisfaction: {}", satisfaction);
                         last_satisfaction = satisfaction;
 
                         combo = 2;
@@ -364,7 +363,7 @@ void Rhythm::doRhythm(InputController& inputCtrl)
 
             if (combo >= 2) /// If combo is not idle bgm
             {
-                logger->debug("Combo: {}", combo);
+                SPDLOG_DEBUG("Combo: {}", combo);
 
                 string fullcom = rhythmController.commandInput[0] + rhythmController.commandInput[1] + rhythmController.commandInput[2] + rhythmController.commandInput[3]; ///Create a full command using 4 individual hits
 
@@ -375,7 +374,7 @@ void Rhythm::doRhythm(InputController& inputCtrl)
                     updateworm = true;
 
                     rl_combo++;
-                    cout << "rl_combo: " << rl_combo << endl;
+                    SPDLOG_DEBUG("rl_combo: {}", rl_combo);
                     combo += 1;
 
                     if (combo >= 28)
@@ -401,7 +400,7 @@ void Rhythm::doRhythm(InputController& inputCtrl)
                         float acc = current_perfect;
                         satisfaction_value.push_back(perfects_reward[acc]);
 
-                        cout << "acc: " << acc << " reward: " << perfects_reward[acc] << endl;
+                        SPDLOG_DEBUG("acc: {} reward: {}", acc, perfects_reward[acc]);
 
                         if (satisfaction_value.size() > 3)
                             satisfaction_value.erase(satisfaction_value.begin());
@@ -415,10 +414,10 @@ void Rhythm::doRhythm(InputController& inputCtrl)
                         if (satisfaction_value.size() == 1)
                             satisfaction = satisfaction_value[0] * 0.05;
 
-                        cout << "Satisfaction: " << satisfaction << ", requirement: " << satisfaction_requirement[rl_combo] << " adv_pre: " << advanced_prefever << " theme_combo: " << combo << endl;
+                        SPDLOG_DEBUG("Satisfaction: {}, requirement: {}, adv_pre: {}, theme_combo: {}", satisfaction, satisfaction_requirement[rl_combo], advanced_prefever, combo);
                         last_satisfaction = satisfaction;
 
-                        logger->debug("Accuracy: {}%", acc / 16 * 100);
+                        SPDLOG_DEBUG("Accuracy: {}%", acc / 16 * 100);
 
                         if ((rl_combo >= 2) && (combo < 6))
                         {

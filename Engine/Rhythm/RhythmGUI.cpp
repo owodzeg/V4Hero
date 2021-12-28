@@ -1,6 +1,9 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
+
 #include "RhythmGUI.h"
 #include <cmath>
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 using namespace std;
 
@@ -142,7 +145,7 @@ void RhythmGUI::doVisuals(sf::RenderWindow& window, int bgm_cycle, sf::Clock* rh
 
     for (int i = 0; i < drumsToErase.size(); i++)
     {
-        cout << "Erased drum " << drumsToErase[i] - i << endl;
+        SPDLOG_DEBUG("Erased drum {}", drumsToErase[i] - i);
         drums->erase(drums->begin() + (drumsToErase[i] - i));
     }
 

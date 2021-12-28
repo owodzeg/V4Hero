@@ -1,5 +1,8 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
+
 #include "RhythmController.h"
 #include <iostream>
+#include <spdlog/spdlog.h>
 
 using namespace std;
 
@@ -173,8 +176,8 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
     if (pata || pon || don || chaka)
     {
         //cout<<"Input registered"<<endl;
-        logger->debug("{} {} ms", current_drum, masterTimer);
-        logger->debug("drum quality was {}", drum_quality);
+        SPDLOG_DEBUG("{} {} ms", current_drum, masterTimer);
+        SPDLOG_DEBUG("drum quality was {}", drum_quality);
 
         ///If drum was already hit and you hit once again, or you hit BAD, reset user input and break combo
         if ((hit) || (drum_quality == 2))
@@ -185,7 +188,7 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
 
             if (combo >= 2)
                 breakCombo = true;
-            logger->debug("break combo #1");
+            SPDLOG_DEBUG("break combo #1");
         }
 
         string check = "";
@@ -197,7 +200,7 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
 
         if (check != "")
         {
-            cout << "Checking " << check << " if it exists in available commands..." << endl;
+            SPDLOG_DEBUG("Checking {} if it exists in available commands...", check);
 
             bool found = false;
 
@@ -221,7 +224,7 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
                     commandInput.clear();
 
                     breakCombo = true;
-                    logger->debug("break combo #2");
+                    SPDLOG_DEBUG("break combo #2");
                 }
             }
         }
@@ -274,7 +277,7 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         if (commandInput.size() == 4)
         {
             string fullcom = commandInput[0] + commandInput[1] + commandInput[2] + commandInput[3]; ///Create a full command using 4 individual hits
-            logger->debug("fullcom: {}", fullcom);
+            SPDLOG_DEBUG("fullcom: {}", fullcom);
 
             if (std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end()) ///Check if the command exists in available commands
             {
