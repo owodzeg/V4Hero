@@ -108,13 +108,16 @@ V4Core::V4Core()
     }
 
     /** Load language data and appropriate font **/
+    SPDLOG_DEBUG("Loading language data");
     config.strRepo.LoadLanguageFiles(config.GetInt("lang"));
     config.fontPath = "resources/fonts/" + config.strRepo.langFonts[config.GetInt("lang") - 1];
 
     /** Load item registry **/
+    SPDLOG_DEBUG("Loading item registry");
     saveReader.itemReg.readItemFiles();
 
     /** "Alpha release" text **/
+    SPDLOG_DEBUG("Creating text for version and FPS");
     f_font.loadFromFile(config.fontPath);
 
     t_debug.setFont(f_font);
@@ -136,9 +139,14 @@ V4Core::V4Core()
     t_fps.setString("FPS: ");
 
     /** Initialize main menu **/
+    SPDLOG_DEBUG("Load backgrounds from tipsUtil");
     tipsUtil.LoadBackgrounds(config);
+    SPDLOG_DEBUG("Load icons from tipsUtil");
     tipsUtil.LoadIcons(config);
+    SPDLOG_DEBUG("Load strings from tipsUtil");
     tipsUtil.LoadStrings(config);
+
+    SPDLOG_DEBUG("Initialize the main menu");
     mainMenu.Initialise(&config, this);
 
     menus.push_back(&mainMenu);
