@@ -107,6 +107,9 @@ V4Core::V4Core()
         }
     }
 
+    /** Load Resource Manager **/
+    resourceManager.getQuality(this);
+
     /** Load language data and appropriate font **/
     SPDLOG_DEBUG("Loading language data");
     config.strRepo.LoadLanguageFiles(config.GetInt("lang"));
@@ -140,11 +143,9 @@ V4Core::V4Core()
 
     /** Initialize main menu **/
     SPDLOG_DEBUG("Load backgrounds from tipsUtil");
-    tipsUtil.LoadBackgrounds(config);
+    tipsUtil.LoadBackgrounds(resourceManager);
     SPDLOG_DEBUG("Load icons from tipsUtil");
-    tipsUtil.LoadIcons(config);
-    SPDLOG_DEBUG("Load strings from tipsUtil");
-    tipsUtil.LoadStrings(config);
+    tipsUtil.LoadIcons(resourceManager);
 
     SPDLOG_DEBUG("Initialize the main menu");
     mainMenu.Initialise(&config, this);
@@ -264,9 +265,9 @@ void V4Core::loadingThread()
     box_1.setFillColor(sf::Color(0, 0, 0, 192));
     box_2.setFillColor(sf::Color(0, 0, 0, 192));
 
-    int tipBackground = rand() % tipsUtil.t_backgrounds.size();
-    int tipIcon = rand() % tipsUtil.t_icons.size();
-    int tipText = (rand() % tipsUtil.tip_amount) + 1;
+    int tipBackground = rand() % tipsUtil.backgroundFileNames.size();
+    int tipIcon = rand() % tipsUtil.iconFileNames.size();
+    int tipText = (rand() % tipsUtil.tipAmount) + 1;
 
     string title_key = "tip" + to_string(tipText) + "_title";
     string desc_key = "tip" + to_string(tipText) + "_desc";
@@ -307,8 +308,8 @@ void V4Core::loadingThread()
         auto lastView = window.getView();
         window.setView(window.getDefaultView());
 
-        tipsUtil.t_backgrounds[tipBackground].setPosition(0, 0);
-        tipsUtil.t_backgrounds[tipBackground].draw(window);
+        std::string bg_key = "resources/graphics/ui/tips/" + tipsUtil.backgroundFileNames[tipBackground];
+        resourceManager.getSprite(bg_key).draw(window);
 
         window.draw(box_1);
         window.draw(box_2);
@@ -316,9 +317,12 @@ void V4Core::loadingThread()
         tip_logo.setPosition(1060, 20);
         tip_logo.draw(window);
 
-        tipsUtil.t_icons[tipIcon].setOrigin(tipsUtil.t_icons[tipIcon].getLocalBounds().width / 2, tipsUtil.t_icons[tipIcon].getLocalBounds().height / 2);
-        tipsUtil.t_icons[tipIcon].setPosition(1040, 380);
-        tipsUtil.t_icons[tipIcon].draw(window);
+        std::string icon_key = "resources/graphics/ui/tips/" + tipsUtil.iconFileNames[tipIcon];
+
+        PSprite icon = resourceManager.getSprite(icon_key);
+        icon.setOrigin(icon.getLocalBounds().width / 2, icon.getLocalBounds().height / 2);
+        icon.setPosition(1040, 380);
+        icon.draw(window);
 
         t_tipTitle.setPosition(24, 32);
         t_tipTitle.draw(window);
