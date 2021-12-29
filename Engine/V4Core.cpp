@@ -241,13 +241,15 @@ void V4Core::loadingThread()
     box_1.setSize(sf::Vector2f(1280 * resRatioX, 80 * resRatioY));
     box_2.setSize(sf::Vector2f(1280 * resRatioX, 514 * resRatioY));
 
-    PSprite tip_logo;
-    tip_logo.loadFromFile("resources/graphics/ui/tips/tip-logo.png", config.GetInt("textureQuality"), 1);
+    resourceManager.loadSprite("resources/graphics/ui/tips/tip-logo.png");
+    resourceManager.loadSprite("resources/graphics/ui/tips/loading_head.png");
+    resourceManager.loadSprite("resources/graphics/ui/tips/loading_eye.png");
 
-    PSprite loading_head, loading_eye1, loading_eye2;
-    loading_head.loadFromFile("resources/graphics/ui/tips/loading_head.png", config.GetInt("textureQuality"), 1);
-    loading_eye1.loadFromFile("resources/graphics/ui/tips/loading_eye.png", config.GetInt("textureQuality"), 1);
-    loading_eye2.loadFromFile("resources/graphics/ui/tips/loading_eye.png", config.GetInt("textureQuality"), 1);
+    PSprite tip_logo = resourceManager.getSprite("resources/graphics/ui/tips/tip-logo.png");
+
+    PSprite loading_head = resourceManager.getSprite("resources/graphics/ui/tips/loading_head.png");
+    PSprite loading_eye1 = resourceManager.getSprite("resources/graphics/ui/tips/loading_eye.png");
+    PSprite loading_eye2 = resourceManager.getSprite("resources/graphics/ui/tips/loading_eye.png");
 
     loading_eye1.setOrigin(loading_eye1.getLocalBounds().width * 0.85, loading_eye1.getLocalBounds().height * 0.85);
     loading_eye2.setOrigin(loading_eye2.getLocalBounds().width * 0.85, loading_eye2.getLocalBounds().height * 0.85);
