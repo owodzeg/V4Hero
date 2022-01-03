@@ -8,9 +8,9 @@
 class PSprite
 {
 public:
-    sf::Texture t;
+    sf::Texture t; //deprecated
     sf::Sprite s;
-    std::string texname;
+    std::string texturePath;
     int qualitySetting = 1;
     int resSetting = 1;
     float ratioX = 1, ratioY = 1;

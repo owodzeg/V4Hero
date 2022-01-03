@@ -1,10 +1,11 @@
 #include "PSprite.h"
+#include "../TextureManager.h"
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <spdlog/spdlog.h>
 
-PSprite::PSprite()
+PSprite::PSprite() 
 {
 }
 
@@ -39,15 +40,9 @@ void PSprite::loadFromFile(std::string file, int q)
     resSetting = 1;
 
     SPDLOG_DEBUG("Loading PSprite: {}", c);
-    texname = c;
+    texturePath = c;
 
-    if (!t.loadFromFile(c))
-    {
-        SPDLOG_ERROR("Failed to load: {}", c);
-    }
-
-    t.setSmooth(true);
-    s.setTexture(t, true);
+    s.setTexture(TextureManager::getInstance().getTexture(c), true);
 }
 
 void PSprite::loadFromFile(std::string file, int q, int r = 1)
@@ -81,21 +76,15 @@ void PSprite::loadFromFile(std::string file, int q, int r = 1)
     resSetting = r;
 
     SPDLOG_DEBUG("Loading PSprite: {}", c);
-    texname = c;
+    texturePath = c;
 
-    if (!t.loadFromFile(c))
-    {
-        SPDLOG_ERROR("Failed to load: {}", c);
-    }
-
-    t.setSmooth(true);
-    s.setTexture(t, true);
+    s.setTexture(TextureManager::getInstance().getTexture(c), true);
 }
 
 void PSprite::setRepeated(bool r)
 {
-    t.setRepeated(r);
-    s.setTexture(t);
+    TextureManager::getInstance().getTexture(texturePath).setRepeated(r);
+    s.setTexture(TextureManager::getInstance().getTexture(texturePath), true);
 }
 
 void PSprite::setTextureRect(sf::IntRect rect)
@@ -134,15 +123,13 @@ sf::Color PSprite::getColor()
 
 void PSprite::setTexture(sf::Texture& texture)
 {
-    t = texture;
-    s.setTexture(t, true);
-
+    s.setTexture(texture, true);
     exported = false;
 }
 
 void PSprite::applyTexture()
 {
-    s.setTexture(t, true);
+    //s.setTexture(t, true);
     exported = false;
 }
 
@@ -205,8 +192,8 @@ sf::FloatRect PSprite::getGlobalBoundsScaled()
 
 void PSprite::setSmooth(bool smooth)
 {
-    t.setSmooth(smooth);
-    s.setTexture(t);
+    TextureManager::getInstance().getTexture(texturePath).setSmooth(smooth);
+    s.setTexture(TextureManager::getInstance().getTexture(texturePath), true);
 }
 
 void PSprite::draw(sf::RenderWindow& window)
@@ -273,7 +260,7 @@ void PSprite::draw(sf::RenderWindow& window)
         }
     }
 
-    s.setTexture(t);
+    //s.setTexture(t);
     s.setScale(ratioX * scaleX, ratioY * scaleY);
     s.setOrigin(orX, orY);
     s.setPosition(lx * resRatioX, ly * resRatioY);
@@ -284,15 +271,12 @@ void PSprite::draw(sf::RenderWindow& window)
     {
         if (!exported)
         {
-            if (texname.find("locationbg") != std::string::npos)
-            {
                 sf::Image img;
-                img = t.copyToImage();
+                img = s.getTexture()->copyToImage();
                 int rrr = rand() % 100000000;
                 img.saveToFile("texDump/" + std::to_string(rrr) + ".png");
 
                 exported = true;
-            }
         }
     }
 }
@@ -363,7 +347,7 @@ void PSprite::update(sf::RenderWindow& window)
         }
     }
 
-    s.setTexture(t);
+    //s.setTexture(t);
     s.setScale(ratioX * scaleX, ratioY * scaleY);
     s.setOrigin(orX, orY);
     s.setPosition(lx * resRatioX, ly * resRatioY);
@@ -374,7 +358,7 @@ void PSprite::update(sf::RenderWindow& window)
         if (!exported)
         {
             sf::Image img;
-            img = t.copyToImage();
+            img = s.getTexture()->copyToImage();
             int rrr = rand() % 100000000;
             img.saveToFile("texDump/" + std::to_string(rrr) + ".png");
 
