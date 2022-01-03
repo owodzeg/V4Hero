@@ -321,19 +321,6 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             location_bgs[renderCur].draw(window);
         }
 
-        if ((sf::Keyboard::isKeyPressed(sf::Keyboard::L)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
-        {
-            SPDLOG_WARN("Special texture dump executed");
-
-            for (int i = 0; i < location_bgs.size(); i++)
-            {
-                sf::Image img;
-                img = location_bgs[i].t.copyToImage();
-                int rrr = rand() % 100000000;
-                img.saveToFile("texDump/" + std::to_string(rrr) + ".png");
-            }
-        }
-
         mainbox.draw(window);
 
         worldmap_title.setOrigin(worldmap_title.getLocalBounds().width / 2, worldmap_title.getLocalBounds().height / 2);
