@@ -17,6 +17,7 @@
 #include "StringRepository.h"
 #include "TipsUtil.h"
 #include "ResourceManager.h"
+#include "TextureManager.h"
 
 #include "Input/InputController.h"
 
@@ -63,7 +64,6 @@ public:
     NewGameMenu newGameMenu;
     MainMenu mainMenu;
     TipsUtil tipsUtil;
-    ResourceManager resourceManager;
     SaveReader saveReader;
     MissionController currentController;
     V4Core();
