@@ -1,6 +1,7 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "Background.h"
+#include "../ResourceManager.h"
 
 #include "../Func.h"
 #include <fstream>
@@ -64,12 +65,13 @@ void Background::Load(string bg_name, Config& thisConfigs)
     vx_pos.clear();
     vx_color.clear();
     p_background.clear();
-    t_background.clear();
     s_background.clear();
     background_xspeed.clear();
     background_y.clear();
 
     temp_camerax = 0;
+    bg_layer = 0;
+
     ifstream param_file("resources/graphics/bg/" + bg_name + "/param.dat");
 
     string buff;
@@ -126,17 +128,13 @@ void Background::Load(string bg_name, Config& thisConfigs)
 
             SPDLOG_DEBUG("Loading texture: {}/{}", bg_name, v_params[0]);
 
-            PSprite ps_temp;
-            s_background.push_back(ps_temp);
-            int id = s_background.size() - 1;
-
-            s_background[id].loadFromFile("resources/graphics/bg/" + bg_name + "/" + v_params[0], quality);
-            s_background[id].setRepeated(true);
-            s_background[id].setTextureRect(sf::IntRect(0, 0, 500000, s_background[id].t.getSize().y));
-            s_background[id].setOrigin(10000, s_background[id].getGlobalBounds().height);
-            s_background[id].setColor(sf::Color(atoi(v_params[3].c_str()), atoi(v_params[4].c_str()), atoi(v_params[5].c_str()), 255));
-            s_background[id].setPosition(-1000, atoi(v_params[1].c_str()));
-            s_background[id].setSmooth(false);
+            s_background[bg_layer] = ResourceManager::getInstance().getSprite("resources/graphics/bg/" + bg_name + "/" + v_params[0]);
+            s_background[bg_layer].setRepeated(true);
+            s_background[bg_layer].setTextureRect(sf::IntRect(0, 0, 500000, s_background[bg_layer].getGlobalBounds().height));
+            s_background[bg_layer].setOrigin(10000, s_background[bg_layer].getGlobalBounds().height);
+            s_background[bg_layer].setColor(sf::Color(atoi(v_params[3].c_str()), atoi(v_params[4].c_str()), atoi(v_params[5].c_str()), 255));
+            s_background[bg_layer].setPosition(-1000, atoi(v_params[1].c_str()));
+            s_background[bg_layer].setSmooth(false);
 
             sf::Vector2f tmpp;
 
@@ -145,6 +143,8 @@ void Background::Load(string bg_name, Config& thisConfigs)
 
             p_background.push_back(tmpp);
             background_xspeed.push_back(atof(v_params[2].c_str()));
+
+            bg_layer++;
         }
     }
 
@@ -172,12 +172,9 @@ void Background::Draw(sf::RenderWindow& window)
 
     window.setView(lastView);
 
-    for (int i = 0; i < s_background.size(); i++)
+    for (int i = 0; i < bg_layer; i++)
     {
-        //s_background[i].setTexture(t_background[i]);
-
         s_background[i].setPosition((-(background_xspeed[i] * camera.camera_x) - (background_xspeed[i] * camera.manual_x) - (background_xspeed[i] * camera.debug_x)) / resRatioX, p_background[i].y);
-        //cout << s_background[i].ly << endl;
         s_background[i].draw(window);
     }
 

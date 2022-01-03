@@ -5,6 +5,7 @@
 #include "../Graphics/PSprite.h"
 #include "Camera.h"
 #include <SFML/Graphics.hpp>
+
 class Background
 {
 public:
@@ -15,8 +16,7 @@ public:
     std::vector<sf::Color> vx_color;
 
     Config* thisConfig;
-    std::vector<sf::Texture> t_background;
-    std::vector<PSprite> s_background;
+    std::map<int, PSprite> s_background; //changed from vector to map: never use vectors for things that contain textures!!!!!!
     std::vector<sf::Vector2f> p_background;
     std::vector<float> background_xspeed;
     std::vector<float> background_y;
@@ -25,6 +25,7 @@ public:
     float temp_camerax = 0;
     float floor_height = 0;
     int quality = 0;
+    int bg_layer = 0;
 
     Background();
     void setCamera(Camera camera);
