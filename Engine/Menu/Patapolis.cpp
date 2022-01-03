@@ -31,9 +31,9 @@ void PatapolisMenu::updateStoryPoint()
     }
 }
 
-void PatapolisMenu::addL6(std::string variant, float x, float y, int q, int r)
+void PatapolisMenu::addL6(std::string variant, float x, float y)
 {
-    SPDLOG_TRACE("Adding L6 layer: variant {} x {} y {} q {} r {}", variant, x, y, q, r);
+    SPDLOG_TRACE("Adding L6 layer: variant {} x {} y {}", variant, x, y);
     //PSprite tmp;
     //tmp.loadFromFile("resources/graphics/bg/patapolis/6" + variant + ".png", q, r);
     //tmp.setPosition(x, y);
@@ -45,9 +45,9 @@ void PatapolisMenu::addL6(std::string variant, float x, float y, int q, int r)
     layer_6.push_back(tmp);
 }
 
-void PatapolisMenu::addL2(std::string variant, float x, float y, int q, int r)
+void PatapolisMenu::addL2(std::string variant, float x, float y)
 {
-    SPDLOG_TRACE("Adding L2 layer: variant {} x {} y {} q {} r {}", variant, x, y, q, r);
+    SPDLOG_TRACE("Adding L2 layer: variant {} x {} y {}", variant, x, y);
     //PSprite tmp;
     //tmp.loadFromFile("resources/graphics/bg/patapolis/2" + variant + ".png", q, r);
     //tmp.setPosition(x, y);
@@ -67,13 +67,12 @@ void PatapolisMenu::addSparkle(float x, float y)
 
     Sparkle tmp;
 
-    PSprite sprk;
-    sprk.loadFromFile("resources/graphics/bg/patapolis/sparkle.png", quality, 1);
-    sprk.setPosition(x, y);
-    sprk.setScale(scale);
     //sparkles.push_back(sprk);
 
-    tmp.sprk = sprk;
+    tmp.sprk = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/sparkle.png");
+    tmp.sprk.setPosition(x, y);
+    tmp.sprk.setScale(scale);
+
     tmp.initScale = scale;
     tmp.curScale = scale;
     tmp.x = x;
@@ -92,12 +91,10 @@ void PatapolisMenu::addParagetSparkle(float x, float y)
 
     ParagetSparkle tmp;
 
-    PSprite sprk;
-
     int choice = rand() % 3 + 1;
     string nm = "paraget_sparkle_" + to_string(choice) + ".png";
 
-    sprk.loadFromFile("resources/graphics/bg/patapolis/" + nm, quality, 1);
+    PSprite sprk = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/" + nm);
 
     sprk.setPosition(x, y);
     sprk.setOrigin(sprk.getLocalBounds().width / 2, sprk.getLocalBounds().height / 2);
@@ -168,11 +165,11 @@ PatapolisMenu::Fire PatapolisMenu::addFire(int type, float x, float y, bool add)
         }
     }
 
-    tmp.fire[0].loadFromFile("resources/graphics/bg/patapolis/" + str_type + "_fire1.png", quality, 1);
-    tmp.fire[1].loadFromFile("resources/graphics/bg/patapolis/" + str_type + "_fire2.png", quality, 1);
-    tmp.fire[2].loadFromFile("resources/graphics/bg/patapolis/" + str_type + "_fire3.png", quality, 1);
+    tmp.fire[0] = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/" + str_type + "_fire1.png");
+    tmp.fire[1] = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/" + str_type + "_fire2.png");
+    tmp.fire[2] = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/" + str_type + "_fire3.png");
 
-    tmp.glow.loadFromFile("resources/graphics/bg/patapolis/" + str_type + "_glow.png", quality, 1);
+    tmp.glow = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/" + str_type + "_glow.png");
 
     tmp.baseX = x;
     tmp.baseY = y;
@@ -185,12 +182,12 @@ PatapolisMenu::Fire PatapolisMenu::addFire(int type, float x, float y, bool add)
     return tmp;
 }
 
-void PatapolisMenu::addSmokeParticle(float x, float y, PSprite& refer)
+void PatapolisMenu::addSmokeParticle(float x, float y)
 {
     SPDLOG_TRACE("Adding Smoke Particle: x {} y {}", x, y);
 
     SmokeParticle tmp;
-    tmp.smk = refer;
+    tmp.smk = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/smoke.png");
     tmp.x = x;
     tmp.y = y;
     tmp.baseX = x;
@@ -199,14 +196,14 @@ void PatapolisMenu::addSmokeParticle(float x, float y, PSprite& refer)
     smoke.push_back(tmp);
 }
 
-void PatapolisMenu::addCloud(std::string type, float x, float y, float xsize, float ysize, int q, int r)
+void PatapolisMenu::addCloud(std::string type, float x, float y, float xsize, float ysize)
 {
-    SPDLOG_TRACE("Adding cloud type {} x {} y {} xsize {} ysize {} q {} r {}", type, x, y, xsize, ysize, q, r);
+    SPDLOG_TRACE("Adding cloud type {} x {} y {} xsize {} ysize {}", type, x, y, xsize, ysize);
 
     if (type == "A")
     {
         CloudA cloud;
-        cloud.cloud.loadFromFile("resources/graphics/bg/patapolis/1a.png", q, r);
+        cloud.cloud = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/1a.png");
         cloud.cloud.baseX = x;
         cloud.cloud.baseY = y;
         cloud.x = x;
@@ -326,107 +323,108 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
     }
     
 
-    addL6("a", 0, 722 - floor_height, quality, 1);
-    addL6("a", 2700, 722 - floor_height, quality, 1);
+    addL6("a", 0, 722 - floor_height);
+    addL6("a", 2700, 722 - floor_height);
 
-    addL6("d", 3840, 726 - floor_height, quality, 1);
-    addL6("c", 3800, 722 - floor_height, quality, 1);
+    addL6("d", 3840, 726 - floor_height);
+    addL6("c", 3800, 722 - floor_height);
 
-    addL6("d", 4400, 740 - floor_height, quality, 1);
-    addL6("c", 4650, 740 - floor_height, quality, 1);
-    addL6("b", 4900, 726 - floor_height, quality, 1);
-    addL6("d", 5100, 737 - floor_height, quality, 1);
-    addL6("c", 5050, 725 - floor_height, quality, 1);
-    addL6("d", 5500, 745 - floor_height, quality, 1);
-    addL6("c", 5700, 723 - floor_height, quality, 1);
-    addL6("d", 5760, 724 - floor_height, quality, 1);
-    addL6("a", 5850, 722 - floor_height, quality, 1);
-    addL6("c", 6100, 722 - floor_height, quality, 1);
-    addL6("d", 6150, 733 - floor_height, quality, 1);
-    addL6("c", 6400, 755 - floor_height, quality, 1);
-    addL6("b", 6650, 722 - floor_height, quality, 1);
+    addL6("d", 4400, 740 - floor_height);
+    addL6("c", 4650, 740 - floor_height);
+    addL6("b", 4900, 726 - floor_height);
+    addL6("d", 5100, 737 - floor_height);
+    addL6("c", 5050, 725 - floor_height);
+    addL6("d", 5500, 745 - floor_height);
+    addL6("c", 5700, 723 - floor_height);
+    addL6("d", 5760, 724 - floor_height);
+    addL6("a", 5850, 722 - floor_height);
+    addL6("c", 6100, 722 - floor_height);
+    addL6("d", 6150, 733 - floor_height);
+    addL6("c", 6400, 755 - floor_height);
+    addL6("b", 6650, 722 - floor_height);
 
-    addL6("e", 7640, 722 - floor_height, quality, 1);
-    addL6("d", 7700, 731 - floor_height, quality, 1);
-    addL6("c", 7670, 724 - floor_height, quality, 1);
-    addL6("c", 7900, 750 - floor_height, quality, 1);
+    addL6("e", 7640, 722 - floor_height);
+    addL6("d", 7700, 731 - floor_height);
+    addL6("c", 7670, 724 - floor_height);
+    addL6("c", 7900, 750 - floor_height);
 
-    addL6("d", 8250, 727 - floor_height, quality, 1);
-    addL6("c", 8480, 742 - floor_height, quality, 1);
-    addL6("d", 8710, 734 - floor_height, quality, 1);
-    addL6("c", 8880, 723 - floor_height, quality, 1);
-    addL6("d", 8930, 733 - floor_height, quality, 1);
-    addL6("c", 9040, 757 - floor_height, quality, 1);
-    addL6("d", 9180, 736 - floor_height, quality, 1);
-    addL6("a", 9120, 722 - floor_height, quality, 1);
-    addL6("c", 9260, 743 - floor_height, quality, 1);
+    addL6("d", 8250, 727 - floor_height);
+    addL6("c", 8480, 742 - floor_height);
+    addL6("d", 8710, 734 - floor_height);
+    addL6("c", 8880, 723 - floor_height);
+    addL6("d", 8930, 733 - floor_height);
+    addL6("c", 9040, 757 - floor_height);
+    addL6("d", 9180, 736 - floor_height);
+    addL6("a", 9120, 722 - floor_height);
+    addL6("c", 9260, 743 - floor_height);
 
-    addL6("c", 9700, 728 - floor_height, quality, 1);
-    addL6("d", 9740, 735 - floor_height, quality, 1);
-    addL6("c", 9880, 760 - floor_height, quality, 1);
-    addL6("d", 9930, 750 - floor_height, quality, 1);
-    addL6("d", 10040, 737 - floor_height, quality, 1);
+    addL6("c", 9700, 728 - floor_height);
+    addL6("d", 9740, 735 - floor_height);
+    addL6("c", 9880, 760 - floor_height);
+    addL6("d", 9930, 750 - floor_height);
+    addL6("d", 10040, 737 - floor_height);
 
-    L5.loadFromFile("resources/graphics/bg/patapolis/5.png", quality, 1);
-    L4.loadFromFile("resources/graphics/bg/patapolis/4.png", quality, 1);
+    L5 = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/5.png");
+    L4 = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/4.png");
 
     L5.setPosition(3060, 740 - floor_height);
     L4.setPosition(2530, 750 - floor_height);
 
-    addL2("a", 800, 766 - floor_height, quality, 1);
-    addL2("b", 2900, 740 - floor_height, quality, 1);
-    addL2("c", 3900, 720 - floor_height, quality, 1);
-    addL2("c", 4300, 770 - floor_height, quality, 1);
+    addL2("a", 800, 766 - floor_height);
+    addL2("b", 2900, 740 - floor_height);
+    addL2("c", 3900, 720 - floor_height);
+    addL2("c", 4300, 770 - floor_height);
 
-    addL2("c", 5080, 750 - floor_height, quality, 1);
-    addL2("c", 5220, 720 - floor_height, quality, 1);
+    addL2("c", 5080, 750 - floor_height);
+    addL2("c", 5220, 720 - floor_height);
 
-    addL2("c", 5600, 770 - floor_height, quality, 1);
-    addL2("c", 5740, 720 - floor_height, quality, 1);
+    addL2("c", 5600, 770 - floor_height);
+    addL2("c", 5740, 720 - floor_height);
 
-    addL2("c", 6150, 760 - floor_height, quality, 1);
-    addL2("c", 6320, 720 - floor_height, quality, 1);
+    addL2("c", 6150, 760 - floor_height);
+    addL2("c", 6320, 720 - floor_height);
 
-    addL2("c", 6540, 760 - floor_height, quality, 1);
+    addL2("c", 6540, 760 - floor_height);
 
-    addL2("c", 7540, 760 - floor_height, quality, 1);
+    addL2("c", 7540, 760 - floor_height);
 
-    addL2("c", 7800, 720 - floor_height, quality, 1);
-    addL2("c", 8000, 750 - floor_height, quality, 1);
+    addL2("c", 7800, 720 - floor_height);
+    addL2("c", 8000, 750 - floor_height);
 
-    addL2("c", 8900, 770 - floor_height, quality, 1);
-    addL2("c", 9060, 740 - floor_height, quality, 1);
+    addL2("c", 8900, 770 - floor_height);
+    addL2("c", 9060, 740 - floor_height);
 
-    addL2("c", 9760, 740 - floor_height, quality, 1);
+    addL2("c", 9760, 740 - floor_height);
 
-    addL2("c", 10300, 770 - floor_height, quality, 1);
-    addL2("c", 10470, 740 - floor_height, quality, 1);
+    addL2("c", 10300, 770 - floor_height);
+    addL2("c", 10470, 740 - floor_height);
 
-    addL2("c", 11000, 750 - floor_height, quality, 1);
+    addL2("c", 11000, 750 - floor_height);
 
-    addL2("d", 300, 728 - floor_height, quality, 1);
-    addL2("d", 940, 728 - floor_height, quality, 1);
-    addL2("e", 1400, 728 - floor_height, quality, 1);
-    addL2("f", 1800, 728 - floor_height, quality, 1);
-    addL2("d", 4200, 728 - floor_height, quality, 1);
-    addL2("d", 5000, 728 - floor_height, quality, 1);
-    addL2("d", 5580, 728 - floor_height, quality, 1);
-    addL2("d", 6400, 728 - floor_height, quality, 1);
-    addL2("d", 7700, 728 - floor_height, quality, 1);
-    addL2("d", 9000, 728 - floor_height, quality, 1);
-    addL2("d", 10500, 728 - floor_height, quality, 1);
+    addL2("d", 300, 728 - floor_height);
+    addL2("d", 940, 728 - floor_height);
+    addL2("e", 1400, 728 - floor_height);
+    addL2("f", 1800, 728 - floor_height);
+    addL2("d", 4200, 728 - floor_height);
+    addL2("d", 5000, 728 - floor_height);
+    addL2("d", 5580, 728 - floor_height);
+    addL2("d", 6400, 728 - floor_height);
+    addL2("d", 7700, 728 - floor_height);
+    addL2("d", 9000, 728 - floor_height);
+    addL2("d", 10500, 728 - floor_height);
 
-    edge.loadFromFile("resources/graphics/bg/patapolis/edge.png", quality, 1);
-    bridge.loadFromFile("resources/graphics/bg/patapolis/bridge.png", quality, 1);
-    rainbow.loadFromFile("resources/graphics/bg/patapolis/rainbow.png", quality, 1);
+    edge = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/edge.png");
+    bridge = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/bridge.png");
+    rainbow = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/rainbow.png");
 
     for (int i = 0; i < 4; i++)
     {
-        back_layer[i].loadFromFile("resources/graphics/bg/patapolis/back_" + to_string(i + 1) + ".png", quality, 1);
+        back_layer[i] = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/back_" + to_string(i + 1) + ".png");
         back_layer[i].setOrigin(0, back_layer[i].getLocalBounds().height);
         back_layer[i].setPosition(back_pos[i], 715);
     }
 
+    // to be replaced to store only data in vectors and draw the same sprite in draw call
     addSparkle(11620 + 25, 400);
     addSparkle(11620 + 170, 380);
     addSparkle(11620 + 83, 270);
@@ -587,9 +585,11 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
     int range = rand() % 30 + 50;
     for (int i = 0; i < range; i++)
     {
+        /// to be replaced so it uses a single texture drawn many times only
         addParagetSparkle(10549 + (rand() % 100), 330 + (rand() % 200));
     }
 
+    /// same as above
     addFire(4, 3903, 583, true);
     addFire(4, 4017, 583, true);
 
@@ -604,12 +604,12 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
     forge_big = addFire(2, 2050, 542, false);
     forge_purple = addFire(3, 2370, 404, false);
 
-    p_smoke.loadFromFile("resources/graphics/bg/patapolis/smoke.png", quality, 1);
+    p_smoke = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/smoke.png");
     p_smoke.setOrigin(p_smoke.getLocalBounds().width / 2, p_smoke.getLocalBounds().height / 2);
 
-    addCloud("A", 9500, 140, 0, 0, quality, 1);
-    addCloud("A", 8800, 240, 0, 0, quality, 1);
-    addCloud("A", 8000, 170, 0, 0, quality, 1);
+    addCloud("A", 9500, 140, 0, 0);
+    addCloud("A", 8800, 240, 0, 0);
+    addCloud("A", 8000, 170, 0, 0);
 
     ctrlTips.create(54, f_font, 20, sf::String("L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
 
@@ -1194,9 +1194,9 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
             smokepath1 = 0;
 
         if (rand() % 100 == 1)
-            addSmokeParticle(altar.baseX - 186 + (cos(smokepath1 * 3.141592 / 180) * 2), 410, p_smoke);
+            addSmokeParticle(altar.baseX - 186 + (cos(smokepath1 * 3.141592 / 180) * 2), 410);
         if (rand() % 100 == 1)
-            addSmokeParticle(altar.baseX + 186 + (sin(smokepath1 * 3.141592 / 180) * 2), 410, p_smoke);
+            addSmokeParticle(altar.baseX + 186 + (sin(smokepath1 * 3.141592 / 180) * 2), 410);
 
         vector<int> e_s;
 

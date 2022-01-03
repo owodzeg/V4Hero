@@ -12,13 +12,16 @@ class V4Core;
 class ResourceManager
 {
     public:
-        ResourceManager();
+        static ResourceManager& getInstance();
         void getQuality(V4Core* core);
         void loadSprite(std::string path);
         PSprite& getSprite(const std::string& path);
         void unloadSprite(const std::string& path);
 
 	private:
+        ResourceManager();
+        ~ResourceManager();
+
         std::unordered_map<std::string, PSprite> loadedSprites;
 
         enum Quality

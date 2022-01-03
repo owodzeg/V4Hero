@@ -12,7 +12,7 @@ TipsUtil::TipsUtil()
     check.close();
 }
 
-void TipsUtil::LoadBackgrounds(ResourceManager& resourceManager)
+void TipsUtil::LoadBackgrounds()
 {
     std::ifstream conf("resources/graphics/ui/tips/tip_backgrounds.txt");
     if (conf.good())
@@ -39,11 +39,11 @@ void TipsUtil::LoadBackgrounds(ResourceManager& resourceManager)
 
     for (auto it = backgroundFileNames.begin(); it != backgroundFileNames.end(); ++it)
     {
-        resourceManager.loadSprite("resources/graphics/ui/tips/" + *it);
+        ResourceManager::getInstance().loadSprite("resources/graphics/ui/tips/" + *it);
     }
 }
 
-void TipsUtil::LoadIcons(ResourceManager& resourceManager)
+void TipsUtil::LoadIcons()
 {
     std::ifstream conf("resources/graphics/ui/tips/tip_icons.txt");
     if (conf.good())
@@ -71,6 +71,6 @@ void TipsUtil::LoadIcons(ResourceManager& resourceManager)
 
     for (auto it = iconFileNames.begin(); it != iconFileNames.end(); ++it)
     {
-        resourceManager.loadSprite("resources/graphics/ui/tips/" + *it);
+        ResourceManager::getInstance().loadSprite("resources/graphics/ui/tips/" + *it);
     }
 }

@@ -61,9 +61,12 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
     rs_cover2.setSize(sf::Vector2f(thisConfigs->GetInt("resX"), thisConfigs->GetInt("resY")));
     rs_cover2.setFillColor(sf::Color(0, 0, 0, 0));
 
-    logow_bg.loadFromFile("resources/graphics/ui/menu/logowbg.png", q, r);
-    logow_text.loadFromFile("resources/graphics/ui/menu/logowtxt.png", q, r);
-    logow_shadow.loadFromFile("resources/graphics/ui/menu/logowsh.png", q, r);
+    logow_bg = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowbg.png");
+    logow_text = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowtxt.png");
+    logow_shadow = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowsh.png");
+
+    sf::Image img3 = logow_shadow.s.getTexture()->copyToImage();
+    img3.saveToFile("test4.png");
 
     logow_bg.setColor(sf::Color(120, 0, 0, ui_alpha));
     logow_shadow.setColor(sf::Color(64, 64, 64, ui_alpha));
@@ -75,10 +78,10 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
     s_smash.setBuffer(sb_smash);
     s_smash.setVolume(float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("sfxVolume")) / 100.f));
 
-    grass_1.loadFromFile("resources/graphics/ui/menu/grass_1.png", q, r);
-    grass_2.loadFromFile("resources/graphics/ui/menu/grass_2.png", q, r);
-    grass_3.loadFromFile("resources/graphics/ui/menu/grass_3.png", q, r);
-    grass_4.loadFromFile("resources/graphics/ui/menu/grass_4.png", q, r);
+    grass_1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_1.png");
+    grass_2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_2.png");
+    grass_3 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_3.png");
+    grass_4 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_4.png");
 
     grass_1.setScale(1.05, 1.05);
     grass_2.setScale(1.05, 1.05);
@@ -90,35 +93,35 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
     grass_3.setOrigin(grass_3.getLocalBounds().width / float(100), grass_3.getLocalBounds().height);
     grass_4.setOrigin(grass_4.getLocalBounds().width / float(100), grass_4.getLocalBounds().height);
 
-    logo.loadFromFile("resources/graphics/ui/menu/logo.png", q, r);
+    logo = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logo.png");
     logo.setOrigin(logo.getLocalBounds().width / 2, logo.getLocalBounds().height / 2);
 
-    logo_shadow.loadFromFile("resources/graphics/ui/menu/logo_shadow.png", q, r);
+    logo_shadow = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logo_shadow.png");
     logo_shadow.setOrigin(logo_shadow.getLocalBounds().width / 2, logo_shadow.getLocalBounds().height / 2);
 
-    totem[0].loadFromFile("resources/graphics/ui/menu/totem_1.png", q, r);
-    totem[1].loadFromFile("resources/graphics/ui/menu/totem_2.png", q, r);
-    totem[2].loadFromFile("resources/graphics/ui/menu/totem_3.png", q, r);
-    totem[3].loadFromFile("resources/graphics/ui/menu/totem_4.png", q, r);
+    totem[0] = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_1.png");
+    totem[1] = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_2.png");
+    totem[2] = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_3.png");
+    totem[3] = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_4.png");
 
     totem[0].setOrigin(0, totem[0].getLocalBounds().height);
     totem[1].setOrigin(0, totem[1].getLocalBounds().height);
     totem[2].setOrigin(0, totem[2].getLocalBounds().height);
     totem[3].setOrigin(0, totem[3].getLocalBounds().height);
 
-    fire_1.loadFromFile("resources/graphics/ui/menu/fire_1.png", q, r);
-    fire_2.loadFromFile("resources/graphics/ui/menu/fire_2.png", q, r);
-    fire_3.loadFromFile("resources/graphics/ui/menu/fire_3.png", q, r);
+    fire_1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/fire_1.png");
+    fire_2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/fire_2.png");
+    fire_3 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/fire_3.png");
 
     fire_1.setOrigin(fire_1.getLocalBounds().width / 2, fire_1.getLocalBounds().height);
     fire_2.setOrigin(fire_2.getLocalBounds().width / 2, fire_2.getLocalBounds().height);
     fire_3.setOrigin(fire_3.getLocalBounds().width / 2, fire_3.getLocalBounds().height);
 
-    aura.loadFromFile("resources/graphics/ui/menu/aura.png", q, r);
+    aura = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/aura.png");
     aura.setOrigin(aura.getLocalBounds().width / 2, aura.getLocalBounds().height / 2);
 
-    sword_1.loadFromFile("resources/graphics/ui/menu/sword.png", q, r);
-    sword_2.loadFromFile("resources/graphics/ui/menu/sword.png", q, r);
+    sword_1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/sword.png");
+    sword_2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/sword.png");
 
     sword_1.setOrigin(sword_1.getLocalBounds().width / 2, sword_1.getLocalBounds().height / 2);
     sword_2.setOrigin(sword_2.getLocalBounds().width / 2, sword_2.getLocalBounds().height / 2);

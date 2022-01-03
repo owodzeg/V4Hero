@@ -1,6 +1,7 @@
 #ifndef MAINMENU_H
 #define MAINMENU_H
 #include "../Config.h"
+#include "../ResourceManager.h"
 #include "../Dialog/DialogBox.h"
 #include "../Graphics/Menu.h"
 #include "../Graphics/PSprite.h"

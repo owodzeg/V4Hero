@@ -1,6 +1,7 @@
 #ifndef PATAPOLISMENU_H
 #define PATAPOLISMENU_H
 #include "../Config.h"
+#include "../ResourceManager.h"
 #include "../Dialog/ControlTips.h"
 #include "../Dialog/DialogBox.h"
 #include "../Graphics/Menu.h"
@@ -215,16 +216,16 @@ class PatapolisMenu : public Menu
 		sf::SoundBuffer sb_city_loop;
 		sf::Sound city_loop;
 
-		void addL6(std::string variant, float x, float y, int q, int r);
-		void addL2(std::string variant, float x, float y, int q, int r);
-		void addSparkle(float x, float y);
-		void addParagetSparkle(float x, float y);
+		void addL6(std::string variant, float x, float y);
+        void addL2(std::string variant, float x, float y);
+        void addSparkle(float x, float y);
+        void addParagetSparkle(float x, float y);
 		void addRay(float x1, float y1, float x2, float y2);
-		Fire addFire(int type, float x, float y, bool add);
-		void addSmokeParticle(float x, float y, PSprite& refer);
-		void addCloud(std::string type, float x, float y, float xsize, float ysize, int q, int r);
-		void Initialise(Config* thisConfig, V4Core* parent, Menu* curParentMenu);
-		void Update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
+        Fire addFire(int type, float x, float y, bool add);
+        void addSmokeParticle(float x, float y);
+        void addCloud(std::string type, float x, float y, float xsize, float ysize);
+        void Initialise(Config* thisConfig, V4Core* parent, Menu* curParentMenu);
+        void Update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
 		void EventFired(sf::Event event);
 		void SetTitle(int menuPosition);
 		void OnExit();

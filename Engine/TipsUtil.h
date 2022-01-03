@@ -21,8 +21,8 @@ public:
     int tipAmount = 7;
 
     TipsUtil();
-    void LoadBackgrounds(ResourceManager& resourceManager);
-    void LoadIcons(ResourceManager& resourceManager);
+    void LoadBackgrounds();
+    void LoadIcons();
 };
 
 #endif // TIPSUTIL_H

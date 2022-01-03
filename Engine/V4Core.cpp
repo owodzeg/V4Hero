@@ -108,7 +108,7 @@ V4Core::V4Core()
     }
 
     /** Load Resource Manager **/
-    resourceManager.getQuality(this);
+    ResourceManager::getInstance().getQuality(this);
 
     /** Load language data and appropriate font **/
     SPDLOG_DEBUG("Loading language data");
@@ -143,9 +143,9 @@ V4Core::V4Core()
 
     /** Initialize main menu **/
     SPDLOG_DEBUG("Load backgrounds from tipsUtil");
-    tipsUtil.LoadBackgrounds(resourceManager);
+    tipsUtil.LoadBackgrounds();
     SPDLOG_DEBUG("Load icons from tipsUtil");
-    tipsUtil.LoadIcons(resourceManager);
+    tipsUtil.LoadIcons();
 
     SPDLOG_DEBUG("Initialize the main menu");
     mainMenu.Initialise(&config, this);
@@ -241,15 +241,11 @@ void V4Core::loadingThread()
     box_1.setSize(sf::Vector2f(1280 * resRatioX, 80 * resRatioY));
     box_2.setSize(sf::Vector2f(1280 * resRatioX, 514 * resRatioY));
 
-    resourceManager.loadSprite("resources/graphics/ui/tips/tip-logo.png");
-    resourceManager.loadSprite("resources/graphics/ui/tips/loading_head.png");
-    resourceManager.loadSprite("resources/graphics/ui/tips/loading_eye.png");
+    PSprite tip_logo = ResourceManager::getInstance().getSprite("resources/graphics/ui/tips/tip-logo.png");
 
-    PSprite tip_logo = resourceManager.getSprite("resources/graphics/ui/tips/tip-logo.png");
-
-    PSprite loading_head = resourceManager.getSprite("resources/graphics/ui/tips/loading_head.png");
-    PSprite loading_eye1 = resourceManager.getSprite("resources/graphics/ui/tips/loading_eye.png");
-    PSprite loading_eye2 = resourceManager.getSprite("resources/graphics/ui/tips/loading_eye.png");
+    PSprite loading_head = ResourceManager::getInstance().getSprite("resources/graphics/ui/tips/loading_head.png");
+    PSprite loading_eye1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/tips/loading_eye.png");
+    PSprite loading_eye2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/tips/loading_eye.png");
 
     loading_eye1.setOrigin(loading_eye1.getLocalBounds().width * 0.85, loading_eye1.getLocalBounds().height * 0.85);
     loading_eye2.setOrigin(loading_eye2.getLocalBounds().width * 0.85, loading_eye2.getLocalBounds().height * 0.85);
@@ -296,6 +292,12 @@ void V4Core::loadingThread()
     PText t_nowLoading;
     t_nowLoading.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(config.strRepo.GetString("tips_loading")), config.GetInt("textureQuality"), 1);
 
+    std::string bg_key = "resources/graphics/ui/tips/" + tipsUtil.backgroundFileNames[tipBackground];
+    PSprite s_bg = ResourceManager::getInstance().getSprite(bg_key);
+
+    std::string icon_key = "resources/graphics/ui/tips/" + tipsUtil.iconFileNames[tipIcon];
+    PSprite s_icon = ResourceManager::getInstance().getSprite(icon_key);
+
     float maxFps = config.GetInt("framerateLimit");
 
     if (maxFps == 0)
@@ -310,8 +312,7 @@ void V4Core::loadingThread()
         auto lastView = window.getView();
         window.setView(window.getDefaultView());
 
-        std::string bg_key = "resources/graphics/ui/tips/" + tipsUtil.backgroundFileNames[tipBackground];
-        resourceManager.getSprite(bg_key).draw(window);
+        s_bg.draw(window);
 
         window.draw(box_1);
         window.draw(box_2);
@@ -319,12 +320,9 @@ void V4Core::loadingThread()
         tip_logo.setPosition(1060, 20);
         tip_logo.draw(window);
 
-        std::string icon_key = "resources/graphics/ui/tips/" + tipsUtil.iconFileNames[tipIcon];
-
-        PSprite icon = resourceManager.getSprite(icon_key);
-        icon.setOrigin(icon.getLocalBounds().width / 2, icon.getLocalBounds().height / 2);
-        icon.setPosition(1040, 380);
-        icon.draw(window);
+        s_icon.setOrigin(s_icon.getLocalBounds().width / 2, s_icon.getLocalBounds().height / 2);
+        s_icon.setPosition(1040, 380);
+        s_icon.draw(window);
 
         t_tipTitle.setPosition(24, 32);
         t_tipTitle.draw(window);
