@@ -60,7 +60,7 @@ void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMe
 
                 if (!v4Core->isCached[wip_pon.get()->entityID])
                 {
-                    v4Core->cacheEntity(wip_pon.get()->entityID, wip_pon.get()->all_swaps_img, wip_pon.get()->animation_spritesheet, wip_pon.get()->objects);
+                    //v4Core->cacheEntity(wip_pon.get()->entityID, wip_pon.get()->all_swaps_img, wip_pon.get()->animation_spritesheet, wip_pon.get()->objects);
                 }
 
                 wip_pon.get()->setAnimationSegment("idle_armed");
