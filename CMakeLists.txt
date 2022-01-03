@@ -76,6 +76,7 @@ set(ENGINE_FILES
         Engine/TipsUtil.cpp
         Engine/P4A.cpp
         Engine/ResourceManager.cpp
+        Engine/TextureManager.cpp
         Engine/Mission/Background.cpp
         Engine/Mission/Camera.cpp
         Engine/Mission/MissionController.cpp
