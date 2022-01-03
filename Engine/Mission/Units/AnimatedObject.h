@@ -67,6 +67,7 @@ public:
     vector<float> animation_begin;
     vector<float> animation_end;
     vector<float> animation_length;
+    vector<int> animation_length_frames;
     vector<string> animation_names;
     vector<string> animation_goto;
     vector<bool> animation_loop;
@@ -108,6 +109,8 @@ public:
     map<int, sf::Vector2f> slots_origins;
 
     bool cached = false;
+
+    std::string custom_img_key = "";
 
     vector<int> animation_frames;
     Config* thisConfig;

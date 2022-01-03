@@ -67,6 +67,7 @@ public:
     void LoadFromMemory(string filename, int xpos, int ypos);
     void swapTexture(sf::Image& img);
     void swapTexture(sf::Image first, vector<Pixel> px);
+    void swapTexture(std::string img_key);
     void SetFrame(float time);
     void SetCustomFrame(float in_time, float in_pos_x, float in_pos_y, float in_or_x, float in_or_y, float in_rotation, float in_scale_x, float in_scale_y);
     void SetPos(float time);

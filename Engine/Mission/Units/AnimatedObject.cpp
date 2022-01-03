@@ -229,7 +229,8 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
 
                         //cout << "[AnimatedObject] result: " << !thisConfig->thisCore->currentController.isCached[entityID] << endl;
 
-                        if (!thisConfig->thisCore->isCached[entityID])
+                        //if (!thisConfig->thisCore->isCached[entityID])
+                        if (true)
                         {
                             Animation tmp;
                             sf::Texture spr;
@@ -315,21 +316,33 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                                 // all_swaps[index][curFrame-1]
 
                                 vector<sf::Image> frames;
+                                int i_frames = 0;
 
                                 for (int a = 0; a < animation_swaps.size(); a++)
                                 {
-                                    sf::Image nw = tmp.spritesheet;
-                                    for (int i = 0; i < animation_swaps[a].size(); i++)
-                                    {
-                                        nw.setPixel(animation_swaps[a][i].x, animation_swaps[a][i].y, animation_swaps[a][i].color);
-                                    }
+                                    std::string img_key = anim_path + "_" + anim[2] + "_" + to_string(i_frames);
+                                    SPDLOG_TRACE("IMG_KEY: {}", img_key);
 
-                                    frames.push_back(nw);
+                                    i_frames++;
+
+                                    if (!TextureManager::getInstance().checkImageExists(img_key))
+                                    {
+                                        sf::Image nw = tmp.spritesheet;
+                                        for (int i = 0; i < animation_swaps[a].size(); i++)
+                                        {
+                                            nw.setPixel(animation_swaps[a][i].x, animation_swaps[a][i].y, animation_swaps[a][i].color);
+                                        }
+
+                                        TextureManager::getInstance().loadImage(img_key, nw);
+                                    }
                                     //cout << "frame " << frames.size() - 1 << " for animation " << a << " created" << endl;
                                 }
 
+                                animation_length_frames.push_back(i_frames);
+
                                 //all_swaps.push_back(animation_swaps);
-                                all_swaps_img.get()->push_back(frames);
+
+                                //all_swaps_img.get()->push_back(frames);
                             }
 
                             //cout << "[AnimatedObject] PixelSwap animation loaded: " << animation_swaps.size() << " swaps (animation no. " << all_swaps_img.get()->size() << ")" << endl;
@@ -1178,10 +1191,21 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
                             //cout << "[AnimatedObject::Draw] (*all_swaps_img).size(): " << (*all_swaps_img).size() << endl;
                             //cout << "[AnimatedObject::Draw] (*all_swaps_img)[index].size(): " << (*all_swaps_img)[index].size() << endl;
 
-                            if (curFramePX >= (*all_swaps_img)[index].size())
-                                curFramePX = (*all_swaps_img)[index].size() - 1;
+                            if (animation_length_frames.size() > index)
+                            {
+                                if (curFramePX >= animation_length_frames[index])
+                                    curFramePX = animation_length_frames[index] - 1;
+                            }
 
-                            (*objects)[i].swapTexture((*all_swaps_img)[index][curFramePX]);
+                            std::string img_key = anim_path + "_" + getAnimationSegment() + "_" + to_string(curFramePX);
+
+                            if (entityID == 5)
+                                img_key = custom_img_key + to_string(curFramePX);
+
+                            //if (curFramePX >= (*all_swaps_img)[index].size())
+                                //curFramePX = (*all_swaps_img)[index].size() - 1;
+
+                            (*objects)[i].swapTexture(img_key);
                         } else if (bound == 0)
                         {
                             //cout << "B " << anim_path << ", swapping texture to: " << index << " " << curFrame - 1 << endl;

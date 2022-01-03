@@ -1,4 +1,5 @@
 #include "Object.h"
+#include "../../TextureManager.h"
 #include <iostream>
 
 using namespace std;
@@ -81,12 +82,13 @@ void Object::LoadFromMemory(std::string mem, int xpos, int ypos)
     exported = false;
 
     //cout << "Object loaded successfully" << endl;
-}
+} 
 
 void Object::swapTexture(sf::Image& img)
 {
     //cout << "[AnimatedObject::swapTexture A] swapping texture" << endl;
     //cout << "[Object] Object::swapTexture(): " << texture_path << endl;
+
 
     s_obj.t.loadFromImage(img);
     //cout << c.getElapsedTime().asMicroseconds() << "us ";
@@ -118,6 +120,12 @@ void Object::swapTexture(sf::Image first, vector<Pixel> px)
     s_obj.applyTexture();
     //cout << c.getElapsedTime().asMicroseconds() << "us" << endl;;
     //cout << "[AnimatedObject::swapTexture B] swapping done" << endl;
+}
+
+void Object::swapTexture(std::string img_key)
+{
+    TextureManager::getInstance().loadTextureFromImage(img_key);
+    s_obj.setTexture(TextureManager::getInstance().getTexture(img_key));
 }
 
 void Object::SetFrame(float time)
