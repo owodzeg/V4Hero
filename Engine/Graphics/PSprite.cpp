@@ -34,6 +34,8 @@ void PSprite::loadFromFile(std::string file, int q)
             break;
     }
 
+    sq = "U";
+
     std::string c = a + "_" + sq + b;
 
     qualitySetting = q;
@@ -42,7 +44,7 @@ void PSprite::loadFromFile(std::string file, int q)
     SPDLOG_DEBUG("Loading PSprite: {}", c);
     texturePath = c;
 
-    s.setTexture(TextureManager::getInstance().getTexture(c), true);
+    s.setTexture(TextureManager::getInstance().getTexture(c, q), true);
 }
 
 void PSprite::loadFromFile(std::string file, int q, int r = 1)
@@ -70,6 +72,8 @@ void PSprite::loadFromFile(std::string file, int q, int r = 1)
             break;
     }
 
+    sq = "U";
+
     std::string c = a + "_" + sq + b;
 
     qualitySetting = q;
@@ -78,7 +82,7 @@ void PSprite::loadFromFile(std::string file, int q, int r = 1)
     SPDLOG_DEBUG("Loading PSprite: {}", c);
     texturePath = c;
 
-    s.setTexture(TextureManager::getInstance().getTexture(c), true);
+    s.setTexture(TextureManager::getInstance().getTexture(c, q), true);
 }
 
 void PSprite::setRepeated(bool r)
