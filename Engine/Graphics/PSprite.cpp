@@ -11,78 +11,24 @@ PSprite::PSprite()
 
 void PSprite::loadFromFile(std::string file, int q)
 {
-    std::string a = file.substr(0, file.find_last_of("."));
-    std::string b = file.substr(file.find_last_of("."));
-    std::string sq = "";
-
-    switch (q)
-    {
-        case 0:
-            sq = "L";
-            break;
-
-        case 1:
-            sq = "M";
-            break;
-
-        case 2:
-            sq = "H";
-            break;
-
-        case 3:
-            sq = "U";
-            break;
-    }
-
-    sq = "U";
-
-    std::string c = a + "_" + sq + b;
-
     qualitySetting = q;
     resSetting = 1;
 
-    SPDLOG_DEBUG("Loading PSprite: {}", c);
-    texturePath = c;
+    SPDLOG_DEBUG("Loading PSprite: {}", file);
+    texturePath = file;
 
-    s.setTexture(TextureManager::getInstance().getTexture(c, q), true);
+    s.setTexture(TextureManager::getInstance().getTexture(file, q), true);
 }
 
 void PSprite::loadFromFile(std::string file, int q, int r = 1)
 {
-    std::string a = file.substr(0, file.find_last_of("."));
-    std::string b = file.substr(file.find_last_of("."));
-    std::string sq = "";
-
-    switch (q)
-    {
-        case 0:
-            sq = "L";
-            break;
-
-        case 1:
-            sq = "M";
-            break;
-
-        case 2:
-            sq = "H";
-            break;
-
-        case 3:
-            sq = "U";
-            break;
-    }
-
-    sq = "U";
-
-    std::string c = a + "_" + sq + b;
-
     qualitySetting = q;
     resSetting = r;
 
-    SPDLOG_DEBUG("Loading PSprite: {}", c);
-    texturePath = c;
+    SPDLOG_DEBUG("Loading PSprite: {}", file);
+    texturePath = file;
 
-    s.setTexture(TextureManager::getInstance().getTexture(c, q), true);
+    s.setTexture(TextureManager::getInstance().getTexture(file, q), true);
 }
 
 void PSprite::setRepeated(bool r)
