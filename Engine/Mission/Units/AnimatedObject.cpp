@@ -333,7 +333,7 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
                                             nw.setPixel(animation_swaps[a][i].x, animation_swaps[a][i].y, animation_swaps[a][i].color);
                                         }
 
-                                        TextureManager::getInstance().loadImage(img_key, nw);
+                                        TextureManager::getInstance().loadImageFromMemory(img_key, nw);
                                     }
                                     //cout << "frame " << frames.size() - 1 << " for animation " << a << " created" << endl;
                                 }

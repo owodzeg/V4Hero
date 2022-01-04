@@ -833,7 +833,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
 
             for (int fr = 0; fr <= 3; fr++)
             {
-                TextureManager::getInstance().loadImage(img_key + to_string(fr), droppable_cache[item_group][item_id].img);
+                TextureManager::getInstance().loadImageFromMemory(img_key + to_string(fr), droppable_cache[item_group][item_id].img);
             }
 
             entity->custom_img_key = img_key;
