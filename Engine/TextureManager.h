@@ -14,10 +14,14 @@ class TextureManager
 public:
     static TextureManager& getInstance();
     sf::Texture& getTexture(const std::string& path);
+    sf::Texture& getTexture(const std::string& path, int quality);
+    sf::Texture& scaleTexture(const std::string& path, int ratio);
     bool checkImageExists(const std::string& key);
-    void loadImage(const std::string& key, sf::Image image);
+    void loadImageFromFile(const std::string& path);
+    void loadImageFromMemory(const std::string& key, sf::Image image);
     sf::Image& getImage(const std::string& key);
     void loadTextureFromImage(const std::string& img_key);
+    void unloadImage(const std::string& key);
 
 private:
     TextureManager();
