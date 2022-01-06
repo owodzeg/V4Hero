@@ -1,3 +1,5 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
+
 #include "PSprite.h"
 #include "../TextureManager.h"
 #include <fstream>
@@ -14,7 +16,7 @@ void PSprite::loadFromFile(std::string file, int q)
     qualitySetting = q;
     resSetting = 1;
 
-    SPDLOG_DEBUG("Loading PSprite: {}", file);
+    SPDLOG_TRACE("Loading PSprite: {}", file);
     texturePath = file;
 
     s.setTexture(TextureManager::getInstance().getTexture(file, q), true);
@@ -25,7 +27,7 @@ void PSprite::loadFromFile(std::string file, int q, int r = 1)
     qualitySetting = q;
     resSetting = r;
 
-    SPDLOG_DEBUG("Loading PSprite: {}", file);
+    SPDLOG_TRACE("Loading PSprite: {}", file);
     texturePath = file;
 
     s.setTexture(TextureManager::getInstance().getTexture(file, q), true);
@@ -33,37 +35,55 @@ void PSprite::loadFromFile(std::string file, int q, int r = 1)
 
 void PSprite::setRepeated(bool r)
 {
+    SPDLOG_TRACE("Change repeated state of {} to {}", texturePath, r);
     TextureManager::getInstance().getTexture(texturePath).setRepeated(r);
     s.setTexture(TextureManager::getInstance().getTexture(texturePath), true);
 }
 
 void PSprite::setTextureRect(sf::IntRect rect)
 {
+    SPDLOG_TRACE("Set texture rect of {} to {} {} {} {}", texturePath, rect.top, rect.left, rect.width, rect.height);
     s.setTextureRect(rect);
 }
 
 void PSprite::setOrigin(float x, float y)
 {
-    orX = x;
-    orY = y;
-    s.setOrigin(orX, orY);
+    if (x != orX || y != orY)
+    {
+        SPDLOG_TRACE("Change origin of {} to {} {}", texturePath, x, y);
+        orX = x;
+        orY = y;
+        s.setOrigin(orX, orY);
+    }
 }
 
 void PSprite::setScale(float x, float y)
 {
-    scaleX = x;
-    scaleY = y;
-    s.setScale(ratioX * scaleX, ratioY * scaleY);
+    if (x != scaleX || y != scaleY)
+    {
+        SPDLOG_TRACE("Change scale of {} to {} {}", texturePath, x, y);
+        scaleX = x;
+        scaleY = y;
+        s.setScale(ratioX * scaleX, ratioY * scaleY);
+    }
 }
 
 void PSprite::setRotation(float a)
 {
-    angle = a;
+    if (a != angle)
+    {
+        SPDLOG_TRACE("Change rotation of {} to {}", texturePath, a);
+        angle = a;
+    }
 }
 
 void PSprite::setColor(sf::Color color)
 {
-    s.setColor(color);
+    if (color != s.getColor())
+    {
+        SPDLOG_TRACE("Change color of {} to {} {} {} {}", texturePath, color.r, color.g, color.b, color.a);
+        s.setColor(color);
+    }
 }
 
 sf::Color PSprite::getColor()
@@ -90,17 +110,22 @@ void PSprite::setSprite(sf::Sprite& sprite)
 
 void PSprite::setPosition(float x, float y)
 {
-    //s.setPosition(x*ratioX,y*ratioY);
-    if (baseX == -999)
-        baseX = x;
+    if (x != lx || y != ly)
+    {
+        SPDLOG_TRACE("Change position of {} to {} {}", texturePath, x, y);
 
-    if (baseY == -999)
-        baseY = y;
+        //s.setPosition(x*ratioX,y*ratioY);
+        if (baseX == -999)
+            baseX = x;
 
-    lx = x;
-    ly = y;
+        if (baseY == -999)
+            baseY = y;
 
-    //std::cout << x << " " << y << "  " << lx << " " << ly << std::endl;
+        lx = x;
+        ly = y;
+
+        //std::cout << x << " " << y << "  " << lx << " " << ly << std::endl;
+    }
 }
 
 sf::Vector2f PSprite::getPosition()
@@ -117,12 +142,16 @@ void PSprite::setScale(float ss)
 
 sf::FloatRect PSprite::getLocalBounds()
 {
-    return s.getLocalBounds();
+    sf::FloatRect rect = s.getLocalBounds();
+    SPDLOG_TRACE("Returning local bounds of {}: {} {} {} {}", texturePath, rect.top, rect.left, rect.width, rect.height);
+    return rect;
 }
 
 sf::FloatRect PSprite::getGlobalBounds()
 {
-    return s.getGlobalBounds();
+    sf::FloatRect rect = s.getGlobalBounds();
+    SPDLOG_TRACE("Returning global bounds of {}: {} {} {} {}", texturePath, rect.top, rect.left, rect.width, rect.height);
+    return rect;
 }
 
 sf::FloatRect PSprite::getGlobalBoundsScaled()
