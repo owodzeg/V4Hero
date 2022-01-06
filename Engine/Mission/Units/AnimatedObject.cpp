@@ -981,9 +981,9 @@ void AnimatedObject::applyEquipment(vector<int> item_id, int slot, bool offhand)
     Item* equip = thisConfig->thisCore->saveReader.itemReg.getItemByID(item_id);
     string category = equip->item_category;
     string type = equip->item_type;
-    string path = "resources/graphics/item/textures/" + equip->spritesheet + "/" + Func::num_padding(equip->spritesheet_id, 4) + "_";
+    string path = "resources/graphics/item/textures/" + equip->spritesheet + "/" + Func::num_padding(equip->spritesheet_id, 4) + ".png";
 
-    switch (q)
+    /* switch (q)
     {
         case 0: {
             path += "L.png";
@@ -1001,16 +1001,17 @@ void AnimatedObject::applyEquipment(vector<int> item_id, int slot, bool offhand)
             path += "U.png";
             break;
         }
-    }
+    }*/
     if (offhand)
     {
         q += 4; // If is in offhand, use lines 5-8 instead
-    }
+    } 
 
     SPDLOG_INFO("Applied equipment: category: {}, type: {}, path: {}, slot: {}", category, type, path, slot);
 
-    (*objects)[slot + 1].tex_obj.loadFromFile(path);
-    (*objects)[slot + 1].s_obj.setTexture((*objects)[slot + 1].tex_obj);
+    //(*objects)[slot + 1].tex_obj.loadFromFile(path);
+    //(*objects)[slot + 1].s_obj.setTexture((*objects)[slot + 1].tex_obj);
+    (*objects)[slot + 1].s_obj.setTexture(TextureManager::getInstance().getTexture(path, q));
     (*objects)[slot + 1].s_obj.qualitySetting = q;
 
     (*objects)[slot + 1].object_name = "eq_" + to_string(slot);
@@ -1021,14 +1022,41 @@ void AnimatedObject::applyEquipment(vector<int> item_id, int slot, bool offhand)
 
     ifstream file("resources/graphics/item/alignment/" + equip->spritesheet + "/" + Func::num_padding(equip->spritesheet_id, 4) + ".spr");
     string buff;
+
+    float ax, ay;
+
     for (int i = 0; getline(file, buff); i++)
     {
-        if (i == q)
+        if (i == 3)
         {
-            a.x = atof(buff.substr(0, buff.find_first_of(",")).c_str());
-            a.y = atof(buff.substr(buff.find_first_of(",") + 1).c_str());
+            ax = atof(buff.substr(0, buff.find_first_of(",")).c_str());
+            ay = atof(buff.substr(buff.find_first_of(",") + 1).c_str());
         }
     }
+
+    switch (q)
+    {
+        case 0: {
+            ax = ax / 6.f;
+            ay = ay / 6.f;
+            break;
+        }
+        
+        case 1: {
+            ax = ax / 3.f;
+            ay = ay / 3.f;
+            break;
+        }
+        
+        case 2: {
+            ax = ax / 2.f;
+            ay = ay / 2.f;
+            break;
+        }
+    }
+
+    a.x = ax;
+    a.y = ay;
 
     /**if(slots_origins.size() - 1 > slot)
     {
