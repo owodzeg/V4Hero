@@ -129,12 +129,10 @@ void Background::Load(string bg_name, Config& thisConfigs)
             SPDLOG_DEBUG("Loading texture: {}/{}", bg_name, v_params[0]);
 
             s_background[bg_layer] = ResourceManager::getInstance().getSprite("resources/graphics/bg/" + bg_name + "/" + v_params[0]);
-            s_background[bg_layer].setRepeated(true);
             s_background[bg_layer].setTextureRect(sf::IntRect(0, 0, 500000, s_background[bg_layer].getGlobalBounds().height));
-            s_background[bg_layer].setOrigin(10000, s_background[bg_layer].getGlobalBounds().height);
+            s_background[bg_layer].setOrigin(0, s_background[bg_layer].getGlobalBounds().height);
             s_background[bg_layer].setColor(sf::Color(atoi(v_params[3].c_str()), atoi(v_params[4].c_str()), atoi(v_params[5].c_str()), 255));
-            s_background[bg_layer].setPosition(-1000, atoi(v_params[1].c_str()));
-            s_background[bg_layer].setSmooth(false);
+            s_background[bg_layer].setRepeated(true);
 
             sf::Vector2f tmpp;
 
@@ -174,7 +172,7 @@ void Background::Draw(sf::RenderWindow& window)
 
     for (int i = 0; i < bg_layer; i++)
     {
-        s_background[i].setPosition((-(background_xspeed[i] * camera.camera_x) - (background_xspeed[i] * camera.manual_x) - (background_xspeed[i] * camera.debug_x)) / resRatioX, p_background[i].y);
+        s_background[i].setPosition((-(background_xspeed[i] * camera.camera_x) - (background_xspeed[i] * camera.manual_x) - (background_xspeed[i] * camera.debug_x) - 5000) / resRatioX, p_background[i].y);
         s_background[i].draw(window);
     }
 
