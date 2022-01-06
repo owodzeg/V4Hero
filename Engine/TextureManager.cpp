@@ -22,6 +22,7 @@ sf::Texture& TextureManager::getTexture(const std::string& path)
     // if you are using this function, that means the texture is already loaded
     // if it's not, this code will crash
 
+    SPDLOG_TRACE("Providing existing texture with path {} [no quality]", path);
     return loadedTextures[path];
 }
 
@@ -29,13 +30,13 @@ sf::Texture& TextureManager::getTexture(const std::string& path, int quality)
 {
     if (loadedTextures.find(path) != loadedTextures.end())
     {
-        SPDLOG_DEBUG("Providing existing texture with path {}", path);
+        SPDLOG_TRACE("Providing existing texture with path {}", path);
         return loadedTextures[path];
     } else
     {
         if (quality < 3)
         {
-            SPDLOG_DEBUG("Quality is {}, texture needs to be downscaled", quality);
+            SPDLOG_TRACE("Quality is {}, texture needs to be downscaled", quality);
             loadImageFromFile(path);
 
             int ratio = 1;
@@ -147,7 +148,7 @@ void TextureManager::loadImageFromFile(const std::string& path)
 {
     if (loadedImages.find(path) == loadedImages.end())
     {
-        SPDLOG_DEBUG("Loading image from file {}", path);
+        SPDLOG_INFO("Loading image from file {}", path);
         loadedImages[path].loadFromFile(path);
     } else
     {
@@ -160,7 +161,7 @@ void TextureManager::loadImageFromMemory(const std::string& key, sf::Image image
 {
     if (loadedImages.find(key) == loadedImages.end())
     {
-        SPDLOG_DEBUG("Loading image from memory with key {}", key);
+        SPDLOG_INFO("Loading image from memory with key {}", key);
         loadedImages[key] = image;
     } else
     {
