@@ -19,11 +19,6 @@ public:
     int quality = 0;
 
     sf::Font f_font;
-    PSprite grass_1, grass_2, grass_3, grass_4;
-    PSprite logo, logo_shadow;
-    PSprite totem[4];
-    PSprite fire_1, fire_2, fire_3, aura, sword;
-    PSprite sword_1, sword_2;
 
     sf::SoundBuffer sb_title_loop;
     sf::Sound title_loop;
@@ -49,7 +44,6 @@ public:
     ///Pre-menu screen
     sf::RectangleShape rs_cover;
     sf::RectangleShape rs_cover2;
-    PSprite logow_bg, logow_text, logow_shadow;
     PText t_pressanykey;
 
     sf::SoundBuffer sb_smash;

@@ -61,12 +61,9 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
     rs_cover2.setSize(sf::Vector2f(thisConfigs->GetInt("resX"), thisConfigs->GetInt("resY")));
     rs_cover2.setFillColor(sf::Color(0, 0, 0, 0));
 
-    logow_bg = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowbg.png");
-    logow_text = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowtxt.png");
-    logow_shadow = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowsh.png");
-
-    sf::Image img3 = logow_shadow.s.getTexture()->copyToImage();
-    img3.saveToFile("test4.png");
+    PSprite& logow_bg = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowbg.png");
+    PSprite& logow_text = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowtxt.png");
+    PSprite& logow_shadow = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowsh.png");
 
     logow_bg.setColor(sf::Color(120, 0, 0, ui_alpha));
     logow_shadow.setColor(sf::Color(64, 64, 64, ui_alpha));
@@ -77,57 +74,41 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
     sb_smash.loadFromFile("resources/sfx/menu/smash.ogg");
     s_smash.setBuffer(sb_smash);
     s_smash.setVolume(float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("sfxVolume")) / 100.f));
+    
+    for (int g = 1; g <= 4; g++)
+    {
+        PSprite& grass = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_" + to_string(g) + ".png");
+        grass.setScale(1.05, 1.05);
+        grass.setOrigin(grass.getLocalBounds().width / float(100), grass.getLocalBounds().height);
+    }
 
-    grass_1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_1.png");
-    grass_2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_2.png");
-    grass_3 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_3.png");
-    grass_4 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_4.png");
+    PSprite& logo = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logo.png");
+    PSprite& logo_shadow = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logo_shadow.png");
 
-    grass_1.setScale(1.05, 1.05);
-    grass_2.setScale(1.05, 1.05);
-    grass_3.setScale(1.05, 1.05);
-    grass_4.setScale(1.05, 1.05);
-
-    grass_1.setOrigin(grass_1.getLocalBounds().width / float(100), grass_1.getLocalBounds().height);
-    grass_2.setOrigin(grass_2.getLocalBounds().width / float(100), grass_2.getLocalBounds().height);
-    grass_3.setOrigin(grass_3.getLocalBounds().width / float(100), grass_3.getLocalBounds().height);
-    grass_4.setOrigin(grass_4.getLocalBounds().width / float(100), grass_4.getLocalBounds().height);
-
-    logo = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logo.png");
     logo.setOrigin(logo.getLocalBounds().width / 2, logo.getLocalBounds().height / 2);
-
-    logo_shadow = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logo_shadow.png");
     logo_shadow.setOrigin(logo_shadow.getLocalBounds().width / 2, logo_shadow.getLocalBounds().height / 2);
 
-    totem[0] = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_1.png");
-    totem[1] = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_2.png");
-    totem[2] = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_3.png");
-    totem[3] = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_4.png");
+    for (int t=1; t<=4; t++)
+    {
+        PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_"+to_string(t)+".png");
+        totem.setOrigin(0, totem.getLocalBounds().height);
+    }
 
-    totem[0].setOrigin(0, totem[0].getLocalBounds().height);
-    totem[1].setOrigin(0, totem[1].getLocalBounds().height);
-    totem[2].setOrigin(0, totem[2].getLocalBounds().height);
-    totem[3].setOrigin(0, totem[3].getLocalBounds().height);
-
-    fire_1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/fire_1.png");
-    fire_2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/fire_2.png");
-    fire_3 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/fire_3.png");
+    PSprite& fire_1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/fire_1.png");
+    PSprite& fire_2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/fire_2.png");
+    PSprite& fire_3 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/fire_3.png");
+    PSprite& aura = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/aura.png");
+    PSprite& sword_1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/sword.png");
+    PSprite& sword_2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/sword.png");
 
     fire_1.setOrigin(fire_1.getLocalBounds().width / 2, fire_1.getLocalBounds().height);
     fire_2.setOrigin(fire_2.getLocalBounds().width / 2, fire_2.getLocalBounds().height);
     fire_3.setOrigin(fire_3.getLocalBounds().width / 2, fire_3.getLocalBounds().height);
 
-    aura = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/aura.png");
     aura.setOrigin(aura.getLocalBounds().width / 2, aura.getLocalBounds().height / 2);
-
-    sword_1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/sword.png");
-    sword_2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/sword.png");
 
     sword_1.setOrigin(sword_1.getLocalBounds().width / 2, sword_1.getLocalBounds().height / 2);
     sword_2.setOrigin(sword_2.getLocalBounds().width / 2, sword_2.getLocalBounds().height / 2);
-
-    sword_1.setScale(1, 1);
-    sword_2.setScale(-1, 1);
 
     for (int i = 0; i <= 3; i++)
     {
@@ -444,6 +425,10 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
 
         } else if (premenu)
         {
+            PSprite& logow_bg = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowbg.png");
+            PSprite& logow_text = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowtxt.png");
+            PSprite& logow_shadow = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowsh.png");
+
             if (startClock.getElapsedTime().asSeconds() > 2)
             {
                 if (!keypressed)
@@ -555,6 +540,15 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
             }
         } else
         {
+            PSprite& fire_1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/fire_1.png");
+            PSprite& fire_2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/fire_2.png");
+            PSprite& fire_3 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/fire_3.png");
+            PSprite& aura = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/aura.png");
+            PSprite& sword_1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/sword.png");
+            PSprite& sword_2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/sword.png");
+            PSprite& logo = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logo.png");
+            PSprite& logo_shadow = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logo_shadow.png");
+
             if (title_loop.getStatus() == sf::Sound::Status::Stopped)
             {
                 SPDLOG_DEBUG("Playing title_loop");
@@ -620,6 +614,10 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
             if (g_x[3] < -30)
                 g_x[3] = -30;
 
+            PSprite& grass_1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_1.png");
+            PSprite& grass_2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_2.png");
+            PSprite& grass_3 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_3.png");
+            PSprite& grass_4 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_4.png");
 
             grass_1.setPosition(g_x[0], 630);
             grass_2.setPosition(g_x[1], 696);
@@ -647,16 +645,17 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
 
             for (int i = 0; i <= 3; i++)
             {
-                //cout << "Totem " << i << " bounds: " << totem[i].getPosition().x << " - " << (totem[i].getPosition().x + totem[totem_sel].getGlobalBounds().width) << endl;
+                PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_"+to_string(i+1)+".png");
 
-                totem[i].setPosition((float(120) + float(306) * i) + g_x[3] / 1.4, 720);
+                totem.setPosition((float(120) + float(306) * i) + g_x[3] / 1.4, 720);
+
                 if (UsingMouseSelection)
                 {
-                    if ((mouseX / window.getSize().x) * 1280 > totem[i].getPosition().x)
+                    if ((mouseX / window.getSize().x) * 1280 > totem.getPosition().x)
                     {
-                        if ((mouseX / window.getSize().x) * 1280 < (totem[i].getPosition().x + totem[totem_sel].getGlobalBounds().width))
+                        if ((mouseX / window.getSize().x) * 1280 < (totem.getPosition().x + totem.getGlobalBounds().width))
                         {
-                            if ((mouseY / window.getSize().y) * 720 > totem[i].getPosition().y - totem[i].getLocalBounds().height)
+                            if ((mouseY / window.getSize().y) * 720 > totem.getPosition().y - totem.getGlobalBounds().height)
                             {
                                 totem_sel = i;
                                 mouseInBounds = true;
@@ -696,9 +695,11 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                 }
             }
 
-            fire_1.setPosition(totem[totem_sel].getPosition().x + fire_x, fire_y + fire_shift);
-            fire_2.setPosition(totem[totem_sel].getPosition().x + fire_x, fire_y + fire_shift);
-            fire_3.setPosition(totem[totem_sel].getPosition().x + fire_x, fire_y + fire_shift);
+            PSprite& selected_totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(totem_sel + 1) + ".png");
+
+            fire_1.setPosition(selected_totem.getPosition().x + fire_x, fire_y + fire_shift);
+            fire_2.setPosition(selected_totem.getPosition().x + fire_x, fire_y + fire_shift);
+            fire_3.setPosition(selected_totem.getPosition().x + fire_x, fire_y + fire_shift);
 
             //cout << int(floor(fire)) << " " << totem[totem_sel].getGlobalBounds().width << " " << totem[totem_sel].getGlobalBounds().height << " vs " << fire_1.getPosition().x << " " << fire_1.getPosition().y << endl;
 
@@ -726,7 +727,10 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
             aura.draw(window);
 
             for (int i = 0; i <= 3; i++)
-                totem[i].draw(window);
+            {
+                PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(i + 1) + ".png");
+                totem.draw(window);
+            }
 
             grass_4.draw(window);
 
@@ -757,9 +761,13 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                 //cout << "Text " << i << ": " << t_option[i].orX << " " << t_option[i].orY << " " << t_option[i].getGlobalBounds().width << " " << t_option[i].getGlobalBounds().height << " " << t_option[i].getGlobalBoundsScaled().width << " " << t_option[i].getGlobalBoundsScaled().height << endl;
 
                 if (i == totem_sel)
-                    t_option[i].setPosition(totem[i].getPosition().x + (totem[i].getGlobalBoundsScaled().width / 2), 720 - totem[i].getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height - 35);
-                else
-                    t_option[i].setPosition(totem[i].getPosition().x + (totem[i].getGlobalBoundsScaled().width / 2), 720 - totem[i].getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height / 2);
+                {
+                    t_option[i].setPosition(selected_totem.getPosition().x + (selected_totem.getGlobalBoundsScaled().width / 2), 720 - selected_totem.getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height - 35);
+                } else
+                {
+                    PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(i+1) + ".png");
+                    t_option[i].setPosition(totem.getPosition().x + (totem.getGlobalBoundsScaled().width / 2), 720 - totem.getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height / 2);
+                }
 
                 t_option[i].setColor(sf::Color(255, 255, 255, 96));
                 t_option[totem_sel].setColor(sf::Color::White);
@@ -767,10 +775,12 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                 t_option[i].draw(window);
             }
 
-            sword_1.setPosition(fire_1.getPosition().x - (fire_1.getGlobalBoundsScaled().width / 2 + t_option[totem_sel].getGlobalBoundsScaled().width / 2 + sword_1.getGlobalBoundsScaled().width / 2), 720 - totem[totem_sel].getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height - 30);
-            sword_2.setPosition(fire_1.getPosition().x + (fire_1.getGlobalBoundsScaled().width / 2 + t_option[totem_sel].getGlobalBoundsScaled().width / 2 + sword_2.getGlobalBoundsScaled().width / 2), 720 - totem[totem_sel].getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height - 30);
-
+            sword_1.setScale(1, 1);
+            sword_1.setPosition(fire_1.getPosition().x - (fire_1.getGlobalBoundsScaled().width / 2 + t_option[totem_sel].getGlobalBoundsScaled().width / 2 + sword_1.getGlobalBoundsScaled().width / 2), 720 - selected_totem.getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height - 30);
             sword_1.draw(window);
+
+            sword_2.setScale(-1, 1);
+            sword_2.setPosition(fire_1.getPosition().x + (fire_1.getGlobalBoundsScaled().width / 2 + t_option[totem_sel].getGlobalBoundsScaled().width / 2 + sword_2.getGlobalBoundsScaled().width / 2), 720 - selected_totem.getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height - 30);
             sword_2.draw(window);
 
             old_sel = totem_sel;
