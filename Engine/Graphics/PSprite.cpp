@@ -13,10 +13,56 @@ PSprite::PSprite()
 
 void PSprite::loadFromFile(std::string file, int q)
 {
+    if (qualitySetting != q && qualitySetting != -1)
+    {
+        SPDLOG_DEBUG("Quality has changed.");
+
+        float a=1, b=1;
+
+        switch (qualitySetting)
+        {
+            case 0: {
+                a = 6;
+                break;
+            }
+            case 1: {
+                a = 3;
+                break;
+            }
+            case 2: {
+                a = 2;
+                break;
+            }
+        }
+
+        switch (q)
+        {
+            case 0: {
+                b = 6;
+                break;
+            }
+            case 1: {
+                b = 3;
+                break;
+            }
+            case 2: {
+                b = 2;
+                break;
+            }
+        }
+
+        SPDLOG_DEBUG("current ratio: {}, new ratio: {}", a, b);
+
+        float diff = a / b;
+
+        orX = orX * diff;
+        orY = orY * diff;
+    }
+
     qualitySetting = q;
     resSetting = 1;
 
-    SPDLOG_TRACE("Loading PSprite: {}", file);
+    SPDLOG_INFO("Loading PSprite: {}", file);
     texturePath = file;
 
     s.setTexture(TextureManager::getInstance().getTexture(file, q), true);
@@ -27,7 +73,7 @@ void PSprite::loadFromFile(std::string file, int q, int r = 1)
     qualitySetting = q;
     resSetting = r;
 
-    SPDLOG_TRACE("Loading PSprite: {}", file);
+    SPDLOG_INFO("Loading PSprite: {}", file);
     texturePath = file;
 
     s.setTexture(TextureManager::getInstance().getTexture(file, q), true);

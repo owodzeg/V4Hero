@@ -13,6 +13,7 @@ class TextureManager
 {
 public:
     static TextureManager& getInstance();
+    void loadTexture(const std::string& path, int quality);
     sf::Texture& getTexture(const std::string& path);
     sf::Texture& getTexture(const std::string& path, int quality);
     sf::Texture& scaleTexture(const std::string& path, int ratio);
@@ -22,12 +23,17 @@ public:
     sf::Image& getImage(const std::string& key);
     void loadTextureFromImage(const std::string& img_key);
     void unloadImage(const std::string& key);
+    void applyForceLoad(bool force);
+    void reloadTextures(int quality);
 
 private:
     TextureManager();
     ~TextureManager();
+    
     std::unordered_map<std::string, sf::Texture> loadedTextures;
     std::unordered_map<std::string, sf::Image> loadedImages;
+
+    bool forceLoad = false;
 };
 
 #endif

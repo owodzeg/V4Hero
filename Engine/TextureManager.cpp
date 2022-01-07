@@ -16,6 +16,43 @@ TextureManager& TextureManager::getInstance()
     return instance;
 }
 
+void TextureManager::loadTexture(const std::string& path, int quality)
+{
+    loadedTextures[path].loadFromFile(path);
+
+    if (quality < 3)
+    {
+        SPDLOG_TRACE("Quality is {}, texture needs to be downscaled", quality);
+        loadImageFromFile(path);
+
+        int ratio = 1;
+
+        switch (quality)
+        {
+            case 0: {
+                ratio = 6;
+                break;
+            }
+
+            case 1: {
+                ratio = 3;
+                break;
+            }
+
+            case 2: {
+                ratio = 2;
+                break;
+            }
+        }
+
+        SPDLOG_INFO("Loading downscaled texture with path {} and ratio {}", path, ratio);
+
+        applyForceLoad(true);
+        scaleTexture(path, ratio);
+        applyForceLoad(false);
+    }
+}
+
 sf::Texture& TextureManager::getTexture(const std::string& path)
 {
     // first texture initialization should be used with quality setting.
@@ -28,7 +65,7 @@ sf::Texture& TextureManager::getTexture(const std::string& path)
 
 sf::Texture& TextureManager::getTexture(const std::string& path, int quality)
 {
-    if (loadedTextures.find(path) != loadedTextures.end())
+    if (loadedTextures.find(path) != loadedTextures.end() && !forceLoad)
     {
         SPDLOG_TRACE("Providing existing texture with path {}", path);
         return loadedTextures[path];
@@ -64,7 +101,7 @@ sf::Texture& TextureManager::getTexture(const std::string& path, int quality)
         } else
         {
             SPDLOG_INFO("Loading texture with path {}", path);
-            loadedTextures[path].loadFromFile(path);
+            loadTexture(path, 3);
             return loadedTextures[path];
         }
     }
@@ -146,7 +183,7 @@ bool TextureManager::checkImageExists(const std::string& key)
 
 void TextureManager::loadImageFromFile(const std::string& path)
 {
-    if (loadedImages.find(path) == loadedImages.end())
+    if (loadedImages.find(path) == loadedImages.end() || forceLoad)
     {
         SPDLOG_INFO("Loading image from file {}", path);
         loadedImages[path].loadFromFile(path);
@@ -191,7 +228,7 @@ void TextureManager::loadTextureFromImage(const std::string& img_key)
         SPDLOG_WARN("Couldn't find image {}, texture may be missing", img_key);
     }
 
-    if (loadedTextures.find(img_key) == loadedTextures.end())
+    if (loadedTextures.find(img_key) == loadedTextures.end() || forceLoad)
     {
         SPDLOG_DEBUG("Loading image {} into texture", img_key);
         loadedTextures[img_key].loadFromImage(loadedImages[img_key]);
@@ -201,4 +238,18 @@ void TextureManager::loadTextureFromImage(const std::string& img_key)
 void TextureManager::unloadImage(const std::string& key)
 {
     loadedImages.erase(key);
+}
+
+void TextureManager::applyForceLoad(bool force)
+{
+    forceLoad = force;
+}
+
+void TextureManager::reloadTextures(int quality)
+{
+    for (const auto& texture : loadedTextures)
+    {
+        std::string path = texture.first;
+        loadTexture(path, quality);
+    }
 }

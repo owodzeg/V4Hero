@@ -59,25 +59,15 @@ void ResourceManager::unloadSprite(const std::string& path)
 
 }
 
-std::string ResourceManager::qualityToString()
+// this action reloads all currently loaded PSprites with actual quality setting.
+void ResourceManager::reloadPSprites()
 {
-    switch (quality)
+    TextureManager::getInstance().reloadTextures(quality);
+
+    for (const auto& sprite : loadedSprites)
     {
-        case 0: {
-            return "L";
-            break;
-        }
-        case 1: {
-            return "M";
-            break;
-        }
-        case 2: {
-            return "H";
-            break;
-        }
-        case 3: {
-            return "U";
-            break;
-        }
+        std::string path = sprite.first;
+        //loadSprite(path);
+        loadedSprites[path].loadFromFile(path, quality);
     }
 }

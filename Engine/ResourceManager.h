@@ -17,6 +17,7 @@ class ResourceManager
         void loadSprite(std::string path);
         PSprite& getSprite(const std::string& path);
         void unloadSprite(const std::string& path);
+        void reloadPSprites();
 
 	private:
         ResourceManager();
@@ -33,8 +34,6 @@ class ResourceManager
         };
 
         Quality quality;
-
-        std::string qualityToString();
 };
 
 #endif
