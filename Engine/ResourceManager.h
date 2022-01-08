@@ -14,6 +14,7 @@ class ResourceManager
     public:
         static ResourceManager& getInstance();
         void getQuality(V4Core* core);
+        int getCurrentQuality();
         void loadSprite(std::string path);
         PSprite& getSprite(const std::string& path);
         void unloadSprite(const std::string& path);

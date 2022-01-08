@@ -24,6 +24,11 @@ void ResourceManager::getQuality(V4Core* core)
     quality = static_cast<Quality>(core->config.GetInt("textureQuality"));
 }
 
+int ResourceManager::getCurrentQuality()
+{
+    return quality;
+}
+
 void ResourceManager::loadSprite(std::string path)
 {
     loadedSprites[path].loadFromFile(path, quality);
