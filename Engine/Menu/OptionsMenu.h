@@ -26,7 +26,7 @@ public:
     bool madeChanges;
 
     PSprite bg, sword;
-    PSprite handle, aura1, aura2, l_fire1, l_fire2, l_fire3, r_fire1, r_fire2, r_fire3;
+    // PSprite handle, aura1, aura2, l_fire1, l_fire2, l_fire3, r_fire1, r_fire2, r_fire3;
 
     float mouseX = 0, mouseY = 0;
     vector<int> prevStates;

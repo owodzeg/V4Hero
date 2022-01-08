@@ -60,10 +60,11 @@ void OptionsMenu::Initialise(Config* thisConfigs, V4Core* parent, Menu* curParen
 
     int q = thisConfigs->GetInt("textureQuality");
     SPDLOG_TRACE("Quality: {}", q);
-    bg.loadFromFile("resources/graphics/ui/options/options.png", q, 1);
-    sword.loadFromFile("resources/graphics/ui/options/sword.png", q, 2);
 
-    handle.loadFromFile("resources/graphics/ui/options/handle.png", q, 1);
+    ResourceManager::getInstance().loadSprite("resources/graphics/ui/options/options.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/ui/options/sword.png");
+
+    /*handle.loadFromFile("resources/graphics/ui/options/handle.png", q, 1);
 
     aura1.loadFromFile("resources/graphics/ui/options/aura.png", q, 1);
     aura2.loadFromFile("resources/graphics/ui/options/aura.png", q, 1);
@@ -77,7 +78,7 @@ void OptionsMenu::Initialise(Config* thisConfigs, V4Core* parent, Menu* curParen
     r_fire3.loadFromFile("resources/graphics/ui/options/r_fire3.png", q, 1);
 
     dg_restart.loadFromFile("resources/graphics/ui/options/dg_restart.png", q, 1);
-    dg_select.loadFromFile("resources/graphics/ui/options/dg_select.png", q, 2);
+    dg_select.loadFromFile("resources/graphics/ui/options/dg_select.png", q, 1);*/
 
     t_restart.createText(m_font, 26, sf::Color::Black, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_restart_notice")), q, 2);
 
@@ -368,6 +369,8 @@ void OptionsMenu::SetConfigValue(std::string key, std::string value, bool select
 
         ///Make the changes
         thisConfig->SetString(key, value);
+
+        if (key != "textureQuality")
         madeChanges = true;
     }
 
@@ -398,13 +401,16 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 {
     if (is_active)
     {
+        PSprite& bg = ResourceManager::getInstance().getSprite("resources/graphics/ui/options/options.png");
+        PSprite& sword = ResourceManager::getInstance().getSprite("resources/graphics/ui/options/sword.png");
+
         bg.setPosition(0, 0);
         bg.draw(window);
 
         if (sel == -1)
             sword.setPosition(-999, -999);
         else
-            sword.setPosition(725, 507 + 40 * sel);
+            sword.setPosition(483, 338 + 26 * sel);
 
         switch (state)
         {
@@ -1405,6 +1411,8 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
             case 121: {
                 SetConfigValue("textureQuality", "0");
+                ResourceManager::getInstance().getQuality(thisConfig->thisCore);
+                ResourceManager::getInstance().reloadPSprites();
 
                 GoBackMenuOption();
                 break;
@@ -1412,6 +1420,8 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
             case 122: {
                 SetConfigValue("textureQuality", "1");
+                ResourceManager::getInstance().getQuality(thisConfig->thisCore);
+                ResourceManager::getInstance().reloadPSprites();
 
                 GoBackMenuOption();
                 break;
@@ -1419,6 +1429,8 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
             case 123: {
                 SetConfigValue("textureQuality", "2");
+                ResourceManager::getInstance().getQuality(thisConfig->thisCore);
+                ResourceManager::getInstance().reloadPSprites();
 
                 GoBackMenuOption();
                 break;
@@ -1426,6 +1438,8 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
             case 124: {
                 SetConfigValue("textureQuality", "3");
+                ResourceManager::getInstance().getQuality(thisConfig->thisCore);
+                ResourceManager::getInstance().reloadPSprites();
 
                 GoBackMenuOption();
                 break;
