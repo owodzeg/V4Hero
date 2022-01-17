@@ -67,12 +67,6 @@ void PatapolisMenu::addSparkle(float x, float y)
 
     Sparkle tmp;
 
-    //sparkles.push_back(sprk);
-
-    tmp.sprk = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/sparkle.png");
-    tmp.sprk.setPosition(x, y);
-    tmp.sprk.setScale(scale);
-
     tmp.initScale = scale;
     tmp.curScale = scale;
     tmp.x = x;
@@ -94,15 +88,7 @@ void PatapolisMenu::addParagetSparkle(float x, float y)
     int choice = rand() % 3 + 1;
     string nm = "paraget_sparkle_" + to_string(choice) + ".png";
 
-    PSprite sprk = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/" + nm);
-
-    sprk.setPosition(x, y);
-    sprk.setOrigin(sprk.getLocalBounds().width / 2, sprk.getLocalBounds().height / 2);
-    sprk.setRotation(angle);
-    sprk.setScale(scale);
-    //sparkles.push_back(sprk);
-
-    tmp.sprk = sprk;
+    tmp.tx_name = nm;
     tmp.initScale = scale;
     tmp.curScale = scale;
     tmp.x = x;
@@ -1168,11 +1154,13 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                             paraget_sparkles[i].y = paraget_sparkles[i].baseY + sin(crystal_y * 3.141592 / 180) * 10;
                         }
 
-                        paraget_sparkles[i].sprk.setColor(sf::Color(255, 255, 255, paraget_sparkles[i].alpha));
-                        paraget_sparkles[i].sprk.setScale(paraget_sparkles[i].curScale);
-                        paraget_sparkles[i].sprk.setOrigin(paraget_sparkles[i].sprk.getLocalBounds().width / 2, paraget_sparkles[i].sprk.getLocalBounds().height / 2);
-                        paraget_sparkles[i].sprk.setPosition(paraget_sparkles[i].x, paraget_sparkles[i].y);
-                        paraget_sparkles[i].sprk.draw(window);
+                        PSprite& sprk = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/" + paraget_sparkles[i].tx_name);
+
+                        sprk.setColor(sf::Color(255, 255, 255, paraget_sparkles[i].alpha));
+                        sprk.setScale(paraget_sparkles[i].curScale);
+                        sprk.setOrigin(sprk.getLocalBounds().width / 2, sprk.getLocalBounds().height / 2);
+                        sprk.setPosition(paraget_sparkles[i].x, paraget_sparkles[i].y);
+                        sprk.draw(window);
                     }
 
                     break;
@@ -1272,11 +1260,13 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                 sparkles[i].timer = 900 + (rand() % 200);
             }
 
-            sparkles[i].sprk.setColor(sf::Color(255, 255, 255, sparkles[i].alpha));
-            sparkles[i].sprk.setScale(sparkles[i].curScale);
-            sparkles[i].sprk.setOrigin(sparkles[i].sprk.getLocalBounds().width / 2, sparkles[i].sprk.getLocalBounds().height / 2);
-            sparkles[i].sprk.setPosition(sparkles[i].x, sparkles[i].y);
-            sparkles[i].sprk.draw(window);
+            PSprite& sprk = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/sparkle.png");
+
+            sprk.setColor(sf::Color(255, 255, 255, sparkles[i].alpha));
+            sprk.setScale(sparkles[i].curScale);
+            sprk.setOrigin(sprk.getLocalBounds().width / 2, sprk.getLocalBounds().height / 2);
+            sprk.setPosition(sparkles[i].x, sparkles[i].y);
+            sprk.draw(window);
         }
 
         /// Egg light and light rays

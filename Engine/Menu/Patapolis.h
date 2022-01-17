@@ -58,7 +58,6 @@ class PatapolisMenu : public Menu
 
 		struct Sparkle ///for rainbow
 		{
-			PSprite sprk;
 			float x = 0, y = 0;
 			float baseX = 0;
 			float curScale = 1;
@@ -84,7 +83,7 @@ class PatapolisMenu : public Menu
 
 		struct ParagetSparkle ///for paraget
 		{
-			PSprite sprk;
+            std::string tx_name;
 			float x = 0, y = 0;
 			float angle = 0;
 			float baseX = 0, baseY = 0;
