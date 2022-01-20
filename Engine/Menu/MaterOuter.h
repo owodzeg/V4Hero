@@ -1,0 +1,70 @@
+
+#ifndef MATEROUTER_H
+#define MATEROUTER_H
+#include "../Config.h"
+#include "../Dialog/ControlTips.h"
+#include "../Dialog/RoundedRect.h"
+#include "../Graphics/Menu.h"
+#include "../Input/InputController.h"
+#include <SFML/Graphics.hpp>
+
+class V4Core;
+class PatapolisMenu;
+class MaterOuterMenu : public Menu
+{
+public:
+    float ratio_x, ratio_y;
+    float res_ratio_x, res_ratio_y;
+    int q = 1;
+
+    sf::Font f_font;
+    ControlTips ctrlTips;
+
+    PSprite altar_main;
+
+    float highlight_x = 0;
+
+    struct InvBox {
+        ///data
+        Item* data;
+        int amount = 0;
+        bool highlight = false;
+
+        ///display
+        sf::RectangleShape r_outer;
+        sf::RectangleShape r_inner;
+        sf::RectangleShape r_highlight;
+        PText num, num_shadow;
+        PSprite icon;
+    };
+
+    vector<InvBox> inventory_boxes;
+    RoundedRect rr_title, rr_title_sh;
+    RoundedRect rr_desc, rr_desc_sh;
+
+    PText altar_title;
+    PText altar_kaching;
+    PText altar_item_title, altar_item_category, altar_item_desc;
+
+    int grid_sel_x = 0, grid_sel_y = 0, grid_offset_y = 0;
+    sf::RectangleShape r_sel;
+
+    bool save_loaded = false;
+
+    PatapolisMenu* parentMenu;
+
+    void initialise(Config* thisConfig, V4Core* parent, PatapolisMenu* curParentMenu);
+    void update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
+    void eventFired(sf::Event event);
+    void reloadInventory();
+    void showCategory();
+    void onExit();
+    void showAltar();
+    void updateAltarDescriptions();
+    void updateButtons();
+    MaterOuterMenu();
+    ~MaterOuterMenu();
+};
+
+
+#endif // MATEROUTER_H

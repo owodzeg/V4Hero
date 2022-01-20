@@ -14,6 +14,7 @@
 #include "Obelisk.h"
 #include "OptionsMenu.h"
 #include <SFML/Graphics.hpp>
+#include <Menu/MaterOuter.h>
 
 class V4Core;
 class PatapolisMenu : public Menu
@@ -154,6 +155,7 @@ class PatapolisMenu : public Menu
 		bool left = false;
 
 		PSprite market;
+        PSprite mater;
 		PSprite forge_main, forge_back, forge_glow, forge_fence, forge_slab, forge_slab_glow;
 		PSprite barracks;
 		PSprite festival_main;
@@ -183,7 +185,8 @@ class PatapolisMenu : public Menu
 
 		AltarMenu altar_menu;
 		Barracks barracks_menu;
-		ObeliskMenu obelisk_menu;
+        ObeliskMenu obelisk_menu;
+        MaterOuterMenu mater_menu;
 		Menu* parentMenu;
 		int currentMenuPosition;
 		std::vector<float> possibleMenuPositions;
@@ -206,10 +209,11 @@ class PatapolisMenu : public Menu
 			FESTIVAL = 3,
 			SEN = 4,
 			ALTAR = 5,
-			OBELISK = 6,
-			PARAGET = 7,
-			WAKAPON = 8,
-			EGG = 9
+            OBELISK = 6,
+            MATER = 7,
+			PARAGET = 8,
+			WAKAPON = 9,
+            EGG = 10,
 		};
 
 		sf::SoundBuffer sb_city_loop;
