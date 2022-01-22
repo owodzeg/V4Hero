@@ -224,6 +224,7 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
     Scene::Initialise(_thisConfig, parent);
     updateStoryPoint(); // Update story_point before anything else
     altar_menu.initialise(_thisConfig, parent, this);
+    mater_menu.initialise(_thisConfig, parent, this);
     barracks_menu.initialise(_thisConfig, parent, this);
     obelisk_menu.Initialise(_thisConfig, parent, this);
     parentMenu = curParentMenu;
@@ -506,11 +507,11 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
     barracks.setOrigin(barracks.getLocalBounds().width / 2, barracks.getLocalBounds().height);
 
     forge_main.loadFromFile("resources/graphics/bg/patapolis/forge_main.png", quality, 1);
-    forge_main.setPosition(2300, 720 - floor_height);
+    forge_main.setPosition(2300, 721 - floor_height);
     forge_main.setOrigin(forge_main.getLocalBounds().width / 2, forge_main.getLocalBounds().height);
 
     forge_back.loadFromFile("resources/graphics/bg/patapolis/blacksmith_forge.png", quality, 1);
-    forge_back.setPosition(2300, 720 - floor_height - 29);
+    forge_back.setPosition(2300, 721 - floor_height - 29);
     forge_back.setOrigin(forge_back.getLocalBounds().width / 2, forge_back.getLocalBounds().height);
 
     forge_glow.loadFromFile("resources/graphics/bg/patapolis/blacksmith_forge_glow.png", quality, 1);
@@ -533,8 +534,12 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
     market.setPosition(3960, 728 - floor_height);
     market.setOrigin(market.getLocalBounds().width / 2, market.getLocalBounds().height);
 
+    mater.loadFromFile("resources/graphics/bg/patapolis/mater.png", quality, 1);
+    mater.setPosition(9340, 728 - floor_height);
+    mater.setOrigin(mater.getLocalBounds().width / 2, mater.getLocalBounds().height);
+
     festival_main.loadFromFile("resources/graphics/bg/patapolis/festival_main.png", quality, 1);
-    festival_main.setPosition(5620, 720 - floor_height);
+    festival_main.setPosition(5620, 721 - floor_height);
     festival_main.setOrigin(festival_main.getLocalBounds().width / 2, festival_main.getLocalBounds().height);
 
     altar.loadFromFile("resources/graphics/bg/patapolis/altar.png", quality, 1);
@@ -542,7 +547,7 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
     altar.setOrigin(altar.getLocalBounds().width / 2, altar.getLocalBounds().height);
 
     obelisk.loadFromFile("resources/graphics/bg/patapolis/obelisk.png", quality, 1);
-    obelisk.setPosition(8940, 720 - floor_height);
+    obelisk.setPosition(8300, 722 - floor_height);
     obelisk.setOrigin(obelisk.getLocalBounds().width / 2, obelisk.getLocalBounds().height);
 
     paraget_main.loadFromFile("resources/graphics/bg/patapolis/paraget_main.png", quality, 1);
@@ -564,6 +569,7 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
     locations.push_back(6450 - 640); ///Sen
     locations.push_back(altar.getPosition().x - 640);
     locations.push_back(obelisk.getPosition().x - 640);
+    locations.push_back(mater.getPosition().x - 530); // mater needs to be offset differently because sprite is not centered
     locations.push_back(paraget_main.getPosition().x - 640);
     locations.push_back(11290);
     locations.push_back(11569);
@@ -576,18 +582,18 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
     }
 
     /// same as above
-    addFire(4, 3903, 583, true);
+    addFire(4, 3903, 583, true); // market
     addFire(4, 4017, 583, true);
 
-    addFire(2, 5816, 574, true);
+    addFire(2, 5816, 574, true); // festival square
     addFire(2, 5431, 574, true);
     addFire(1, 5207, 368, true);
     addFire(1, 6039, 368, true);
 
-    addFire(0, 8775, 479, true);
-    addFire(0, 9105, 479, true);
+    addFire(0, 8135, 479, true); // we should probably switch these to use something like obelisk.position.x so it's easier to move things
+    addFire(0, 8465, 479, true);
 
-    forge_big = addFire(2, 2050, 542, false);
+    forge_big = addFire(2, 2050, 542, false); // blacksmith
     forge_purple = addFire(3, 2370, 404, false);
 
     p_smoke = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/smoke.png");
@@ -601,6 +607,8 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
 
     altar_menu.save_loaded = save_loaded;
     altar_menu.reloadInventory();
+
+    mater_menu.save_loaded = save_loaded; // TEMPORARY REMOVE DIS 
 
     credits.Initialise(_thisConfig, v4Core);
 
@@ -638,6 +646,9 @@ void PatapolisMenu::EventFired(sf::Event event)
     } else if (obelisk_menu.is_active)
     {
         obelisk_menu.EventFired(event);
+    } else if (mater_menu.is_active)
+    {
+        mater_menu.EventFired(event);
     } else if (is_active)
     {
         if (event.type == sf::Event::KeyPressed)
@@ -679,20 +690,20 @@ void PatapolisMenu::SetTitle(int menuPosition)
 
     switch (menuPosition)
     {
-        case 0:
+        case Buildings::MARKET:
             t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_trader")));
             break;
-        case 1:
+        case Buildings::FORGE:
             t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_blacksmith")));
             break;
-        case 2:
+        case Buildings::BARRACKS:
             t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_barracks")));
             a += "X: Interact      ";
             break;
-        case 3:
+        case Buildings::FESTIVAL:
             t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_festival")));
             break;
-        case 4: {
+        case Buildings::SEN: {
             t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_sen")));
             a += "X: Interact      ";
 
@@ -720,7 +731,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
                     break;
                 }
                 case 2: {
-                    // Patapin Grove Unlocked
+                    // Patapine Grove Unlocked
                     tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_3")), true);
                     tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_6")), true);
                     tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_7")), true);
@@ -757,18 +768,21 @@ void PatapolisMenu::SetTitle(int menuPosition)
 
             break;
         }
-        case 5:
+        case Buildings::ALTAR:
             t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_altar")));
             a += "X: Interact      ";
             break;
-        case 6:
+        case Buildings::OBELISK:
             t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_obelisk")));
             a += "X: Interact      ";
             break;
-        case 7:
+        case Buildings::MATER:
+            t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_mater")));
+            break;
+        case Buildings::PARAGET:
             t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_paraget")));
             break;
-        case 8: {
+        case Buildings::WAKAPON: {
             t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_wakapon")));
 
             a += "X: Interact      ";
@@ -833,7 +847,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
 
             break;
         }
-        case 9:
+        case Buildings::EGG:
             t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("patapolis_egg")));
             break;
         default:
@@ -866,21 +880,24 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
         window.draw(v_background);
 
         camDest = locations[location];
+        if (mater_menu.is_active) {
+            camDest += materoffset; // when mater menu is open, offset slightly so we still see the tree
+        }
 
-        float camDistance = abs(camDest - camPos);
+        float camDistance = abs(camDest - camPos); // why abs? we literally make it negative again a couple lines down
         float camSpeed = camDistance * 3;
 
         if (camPos != camDest)
         {
             if (left)
             {
-                if (camPos < locations[location])
+                if (camPos < camDest)
                     camPos += camSpeed / fps;
                 else
                     camPos -= camSpeed / fps;
             } else
             {
-                if (camPos > locations[location])
+                if (camPos > camDest)
                     camPos -= camSpeed / fps;
                 else
                     camPos += camSpeed / fps;
@@ -938,6 +955,7 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
         egg_light.lx = egg_light.baseX - camPos;
 
         market.lx = market.baseX - camPos;
+        mater.lx = mater.baseX - camPos;
         forge_main.lx = forge_main.baseX - camPos;
         forge_back.lx = forge_back.baseX - camPos;
         forge_glow.lx = forge_glow.baseX - camPos;
@@ -1098,6 +1116,12 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                 {
                     //for some reason, marketplace is barracks. ??????
                     market.draw(window);
+                    break;
+                }
+
+                case Buildings::MATER:
+                {
+                    mater.draw(window);
                     break;
                 }
 
@@ -1342,7 +1366,7 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
             }
         }
 
-        bridge.setOrigin(0, bridge.getLocalBounds().height);
+        bridge.setOrigin(0, bridge.getLocalBounds().height); // could consider not drawing this + wakapon unless player camera is close
         bridge.setPosition(floor_x + 11200, 720);
         bridge.draw(window);
 
@@ -1371,6 +1395,9 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
         } else if (altar_menu.is_active)
         {
             altar_menu.update(window, fps, inputCtrl);
+        } else if (mater_menu.is_active)
+        {
+            mater_menu.update(window, fps, inputCtrl);
         } else if (obelisk_menu.is_active)
         {
             obelisk_menu.Update(window, fps, inputCtrl);
@@ -1462,7 +1489,7 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
         lastView = window.getView();
         window.setView(window.getDefaultView());
 
-        if ((!barracks_menu.is_active) && (!altar_menu.is_active) && (!obelisk_menu.is_active) && (!credits.is_active))
+        if ((!barracks_menu.is_active) && (!altar_menu.is_active) && (!obelisk_menu.is_active) && (!mater_menu.is_active) && (!credits.is_active))
         {
             ctrlTips.x = 0;
             ctrlTips.y = (720 - ctrlTips.ySize);
@@ -1620,7 +1647,7 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
 
         if (dialogboxes.size() <= 0)
         {
-            if ((!barracks_menu.is_active) && (!altar_menu.is_active) && (!obelisk_menu.is_active) && (!credits.is_active) && (screenFade.checkFinished()))
+            if ((!barracks_menu.is_active) && (!altar_menu.is_active) && (!obelisk_menu.is_active) && (!mater_menu.is_active) && (!credits.is_active) && (screenFade.checkFinished()))
             {
                 if ((inputCtrl.isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl.isKeyPressed(InputController::Keys::LTRIGGER)))
                 {
@@ -1653,11 +1680,11 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                     // select the current menu item
                     switch (location)
                     {
-                        case 0:
+                        case Buildings::MARKET:
                             /// trader/random
                             // open the world map
                             break;
-                        case 2:
+                        case Buildings::BARRACKS:
                             /// armory/barracks
                             thisConfig->thisCore->saveToDebugLog("Entering Barracks...");
 
@@ -1671,11 +1698,11 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                         barracks_menu.UpdateInputControls();*/
                             thisConfig->thisCore->saveToDebugLog("Barracks entered.");
                             break;
-                        case 3:
+                        case Buildings::FESTIVAL:
                             /// festival
                             // open barracks screen
                             break;
-                        case 5:
+                        case Buildings::ALTAR:
                             /// altar
                             // open mater menu
                             thisConfig->thisCore->saveToDebugLog("Entering Altar...");
@@ -1686,7 +1713,7 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                             altar_menu.showAltar();
                             thisConfig->thisCore->saveToDebugLog("Altar entered.");
                             break;
-                        case 6:
+                        case Buildings::OBELISK:
                             /// obelisk
                             thisConfig->thisCore->saveToDebugLog("Entering Obelisk...");
 
@@ -1697,6 +1724,15 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                         obelisk_menu.Show();
                         obelisk_menu.isActive = true;*/
                             thisConfig->thisCore->saveToDebugLog("Obelisk entered.");
+                            break;
+                        case Buildings::MATER:
+                            /// festival
+                            // open barracks screen
+                            thisConfig->thisCore->saveToDebugLog("Entering Mater...");
+                            mater_menu.save_loaded = save_loaded;
+                            mater_menu.is_active = true;
+                            mater_menu.showMater();
+                            thisConfig->thisCore->saveToDebugLog("Mater entered.");
                             break;
                         default:
                             /// nothing

@@ -3,7 +3,7 @@ project(V4Hero VERSION 1.2)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 add_definitions(-DPATAFOUR_VERSION="${CMAKE_PROJECT_VERSION}")
 
 find_package(SFML 2.5.1 COMPONENTS graphics audio REQUIRED)
@@ -115,7 +115,7 @@ set(ENGINE_FILES
         Engine/Mission/Mission.cpp
         Engine/Utils.h)
 
-add_executable(V4Hero ${ENGINE_FILES} main.cpp)
+add_executable(V4Hero ${ENGINE_FILES} main.cpp "Engine/Menu/MaterOuter.cpp" "Engine/Menu/MaterOuter.h")
 
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
     message("Enabling Unity build for Release build")
