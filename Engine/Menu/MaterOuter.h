@@ -12,6 +12,10 @@ class V4Core;
 class PatapolisMenu;
 class MaterOuterMenu : public Menu
 {
+private:
+    int squadpos = 0;
+    int cursquad = 0;
+
 public:
     float ratio_x, ratio_y;
     float res_ratio_x, res_ratio_y;
@@ -20,34 +24,25 @@ public:
     sf::Font f_font;
     ControlTips ctrlTips;
 
-    PSprite altar_main;
+    PSprite mater_main;
+    PSprite mater_selector;
+    float mouseX = 0, mouseY = 0;
+
+    struct SquadBox {
+        ///data
+        int amount = 0;
+        int maxSize;
+        int y;
+
+        sf::String title;
+    };
+    vector<SquadBox> squads;
 
     float highlight_x = 0;
 
-    struct InvBox {
-        ///data
-        Item* data;
-        int amount = 0;
-        bool highlight = false;
-
-        ///display
-        sf::RectangleShape r_outer;
-        sf::RectangleShape r_inner;
-        sf::RectangleShape r_highlight;
-        PText num, num_shadow;
-        PSprite icon;
-    };
-
-    vector<InvBox> inventory_boxes;
-    RoundedRect rr_title, rr_title_sh;
-    RoundedRect rr_desc, rr_desc_sh;
-
-    PText altar_title;
     PText altar_kaching;
-    PText altar_item_title, altar_item_category, altar_item_desc;
-
-    int grid_sel_x = 0, grid_sel_y = 0, grid_offset_y = 0;
-    sf::RectangleShape r_sel;
+    PText mater_title;
+    PText squad_title;
 
     bool save_loaded = false;
 
@@ -56,12 +51,13 @@ public:
     void initialise(Config* thisConfig, V4Core* parent, PatapolisMenu* curParentMenu);
     void update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
     void eventFired(sf::Event event);
-    void reloadInventory();
+    void DrawAsleepSquad(MaterOuterMenu::SquadBox& squad, int squad_alpha, sf::RenderWindow& window);
     void showCategory();
     void onExit();
-    void showAltar();
-    void updateAltarDescriptions();
+    void GetSquadlist();
+    void showMater();
     void updateButtons();
+    void MoveSquadPos(int spaces);
     MaterOuterMenu();
     ~MaterOuterMenu();
 };

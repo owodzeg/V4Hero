@@ -137,6 +137,7 @@ class PatapolisMenu : public Menu
 
 		float camPos = 1280;
 		float camDest = 1280;
+        float materoffset = 200; 
 
 		bool light = false;
 

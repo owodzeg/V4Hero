@@ -609,7 +609,6 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
     altar_menu.reloadInventory();
 
     mater_menu.save_loaded = save_loaded; // TEMPORARY REMOVE DIS 
-    mater_menu.reloadInventory();
 
     credits.Initialise(_thisConfig, v4Core);
 
@@ -732,7 +731,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
                     break;
                 }
                 case 2: {
-                    // Patapin Grove Unlocked
+                    // Patapine Grove Unlocked
                     tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_3")), true);
                     tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_6")), true);
                     tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("npc_sen_7")), true);
@@ -881,21 +880,24 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
         window.draw(v_background);
 
         camDest = locations[location];
+        if (mater_menu.is_active) {
+            camDest += materoffset; // when mater menu is open, offset slightly so we still see the tree
+        }
 
-        float camDistance = abs(camDest - camPos);
+        float camDistance = abs(camDest - camPos); // why abs? we literally make it negative again a couple lines down
         float camSpeed = camDistance * 3;
 
         if (camPos != camDest)
         {
             if (left)
             {
-                if (camPos < locations[location])
+                if (camPos < camDest)
                     camPos += camSpeed / fps;
                 else
                     camPos -= camSpeed / fps;
             } else
             {
-                if (camPos > locations[location])
+                if (camPos > camDest)
                     camPos -= camSpeed / fps;
                 else
                     camPos += camSpeed / fps;
@@ -1728,10 +1730,8 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                             // open barracks screen
                             thisConfig->thisCore->saveToDebugLog("Entering Mater...");
                             mater_menu.save_loaded = save_loaded;
-                            mater_menu.reloadInventory();
-                            mater_menu.showAltar();
                             mater_menu.is_active = true;
-                            mater_menu.showAltar();
+                            mater_menu.showMater();
                             thisConfig->thisCore->saveToDebugLog("Mater entered.");
                             break;
                         default:
