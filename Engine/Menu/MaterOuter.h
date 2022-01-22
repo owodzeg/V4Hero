@@ -26,6 +26,10 @@ public:
 
     PSprite mater_main;
     PSprite mater_selector;
+
+    PSprite up_arrow_prompt;
+    PSprite down_arrow_prompt;
+
     float mouseX = 0, mouseY = 0;
 
     struct SquadBox {
@@ -52,9 +56,9 @@ public:
     void update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
     void eventFired(sf::Event event);
     void DrawAsleepSquad(MaterOuterMenu::SquadBox& squad, int squad_alpha, sf::RenderWindow& window);
+    vector<MaterOuterMenu::SquadBox*> GetSquadsCentered();
     void showCategory();
     void onExit();
-    void GetSquadlist();
     void showMater();
     void updateButtons();
     void MoveSquadPos(int spaces);

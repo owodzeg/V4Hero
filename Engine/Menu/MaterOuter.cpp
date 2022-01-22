@@ -71,6 +71,9 @@ void MaterOuterMenu::initialise(Config* _thisConfig, V4Core* parent, PatapolisMe
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/mater/matersquad_member_awake.png");
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/mater/matersquad_slot_awake.png");
 
+    up_arrow_prompt.loadFromFile("resources/graphics/ui/mater/up_prompt.png", quality, 1);
+    down_arrow_prompt.loadFromFile("resources/graphics/ui/mater/down_prompt.png", quality, 1);
+
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/mater/yaripon_icon.png");
 
     mater_title.createText(f_font, 40, sf::Color(255, 234, 191, 255), Func::ConvertToUtf8String(_thisConfig->strRepo.GetString("mater_title")), q, 1);
@@ -85,10 +88,6 @@ void MaterOuterMenu::showCategory()
 {
 }
 
-void MaterOuterMenu::GetSquadlist()
-{
-
-}
 void MaterOuterMenu::MoveSquadPos(int spaces)
 {
     squadpos = squadpos + spaces;
@@ -107,7 +106,7 @@ void MaterOuterMenu::showMater()
 {
     // TODO: check which squads player has unlocked memories for
     squads.clear();
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 9; i++)
     {
         SquadBox squad = SquadBox();
         squad.amount = 3;
@@ -121,6 +120,17 @@ void MaterOuterMenu::showMater()
     squads[2].title = "Yumipon";
     squads[3].title = "Kibapon";
     squads[4].title = "Dekapon";
+    squads[5].title = "Megapon";
+    squads[6].title = "Toripon";
+    squads[7].title = "Robopon";
+    squads[8].title = "Mahopon";
+
+    
+    vector<MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
+    for (int i = 0; i < 5; i++)
+    {
+        centered_squads[i]->y = 165 + 100 * i; // re-center the squads
+    }
 }
 
 void MaterOuterMenu::eventFired(sf::Event event)
@@ -197,6 +207,24 @@ void MaterOuterMenu::DrawAsleepSquad(MaterOuterMenu::SquadBox& squad, int squad_
     }
 }
 
+vector<MaterOuterMenu::SquadBox*> MaterOuterMenu::GetSquadsCentered()
+{
+    vector<MaterOuterMenu::SquadBox*> out;
+    for (int i = -2; i < 3; i++)
+    {
+        int pos = cursquad + i;
+        if (pos < 0) {
+            pos = pos + squads.size();
+        }
+        if (pos > squads.size()-1)
+        {
+            pos = pos - squads.size();
+        }
+        out.push_back(&squads[pos]);
+    }
+    return out;
+}
+
 void MaterOuterMenu::update(sf::RenderWindow& window, float fps, InputController& inputCtrl)
 {
     if (is_active)
@@ -208,63 +236,62 @@ void MaterOuterMenu::update(sf::RenderWindow& window, float fps, InputController
         ctrlTips.draw(window);
 
         mater_main.setOrigin(mater_main.getLocalBounds().width / 2, mater_main.getLocalBounds().height / 2);
-        mater_main.setPosition(1050, 320);
+        mater_main.setPosition(1050, 322);
 
         mater_main.draw(window);
 
         mater_title.setOrigin(mater_title.getLocalBounds().width / 2, mater_title.getLocalBounds().height / 2);
         altar_kaching.setOrigin(altar_kaching.getLocalBounds().width / 2, altar_kaching.getLocalBounds().height / 2);
 
-        mater_title.setPosition(1050, 30);
-        altar_kaching.setPosition(1050, 60);
+        mater_title.setPosition(1050, 15);
+        altar_kaching.setPosition(1050, 45);
 
         mater_title.draw(window);
         altar_kaching.draw(window);
 
-        // draw the squads before selected squad in normal order
-        if (cursquad > 0)
+        vector<MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
+
+
+        std::span<SquadBox*> beforesquads = std::span(centered_squads).subspan(0, 2);
+        int draw_n = 0;
+        for (auto it = beforesquads.begin(); it != beforesquads.end(); ++it)
         {
-            auto beforesquads = std::span(squads).subspan(0, cursquad);
-            int draw_n = 0;
-            for (auto it = beforesquads.begin(); it != beforesquads.end(); ++it)
+            SquadBox& squad = **it;
+                
+                
+            int squad_alpha = 255 - 80 * (beforesquads.size() - draw_n - 1);
+            if (squad_alpha < 0)
             {
-                SquadBox& squad = *it;
-                
-                
-                int squad_alpha = 255 - 80 * (beforesquads.size() - draw_n - 1);
-                if (squad_alpha < 0)
-                {
-                    squad_alpha = 0;
-                }
-                DrawAsleepSquad(squad, squad_alpha, window);
-                draw_n++;
+                squad_alpha = 0;
             }
+            DrawAsleepSquad(squad, squad_alpha, window);
+            draw_n++;
         }
+        
 
         // draw the squads after selected squad in reverse order
-        if (cursquad < squads.size() - 1)
+        
+        // aftersquads start at cursquad+1 and go to end 
+        std::span<SquadBox*> aftersquads = std::span(centered_squads).subspan(3, 2);
+        draw_n = 0;
+        // rbegin to rend - reverse iteration
+        for (auto it = aftersquads.rbegin(); it != aftersquads.rend(); ++it)
         {
-            // aftersquads start at cursquad+1 and go to end 
-            std::span<SquadBox> aftersquads = std::span(squads).subspan(cursquad + 1, (squads.size() - 1) - cursquad);
-            int draw_n = 0;
-            // rbegin to rend - reverse iteration
-            for (auto it = aftersquads.rbegin(); it != aftersquads.rend(); ++it)
+            SquadBox& squad = **it;
+
+
+            int squad_alpha = 255 - 80 * (aftersquads.size() - draw_n - 1);
+            if (squad_alpha < 0)
             {
-                SquadBox& squad = *it;
-
-
-                int squad_alpha = 255 - 80 * (aftersquads.size() - draw_n - 1);
-                if (squad_alpha < 0)
-                {
-                    squad_alpha = 0;
-                }
-                DrawAsleepSquad(squad, squad_alpha, window);
-                draw_n++;
+                squad_alpha = 0;
             }
+            DrawAsleepSquad(squad, squad_alpha, window);
+            draw_n++;
         }
+        
 
         // finally, we draw the current selected squad, so its on top of everything
-        SquadBox& squad = squads[cursquad];
+        SquadBox& squad = *centered_squads[2];
 
         PSprite& bg = ResourceManager::getInstance().getSprite("resources/graphics/ui/mater/matersquad_bg.png");
         PSprite& slot = ResourceManager::getInstance().getSprite("resources/graphics/ui/mater/matersquad_slot_awake.png");
@@ -284,6 +311,7 @@ void MaterOuterMenu::update(sf::RenderWindow& window, float fps, InputController
         squad_title.setPosition(875, squad.y - 65);
         squad_title.setColor(sf::Color(0, 0, 0, 255));
         squad_title.draw(window);
+        GetSquadsCentered();
 
         pon.setOrigin(pon.getLocalBounds().width / 2, pon.getLocalBounds().height / 2);
         slot.setOrigin(slot.getLocalBounds().width / 2, slot.getLocalBounds().height / 2);
@@ -302,6 +330,15 @@ void MaterOuterMenu::update(sf::RenderWindow& window, float fps, InputController
         mater_selector.setOrigin(mater_selector.getLocalBounds().width / 2, mater_selector.getLocalBounds().height / 2);
         mater_selector.setPosition(850 + squadpos * 73, squad.y + 15);
         mater_selector.draw(window);
+
+        up_arrow_prompt.setOrigin(up_arrow_prompt.getLocalBounds().width / 2, up_arrow_prompt.getLocalBounds().height / 2);
+        down_arrow_prompt.setOrigin(down_arrow_prompt.getLocalBounds().width / 2, down_arrow_prompt.getLocalBounds().height / 2);
+
+        up_arrow_prompt.setPosition(1050, 75);
+        down_arrow_prompt.setPosition(1050, 655);
+
+        up_arrow_prompt.draw(window);
+        down_arrow_prompt.draw(window);
 
         for (int i = 0; i < squads.size(); i++)
         {
@@ -332,6 +369,12 @@ void MaterOuterMenu::update(sf::RenderWindow& window, float fps, InputController
                 cursquad = cursquad + squads.size();
             }
             squadpos = 0; // reset squad pos in case squad has different max size
+
+            vector<MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
+            for (int i = 0; i < 5; i++)
+            {
+                centered_squads[i]->y = 165 + 100 * i; // re-center the squads
+            }
         }
         if (inputCtrl.isKeyPressed(InputController::Keys::DOWN))
         {
@@ -341,6 +384,12 @@ void MaterOuterMenu::update(sf::RenderWindow& window, float fps, InputController
                 cursquad = cursquad - squads.size();
             }
             squadpos = 0; // reset squad pos in case squad has different max size
+
+            vector<MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
+            for (int i = 0; i < 5; i++)
+            {
+                centered_squads[i]->y = 165 + 100 * i; // re-center the squads
+            }
         }
         if (inputCtrl.isKeyPressed(InputController::Keys::CIRCLE))
         {
