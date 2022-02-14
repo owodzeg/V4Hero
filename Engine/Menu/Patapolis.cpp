@@ -632,7 +632,6 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
         v4Core->changeRichPresence("In Patapolis", "logo", "");
     }
 
-    parent->saveToDebugLog("Initializing Patapolis finished.");
 }
 
 void PatapolisMenu::EventFired(sf::Event event)
@@ -1660,7 +1659,6 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                             messageclouds[i].End();
 
                         SetTitle(location);
-                        thisConfig->thisCore->saveToDebugLog("Changing Patapolis location to " + to_string(location));
                     }
                 } else if ((inputCtrl.isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl.isKeyPressed(InputController::Keys::RTRIGGER)))
                 {
@@ -1673,7 +1671,6 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                             messageclouds[i].End();
 
                         SetTitle(location);
-                        thisConfig->thisCore->saveToDebugLog("Changing Patapolis location to " + to_string(location));
                     }
                 } else if (inputCtrl.isKeyPressed(InputController::Keys::CROSS))
                 {
@@ -1686,7 +1683,6 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                             break;
                         case Buildings::BARRACKS:
                             /// armory/barracks
-                            thisConfig->thisCore->saveToDebugLog("Entering Barracks...");
 
                             screenFade.Create(thisConfig, 1, 1536);
                             goto_id = 0;
@@ -1696,7 +1692,6 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                         barracks_menu.obelisk = false;
                         barracks_menu.ReloadInventory();
                         barracks_menu.UpdateInputControls();*/
-                            thisConfig->thisCore->saveToDebugLog("Barracks entered.");
                             break;
                         case Buildings::FESTIVAL:
                             /// festival
@@ -1705,17 +1700,14 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                         case Buildings::ALTAR:
                             /// altar
                             // open mater menu
-                            thisConfig->thisCore->saveToDebugLog("Entering Altar...");
                             altar_menu.save_loaded = save_loaded;
                             altar_menu.reloadInventory();
                             altar_menu.showAltar();
                             altar_menu.is_active = true;
                             altar_menu.showAltar();
-                            thisConfig->thisCore->saveToDebugLog("Altar entered.");
                             break;
                         case Buildings::OBELISK:
                             /// obelisk
-                            thisConfig->thisCore->saveToDebugLog("Entering Obelisk...");
 
                             screenFade.Create(thisConfig, 1, 1536);
                             goto_id = 1;
@@ -1723,16 +1715,13 @@ void PatapolisMenu::Update(sf::RenderWindow& window, float fps, InputController&
                             /*obelisk_menu.Reload();
                         obelisk_menu.Show();
                         obelisk_menu.isActive = true;*/
-                            thisConfig->thisCore->saveToDebugLog("Obelisk entered.");
                             break;
                         case Buildings::MATER:
                             /// festival
                             // open barracks screen
-                            thisConfig->thisCore->saveToDebugLog("Entering Mater...");
                             mater_menu.save_loaded = save_loaded;
                             mater_menu.is_active = true;
                             mater_menu.showMater();
-                            thisConfig->thisCore->saveToDebugLog("Mater entered.");
                             break;
                         default:
                             /// nothing

@@ -44,7 +44,6 @@ OptionsMenu::OptionsMenu()
 }
 void OptionsMenu::Initialise(Config* thisConfigs, V4Core* parent, Menu* curParentMenu)
 {
-    parent->saveToDebugLog("Initializing Options menu...");
     SPDLOG_DEBUG("Initialize Options menu");
     Scene::Initialise(thisConfigs, parent);
     //buttonList.Initialise(&m_font,*thisConfig,keymap,&(v4core->currentController),this);
@@ -1411,7 +1410,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
             case 121: {
                 SetConfigValue("textureQuality", "0");
-                ResourceManager::getInstance().getQuality(thisConfig->thisCore);
+                ResourceManager::getInstance().getQuality();
                 ResourceManager::getInstance().reloadPSprites();
 
                 GoBackMenuOption();
@@ -1420,7 +1419,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
             case 122: {
                 SetConfigValue("textureQuality", "1");
-                ResourceManager::getInstance().getQuality(thisConfig->thisCore);
+                ResourceManager::getInstance().getQuality();
                 ResourceManager::getInstance().reloadPSprites();
 
                 GoBackMenuOption();
@@ -1429,7 +1428,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
             case 123: {
                 SetConfigValue("textureQuality", "2");
-                ResourceManager::getInstance().getQuality(thisConfig->thisCore);
+                ResourceManager::getInstance().getQuality();
                 ResourceManager::getInstance().reloadPSprites();
 
                 GoBackMenuOption();
@@ -1438,7 +1437,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
             case 124: {
                 SetConfigValue("textureQuality", "3");
-                ResourceManager::getInstance().getQuality(thisConfig->thisCore);
+                ResourceManager::getInstance().getQuality();
                 ResourceManager::getInstance().reloadPSprites();
 
                 GoBackMenuOption();

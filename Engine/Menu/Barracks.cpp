@@ -271,7 +271,6 @@ void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMe
     rr_uniticon.setOrigin(sf::Vector2f((175 + 50) / 2, (12 + 50) / 2));
 
     //mm_inventory_background.setSize(sf::Vector2f(mm_inventory_background.getSize().x+(40*resRatioX),mm_inventory_background.getSize().y+(40*resRatioX)));
-    parent->saveToDebugLog("Initializing Barracks finished.");
 }
 void Barracks::eventFired(sf::Event event)
 {
