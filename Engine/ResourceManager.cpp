@@ -1,6 +1,7 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
 
 #include "ResourceManager.h"
+#include "CoreManager.h"
 #include "V4Core.h"
 
 ResourceManager::ResourceManager()
@@ -19,9 +20,9 @@ ResourceManager& ResourceManager::getInstance()
     return instance;
 }
 
-void ResourceManager::getQuality(V4Core* core)
+void ResourceManager::getQuality()
 {
-    quality = static_cast<Quality>(core->config.GetInt("textureQuality"));
+    quality = static_cast<Quality>(CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
 }
 
 int ResourceManager::getCurrentQuality()

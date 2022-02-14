@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <iostream>
+#include "Engine/CoreManager.h"
 #include "Engine/V4Core.h"
 #include <spdlog/spdlog.h>
 #include <spdlog/cfg/env.h>
@@ -60,8 +61,9 @@ int main(int argc, char *argv[])
 
     fs::current_path(executable_path);
 
-    V4Core V4;
-    V4.init();
+    //std::unique_ptr<V4Core> V4 = std::make_unique<V4Core>();
+    CoreManager::getInstance().init();
+    CoreManager::getInstance().getCore()->init();
 
     return 0;
 }

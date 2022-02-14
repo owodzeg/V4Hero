@@ -1,6 +1,7 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
 
 #include "V4Core.h"
+#include "CoreManager.h"
 #include <chrono>
 #include <cstdlib>
 #include <iostream>
@@ -85,10 +86,11 @@ V4Core::V4Core()
     */
 
     /** Load config from config.cfg **/
-    config.LoadConfig(this);
+    Config* config = CoreManager::getInstance().getConfig();
+    config->LoadConfig(this);
 
     /** Apply logging level from config **/
-    switch (config.GetInt("logLevel")) //i can't get int to convert to a spdlog::set_level argument, so i'm making a switch
+    switch (config->GetInt("logLevel")) //i can't get int to convert to a spdlog::set_level argument, so i'm making a switch
     {
         case 0: {
             spdlog::set_level(spdlog::level::trace);
@@ -108,26 +110,24 @@ V4Core::V4Core()
     }
 
     /** Load Resource Manager **/
-    ResourceManager::getInstance().getQuality(this);
+    ResourceManager::getInstance().getQuality();
 
     /** Load language data and appropriate font **/
     SPDLOG_DEBUG("Loading language data");
-    config.strRepo.LoadLanguageFiles(config.GetInt("lang"));
-    config.fontPath = "resources/fonts/" + config.strRepo.langFonts[config.GetInt("lang") - 1];
+
+    StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
+    strRepo->LoadLanguageFiles(config->GetInt("lang"));
+
+    //config->fontPath = "resources/fonts/" + config->strRepo.langFonts[config->GetInt("lang") - 1];
 
     /** Load item registry **/
     SPDLOG_DEBUG("Loading item registry");
-    saveReader.itemReg.readItemFiles();
+    SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
+    saveReader->itemReg.readItemFiles();
 
     /** "Alpha release" text **/
     SPDLOG_DEBUG("Creating text for version and FPS");
-    f_font.loadFromFile(config.fontPath);
-
-    t_debug.setFont(f_font);
-    t_debug.setCharacterSize(24);
-    t_debug.setFillColor(sf::Color::White);
-    t_debug.setString(config.strRepo.GetString("demo_string")); //+strDay+" "+months[month]+" "+to_string(year)+".");
-    t_debug.setOrigin(t_debug.getGlobalBounds().width / 2, t_debug.getGlobalBounds().height / 2);
+    f_font.loadFromFile(config->fontPath);
 
     t_version.setFont(f_font);
     t_version.setCharacterSize(24);
@@ -143,23 +143,15 @@ V4Core::V4Core()
 
     /** Initialize main menu **/
     SPDLOG_DEBUG("Load backgrounds from tipsUtil");
-    tipsUtil.LoadBackgrounds();
+    //tipsUtil.LoadBackgrounds();
     SPDLOG_DEBUG("Load icons from tipsUtil");
-    tipsUtil.LoadIcons();
+    //tipsUtil.LoadIcons();
 
     SPDLOG_DEBUG("Initialize the main menu");
-    mainMenu.Initialise(&config, this);
+    //mainMenu.Initialise(&config, this);
 
     menus.push_back(&mainMenu);
-    config.configDebugID = 10;
-}
-
-void V4Core::saveToDebugLog(string data)
-{
-    ofstream dbg("V4Hero-" + hero_version + "-latest.log", ios::app);
-    dbg << data;
-    dbg << "\r\n";
-    dbg.close();
+    config->configDebugID = 10;
 }
 
 void V4Core::changeRichPresence(string title, string bg_image, string sm_image)
@@ -274,9 +266,9 @@ void V4Core::loadingThread()
     string wdesc_key(desc_key.begin(), desc_key.end());
 
     PText t_tipTitle;
-    t_tipTitle.createText(f_font, 48, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(config.strRepo.GetString(wtitle_key)), config.GetInt("textureQuality"), 1);
+    //t_tipTitle.createText(f_font, 48, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(config.strRepo.GetString(wtitle_key)), config.GetInt("textureQuality"), 1);
 
-    sf::String str_tipText = Func::ConvertToUtf8String(config.strRepo.GetString(wdesc_key));
+    //sf::String str_tipText = Func::ConvertToUtf8String(config.strRepo.GetString(wdesc_key));
     //for(int t=0; t<str_tipText.size(); t++)
     //{
     //    if(str_tipText[t] == '\\')
@@ -284,13 +276,13 @@ void V4Core::loadingThread()
     //}
 
     PText t_tipText;
-    t_tipText.createText(f_font, 32, sf::Color(255, 255, 255, 255), str_tipText, config.GetInt("textureQuality"), 1);
+    //t_tipText.createText(f_font, 32, sf::Color(255, 255, 255, 255), str_tipText, config.GetInt("textureQuality"), 1);
 
     PText t_pressAnyKey;
-    t_pressAnyKey.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(config.strRepo.GetString("tips_anykey")), config.GetInt("textureQuality"), 1);
+    //t_pressAnyKey.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(config.strRepo.GetString("tips_anykey")), config.GetInt("textureQuality"), 1);
 
     PText t_nowLoading;
-    t_nowLoading.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(config.strRepo.GetString("tips_loading")), config.GetInt("textureQuality"), 1);
+    //t_nowLoading.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(config.strRepo.GetString("tips_loading")), config.GetInt("textureQuality"), 1);
 
     std::string bg_key = "resources/graphics/ui/tips/" + tipsUtil.backgroundFileNames[tipBackground];
     PSprite s_bg = ResourceManager::getInstance().getSprite(bg_key);
@@ -298,7 +290,7 @@ void V4Core::loadingThread()
     std::string icon_key = "resources/graphics/ui/tips/" + tipsUtil.iconFileNames[tipIcon];
     PSprite s_icon = ResourceManager::getInstance().getSprite(icon_key);
 
-    float maxFps = config.GetInt("framerateLimit");
+    float maxFps = 240;
 
     if (maxFps == 0)
         maxFps = 240;
@@ -405,34 +397,38 @@ void V4Core::init()
     settings.antialiasingLevel = 16;
 
     SPDLOG_INFO("Creating window");
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    Config* config = CoreManager::getInstance().getConfig();
 
-    if (config.GetInt("enableFullscreen"))
-        window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::Fullscreen, settings);
-    else if (config.GetInt("enableBorderlessWindow"))
-        window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::None, settings);
+    if (config->GetInt("enableFullscreen"))
+        window->create(sf::VideoMode(config->GetInt("resX"), config->GetInt("resY")), "Patafour", sf::Style::Fullscreen, settings);
+    else if (config->GetInt("enableBorderlessWindow"))
+        window->create(sf::VideoMode(config->GetInt("resX"), config->GetInt("resY")), "Patafour", sf::Style::None, settings);
     else
-        window.create(sf::VideoMode(config.GetInt("resX"), config.GetInt("resY")), "Patafour", sf::Style::Titlebar | sf::Style::Close, settings);
+        window->create(sf::VideoMode(config->GetInt("resX"), config->GetInt("resY")), "Patafour", sf::Style::Titlebar | sf::Style::Close, settings);
 
-    framerate_limit = config.GetInt("framerateLimit");
+    framerate_limit = config->GetInt("framerateLimit");
+    
+    // Despite having an "Unlimited" framerate option, we limit it to 500.
     if (framerate_limit == 0)
         framerate_limit = 500;
     if (framerate_limit > 500)
         framerate_limit = 500;
 
     SPDLOG_INFO("Applying window settings");
-    window.setFramerateLimit(framerate_limit);
-    window.setKeyRepeatEnabled(false);
-    window.setVerticalSyncEnabled(config.GetInt("verticalSync"));
+    window->setFramerateLimit(framerate_limit);
+    window->setKeyRepeatEnabled(false);
+    window->setVerticalSyncEnabled(config->GetInt("verticalSync"));
 
-    inputCtrl.LoadKeybinds(config);
+    //inputCtrl.LoadKeybinds(config);
 
-    while (window.isOpen())
+    while (window->isOpen())
     {
         sf::Event event;
-        while (window.pollEvent(event))
+        while (window->pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
-                window.close();
+                window->close();
 
             if (event.type == sf::Event::KeyPressed)
             {
@@ -533,7 +529,7 @@ void V4Core::init()
                 }
             }
 
-            mainMenu.EventFired(event);
+            //mainMenu.EventFired(event);
         }
 
         fps = float(1000000) / fpsclock.getElapsedTime().asMicroseconds();
@@ -558,34 +554,34 @@ void V4Core::init()
 
         //cout << fps << endl;
 
-        window.clear();
+        window->clear();
 
-        mainMenu.Update(window, fps, inputCtrl);
+        //mainMenu.Update(window, fps, inputCtrl);
 
-        auto lastView = window.getView();
-        window.setView(window.getDefaultView());
+        auto lastView = window->getView();
+        window->setView(window->getDefaultView());
 
         t_version.setPosition(4, 4);
-        window.draw(t_version);
+        window->draw(t_version);
 
-        if (config.GetInt("showFPS"))
+        if (config->GetInt("showFPS"))
         {
             t_fps.setString("FPS: " + to_string(int(ceil(rawFps))));
             t_fps.setOrigin(t_fps.getLocalBounds().width, 0);
-            t_fps.setPosition(window.getSize().x - 4, 4);
-            window.draw(t_fps);
+            t_fps.setPosition(window->getSize().x - 4, 4);
+            window->draw(t_fps);
         }
 
-        window.display();
+        window->display();
 
-        window.setView(lastView);
+        window->setView(lastView);
 
         ///Clear the key inputs
         inputCtrl.Flush();
 
         if (close_window)
         {
-            window.close();
+            window->close();
         }
 
         //if(state.core)

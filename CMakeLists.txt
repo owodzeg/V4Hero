@@ -79,6 +79,7 @@ set(ENGINE_FILES
         Engine/P4A.cpp
         Engine/ResourceManager.cpp
         Engine/TextureManager.cpp
+        Engine/CoreManager.cpp
         Engine/Mission/Background.cpp
         Engine/Mission/Camera.cpp
         Engine/Mission/MissionController.cpp

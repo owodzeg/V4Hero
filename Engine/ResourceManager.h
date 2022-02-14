@@ -13,7 +13,7 @@ class ResourceManager
 {
     public:
         static ResourceManager& getInstance();
-        void getQuality(V4Core* core);
+        void getQuality();
         int getCurrentQuality();
         void loadSprite(std::string path);
         PSprite& getSprite(const std::string& path);
