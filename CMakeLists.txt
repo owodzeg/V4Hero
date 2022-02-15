@@ -80,6 +80,7 @@ set(ENGINE_FILES
         Engine/ResourceManager.cpp
         Engine/TextureManager.cpp
         Engine/CoreManager.cpp
+        Engine/StateManager.cpp
         Engine/Mission/Background.cpp
         Engine/Mission/Camera.cpp
         Engine/Mission/MissionController.cpp
