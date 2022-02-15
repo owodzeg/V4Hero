@@ -44,6 +44,7 @@ public:
     InputController();
 
     void LoadKeybinds(Config& config);
+    void parseEvents(sf::Event& event);
     int translateKeybind(int keyID);
     bool isAnyKeyPressed();
     int whatKeyPressed(int restrictMode = 0);
