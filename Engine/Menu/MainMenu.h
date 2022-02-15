@@ -84,7 +84,7 @@ public:
     IntroductionMenu introductionMenu;
 
     void Initialise(Config* thisConfig, V4Core* parent);
-    void Update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
+    void Update();
     void EventFired(sf::Event event);
     void OnExit();
     void SelectMenuOption();

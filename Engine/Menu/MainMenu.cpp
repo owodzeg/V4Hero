@@ -4,6 +4,8 @@
 #include "../V4Core.h"
 #include "ButtonList.h"
 #include "iostream"
+#include "../CoreManager.h"
+
 MainMenu::MainMenu()
 {
     //ctor
@@ -373,9 +375,13 @@ void MainMenu::SelectMenuOption()
         }
     }
 }
-void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inputCtrl)
+void MainMenu::Update()
 {
-    if (v4Core->currentController.isInitialized)
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    InputController* inputCtrl = CoreManager::getInstance().getInputController();
+    float fps = CoreManager::getInstance().getCore()->getFPS();
+
+    /* if (v4Core->currentController.isInitialized)
     {
         v4Core->currentController.Update(window, fps, inputCtrl);
     } else if (patapolisMenu.is_active)
@@ -387,7 +393,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
     } else if (optionsMenu.is_active)
     {
         optionsMenu.Update(window, fps, inputCtrl);
-    } else if (is_active)
+    } else if (is_active) */
     {
         if (firstrun)
         {
@@ -421,7 +427,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                 }
             }
 
-            msgcloud.Draw(window, fps, inputCtrl);
+            //rework pending msgcloud.Draw(window, fps, inputCtrl);
 
         } else if (premenu)
         {
@@ -457,7 +463,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                     logow_text.setColor(sf::Color(255, 255, 255, ui_alpha));
                     logow_shadow.setColor(sf::Color(64, 0, 0, ui_alpha));
 
-                    if (inputCtrl.isAnyKeyPressed())
+                    if (inputCtrl->isAnyKeyPressed())
                     {
                         s_smash.play();
                         logow_bg.setColor(sf::Color(200, 0, 0, 255));
@@ -503,7 +509,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                 logow_text.setScale(logow_scale);
                 logow_shadow.setScale(logow_shscale);
 
-                window.draw(rs_cover);
+                window->draw(rs_cover);
 
                 logow_shadow.draw(window);
                 logow_bg.draw(window);
@@ -536,7 +542,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                 t_pressanykey.draw(window);
 
                 rs_cover2.setFillColor(sf::Color(0, 0, 0, cv_alpha));
-                window.draw(rs_cover2);
+                window->draw(rs_cover2);
             }
         } else
         {
@@ -555,7 +561,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                 title_loop.play();
             }
 
-            window.draw(v_background);
+            window->draw(v_background);
 
             if (fade == 0)
                 alpha -= float(15) / fps;
@@ -639,7 +645,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
 
             float fire_shift = 0;
 
-            //cout << "MouseX: " << (mouseX / window.getSize().x) * 1280 << endl;
+            //cout << "MouseX: " << (mouseX / window->getSize().x) * 1280 << endl;
 
             mouseInBounds = false;
 
@@ -651,11 +657,11 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
 
                 if (UsingMouseSelection)
                 {
-                    if ((mouseX / window.getSize().x) * 1280 > totem.getPosition().x)
+                    if ((mouseX / window->getSize().x) * 1280 > totem.getPosition().x)
                     {
-                        if ((mouseX / window.getSize().x) * 1280 < (totem.getPosition().x + totem.getGlobalBounds().width))
+                        if ((mouseX / window->getSize().x) * 1280 < (totem.getPosition().x + totem.getGlobalBounds().width))
                         {
-                            if ((mouseY / window.getSize().y) * 720 > totem.getPosition().y - totem.getGlobalBounds().height)
+                            if ((mouseY / window->getSize().y) * 720 > totem.getPosition().y - totem.getGlobalBounds().height)
                             {
                                 totem_sel = i;
                                 mouseInBounds = true;
@@ -791,11 +797,11 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                 cv_alpha = 0;
 
             rs_cover2.setFillColor(sf::Color(0, 0, 0, cv_alpha));
-            window.draw(rs_cover2);
+            window->draw(rs_cover2);
 
-            window.setView(window.getDefaultView());
+            window->setView(window->getDefaultView());
 
-            screenFade.draw(window, fps);
+            //rework pending screenFade.draw(window, fps);
 
             if (screenFade.checkFinished())
             {
@@ -829,7 +835,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                             {
                                 sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
                                 v4Core->continue_loading = true;
-                                v4Core->window.setActive(false);
+                                //rework pending v4Core->window->setActive(false);
                                 loadingThreadInstance.launch();
 
                                 patapolisMenu.Show();
@@ -842,7 +848,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                             {
                                 sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
                                 v4Core->continue_loading = true;
-                                v4Core->window.setActive(false);
+                                //rework pending v4Core->window->setActive(false);
                                 loadingThreadInstance.launch();
 
                                 patapolisMenu.Show();
@@ -891,7 +897,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
             {
                 dialogboxes[i].x = 640;
                 dialogboxes[i].y = 360;
-                dialogboxes[i].Draw(window, fps, inputCtrl);
+                //rework pending dialogboxes[i].Draw(window, fps, inputCtrl);
 
                 if (dialogboxes[i].closed)
                     db_e.push_back(i);
@@ -904,7 +910,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
 
             if (dialogboxes.size() <= 0)
             {
-                if ((inputCtrl.isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl.isKeyPressed(InputController::Keys::LTRIGGER)))
+                if ((inputCtrl->isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl->isKeyPressed(InputController::Keys::LTRIGGER)))
                 {
                     UsingMouseSelection = false;
 
@@ -916,7 +922,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                     mouseX = totem_sel_pos[totem_sel];
                 }
 
-                if ((inputCtrl.isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl.isKeyPressed(InputController::Keys::RTRIGGER)))
+                if ((inputCtrl->isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl->isKeyPressed(InputController::Keys::RTRIGGER)))
                 {
                     UsingMouseSelection = false;
 
@@ -928,7 +934,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                     mouseX = totem_sel_pos[totem_sel];
                 }
 
-                if (inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+                if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
                 {
                     UsingMouseSelection = false;
 
@@ -937,7 +943,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                 }
             } else
             {
-                if (inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+                if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
                 {
                     switch (dialogboxes[dialogboxes.size() - 1].CheckSelectedOption())
                     {
