@@ -48,6 +48,7 @@ public:
     sf::FloatRect getGlobalBoundsScaled();
     void setScale(float s);
     void draw(sf::RenderWindow& window);
+    void draw(sf::RenderWindow* window);
     void update(sf::RenderWindow& window);
     sf::Text getText();
 };
