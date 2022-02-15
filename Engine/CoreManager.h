@@ -16,6 +16,7 @@ public:
     Config* getConfig();
     StringRepository* getStrRepo();
     SaveReader* getSaveReader();
+    InputController* getInputController();
     sf::RenderWindow* getWindow();
 
 private:
@@ -33,6 +34,9 @@ private:
 
     // Pointer to Save (and item) manager
     SaveReader* saveReader;
+
+    // Pointer to Input controller
+    InputController* inputCtrl;
 
     // Pointer to current window
     sf::RenderWindow* window;

@@ -28,6 +28,9 @@ void CoreManager::init()
     strRepo = new StringRepository;
     saveReader = new SaveReader;
 
+    // Create InputController before window, because we take events from it
+    inputCtrl = new InputController;
+
     // Window must be created beforehand so V4Core can use it.
     window = new sf::RenderWindow;
 
@@ -57,6 +60,12 @@ StringRepository* CoreManager::getStrRepo()
 SaveReader* CoreManager::getSaveReader()
 {
     return saveReader;
+}
+
+// Returns a pointer to InputController.
+InputController* CoreManager::getInputController()
+{
+    return inputCtrl;
 }
 
 // Returns a pointer to the window game uses.
