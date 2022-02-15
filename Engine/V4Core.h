@@ -71,6 +71,7 @@ public:
     void changeRichPresence(string title, string bg_image, string sm_image);
     std::vector<Menu*> menus;
     bool close_window = false;
+    float getFPS();
     void init();
     void showTip();
     void loadingThread();
