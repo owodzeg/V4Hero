@@ -10,14 +10,14 @@ MainMenu::MainMenu()
 {
     //ctor
     is_active = true;
-}
-void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
-{
+
+    Config* config = CoreManager::getInstance().getConfig();
+    StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
+
     SPDLOG_DEBUG("Initializing main menu...");
 
-    f_font.loadFromFile(thisConfigs->fontPath);
-    config = thisConfigs;
-    int q = thisConfigs->GetInt("textureQuality");
+    f_font.loadFromFile(config->fontPath);
+    int q = config->GetInt("textureQuality");
     int r = 1;
 
     quality = q;
@@ -28,39 +28,39 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
     {
         case 0: ///low
         {
-            ratioX = thisConfigs->GetInt("resX") / float(640);
-            ratioY = thisConfigs->GetInt("resY") / float(360);
+            ratioX = config->GetInt("resX") / float(640);
+            ratioY = config->GetInt("resY") / float(360);
             break;
         }
 
         case 1: ///med
         {
-            ratioX = thisConfigs->GetInt("resX") / float(1280);
-            ratioY = thisConfigs->GetInt("resY") / float(720);
+            ratioX = config->GetInt("resX") / float(1280);
+            ratioY = config->GetInt("resY") / float(720);
             break;
         }
 
         case 2: ///high
         {
-            ratioX = thisConfigs->GetInt("resX") / float(1920);
-            ratioY = thisConfigs->GetInt("resY") / float(1080);
+            ratioX = config->GetInt("resX") / float(1920);
+            ratioY = config->GetInt("resY") / float(1080);
             break;
         }
 
         case 3: ///ultra
         {
-            ratioX = thisConfigs->GetInt("resX") / float(3840);
-            ratioY = thisConfigs->GetInt("resY") / float(2160);
+            ratioX = config->GetInt("resX") / float(3840);
+            ratioY = config->GetInt("resY") / float(2160);
             break;
         }
     }
 
-    float resRatioX = thisConfigs->GetInt("resX") / float(1280);
-    float resRatioY = thisConfigs->GetInt("resY") / float(720);
+    float resRatioX = config->GetInt("resX") / float(1280);
+    float resRatioY = config->GetInt("resY") / float(720);
 
-    rs_cover.setSize(sf::Vector2f(thisConfigs->GetInt("resX"), thisConfigs->GetInt("resY")));
+    rs_cover.setSize(sf::Vector2f(config->GetInt("resX"), config->GetInt("resY")));
     rs_cover.setFillColor(sf::Color(0, 0, 0, 255));
-    rs_cover2.setSize(sf::Vector2f(thisConfigs->GetInt("resX"), thisConfigs->GetInt("resY")));
+    rs_cover2.setSize(sf::Vector2f(config->GetInt("resX"), config->GetInt("resY")));
     rs_cover2.setFillColor(sf::Color(0, 0, 0, 0));
 
     PSprite& logow_bg = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowbg.png");
@@ -71,12 +71,12 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
     logow_shadow.setColor(sf::Color(64, 64, 64, ui_alpha));
     logow_text.setColor(sf::Color(255, 255, 255, ui_alpha));
 
-    t_pressanykey.createText(f_font, 26, sf::Color(255, 255, 255, t_alpha), Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("menu_pressanykey")), q, r);
+    t_pressanykey.createText(f_font, 26, sf::Color(255, 255, 255, t_alpha), Func::ConvertToUtf8String(config->strRepo.GetString("menu_pressanykey")), q, r);
 
     sb_smash.loadFromFile("resources/sfx/menu/smash.ogg");
     s_smash.setBuffer(sb_smash);
-    s_smash.setVolume(float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("sfxVolume")) / 100.f));
-    
+    s_smash.setVolume(float(config->GetInt("masterVolume")) * (float(config->GetInt("sfxVolume")) / 100.f));
+
     for (int g = 1; g <= 4; g++)
     {
         PSprite& grass = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_" + to_string(g) + ".png");
@@ -90,9 +90,9 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
     logo.setOrigin(logo.getLocalBounds().width / 2, logo.getLocalBounds().height / 2);
     logo_shadow.setOrigin(logo_shadow.getLocalBounds().width / 2, logo_shadow.getLocalBounds().height / 2);
 
-    for (int t=1; t<=4; t++)
+    for (int t = 1; t <= 4; t++)
     {
-        PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_"+to_string(t)+".png");
+        PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(t) + ".png");
         totem.setOrigin(0, totem.getLocalBounds().height);
     }
 
@@ -175,16 +175,16 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
     g_x[2] = 0;
     g_x[3] = 0;
 
-    float volume = (float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("bgmVolume")) / 100.f));
+    float volume = (float(config->GetInt("masterVolume")) * (float(config->GetInt("bgmVolume")) / 100.f));
 
     sb_title_loop.loadFromFile("resources/sfx/menu/menuloop.ogg");
     title_loop.setBuffer(sb_title_loop);
     title_loop.setLoop(true);
     title_loop.setVolume(volume);
 
-    Scene::Initialise(thisConfigs, parent);
-
-    optionsMenu.Initialise(thisConfig, v4Core, this);
+    //rework pending
+    //Scene::Initialise(thisConfigs, parent);
+    //optionsMenu.Initialise(thisConfig, v4Core, this);
 
     ifstream fr("resources/firstrun");
     if (fr.good())
@@ -197,32 +197,39 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
         firstrun = true;
     }
 
-    msgcloud.Create(45, sf::Vector2f(640, 480), sf::Color::White, true, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_1")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_2")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_3")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_4")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_5")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_6")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_7")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_8")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_9")), true);
+    msgcloud.Create(45, sf::Vector2f(640, 480), sf::Color::White, true, config->GetInt("textureQuality"), config->fontPath);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_1")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_2")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_3")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_4")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_5")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_6")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_7")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_8")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_9")), true);
 
-    temp_menu.push_back(thisConfig->strRepo.GetString("menu_newgame"));
-    temp_menu.push_back(thisConfig->strRepo.GetString("menu_continue"));
-    temp_menu.push_back(thisConfig->strRepo.GetString("menu_options"));
-    temp_menu.push_back(thisConfig->strRepo.GetString("menu_exit"));
+    temp_menu.push_back(strRepo->GetString("menu_newgame"));
+    temp_menu.push_back(strRepo->GetString("menu_continue"));
+    temp_menu.push_back(strRepo->GetString("menu_options"));
+    temp_menu.push_back(strRepo->GetString("menu_exit"));
 
-    introductionMenu.Initialise(thisConfig, v4Core, this);
+    //rework pending
+    //introductionMenu.Initialise(thisConfig, v4Core, this);
 
     SPDLOG_DEBUG("Main menu initialized.");
     //title_loop.play();
     startClock.restart();
     frClock.restart();
 }
+void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
+{
+    
+}
 
 void MainMenu::EventFired(sf::Event event)
 {
+    /*
+    rework pending
     if (patapolisMenu.is_active)
     {
         patapolisMenu.EventFired(event);
@@ -237,7 +244,7 @@ void MainMenu::EventFired(sf::Event event)
         if (event.type == sf::Event::KeyPressed)
         {
         }
-    } else if (is_active)
+    } else */ if (is_active)
     {
         if (firstrun)
         {
