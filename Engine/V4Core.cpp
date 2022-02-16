@@ -452,7 +452,9 @@ void V4Core::init()
 
             // Forward events to InputController for keyboard and controller usage
             inputCtrl->parseEvents(event);
-            //mainMenu.EventFired(event);
+
+            // Forward events to currently enabled state
+            StateManager::getInstance().parseCurrentStateEvents(event);
         }
 
         // Calculate framerate per second

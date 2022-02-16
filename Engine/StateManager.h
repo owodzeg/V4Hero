@@ -22,6 +22,7 @@ public:
     static StateManager& getInstance();
     std::variant<NewGameMenu*, MainMenu*, MissionController*> getCurrentState();
     void updateCurrentState();
+    void parseCurrentStateEvents(sf::Event& event);
     void setState(int state);
 
 private:

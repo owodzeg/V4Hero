@@ -68,6 +68,31 @@ void StateManager::updateCurrentState()
     }
 }
 
+void StateManager::parseCurrentStateEvents(sf::Event& event)
+{
+    switch (currentGameState)
+    {
+        case NEWGAMEMENU: {
+            break;
+        }
+
+        case MAINMENU: {
+            if (mainMenuPtr == nullptr)
+            {
+                mainMenuPtr = new MainMenu;
+                mainMenuPtr->Initialise(CoreManager::getInstance().getConfig(), CoreManager::getInstance().getCore());
+            }
+
+            mainMenuPtr->EventFired(event);
+            break;
+        }
+
+        case MISSIONCONTROLLER: {
+            break;
+        }
+    }
+}
+
 void StateManager::setState(int state)
 {
     currentGameState = state;
