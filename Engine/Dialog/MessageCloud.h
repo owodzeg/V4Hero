@@ -68,6 +68,7 @@ public:
     void Hide();
     void End();
     void Draw(sf::RenderWindow& window, float fps, InputController& inputCtrl);
+    void Draw();
 };
 
 #endif // MESSAGECLOUD_H

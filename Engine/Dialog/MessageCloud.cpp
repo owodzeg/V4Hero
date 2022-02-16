@@ -4,6 +4,7 @@
 #include <iostream>
 #include <math.h>
 #include <spdlog/spdlog.h>
+#include "../CoreManager.h"
 
 using namespace std;
 
@@ -127,20 +128,31 @@ void MessageCloud::SpeedUp()
     speedup = true;
 }
 
+// rework pending; get rid of arguments
+
 void MessageCloud::Draw(sf::RenderWindow& window, float fps, InputController& inputCtrl)
 {
+    //compatibility measure so i dont have to edit the entire code for now
+}
+
+void MessageCloud::Draw()
+{
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    InputController* inputCtrl = CoreManager::getInstance().getInputController();
+    float fps = CoreManager::getInstance().getCore()->getFPS();
+
     if (!firstrender)
         firstrender = true;
 
     if (speedable)
     {
-        if (inputCtrl.isKeyHeld(InputController::Keys::CIRCLE))
+        if (inputCtrl->isKeyHeld(InputController::Keys::CIRCLE))
             SpeedUp();
     }
 
     if (ready)
     {
-        if (inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+        if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
         {
             NextDialog();
         }
@@ -223,15 +235,15 @@ void MessageCloud::Draw(sf::RenderWindow& window, float fps, InputController& in
             }
         }
 
-        float rX = window.getSize().x / float(1280);
-        float rY = window.getSize().y / float(720);
+        float rX = window->getSize().x / float(1280);
+        float rY = window->getSize().y / float(720);
 
         triangle.setPoint(0, sf::Vector2f(startpos.x * rX, startpos.y * rY));
         triangle.setPoint(1, sf::Vector2f((x - (xsize / 25)) * rX, y * rY));
         triangle.setPoint(2, sf::Vector2f((x + (xsize / 25)) * rX, y * rY));
 
         triangle.setFillColor(cur_color);
-        window.draw(triangle);
+        window->draw(triangle);
 
         if (!done)
         {
