@@ -219,6 +219,8 @@ MainMenu::MainMenu()
     //title_loop.play();
     startClock.restart();
     frClock.restart();
+
+    initialized = true;
 }
 
 void MainMenu::EventFired(sf::Event event)

@@ -9,6 +9,10 @@ StateManager::StateManager()
 
 StateManager::~StateManager()
 {
+    for (auto& t : loadingThreads)
+    {
+        t.detach();
+    }
 }
 
 StateManager& StateManager::getInstance()
@@ -45,6 +49,17 @@ void StateManager::updateCurrentState()
 {
     switch (currentGameState)
     {
+        case ENTRY: {
+            if (mainMenuPtr != nullptr)
+            {
+                if (mainMenuPtr->initialized)
+                {
+                    setState(MAINMENU);
+                }
+            }
+            break;
+        }
+
         case NEWGAMEMENU: {
             //newGameMenuPtr->Update();
             break;
@@ -54,7 +69,6 @@ void StateManager::updateCurrentState()
             if (mainMenuPtr == nullptr)
             {
                 mainMenuPtr = new MainMenu;
-                mainMenuPtr->Initialise(CoreManager::getInstance().getConfig(), CoreManager::getInstance().getCore());
             }
 
             mainMenuPtr->Update();
@@ -66,6 +80,36 @@ void StateManager::updateCurrentState()
             break;
         }
     }
+}
+
+void StateManager::initState(int state)
+{
+    switch (state)
+    {
+        case NEWGAMEMENU: {
+            //newGameMenuPtr->Update();
+            break;
+        }
+
+        case MAINMENU: {
+            if (mainMenuPtr == nullptr)
+            {
+                mainMenuPtr = new MainMenu;
+            }
+
+            break;
+        }
+
+        case MISSIONCONTROLLER: {
+            //missionControllerPtr->Update();
+            break;
+        }
+    }
+}
+
+void StateManager::initStateMT(int state)
+{
+    loadingThreads.push_back(std::thread(&StateManager::initState, this, state));
 }
 
 void StateManager::parseCurrentStateEvents(sf::Event& event)

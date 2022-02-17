@@ -433,7 +433,10 @@ void V4Core::init()
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
     inputCtrl->LoadKeybinds();
 
-    StateManager::getInstance().setState(StateManager::MAINMENU);
+    StateManager::getInstance().setState(StateManager::ENTRY);
+
+    //StateManager& instance = StateManager::getInstance();
+    StateManager::getInstance().initStateMT(StateManager::MAINMENU);
 
     // Execute the main game loop
     while (window->isOpen())

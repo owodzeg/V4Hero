@@ -70,6 +70,7 @@ public:
     sf::Clock patapolisClock;
 
     bool mouseInBounds = false;
+    bool initialized = false;
 
     vector<int> totem_sel_pos = {205, 490, 780, 1080};
 

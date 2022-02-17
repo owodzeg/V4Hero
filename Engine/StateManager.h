@@ -3,6 +3,8 @@
 
 #include <spdlog/spdlog.h>
 #include <variant>
+#include <thread>
+#include <vector>
 
 #include "Menu/MainMenu.h"
 #include "Menu/NewGameMenu.h"
@@ -14,6 +16,7 @@ class StateManager
 public:
     enum GameState
     {
+        ENTRY = 0,
         NEWGAMEMENU = 1,
         MAINMENU = 2,
         MISSIONCONTROLLER = 3
@@ -23,6 +26,8 @@ public:
     std::variant<NewGameMenu*, MainMenu*, MissionController*> getCurrentState();
     void updateCurrentState();
     void parseCurrentStateEvents(sf::Event& event);
+    void initState(int state);
+    void initStateMT(int state);
     void setState(int state);
 
 private:
@@ -34,6 +39,8 @@ private:
     NewGameMenu* newGameMenuPtr;
     MainMenu* mainMenuPtr;
     MissionController* missionControllerPtr;
+
+    std::vector<std::thread> loadingThreads;
 };
 
 #endif
