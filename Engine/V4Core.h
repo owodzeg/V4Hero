@@ -62,7 +62,6 @@ public:
 
     //Config config;
     NewGameMenu newGameMenu;
-    MainMenu mainMenu;
     TipsUtil tipsUtil;
     SaveReader saveReader;
     MissionController currentController;

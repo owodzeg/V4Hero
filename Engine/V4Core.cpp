@@ -119,10 +119,6 @@ V4Core::V4Core()
     SPDLOG_DEBUG("Load icons from tipsUtil");
     //tipsUtil.LoadIcons();
 
-    SPDLOG_DEBUG("Initialize the main menu");
-    //mainMenu.Initialise(&config, this);
-
-    menus.push_back(&mainMenu);
     config->configDebugID = 10;
 }
 
@@ -435,7 +431,7 @@ void V4Core::init()
 
     // Get Input controller
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
-    //inputCtrl.LoadKeybinds(config);
+    inputCtrl->LoadKeybinds();
 
     StateManager::getInstance().setState(StateManager::MAINMENU);
 
