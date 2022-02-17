@@ -64,8 +64,8 @@ void NewGameMenu::EventFired(sf::Event event)
             {
                 spdlog::debug("Returning to patapolis menu...");
                 v4Core->currentController.StopMission();
-                v4Core->mainMenu.Show();
-                v4Core->mainMenu.patapolisMenu.Hide();
+                //rework pending v4Core->mainMenu.Show();
+                //rework pending v4Core->mainMenu.patapolisMenu.Hide();
             }
         }
     } else if (is_active)
