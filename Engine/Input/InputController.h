@@ -43,7 +43,7 @@ public:
 
     InputController();
 
-    void LoadKeybinds(Config& config);
+    void LoadKeybinds();
     void parseEvents(sf::Event& event);
     int translateKeybind(int keyID);
     bool isAnyKeyPressed();

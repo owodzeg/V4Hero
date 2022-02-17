@@ -1,6 +1,7 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
 
 #include "InputController.h"
+#include "../CoreManager.h"
 #include <iostream>
 #include <spdlog/spdlog.h>
 
@@ -17,8 +18,10 @@ compare with keyMap
 stonks
 **/
 
-void InputController::LoadKeybinds(Config& config)
+void InputController::LoadKeybinds()
 {
+    Config* config = CoreManager::getInstance().getConfig();
+
     SPDLOG_INFO("Loading keybinds for InputController");
 
     for (int k = 0; k < 12; k++)
@@ -28,9 +31,9 @@ void InputController::LoadKeybinds(Config& config)
             string confkey = "keybind" + keyLabels[k] + to_string(i);
             SPDLOG_TRACE("Checking confkey {}", confkey);
 
-            if (config.keyExists(confkey))
+            if (config->keyExists(confkey))
             {
-                keybinds[k].push_back(config.GetInt(confkey));
+                keybinds[k].push_back(config->GetInt(confkey));
                 SPDLOG_DEBUG("Loading keybind {} with key id {}", k, confkey);
             }
         }
