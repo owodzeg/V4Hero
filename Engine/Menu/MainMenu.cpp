@@ -71,7 +71,7 @@ MainMenu::MainMenu()
     logow_shadow.setColor(sf::Color(64, 64, 64, ui_alpha));
     logow_text.setColor(sf::Color(255, 255, 255, ui_alpha));
 
-    t_pressanykey.createText(f_font, 26, sf::Color(255, 255, 255, t_alpha), Func::ConvertToUtf8String(config->strRepo.GetString("menu_pressanykey")), q, r);
+    t_pressanykey.createText(f_font, 26, sf::Color(255, 255, 255, t_alpha), Func::ConvertToUtf8String(strRepo->GetString("menu_pressanykey")), q, r);
 
     sb_smash.loadFromFile("resources/sfx/menu/smash.ogg");
     s_smash.setBuffer(sb_smash);
@@ -183,7 +183,6 @@ MainMenu::MainMenu()
     title_loop.setVolume(volume);
 
     //rework pending
-    //Scene::Initialise(thisConfigs, parent);
     //optionsMenu.Initialise(thisConfig, v4Core, this);
 
     ifstream fr("resources/firstrun");
@@ -220,10 +219,6 @@ MainMenu::MainMenu()
     //title_loop.play();
     startClock.restart();
     frClock.restart();
-}
-void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
-{
-    
 }
 
 void MainMenu::EventFired(sf::Event event)
@@ -275,6 +270,8 @@ void MainMenu::EventFired(sf::Event event)
 }
 void MainMenu::SelectMenuOption()
 {
+    StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
+
     switch (totem_sel)
     {
         case 0: // load the start game cutscenes and menu
@@ -318,10 +315,10 @@ void MainMenu::SelectMenuOption()
             {
                 SPDLOG_INFO("There is an existing save data. Ask if overwrite");
 
-                std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetString("nav_yes")), Func::ConvertToUtf8String(config->strRepo.GetString("nav_no"))};
+                std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_yes")), Func::ConvertToUtf8String(strRepo->GetString("nav_no"))};
 
                 PataDialogBox db;
-                db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetString("menu_saveexists")), a, config->GetInt("textureQuality"));
+                db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("menu_saveexists")), a, config->GetInt("textureQuality"));
                 db.id = 0;
                 dialogboxes.push_back(db);
             }
@@ -344,10 +341,10 @@ void MainMenu::SelectMenuOption()
                 {
                     SPDLOG_WARN("Outdated save data!");
 
-                    std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetString("nav_understood"))};
+                    std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_understood"))};
 
                     PataDialogBox db;
-                    db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetString("menu_nosupportdata")), a, config->GetInt("textureQuality"));
+                    db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("menu_nosupportdata")), a, config->GetInt("textureQuality"));
                     db.id = 2;
                     dialogboxes.push_back(db);
                 } else
@@ -359,10 +356,10 @@ void MainMenu::SelectMenuOption()
             {
                 SPDLOG_WARN("There is no savedata.");
 
-                std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetString("nav_understood"))};
+                std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_understood"))};
 
                 PataDialogBox db;
-                db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetString("menu_nodata")), a, config->GetInt("textureQuality"));
+                db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("menu_nodata")), a, config->GetInt("textureQuality"));
                 db.id = 1;
                 dialogboxes.push_back(db);
             }
@@ -434,7 +431,7 @@ void MainMenu::Update()
                 }
             }
 
-            //rework pending msgcloud.Draw(window, fps, inputCtrl);
+            msgcloud.Draw();
 
         } else if (premenu)
         {

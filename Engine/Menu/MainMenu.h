@@ -83,7 +83,6 @@ public:
     OptionsMenu optionsMenu;
     IntroductionMenu introductionMenu;
 
-    void Initialise(Config* thisConfig, V4Core* parent);
     void Update();
     void EventFired(sf::Event event);
     void OnExit();
