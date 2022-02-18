@@ -5,6 +5,7 @@
 #include "ButtonList.h"
 #include "iostream"
 #include "../CoreManager.h"
+#include "../StateManager.h"
 
 MainMenu::MainMenu()
 {
@@ -370,7 +371,7 @@ void MainMenu::SelectMenuOption()
         }
         case 2: {
             // load the options menu
-            screenFade.Create(thisConfig, 1, 512);
+            screenFade.Create(1, 512);
             goto_id = 2;
             break;
         }
@@ -807,7 +808,7 @@ void MainMenu::Update()
 
             window->setView(window->getDefaultView());
 
-            //rework pending screenFade.draw(window, fps);
+            screenFade.draw();
 
             if (screenFade.checkFinished())
             {
@@ -883,11 +884,14 @@ void MainMenu::Update()
                             title_loop.stop();
                             Hide();
                             //v4Core->changeRichPresence("In Options menu", "logo", "");
-                            optionsMenu.state = 0;
-                            optionsMenu.sel = 0;
-                            optionsMenu.Show();
 
-                            optionsMenu.screenFade.Create(thisConfig, 0, 512);
+                            StateManager::getInstance().setState(StateManager::OPTIONSMENU);
+
+                            //optionsMenu.state = 0;
+                            //optionsMenu.sel = 0;
+                            //optionsMenu.Show();
+
+                            //optionsMenu.screenFade.Create(thisConfig, 0, 512);
 
                             break;
                         }
