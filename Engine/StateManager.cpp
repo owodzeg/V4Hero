@@ -21,30 +21,6 @@ StateManager& StateManager::getInstance()
     return instance;
 }
 
-std::variant<NewGameMenu*, MainMenu*, MissionController*> StateManager::getCurrentState()
-{
-    switch (currentGameState)
-    {
-        case 1: {
-            return newGameMenuPtr;
-            break;
-        }
-
-        case 2: {
-            if (mainMenuPtr == nullptr)
-                mainMenuPtr = new MainMenu;
-
-            return mainMenuPtr;
-            break;
-        }
-
-        case 3: {
-            return missionControllerPtr;
-            break;
-        }
-    }
-} 
-
 void StateManager::updateCurrentState()
 {
     switch (currentGameState)
@@ -75,6 +51,16 @@ void StateManager::updateCurrentState()
             break;
         }
 
+        case OPTIONSMENU: {
+            if (optionsMenuPtr == nullptr)
+            {
+                optionsMenuPtr = new OptionsMenu;
+            }
+
+            //optionsMenuPtr->Update();
+            break;
+        }
+
         case MISSIONCONTROLLER: {
             //missionControllerPtr->Update();
             break;
@@ -87,21 +73,28 @@ void StateManager::initState(int state)
     switch (state)
     {
         case NEWGAMEMENU: {
-            //newGameMenuPtr->Update();
+
             break;
         }
 
         case MAINMENU: {
+
+            // For initializing MainMenu, we want to initialize OptionsMenu as well, so the transition is seamless
             if (mainMenuPtr == nullptr)
             {
                 mainMenuPtr = new MainMenu;
+            }
+
+            if (optionsMenuPtr == nullptr)
+            {
+                optionsMenuPtr = new OptionsMenu;
             }
 
             break;
         }
 
         case MISSIONCONTROLLER: {
-            //missionControllerPtr->Update();
+
             break;
         }
     }
@@ -139,5 +132,6 @@ void StateManager::parseCurrentStateEvents(sf::Event& event)
 
 void StateManager::setState(int state)
 {
+    SPDLOG_DEBUG("Changing state to {}", state);
     currentGameState = state;
 }

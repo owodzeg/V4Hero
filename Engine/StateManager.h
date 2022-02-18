@@ -8,6 +8,7 @@
 
 #include "Menu/MainMenu.h"
 #include "Menu/NewGameMenu.h"
+#include "Menu/OptionsMenu.h"
 #include "Mission/MissionController.h"
 
 // Class for holding the pointers to commonly used important game contents
@@ -19,11 +20,11 @@ public:
         ENTRY = 0,
         NEWGAMEMENU = 1,
         MAINMENU = 2,
-        MISSIONCONTROLLER = 3
+        OPTIONSMENU = 3,
+        MISSIONCONTROLLER = 10
     };
 
     static StateManager& getInstance();
-    std::variant<NewGameMenu*, MainMenu*, MissionController*> getCurrentState();
     void updateCurrentState();
     void parseCurrentStateEvents(sf::Event& event);
     void initState(int state);
@@ -38,6 +39,7 @@ private:
 
     NewGameMenu* newGameMenuPtr;
     MainMenu* mainMenuPtr;
+    OptionsMenu* optionsMenuPtr;
     MissionController* missionControllerPtr;
 
     std::vector<std::thread> loadingThreads;
