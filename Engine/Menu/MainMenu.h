@@ -78,7 +78,6 @@ public:
 
     MessageCloud msgcloud;
 
-    PatapolisMenu patapolisMenu;
     NewGameNameEntryMenu nameEntryMenu;
     IntroductionMenu introductionMenu;
 

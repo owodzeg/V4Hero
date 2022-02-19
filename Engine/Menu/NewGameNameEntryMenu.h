@@ -29,7 +29,7 @@ public:
     SaveFileCreatedMenu savefilecreated;
 
     //OptionsMenu optionsMenu;
-    PatapolisMenu patapolisMenu;
+    //PatapolisMenu patapolisMenu;
     void Initialise(Config* thisConfig, V4Core* parent, Menu* parentMenu);
     string GetEnteredString();
     void Update(sf::RenderWindow& window, float fps);
