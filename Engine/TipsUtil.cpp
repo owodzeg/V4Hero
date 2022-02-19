@@ -7,70 +7,60 @@
 
 TipsUtil::TipsUtil()
 {
-    std::ifstream check("resources/graphics/ui/tips/tip_backgrounds.txt");
-    bool exists = check.good();
-    check.close();
-}
+    // Load background filenames
+    std::ifstream bgFile("resources/graphics/ui/tips/tip_backgrounds.txt");
 
-void TipsUtil::LoadBackgrounds()
-{
-    std::ifstream conf("resources/graphics/ui/tips/tip_backgrounds.txt");
-    if (conf.good())
+    if (bgFile.good())
     {
-        std::string line;
-        while (getline(conf, line))
-        {
-            ///ignore comments and empty lines
-            if (line.find("#") == std::string::npos && line.find("//") == std::string::npos && line.length() > 0)
-            {
-                ///Split the Key and Value
-                if (line.back() == '\r')
-                {
-                    line.pop_back();
-                }
-                backgroundFileNames.push_back(line);
-            }
-        }
+        // thanks to https://stackoverflow.com/a/8365247
+        std::copy(std::istream_iterator<std::string>(bgFile),
+                  std::istream_iterator<std::string>(),
+                  std::back_inserter(backgroundFileNames));
+
+        SPDLOG_INFO("Tip backgrounds loaded: {} backgrounds detected", backgroundFileNames.size());
     } else
     {
         SPDLOG_ERROR("Could not load tips background file!");
     }
-    conf.close();
 
-    for (auto it = backgroundFileNames.begin(); it != backgroundFileNames.end(); ++it)
-    {
-        ResourceManager::getInstance().loadSprite("resources/graphics/ui/tips/" + *it);
-    }
-}
+    bgFile.close();
 
-void TipsUtil::LoadIcons()
-{
-    std::ifstream conf("resources/graphics/ui/tips/tip_icons.txt");
-    if (conf.good())
+    // Load icon filenames
+    std::ifstream iconFile("resources/graphics/ui/tips/tip_icons.txt");
+    
+    if (iconFile.good())
     {
-        std::string line;
-        while (getline(conf, line))
-        {
-            ///ignore comments and empty lines
-            if (line.find("#") == std::string::npos && line.find("//") == std::string::npos && line.length() > 0)
-            {
-                if (line.back() == '\r')
-                {
-                    line.pop_back();
-                }
-                ///Split the Key and Value
-                iconFileNames.push_back(line);
-            }
-        }
+        std::copy(std::istream_iterator<std::string>(iconFile),
+                  std::istream_iterator<std::string>(),
+                  std::back_inserter(iconFileNames));
+
+        SPDLOG_INFO("Tip icons loaded: {} icons detected", iconFileNames.size());
     } else
     {
         SPDLOG_ERROR("Could not load tips icon file!");
     }
 
-    conf.close();
+    iconFile.close();
+}
 
-    for (auto it = iconFileNames.begin(); it != iconFileNames.end(); ++it)
+void TipsUtil::LoadBackgrounds()
+{
+    // dont load all icons, too much weight
+    /*
+    for (auto it = backgroundFileNames.begin(); it != backgroundFileNames.end(); ++it)
     {
         ResourceManager::getInstance().loadSprite("resources/graphics/ui/tips/" + *it);
     }
+    */
+}
+
+void TipsUtil::LoadIcons()
+{
+    // dont load all icons, too much weight
+    /* 
+    for (auto it = iconFileNames.begin(); it != iconFileNames.end(); ++it)
+    {
+        ResourceManager::getInstance().loadSprite("resources/graphics/ui/tips/" + *it);
+    } 
+    */
 }
