@@ -602,8 +602,8 @@ void OptionsMenu::Update()
 
                     restart_prompt.x = 640;
                     restart_prompt.y = 360;
-                    //rework pending TO-DO: dialogboxes with no arguments
-                    //restart_prompt.Draw(window, fps, inputCtrl);
+                    
+                    restart_prompt.Draw();
                 } else
                 {
                     if (goto_id == -1)

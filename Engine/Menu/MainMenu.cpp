@@ -275,6 +275,8 @@ void MainMenu::SelectMenuOption()
 {
     StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
     Config* config = CoreManager::getInstance().getConfig();
+    SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
+    V4Core* core = CoreManager::getInstance().getCore();
 
     switch (totem_sel)
     {
@@ -338,10 +340,10 @@ void MainMenu::SelectMenuOption()
             if (exists)
             {
                 /** Load save from saveReader **/
-                v4Core->saveReader.Flush();
-                v4Core->saveReader.LoadSave(*config);
+                saveReader->Flush();
+                saveReader->LoadSave();
 
-                if (v4Core->saveReader.save_ver != "2.0")
+                if (saveReader->save_ver != "2.0")
                 {
                     SPDLOG_WARN("Outdated save data!");
 
@@ -378,7 +380,7 @@ void MainMenu::SelectMenuOption()
         }
         case 3: {
             // quit the game probably
-            v4Core->close_window = true;
+            core->close_window = true;
             break;
         }
     }
@@ -819,16 +821,21 @@ void MainMenu::Update()
                     {
                         case 0: ///New game
                         {
-                            v4Core->saveReader.Flush();
-                            v4Core->saveReader.CreateBlankSave();
+                            SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
+
+                            saveReader->Flush();
+                            saveReader->CreateBlankSave();
 
                             title_loop.stop();
 
-                            introductionMenu.Show();
+                            //TO-DO: replace with StateManager
+                            /* introductionMenu.Show();
                             introductionMenu.is_active = true;
                             introductionMenu.timeout.restart();
 
-                            patapolisMenu.save_loaded = false;
+                            patapolisMenu.save_loaded = false;*/
+
+                            StateManager::getInstance().setState(StateManager::INTRODUCTION);
 
                             break;
                         }
@@ -836,6 +843,11 @@ void MainMenu::Update()
                         case 1: ///Continue
                         {
                             title_loop.stop();
+
+                            StateManager::getInstance().setState(StateManager::PATAPOLIS);
+
+                            //TO-DO: replace by StateManager
+                            /*
                             Hide();
                             patapolisClock.restart();
 
@@ -876,7 +888,7 @@ void MainMenu::Update()
 
                                 v4Core->loadingWaitForKeyPress();
                                 v4Core->continue_loading = false;
-                            }
+                            }*/
 
                             break;
                         }
@@ -909,7 +921,7 @@ void MainMenu::Update()
             {
                 dialogboxes[i].x = 640;
                 dialogboxes[i].y = 360;
-                //rework pending dialogboxes[i].Draw(window, fps, inputCtrl);
+                dialogboxes[i].Draw();
 
                 if (dialogboxes[i].closed)
                     db_e.push_back(i);
