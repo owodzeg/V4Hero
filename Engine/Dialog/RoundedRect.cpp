@@ -1,4 +1,5 @@
 #include "RoundedRect.h"
+#include "../CoreManager.h"
 
 RoundedRect::RoundedRect()
 {
@@ -32,9 +33,17 @@ void RoundedRect::setOrigin(sf::Vector2f origin)
     ory = origin.y;
 }
 
+//TO-DO: left for compatibility. have rounded rect require no parameters
 void RoundedRect::Draw(sf::RenderWindow& window)
 {
-    float resRatio = window.getSize().x / float(1280);
+
+}
+
+void RoundedRect::Draw()
+{
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+
+    float resRatio = window->getSize().x / float(1280);
 
     edges[0].setPosition((x - orx) * resRatio, (y - ory) * resRatio);
     edges[1].setPosition((x - orx + width) * resRatio, (y - ory) * resRatio);
@@ -50,9 +59,9 @@ void RoundedRect::Draw(sf::RenderWindow& window)
 
     for (int i = 0; i < 4; i++)
     {
-        window.draw(edges[i]);
-        window.draw(connections[i]);
+        window->draw(edges[i]);
+        window->draw(connections[i]);
     }
 
-    window.draw(contents);
+    window->draw(contents);
 }

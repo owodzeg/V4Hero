@@ -41,6 +41,7 @@ public:
     void MoveDown();
     void Close();
     void Draw(sf::RenderWindow& window, float fps, InputController& inputCtrl);
+    void Draw();
 };
 
 #endif // DIALOGBOX_H

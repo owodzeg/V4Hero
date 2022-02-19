@@ -3,6 +3,7 @@
 #include "DialogBox.h"
 #include <iostream>
 #include <spdlog/spdlog.h>
+#include "../CoreManager.h"
 
 using namespace std;
 
@@ -94,15 +95,24 @@ void PataDialogBox::Close()
 
 void PataDialogBox::Draw(sf::RenderWindow& window, float fps, InputController& inputCtrl)
 {
+
+}
+
+void PataDialogBox::Draw()
+{
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    InputController* inputCtrl = CoreManager::getInstance().getInputController();
+    float fps = CoreManager::getInstance().getCore()->getFPS();
+
     if (!closed)
     {
-        if (inputCtrl.isKeyPressed(InputController::Keys::UP))
+        if (inputCtrl->isKeyPressed(InputController::Keys::UP))
             MoveUp();
 
-        if (inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+        if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
             MoveDown();
 
-        float resRatio = window.getSize().x / float(1280);
+        float resRatio = window->getSize().x / float(1280);
 
         if (!rendered)
         {
@@ -119,17 +129,17 @@ void PataDialogBox::Draw(sf::RenderWindow& window, float fps, InputController& i
 
         Readjust();
 
-        rr_shadow.Create(width + 2, height + 2, 20, window.getSize().x / float(1280), sf::Color(0, 0, 0, 96));
+        rr_shadow.Create(width + 2, height + 2, 20, window->getSize().x / float(1280), sf::Color(0, 0, 0, 96));
         rr_shadow.x = x - 1;
         rr_shadow.y = y - 1;
         rr_shadow.setOrigin(sf::Vector2f((width + 40) / 2, (height + 40) / 2));
-        rr_shadow.Draw(window);
+        rr_shadow.Draw();
 
-        rr_main.Create(width, height, 20, window.getSize().x / float(1280));
+        rr_main.Create(width, height, 20, window->getSize().x / float(1280));
         rr_main.x = x;
         rr_main.y = y;
         rr_main.setOrigin(sf::Vector2f((width + 40) / 2, (height + 40) / 2));
-        rr_main.Draw(window);
+        rr_main.Draw();
 
         t_dialogType.setPosition(x - rr_main.orx + 10, y - rr_main.ory);
         t_dialogType.draw(window);
@@ -144,7 +154,7 @@ void PataDialogBox::Draw(sf::RenderWindow& window, float fps, InputController& i
         highlight.setFillColor(sf::Color(0, 200, 0, 255));
         highlight.setOrigin(highlight.getLocalBounds().width / 2, 0);
         highlight.setPosition((x) *resRatio, (y - rr_main.ory + 46 + t_dialogType.getLocalBounds().height + t_dialogText.getLocalBounds().height + (option * 30)) * resRatio);
-        window.draw(highlight);
+        window->draw(highlight);
 
         arrow_x -= 3 / fps;
 
