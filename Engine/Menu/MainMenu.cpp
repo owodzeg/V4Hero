@@ -274,6 +274,7 @@ void MainMenu::EventFired(sf::Event event)
 void MainMenu::SelectMenuOption()
 {
     StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
+    Config* config = CoreManager::getInstance().getConfig();
 
     switch (totem_sel)
     {
@@ -301,7 +302,7 @@ void MainMenu::SelectMenuOption()
             {
                 SPDLOG_INFO("There is no save. Start new game!");
 
-                screenFade.Create(thisConfig, 1, 512);
+                screenFade.Create(1, 512);
                 goto_id = 0;
 
                 /*v4core->saveReader.Flush();
@@ -352,7 +353,7 @@ void MainMenu::SelectMenuOption()
                     dialogboxes.push_back(db);
                 } else
                 {
-                    screenFade.Create(thisConfig, 1, 512);
+                    screenFade.Create(1, 512);
                     goto_id = 1;
                 }
             } else
@@ -848,7 +849,8 @@ void MainMenu::Update()
                                 patapolisMenu.Show();
                                 patapolisMenu.is_active = true;
                                 patapolisMenu.save_loaded = true;
-                                patapolisMenu.Initialise(config, v4Core, this);
+                                //TO-DO: handle it by statemanager
+                                //patapolisMenu.Initialise(config, v4Core, this);
 
                                 v4Core->continue_loading = false;
                             } else
@@ -860,7 +862,7 @@ void MainMenu::Update()
 
                                 patapolisMenu.Show();
                                 patapolisMenu.is_active = true;
-                                patapolisMenu.screenFade.Create(thisConfig, 0, 512);
+                                patapolisMenu.screenFade.Create(0, 512);
 
                                 patapolisMenu.location = 3;
                                 patapolisMenu.ctrlTips.create(54, patapolisMenu.f_font, 20, sf::String("L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
@@ -891,7 +893,7 @@ void MainMenu::Update()
                             //optionsMenu.sel = 0;
                             //optionsMenu.Show();
 
-                            //optionsMenu.screenFade.Create(thisConfig, 0, 512);
+                            //optionsMenu.screenFade.Create(0, 512);
 
                             break;
                         }
@@ -963,7 +965,7 @@ void MainMenu::Update()
                                 SPDLOG_INFO("Starting new game!");
                                 dialogboxes[dialogboxes.size() - 1].Close();
 
-                                screenFade.Create(thisConfig, 1, 512);
+                                screenFade.Create(1, 512);
                                 goto_id = 0;
 
                                 break;

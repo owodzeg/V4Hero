@@ -78,10 +78,8 @@ public:
 
     MessageCloud msgcloud;
 
-    Config* config;
     PatapolisMenu patapolisMenu;
     NewGameNameEntryMenu nameEntryMenu;
-    OptionsMenu optionsMenu;
     IntroductionMenu introductionMenu;
 
     void Update();
