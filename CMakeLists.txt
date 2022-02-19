@@ -55,7 +55,7 @@ set(ENGINE_FILES
         Engine/Menu/SaveFileCreated.cpp
         Engine/Menu/OptionsMenu.cpp
         Engine/Menu/MaterOuter.cpp
-        Engine/Menu/MaterOuter.h
+        Engine/Menu/LoadingTip.cpp
         Engine/Graphics/PSpritesheet.cpp
         Engine/Graphics/Scene.cpp
         Engine/Graphics/PSprite.cpp
