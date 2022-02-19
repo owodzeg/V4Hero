@@ -17,6 +17,7 @@ public:
     StringRepository* getStrRepo();
     SaveReader* getSaveReader();
     InputController* getInputController();
+    TipsUtil* getTipsUtil();
     sf::RenderWindow* getWindow();
 
 private:
@@ -37,6 +38,9 @@ private:
 
     // Pointer to Input controller
     InputController* inputCtrl;
+
+    // Pointer to Tips utility
+    TipsUtil* tipsUtil;
 
     // Pointer to current window
     sf::RenderWindow* window;

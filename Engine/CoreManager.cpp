@@ -34,6 +34,9 @@ void CoreManager::init()
     // Window must be created beforehand so V4Core can use it.
     window = new sf::RenderWindow;
 
+    // Load tips utility so we can have the background and icon filenames ready
+    tipsUtil = new TipsUtil;
+
     // After we created prerequisities for V4Core, we can safely create it.
     core = new V4Core;
 }
@@ -66,6 +69,12 @@ SaveReader* CoreManager::getSaveReader()
 InputController* CoreManager::getInputController()
 {
     return inputCtrl;
+}
+
+// Returns a pointer to Tips utility.
+TipsUtil* CoreManager::getTipsUtil()
+{
+    return tipsUtil;
 }
 
 // Returns a pointer to the window game uses.
