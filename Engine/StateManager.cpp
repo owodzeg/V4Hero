@@ -61,6 +61,42 @@ void StateManager::updateCurrentState()
             break;
         }
 
+        case TIPS: {
+
+            if (loadingTipPtr == nullptr)
+            {
+                loadingTipPtr = new LoadingTip;
+            }
+
+            switch (afterTipState)
+            {
+                case PATAPOLIS: {
+
+                    if (patapolisPtr != nullptr)
+                    {
+                        if (patapolisPtr->initialized)
+                        {
+                            if (loadingTipPtr != nullptr)
+                            {
+                                loadingTipPtr->pressAnyKey = true;
+
+                                if (loadingTipPtr->tipFinished)
+                                {
+                                    setState(afterTipState);
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                }
+            }
+
+            loadingTipPtr->Draw();
+
+            break;
+        }
+
         case MISSIONCONTROLLER: {
             //missionControllerPtr->Update();
             break;
@@ -99,6 +135,26 @@ void StateManager::initState(int state)
             {
                 optionsMenuPtr = new OptionsMenu;
             }
+            
+            break;
+        }
+
+        case TIPS: {
+
+            if (loadingTipPtr == nullptr)
+            {
+                loadingTipPtr = new LoadingTip;
+            }
+
+            break;
+        }
+
+        case PATAPOLIS: {
+        
+            if (patapolisPtr == nullptr)
+            {
+                patapolisPtr = new PatapolisMenu;
+            }
         }
 
         case MISSIONCONTROLLER: {
@@ -125,7 +181,6 @@ void StateManager::parseCurrentStateEvents(sf::Event& event)
             if (mainMenuPtr == nullptr)
             {
                 mainMenuPtr = new MainMenu;
-                mainMenuPtr->Initialise(CoreManager::getInstance().getConfig(), CoreManager::getInstance().getCore());
             }
 
             mainMenuPtr->EventFired(event);
@@ -158,6 +213,23 @@ void StateManager::setState(int state)
             optionsMenuPtr->sel = 0;
             optionsMenuPtr->screenFade.Create(0, 512);
         }
+    }
+
+    if (currentGameState == MAINMENU && state == PATAPOLIS) //go from main to patapolis (forward through tips)
+    {
+        if (loadingTipPtr == nullptr)
+        {
+            loadingTipPtr = new LoadingTip;
+        } else
+        {
+            delete loadingTipPtr;
+            loadingTipPtr = new LoadingTip;
+        }
+
+        state = TIPS;
+        afterTipState = PATAPOLIS;
+
+        initStateMT(afterTipState);
     }
 
     // Change the state

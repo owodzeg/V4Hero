@@ -9,6 +9,8 @@
 #include "Menu/MainMenu.h"
 #include "Menu/NewGameMenu.h"
 #include "Menu/OptionsMenu.h"
+#include "Menu/LoadingTip.h"
+#include "Menu/Patapolis.h"
 #include "Mission/MissionController.h"
 
 // Class for holding the pointers to commonly used important game contents
@@ -39,11 +41,14 @@ private:
     ~StateManager();
 
     int currentGameState = 0;
+    int afterTipState = 0;
 
     NewGameMenu* newGameMenuPtr;
     MainMenu* mainMenuPtr;
     OptionsMenu* optionsMenuPtr;
     MissionController* missionControllerPtr;
+    LoadingTip* loadingTipPtr;
+    PatapolisMenu* patapolisPtr;
 
     std::vector<std::thread> loadingThreads;
 };
