@@ -28,7 +28,7 @@ public:
     NameEntryButtonList buttonList;
     SaveFileCreatedMenu savefilecreated;
 
-    OptionsMenu optionsMenu;
+    //OptionsMenu optionsMenu;
     PatapolisMenu patapolisMenu;
     void Initialise(Config* thisConfig, V4Core* parent, Menu* parentMenu);
     string GetEnteredString();

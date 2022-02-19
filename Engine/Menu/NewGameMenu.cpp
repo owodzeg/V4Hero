@@ -47,10 +47,11 @@ NewGameMenu::NewGameMenu()
 void NewGameMenu::Initialise(Config* thisConfigs, V4Core* parent)
 {
     Scene::Initialise(thisConfigs, parent);
-    optionsMenu.Initialise(thisConfigs, parent, this);
+    //TO-DO: rethink if its necessary, probably to be replaced by StateManager
+    //optionsMenu.Initialise(thisConfigs, parent, this);
     newGameNameEntryMenu.Initialise(thisConfigs, parent, this);
-    v4Core->menus.push_back(&optionsMenu);
-    buttonList.Initialise(&f_font, *thisConfig, &(v4Core->currentController), this, &optionsMenu, &newGameNameEntryMenu);
+    //v4Core->menus.push_back(&optionsMenu);
+    //buttonList.Initialise(&f_font, *thisConfig, &(v4Core->currentController), this, &optionsMenu, &newGameNameEntryMenu);
 }
 void NewGameMenu::EventFired(sf::Event event)
 {
@@ -85,7 +86,8 @@ void NewGameMenu::EventFired(sf::Event event)
             // We use mouse released so a user can change their mind by keeping the mouse held and moving away.
             buttonList.MouseReleasedEvent(event);
         }
-    } else if (optionsMenu.is_active)
+    } /* TO-DO: fix this lol idk what to do here yet
+      else if (optionsMenu.is_active)
     {
         optionsMenu.EventFired(event);
     } else if (newGameNameEntryMenu.is_active)
@@ -94,7 +96,7 @@ void NewGameMenu::EventFired(sf::Event event)
     } else if (newGameNameEntryMenu.savefilecreated.is_active)
     {
         newGameNameEntryMenu.savefilecreated.EventFired(event);
-    }
+    }*/
 }
 void NewGameMenu::Update(sf::RenderWindow& window, float fps, InputController& inputCtrl, InputController& inputCtrlHeld)
 {
@@ -153,16 +155,17 @@ void NewGameMenu::Update(sf::RenderWindow& window, float fps, InputController& i
         if (v4Core->currentController.isInitialized && v4Core->currentController.isFinishedLoading)
         {
             v4Core->currentController.Update(window, fps, inputCtrl);
-        } else if (optionsMenu.is_active)
+        } /* else if (optionsMenu.is_active)
         {
-            optionsMenu.Update(window, fps, inputCtrl);
+            //TO-DO: to be replaced by StateManager
+            //optionsMenu.Update(window, fps, inputCtrl);
         } else if (newGameNameEntryMenu.is_active)
         {
             newGameNameEntryMenu.Update(window, fps);
         } else if (newGameNameEntryMenu.savefilecreated.is_active)
         {
             newGameNameEntryMenu.savefilecreated.Update(window, fps);
-        }
+        }*/
     }
 }
 void NewGameMenu::UpdateButtons()
