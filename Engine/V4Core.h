@@ -62,7 +62,6 @@ public:
 
     //Config config;
     NewGameMenu newGameMenu;
-    TipsUtil tipsUtil;
     SaveReader saveReader;
     MissionController currentController;
     V4Core();

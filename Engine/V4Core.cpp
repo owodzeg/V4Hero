@@ -113,12 +113,6 @@ V4Core::V4Core()
     /** Load Resource Manager **/
     ResourceManager::getInstance().getQuality();
 
-    /** Initialize main menu **/
-    SPDLOG_DEBUG("Load backgrounds from tipsUtil");
-    //tipsUtil.LoadBackgrounds();
-    SPDLOG_DEBUG("Load icons from tipsUtil");
-    //tipsUtil.LoadIcons();
-
     config->configDebugID = 10;
 }
 
@@ -174,6 +168,8 @@ void V4Core::loadingWaitForKeyPress()
 }
 void V4Core::loadingThread()
 {
+    //TO-DO: transfer it to LoadingTip.cpp
+    /*
     changeRichPresence("Reading tips", "logo", "");
 
     //sf::Context context;
@@ -320,6 +316,7 @@ void V4Core::loadingThread()
     }
 
     window.setActive(false);
+    */
 }
 
 void V4Core::showTip()
