@@ -12,6 +12,7 @@
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
 #include <string>
+#include "CoreManager.h"
 
 using namespace std;
 using json = nlohmann::json; // Convenience recommended by the library
@@ -42,10 +43,14 @@ SaveReader::SaveReader()
     itemReg.saveReader = this;
 }
 
+//TO-DO: remove the argument version
 void SaveReader::LoadSave(Config& tconfig)
 {
-    thisConfig = &tconfig;
+    //lol config is not even needed here
+}
 
+void SaveReader::LoadSave()
+{
     ifstream conf("resources/data/sv1.p4sv", std::ios::in);
     if (conf.good())
     {
@@ -55,7 +60,7 @@ void SaveReader::LoadSave(Config& tconfig)
         save_ver = save_data["details"]["version"];
         kami_name = sf::String(to_string(save_data["details"]["name"]));
         story_point = save_data["details"]["story_point"];
-        locations_unlocked.clear(); // Clear the defaul from SaveReader.h
+        locations_unlocked.clear(); // Clear the default from SaveReader.h
         for (int i = 0; i < save_data["details"]["locations_unlocked"].size(); i++)
         {
             locations_unlocked.push_back(save_data["details"]["locations_unlocked"][i]);
