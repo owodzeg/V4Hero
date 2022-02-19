@@ -21,6 +21,9 @@ public:
         NEWGAMEMENU = 1,
         MAINMENU = 2,
         OPTIONSMENU = 3,
+        INTRODUCTION = 4,
+        TIPS = 5,
+        PATAPOLIS = 6,
         MISSIONCONTROLLER = 10
     };
 
