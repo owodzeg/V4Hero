@@ -220,6 +220,8 @@ class PatapolisMenu : public Menu
 		sf::SoundBuffer sb_city_loop;
 		sf::Sound city_loop;
 
+		bool initialized = false;
+
 		void addL6(std::string variant, float x, float y);
         void addL2(std::string variant, float x, float y);
         void addSparkle(float x, float y);
@@ -229,7 +231,7 @@ class PatapolisMenu : public Menu
         void addSmokeParticle(float x, float y);
         void addCloud(std::string type, float x, float y, float xsize, float ysize);
         void Initialise(Config* thisConfig, V4Core* parent, Menu* curParentMenu);
-        void Update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
+        void Update();
 		void EventFired(sf::Event event);
 		void SetTitle(int menuPosition);
 		void OnExit();
