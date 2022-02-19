@@ -97,6 +97,18 @@ void StateManager::updateCurrentState()
             break;
         }
 
+        case PATAPOLIS: {
+        
+            if (patapolisPtr == nullptr)
+            {
+                patapolisPtr = new PatapolisMenu;
+            }
+
+            patapolisPtr->Update();
+
+            break;
+        }
+
         case MISSIONCONTROLLER: {
             //missionControllerPtr->Update();
             break;
