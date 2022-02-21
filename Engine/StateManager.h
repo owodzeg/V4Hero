@@ -11,6 +11,7 @@
 #include "Menu/OptionsMenu.h"
 #include "Menu/LoadingTip.h"
 #include "Menu/Patapolis.h"
+#include "Menu/Altar.h"
 #include "Mission/MissionController.h"
 
 // Class for holding the pointers to commonly used important game contents
@@ -26,6 +27,7 @@ public:
         INTRODUCTION = 4,
         TIPS = 5,
         PATAPOLIS = 6,
+        PATAPOLIS_ALTAR = 7,
         MISSIONCONTROLLER = 10
     };
 
@@ -35,6 +37,7 @@ public:
     void initState(int state);
     void initStateMT(int state);
     void setState(int state);
+    int getState();
 
 private:
     StateManager();
@@ -49,6 +52,7 @@ private:
     MissionController* missionControllerPtr;
     LoadingTip* loadingTipPtr;
     PatapolisMenu* patapolisPtr;
+    AltarMenu* altarPtr;
 
     std::vector<std::thread> loadingThreads;
 };

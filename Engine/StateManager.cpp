@@ -72,9 +72,9 @@ void StateManager::updateCurrentState()
             {
                 case PATAPOLIS: {
 
-                    if (patapolisPtr != nullptr)
+                    if (patapolisPtr != nullptr && altarPtr != nullptr)
                     {
-                        if (patapolisPtr->initialized)
+                        if (patapolisPtr->initialized && altarPtr->initialized)
                         {
                             if (loadingTipPtr != nullptr)
                             {
@@ -98,13 +98,31 @@ void StateManager::updateCurrentState()
         }
 
         case PATAPOLIS: {
-        
+
             if (patapolisPtr == nullptr)
             {
                 patapolisPtr = new PatapolisMenu;
             }
 
             patapolisPtr->Update();
+
+            break;
+        }
+
+        case PATAPOLIS_ALTAR: {
+
+            if (patapolisPtr == nullptr)
+            {
+                patapolisPtr = new PatapolisMenu;
+            }
+
+            if (altarPtr == nullptr)
+            {
+                altarPtr = new AltarMenu;
+            }
+
+            patapolisPtr->Update();
+            altarPtr->Update();
 
             break;
         }
@@ -167,6 +185,16 @@ void StateManager::initState(int state)
             {
                 patapolisPtr = new PatapolisMenu;
             }
+
+            if (altarPtr == nullptr)
+            {
+                altarPtr = new AltarMenu;
+                altarPtr->save_loaded = patapolisPtr->save_loaded;
+                altarPtr->reloadInventory();
+                altarPtr->initialized = true;
+            }
+
+            break;
         }
 
         case MISSIONCONTROLLER: {
@@ -244,7 +272,20 @@ void StateManager::setState(int state)
         initStateMT(afterTipState);
     }
 
+    if (currentGameState == PATAPOLIS && state == PATAPOLIS_ALTAR)
+    {
+        if (altarPtr != nullptr)
+        {
+            altarPtr->reloadInventory();
+        }
+    }
+
     // Change the state
     SPDLOG_DEBUG("Changing state to {}", state);
     currentGameState = state;
+}
+
+int StateManager::getState()
+{
+    return currentGameState;
 }
