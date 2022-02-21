@@ -8,6 +8,7 @@
 #include <sstream>
 #include <spdlog/spdlog.h>
 #include "../CoreManager.h"
+#include "../StateManager.h"
 
 PatapolisMenu::PatapolisMenu()
 {
@@ -28,7 +29,7 @@ PatapolisMenu::PatapolisMenu()
     updateStoryPoint(); // Update story_point before anything else
     
     //TO-DO: Patapolis menus under new system
-    //altar_menu.initialise(_thisConfig, parent, this);
+    //altar_menu->initialise(_thisConfig, parent, this);
     //mater_menu.initialise(_thisConfig, parent, this);
     //barracks_menu.initialise(_thisConfig, parent, this);
     //obelisk_menu.Initialise(_thisConfig, parent, this);
@@ -413,9 +414,6 @@ PatapolisMenu::PatapolisMenu()
 
     //TO-DO: these things are not yet supported by new system. add compatibility
     /*
-    altar_menu.save_loaded = save_loaded;
-    altar_menu.reloadInventory();
-
     mater_menu.save_loaded = save_loaded; // TEMPORARY REMOVE DIS
     
     credits.Initialise(config, v4Core);
@@ -652,10 +650,7 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
 
 void PatapolisMenu::EventFired(sf::Event event)
 {
-    if (altar_menu.is_active)
-    {
-        altar_menu.EventFired(event);
-    } else if (barracks_menu.is_active)
+    if (barracks_menu.is_active)
     {
         barracks_menu.EventFired(event);
     } else if (obelisk_menu.is_active)
@@ -1422,9 +1417,9 @@ void PatapolisMenu::Update()
         if (barracks_menu.is_active)
         {
             barracks_menu.update(window, fps, inputCtrl);
-        } else if (altar_menu.is_active)
+        } else if (altar_menu->is_active)
         {
-            altar_menu.update(window, fps, inputCtrl);
+            altar_menu->update(window, fps, inputCtrl);
         } else if (mater_menu.is_active)
         {
             mater_menu.update(window, fps, inputCtrl);
@@ -1519,7 +1514,7 @@ void PatapolisMenu::Update()
         lastView = window->getView();
         window->setView(window->getDefaultView());
 
-        if ((!barracks_menu.is_active) && (!altar_menu.is_active) && (!obelisk_menu.is_active) && (!mater_menu.is_active) && (!credits.is_active))
+        if ((!barracks_menu.is_active) && (!obelisk_menu.is_active) && (!mater_menu.is_active) && (!credits.is_active))
         {
             ctrlTips.x = 0;
             ctrlTips.y = (720 - ctrlTips.ySize);
@@ -1678,7 +1673,7 @@ void PatapolisMenu::Update()
 
         if (dialogboxes.size() <= 0)
         {
-            if ((!barracks_menu.is_active) && (!altar_menu.is_active) && (!obelisk_menu.is_active) && (!mater_menu.is_active) && (!credits.is_active) && (screenFade.checkFinished()))
+            if ((!barracks_menu.is_active) && (!obelisk_menu.is_active) && (StateManager::getInstance().getState() != StateManager::PATAPOLIS_ALTAR) && (!mater_menu.is_active) && (!credits.is_active) && (screenFade.checkFinished()))
             {
                 if ((inputCtrl->isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl->isKeyPressed(InputController::Keys::LTRIGGER)))
                 {
@@ -1732,11 +1727,16 @@ void PatapolisMenu::Update()
                         case Buildings::ALTAR:
                             /// altar
                             // open mater menu
-                            altar_menu.save_loaded = save_loaded;
-                            altar_menu.reloadInventory();
-                            altar_menu.showAltar();
-                            altar_menu.is_active = true;
-                            altar_menu.showAltar();
+                            
+                            
+                            /* altar_menu->save_loaded = save_loaded;
+                            altar_menu->reloadInventory();
+                            altar_menu->showAltar();
+                            altar_menu->is_active = true;
+                            altar_menu->showAltar(); */
+
+                            StateManager::getInstance().setState(StateManager::PATAPOLIS_ALTAR);
+
                             break;
                         case Buildings::OBELISK:
                             /// obelisk
