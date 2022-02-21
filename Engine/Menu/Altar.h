@@ -7,9 +7,7 @@
 #include "../Input/InputController.h"
 #include <SFML/Graphics.hpp>
 
-class V4Core;
-class PatapolisMenu;
-class AltarMenu : public Menu
+class AltarMenu
 {
 public:
     float ratio_x, ratio_y;
@@ -49,11 +47,10 @@ public:
     sf::RectangleShape r_sel;
 
     bool save_loaded = false;
+    bool is_active = false;
+    bool initialized = false;
 
-    PatapolisMenu* parentMenu;
-
-    void initialise(Config* thisConfig, V4Core* parent, PatapolisMenu* curParentMenu);
-    void update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
+    void Update();
     void eventFired(sf::Event event);
     void reloadInventory();
     void showCategory();
