@@ -1,0 +1,40 @@
+[0, 0, 0] - soggy map
+[0, 0, 1] - digital blueprint
+[0, 0, 2] - keepsake
+[0, 0, 3] - pata drum
+[0, 0, 4] - pon drum
+[0, 0, 5] - don drum
+[0, 0, 6] - chaka drum
+[0, 0, 7] - christmas charm 2020
+[1, 0, 0] - banal branch
+[1, 0, 1] - cherry blossom
+[1, 0, 2] - hinoki
+[1, 1, 0] - leather meat
+[1, 1, 1] - tender meat
+[1, 1, 2] - dream meat
+[1, 2, 0] - kuneri fang
+[1, 2, 1] - itete fang
+[1, 2, 2] - gizaza fang
+[1, 3, 0] - mudada bone
+[1, 3, 1] - gashirin bone
+[1, 4, 0] - stone
+[1, 4, 1] - hard iron
+[1, 4, 2] - titanium ore
+[2, 0, 0] - potion_1
+[2, 0, 1] - potion_2
+[3, 0, 0] - wooden spear
+[3, 0, 1] - iron spear
+[3, 0, 2] - steel spear
+[3, 0, 3] - scorching spear
+[3, 0, 4] - kacheek spear
+[3, 0, 5] - kirajin spear1
+[3, 0, 6] - rappata spear
+[4, 1, 0] - wooden helmet
+[4, 1, 1] - iron helmet
+[4, 1, 2] - strength helmet
+[4, 1, 3] - kacheek helm
+[4, 1, 4] - kirajin helmet
+[4, 1, 5] - rappata helm
+[4, 1, 6] - santa hat
+[4, 1, 7] - kirajin santa hat
+[4, 2, 0] - shubaba mask
