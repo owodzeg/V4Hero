@@ -1,0 +1,19 @@
+{
+	"baseHP": 20,
+	"baseY": 457,
+	"collidable": true,
+	"attackable": true,
+	"loot":
+	{
+		"common": [
+			100,
+			{ "tender_meat": 50 },
+			{ "itete_fang": 50 }
+		],
+		"rare": [
+			1,
+			{ "rappata_spear": 50 },
+			{ "rappata_helm": 50 }
+		]
+	}
+}

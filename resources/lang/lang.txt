@@ -1,0 +1,12 @@
+1|English|str_ENG|p4kakupop-pro.ttf
+2|Russian|str_RUS|dejavusans.ttf
+3|Deustch|str_DEU|roboto.ttf
+4|Italian|str_ITA|roboto.ttf
+5|French|str_FR|roboto.ttf
+6|Chinese|str_CN|dfpop2w9.ttf
+7|Esperanto|str_ESP|p4kakupop-pro.ttf
+8|Spanish|str_SP|p4kakupop-pro-espanol.otf
+9|Vietnamese|str_VN|roboto.ttf
+10|Indonesian|str_IND|roboto.ttf
+11|Brazilian Portugese|str_BPT|roboto.ttf
+12|Japanese|str_JP|p4kakupop-pro.ttf

@@ -1,0 +1,384 @@
+// # Language: French
+altar_category_armor|Armure
+altar_category_key_items|Objets clés
+altar_category_materials|Matériaux
+altar_category_weapon|Armes
+altar_title|Totem
+barracks_depart|Êtes-vous sûr de vouloir partir ?
+barracks_lvl|Niv
+barracks_stat_attackspeed|Vitesse d’attaque
+barracks_stat_burnchance|Chance de brûler
+barracks_stat_critchance|Chance de crit
+barracks_stat_damage|Dégâts
+barracks_stat_exp|Expérience
+barracks_stat_freezechance|Chance de gêler
+barracks_stat_hp|PV
+barracks_stat_knockbackchance|Chance de renverser
+barracks_stat_level|Niveau
+barracks_stat_staggerchance|Chance de trébucher
+barracks_unit_status|Statut de l’unité
+barracks_yaripon|Yaripon
+credits_all|Et à tous ceux qui ont soutenu le projet ! Merci !
+credits_animators|Animateurs
+credits_artists|Artistes
+credits_community|Community managers
+credits_creator|Créateur du projet
+credits_gameplay|Équilibrage du gameplay
+credits_musicians|Musiciens
+credits_programmers|Programmeurs
+credits_special|Remerciement spécial
+credits_supporters|Supporters
+credits_translators|Traducteurs
+credits_writers|Écrivains
+desc_banal_branch|Une branche banale. Bien qu’elle ne soit qu’une simple partie de bois, un Patapon entreprenant peut lui trouver plusieurs utilisations, allant d’un manche d’une hache à un mât de tente.
+desc_chaka_drum|Grand tambour de Sagesse. 
+desc_cherry_blossom|Selon la légende, les colossaux anciens cerisiers d’où provient cette branche sont des divinités au repos. 
+desc_christmas_charm_2020|Tenir ce charme dans votre inventaire vous donne de la chance toute l’année ! Merci d’avoir participé à l’event de Noël Patafour 2020 !
+desc_digital_blueprint|Un plan trouvé à l’intérieur d’une hutte Kirajin au Bosquet Patapine. Il montre l’emplacement d’une future forteresse Kirajin.
+desc_don_drum|Grand tambour des Miracles. Le rythme de ce tambour aurait le pouvoir de faire naître la volonté du Tout-Puissant.
+desc_dream_meat|Cette légendaire viande marbrée fond comme de la barbe à papa, mais les Patapons préfèrent un repas plus copieux. Les Patapons qui goûtent à cette délicatesse tous les jours ont le droit d’avoir une vie heureuse et paisible.
+desc_gashirin_bone|Un énorme os robuste. Il est écrit que nos anciens ancêtres utilisaient ces os comme armes.
+desc_gizaza_fang|La pointe de ce croc contient d’innombrables petits cartilages. Toute personne percée par ce croc devra payer le prix fort si elle essaie de l’enlever. Même les Patapons médecins les plus qualifiés ont du mal à retirer ce croc de quelqu’un.
+desc_hard_iron|Selon les mythes de Zigoton, beaucoup de sang a coulé dans les conflits autour de ce métal rare. Les anciennes histoires racontaient comment les ancêtres récoltaient ce métal à l’intérieur des montagnes, mais le secret a été perdu au fil du temps.
+desc_hinoki|La légende raconte que même la maison du Tout-Puissant Patapon est composée de ce bois sacré. Les Patapons se sentent soulagés et reposés lorsqu’ils pénètrent dans des bâtiments en ce bois précieux.
+desc_iron_helmet|Ce casque, fabriqué en fer précieux, imite le design standard du casque en bois, mais apporte plus de protection.
+desc_iron_spear|Une robuste lance en fer. Les Patapons les apprécient, car elles sont plus lourdes et infligent plus de dégâts. Cependant, elles ont besoin d’un guerrier plus fort pour pouvoir être lancées.
+desc_itete_fang|Un grand croc très pointue. On dit depuis très longtemps qu’il est possible de connaître l’expérience d’un véritable chasseur par le nombre de crocs qu’il a dû retirer de son cou.
+desc_kacheek_helm|Ce casque, façonné grâce à la peau et la fourrure d’un Kacheek, maintiens le porteur hors de danger. Il permet aussi de garder la vue du porteur au chaud.
+desc_kacheek_spear|Une lance forgée à partir de la défense d’un Kacheek. Son tranchant est suffisant pour percer les boucliers et infliger des dégâts critiques.
+desc_keepsake|Le souvenir d’Hatapon. Cela le réconfortait toujours et lui rappelait que le Tout-Puissant viendrait lorsque le monde aura le plus besoin de lui.
+desc_kirajin_helmet1|Casque triangulaire, fait d’une ressource inhabituelle que l’on pense être du fer. Fournit des attributs inhabituels au soldat qui le porte. Il augmente les points de santé et renforce l’attaque.
+desc_kirajin_spear1|Lance faite d’une ressource inhabituelle que l’on pense être du fer. Sa pointe est tellement pointu que l’on pourrait percer son doigt juste en la touchant doucement.
+desc_kuneri_fang|Un croc magnifique et déformé. Il peut être taillé pour servir d’arme et sert également pour la confection d’équipement.
+desc_leather_meat|Les anciens disent aux jeunes Patapons : “Si cela vous rassasie, ne vous plaignez pas” et ils apprennent à manger cette viande.
+desc_mudada_bone|Un petit os blanchi, apparement d’un petit animal. On les trouvent souvent dans les touffes d’herbes des terrains de chasse ou dans l’estomac des gros animaux.
+desc_none|Un coin vide de l’autel Patapon, avec seulement des bougis et de l’encens
+desc_pata_drum|Grand tambour de Vigueur. Hatapon a gardé ce tambour toute sa vie.
+desc_pon_drum|Grand tambour de Bravoure. Obtenu en acceptant de devenir le Dieu Patapon.
+desc_rappata_helm|Ce casque en fourrure de Rappata permet des mouvements beaucoup plus faciles et offre une protection contre le froid.
+desc_rappata_spear|Une lance très tranchante faite d’os de Rappatas chassés. Elle est incroyablement légère et peut percer de nombreuses cibles à la fois.
+desc_santa_hat|Ce bonnet douillet, tricoté par les mamies Patapon, offre beaucoup de joie et de chaleur à ceux qui le portent. Accorde une énorme protection contre le froid.
+desc_scorching_spear|La magie lancée sur cette lance rend sa pointe en flamme. Inflige de lourds dégâts et met le feu aux ennemis. Les ennemis sentiront comme un bon bœuf rôti.
+desc_shubaba_mask|Masque du Héros Phantom Strike. Il accorde une petite partie du pouvoir du Grand Shubabassa, augmentant légèrement la vitesse des muscles, permettant d’attaquer plus rapidement que les autres guerriers.
+desc_small_rock|Une pierre commune. Pleine d’impuretés mais vitale pour la vie tribale. Les enfants Patapon essaient souvent de les envoyer de l’autre côté des rivières en les faisant ricocher à la surface.
+desc_soggy_map|Une carte obtenue dans un coffre au trésor enterré trouvé dans la Vallée de Shida. Il marque l’emplacement d’une forteresse cachée.
+desc_steel_spear|Une lance avec une pointe affutée fabriquée à partir d’un alliage rare, l’acier. Ces lances sont plus légère que celle en fer mais infligent encore plus de dégâts !
+desc_strength_helmet|Ce casque magique, décoré avec de la peinture d’algues rouges, provenant du Volcan Bovo, augmente considérablement l’attaque.
+desc_tender_meat|Les Patapons aiment cette viande moelleuse et succulente, mais ils n’en mangent que très rarement, même le jour de leur anniversaire.
+desc_titanum_ore|La légende raconte que ce minerai résistant et léger a été accordé aux Patapons par le Tout-Puissant. Il peut résister pendant des siècles et constitue un matériau d’équipement parfait pour les classes ayant besoin de mouvements rapides.
+desc_wooden_helmet|Le casque traditionnel en bois de la tribu Patapon. C’est le résultat de leurs parties de chasse et malgré sa conception simple, il a sauvé la vie à de nombreux guerriers.
+desc_wooden_spear|Une lance basique en bois, donnée à chaque recrue Patapon lorsqu’elle atteint l’âge de participer à sa première chasse. Chérie par de nombreux Patapons, même après qu’ils aient obtenu de meilleures armes.
+firstrun_dialog_1|Bienvenue dans la démo de Patafour !\Appuyez sur Z pour continuer.
+firstrun_dialog_2|C’est la première fois que vous lancez la démo,\alors voici quelques informations basiques.
+firstrun_dialog_3|Patafour est un projet en cours de développement.\Ce n’est pas une version finale et est loin d’être achevée.
+firstrun_dialog_4|Cette démo vous montrera la plupart des mécanismes de base que nous avons réussi à finir.
+firstrun_dialog_5|Toute l’équipe de Patafour espère\que vous allez apprécier notre petit projet !
+firstrun_dialog_6|Voici quelques contrôles basiques:\Z - Confirmer (Croix)\X - Annuler (Cercle)\Entrée - Start\Barre espace - Select
+firstrun_dialog_7|Vous pouvez changer ces paramètres\dans le menu options.
+firstrun_dialog_8|Nous vous recommandons d’utiliser une manette\pour une meilleure expérience.
+firstrun_dialog_9|Amusez-vous !
+item_banal_branch|Branche banale
+item_chaka_drum|Tambour Chaka
+item_cherry_blossom|Fleur de cerisier
+item_christmas_charm_2020|Charme de Noël 2020
+item_digital_blueprint|Plan numérique
+item_don_drum|Tambour Don
+item_dream_meat|Viande de rêve
+item_gashirin_bone|Os de Gashirin
+item_gizaza_fang|Croc de Gizaza
+item_hard_iron|Fer robuste
+item_hinoki|Hinoki
+item_iron_helmet|Casque en fer
+item_iron_spear|Lance en fer
+item_itete_fang|Crocs d’Itete
+item_kacheek_helm|Casque Kacheek
+item_kacheek_spear|Lance Kacheek 
+item_keepsake|Souvenir
+item_kirajin_helmet1|Casque en fer Kirajin
+item_kirajin_spear1|Lance en fer Kirajin
+item_kuneri_fang|Crocs de Kuneri
+item_leather_meat|Viande coriace
+item_mudada_bone|Os de Mudada
+item_none|Rien ! 
+item_pata_drum|Tambour Pata
+item_pon_drum|Tambour Pon
+item_rappata_helm|Casque Rappata
+item_rappata_spear|Lance Rappata
+item_santa_hat|Chapeau de père Noël
+item_scorching_spear|Lance brûlante
+item_shubaba_mask|Masque Shubaba
+item_small_rock|Pierre
+item_soggy_map|Carte sale
+item_steel_spear|Lance en acier
+item_strength_helmet|Casque de force
+item_tender_meat|Viande tendre
+item_titanum_ore|Minerai de Titane
+item_wooden_helmet|Casque en bois
+item_wooden_spear|Lance en bois
+kirajin_ambush_1|Attaque surprise !\Prenez position !
+kirajin_ambush_2|Défendez la tour de garde !\Ne les laissez pas passer !
+kirajin_ambush_3|Le Bosquet Patapine appartient aux Kirajins !\Nous ne vous laisserons pas passer !
+kirajin_ambush_4|Attaque surprise !\Vous n'irez pas plus loin !
+kirajin_ambush_5|Protégez la tour de garde\à tout prix !
+kirajin_ambush_6|C'est notre chance !\Anéantissons les !
+kirajin_ambush_7|Attaquez ! Ils doivent geler !
+kirajin_death_1|Tuer... tuer...
+kirajin_death_2|La mort est inévitable !
+kirajin_death_3|Nous reviendrons !
+kirajin_death_4|Kira...jin...
+kirajin_death_5|Si... froid...
+kirajin_talk_1|L.. Les Patapons\sont là !
+kirajin_talk_10|Nous ne pouvons pas perdre !
+kirajin_talk_11|Protégez les cristaux d'énergie !
+kirajin_talk_12|Vous paierez pour ça !\Je vous maudis, Patapons !
+kirajin_talk_13|Vous ne vous en tirerez pas !
+kirajin_talk_14|Nous aurons notre revanche\sur vous, Patapons !
+kirajin_talk_15|Gelez-les à mort!
+kirajin_talk_16|Qu'il neige... qu'il neige... 
+kirajin_talk_2|Hehehe... Stupides Patapons...\Tellement stupides...
+kirajin_talk_3|Les falaises d'Ejiji ne\nous seront pas enlevées !
+kirajin_talk_4|Ne les laissez pas s'approcher\de notre source d'énergie !
+kirajin_talk_5|Surprise ! Tu vas mourir !
+kirajin_talk_6|C'est votre fin !
+kirajin_talk_7|Abandonne ! C'est fini !
+kirajin_talk_8|
+kirajin_talk_9|Maintenant, attaquez !
+menu_continue|Continuer
+menu_exit|Quitter
+menu_invaliddata|Les données de sauvegarde sont invalides ou corrompues.
+menu_newgame|Nouvelle partie
+menu_nodata|Aucune donnée de sauvegarde disponible trouvée.
+menu_nosupportdata|Les sauvegardes des versions antérieurs de Patafour ne sont pas prises en charge.
+menu_options|Options
+menu_pressanykey|Appuyer sur n’importe quel bouton
+menu_saveexists|Il existe une sauvegarde.\Voulez vous l’écraser ?
+mission_backtopatapolis|Voulez-vous retourner à Patapolis ?\Tous les matériaux et Ka-ching seront perdus.
+mission_complete|MISSION REUSSIE !
+mission_failed|MISSION ÉCHOUÉE !
+nav_agree|Accepter
+nav_attack|Attaque
+nav_cancel|Annuler
+nav_changeequip|Changer d'équipement
+nav_charge|Charger
+nav_circle|Cercle
+nav_cross|Croix
+nav_defend|Défense
+nav_down|Bas
+nav_enter|Entrer
+nav_entermission|Entrer en mission
+nav_equipitem|Équiper l'objet
+nav_exit|Quitter
+nav_exittopatapolis|Retour à Patapolis
+nav_exittotitle|Retourner a l’écran titre
+nav_interact|Interagir 
+nav_jump|Sauter
+nav_leave|Partir
+nav_left|Gauche
+nav_move|Déplacer
+nav_navigate|Naviguer
+nav_navigateitem|Naviguer l'élément
+nav_next|Suivant
+nav_nextpage|Page suivante
+nav_no|Non
+nav_onward|En avant
+nav_party|Équipe
+nav_previous|Précédent
+nav_previouspage|Page précédente
+nav_retreat|Retraite
+nav_returntofield|Retour au champ de sélection
+nav_returntomap|Retour à la carte du Monde
+nav_returntopatapolis|Retour à Patapolis
+nav_right|Droite
+nav_savegame|Sauvegarder
+nav_scroll|Défiler
+nav_selectequip|Sélectionner l'équipement
+nav_selectfield|Sélectionner le champ
+nav_selectmission|Sélectionner la mission
+nav_selectunit|Sélectionner une unité
+nav_square|Carré
+nav_startmission|Commencer la mission
+nav_summon|Invoquer
+nav_triangle|Triangle
+nav_understood|Compris
+nav_up|Haut
+nav_viewmissions|Voir les missions
+nav_yes|Oui
+newgame_intro_1|Après avoir terminé le pont Patapole, nous\sommes finalement arrivés sur de nouvelles terres, intactes des mains du Tout-Puissant Patapon.
+newgame_intro_10|Alors qu’il commençait à nous approcher, nous nous sommes heureusement sauvés\grâce à l’ancienne machine que nous avions utilisée auparavant,\échappant de justesse aux mâchoires de la mort.
+newgame_intro_11|...
+newgame_intro_12|Tout-Puissant, je vous en prie!\Veuillez nous guider vers Earthend.
+newgame_intro_13|Sauvez notre monde du mal\et laissez-nous enfin le contempler!
+newgame_intro_14|S’il vous plaît, prenez le tambour sacré\et marchons encore une fois !
+newgame_intro_2|Dans cet endroit inconnu, nous avons découvert\les ruines d’une ancienne civilisation,\apparemment oubliées depuis longtemps.
+newgame_intro_3|Désespérés de le trouver, nous avons commencé à bricoler\avec les anciens mécanismes qui\avaient été retrouvés enfouis dans les décombres.
+newgame_intro_4|En appuyant simplement sur un bouton, nos trois Yaripons,\le Héros, et moi-même, avons été envoyés dans un endroit bizarre\et inconnu rempli de nature\et d’animaux sauvages, apparemment dépourvu de toute civilisation.
+newgame_intro_5|Inquiets pour nos camarades, nous avons essayé\tout ce que nous pouvions pour rentrer chez nous,\et nous remercions le Tout-Puissant Patapon d’avoir pu y arriver !
+newgame_intro_6|Cependant...
+newgame_intro_7|À notre retour, nous avons découvert avec effroi les corps de nos alliés. À en juger par leurs blessures, leur mort était récente. 
+newgame_intro_8|Le ciel était teint en rouge sang,\et les cris des rares survivants\pouvaient être entendus au loin.
+newgame_intro_9|Nous avons levé les yeux vers le ciel et avons rencontré\une terrifiante et mystérieuse silhouette flottante et inquétante au-dessus de nous. Son unique oeil était rempli de rancœur et de haine.
+npc_sen_1|Oh Grand Kami !\Conduis nous à Earthend.
+npc_sen_10|Les Kirajins ont construit\une autre forteresse aux falaises d’Ejiji.
+npc_sen_11|On ne peut pas les laisser gagner...!\Allez les vaincre, Kami !
+npc_sen_12|Vous avez réussi mon Dieu ! Vous avez réussi !\C’en est fini pour l’instant...
+npc_sen_13|Je n’arrive toujours pas à me rappeler d’où\je les ai déjà vus...
+npc_sen_2|Oh Puissant Kami !\Conduis nous à Earthend.
+npc_sen_3|Oh Puissant Patapon !\Conduis nous à Earthend.
+npc_sen_4|Il y a de nombreux animaux\qui errent dans la vallée de Shida.
+npc_sen_5|Les rumeurs disent que d’innombrables trésors\ont été enterrés dans ces sols.
+npc_sen_6|Quelque chose a attaqué les bûcherons\Patapons au Bosquet Patapine.
+npc_sen_7|Les éclaireurs Yaripons signalent\des créatures triangulaires qui construisent\une forteresse à partir de bois volé...
+npc_sen_8|”Kirajins”...? Est-ce que c’est comme cela qu’ils sont appelés ?
+npc_sen_9|Je pense avoir déjà entendu\ce nom auparavant...
+npc_wakapon_1|Je suis Wakapon ! Garde de\ l’Œuf du Monde pour l’ordre de Kami !
+npc_wakapon_10|Fantastique travail, Kami ! Vous avez détruit leur forteresse aux falaises d’Ejiji. 
+npc_wakapon_11|Cependant, le mal ne se repose jamais.\Les Kirajins recueillent de l’énergie provenant\d’étranges cristaux rouges. Détruisez-les pour affaiblir leur armée !
+npc_wakapon_2|Bienvenue Kami ! Je suis vraiment reconnaissant\de parler avec vous en personne !
+npc_wakapon_3|Vous pouvez avoir confiance en moi,\je protégerai l’Œuf du Monde\au péril de ma vie, c’est promis !
+npc_wakapon_4|Je peux sentir quelque chose de mal\arriver dans notre monde...
+npc_wakapon_5|Le ressentez-vous aussi, Kami ? Allez-vous nous protéger de\tout danger auquel nous pourrions être confrontés ?
+npc_wakapon_6|Ces créatures triangulaires...\Que sont-elles ? Que veulent-elles de\nous, Patapons ?
+npc_wakapon_7|Leurs yeux sont remplis de haine...\J’ai bien peur que ce ne soit que le début.
+npc_wakapon_8|Une quête périlleuse vous attends, vous et vos troupes, Kami.
+npc_wakapon_9|Les Kirajins sont en possession d’une\technologie qui n’est pas de ce\monde. Vous devez rester fort.
+options_assign_key|Touche assignée 
+options_audio|Son
+options_audio1|Paramètres de volume
+options_audio1|Paramètres de volume
+options_audio2|Son tambour
+options_audio3|Chants et tambour Patapon
+options_audio4|Réponses Patapon
+options_back|Retour
+options_backtomain|Retour au menu principal
+options_bigbutton|Gros bouton
+options_change_anykey|Appuyer sur n’importe quelle touche pour l’assigner au bouton en jeu.
+options_change_button|Bouton
+options_change_title|Modification de la touche assignée pour le bouton en jeu.
+options_diff1|Coups PARFAIT
+options_diff2|Coup BIEN
+options_diff3|Coup MAUVAIS
+options_disable|Désactiver
+options_enable|Activer
+options_graphics|Graphismes
+options_graphics1|Résolution d’écran
+options_graphics2|Qualité de texture
+options_graphics3|Anticrénélage
+options_graphics4|Limite d’image par seconde
+options_graphics5|Plein-écran
+options_graphics6|Plein-écran fenêtré
+options_ingame_btn|Boutons en jeu
+options_input|Contrôles
+options_input1|Paramètres manette
+options_input2|Raccourcis clavier
+options_input3|Configuration du timing (option expérimentale)
+options_input_setup1|Vérifier la connexion de votre manette. Appuyez sur n’importe quel bouton de votre manette et elle apparaîtra au milieu de l’écran.
+options_input_setup10|Appuyer sur la touche pour déplacer la caméra à gauche. (gâchette L)
+options_input_setup11|Appuyer sur la touche pour déplacer la caméra à droite. (gâchette R)
+options_input_setup12|Appuyer sur l'équivalent de la touche Start
+options_input_setup13|Appuyer sur l'équivalent de la touche Select
+options_input_setup14|Et voilà ! Votre manette est prête pour jouer à Patafour.
+options_input_setup2|Appuyer sur la flèche de gauche.
+options_input_setup3|Appuyer sur la flèche de droite.
+options_input_setup4|Appuyer sur la flèche du bas.
+options_input_setup5|Appuyer sur la flèche du haut.
+options_input_setup6|Appuyer sur la touche du tambour PATA. (Carré)
+options_input_setup7|Appuyer sur la touche du tambour PON. (Cercle)
+options_input_setup8|Appuyer sur la touche du tambour DON. (Croix)
+options_input_setup9|Appuyer sur la touche du tambour CHAKA. (Triangle)
+options_input_setup_again|Réessayer
+options_input_setup_next|Suivant
+options_input_setup_notice|Touche enregistrée avec succès.
+options_input_setup_return|Retour aux options
+options_key|Touche
+options_language|Langues
+options_language1|Changer de langue
+options_language_english|English
+options_options|Options
+options_quality_high|Haute
+options_quality_low|Faible
+options_quality_medium|Moyen
+options_quality_ultra|Ultra
+options_restart_button1|Redémarrer le jeu
+options_restart_button2|Annuler les changements
+options_restart_notice|Redémarrage nécessaire pour appliquer les paramètres. Redémarrer maintenant ?
+options_tip1|Astuce: Passez la souris sur une touche assignée ou sélectionner la avec les flèches dirrectionnelles, \puis appuyer sur le bouton croix pour le changer.\Appuyer sur le bouton triangle pour retirer la touche assignée.\Utilisez les nombres en haut du menu pour basculer entre les différents profils.
+options_tip2|Astuce: Appuyez sur n’importe quelle touche pour retourner au menu des options.\Les raccourcis claviers seront sauvegardés après avoir quitté le menu des options.
+options_tip3|Astuce: Appuyez sur le bouton Start de votre clavier pour continuer.\Appuyez sur le bouton cercle pour quitter la configuration de la manette.
+options_unlimited|Illimité
+options_volume|Volume
+options_volume1|Volume principal :
+options_volume2|Volume des musiques :
+options_volume3|Volume des bruitages :
+outro_cutscene_1|Merci d’avoir joué à la démo !
+outro_cutscene_2|Ce fut un plaisir de faire Patafour pour vous !
+outro_cutscene_3|L’équipe Patafour espère sincèrement que cela vous a plu. Nous nous sommes données corps et âme pour vous !
+outro_cutscene_4|Les Kirajins reviendront plus fort que jamais...
+outro_cutscene_5|Parviendrez-vous à les combattre et récupérer les terres perdus des Patapon, Pata-Pole? 
+outro_cutscene_6|Apprenez les arts anciens de la toute première tribu Patapon et menez votre armée à la victoire.
+outro_cutscene_7|Les autres tribus auront besoin de vous, Tout-Puissant [PLAYER_NAME]...
+outro_cutscene_8|Sauvez le monde dans la version complète de Patafour !
+outro_end|Merci d’avoir joué !
+patapolis|Patapolis
+patapolis_altar|Totem
+patapolis_barracks|Caserne
+patapolis_blacksmith|Forgeron
+patapolis_demofinish|Félicitations, vous avez fini la démo !
+patapolis_demo_pick1|Regarder les crédits
+patapolis_demo_pick2|Annuler
+patapolis_egg|Oeuf du monde
+patapolis_festival|Place du festival
+patapolis_obelisk|Obélisque
+patapolis_paraget|Paraget
+patapolis_returntomain|Voulez-vous retourner\à l’écran titre ?
+patapolis_returntomainsave|Les données non enregistrées seront perdus.\Êtes-vous sûr ?
+patapolis_save|Voulez-vous sauvegarder votre partie ?
+patapolis_saved|La partie a été enregistrée.
+patapolis_sen|Sen Ranpurupon
+patapolis_trader|Marché
+patapolis_tree|Mater, Arbre de la Vie
+patapolis_wakapon|Wakapon, le Gardien
+rarepon_normal|Normal
+rarepon_normal_desc|Un guerrier normal de la tribu des Patapons. Ils sont réputés pour leur stoïcisme et leur bravoure. Ces Patapons sont peut être de petite taille, mais avec la bonne mentalité, ils peuvent tout faire !
+tip1_desc|La chasse aux Kacheeks dans la vallée de Shida\est une ancienne tradition des Patapons.\\Ces bêtes lentes ont nourri la tribu\pendant des générations. Rejoindre une session de chasse est\pour la plupart des Patapons une première expérience au maniement d’une lance.\\Bien que leur odorat ne soit pas aussi bon\que les Mochichis, il est plus prudent d’attendre un vent de face\afin qu’ils ne puissent pas sentir les Patapons venir.
+tip1_title|Chasse au Kacheeks
+tip2_desc|Obtenez de la viande venant de la chasse !\\Chassez les proies pour que la tribu Patapon puisse manger.\Quoi qu’il se passe dans le monde,\les Patapons ont besoin de viande\pour se remplir le ventre !\\Si vous avez bien dirigé les Patapons, ils pourraient\laisser de la viande en offrande à l’autel !\\Les Kacheeks donnent de la viande de cuir.\Les Mochichis donnent de la viande tendre.\\Après votre retour de chasse, n’oubliez pas de vérifier à l’autel !
+tip2_title|Récompenses de la chasse
+tip3_desc|Le Bosquet Patapine est connu pour sa capacité\à s’y perdre facilement.\\Les énormes arbres sont un matérau parfait\pour les bâtiments solides, en raison de leur\durabilité incroyable.\\De nombreux bûcherons Patapons passent\leur vie entière à ramasser du bois,\et de nouveaux arbres y poussent chaque jour.
+tip3_title|Bois Robuste du Bosquet Patapine
+tip4_desc|Obtenir des commandes parfaites est la clé\de la réussite.\\Une fois que vous avez parfaitement frappé les 4 tambours,\vous entendrez un “shwing”.\\De nombreux avantages proviennent des commandes parfaites !\Les Patapons peuvent marcher plus vite et infliger plus de dégâts.\\C’est une technique utile à apprendre !
+tip4_title|Commandes parfaites
+tip5_desc|PON PON CHAKA CHAKA charge vos unités.\\Vous pouvez utiliser cette commande à votre avantage !\\Infligez plus de deux fois plus de dégâts\en attaquant !\\Réduisez considérablement les dégâts subis\lors d’un défense !\\Certaines classes ont un comportement spécial lorsqu’elles sont chargées.
+tip5_title|N’oubliez pas de charger !
+tip6_desc|Wakapon est le gardien de l’Œuf du Monde\qui brille au centre du pont de Patapole.\\L’Œuf du Monde apporte la paix de le monde des Patapons.\\Les légendes disent que le briser\libérerait tout le mal des enfers dans le monde.\\Le Wakapon a promis à Kami de protéger l’Œuf du Monde au péril de sa vie.
+tip6_title|Wakapon et l’Œuf du Monde
+tip7_desc|Sen est une prêtresse de l’âge de l’ancien Patapon.\\Elle est un lien direct entre Patapons et Kami,\et a vécu à travers de nombreuses générations de tribu Patapon.\\Ranpurupon est très attentionnée pour chaque Patapon,\élevant et enseignant les enfants Patapons.\Elle fera tout pour aider la tribu à grandir.
+tip7_title|Sen Ranpurupon dans l’ancienne Patapolis
+tip8_desc|Saviez-vous que les Patapons fêtaient également Noël ?\\Pour la période de Noël, les Patapons décorent\Patapolis avec de nombreuses décorations colorées.\\Les petits Patapons attendent Santapon,\qui leur donne ce qu’ils souhaitent.\\Ils reçoivent généralement leur première arme\pour combattre au nom du Tout-Puissant, pour atteindre Earthend !
+tip8_title|Noël à Patapolis
+tips_anykey|Appuyer sur n’importe quelle touche
+tips_loading|Chargement
+worldmap_header_1|Carte du monde de Patapon
+worldmap_location_1_description|L’air humide de la mer qui souffle dans cette vallée en fait un habitat parfait pour les plantes de toutes sortes, permettant aux fougères éphémères de pousser à des hauteurs énormes ! Pendant des générations, diverses tribus ont utilisé cette zone fertile comme zone pour chasser les animaux et cueillir des légumes sauvages. Son étrange paysage de plantes géantes peut être désorientant et des rumeurs persistent à propos de secrets cachés quelque part dans la région.
+worldmap_location_1_title|~ Vallée Shida ~
+worldmap_location_2_description|Les pins de ce bosquet sont réputés pour leur hauteur gargantuesque et leur robustesse lorsqu’ils sont utilisés comme matériau de construction. Les Patapon bûcherons sont connus pour pour gagner leur vie ici en coupant ces arbres pour la construction. La rumeur veut que des fées prospèrent des champignons comestibles dans les profondeurs de la forêt.
+worldmap_location_2_title|~ Le Bosquet Patapine ~
+worldmap_location_3_description|Les falaises d’Ejiji ont vu de nombreux dragons avant qu’ils ne disparaissent de leur lieu de naissance pour des raisons inconnues des habitants de Rolitoland. Elles constituent un bon endroit pour construire des maisons et des forteresses à l’abri des regards. Les Gyaba Rarepons sont issus de cette région et certains habitent encore les falaises à ce jour, mais nombre de cette lignée de Patapon sont, depuis, éparpillée dans le monde.
+worldmap_location_3_title|~ Les falaises d’Eijiji ~
+worldmap_location_locked|~ Bloqué ~
+worldmap_mission_1_description|De nombreux animaux se rassemblent dans la vallée pour avoir la chance de trouver des plantes et des champignons comestibles. Profitez de cette occasion pour chasser les créatures pour nourrir vos Patapons ! Les rumeurs disent que la vallée détient un trésor inconnu.
+worldmap_mission_1_title|Chasse dans la Vallée Shida
+worldmap_mission_2_description|Les Kirajins se sont installés dans le Bosquet Patapine ! En utilisant le bois solide des arbres environnants, ils ont construit une forteresse. Rassemblez vos forces et abattez la forteresse tout en vous méfiant des créatures de la forêt !
+worldmap_mission_2_title|Forteresse dans les bois
+worldmap_mission_3_description|Les Kirajins ont peut-être été vaincus une fois, mais ils sont revenus, plus forts que jamais. Ils sont déterminés à maintenir cette position à n’importe quel prix. Battez la forteresse une fois de plus pour repousser les forces Kirajins !
+worldmap_mission_3_title|Forteresse de Kirajin - Bosquet Patapine : Niv.
+worldmap_mission_4_description|Les éclaireurs Patapons ont rapporté qu’au sein des falaises d’Ejiji, les Kirajins ont commencé la construction d’une énorme forteresse qui servira de base d’opérations contre les forces Patapons. Selon les rapports, la future forteresse est renforcée par une puissante technologie jamais vu auparavant. Soyez courageux, n’ayez pas peur et détruisez cette forteresse avant qu’elle ne soit terminée.
+worldmap_mission_4_title|Armements avancés
+worldmap_mission_5_description|Même après avoir détruit une fois leur forteresse, les Kirajins ne se laisseront plus perdre une fois de plus. Ils sont déterminés à se battre pour cet endroit même si cela leur coûte la vie. Meden prévient d’un ton sombre dans sa voix “Ce sera encore plus difficile que la dernière bataille”.
+worldmap_mission_5_title|Kirajins implacables aux falaises d'Ejiji : Niv.
+worldmap_mission_6_description|À cette période de l’année, la vallée de Shida est couverte de neige, alors que les vents glacés de l’océan près du pont Patapole arrivent. C’est l’occasion idéale pour les animaux rares de sortir de leurs nids et de chasser le poisson sous la glace. Parfois des espèces vraiment rares peuvent apparaître...
+worldmap_mission_6_title|Fougères couvertes de neige de la vallée de Shida
+worldmap_select|Sélectionner une quête
+// # Translated by: 
+// @x225franc
+// @TooFat4You
+// @TooFat4You

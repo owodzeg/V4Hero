@@ -1,0 +1,432 @@
+{
+	"params":
+	{
+		"name": "Fortress in the Woods",
+		"background": "patapinegrove",
+		"bgm": "Pokkurimakka Rock Theme",
+		"rich_presence": "patapine"
+	},
+
+	"cutscenes":
+	{
+		"learn_chakachaka": [0, 0, 6]
+	},
+
+	"entities":
+	[
+		{ "id": 1, "params": { "xpos": -330, "layer": "ui" } },
+
+		{ "id": 8, "params": { "xpos": 1400, "layer": "buildings", "hp": 80, "loot": [ 100, { "item": "item_stone", "chance": 73 }, { "item": "item_hard_iron", "chance": 27 } ] } },
+
+		{ "id": 3, "params": { "xpos": 1800, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 1845, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 1890, "color": "1e8c5a", "layer": "nature" } },
+
+		{
+			"id": 16,
+			"params":
+			{
+				"xpos": 1805,
+				"layer":"animals",
+				"loot":
+				{
+					"common":
+					[
+						20,
+						{ "item": "item_iron_spear", "chance": 50 },
+						{ "item": "item_iron_helmet", "chance": 50 }
+					],
+					"rare":
+					[
+						0.2,
+						{ "item": "item_kirajin_spear1", "chance": 50 },
+						{ "item": "item_kirajin_helmet1", "chance": 50 }
+					]
+				},
+				"mindmg": 1,
+				"maxdmg": 3,
+				"custom_params":
+				{
+					"equip": ["item_kirajin_spear1", "item_kirajin_helmet1"],
+					"hidden": 99,
+					"talk": "kirajin_ambush_1",
+					"range": 750
+				}
+			}
+		},
+		{
+			"id": 16,
+			"params":
+			{
+				"xpos": 1850,
+				"layer":"animals",
+				"loot":
+				{
+					"common":
+					[
+						20,
+						{ "item": "item_iron_spear", "chance": 50 },
+						{ "item": "item_iron_helmet", "chance": 50 }
+					],
+					"rare":
+					[
+						0.2,
+						{ "item": "item_kirajin_spear1", "chance": 50 },
+						{ "item": "item_kirajin_helmet1", "chance": 50 }
+					]
+				},
+				"mindmg": 1,
+				"maxdmg": 3,
+				"custom_params":
+				{
+					"equip": ["item_kirajin_spear1", "item_kirajin_helmet1"],
+					"hidden": 100,
+					"range": 795
+				}
+			}
+		},
+		{
+			"id": 16,
+			"params":
+			{
+				"xpos": 1895,
+				"layer":"animals",
+				"loot":
+				{
+					"common":
+					[
+						20,
+						{ "item": "item_iron_spear", "chance": 50 },
+						{ "item": "item_iron_helmet", "chance": 50 }
+					],
+					"rare":
+					[
+						0.2,
+						{ "item": "item_kirajin_spear1", "chance": 50 },
+						{ "item": "item_kirajin_helmet1", "chance": 50 }
+					]
+				},
+				"mindmg": 1,
+				"maxdmg": 3,
+				"custom_params":
+				{
+					"equip": ["item_kirajin_spear1", "item_kirajin_helmet1"],
+					"hidden": 100,
+					"range": 840
+				}
+			}
+		},
+
+		{ "id": 11, "params": { "xpos": 2400, "layer": "buildings", "hp": 10, "loot": { "item": "item_stone", "chance": 60 } } },
+		{ "id": 10, "params": { "xpos": 3000, "layer": "buildings", "hp": 15, "loot": [ 50, { "item": "item_banal_branch", "chance": 80 }, { "item": "item_cherry_blossom", "chance": 20 } ] } },
+		{ "id": 10, "params": { "xpos": 3120, "layer": "buildings", "hp": 15, "loot": [ 50, { "item": "item_banal_branch", "chance": 80 }, { "item": "item_cherry_blossom", "chance": 20 } ] } },
+
+		{
+			"id": 16,
+			"params":
+			{
+				"xpos": 3175,
+				"layer": "animals",
+				"hp": 25,
+				"loot":
+				{
+					"common":
+					[
+						20,
+						{ "item": "item_iron_spear", "chance": 50 },
+						{ "item": "item_iron_helmet", "chance": 50 }
+					],
+					"rare":
+					[
+						0.2,
+						{ "item": "item_kirajin_spear1", "chance": 50 },
+						{ "item": "item_kirajin_helmet1", "chance": 50 }
+					]
+				},
+				"mindmg": 2,
+				"maxdmg": 7,
+				"custom_params":
+				{
+					"equip": ["item_kirajin_spear1", "item_kirajin_helmet1"],
+					"talk": "kirajin_ambush_2"
+				}
+			}
+		},
+		{
+			"id": 16,
+			"params":
+			{
+				"xpos": 3220,
+				"layer": "animals",
+				"hp": 25,
+				"loot":
+				{
+					"common":
+					[
+						20,
+						{ "item": "item_iron_spear", "chance": 50 },
+						{ "item": "item_iron_helmet", "chance": 50 }
+					],
+					"rare":
+					[
+						0.2,
+						{ "item": "item_kirajin_spear1", "chance": 50 },
+						{ "item": "item_kirajin_helmet1", "chance": 50 }
+					]
+				},
+				"mindmg": 2,
+				"maxdmg": 7,
+				"custom_params":
+				{
+					"equip": ["item_kirajin_spear1", "item_kirajin_helmet1"]
+				}
+			}
+		},
+		{
+			"id": 16,
+			"params":
+			{
+				"xpos": 3295,
+				"layer": "animals",
+				"hp": 25,
+				"loot":
+				{
+					"common":
+					[
+						20,
+						{ "item": "item_iron_spear", "chance": 50 },
+						{ "item": "item_iron_helmet", "chance": 50 }
+					],
+					"rare":
+					[
+						0.2,
+						{ "item": "item_kirajin_spear1", "chance": 50 },
+						{ "item": "item_kirajin_helmet1", "chance": 50 }
+					]
+				},
+				"mindmg": 2,
+				"maxdmg": 7,
+				"custom_params":
+				{
+					"equip": ["item_kirajin_spear1", "item_kirajin_helmet1"]
+				}
+			}
+		},
+
+		{ "id": 11, "params": { "xpos": 3200, "layer": "buildings", "hp": 10, "loot": { "item": "item_potion_1", "chance": 100 } } },
+		{
+			"id": 12,
+			"params":
+			{
+				"xpos": 3800,
+				"layer": "buildings",
+				"hp": 40,
+				"loot":
+				{
+					"common":
+					[
+						55,
+						{
+							"item": "item_iron_spear",
+							"chance": 45
+						},
+						{
+							"item": "item_iron_helmet",
+							"chance": 45
+						},
+						{
+							"item": "item_steel_spear",
+							"chance": 10
+						}
+					]
+				}
+			}
+		},
+
+		{ "id": 10, "params": { "xpos": 3880, "layer": "buildings", "hp": 15, "loot": [50, { "item": "item_banal_branch", "chance": 80 }, { "item": "item_cherry_blossom", "chance": 20 } ] } },
+
+		{ "id": 3, "params": { "xpos": 3800, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 3845, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 3890, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 3935, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 3980, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 3925, "color": "1e8c5a", "layer": "nature" } },
+
+		{ "id": 11, "params": { "xpos": 4485, "layer": "buildings", "hp": 10, "loot": { "item": "item_stone", "chance": 60 } } },
+
+		{ "id": 13, "params": { "xpos": 4630, "layer": "buildings", "hp": 100, "loot": [ 70, { "item": "item_iron_spear", "chance": 43 }, { "item": "item_iron_helmet", "chance": 43 }, { "item": "item_steel_spear", "chance": 16 } ] } },
+		{
+			"id": 6,
+			"params":
+			{
+				"xpos": 4525,
+				"layer": "animals",
+				"hp": 35,
+				"ypos": 270,
+				"parent": 24,
+				"loot":
+				{
+					"common":
+					[
+						20,
+						{ "item": "item_iron_spear", "chance": 50 },
+						{ "item": "item_iron_helmet", "chance": 50 }
+					],
+					"rare":
+					[
+						0.2,
+						{ "item": "item_kirajin_spear1", "chance": 50 },
+						{ "item": "item_kirajin_helmet1", "chance": 50 }
+					]
+				},
+				"mindmg": 3,
+				"maxdmg": 10,
+				"custom_params":
+				{
+					"equip": ["item_kirajin_spear1", "item_kirajin_helmet1"]
+				}
+			}
+		},
+		{
+			"id": 6,
+			"params":
+			{
+				"xpos": 4555,
+				"layer": "animals",
+				"hp": 35,
+				"ypos": 270,
+				"parent": 24,
+				"loot":
+				{
+					"common":
+					[
+						20,
+						{ "item": "item_iron_spear", "chance": 50 },
+						{ "item": "item_iron_helmet", "chance": 50 }
+					],
+					"rare":
+					[
+						0.2,
+						{ "item": "item_kirajin_spear1", "chance": 50 },
+						{ "item": "item_kirajin_helmet1", "chance": 50 }
+					]
+				},
+				"mindmg": 3,
+				"maxdmg": 10,
+				"custom_params":
+				{
+					"equip": ["item_kirajin_spear1", "item_kirajin_helmet1"]
+				}
+			}
+		},
+
+		{ "id": 10, "params": { "xpos": 5200, "layer": "buildings", "hp": 15, "loot": [ 50, { "item": "item_banal_branch", "chance": 80 }, { "item": "item_cherry_blossom", "chance": 20 } ] } },
+        { "id": 10, "params": { "xpos": 5320, "layer": "buildings", "hp": 15, "loot": [ 50, { "item": "item_banal_branch", "chance": 80 }, { "item": "item_cherry_blossom", "chance": 20 } ] } },
+
+		{ "id": 3, "params": { "xpos": 5500, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 5545, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 5590, "color": "1e8c5a", "layer": "nature" } },
+
+		{
+			"id": 16,
+			"params":
+			{
+				"xpos": 5505,
+				"layer":"animals",
+				"hp": 25,
+				"loot":
+				{
+					"common":
+					[
+						20,
+						{ "item": "item_iron_spear", "chance": 50 },
+						{ "item": "item_iron_helmet", "chance": 50 }
+					],
+					"rare":
+					[
+						0.2,
+						{ "item": "item_kirajin_spear1", "chance": 50 },
+						{ "item": "item_kirajin_helmet1", "chance": 50 }
+					]
+				},
+				"mindmg": 1,
+				"maxdmg": 3,
+				"custom_params":
+				{
+					"equip": ["item_kirajin_spear1", "item_kirajin_helmet1"],
+					"talk": "kirajin_ambush_3",
+					"hidden": 99,
+					"range": 750
+				}
+			}
+		},
+		{
+			"id": 16,
+			"params":
+			{
+				"xpos": 5550,
+				"layer":"animals",
+				"hp": 25,
+				"loot":
+				{
+					"common":
+					[
+						20,
+						{ "item": "item_iron_spear", "chance": 50 },
+						{ "item": "item_iron_helmet", "chance": 50 }
+					],
+					"rare":
+					[
+						0.2,
+						{ "item": "item_kirajin_spear1", "chance": 50 },
+						{ "item": "item_kirajin_helmet1", "chance": 50 }
+					]
+				},
+				"mindmg": 1,
+				"maxdmg": 3,
+				"custom_params":
+				{
+					"equip": ["item_kirajin_spear1", "item_kirajin_helmet1"],
+					"hidden": 100,
+					"range": 795
+				}
+			}
+		},
+		{
+			"id": 16,
+			"params":
+			{
+				"xpos": 5595,
+				"layer":"animals",
+				"hp": 25,
+				"loot":
+				{
+					"common":
+					[
+						20,
+						{ "item": "item_iron_spear", "chance": 50 },
+						{ "item": "item_iron_helmet", "chance": 50 }
+					],
+					"rare":
+					[
+						0.2,
+						{ "item": "item_kirajin_spear1", "chance": 50 },
+						{ "item": "item_kirajin_helmet1", "chance": 50 }
+					]
+				},
+				"mindmg": 1,
+				"maxdmg": 3,
+				"custom_params":
+				{
+					"equip": ["item_kirajin_spear1", "item_kirajin_helmet1"],
+					"hidden": 100,
+					"range": 840
+				}
+			}
+		},
+
+		{ "id": 12, "params": { "xpos": 6000, "layer": "buildings", "hp": 40, "loot": [ 100, { "item": "item_iron_spear", "chance": 47 }, { "item": "item_iron_helmet", "chance": 47 }, { "item": "item_steel_spear", "chance": 6 } ] } },
+
+		{ "id": 0, "params": { "xpos": 6300, "layer": "ui" } }
+	]
+}

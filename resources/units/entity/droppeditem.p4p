@@ -1,0 +1,6 @@
+{
+	"baseHP": 9999,
+	"baseY": 0,
+	"collidable": false,
+	"attackable": false
+}

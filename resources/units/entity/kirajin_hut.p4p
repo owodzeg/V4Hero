@@ -1,0 +1,14 @@
+{
+	"baseHP": 50,
+	"baseY": 355,
+	"collidable": true,
+	"attackable": true,
+	"loot":
+	{
+		"common": [
+			100,
+			{ "leather_meat": 50 },
+			{ "kuneri_fang": 50 }
+		]
+	}
+}

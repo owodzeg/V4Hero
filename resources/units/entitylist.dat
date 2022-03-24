@@ -1,0 +1,26 @@
+# list defining usable entities
+# feel free to add your own if you have enough knowledge!
+# id,filename
+0,end_flag
+1,fever_worm
+2,kacheek
+3,grass_1
+4,grass_2
+5,droppeditem
+# kirajin that stands on top of an obstacle/building
+6,kirajin
+# treasure chest found randomly in shida valley hunting mission
+7,treasure_chest
+8,rock_big
+9,rock_small
+10,wooden_spikes
+11,rock_pile
+12,kirajin_hut
+13,kirajin_guardtower
+14,kirajin_poweredtower_small
+15,kirajin_poweredtower_big
+# kirajin that is hidden in the bushes
+16,kirajin
+# kirajin that attacks normally with full AI
+17,kirajin
+18,rappata
