@@ -513,4 +513,6 @@ FodyWeavers.xsd
 # Additional files built by Visual Studio
 *.tlog
 
-resources
+# Patafour resource files
+resources/data/sv1.p4sv
+resources/firstrun
