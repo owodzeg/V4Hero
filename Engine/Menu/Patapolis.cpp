@@ -31,7 +31,7 @@ PatapolisMenu::PatapolisMenu()
     //TO-DO: Patapolis menus under new system
     //altar_menu->initialise(_thisConfig, parent, this);
     //mater_menu.initialise(_thisConfig, parent, this);
-    //barracks_menu.initialise(_thisConfig, parent, this);
+    //SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       initialise(_thisConfig, parent, this);
     //obelisk_menu.Initialise(_thisConfig, parent, this);
     //parentMenu = curParentMenu;
     quality = config->GetInt("textureQuality");
@@ -650,10 +650,12 @@ void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curPar
 
 void PatapolisMenu::EventFired(sf::Event event)
 {
-    if (barracks_menu.is_active)
-    {
-        barracks_menu.EventFired(event);
-    } else if (obelisk_menu.is_active)
+    //TO-DO: fire events for barracks menu? probably through CoreManager
+    //if (barracks_menu.is_active)
+    //{
+    //    barracks_menu.EventFired(event);
+    //} else 
+    if (obelisk_menu.is_active)
     {
         obelisk_menu.EventFired(event);
     } else if (mater_menu.is_active)
@@ -1404,19 +1406,20 @@ void PatapolisMenu::Update()
 
         world_egg.draw(window);
 
-        if (barracks_menu.mission_started)
+        //TO-DO: replace with something else probably core manager blabla
+        /* if (barracks_menu.mission_started)
         {
             obelisk_menu.displayMissions = false;
             //obelisk_menu.sel_location = 1;
             obelisk_menu.sel_mission = 0;
             obelisk_menu.Hide();
-            barracks_menu.mission_started = false;
-        }
+            SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_started = false;
+        }*/
 
         /* TO-DO: whole ass section of not yet refactored classes.
-        if (barracks_menu.is_active)
+        if(barracks_menu.is_active)
         {
-            barracks_menu.update(window, fps, inputCtrl);
+            SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       update(window, fps, inputCtrl);
         } else if (altar_menu->is_active)
         {
             altar_menu->update(window, fps, inputCtrl);
@@ -1514,7 +1517,7 @@ void PatapolisMenu::Update()
         lastView = window->getView();
         window->setView(window->getDefaultView());
 
-        if ((!barracks_menu.is_active) && (!obelisk_menu.is_active) && (!mater_menu.is_active) && (!credits.is_active))
+        if ((!obelisk_menu.is_active) && (!mater_menu.is_active) && (!credits.is_active))
         {
             ctrlTips.x = 0;
             ctrlTips.y = (720 - ctrlTips.ySize);
@@ -1547,13 +1550,14 @@ void PatapolisMenu::Update()
                     case 0: ///Barracks
                     {
                         city_loop.stop();
-                        barracks_menu.Show();
-                        barracks_menu.is_active = true;
-                        barracks_menu.obelisk = false;
-                        barracks_menu.loadInventory();
-                        barracks_menu.updateInputControls();
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       Show();
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       is_active = true;
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       obelisk = false;
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       loadInventory();
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       updateInputControls();
 
-                        screenFade.Create(thisConfig, 0, 1536);
+                        screenFade.Create(0, 1536);
+                        StateManager::getInstance().setState(StateManager::BARRACKS);
 
                         break;
                     }
@@ -1573,8 +1577,8 @@ void PatapolisMenu::Update()
                     case 2: ///Exit barracks
                     {
                         city_loop.stop();
-                        barracks_menu.Hide();
-                        barracks_menu.is_active = false;
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       Hide();
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       is_active = false;
                         Show();
                         is_active = true;
 
@@ -1599,19 +1603,19 @@ void PatapolisMenu::Update()
                     case 4: ///Enter barracks (obelisk)
                     {
                         city_loop.stop();
-                        barracks_menu.Show();
-                        barracks_menu.is_active = true;
-                        barracks_menu.obelisk = true;
-                        barracks_menu.mission_id = obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID;
-                        barracks_menu.mission_file = obelisk_menu.missions[obelisk_menu.sel_mission].mission_file;
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       Show();
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       is_active = true;
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       obelisk = true;
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_id = obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID;
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_file = obelisk_menu.missions[obelisk_menu.sel_mission].mission_file;
 
                         if (config->thisCore->saveReader.mission_levels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID] != 0)
-                            barracks_menu.mission_multiplier = 0.85 + config->thisCore->saveReader.mission_levels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID] * 0.15;
+                            SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_multiplier = 0.85 + config->thisCore->saveReader.mission_levels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID] * 0.15;
                         else
-                            barracks_menu.mission_multiplier = 1;
+                            SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_multiplier = 1;
 
-                        barracks_menu.loadInventory();
-                        barracks_menu.updateInputControls();
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       loadInventory();
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       updateInputControls();
 
                         screenFade.Create(thisConfig, 0, 1536);
 
@@ -1626,12 +1630,12 @@ void PatapolisMenu::Update()
                         window->setActive(false);
                         loadingThreadInstance.launch();
 
-                        barracks_menu.currentController->Initialise(*thisConfig, config->GetString("mission1Background"), *v4Core);
-                        barracks_menu.currentController->StartMission(barracks_menu.mission_file, 1, barracks_menu.mission_id, barracks_menu.mission_multiplier);
-                        barracks_menu.Hide();
-                        barracks_menu.is_active = false;
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       currentController->Initialise(*thisConfig, config->GetString("mission1Background"), *v4Core);
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       currentController->StartMission(SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_file, 1, SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_id, SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_multiplier);
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       Hide();
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       is_active = false;
 
-                        barracks_menu.mission_started = true;
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_started = true;
 
                         v4Core->continue_loading = false;
 
@@ -1673,7 +1677,7 @@ void PatapolisMenu::Update()
 
         if (dialogboxes.size() <= 0)
         {
-            if ((!barracks_menu.is_active) && (!obelisk_menu.is_active) && (StateManager::getInstance().getState() != StateManager::PATAPOLIS_ALTAR) && (!mater_menu.is_active) && (!credits.is_active) && (screenFade.checkFinished()))
+            if ((!obelisk_menu.is_active) && (StateManager::getInstance().getState() != StateManager::PATAPOLIS_ALTAR) && (!mater_menu.is_active) && (!credits.is_active) && (screenFade.checkFinished()))
             {
                 if ((inputCtrl->isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl->isKeyPressed(InputController::Keys::LTRIGGER)))
                 {
@@ -1711,14 +1715,14 @@ void PatapolisMenu::Update()
                         case Buildings::BARRACKS:
                             /// armory/barracks
 
-                            screenFade.Create(thisConfig, 1, 1536);
+                            screenFade.Create(1, 1536);
                             goto_id = 0;
 
-                            /*barracks_menu.Show();
-                        barracks_menu.is_active = true;
-                        barracks_menu.obelisk = false;
-                        barracks_menu.ReloadInventory();
-                        barracks_menu.UpdateInputControls();*/
+                            /*SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       Show();
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       is_active = true;
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       obelisk = false;
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       ReloadInventory();
+                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       UpdateInputControls();*/
                             break;
                         case Buildings::FESTIVAL:
                             /// festival

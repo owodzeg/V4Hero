@@ -184,7 +184,6 @@ class PatapolisMenu : public Menu
 
 		ControlTips ctrlTips;
 
-		Barracks barracks_menu;
         ObeliskMenu obelisk_menu;
         MaterOuterMenu mater_menu;
 		Menu* parentMenu;

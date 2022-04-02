@@ -7,6 +7,8 @@
 #include <iostream>
 #include <sstream>
 #include <spdlog/spdlog.h>
+#include "../CoreManager.h"
+#include "../StateManager.h"
 
 template<typename T>
 std::string to_string_with_precision(const T a_value, const int n = 2)
@@ -22,19 +24,14 @@ Barracks::Barracks()
     //ctor
     //f_font.loadFromFile("resources/fonts/arial.ttf");
 
-    is_active = false;
-}
-void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMenu)
-{
     SPDLOG_INFO("Initializing Barracks");
-    Scene::Initialise(_thisConfig, parent);
-    parentMenu = curParentMenu;
-    currentController = &(v4Core->currentController);
-    thisConfig = _thisConfig;
+    //TO-DO: is this needed anymore?
+    //Scene::Initialise(_thisConfig, parent);
+    //parentMenu = curParentMenu;
 
-    f_font.loadFromFile(thisConfig->fontPath);
+    f_font.loadFromFile(CoreManager::getInstance().getConfig()->fontPath);
 
-    int army_size = v4Core->saveReader.ponReg.pons.size();
+    int army_size = CoreManager::getInstance().getSaveReader()->ponReg.pons.size();
 
     SPDLOG_DEBUG("Barracks army size: {}", army_size);
 
@@ -43,7 +40,7 @@ void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMe
         SPDLOG_DEBUG("Checking Pon {}", i);
 
         Pon* current_pon = new Pon;
-        current_pon = v4Core->saveReader.ponReg.GetPonByID(i);
+        current_pon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i);
 
         SPDLOG_DEBUG("Pon class: {}", current_pon->pon_class);
 
@@ -56,25 +53,28 @@ void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMe
 
                 SPDLOG_DEBUG("Loading Pon");
 
-                wip_pon.get()->LoadConfig(thisConfig);
+                //TO-DO: this is disabled because AnimatedObject does not work well yet.
+                //wip_pon.get()->LoadConfig(thisConfig);
 
-                if (!v4Core->isCached[wip_pon.get()->entityID])
+                if (!CoreManager::getInstance().getCore()->isCached[wip_pon.get()->entityID])
                 {
-                    //v4Core->cacheEntity(wip_pon.get()->entityID, wip_pon.get()->all_swaps_img, wip_pon.get()->animation_spritesheet, wip_pon.get()->objects);
+                    //CoreManager::getInstance().getCore()->cacheEntity(wip_pon.get()->entityID, wip_pon.get()->all_swaps_img, wip_pon.get()->animation_spritesheet, wip_pon.get()->objects);
                 }
 
                 wip_pon.get()->setAnimationSegment("idle_armed");
 
-                SPDLOG_DEBUG("Assigning equipment to Pon ({} slots)", parent->saveReader.ponReg.GetPonByID(i)->slots.size());
+                SPDLOG_DEBUG("Assigning equipment to Pon ({} slots)", CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i)->slots.size());
 
-                for (int o = 0; o < parent->saveReader.ponReg.GetPonByID(i)->slots.size(); o++)
+                for (int o = 0; o < CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i)->slots.size(); o++)
                 {
-                    SPDLOG_DEBUG("Slot {}: {}", o, parent->saveReader.ponReg.GetPonByID(i)->slots[o]);
+                    SPDLOG_DEBUG("Slot {}: {}", o, CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i)->slots[o]);
 
-                    if (parent->saveReader.ponReg.GetPonByID(i)->slots[o] != -1)
+                    if (CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i)->slots[o] != -1)
                     {
                         SPDLOG_DEBUG("Applying equipment");
-                        wip_pon.get()->applyEquipment(parent->saveReader.invData.items[parent->saveReader.ponReg.GetPonByID(i)->slots[o]].item->order_id, o);
+                        
+                        //TO-DO: This will not work until AnimatedObject is converted to new system.
+                        //wip_pon.get()->applyEquipment(CoreManager::getInstance().getSaveReader()->invData.items[CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i)->slots[o]].item->order_id, o);
                     }
                 }
 
@@ -106,42 +106,42 @@ void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMe
         }
     }
 
-    int quality = thisConfig->GetInt("textureQuality");
+    int quality = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
     q = quality;
 
     switch (quality)
     {
         case 0: ///low
         {
-            ratio_x = thisConfig->GetInt("resX") / float(640);
-            ratio_y = thisConfig->GetInt("resY") / float(360);
+            ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / float(640);
+            ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / float(360);
             break;
         }
 
         case 1: ///med
         {
-            ratio_x = thisConfig->GetInt("resX") / float(1280);
-            ratio_y = thisConfig->GetInt("resY") / float(720);
+            ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
+            ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
             break;
         }
 
         case 2: ///high
         {
-            ratio_x = thisConfig->GetInt("resX") / float(1920);
-            ratio_y = thisConfig->GetInt("resY") / float(1080);
+            ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1920);
+            ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / float(1080);
             break;
         }
 
         case 3: ///ultra
         {
-            ratio_x = thisConfig->GetInt("resX") / float(3840);
-            ratio_y = thisConfig->GetInt("resY") / float(2160);
+            ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / float(3840);
+            ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / float(2160);
             break;
         }
     }
 
-    res_ratio_x = thisConfig->GetInt("resX") / float(1280);
-    res_ratio_y = thisConfig->GetInt("resY") / float(720);
+    res_ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
+    res_ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
 
     patapon_y = 607;
     floor_y = 980;
@@ -167,31 +167,31 @@ void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMe
     s_unit_icon.loadFromFile("resources/graphics/ui/unit_icon.png", quality, 1);
     s_unit_icon.setPosition(946, 82);
 
-    Pon* cur_pon = parentMenu->v4Core->saveReader.ponReg.GetPonByID(current_selected_pon);
-    unit_status.createText(f_font, 22, sf::Color(239, 88, 98, 255), Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_unit_status")), quality, 1);
-    class_name.createText(f_font, 34, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_yaripon")), quality, 1);
+    Pon* cur_pon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(current_selected_pon);
+    unit_status.createText(f_font, 22, sf::Color(239, 88, 98, 255), Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_unit_status")), quality, 1);
+    class_name.createText(f_font, 34, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_yaripon")), quality, 1);
 
     /// Stat text
-    unit_stat_level_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_level")), quality, 1);
+    unit_stat_level_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_stat_level")), quality, 1);
     unit_stat_level_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
-    unit_stat_exp_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_exp")), quality, 1);
+    unit_stat_exp_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_stat_exp")), quality, 1);
     unit_stat_exp_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
-    unit_stat_hp_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_hp")), quality, 1);
+    unit_stat_hp_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_stat_hp")), quality, 1);
     unit_stat_hp_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
-    unit_stat_dmg_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_damage")), quality, 1);
+    unit_stat_dmg_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_stat_damage")), quality, 1);
     unit_stat_dmg_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
-    unit_stat_atkspd_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_attackspeed")), quality, 1);
+    unit_stat_atkspd_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_stat_attackspeed")), quality, 1);
     unit_stat_atkspd_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
 
-    unit_stat_critc_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_critchance")), quality, 1);
+    unit_stat_critc_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_stat_critchance")), quality, 1);
     unit_stat_critc_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
-    unit_stat_kbc_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_knockbackchance")), quality, 1);
+    unit_stat_kbc_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_stat_knockbackchance")), quality, 1);
     unit_stat_kbc_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
-    unit_stat_stgc_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_staggerchance")), quality, 1);
+    unit_stat_stgc_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_stat_staggerchance")), quality, 1);
     unit_stat_stgc_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
-    unit_stat_firec_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_burnchance")), quality, 1);
+    unit_stat_firec_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_stat_burnchance")), quality, 1);
     unit_stat_firec_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
-    unit_stat_icec_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_stat_freezechance")), quality, 1);
+    unit_stat_icec_t.createText(f_font, 27, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_stat_freezechance")), quality, 1);
     unit_stat_icec_v.createText(f_font, 27, sf::Color::Black, "", quality, 1);
 
     int equip_height = 50;
@@ -214,12 +214,12 @@ void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMe
 
     /// unit + item name text
 
-    t_unit_rarepon_name.createText(f_font, 24, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("wooden_spear")), quality, 1);
+    t_unit_rarepon_name.createText(f_font, 24, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("wooden_spear")), quality, 1);
     t_unit_rarepon_name.setOrigin(0, t_unit_rarepon_name.getLocalBounds().height / 2);
 
     for (int i = 0; i < t_eq_names.size(); i++)
     {
-        t_eq_names[i].createText(f_font, 24, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("wooden_spear")), quality, 1); // Why always wooden spear? I assumed unimplemented and is gonna change?
+        t_eq_names[i].createText(f_font, 24, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("wooden_spear")), quality, 1); // Why always wooden spear? I assumed unimplemented and is gonna change?
         t_eq_names[i].setOrigin(0, t_eq_names[i].getLocalBounds().height / 2);
     }
 
@@ -238,39 +238,49 @@ void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMe
     quality_setting = quality;
     highlighted_pon.loadFromFile("resources/graphics/ui/highlighted_pon.png", quality_setting, 1);
 
-    applyEquipment();
+    //TO-DO: replace old pointers with new CoreManager pointers
+    //applyEquipment();
 
-    rr_main_sh.Create(1100 + 2, 220 + 2, 20, thisConfig->GetInt("resX") / float(1280), sf::Color(0, 0, 0, 96));
+    rr_main_sh.Create(1100 + 2, 220 + 2, 20, CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280), sf::Color(0, 0, 0, 96));
     rr_main_sh.x = 670 - 1;
     rr_main_sh.y = 190 - 1;
     rr_main_sh.setOrigin(sf::Vector2f((1100 + 40) / 2, (220 + 40) / 2));
 
-    rr_uniticon_sh.Create(176 + 2, 8 + 2, 34, thisConfig->GetInt("resX") / float(1280), sf::Color(0, 0, 0, 96));
+    rr_uniticon_sh.Create(176 + 2, 8 + 2, 34, CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280), sf::Color(0, 0, 0, 96));
     rr_uniticon_sh.x = 188 - 1;
     rr_uniticon_sh.y = 98 - 1;
     rr_uniticon_sh.setOrigin(sf::Vector2f((176 + 68) / 2, (8 + 68) / 2));
 
-    rr_unitstatus_sh.Create(175 + 2, 20 + 2, 25, thisConfig->GetInt("resX") / float(1280), sf::Color(0, 0, 0, 96));
+    rr_unitstatus_sh.Create(175 + 2, 20 + 2, 25, CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280), sf::Color(0, 0, 0, 96));
     rr_unitstatus_sh.x = 1127 - 1;
     rr_unitstatus_sh.y = 64 - 1;
     rr_unitstatus_sh.setOrigin(sf::Vector2f((175 + 50) / 2, (12 + 50) / 2));
 
-    rr_main.Create(1100, 220, 20, thisConfig->GetInt("resX") / float(1280));
+    rr_main.Create(1100, 220, 20, CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280));
     rr_main.x = 670;
     rr_main.y = 190;
     rr_main.setOrigin(sf::Vector2f((1100 + 40) / 2, (220 + 40) / 2));
 
-    rr_uniticon.Create(176, 8, 34, thisConfig->GetInt("resX") / float(1280));
+    rr_uniticon.Create(176, 8, 34, CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280));
     rr_uniticon.x = 188;
     rr_uniticon.y = 98;
     rr_uniticon.setOrigin(sf::Vector2f((176 + 68) / 2, (8 + 68) / 2));
 
-    rr_uniticon.Create(175, 20, 25, thisConfig->GetInt("resX") / float(1280));
+    rr_uniticon.Create(175, 20, 25, CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280));
     rr_uniticon.x = 1127;
     rr_uniticon.y = 64;
     rr_uniticon.setOrigin(sf::Vector2f((175 + 50) / 2, (12 + 50) / 2));
 
     //mm_inventory_background.setSize(sf::Vector2f(mm_inventory_background.getSize().x+(40*resRatioX),mm_inventory_background.getSize().y+(40*resRatioX)));
+
+    initialized = true;
+
+    //TO-DO: is this needed?
+    is_active = false;
+}
+void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMenu)
+{
+    
 }
 void Barracks::eventFired(sf::Event event)
 {
@@ -292,11 +302,11 @@ int Barracks::countOccupied(vector<int> order_id)
     SPDLOG_DEBUG("Barracks::countOccupied({} {} {})", order_id[0], order_id[1], order_id[2]);
     int occ = 0;
 
-    for (int i = 0; i < v4Core->saveReader.ponReg.pons.size(); i++) // Go through every pon
+    for (int i = 0; i < CoreManager::getInstance().getSaveReader()->ponReg.pons.size(); i++) // Go through every pon
     {
-        for (int o = 0; o < v4Core->saveReader.ponReg.pons[i].slots.size(); o++) // *through every equip slot of every pon
+        for (int o = 0; o < CoreManager::getInstance().getSaveReader()->ponReg.pons[i].slots.size(); o++) // *through every equip slot of every pon
         {
-            if (v4Core->saveReader.ponReg.pons[i].slots[o] == v4Core->saveReader.invData.getInvIDByItemID(order_id)) // if it matches the inv id (equivalent to is same item cause of the inv system)
+            if (CoreManager::getInstance().getSaveReader()->ponReg.pons[i].slots[o] == CoreManager::getInstance().getSaveReader()->invData.getInvIDByItemID(order_id)) // if it matches the inv id (equivalent to is same item cause of the inv system)
             {
                 occ++;
             }
@@ -315,9 +325,9 @@ void Barracks::loadInventory()
     std::vector<InventoryData::InventoryItem> items_filtered; ///take only the items we want
     std::vector<int> items_invIDs;                            ///i dont remember if invid is accessible through inventoryitem
 
-    for (int i = 0; i < v4Core->saveReader.invData.items.size(); i++)
+    for (int i = 0; i < CoreManager::getInstance().getSaveReader()->invData.items.size(); i++)
     {
-        InventoryData::InventoryItem cur_inv_item = v4Core->saveReader.invData.items[i];
+        InventoryData::InventoryItem cur_inv_item = CoreManager::getInstance().getSaveReader()->invData.items[i];
         Item* cur_item = cur_inv_item.item;
 
         if (cur_item->order_id[0] == active_category)
@@ -326,7 +336,7 @@ void Barracks::loadInventory()
             {
                 if (cur_item->order_id[1] == 0)
                 {
-                    items_filtered.push_back(v4Core->saveReader.invData.items[i]);
+                    items_filtered.push_back(CoreManager::getInstance().getSaveReader()->invData.items[i]);
                     items_invIDs.push_back(i);
                 }
             }
@@ -335,7 +345,7 @@ void Barracks::loadInventory()
             {
                 if (cur_item->order_id[1] == 1)
                 {
-                    items_filtered.push_back(v4Core->saveReader.invData.items[i]);
+                    items_filtered.push_back(CoreManager::getInstance().getSaveReader()->invData.items[i]);
                     items_invIDs.push_back(i);
                 }
             }
@@ -454,7 +464,7 @@ void Barracks::setInventoryPosition()
 {
     int inv_id = -1;
 
-    Pon* currentPon = parentMenu->v4Core->saveReader.ponReg.GetPonByID(current_selected_pon);
+    Pon* currentPon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(current_selected_pon);
 
     if (current_item_position == 1)
         inv_id = currentPon->slots[0];
@@ -463,7 +473,7 @@ void Barracks::setInventoryPosition()
 
     if (inv_id != -1)
     {
-        Item* cur_item = v4Core->saveReader.invData.items[inv_id].item;
+        Item* cur_item = CoreManager::getInstance().getSaveReader()->invData.items[inv_id].item;
 
         int invbox_id = -1;
 
@@ -507,11 +517,12 @@ void Barracks::applyEquipment()
 {
     for (int i = 0; i < units.size(); i++)
     {
-        for (int o = 0; o < v4Core->saveReader.ponReg.GetPonByID(i)->slots.size(); o++)
+        for (int o = 0; o < CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i)->slots.size(); o++)
         {
-            if (v4Core->saveReader.ponReg.GetPonByID(i)->slots[o] != -1)
+            if (CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i)->slots[o] != -1)
             {
-                units[i].get()->applyEquipment(v4Core->saveReader.invData.items[v4Core->saveReader.ponReg.GetPonByID(i)->slots[o]].item->order_id, o);
+                //TO-DO: will not work until AnimatedObject refactor
+                //units[i].get()->applyEquipment(CoreManager::getInstance().getSaveReader()->invData.items[CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i)->slots[o]].item->order_id, o);
             }
         }
     }
@@ -519,34 +530,34 @@ void Barracks::applyEquipment()
 
 void Barracks::refreshStats()
 {
-    Pon* currentPon = parentMenu->v4Core->saveReader.ponReg.GetPonByID(current_selected_pon);
+    Pon* currentPon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(current_selected_pon);
     switch (currentPon->pon_class)
     {
         case 1: {
-            class_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_yaripon")));
+            class_name.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_yaripon")));
             break;
         }
         case 2: {
-            class_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_tatepon")));
+            class_name.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_tatepon")));
             break;
         }
         case 3: {
-            class_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_yumipon")));
+            class_name.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_yumipon")));
             break;
         }
         case 4: {
-            class_name.setString(thisConfig->thisCore->saveReader.kami_name);
+            class_name.setString(CoreManager::getInstance().getSaveReader()->kami_name);
             break;
         }
     }
-    t_unit_rarepon_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("rarepon_normal")) + " " + Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_lvl")) + " " + std::to_string(currentPon->pon_level));
+    t_unit_rarepon_name.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("rarepon_normal")) + " " + Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_lvl")) + " " + std::to_string(currentPon->pon_level));
 
     for (int i = 0; i < currentPon->slots.size(); i++)
     {
         if (currentPon->slots[i] >= 0)
         {
-            InventoryData::InventoryItem eq = parentMenu->v4Core->saveReader.invData.items[currentPon->slots[i]];
-            t_eq_names[i].setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(eq.item->item_name)));
+            InventoryData::InventoryItem eq = CoreManager::getInstance().getSaveReader()->invData.items[currentPon->slots[i]];
+            t_eq_names[i].setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(eq.item->item_name)));
             t_eq_names[i].setOrigin(0, 0);
 
             SPDLOG_TRACE("currentPon->slots[{}]: {} {}", i, currentPon->slots[i], eq.item->item_name);
@@ -573,16 +584,16 @@ void Barracks::refreshStats()
     unit_stat_icec_v.setString("0%");
 
 
-    /*if (inventoryGridXPos+inventoryGridYPos*numItemColumns<v4core->saveReader.invdata.ItemsByType(activeCategory).size())
+    /*if (inventoryGridXPos+inventoryGridYPos*numItemColumns<CoreManager::getInstance().getSaveReader()->invdata.ItemsByType(activeCategory).size())
     {
-        Item* starting_item = v4core->saveReader.invdata.ItemsByType(activeCategory)[inventoryGridXPos+inventoryGridYPos*numItemColumns].item;
+        Item* starting_item = CoreManager::getInstance().getSaveReader()->invdata.ItemsByType(activeCategory)[inventoryGridXPos+inventoryGridYPos*numItemColumns].item;
 
-        t_itemtitle.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(starting_item->item_name)));
+        t_itemtitle.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(starting_item->item_name)));
         t_itemtitle.setOrigin(t_itemtitle.getLocalBounds().width/2,t_itemtitle.getLocalBounds().height/2);
     }
     else
     {
-        t_itemtitle.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("item_none")));
+        t_itemtitle.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("item_none")));
         t_itemtitle.setOrigin(t_itemtitle.getLocalBounds().width/2,t_itemtitle.getLocalBounds().height/2);
     }*/
 }
@@ -595,8 +606,8 @@ void Barracks::updatePreviewText()
     {
         if (invbox_id < inventory_boxes.size())
         {
-            item_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(inventory_boxes[invbox_id].data->item_name)));
-            item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(thisConfig->strRepo.GetString(inventory_boxes[invbox_id].data->item_description), 340, f_font, 22)));
+            item_title.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(inventory_boxes[invbox_id].data->item_name)));
+            item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(CoreManager::getInstance().getStrRepo()->GetString(inventory_boxes[invbox_id].data->item_description), 340, f_font, 22)));
         } else
         {
             item_title.setString("");
@@ -609,17 +620,21 @@ void Barracks::updatePreviewText()
     }
 }
 
-void Barracks::update(sf::RenderWindow& window, float fps, InputController& inputCtrl)
+void Barracks::Update()
 {
-    if (is_active)
+    if (true)
     {
-        auto lastView = window.getView();
-        window.setView(window.getDefaultView());
+        InputController* inputCtrl = CoreManager::getInstance().getInputController();
+        sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+        float fps = CoreManager::getInstance().getCore()->getFPS();
+
+        auto lastView = window->getView();
+        window->setView(window->getDefaultView());
 
         rs_cover.setSize(sf::Vector2f(1280 * res_ratio_x, 720 * res_ratio_y));
         rs_cover.setFillColor(sf::Color::Black);
         rs_cover.setPosition(0, 0);
-        window.draw(rs_cover);
+        window->draw(rs_cover);
 
         s_background.setPosition(0, 0);
         s_background.draw(window);
@@ -634,35 +649,36 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
         {
             units[i].get()->setGlobalPosition(sf::Vector2f(500 + (75 * (i)), patapon_y));
             units[i].get()->fps = fps;
-            units[i].get()->Draw(window);
+            //TO-DO: animated objects doesn't work yet. implement new system
+            //units[i].get()->Draw(window);
         }
 
         s_pon_highlight.setPosition(highlight_width * 2, 675);
         s_pon_highlight.draw(window);
 
 
-        rr_main_sh.Draw(window);
-        rr_uniticon_sh.Draw(window);
-        rr_unitstatus_sh.Draw(window);
-        rr_main.Draw(window);
-        rr_uniticon.Draw(window);
-        rr_uniticon.Draw(window);
+        rr_main_sh.Draw();
+        rr_uniticon_sh.Draw();
+        rr_unitstatus_sh.Draw();
+        rr_main.Draw();
+        rr_uniticon.Draw();
+        rr_uniticon.Draw();
 
         class_icon.draw(window);
 
-        unit_status.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_unit_status")) + " " + to_string(current_selected_pon + 1) + "/3");
+        unit_status.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_unit_status")) + " " + to_string(current_selected_pon + 1) + "/3");
         unit_status.setPosition(1048, 38);
 
         Pon* currentPon = new Pon;
-        currentPon = parentMenu->v4Core->saveReader.ponReg.GetPonByID(current_selected_pon);
+        currentPon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(current_selected_pon);
         switch (currentPon->pon_class)
         {
             case 1: {
-                class_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_yaripon")));
+                class_name.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_yaripon")));
                 break;
             }
             case 2: {
-                class_name.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_tatepon")));
+                class_name.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_tatepon")));
                 break;
             }
         }
@@ -810,7 +826,8 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
 
         ctrlTips.x = 0;
         ctrlTips.y = (720 - ctrlTips.ySize);
-        ctrlTips.draw(window);
+        //TO-DO: this doesn't work. check why
+        //ctrlTips.draw(window);
 
         if (menu_mode)
         {
@@ -833,8 +850,8 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
 
                         inventory_boxes[cur_item].r_outer.setPosition((40 + xpos) * res_ratio_x, (366 + ypos) * res_ratio_y);
                         inventory_boxes[cur_item].r_inner.setPosition((40 + xpos + 2.5) * res_ratio_x, (366 + ypos + 2.5) * res_ratio_y);
-                        window.draw(inventory_boxes[cur_item].r_outer);
-                        window.draw(inventory_boxes[cur_item].r_inner);
+                        window->draw(inventory_boxes[cur_item].r_outer);
+                        window->draw(inventory_boxes[cur_item].r_inner);
 
                         //inventory_boxes[i].num.setOrigin(inventory_boxes[i].num.getLocalBounds().width,inventory_boxes[i].num.getLocalBounds().height);
                         //inventory_boxes[i].num_shadow.setOrigin(inventory_boxes[i].num_shadow.getLocalBounds().width,inventory_boxes[i].num_shadow.getLocalBounds().height);
@@ -858,7 +875,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                             inventory_boxes[cur_item].r_highlight.setSize(sf::Vector2f(70.0 * res_ratio_x, 51.0 * res_ratio_y));
                             inventory_boxes[cur_item].r_highlight.setPosition((40 + xpos) * res_ratio_x, (366 + ypos) * res_ratio_y);
                             inventory_boxes[cur_item].r_highlight.setFillColor(sf::Color(0, 0, 0, 192));
-                            window.draw(inventory_boxes[cur_item].r_highlight);
+                            window->draw(inventory_boxes[cur_item].r_highlight);
                         }
                     }
                 } else
@@ -879,13 +896,13 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
 
                     tmp_inv.r_outer.setPosition((40 + xpos) * res_ratio_x, (366 + ypos) * res_ratio_y);
                     tmp_inv.r_inner.setPosition((40 + xpos + 2.5) * res_ratio_x, (366 + ypos + 2.5) * res_ratio_y);
-                    window.draw(tmp_inv.r_outer);
-                    window.draw(tmp_inv.r_inner);
+                    window->draw(tmp_inv.r_outer);
+                    window->draw(tmp_inv.r_inner);
 
                     tmp_inv.r_highlight.setSize(sf::Vector2f(70.0 * res_ratio_x, 51.0 * res_ratio_y));
                     tmp_inv.r_highlight.setPosition((40 + xpos) * res_ratio_x, (366 + ypos) * res_ratio_y);
                     tmp_inv.r_highlight.setFillColor(sf::Color(0, 0, 0, 192));
-                    window.draw(tmp_inv.r_highlight);
+                    window->draw(tmp_inv.r_highlight);
                 }
             }
 
@@ -895,19 +912,19 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
             r_sel.setOutlineColor(sf::Color(255, 0, 32, 255));
             r_sel.setPosition((40 + 46 + (grid_sel_x * 77)) * res_ratio_x, (366 + 37 + (grid_sel_y * 54)) * res_ratio_y);
 
-            window.draw(r_sel);
+            window->draw(r_sel);
 
-            rr_itempreview_sh.Create(360 + 2, 260 + 2, 20, window.getSize().x / float(1280), sf::Color(0, 0, 0, 96));
+            rr_itempreview_sh.Create(360 + 2, 260 + 2, 20, window->getSize().x / float(1280), sf::Color(0, 0, 0, 96));
             rr_itempreview_sh.x = 650 - 1;
             rr_itempreview_sh.y = 490 - 1;
             rr_itempreview_sh.setOrigin(sf::Vector2f((360 + 40) / 2, (220 + 40) / 2));
-            rr_itempreview_sh.Draw(window);
+            rr_itempreview_sh.Draw();
 
-            rr_itempreview.Create(360, 260, 20, window.getSize().x / float(1280));
+            rr_itempreview.Create(360, 260, 20, window->getSize().x / float(1280));
             rr_itempreview.x = 650;
             rr_itempreview.y = 490;
             rr_itempreview.setOrigin(sf::Vector2f((360 + 40) / 2, (220 + 40) / 2));
-            rr_itempreview.Draw(window);
+            rr_itempreview.Draw();
 
             item_title.setOrigin(item_title.getLocalBounds().width / 2, item_title.getLocalBounds().height / 2);
             item_title.setPosition(650, 390);
@@ -917,7 +934,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
             item_desc.draw(window);
         }
 
-        window.draw(mm_selected_item_line);
+        window->draw(mm_selected_item_line);
 
         vector<int> db_e; ///dialog box erase
 
@@ -925,7 +942,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
         {
             dialog_boxes[i].x = 640;
             dialog_boxes[i].y = 360;
-            dialog_boxes[i].Draw(window, fps, inputCtrl);
+            dialog_boxes[i].Draw();
 
             if (dialog_boxes[i].closed)
                 db_e.push_back(i);
@@ -936,7 +953,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
             dialog_boxes.erase(dialog_boxes.begin() + db_e[i] - i);
         }
 
-        window.setView(lastView);
+        window->setView(lastView);
 
         if (dialog_boxes.size() <= 0)
         {
@@ -952,7 +969,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                 enabled_positons.push_back(false); [4]
                 */
 
-                if (inputCtrl.isKeyPressed(InputController::Keys::UP))
+                if (inputCtrl->isKeyPressed(InputController::Keys::UP))
                 {
                     /*current_item_position -=1;
                     if (current_item_position<0){
@@ -989,7 +1006,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                     }
                 }
 
-                if (inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+                if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
                 {
                     /*if(current_item_position < 4)
                     {
@@ -1043,7 +1060,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                     }
                 }
 
-                if (inputCtrl.isKeyPressed(InputController::Keys::LEFT))
+                if (inputCtrl->isKeyPressed(InputController::Keys::LEFT))
                 {
                     if (current_selected_pon > 0)
                         current_selected_pon--;
@@ -1051,7 +1068,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                     refreshStats();
                 }
 
-                if (inputCtrl.isKeyPressed(InputController::Keys::RIGHT))
+                if (inputCtrl->isKeyPressed(InputController::Keys::RIGHT))
                 {
                     if (current_selected_pon < 2)
                         current_selected_pon++;
@@ -1060,7 +1077,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                 }
             } else
             {
-                if (inputCtrl.isKeyPressed(InputController::Keys::LEFT))
+                if (inputCtrl->isKeyPressed(InputController::Keys::LEFT))
                 {
                     grid_sel_x--;
 
@@ -1069,7 +1086,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
 
                     updatePreviewText();
                 }
-                if (inputCtrl.isKeyPressed(InputController::Keys::RIGHT))
+                if (inputCtrl->isKeyPressed(InputController::Keys::RIGHT))
                 {
                     grid_sel_x++;
 
@@ -1078,7 +1095,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
 
                     updatePreviewText();
                 }
-                if (inputCtrl.isKeyPressed(InputController::Keys::UP))
+                if (inputCtrl->isKeyPressed(InputController::Keys::UP))
                 {
                     grid_sel_y--;
 
@@ -1101,7 +1118,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
 
                     updatePreviewText();
                 }
-                if (inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+                if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
                 {
                     grid_sel_y++;
 
@@ -1122,7 +1139,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                 }
             }
 
-            if (inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+            if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
             {
                 if (!menu_mode)
                 {
@@ -1157,7 +1174,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                             ///Check if item isn't highlighted, that means it's accessible
                             if (!inventory_boxes[invbox_id].highlight)
                             {
-                                InventoryData::InventoryItem currentItem = v4Core->saveReader.invData.items[inventory_boxes[invbox_id].inv_id];
+                                InventoryData::InventoryItem currentItem = CoreManager::getInstance().getSaveReader()->invData.items[inventory_boxes[invbox_id].inv_id];
 
                                 SPDLOG_TRACE("InvID: {}", inventory_boxes[invbox_id].inv_id);
 
@@ -1170,9 +1187,9 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
 
                                 SPDLOG_TRACE("Order_id is {}", str_order_id);
 
-                                if ((inventory_boxes[invbox_id].amount > inventory_boxes[invbox_id].occ_amount) && (v4Core->saveReader.ponReg.pons[current_selected_pon].canEquip(currentItem.item->order_id, active_category - 3))) ///I have put active_category-2 here because where=0 when you wanna equip spear and where=1 when you wanna equip helm. theres some confusion between gui slots and equipment slots in ponregistry. gotta fix it someday.
+                                if ((inventory_boxes[invbox_id].amount > inventory_boxes[invbox_id].occ_amount) && (CoreManager::getInstance().getSaveReader()->ponReg.pons[current_selected_pon].canEquip(currentItem.item->order_id, active_category - 3))) ///I have put active_category-2 here because where=0 when you wanna equip spear and where=1 when you wanna equip helm. theres some confusion between gui slots and equipment slots in ponregistry. gotta fix it someday.
                                 {
-                                    v4Core->saveReader.ponReg.pons[current_selected_pon].giveItem(v4Core->saveReader.invData.getInvIDByItemID(currentItem.item->order_id), active_category - 3);
+                                    CoreManager::getInstance().getSaveReader()->ponReg.pons[current_selected_pon].giveItem(CoreManager::getInstance().getSaveReader()->invData.getInvIDByItemID(currentItem.item->order_id), active_category - 3);
 
                                     refreshStats();
                                     applyEquipment();
@@ -1189,7 +1206,7 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                 }
             }
 
-            if (inputCtrl.isKeyPressed(InputController::Keys::CIRCLE))
+            if (inputCtrl->isKeyPressed(InputController::Keys::CIRCLE))
             {
                 if (menu_mode)
                 {
@@ -1199,31 +1216,35 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                     refreshStats();
                 } else
                 {
-                    parentMenu->screenFade.Create(thisConfig, 1, 1536);
-                    parentMenu->goto_id = 2;
+                    //TO-DO: return from barracks to Patapolis (call to StateManager i guess)
+                    //parentMenu->screenFade.Create(thisConfig, 1, 1536);
+                    //parentMenu->goto_id = 2;
 
                     /*this->Hide();
                     this->isActive = false;
                     parentMenu->Show();
                     parentMenu->isActive=true;*/
+
+                    screenFade.Create(1, 512);
+                    StateManager::getInstance().setState(StateManager::PATAPOLIS);
                 }
             }
 
-            if (inputCtrl.isKeyPressed(InputController::Keys::START))
+            if (inputCtrl->isKeyPressed(InputController::Keys::START))
             {
                 if (obelisk)
                 {
-                    std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_yes")), Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_no"))};
+                    std::vector<sf::String> a = {Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("nav_yes")), Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("nav_no"))};
 
                     PataDialogBox db;
-                    db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("barracks_depart")), a, thisConfig->GetInt("textureQuality"));
+                    db.Create(f_font, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_depart")), a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
                     db.id = 0;
                     dialog_boxes.push_back(db);
                 }
             }
         } else
         {
-            if (inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+            if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
             {
                 switch (dialog_boxes[dialog_boxes.size() - 1].CheckSelectedOption())
                 {
@@ -1233,12 +1254,13 @@ void Barracks::update(sf::RenderWindow& window, float fps, InputController& inpu
                             SPDLOG_DEBUG("Go on mission!");
                             dialog_boxes[dialog_boxes.size() - 1].Close();
 
-                            parentMenu->screenFade.Create(thisConfig, 1, 1536);
-                            parentMenu->goto_id = 5;
+                            //TO-DO: Run MissionController (but through StateManager, properly)
+                            //parentMenu->screenFade.Create(thisConfig, 1, 1536);
+                            //parentMenu->goto_id = 5;
 
                             /*sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
                             v4core->continueLoading=true;
-                            v4core->window.setActive(false);
+                            v4core->window->setActive(false);
                             loadingThreadInstance.launch();
 
                             currentController->Initialise(*config,config->GetString("mission1Background"),*v4core);
