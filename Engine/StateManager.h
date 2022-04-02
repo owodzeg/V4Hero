@@ -12,6 +12,7 @@
 #include "Menu/LoadingTip.h"
 #include "Menu/Patapolis.h"
 #include "Menu/Altar.h"
+#include "Menu/Barracks.h"
 #include "Mission/MissionController.h"
 
 // Class for holding the pointers to commonly used important game contents
@@ -28,6 +29,7 @@ public:
         TIPS = 5,
         PATAPOLIS = 6,
         PATAPOLIS_ALTAR = 7,
+        BARRACKS = 8,
         MISSIONCONTROLLER = 10
     };
 
@@ -53,6 +55,7 @@ private:
     LoadingTip* loadingTipPtr;
     PatapolisMenu* patapolisPtr;
     AltarMenu* altarPtr;
+    Barracks* barracksPtr;
 
     std::vector<std::thread> loadingThreads;
 };

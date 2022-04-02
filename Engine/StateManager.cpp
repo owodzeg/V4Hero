@@ -72,9 +72,9 @@ void StateManager::updateCurrentState()
             {
                 case PATAPOLIS: {
 
-                    if (patapolisPtr != nullptr && altarPtr != nullptr)
+                    if (patapolisPtr != nullptr && altarPtr != nullptr && barracksPtr != nullptr)
                     {
-                        if (patapolisPtr->initialized && altarPtr->initialized)
+                        if (patapolisPtr->initialized && altarPtr->initialized && barracksPtr->initialized)
                         {
                             if (loadingTipPtr != nullptr)
                             {
@@ -125,6 +125,16 @@ void StateManager::updateCurrentState()
             altarPtr->Update();
 
             break;
+        }
+
+        case BARRACKS: {
+        
+            if (barracksPtr == nullptr)
+            {
+                barracksPtr = new Barracks;
+            }
+
+            barracksPtr->Update();
         }
 
         case MISSIONCONTROLLER: {
@@ -194,6 +204,11 @@ void StateManager::initState(int state)
                 altarPtr->initialized = true;
             }
 
+            if (barracksPtr == nullptr)
+            {
+                barracksPtr = new Barracks;
+            }
+
             break;
         }
 
@@ -237,7 +252,8 @@ void StateManager::setState(int state)
 {
     // Here is a good place to put specific events that always happen when changing states
     
-    if (currentGameState == OPTIONSMENU && state == MAINMENU) //return from options to main
+    //return from options to main
+    if (currentGameState == OPTIONSMENU && state == MAINMENU) 
     {
         if (mainMenuPtr != nullptr)
         {
@@ -245,7 +261,8 @@ void StateManager::setState(int state)
         }
     }
 
-    if (currentGameState == MAINMENU && state == OPTIONSMENU) //go from main to options
+    //go from main to options
+    if (currentGameState == MAINMENU && state == OPTIONSMENU) 
     {
         if (optionsMenuPtr != nullptr)
         {
@@ -255,7 +272,8 @@ void StateManager::setState(int state)
         }
     }
 
-    if (currentGameState == MAINMENU && state == PATAPOLIS) //go from main to patapolis (forward through tips)
+    //go from main to patapolis (forward through tips)
+    if (currentGameState == MAINMENU && state == PATAPOLIS) 
     {
         if (loadingTipPtr == nullptr)
         {
@@ -272,11 +290,33 @@ void StateManager::setState(int state)
         initStateMT(afterTipState);
     }
 
+    // go from patapolis to altar
     if (currentGameState == PATAPOLIS && state == PATAPOLIS_ALTAR)
     {
         if (altarPtr != nullptr)
         {
             altarPtr->reloadInventory();
+        }
+    }
+
+    // go from patapolis to barracks
+    if (currentGameState == PATAPOLIS && state == BARRACKS)
+    {
+        if (barracksPtr != nullptr)
+        {
+            barracksPtr->screenFade.Create(0, 512);
+            barracksPtr->obelisk = false;
+            barracksPtr->refreshStats();
+            barracksPtr->updateInputControls();
+        }
+    }
+
+    // go from barracks to patapolis
+    if (currentGameState == BARRACKS && state == PATAPOLIS)
+    {
+        if (patapolisPtr != nullptr)
+        {
+            patapolisPtr->screenFade.Create(0, 1536);
         }
     }
 
