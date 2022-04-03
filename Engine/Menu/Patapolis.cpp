@@ -655,10 +655,11 @@ void PatapolisMenu::EventFired(sf::Event event)
     //{
     //    barracks_menu.EventFired(event);
     //} else 
-    if (obelisk_menu.is_active)
-    {
-        obelisk_menu.EventFired(event);
-    } else if (mater_menu.is_active)
+    //if (obelisk_menu.is_active)
+    //{
+    //    obelisk_menu.EventFired(event);
+    //} else 
+    if (mater_menu.is_active)
     {
         mater_menu.EventFired(event);
     } else if (is_active)
@@ -1517,7 +1518,7 @@ void PatapolisMenu::Update()
         lastView = window->getView();
         window->setView(window->getDefaultView());
 
-        if ((!obelisk_menu.is_active) && (!mater_menu.is_active) && (!credits.is_active))
+        if ((!mater_menu.is_active) && (!credits.is_active))
         {
             ctrlTips.x = 0;
             ctrlTips.y = (720 - ctrlTips.ySize);
@@ -1565,11 +1566,12 @@ void PatapolisMenu::Update()
                     case 1: ///Obelisk
                     {
                         city_loop.stop();
-                        obelisk_menu.Reload();
-                        obelisk_menu.Show();
-                        obelisk_menu.is_active = true;
+                        //obelisk_menu.Reload();
+                        //obelisk_menu.Show();
+                        //obelisk_menu.is_active = true;
 
-                        screenFade.Create(thisConfig, 0, 1536);
+                        screenFade.Create(0, 1536);
+                        StateManager::getInstance().setState(StateManager::OBELISK);
 
                         break;
                     }
@@ -1582,7 +1584,7 @@ void PatapolisMenu::Update()
                         Show();
                         is_active = true;
 
-                        screenFade.Create(thisConfig, 0, 1536);
+                        screenFade.Create(0, 1536);
 
                         break;
                     }
@@ -1590,12 +1592,12 @@ void PatapolisMenu::Update()
                     case 3: ///Exit obelisk
                     {
                         city_loop.stop();
-                        obelisk_menu.Hide();
-                        obelisk_menu.is_active = false;
-                        Show();
+                        //obelisk_menu.Hide();
+                        //obelisk_menu.is_active = false;
+                        //Show();
                         is_active = true;
 
-                        screenFade.Create(thisConfig, 0, 1536);
+                        screenFade.Create(0, 1536);
 
                         break;
                     }
@@ -1606,18 +1608,21 @@ void PatapolisMenu::Update()
                         SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       Show();
                         SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       is_active = true;
                         SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       obelisk = true;
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_id = obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID;
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_file = obelisk_menu.missions[obelisk_menu.sel_mission].mission_file;
+                        
+                        //TO-DO: mission controller will probably obtain the mission to be played in a different way so discard this for now
+                        //barracks_menu.mission_id = obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID;
+                        //barracks_menu.mission_file = obelisk_menu.missions[obelisk_menu.sel_mission].mission_file;
 
-                        if (config->thisCore->saveReader.mission_levels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID] != 0)
-                            SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_multiplier = 0.85 + config->thisCore->saveReader.mission_levels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID] * 0.15;
-                        else
-                            SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_multiplier = 1;
+                        //TO-DO: handle obelisk difficulty calculation differently
+                        //if (config->thisCore->saveReader.mission_levels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID] != 0)
+                        //    SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_multiplier = 0.85 + config->thisCore->saveReader.mission_levels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID] * 0.15;
+                        //else
+                        //    SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_multiplier = 1;
 
                         SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       loadInventory();
                         SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       updateInputControls();
 
-                        screenFade.Create(thisConfig, 0, 1536);
+                        screenFade.Create(0, 1536);
 
                         break;
                     }
@@ -1639,7 +1644,7 @@ void PatapolisMenu::Update()
 
                         v4Core->continue_loading = false;
 
-                        screenFade.Create(thisConfig, 0, 1536);
+                        screenFade.Create(0, 1536);
 
                         break;
                     }
@@ -1650,7 +1655,7 @@ void PatapolisMenu::Update()
                         credits.is_active = true;
                         credits.restart();
 
-                        screenFade.Create(thisConfig, 0, 512);
+                        screenFade.Create(0, 512);
 
                         break;
                     }
@@ -1663,7 +1668,7 @@ void PatapolisMenu::Update()
                         parentMenu->Show();
                         parentMenu->is_active = true;
 
-                        parentMenu->screenFade.Create(thisConfig, 0, 512);
+                        parentMenu->screenFade.Create(0, 512);
 
                         break;
                     }
@@ -1677,7 +1682,7 @@ void PatapolisMenu::Update()
 
         if (dialogboxes.size() <= 0)
         {
-            if ((!obelisk_menu.is_active) && (StateManager::getInstance().getState() != StateManager::PATAPOLIS_ALTAR) && (!mater_menu.is_active) && (!credits.is_active) && (screenFade.checkFinished()))
+            if ((StateManager::getInstance().getState() != StateManager::PATAPOLIS_ALTAR) && (!mater_menu.is_active) && (!credits.is_active) && (screenFade.checkFinished()))
             {
                 if ((inputCtrl->isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl->isKeyPressed(InputController::Keys::LTRIGGER)))
                 {
@@ -1745,7 +1750,7 @@ void PatapolisMenu::Update()
                         case Buildings::OBELISK:
                             /// obelisk
 
-                            screenFade.Create(thisConfig, 1, 1536);
+                            screenFade.Create(1, 1536);
                             goto_id = 1;
 
                             /*obelisk_menu.Reload();
@@ -1806,7 +1811,7 @@ void PatapolisMenu::Update()
                         } else if (dialogboxes[dialogboxes.size() - 1].id == 1)
                         {
                             SPDLOG_INFO("Left from Patapolis to Title screen.");
-                            screenFade.Create(thisConfig, 1, 512);
+                            screenFade.Create(1, 512);
                             goto_id = 7;
                         } else if (dialogboxes[dialogboxes.size() - 1].id == 2)
                         {
@@ -1833,7 +1838,7 @@ void PatapolisMenu::Update()
                         } else if (dialogboxes[dialogboxes.size() - 1].id == 4)
                         {
                             SPDLOG_INFO("Going into credits!");
-                            screenFade.Create(thisConfig, 1, 512);
+                            screenFade.Create(1, 512);
                             goto_id = 6;
 
                             dialogboxes[dialogboxes.size() - 1].Close();

@@ -81,12 +81,16 @@ public:
     sf::View v_render_map;
     sf::View v_render_missions_map;
 
+    bool initialized = false;
+
     PatapolisMenu* parentMenu;
 
     void addMission(nlohmann::json missiondata);
     void Initialise(Config* thisConfig, V4Core* parent, PatapolisMenu* curParentMenu);
+    void Initialise();
     void Reload();
     void Update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
+    void Update();
     void EventFired(sf::Event event);
     void OnExit();
     void UpdateButtons();
