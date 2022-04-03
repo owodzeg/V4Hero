@@ -72,9 +72,9 @@ void StateManager::updateCurrentState()
             {
                 case PATAPOLIS: {
 
-                    if (patapolisPtr != nullptr && altarPtr != nullptr && barracksPtr != nullptr)
+                    if (patapolisPtr != nullptr && altarPtr != nullptr && barracksPtr != nullptr && obeliskPtr != nullptr)
                     {
-                        if (patapolisPtr->initialized && altarPtr->initialized && barracksPtr->initialized)
+                        if (patapolisPtr->initialized && altarPtr->initialized && barracksPtr->initialized && obeliskPtr->initialized)
                         {
                             if (loadingTipPtr != nullptr)
                             {
@@ -135,6 +135,20 @@ void StateManager::updateCurrentState()
             }
 
             barracksPtr->Update();
+
+            break;
+        }
+
+        case OBELISK: {
+        
+            if (obeliskPtr == nullptr)
+            {
+                obeliskPtr = new ObeliskMenu;
+            }
+
+            obeliskPtr->Update();
+
+            break;
         }
 
         case MISSIONCONTROLLER: {
@@ -207,6 +221,13 @@ void StateManager::initState(int state)
             if (barracksPtr == nullptr)
             {
                 barracksPtr = new Barracks;
+            }
+
+            if (obeliskPtr == nullptr)
+            {
+                obeliskPtr = new ObeliskMenu;
+                obeliskPtr->Reload();
+                obeliskPtr->initialized = true;
             }
 
             break;
@@ -317,6 +338,45 @@ void StateManager::setState(int state)
         if (patapolisPtr != nullptr)
         {
             patapolisPtr->screenFade.Create(0, 1536);
+        }
+    }
+
+    // go from patapolis to obelisk
+    if (currentGameState == PATAPOLIS && state == OBELISK)
+    {
+        if (obeliskPtr != nullptr)
+        {
+            obeliskPtr->screenFade.Create(0, 512);
+        }
+    }
+
+    // go from obelisk to patapolis
+    if (currentGameState == OBELISK && state == PATAPOLIS)
+    {
+        if (patapolisPtr != nullptr)
+        {
+            patapolisPtr->screenFade.Create(0, 512);
+        }
+    }
+
+    // go from obelisk to barracks
+    if (currentGameState == OBELISK && state == BARRACKS)
+    {
+        if (barracksPtr != nullptr)
+        {
+            barracksPtr->screenFade.Create(0, 512);
+            barracksPtr->obelisk = true;
+            barracksPtr->refreshStats();
+            barracksPtr->updateInputControls();
+        }
+    }
+
+    // go from barracks to obelisk
+    if (currentGameState == BARRACKS && state == OBELISK)
+    {
+        if (obeliskPtr != nullptr)
+        {
+            obeliskPtr->screenFade.Create(0, 512);
         }
     }
 
