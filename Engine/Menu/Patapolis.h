@@ -183,8 +183,6 @@ class PatapolisMenu : public Menu
 		bool save_loaded = false;
 
 		ControlTips ctrlTips;
-
-        ObeliskMenu obelisk_menu;
         MaterOuterMenu mater_menu;
 		Menu* parentMenu;
 		int currentMenuPosition;
