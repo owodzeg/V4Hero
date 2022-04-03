@@ -93,9 +93,10 @@ public:
     int lang_current = 0;
     vector<int> langIDs;
 
+    bool initialized = false;
+
     Menu* parentMenu;
-    void Initialise(Config* thisConfig, V4Core* parent, Menu* curParentMenu);
-    void Update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
+    void Update();
     void SelectMenuOption();
     void GoBackMenuOption(int a = 2);
     void SetConfigValue(std::string key, std::string value, bool selectmenu = true);

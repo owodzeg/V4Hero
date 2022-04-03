@@ -60,18 +60,16 @@ public:
     std::map<int, std::shared_ptr<AnimationCache>> animation_cache;
     std::map<int, bool> isCached; ///Check if entities have been cached already, so we can make automatic caching inside spawnEntity function
 
-    Config config;
+    //Config config;
     NewGameMenu newGameMenu;
-    MainMenu mainMenu;
-    TipsUtil tipsUtil;
     SaveReader saveReader;
     MissionController currentController;
     V4Core();
     void cacheEntity(int entityID, shared_ptr<vector<vector<sf::Image>>> swaps, shared_ptr<vector<AnimatedObject::Animation>> spritesheet, shared_ptr<vector<Object>> objects);
-    void saveToDebugLog(string data);
     void changeRichPresence(string title, string bg_image, string sm_image);
     std::vector<Menu*> menus;
     bool close_window = false;
+    float getFPS();
     void init();
     void showTip();
     void loadingThread();

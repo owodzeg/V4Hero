@@ -4,18 +4,21 @@
 #include "../V4Core.h"
 #include "ButtonList.h"
 #include "iostream"
+#include "../CoreManager.h"
+#include "../StateManager.h"
+
 MainMenu::MainMenu()
 {
     //ctor
     is_active = true;
-}
-void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
-{
+
+    Config* config = CoreManager::getInstance().getConfig();
+    StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
+
     SPDLOG_DEBUG("Initializing main menu...");
 
-    f_font.loadFromFile(thisConfigs->fontPath);
-    config = thisConfigs;
-    int q = thisConfigs->GetInt("textureQuality");
+    f_font.loadFromFile(config->fontPath);
+    int q = config->GetInt("textureQuality");
     int r = 1;
 
     quality = q;
@@ -26,39 +29,39 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
     {
         case 0: ///low
         {
-            ratioX = thisConfigs->GetInt("resX") / float(640);
-            ratioY = thisConfigs->GetInt("resY") / float(360);
+            ratioX = config->GetInt("resX") / float(640);
+            ratioY = config->GetInt("resY") / float(360);
             break;
         }
 
         case 1: ///med
         {
-            ratioX = thisConfigs->GetInt("resX") / float(1280);
-            ratioY = thisConfigs->GetInt("resY") / float(720);
+            ratioX = config->GetInt("resX") / float(1280);
+            ratioY = config->GetInt("resY") / float(720);
             break;
         }
 
         case 2: ///high
         {
-            ratioX = thisConfigs->GetInt("resX") / float(1920);
-            ratioY = thisConfigs->GetInt("resY") / float(1080);
+            ratioX = config->GetInt("resX") / float(1920);
+            ratioY = config->GetInt("resY") / float(1080);
             break;
         }
 
         case 3: ///ultra
         {
-            ratioX = thisConfigs->GetInt("resX") / float(3840);
-            ratioY = thisConfigs->GetInt("resY") / float(2160);
+            ratioX = config->GetInt("resX") / float(3840);
+            ratioY = config->GetInt("resY") / float(2160);
             break;
         }
     }
 
-    float resRatioX = thisConfigs->GetInt("resX") / float(1280);
-    float resRatioY = thisConfigs->GetInt("resY") / float(720);
+    float resRatioX = config->GetInt("resX") / float(1280);
+    float resRatioY = config->GetInt("resY") / float(720);
 
-    rs_cover.setSize(sf::Vector2f(thisConfigs->GetInt("resX"), thisConfigs->GetInt("resY")));
+    rs_cover.setSize(sf::Vector2f(config->GetInt("resX"), config->GetInt("resY")));
     rs_cover.setFillColor(sf::Color(0, 0, 0, 255));
-    rs_cover2.setSize(sf::Vector2f(thisConfigs->GetInt("resX"), thisConfigs->GetInt("resY")));
+    rs_cover2.setSize(sf::Vector2f(config->GetInt("resX"), config->GetInt("resY")));
     rs_cover2.setFillColor(sf::Color(0, 0, 0, 0));
 
     PSprite& logow_bg = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowbg.png");
@@ -69,12 +72,12 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
     logow_shadow.setColor(sf::Color(64, 64, 64, ui_alpha));
     logow_text.setColor(sf::Color(255, 255, 255, ui_alpha));
 
-    t_pressanykey.createText(f_font, 26, sf::Color(255, 255, 255, t_alpha), Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("menu_pressanykey")), q, r);
+    t_pressanykey.createText(f_font, 26, sf::Color(255, 255, 255, t_alpha), Func::ConvertToUtf8String(strRepo->GetString("menu_pressanykey")), q, r);
 
     sb_smash.loadFromFile("resources/sfx/menu/smash.ogg");
     s_smash.setBuffer(sb_smash);
-    s_smash.setVolume(float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("sfxVolume")) / 100.f));
-    
+    s_smash.setVolume(float(config->GetInt("masterVolume")) * (float(config->GetInt("sfxVolume")) / 100.f));
+
     for (int g = 1; g <= 4; g++)
     {
         PSprite& grass = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_" + to_string(g) + ".png");
@@ -88,9 +91,9 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
     logo.setOrigin(logo.getLocalBounds().width / 2, logo.getLocalBounds().height / 2);
     logo_shadow.setOrigin(logo_shadow.getLocalBounds().width / 2, logo_shadow.getLocalBounds().height / 2);
 
-    for (int t=1; t<=4; t++)
+    for (int t = 1; t <= 4; t++)
     {
-        PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_"+to_string(t)+".png");
+        PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(t) + ".png");
         totem.setOrigin(0, totem.getLocalBounds().height);
     }
 
@@ -173,16 +176,15 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
     g_x[2] = 0;
     g_x[3] = 0;
 
-    float volume = (float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("bgmVolume")) / 100.f));
+    float volume = (float(config->GetInt("masterVolume")) * (float(config->GetInt("bgmVolume")) / 100.f));
 
     sb_title_loop.loadFromFile("resources/sfx/menu/menuloop.ogg");
     title_loop.setBuffer(sb_title_loop);
     title_loop.setLoop(true);
     title_loop.setVolume(volume);
 
-    Scene::Initialise(thisConfigs, parent);
-
-    optionsMenu.Initialise(thisConfig, v4Core, this);
+    //rework pending
+    //optionsMenu.Initialise(thisConfig, v4Core, this);
 
     ifstream fr("resources/firstrun");
     if (fr.good())
@@ -195,32 +197,37 @@ void MainMenu::Initialise(Config* thisConfigs, V4Core* parent)
         firstrun = true;
     }
 
-    msgcloud.Create(45, sf::Vector2f(640, 480), sf::Color::White, true, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_1")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_2")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_3")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_4")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_5")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_6")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_7")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_8")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("firstrun_dialog_9")), true);
+    msgcloud.Create(45, sf::Vector2f(640, 480), sf::Color::White, true, config->GetInt("textureQuality"), config->fontPath);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_1")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_2")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_3")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_4")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_5")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_6")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_7")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_8")), true);
+    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_9")), true);
 
-    temp_menu.push_back(thisConfig->strRepo.GetString("menu_newgame"));
-    temp_menu.push_back(thisConfig->strRepo.GetString("menu_continue"));
-    temp_menu.push_back(thisConfig->strRepo.GetString("menu_options"));
-    temp_menu.push_back(thisConfig->strRepo.GetString("menu_exit"));
+    temp_menu.push_back(strRepo->GetString("menu_newgame"));
+    temp_menu.push_back(strRepo->GetString("menu_continue"));
+    temp_menu.push_back(strRepo->GetString("menu_options"));
+    temp_menu.push_back(strRepo->GetString("menu_exit"));
 
-    introductionMenu.Initialise(thisConfig, v4Core, this);
+    //rework pending
+    //introductionMenu.Initialise(thisConfig, v4Core, this);
 
     SPDLOG_DEBUG("Main menu initialized.");
     //title_loop.play();
     startClock.restart();
     frClock.restart();
+
+    initialized = true;
 }
 
 void MainMenu::EventFired(sf::Event event)
 {
+    /*
+    rework pending
     if (patapolisMenu.is_active)
     {
         patapolisMenu.EventFired(event);
@@ -235,7 +242,7 @@ void MainMenu::EventFired(sf::Event event)
         if (event.type == sf::Event::KeyPressed)
         {
         }
-    } else if (is_active)
+    } else */ if (is_active)
     {
         if (firstrun)
         {
@@ -266,6 +273,11 @@ void MainMenu::EventFired(sf::Event event)
 }
 void MainMenu::SelectMenuOption()
 {
+    StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
+    Config* config = CoreManager::getInstance().getConfig();
+    SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
+    V4Core* core = CoreManager::getInstance().getCore();
+
     switch (totem_sel)
     {
         case 0: // load the start game cutscenes and menu
@@ -292,7 +304,7 @@ void MainMenu::SelectMenuOption()
             {
                 SPDLOG_INFO("There is no save. Start new game!");
 
-                screenFade.Create(thisConfig, 1, 512);
+                screenFade.Create(1, 512);
                 goto_id = 0;
 
                 /*v4core->saveReader.Flush();
@@ -309,10 +321,10 @@ void MainMenu::SelectMenuOption()
             {
                 SPDLOG_INFO("There is an existing save data. Ask if overwrite");
 
-                std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetString("nav_yes")), Func::ConvertToUtf8String(config->strRepo.GetString("nav_no"))};
+                std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_yes")), Func::ConvertToUtf8String(strRepo->GetString("nav_no"))};
 
                 PataDialogBox db;
-                db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetString("menu_saveexists")), a, config->GetInt("textureQuality"));
+                db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("menu_saveexists")), a, config->GetInt("textureQuality"));
                 db.id = 0;
                 dialogboxes.push_back(db);
             }
@@ -328,32 +340,32 @@ void MainMenu::SelectMenuOption()
             if (exists)
             {
                 /** Load save from saveReader **/
-                v4Core->saveReader.Flush();
-                v4Core->saveReader.LoadSave(*config);
+                saveReader->Flush();
+                saveReader->LoadSave();
 
-                if (v4Core->saveReader.save_ver != "2.0")
+                if (saveReader->save_ver != "2.0")
                 {
                     SPDLOG_WARN("Outdated save data!");
 
-                    std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetString("nav_understood"))};
+                    std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_understood"))};
 
                     PataDialogBox db;
-                    db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetString("menu_nosupportdata")), a, config->GetInt("textureQuality"));
+                    db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("menu_nosupportdata")), a, config->GetInt("textureQuality"));
                     db.id = 2;
                     dialogboxes.push_back(db);
                 } else
                 {
-                    screenFade.Create(thisConfig, 1, 512);
+                    screenFade.Create(1, 512);
                     goto_id = 1;
                 }
             } else
             {
                 SPDLOG_WARN("There is no savedata.");
 
-                std::vector<sf::String> a = {Func::ConvertToUtf8String(config->strRepo.GetString("nav_understood"))};
+                std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_understood"))};
 
                 PataDialogBox db;
-                db.Create(f_font, Func::ConvertToUtf8String(config->strRepo.GetString("menu_nodata")), a, config->GetInt("textureQuality"));
+                db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("menu_nodata")), a, config->GetInt("textureQuality"));
                 db.id = 1;
                 dialogboxes.push_back(db);
             }
@@ -362,20 +374,24 @@ void MainMenu::SelectMenuOption()
         }
         case 2: {
             // load the options menu
-            screenFade.Create(thisConfig, 1, 512);
+            screenFade.Create(1, 512);
             goto_id = 2;
             break;
         }
         case 3: {
             // quit the game probably
-            v4Core->close_window = true;
+            core->close_window = true;
             break;
         }
     }
 }
-void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inputCtrl)
+void MainMenu::Update()
 {
-    if (v4Core->currentController.isInitialized)
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    InputController* inputCtrl = CoreManager::getInstance().getInputController();
+    float fps = CoreManager::getInstance().getCore()->getFPS();
+
+    /* if (v4Core->currentController.isInitialized)
     {
         v4Core->currentController.Update(window, fps, inputCtrl);
     } else if (patapolisMenu.is_active)
@@ -387,7 +403,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
     } else if (optionsMenu.is_active)
     {
         optionsMenu.Update(window, fps, inputCtrl);
-    } else if (is_active)
+    } else if (is_active) */
     {
         if (firstrun)
         {
@@ -421,7 +437,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                 }
             }
 
-            msgcloud.Draw(window, fps, inputCtrl);
+            msgcloud.Draw();
 
         } else if (premenu)
         {
@@ -457,7 +473,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                     logow_text.setColor(sf::Color(255, 255, 255, ui_alpha));
                     logow_shadow.setColor(sf::Color(64, 0, 0, ui_alpha));
 
-                    if (inputCtrl.isAnyKeyPressed())
+                    if (inputCtrl->isAnyKeyPressed())
                     {
                         s_smash.play();
                         logow_bg.setColor(sf::Color(200, 0, 0, 255));
@@ -503,7 +519,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                 logow_text.setScale(logow_scale);
                 logow_shadow.setScale(logow_shscale);
 
-                window.draw(rs_cover);
+                window->draw(rs_cover);
 
                 logow_shadow.draw(window);
                 logow_bg.draw(window);
@@ -536,7 +552,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                 t_pressanykey.draw(window);
 
                 rs_cover2.setFillColor(sf::Color(0, 0, 0, cv_alpha));
-                window.draw(rs_cover2);
+                window->draw(rs_cover2);
             }
         } else
         {
@@ -555,7 +571,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                 title_loop.play();
             }
 
-            window.draw(v_background);
+            window->draw(v_background);
 
             if (fade == 0)
                 alpha -= float(15) / fps;
@@ -639,7 +655,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
 
             float fire_shift = 0;
 
-            //cout << "MouseX: " << (mouseX / window.getSize().x) * 1280 << endl;
+            //cout << "MouseX: " << (mouseX / window->getSize().x) * 1280 << endl;
 
             mouseInBounds = false;
 
@@ -651,11 +667,11 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
 
                 if (UsingMouseSelection)
                 {
-                    if ((mouseX / window.getSize().x) * 1280 > totem.getPosition().x)
+                    if ((mouseX / window->getSize().x) * 1280 > totem.getPosition().x)
                     {
-                        if ((mouseX / window.getSize().x) * 1280 < (totem.getPosition().x + totem.getGlobalBounds().width))
+                        if ((mouseX / window->getSize().x) * 1280 < (totem.getPosition().x + totem.getGlobalBounds().width))
                         {
-                            if ((mouseY / window.getSize().y) * 720 > totem.getPosition().y - totem.getGlobalBounds().height)
+                            if ((mouseY / window->getSize().y) * 720 > totem.getPosition().y - totem.getGlobalBounds().height)
                             {
                                 totem_sel = i;
                                 mouseInBounds = true;
@@ -791,11 +807,11 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                 cv_alpha = 0;
 
             rs_cover2.setFillColor(sf::Color(0, 0, 0, cv_alpha));
-            window.draw(rs_cover2);
+            window->draw(rs_cover2);
 
-            window.setView(window.getDefaultView());
+            window->setView(window->getDefaultView());
 
-            screenFade.draw(window, fps);
+            screenFade.draw();
 
             if (screenFade.checkFinished())
             {
@@ -805,16 +821,21 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                     {
                         case 0: ///New game
                         {
-                            v4Core->saveReader.Flush();
-                            v4Core->saveReader.CreateBlankSave();
+                            SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
+
+                            saveReader->Flush();
+                            saveReader->CreateBlankSave();
 
                             title_loop.stop();
 
-                            introductionMenu.Show();
+                            //TO-DO: replace with StateManager
+                            /* introductionMenu.Show();
                             introductionMenu.is_active = true;
                             introductionMenu.timeout.restart();
 
-                            patapolisMenu.save_loaded = false;
+                            patapolisMenu.save_loaded = false;*/
+
+                            StateManager::getInstance().setState(StateManager::INTRODUCTION);
 
                             break;
                         }
@@ -822,6 +843,11 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                         case 1: ///Continue
                         {
                             title_loop.stop();
+
+                            StateManager::getInstance().setState(StateManager::PATAPOLIS);
+
+                            //TO-DO: replace by StateManager
+                            /*
                             Hide();
                             patapolisClock.restart();
 
@@ -829,25 +855,26 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                             {
                                 sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
                                 v4Core->continue_loading = true;
-                                v4Core->window.setActive(false);
+                                //rework pending v4Core->window->setActive(false);
                                 loadingThreadInstance.launch();
 
                                 patapolisMenu.Show();
                                 patapolisMenu.is_active = true;
                                 patapolisMenu.save_loaded = true;
-                                patapolisMenu.Initialise(config, v4Core, this);
+                                //TO-DO: handle it by statemanager
+                                //patapolisMenu.Initialise(config, v4Core, this);
 
                                 v4Core->continue_loading = false;
                             } else
                             {
                                 sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
                                 v4Core->continue_loading = true;
-                                v4Core->window.setActive(false);
+                                //rework pending v4Core->window->setActive(false);
                                 loadingThreadInstance.launch();
 
                                 patapolisMenu.Show();
                                 patapolisMenu.is_active = true;
-                                patapolisMenu.screenFade.Create(thisConfig, 0, 512);
+                                patapolisMenu.screenFade.Create(0, 512);
 
                                 patapolisMenu.location = 3;
                                 patapolisMenu.ctrlTips.create(54, patapolisMenu.f_font, 20, sf::String("L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
@@ -861,7 +888,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
 
                                 v4Core->loadingWaitForKeyPress();
                                 v4Core->continue_loading = false;
-                            }
+                            }*/
 
                             break;
                         }
@@ -871,11 +898,14 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                             title_loop.stop();
                             Hide();
                             //v4Core->changeRichPresence("In Options menu", "logo", "");
-                            optionsMenu.state = 0;
-                            optionsMenu.sel = 0;
-                            optionsMenu.Show();
 
-                            optionsMenu.screenFade.Create(thisConfig, 0, 512);
+                            StateManager::getInstance().setState(StateManager::OPTIONSMENU);
+
+                            //optionsMenu.state = 0;
+                            //optionsMenu.sel = 0;
+                            //optionsMenu.Show();
+
+                            //optionsMenu.screenFade.Create(0, 512);
 
                             break;
                         }
@@ -891,7 +921,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
             {
                 dialogboxes[i].x = 640;
                 dialogboxes[i].y = 360;
-                dialogboxes[i].Draw(window, fps, inputCtrl);
+                dialogboxes[i].Draw();
 
                 if (dialogboxes[i].closed)
                     db_e.push_back(i);
@@ -904,7 +934,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
 
             if (dialogboxes.size() <= 0)
             {
-                if ((inputCtrl.isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl.isKeyPressed(InputController::Keys::LTRIGGER)))
+                if ((inputCtrl->isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl->isKeyPressed(InputController::Keys::LTRIGGER)))
                 {
                     UsingMouseSelection = false;
 
@@ -916,7 +946,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                     mouseX = totem_sel_pos[totem_sel];
                 }
 
-                if ((inputCtrl.isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl.isKeyPressed(InputController::Keys::RTRIGGER)))
+                if ((inputCtrl->isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl->isKeyPressed(InputController::Keys::RTRIGGER)))
                 {
                     UsingMouseSelection = false;
 
@@ -928,7 +958,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                     mouseX = totem_sel_pos[totem_sel];
                 }
 
-                if (inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+                if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
                 {
                     UsingMouseSelection = false;
 
@@ -937,7 +967,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                 }
             } else
             {
-                if (inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+                if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
                 {
                     switch (dialogboxes[dialogboxes.size() - 1].CheckSelectedOption())
                     {
@@ -947,7 +977,7 @@ void MainMenu::Update(sf::RenderWindow& window, float fps, InputController& inpu
                                 SPDLOG_INFO("Starting new game!");
                                 dialogboxes[dialogboxes.size() - 1].Close();
 
-                                screenFade.Create(thisConfig, 1, 512);
+                                screenFade.Create(1, 512);
                                 goto_id = 0;
 
                                 break;

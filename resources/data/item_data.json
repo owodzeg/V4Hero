@@ -1,0 +1,442 @@
+{
+	"items":
+	[
+		[
+			[
+				{
+					"name": "item_soggy_map",
+					"desc": "desc_soggy_map",
+					"icon": "soggy_map",
+					"item_group": "main",
+					"item_id": 5
+				},
+				
+				{
+					"name": "item_digital_blueprint",
+					"desc": "desc_digital_blueprint",
+					"icon": "digital_blueprint",
+					"item_group": "main",
+					"item_id": 5
+				},
+				
+				{
+					"name": "item_keepsake",
+					"desc": "desc_keepsake",
+					"icon": "keepsake",
+					"item_group": "none",
+					"item_id": -1
+				},
+				
+				{
+					"name": "item_pata_drum",
+					"desc": "desc_pata_drum",
+					"icon": "pata_drum",
+					"item_group": "none",
+					"item_id": -1
+				},
+				
+				{
+					"name": "item_pon_drum",
+					"desc": "desc_pon_drum",
+					"icon": "pon_drum",
+					"item_group": "none",
+					"item_id": -1
+				},
+				
+				{
+					"name": "item_don_drum",
+					"desc": "desc_don_drum",
+					"icon": "don_drum",
+					"item_group": "none",
+					"item_id": -1
+				},
+				
+				{
+					"name": "item_chaka_drum",
+					"desc": "desc_chaka_drum",
+					"icon": "chaka_drum",
+					"item_group": "none",
+					"item_id": -1
+				},
+				
+				{
+					"name": "item_christmas_charm_2020",
+					"desc": "desc_christmas_charm_2020",
+					"icon": "christmas_charm_2020",
+					"item_group": "main",
+					"item_id": 31
+				}
+			]
+		],
+		
+		[
+			[
+				{
+					"name": "item_banal_branch",
+					"desc": "desc_banal_branch",
+					"icon": "banal_branch",
+					"item_group": "main",
+					"item_id": 4
+				},
+				
+				{
+					"name": "item_cherry_blossom",
+					"desc": "desc_cherry_blossom",
+					"icon": "cherry_blossom",
+					"item_group": "main",
+					"item_id": 8
+				},
+				
+				{
+					"name": "item_hinoki",
+					"desc": "desc_hinoki",
+					"icon": "hinoki",
+					"item_group": "main",
+					"item_id": 9
+				}
+			],
+			
+			[
+				{
+					"name": "item_leather_meat",
+					"desc": "desc_leather_meat",
+					"icon": "leather_meat",
+					"item_group": "main",
+					"item_id": 3
+				},
+				
+				{
+					"name": "item_tender_meat",
+					"desc": "desc_tender_meat",
+					"icon": "tender_meat",
+					"item_group": "main",
+					"item_id": 12
+				},
+				
+				{
+					"name": "item_dream_meat",
+					"desc": "desc_dream_meat",
+					"icon": "dream_meat",
+					"item_group": "main",
+					"item_id": 13
+				}
+			],
+			
+			[
+				{
+					"name": "item_kuneri_fang",
+					"desc": "desc_kuneri_fang",
+					"icon": "kuneri_fang",
+					"item_group": "main",
+					"item_id": 2
+				},
+				
+				{
+					"name": "item_itete_fang",
+					"desc": "desc_itete_fang",
+					"icon": "itete_fang",
+					"item_group": "main",
+					"item_id": 10
+				},
+				
+				{
+					"name": "item_gizaza_fang",
+					"desc": "desc_gizaza_fang",
+					"icon": "gizaza_fang",
+					"item_group": "main",
+					"item_id": 11
+				}
+			],
+			
+			[
+				{
+					"name": "item_mudada_bone",
+					"desc": "desc_mudada_bone",
+					"icon": "mudada_bone",
+					"item_group": "none",
+					"item_id": -1
+				},
+				
+				{
+					"name": "item_gashirin_bone",
+					"desc": "desc_gashirin_bone",
+					"icon": "gashirin_bone",
+					"item_group": "none",
+					"item_id": -1
+				}
+			],
+			
+			[
+				{
+					"name": "item_stone",
+					"desc": "desc_stone",
+					"icon": "stone",
+					"item_group": "main",
+					"item_id": 1
+				},
+				
+				{
+					"name": "item_hard_iron",
+					"desc": "desc_hard_iron",
+					"icon": "hard_iron",
+					"item_group": "main",
+					"item_id": 6
+				},
+				
+				{
+					"name": "item_titanium_ore",
+					"desc": "desc_titanium_ore",
+					"icon": "titanium_ore",
+					"item_group": "main",
+					"item_id": 7
+				}
+			]
+		],
+		
+		[
+			[
+				{
+					"name": "item_potion_1",
+					"desc": "desc_potion_1",
+					"icon": "potion_1",
+					"item_group": "main",
+					"item_id": 23
+				},
+				
+				{
+					"name": "item_potion_2",
+					"desc": "desc_potion_2",
+					"icon": "potion_2",
+					"item_group": "main",
+					"item_id": 24
+				}
+			]
+		],
+	
+		[
+			[
+				{
+					"name": "item_wooden_spear",
+					"desc": "desc_wooden_spear",
+					"icon": "wooden_spear",
+					"item_group": "main",
+					"item_id": 14,
+					"hp": 0,
+					"min_dmg": 5,
+					"max_dmg": 8,
+					"crit": 0,
+					"attack_speed": 0
+				},
+				
+				{
+					"name": "item_iron_spear",
+					"desc": "desc_iron_spear",
+					"icon": "iron_spear",
+					"item_group": "main",
+					"item_id": 15,
+					"hp": 0,
+					"min_dmg": 6,
+					"max_dmg": 10,
+					"crit": 0,
+					"attack_speed": 0
+				},
+				
+				{
+					"name": "item_steel_spear",
+					"desc": "desc_steel_spear",
+					"icon": "steel_spear",
+					"item_group": "main",
+					"item_id": 16,
+					"hp": 0,
+					"min_dmg": 7,
+					"max_dmg": 13,
+					"crit": 0,
+					"attack_speed": 0
+				},
+				
+				{
+					"name": "item_scorching_spear",
+					"desc": "desc_scorching_spear",
+					"icon": "scorching_spear",
+					"item_group": "main",
+					"item_id": 17,
+					"hp": 0,
+					"min_dmg": 8,
+					"max_dmg": 15,
+					"crit": 0,
+					"attack_speed": 0
+				},
+				
+				{
+					"name": "item_kacheek_spear",
+					"desc": "desc_kacheek_spear",
+					"icon": "kacheek_spear",
+					"item_group": "main",
+					"item_id": 18,
+					"hp": 0,
+					"min_dmg": 10,
+					"max_dmg": 22,
+					"crit": 0,
+					"attack_speed": 0
+				},
+				
+				{
+					"name": "item_kirajin_spear1",
+					"desc": "desc_kirajin_spear1",
+					"icon": "kirajin_spear_1",
+					"item_group": "main",
+					"item_id": 25,
+					"hp": 0,
+					"min_dmg": 7,
+					"max_dmg": 20,
+					"crit": 0,
+					"attack_speed": 0
+				},
+				
+				{
+					"name": "item_rappata_spear",
+					"desc": "desc_rappata_spear",
+					"icon": "rappata_spear",
+					"item_group": "main",
+					"item_id": 27,
+					"hp": 0,
+					"min_dmg": 11,
+					"max_dmg": 23,
+					"crit": 0,
+					"attack_speed": 0
+				}
+			],
+			
+			[
+					
+			]
+		],
+		
+		[
+			[
+			
+			],
+			
+			[
+				{
+					"name": "item_wooden_helmet",
+					"desc": "desc_wooden_helmet",
+					"icon": "wooden_helmet",
+					"item_group": "main",
+					"item_id": 19,
+					"hp": 10,
+					"min_dmg": 0,
+					"max_dmg": 0,
+					"crit": 0,
+					"attack_speed": 0
+				},
+				
+				{
+					"name": "item_iron_helmet",
+					"desc": "desc_iron_helmet",
+					"icon": "iron_helmet",
+					"item_group": "main",
+					"item_id": 20,
+					"hp": 20,
+					"min_dmg": 0,
+					"max_dmg": 0,
+					"crit": 0,
+					"attack_speed": 0
+				},
+				
+				{
+					"name": "item_strength_helmet",
+					"desc": "desc_strength_helmet",
+					"icon": "strength_helmet",
+					"item_group": "main",
+					"item_id": 21,
+					"hp": 50,
+					"min_dmg": 0,
+					"max_dmg": 2,
+					"crit": 0,
+					"attack_speed": 0
+				},
+				
+				{
+					"name": "item_kacheek_helm",
+					"desc": "desc_kacheek_helm",
+					"icon": "kacheek_helmet",
+					"item_group": "main",
+					"item_id": 22,
+					"hp": 80,
+					"min_dmg": 1,
+					"max_dmg": 1,
+					"crit": 0,
+					"attack_speed": 0
+				},
+				
+				{
+					"name": "item_kirajin_helmet1",
+					"desc": "desc_kirajin_helmet1",
+					"icon": "kirajin_helmet_1",
+					"item_group": "main",
+					"item_id": 26,
+					"hp": 20,
+					"min_dmg": 1,
+					"max_dmg": 4,
+					"crit": 0,
+					"attack_speed": 0
+				},
+				
+				{
+					"name": "item_rappata_helm",
+					"desc": "desc_rappata_helm",
+					"icon": "rappata_helm",
+					"item_group": "main",
+					"item_id": 28,
+					"hp": 80,
+					"min_dmg": 0,
+					"max_dmg": 0,
+					"crit": 0,
+					"attack_speed": 0
+				},
+				
+				{
+					"name": "item_santa_hat",
+					"desc": "desc_santa_hat",
+					"icon": "santa_hat",
+					"item_group": "main",
+					"item_id": 32,
+					"hp": 100,
+					"min_dmg": 0,
+					"max_dmg": 0,
+					"crit": 0,
+					"attack_speed": 0
+				},
+				
+				{
+					"name": "item_kirajin_santa_hat",
+					"desc": "desc_kirajin_santa_hat",
+					"icon": "santa_hat",
+					"item_group": "main",
+					"item_id": 30,
+					"hp": 100,
+					"min_dmg": 0,
+					"max_dmg": 0,
+					"crit": 0,
+					"attack_speed": 0
+				}
+			],
+		
+			[
+				{
+					"name": "item_shubaba_mask",
+					"desc": "desc_shubaba_mask",
+					"icon": "shubaba_mask",
+					"item_group": "none",
+					"item_id": -1,
+					"hp": 0,
+					"min_dmg": 0,
+					"max_dmg": 0,
+					"crit": 0,
+					"attack_speed": -5
+				}
+			]
+		]
+	]
+}

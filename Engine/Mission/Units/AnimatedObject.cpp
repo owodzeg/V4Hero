@@ -836,12 +836,15 @@ void AnimatedObject::setAnimationSegment(std::string new_segment_name)
         anim_end = animation_end[distance(animation_names.begin(), find(animation_names.begin(), animation_names.end(), new_segment_name))];
 
         current_animation = new_segment_name;
-    } else
+    } else if (animation_begin.size() == 1)
     {
         anim_begin = animation_begin[0];
         anim_end = animation_end[0];
 
         current_animation = new_segment_name;
+    } else
+    {
+        SPDLOG_ERROR("There's an object with 0 animations. Did it load properly? Or maybe you forgot to add them? File {} Animation segment {}", anim_path, new_segment_name);
     }
 }
 

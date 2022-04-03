@@ -28,8 +28,8 @@ public:
     NameEntryButtonList buttonList;
     SaveFileCreatedMenu savefilecreated;
 
-    OptionsMenu optionsMenu;
-    PatapolisMenu patapolisMenu;
+    //OptionsMenu optionsMenu;
+    //PatapolisMenu patapolisMenu;
     void Initialise(Config* thisConfig, V4Core* parent, Menu* parentMenu);
     string GetEnteredString();
     void Update(sf::RenderWindow& window, float fps);

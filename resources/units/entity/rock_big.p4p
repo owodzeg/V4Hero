@@ -1,0 +1,14 @@
+{
+	"baseHP": 1,
+	"baseY": 388,
+	"collidable": true,
+	"attackable": true,
+	"loot":
+	{
+		"common": [
+			100,
+			{ "potion_1": 50 },
+			{ "potion_2": 50 }
+		]
+	}
+}

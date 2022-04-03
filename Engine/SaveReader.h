@@ -33,6 +33,7 @@ public:
 
     SaveReader();
     void LoadSave(Config& tconfig);
+    void LoadSave();
     void Flush();
     void CreateBlankSave();
     Config* thisConfig;

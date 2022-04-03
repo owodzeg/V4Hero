@@ -7,6 +7,9 @@
 //#include <windows.h>
 #include "../V4Core.h"
 #include "math.h"
+#include "../CoreManager.h"
+#include "../StateManager.h"
+
 OptionsMenu::OptionsMenu()
 {
     //ctor
@@ -41,24 +44,15 @@ OptionsMenu::OptionsMenu()
     mm_titleBox.setFillColor(sf::Color::Red);*/
     is_active = false;
     madeChanges = false;
-}
-void OptionsMenu::Initialise(Config* thisConfigs, V4Core* parent, Menu* curParentMenu)
-{
-    parent->saveToDebugLog("Initializing Options menu...");
-    SPDLOG_DEBUG("Initialize Options menu");
-    Scene::Initialise(thisConfigs, parent);
-    //buttonList.Initialise(&m_font,*thisConfig,keymap,&(v4core->currentController),this);
-    parentMenu = curParentMenu;
+
+    Config* config = CoreManager::getInstance().getConfig();
+    StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
+
     SPDLOG_DEBUG("Initial values loaded, loading assets");
-    /*t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("menu_button_3")));
 
-    t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
-    t_disclaimer.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("option_disclaimer")));
-    t_disclaimer.setOrigin(t_disclaimer.getGlobalBounds().width/2,t_disclaimer.getGlobalBounds().height/2);*/
+    m_font.loadFromFile(config->fontPath);
 
-    m_font.loadFromFile(thisConfigs->fontPath);
-
-    int q = thisConfigs->GetInt("textureQuality");
+    int q = config->GetInt("textureQuality");
     SPDLOG_TRACE("Quality: {}", q);
 
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/options/options.png");
@@ -80,35 +74,35 @@ void OptionsMenu::Initialise(Config* thisConfigs, V4Core* parent, Menu* curParen
     dg_restart.loadFromFile("resources/graphics/ui/options/dg_restart.png", q, 1);
     dg_select.loadFromFile("resources/graphics/ui/options/dg_select.png", q, 1);*/
 
-    t_restart.createText(m_font, 26, sf::Color::Black, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_restart_notice")), q, 2);
+    t_restart.createText(m_font, 26, sf::Color::Black, Func::ConvertToUtf8String(strRepo->GetString("options_restart_notice")), q, 2);
 
-    vector<sf::String> restart_opt = {Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_restart_button1")), Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_restart_button2"))};
-    restart_prompt.Create(m_font, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_restart_notice")), restart_opt, q);
-    options_header.createText(m_font, 45, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_options")), q, 2);
+    vector<sf::String> restart_opt = {Func::ConvertToUtf8String(strRepo->GetString("options_restart_button1")), Func::ConvertToUtf8String(strRepo->GetString("options_restart_button2"))};
+    restart_prompt.Create(m_font, Func::ConvertToUtf8String(strRepo->GetString("options_restart_notice")), restart_opt, q);
+    options_header.createText(m_font, 45, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_options")), q, 2);
 
     PText opt;
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_graphics")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_graphics")), q, 2);
     options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_audio")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_audio")), q, 2);
     options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_input")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_input")), q, 2);
     options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_language")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_language")), q, 2);
     options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_backtomain")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_backtomain")), q, 2);
     options.push_back(opt);
 
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_graphics1")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_graphics1")), q, 2);
     g_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_graphics2")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_graphics2")), q, 2);
     g_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_graphics4")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_graphics4")), q, 2);
     g_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_graphics5")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_graphics5")), q, 2);
     g_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_graphics6")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_graphics6")), q, 2);
     g_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_back")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_back")), q, 2);
     g_options.push_back(opt);
 
     vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes();
@@ -139,10 +133,10 @@ void OptionsMenu::Initialise(Config* thisConfigs, V4Core* parent, Menu* curParen
             }
         }
     }
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_back")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_back")), q, 2);
     resolutions.push_back(opt);
 
-    opt.createText(m_font, 25, sf::Color::White, "0 " + Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_unlimited")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, "0 " + Func::ConvertToUtf8String(strRepo->GetString("options_unlimited")), q, 2);
     framerates.push_back(opt);
     float_framerates.push_back(0);
     opt.createText(m_font, 25, sf::Color::White, "240", q, 2);
@@ -154,45 +148,45 @@ void OptionsMenu::Initialise(Config* thisConfigs, V4Core* parent, Menu* curParen
     opt.createText(m_font, 25, sf::Color::White, "60", q, 2);
     framerates.push_back(opt);
     float_framerates.push_back(60);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_back")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_back")), q, 2);
     framerates.push_back(opt);
 
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_quality_low")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_quality_low")), q, 2);
     qualities.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_quality_medium")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_quality_medium")), q, 2);
     qualities.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_quality_high")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_quality_high")), q, 2);
     qualities.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_quality_ultra")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_quality_ultra")), q, 2);
     qualities.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_back")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_back")), q, 2);
     qualities.push_back(opt);
 
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_audio1")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_audio1")), q, 2);
     a_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_audio2")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_audio2")), q, 2);
     a_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_audio3")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_audio3")), q, 2);
     a_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_audio4")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_audio4")), q, 2);
     a_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_back")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_back")), q, 2);
     a_options.push_back(opt);
 
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_volume1")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_volume1")), q, 2);
     ms_volume.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_volume2")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_volume2")), q, 2);
     ms_volume.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_volume3")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_volume3")), q, 2);
     ms_volume.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_back")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_back")), q, 2);
     ms_volume.push_back(opt);
 
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_enable")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_enable")), q, 2);
     switches.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_disable")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_disable")), q, 2);
     switches.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_back")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_back")), q, 2);
     switches.push_back(opt);
 
     opt.createText(m_font, 25, sf::Color::Black, "Restart game", q, 2);
@@ -200,22 +194,22 @@ void OptionsMenu::Initialise(Config* thisConfigs, V4Core* parent, Menu* curParen
     opt.createText(m_font, 25, sf::Color::Black, "Revert changes", q, 2);
     restarts.push_back(opt);
 
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_input2")), q, 2); // Keyboard Bindings
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_input2")), q, 2); // Keyboard Bindings
     inputs.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_input1")), q, 2); // Controller Setup
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_input1")), q, 2); // Controller Setup
     inputs.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_input3")), q, 2); // Beat Difficulty
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_input3")), q, 2); // Beat Difficulty
     inputs.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_back")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_back")), q, 2);
     inputs.push_back(opt);
 
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_diff1")), q, 2); // Low Range
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_diff1")), q, 2); // Low Range
     diff_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_diff2")), q, 2); // High Range
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_diff2")), q, 2); // High Range
     diff_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_diff3")), q, 2); // Apply
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_diff3")), q, 2); // Apply
     diff_options.push_back(opt);
-    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_back")), q, 2);
+    opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_back")), q, 2);
     diff_options.push_back(opt);
 
     ifstream langfile("resources/lang/lang.txt");
@@ -236,10 +230,10 @@ void OptionsMenu::Initialise(Config* thisConfigs, V4Core* parent, Menu* curParen
 
         if (langcount >= 5)
         {
-            opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("nav_nextpage")), q, 2);
+            opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("nav_nextpage")), q, 2);
             langs[page].push_back(opt);
 
-            opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_back")), q, 2);
+            opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_back")), q, 2);
             langs[page].push_back(opt);
 
             langcount = 0;
@@ -249,10 +243,10 @@ void OptionsMenu::Initialise(Config* thisConfigs, V4Core* parent, Menu* curParen
 
     if (langcount != 0)
     {
-        opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("nav_nextpage")), q, 2);
+        opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("nav_nextpage")), q, 2);
         langs[page].push_back(opt);
 
-        opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_back")), q, 2);
+        opt.createText(m_font, 25, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_back")), q, 2);
         langs[page].push_back(opt);
 
         page++;
@@ -270,28 +264,29 @@ void OptionsMenu::Initialise(Config* thisConfigs, V4Core* parent, Menu* curParen
         t_presets[i].createText(m_font, 18, sf::Color::Black, to_string(i + 1), q, 1);
     }
 
-    t_igbutton.createText(m_font, 18, sf::Color::Black, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_ingame_btn")), q, 1);
-    t_assigned.createText(m_font, 18, sf::Color::Black, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_assign_key")), q, 1);
+    t_igbutton.createText(m_font, 18, sf::Color::Black, Func::ConvertToUtf8String(strRepo->GetString("options_ingame_btn")), q, 1);
+    t_assigned.createText(m_font, 18, sf::Color::Black, Func::ConvertToUtf8String(strRepo->GetString("options_assign_key")), q, 1);
 
     for (int i = 0; i < 12; i++)
     {
-        t_igkey[i].createText(m_font, 18, sf::Color::Black, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_key")), q, 1);
+        t_igkey[i].createText(m_font, 18, sf::Color::Black, Func::ConvertToUtf8String(strRepo->GetString("options_key")), q, 1);
         t_askey[i].createText(m_font, 18, sf::Color::Black, "", q, 1);
     }
 
-    t_im_tip.createText(m_font, 18, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_tip1")), q, 1); ///input manager's tip
+    t_im_tip.createText(m_font, 18, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_tip1")), q, 1); ///input manager's tip
 
-    t_change_title.createText(m_font, 28, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_change_title")), q, 1);
-    t_change_button.createText(m_font, 62, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_change_button")), q, 1);
-    t_change_anykey.createText(m_font, 28, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_change_anykey")), q, 1); ///change dialog
+    t_change_title.createText(m_font, 28, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_change_title")), q, 1);
+    t_change_button.createText(m_font, 62, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_change_button")), q, 1);
+    t_change_anykey.createText(m_font, 28, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_change_anykey")), q, 1); ///change dialog
 
     ///Controller setup
-    t_cs_title.createText(m_font, 26, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_input1")), q, 1);
-    t_cs_desc.createText(m_font, 16, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_input_setup1")), q, 1);
-    t_cs_bigbutton.createText(m_font, 30, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_bigbutton")), q, 1);
-    t_cs_tip.createText(m_font, 15, sf::Color::White, Func::ConvertToUtf8String(thisConfigs->strRepo.GetString("options_tip2")), q, 1);
+    t_cs_title.createText(m_font, 26, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_input1")), q, 1);
+    t_cs_desc.createText(m_font, 16, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_input_setup1")), q, 1);
+    t_cs_bigbutton.createText(m_font, 30, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_bigbutton")), q, 1);
+    t_cs_tip.createText(m_font, 15, sf::Color::White, Func::ConvertToUtf8String(strRepo->GetString("options_tip2")), q, 1);
 
     SPDLOG_DEBUG("Options menu initialized.");
+    initialized = true;
 }
 
 void OptionsMenu::SelectMenuOption()
@@ -344,7 +339,9 @@ void OptionsMenu::GoBackMenuOption(int a)
 
 void OptionsMenu::SetConfigValue(std::string key, std::string value, bool selectmenu)
 {
-    if (thisConfig->GetString(key) != value)
+    Config* config = CoreManager::getInstance().getConfig();
+
+    if (config->GetString(key) != value)
     {
         SPDLOG_DEBUG("Changing key {} to {}", key, value);
 
@@ -363,12 +360,12 @@ void OptionsMenu::SetConfigValue(std::string key, std::string value, bool select
 
             ConfigValue tmp;
             tmp.index = key;
-            tmp.value = thisConfig->GetString(key);
+            tmp.value = config->GetString(key);
             original_config.push_back(tmp);
         }
 
         ///Make the changes
-        thisConfig->SetString(key, value);
+        config->SetString(key, value);
 
         if (key != "textureQuality")
         madeChanges = true;
@@ -397,9 +394,18 @@ void OptionsMenu::EventFired(sf::Event event)
         mouseY = event.mouseMove.y;
     }
 }
-void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& inputCtrl)
+
+void OptionsMenu::Update()
 {
-    if (is_active)
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    InputController* inputCtrl = CoreManager::getInstance().getInputController();
+    StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
+    Config* config = CoreManager::getInstance().getConfig();
+
+    float fps = CoreManager::getInstance().getCore()->getFPS();
+
+    //TO-DO: figure out if is_active is still necessary when we have StateManager?
+    //if (is_active)
     {
         PSprite& bg = ResourceManager::getInstance().getSprite("resources/graphics/ui/options/options.png");
         PSprite& sword = ResourceManager::getInstance().getSprite("resources/graphics/ui/options/sword.png");
@@ -417,7 +423,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             case 0: {
                 lang_current = 0;
 
-                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_options")));
+                options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_options")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -432,9 +438,9 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     options[i].setPosition(810, 520 + 40 * i);
                     options[i].setColor(sf::Color::White);
 
-                    if (mouseY / window.getSize().y * 1080 >= (options[i].getPosition().y - options[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 1080 >= (options[i].getPosition().y - options[i].getGlobalBoundsScaled().height / 2 + 8))
                     {
-                        if (mouseY / window.getSize().y * 1080 <= (options[i].getPosition().y + options[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 1080 <= (options[i].getPosition().y + options[i].getGlobalBoundsScaled().height / 2 + 8))
                         {
                             options[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -451,7 +457,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             }
 
             case 1: {
-                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_graphics")));
+                options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_graphics")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -464,9 +470,9 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     g_options[i].setPosition(810, 520 + 40 * i);
                     g_options[i].setColor(sf::Color::White);
 
-                    if (mouseY / window.getSize().y * 1080 >= (g_options[i].getPosition().y - g_options[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 1080 >= (g_options[i].getPosition().y - g_options[i].getGlobalBoundsScaled().height / 2 + 8))
                     {
-                        if (mouseY / window.getSize().y * 1080 <= (g_options[i].getPosition().y + g_options[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 1080 <= (g_options[i].getPosition().y + g_options[i].getGlobalBoundsScaled().height / 2 + 8))
                         {
                             g_options[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -483,7 +489,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             }
 
             case 2: {
-                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_audio")));
+                options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_audio")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -496,9 +502,9 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     a_options[i].setPosition(810, 520 + 40 * i);
                     a_options[i].setColor(sf::Color::White);
 
-                    if (mouseY / window.getSize().y * 1080 >= (a_options[i].getPosition().y - a_options[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 1080 >= (a_options[i].getPosition().y - a_options[i].getGlobalBoundsScaled().height / 2 + 8))
                     {
-                        if (mouseY / window.getSize().y * 1080 <= (a_options[i].getPosition().y + a_options[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 1080 <= (a_options[i].getPosition().y + a_options[i].getGlobalBoundsScaled().height / 2 + 8))
                         {
                             a_options[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -515,7 +521,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             }
 
             case 3: {
-                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_input")));
+                options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_input")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -528,9 +534,9 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     inputs[i].setPosition(810, 520 + 40 * i);
                     inputs[i].setColor(sf::Color::White);
 
-                    if (mouseY / window.getSize().y * 1080 >= (inputs[i].getPosition().y - inputs[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 1080 >= (inputs[i].getPosition().y - inputs[i].getGlobalBoundsScaled().height / 2 + 8))
                     {
-                        if (mouseY / window.getSize().y * 1080 <= (inputs[i].getPosition().y + inputs[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 1080 <= (inputs[i].getPosition().y + inputs[i].getGlobalBoundsScaled().height / 2 + 8))
                         {
                             inputs[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -547,7 +553,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             }
 
             case 4: {
-                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_language")));
+                options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_language")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -560,15 +566,15 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     langs[lang_current][i].setPosition(810, 520 + 40 * i);
                     langs[lang_current][i].setColor(sf::Color::White);
 
-                    if (lang_current * 5 + i + 1 == thisConfig->GetInt("lang"))
+                    if (lang_current * 5 + i + 1 == config->GetInt("lang"))
                     {
                         if (i < 5)
                             langs[lang_current][i].setColor(sf::Color(0, 192, 0, 255));
                     }
 
-                    if (mouseY / window.getSize().y * 1080 >= (langs[lang_current][i].getPosition().y - langs[lang_current][i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 1080 >= (langs[lang_current][i].getPosition().y - langs[lang_current][i].getGlobalBoundsScaled().height / 2 + 8))
                     {
-                        if (mouseY / window.getSize().y * 1080 <= (langs[lang_current][i].getPosition().y + langs[lang_current][i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 1080 <= (langs[lang_current][i].getPosition().y + langs[lang_current][i].getGlobalBoundsScaled().height / 2 + 8))
                         {
                             langs[lang_current][i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -587,22 +593,23 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             case 5: {
                 if (madeChanges)
                 {
-                    if (inputCtrl.isKeyPressed(InputController::Keys::UP))
+                    if (inputCtrl->isKeyPressed(InputController::Keys::UP))
                         restart_prompt.MoveUp();
-                    if (inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+                    if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
                         restart_prompt.MoveDown();
 
                     sel = restart_prompt.CheckSelectedOption();
 
                     restart_prompt.x = 640;
                     restart_prompt.y = 360;
-                    restart_prompt.Draw(window, fps, inputCtrl);
+                    
+                    restart_prompt.Draw();
                 } else
                 {
                     if (goto_id == -1)
                     {
                         SPDLOG_DEBUG("Create a screenFade");
-                        screenFade.Create(thisConfig, 1, 512);
+                        screenFade.Create(1, 512);
                         goto_id = 0;
                     }
                     sel = 0;
@@ -612,7 +619,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             }
 
             case 11: {
-                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_graphics1")));
+                options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_graphics1")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -627,13 +634,13 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
                     if (i < float_resolutions.size())
                     {
-                        if ((float_resolutions[i].width == thisConfig->GetInt("resX")) && (float_resolutions[i].height == thisConfig->GetInt("resY")))
+                        if ((float_resolutions[i].width == config->GetInt("resX")) && (float_resolutions[i].height == config->GetInt("resY")))
                             resolutions[i].setColor(sf::Color(0, 192, 0, 255));
                     }
 
-                    if (mouseY / window.getSize().y * 1080 >= (resolutions[i].getPosition().y - resolutions[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 1080 >= (resolutions[i].getPosition().y - resolutions[i].getGlobalBoundsScaled().height / 2 + 8))
                     {
-                        if (mouseY / window.getSize().y * 1080 <= (resolutions[i].getPosition().y + resolutions[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 1080 <= (resolutions[i].getPosition().y + resolutions[i].getGlobalBoundsScaled().height / 2 + 8))
                         {
                             resolutions[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -650,7 +657,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             }
 
             case 12: {
-                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_graphics2")));
+                options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_graphics2")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -663,12 +670,12 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     qualities[i].setPosition(810, 520 + 40 * i);
                     qualities[i].setColor(sf::Color::White);
 
-                    if (thisConfig->GetInt("textureQuality") == i)
+                    if (config->GetInt("textureQuality") == i)
                         qualities[i].setColor(sf::Color(0, 192, 0, 255));
 
-                    if (mouseY / window.getSize().y * 1080 >= (qualities[i].getPosition().y - qualities[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 1080 >= (qualities[i].getPosition().y - qualities[i].getGlobalBoundsScaled().height / 2 + 8))
                     {
-                        if (mouseY / window.getSize().y * 1080 <= (qualities[i].getPosition().y + qualities[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 1080 <= (qualities[i].getPosition().y + qualities[i].getGlobalBoundsScaled().height / 2 + 8))
                         {
                             qualities[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -685,7 +692,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             }
 
             case 13: {
-                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_graphics4")));
+                options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_graphics4")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -700,13 +707,13 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
                     if (i < float_framerates.size())
                     {
-                        if ((thisConfig->GetInt("framerateLimit") == float_framerates[i]) && (i != 4))
+                        if ((config->GetInt("framerateLimit") == float_framerates[i]) && (i != 4))
                             framerates[i].setColor(sf::Color(0, 192, 0, 255));
                     }
 
-                    if (mouseY / window.getSize().y * 1080 >= (framerates[i].getPosition().y - framerates[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 1080 >= (framerates[i].getPosition().y - framerates[i].getGlobalBoundsScaled().height / 2 + 8))
                     {
-                        if (mouseY / window.getSize().y * 1080 <= (framerates[i].getPosition().y + framerates[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 1080 <= (framerates[i].getPosition().y + framerates[i].getGlobalBoundsScaled().height / 2 + 8))
                         {
                             framerates[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -723,7 +730,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             }
 
             case 14: {
-                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_graphics5")));
+                options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_graphics5")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -736,12 +743,12 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     switches[i].setPosition(810, 520 + 40 * i);
                     switches[i].setColor(sf::Color::White);
 
-                    if ((thisConfig->GetInt("enableFullscreen") == !i) && (i != 2))
+                    if ((config->GetInt("enableFullscreen") == !i) && (i != 2))
                         switches[i].setColor(sf::Color(0, 192, 0, 255));
 
-                    if (mouseY / window.getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
                     {
-                        if (mouseY / window.getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 8))
                         {
                             switches[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -758,7 +765,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             }
 
             case 15: {
-                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_graphics6")));
+                options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_graphics6")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -771,12 +778,12 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     switches[i].setPosition(810, 520 + 40 * i);
                     switches[i].setColor(sf::Color::White);
 
-                    if ((thisConfig->GetInt("enableBorderlessWindow") == !i) && (i != 2))
+                    if ((config->GetInt("enableBorderlessWindow") == !i) && (i != 2))
                         switches[i].setColor(sf::Color(0, 192, 0, 255));
 
-                    if (mouseY / window.getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
                     {
-                        if (mouseY / window.getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 8))
                         {
                             switches[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -798,7 +805,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             }
 
             case 21: {
-                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_audio1")));
+                options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_audio1")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -822,17 +829,17 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                         break;
                 }
 
-                if (inputCtrl.isKeyPressed(InputController::Keys::LEFT))
+                if (inputCtrl->isKeyPressed(InputController::Keys::LEFT))
                 {
-                    int newVolume = thisConfig->GetInt(key) - 10;
+                    int newVolume = config->GetInt(key) - 10;
 
                     if (newVolume <= 0)
                         newVolume = 0;
 
                     SetConfigValue(key, to_string(newVolume), false);
-                } else if (inputCtrl.isKeyPressed(InputController::Keys::RIGHT))
+                } else if (inputCtrl->isKeyPressed(InputController::Keys::RIGHT))
                 {
-                    int newVolume = thisConfig->GetInt(key) + 10;
+                    int newVolume = config->GetInt(key) + 10;
 
                     if (newVolume >= 100)
                         newVolume = 100;
@@ -849,29 +856,29 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     {
                         case 0:
                             key = "masterVolume";
-                            str = Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_volume1"));
+                            str = Func::ConvertToUtf8String(strRepo->GetString("options_volume1"));
                             break;
 
                         case 1:
                             key = "sfxVolume";
-                            str = Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_volume2"));
+                            str = Func::ConvertToUtf8String(strRepo->GetString("options_volume2"));
                             break;
 
                         case 2:
                             key = "bgmVolume";
-                            str = Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_volume3"));
+                            str = Func::ConvertToUtf8String(strRepo->GetString("options_volume3"));
                             break;
                     }
 
                     if (i <= 2)
-                        ms_volume[i].setString(str + to_string(thisConfig->GetInt(key)) + "%");
+                        ms_volume[i].setString(str + to_string(config->GetInt(key)) + "%");
                     ms_volume[i].setOrigin(0, ms_volume[i].getGlobalBoundsScaled().height / 2);
                     ms_volume[i].setPosition(810, 520 + 40 * i);
                     ms_volume[i].setColor(sf::Color::White);
 
-                    if (mouseY / window.getSize().y * 1080 >= (ms_volume[i].getPosition().y - ms_volume[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 1080 >= (ms_volume[i].getPosition().y - ms_volume[i].getGlobalBoundsScaled().height / 2 + 8))
                     {
-                        if (mouseY / window.getSize().y * 1080 <= (ms_volume[i].getPosition().y + ms_volume[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 1080 <= (ms_volume[i].getPosition().y + ms_volume[i].getGlobalBoundsScaled().height / 2 + 8))
                         {
                             ms_volume[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -888,7 +895,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             }
 
             case 22: {
-                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_audio2")));
+                options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_audio2")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -901,12 +908,12 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     switches[i].setPosition(810, 520 + 40 * i);
                     switches[i].setColor(sf::Color::White);
 
-                    if ((thisConfig->GetInt("enableDrums") == !i) && (i != 2))
+                    if ((config->GetInt("enableDrums") == !i) && (i != 2))
                         switches[i].setColor(sf::Color(0, 192, 0, 255));
 
-                    if (mouseY / window.getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
                     {
-                        if (mouseY / window.getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 8))
                         {
                             switches[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -923,7 +930,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             }
 
             case 23: {
-                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_audio3")));
+                options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_audio3")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -936,12 +943,12 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     switches[i].setPosition(810, 520 + 40 * i);
                     switches[i].setColor(sf::Color::White);
 
-                    if ((thisConfig->GetInt("enableDrumChants") == !i) && (i != 2))
+                    if ((config->GetInt("enableDrumChants") == !i) && (i != 2))
                         switches[i].setColor(sf::Color(0, 192, 0, 255));
 
-                    if (mouseY / window.getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
                     {
-                        if (mouseY / window.getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 8))
                         {
                             switches[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -958,7 +965,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             }
 
             case 24: {
-                options_header.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_audio4")));
+                options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_audio4")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
                 options_header.setPosition(930, 460);
                 options_header.draw(window);
@@ -971,12 +978,12 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     switches[i].setPosition(810, 520 + 40 * i);
                     switches[i].setColor(sf::Color::White);
 
-                    if ((thisConfig->GetInt("enablePataponChants") == !i) && (i != 2))
+                    if ((config->GetInt("enablePataponChants") == !i) && (i != 2))
                         switches[i].setColor(sf::Color(0, 192, 0, 255));
 
-                    if (mouseY / window.getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
                     {
-                        if (mouseY / window.getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 8))
                         {
                             switches[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -1032,9 +1039,9 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     string key = "keybind" + ingame_buttons[i] + to_string(currentPreset + 1);
                     //cout << key << endl;
 
-                    if (thisConfig->keyExists(key))
+                    if (config->keyExists(key))
                     {
-                        int keyID = (thisConfig->GetInt(key) + 1);
+                        int keyID = (config->GetInt(key) + 1);
 
                         if (keyID >= 1000)
                         {
@@ -1058,10 +1065,10 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
                 if (changeInput)
                 {
-                    block.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+                    block.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
                     block.setOrigin(block.getLocalBounds().width / 2, block.getLocalBounds().height / 2);
                     block.setFillColor(sf::Color(0, 0, 0, 192));
-                    window.draw(block);
+                    window->draw(block);
 
                     t_change_title.setOrigin(t_change_title.getLocalBounds().width / 2, t_change_title.getLocalBounds().height / 2);
                     t_change_title.setPosition(640, 200);
@@ -1083,25 +1090,25 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             case 32: {
                 ///Controller setup
 
-                block.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+                block.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
                 block.setOrigin(block.getLocalBounds().width / 2, block.getLocalBounds().height / 2);
                 block.setFillColor(sf::Color(0, 0, 0, 96));
-                window.draw(block);
+                window->draw(block);
 
                 if (setup_stage == 1)
                 {
-                    t_cs_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_input1")));
+                    t_cs_title.setString(Func::ConvertToUtf8String(strRepo->GetString("options_input1")));
                     t_cs_title.setOrigin(t_cs_title.getLocalBounds().width / 2, t_cs_title.getLocalBounds().height / 2);
                     t_cs_title.setPosition(640, 240);
                     t_cs_title.draw(window);
 
                     string key = "options_input_setup" + to_string(setup_stage);
-                    t_cs_desc.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(key)));
+                    t_cs_desc.setString(Func::ConvertToUtf8String(strRepo->GetString(key)));
                     t_cs_desc.setOrigin(t_cs_desc.getLocalBounds().width / 2, t_cs_desc.getLocalBounds().height / 2);
                     t_cs_desc.setPosition(640, 280);
                     t_cs_desc.draw(window);
 
-                    int checkKey = inputCtrl.whatKeyPressed(InputController::RestrictMode::ONLYJOYSTICK);
+                    int checkKey = inputCtrl->whatKeyPressed(InputController::RestrictMode::ONLYJOYSTICK);
 
                     if (checkKey != -2)
                         setup_key = checkKey + 1;
@@ -1121,24 +1128,24 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     t_cs_bigbutton.setPosition(640, 340);
                     t_cs_bigbutton.draw(window);
 
-                    t_cs_tip.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_tip3")));
+                    t_cs_tip.setString(Func::ConvertToUtf8String(strRepo->GetString("options_tip3")));
                     t_cs_tip.setOrigin(t_cs_tip.getLocalBounds().width / 2, t_cs_tip.getLocalBounds().height / 2);
                     t_cs_tip.setPosition(640, 440);
                     t_cs_tip.draw(window);
                 } else if (setup_stage != 14)
                 {
-                    t_cs_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_input1")));
+                    t_cs_title.setString(Func::ConvertToUtf8String(strRepo->GetString("options_input1")));
                     t_cs_title.setOrigin(t_cs_title.getLocalBounds().width / 2, t_cs_title.getLocalBounds().height / 2);
                     t_cs_title.setPosition(640, 320);
                     t_cs_title.draw(window);
 
                     string key = "options_input_setup" + to_string(setup_stage);
-                    t_cs_desc.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(key)));
+                    t_cs_desc.setString(Func::ConvertToUtf8String(strRepo->GetString(key)));
                     t_cs_desc.setOrigin(t_cs_desc.getLocalBounds().width / 2, t_cs_desc.getLocalBounds().height / 2);
                     t_cs_desc.setPosition(640, 360);
                     t_cs_desc.draw(window);
 
-                    int checkKey = inputCtrl.whatKeyPressed(InputController::RestrictMode::ONLYJOYSTICK);
+                    int checkKey = inputCtrl->whatKeyPressed(InputController::RestrictMode::ONLYJOYSTICK);
 
                     if (checkKey != -2)
                     {
@@ -1152,7 +1159,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     }
                 } else
                 {
-                    int checkKey = inputCtrl.whatKeyPressed(InputController::RestrictMode::ONLYKEYBOARD);
+                    int checkKey = inputCtrl->whatKeyPressed(InputController::RestrictMode::ONLYKEYBOARD);
 
                     if (checkKey != -2)
                     {
@@ -1163,18 +1170,18 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                         GoBackMenuOption();
                     }
 
-                    t_cs_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_input1")));
+                    t_cs_title.setString(Func::ConvertToUtf8String(strRepo->GetString("options_input1")));
                     t_cs_title.setOrigin(t_cs_title.getLocalBounds().width / 2, t_cs_title.getLocalBounds().height / 2);
                     t_cs_title.setPosition(640, 320);
                     t_cs_title.draw(window);
 
                     string key = "options_input_setup" + to_string(setup_stage);
-                    t_cs_desc.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(key)));
+                    t_cs_desc.setString(Func::ConvertToUtf8String(strRepo->GetString(key)));
                     t_cs_desc.setOrigin(t_cs_desc.getLocalBounds().width / 2, t_cs_desc.getLocalBounds().height / 2);
                     t_cs_desc.setPosition(640, 360);
                     t_cs_desc.draw(window);
 
-                    t_cs_tip.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_tip2")));
+                    t_cs_tip.setString(Func::ConvertToUtf8String(strRepo->GetString("options_tip2")));
                     t_cs_tip.setOrigin(t_cs_tip.getLocalBounds().width / 2, t_cs_tip.getLocalBounds().height / 2);
                     t_cs_tip.setPosition(640, 440);
                     t_cs_tip.draw(window);
@@ -1185,12 +1192,12 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
             case 33: {
                 ///Beat Difficulty
-                float beat_length = thisConfig->thisCore->currentController.rhythm.beat_timer;
-                float low_range = thisConfig->thisCore->currentController.rhythm.low_range;
-                float high_range = thisConfig->thisCore->currentController.rhythm.high_range;
+                float beat_length = config->thisCore->currentController.rhythm.beat_timer;
+                float low_range = config->thisCore->currentController.rhythm.low_range;
+                float high_range = config->thisCore->currentController.rhythm.high_range;
 
-                int right_pressed = int(thisConfig->thisCore->inputCtrl.isKeyHeld(thisConfig->thisCore->inputCtrl.RIGHT));
-                int left_pressed = -int(thisConfig->thisCore->inputCtrl.isKeyHeld(thisConfig->thisCore->inputCtrl.LEFT));
+                int right_pressed = int(inputCtrl->isKeyHeld(inputCtrl->RIGHT));
+                int left_pressed = -int(inputCtrl->isKeyHeld(inputCtrl->LEFT));
                 int slide_to = right_pressed + left_pressed;
                 if ((slide_to != 0) && (diff_sel != 0))
                 {
@@ -1246,10 +1253,10 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     SPDLOG_DEBUG("Good range changed to: {}", low_range);
                 }
 
-                thisConfig->thisCore->currentController.rhythm.high_range = high_range; // Apply (current session only) (to be able to load next update)
-                thisConfig->thisCore->currentController.rhythm.low_range = low_range;
+                config->thisCore->currentController.rhythm.high_range = high_range; // Apply (current session only) (to be able to load next update)
+                config->thisCore->currentController.rhythm.low_range = low_range;
 
-                int beat_bar_size = floor(window.getSize().x / 3);
+                int beat_bar_size = floor(window->getSize().x / 3);
                 int high_bar_size = beat_bar_size * ((high_range - low_range) / (beat_length / 2));
                 int low_bar_size = beat_bar_size * (low_range / (beat_length / 2)) + high_bar_size;
                 int bar_height = floor(0.02 * 1080); // 2% of window height, rounding down
@@ -1258,20 +1265,20 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 block.setSize(sf::Vector2f(beat_bar_size, bar_height)); // Beat length bar
                 block.setFillColor(sf::Color(80, 80, 80, 255));
                 block.setOrigin(block.getLocalBounds().width / 2, block.getLocalBounds().height / 2);
-                block.setPosition(window.getSize().x / 2, window.getSize().y / 2);
-                window.draw(block);
+                block.setPosition(window->getSize().x / 2, window->getSize().y / 2);
+                window->draw(block);
 
                 block.setSize(sf::Vector2f(low_bar_size, bar_height)); // Low range bar
                 block.setFillColor(sf::Color(255, 115, 45, 255));
                 block.setOrigin(block.getLocalBounds().width / 2, block.getLocalBounds().height / 2);
-                block.setPosition(window.getSize().x / 2, window.getSize().y / 2);
-                window.draw(block);
+                block.setPosition(window->getSize().x / 2, window->getSize().y / 2);
+                window->draw(block);
 
                 block.setSize(sf::Vector2f(high_bar_size, bar_height)); // High range bar
                 block.setFillColor(sf::Color(0, 255, 255, 255));
                 block.setOrigin(block.getLocalBounds().width / 2, block.getLocalBounds().height / 2);
-                block.setPosition(window.getSize().x / 2, window.getSize().y / 2);
-                window.draw(block);
+                block.setPosition(window->getSize().x / 2, window->getSize().y / 2);
+                window->draw(block);
 
                 beat_bar_size = 640;
                 high_bar_size = beat_bar_size * ((high_range - low_range) / (beat_length / 2));
@@ -1316,7 +1323,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 high_sword_1.draw(window);
                 high_sword_2.draw(window);
 
-                t_cs_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("options_input3")));
+                t_cs_title.setString(Func::ConvertToUtf8String(strRepo->GetString("options_input3")));
                 t_cs_title.setOrigin(t_cs_title.getLocalBounds().width / 2, t_cs_title.getLocalBounds().height / 2);
                 t_cs_title.setPosition(640, 240);
                 t_cs_title.draw(window);
@@ -1363,8 +1370,8 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             }
 
             case 333: {
-                SetConfigValue("highRange", to_string(thisConfig->thisCore->currentController.rhythm.high_range));
-                SetConfigValue("lowRange", to_string(thisConfig->thisCore->currentController.rhythm.low_range));
+                SetConfigValue("highRange", to_string(config->thisCore->currentController.rhythm.high_range));
+                SetConfigValue("lowRange", to_string(config->thisCore->currentController.rhythm.low_range));
 
                 GoBackMenuOption(3);
                 break;
@@ -1381,7 +1388,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             }
 
             case 51: {
-                thisConfig->SaveConfig();
+                config->SaveConfig();
                 v4Core->close_window = true;
 
                 ///Run the game process again
@@ -1397,12 +1404,12 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
             case 52: {
                 for (int i = 0; i < original_config.size(); i++)
-                    thisConfig->SetString(original_config[i].index, original_config[i].value);
+                    config->SetString(original_config[i].index, original_config[i].value);
 
                 if (goto_id == -1)
                 {
                     SPDLOG_DEBUG("Create a screenFade");
-                    screenFade.Create(thisConfig, 1, 512);
+                    screenFade.Create(1, 512);
                     goto_id = 0;
                 }
 
@@ -1411,7 +1418,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
             case 121: {
                 SetConfigValue("textureQuality", "0");
-                ResourceManager::getInstance().getQuality(thisConfig->thisCore);
+                ResourceManager::getInstance().getQuality();
                 ResourceManager::getInstance().reloadPSprites();
 
                 GoBackMenuOption();
@@ -1420,7 +1427,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
             case 122: {
                 SetConfigValue("textureQuality", "1");
-                ResourceManager::getInstance().getQuality(thisConfig->thisCore);
+                ResourceManager::getInstance().getQuality();
                 ResourceManager::getInstance().reloadPSprites();
 
                 GoBackMenuOption();
@@ -1429,7 +1436,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
             case 123: {
                 SetConfigValue("textureQuality", "2");
-                ResourceManager::getInstance().getQuality(thisConfig->thisCore);
+                ResourceManager::getInstance().getQuality();
                 ResourceManager::getInstance().reloadPSprites();
 
                 GoBackMenuOption();
@@ -1438,7 +1445,7 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
             case 124: {
                 SetConfigValue("textureQuality", "3");
-                ResourceManager::getInstance().getQuality(thisConfig->thisCore);
+                ResourceManager::getInstance().getQuality();
                 ResourceManager::getInstance().reloadPSprites();
 
                 GoBackMenuOption();
@@ -1621,50 +1628,50 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             GoBackMenuOption();
         }
 
-        window.setView(window.getDefaultView());
+        window->setView(window->getDefaultView());
 
         if (state == 31)
         {
             if (!changeInput)
             {
-                if (inputCtrl.isKeyPressed(InputController::Keys::UP))
+                if (inputCtrl->isKeyPressed(InputController::Keys::UP))
                 {
                     if (currentOption > 0)
                         currentOption--;
                 }
 
-                if (inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+                if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
                 {
                     if (currentOption < 11)
                         currentOption++;
                 }
 
-                if (inputCtrl.isKeyPressed(InputController::Keys::LEFT))
+                if (inputCtrl->isKeyPressed(InputController::Keys::LEFT))
                 {
                     if (currentPreset > 0)
                         currentPreset--;
                 }
 
-                if (inputCtrl.isKeyPressed(InputController::Keys::RIGHT))
+                if (inputCtrl->isKeyPressed(InputController::Keys::RIGHT))
                 {
                     if (currentPreset < 8)
                         currentPreset++;
                 }
 
-                if (inputCtrl.isKeyPressed(InputController::Keys::CIRCLE))
+                if (inputCtrl->isKeyPressed(InputController::Keys::CIRCLE))
                 {
                     sel = 9999;
                     SelectMenuOption();
                     GoBackMenuOption();
                 }
 
-                if (inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+                if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
                 {
                     changeInput = true;
                 }
             } else
             {
-                int keyID = inputCtrl.whatKeyPressed();
+                int keyID = inputCtrl->whatKeyPressed();
 
                 if (keyID != -2)
                 {
@@ -1680,46 +1687,46 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             if (setup_stage == 1)
             {
                 ///Only keyboard inputs here
-                if (inputCtrl.isKeyPressed(InputController::Keys::CIRCLE, InputController::RestrictMode::ONLYKEYBOARD))
+                if (inputCtrl->isKeyPressed(InputController::Keys::CIRCLE, InputController::RestrictMode::ONLYKEYBOARD))
                 {
                     sel = 9999;
                     SelectMenuOption();
                     GoBackMenuOption();
                 }
 
-                if (inputCtrl.isKeyPressed(InputController::Keys::START, InputController::RestrictMode::ONLYKEYBOARD))
+                if (inputCtrl->isKeyPressed(InputController::Keys::START, InputController::RestrictMode::ONLYKEYBOARD))
                 {
                     setup_stage = 2;
                 }
             }
         } else
         {
-            if (inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+            if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
             {
                 SelectMenuOption();
             }
 
-            if (inputCtrl.isKeyPressed(InputController::Keys::CIRCLE))
+            if (inputCtrl->isKeyPressed(InputController::Keys::CIRCLE))
             {
                 sel = 9999;
                 SelectMenuOption();
                 GoBackMenuOption();
             }
 
-            if (inputCtrl.isKeyPressed(InputController::Keys::UP))
+            if (inputCtrl->isKeyPressed(InputController::Keys::UP))
             {
                 if (sel > 0)
                     sel--;
             }
 
-            if (inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+            if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
             {
                 if (sel < maxSel - 1)
                     sel++;
             }
         }
 
-        screenFade.draw(window, fps);
+        screenFade.draw();
 
         if (screenFade.checkFinished())
         {
@@ -1733,7 +1740,8 @@ void OptionsMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
                         Back();
 
-                        parentMenu->screenFade.Create(thisConfig, 0, 512);
+                        //TO-DO: create a screen fade for MainMenu in a nicer way (StateManager?)
+                        //parentMenu->screenFade.Create(0, 512);
 
                         break;
                     }
@@ -1749,8 +1757,9 @@ void OptionsMenu::Back()
 {
     /// this should go back to the previous menu.
     Hide();
-    parentMenu->Show();
-    v4Core->changeRichPresence("In Main menu", "logo", "");
+    //parentMenu->Show();
+    //v4Core->changeRichPresence("In Main menu", "logo", "");
+    StateManager::getInstance().setState(StateManager::MAINMENU);
     OnExit();
 }
 void OptionsMenu::OnExit()
@@ -1766,9 +1775,9 @@ void OptionsMenu::Show()
     is_active = true;
     /*Menu::Show();
     buttonList.Show();
-    t_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("menu_button_3")));
+    t_title.setString(Func::ConvertToUtf8String(strRepo->GetString("menu_button_3")));
     t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
-    t_disclaimer.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("option_disclaimer")));
+    t_disclaimer.setString(Func::ConvertToUtf8String(strRepo->GetString("option_disclaimer")));
     t_disclaimer.setOrigin(t_disclaimer.getGlobalBounds().width/2,t_disclaimer.getGlobalBounds().height/2);*/
 }
 OptionsMenu::~OptionsMenu()

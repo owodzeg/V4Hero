@@ -142,20 +142,21 @@ private:
     std::vector<PataDialogBox> dialog_boxes;
 
 public:
-    MissionController* currentController;
-    Config* thisConfig;
     std::string mission_file;
     Camera camera;
     Menu* parentMenu;
+    MissionController* currentController;
 
     int mission_id = 0;
     float mission_multiplier = 1;
 
     bool obelisk = false;
     bool mission_started = false;
+
+    bool initialized = false;
     
     void initialise(Config* thisConfig, V4Core* v4Core, Menu* curParentMenu);
-    void update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
+    void Update();
     void updateInputControls();
     void eventFired(sf::Event event);
     void setTitle(int menu_position);

@@ -30,7 +30,7 @@ public:
 
     NewGameMenuButtonList buttonList;
 
-    OptionsMenu optionsMenu;
+    //OptionsMenu optionsMenu;
     NewGameNameEntryMenu newGameNameEntryMenu;
     void Initialise(Config* thisConfig, V4Core* parent);
 

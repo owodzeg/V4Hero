@@ -1,0 +1,35 @@
+{
+	"params":
+	{
+		"name": "Kami's Return",
+		"background": "shidavalley",
+		"bgm": "Ah-woon Theme",
+		"rich_presence": "shida"
+	},
+
+	"cutscenes":
+	{
+		"learn_patapata": [0, 0, 3]
+	},
+
+	"entities":
+	[
+		{ "id": 1, "params": { "xpos": -330, "layer": "ui" } },
+
+		{ "id": 3, "params": { "xpos": 400, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 470, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 580, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 900, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 980, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 1060, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 1300, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 1370, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 1640, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 1720, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 2400, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 2480, "color": "1e8c5a", "layer": "nature" } },
+		{ "id": 3, "params": { "xpos": 2900, "color": "1e8c5a", "layer": "nature" } },
+
+		{ "id": 0, "params": { "xpos": 3500, "layer": "ui" } }
+	]
+}

@@ -1,0 +1,19 @@
+{
+    "baseHP": 1,
+    "baseY": 545,
+    "collidable": true,
+    "attackable": true,
+    "loot":
+    {
+        "common": [
+            100,
+            { "chance": 50, "item": "item_leather_meat" },
+            { "chance": 50, "item": "item_kuneri_fang" }
+        ],
+        "rare": [
+            1,
+            { "chance": 50, "item": "item_kacheek_spear" },
+            { "chance": 50, "item": "item_kacheek_helm" }
+        ]
+    }
+}

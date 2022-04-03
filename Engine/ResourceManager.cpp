@@ -1,6 +1,7 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
 
 #include "ResourceManager.h"
+#include "CoreManager.h"
 #include "V4Core.h"
 
 ResourceManager::ResourceManager()
@@ -19,9 +20,9 @@ ResourceManager& ResourceManager::getInstance()
     return instance;
 }
 
-void ResourceManager::getQuality(V4Core* core)
+void ResourceManager::getQuality()
 {
-    quality = static_cast<Quality>(core->config.GetInt("textureQuality"));
+    quality = static_cast<Quality>(CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
 }
 
 int ResourceManager::getCurrentQuality()
@@ -31,7 +32,7 @@ int ResourceManager::getCurrentQuality()
 
 void ResourceManager::loadSprite(std::string path)
 {
-    loadedSprites[path].loadFromFile(path, quality);
+    loadedSprites[path].loadFromFile(path, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
     SPDLOG_INFO("Loaded sprite with path {}", path);
     ///have to add handling for when texture doesn't exist
 }
@@ -50,6 +51,7 @@ PSprite& ResourceManager::getSprite(const std::string& path)
         // later replace it with a dedicated "error" texture for more clearance on where the texture broke*/
         
         // if the texture is not loaded yet, load it
+        SPDLOG_TRACE("Sprite with path {} not loaded yet.", path);
         loadSprite(path);
         // and then try running the function again
         return getSprite(path);

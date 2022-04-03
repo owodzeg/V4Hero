@@ -54,6 +54,8 @@ set(ENGINE_FILES
         Engine/Menu/ButtonLists/NewGameMenuButtonList.cpp
         Engine/Menu/SaveFileCreated.cpp
         Engine/Menu/OptionsMenu.cpp
+        Engine/Menu/MaterOuter.cpp
+        Engine/Menu/LoadingTip.cpp
         Engine/Graphics/PSpritesheet.cpp
         Engine/Graphics/Scene.cpp
         Engine/Graphics/PSprite.cpp
@@ -77,6 +79,8 @@ set(ENGINE_FILES
         Engine/P4A.cpp
         Engine/ResourceManager.cpp
         Engine/TextureManager.cpp
+        Engine/CoreManager.cpp
+        Engine/StateManager.cpp
         Engine/Mission/Background.cpp
         Engine/Mission/Camera.cpp
         Engine/Mission/MissionController.cpp
@@ -115,7 +119,7 @@ set(ENGINE_FILES
         Engine/Mission/Mission.cpp
         Engine/Utils.h)
 
-add_executable(V4Hero ${ENGINE_FILES} main.cpp "Engine/Menu/MaterOuter.cpp" "Engine/Menu/MaterOuter.h")
+add_executable(V4Hero ${ENGINE_FILES} main.cpp)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
     message("Enabling Unity build for Release build")

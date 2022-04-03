@@ -7,11 +7,14 @@
 #include <iostream>
 #include <string>
 #include <spdlog/spdlog.h>
+#include "CoreManager.h"
 
 using namespace std;
 
 Config::Config()
 {
+    SPDLOG_INFO("Config initialization");
+
     configDebugID = 0;
     ///check if config file already exists
     ifstream check("config.ini");
@@ -42,11 +45,13 @@ Config::Config()
 
         conf.close();
     }
+
+    SPDLOG_INFO("Config initialization finished");
 }
 
 void Config::LoadConfig(V4Core* core)
 {
-    thisCore = core;
+    V4Core* thisCore = CoreManager::getInstance().getCore();
     ifstream conf("config.ini");
 
     vector<string> keysCheckList = configKeys;

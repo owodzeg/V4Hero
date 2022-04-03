@@ -1,6 +1,7 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
 
 #include "InputController.h"
+#include "../CoreManager.h"
 #include <iostream>
 #include <spdlog/spdlog.h>
 
@@ -17,8 +18,10 @@ compare with keyMap
 stonks
 **/
 
-void InputController::LoadKeybinds(Config& config)
+void InputController::LoadKeybinds()
 {
+    Config* config = CoreManager::getInstance().getConfig();
+
     SPDLOG_INFO("Loading keybinds for InputController");
 
     for (int k = 0; k < 12; k++)
@@ -28,10 +31,112 @@ void InputController::LoadKeybinds(Config& config)
             string confkey = "keybind" + keyLabels[k] + to_string(i);
             SPDLOG_TRACE("Checking confkey {}", confkey);
 
-            if (config.keyExists(confkey))
+            if (config->keyExists(confkey))
             {
-                keybinds[k].push_back(config.GetInt(confkey));
+                keybinds[k].push_back(config->GetInt(confkey));
                 SPDLOG_DEBUG("Loading keybind {} with key id {}", k, confkey);
+            }
+        }
+    }
+}
+
+void InputController::parseEvents(sf::Event& event)
+{
+    if (event.type == sf::Event::KeyPressed)
+    {
+        ///keyMap[event.key.code] = true/false??? would that do the trick?
+        SPDLOG_DEBUG("Key pressed: {}", event.key.code);
+
+        keyRegistered = true;
+        currentKey = event.key.code;
+        keyMap[event.key.code] = true;
+        keyMapHeld[event.key.code] = true;
+    }
+
+    if (event.type == sf::Event::KeyReleased)
+    {
+        SPDLOG_DEBUG("Key released: {}", event.key.code);
+
+        keyMapHeld[event.key.code] = false;
+    }
+
+    /** Joystick buttons need to be somewhat manually assigned **/
+
+    if (event.type == sf::Event::JoystickButtonPressed)
+    {
+        if (event.joystickButton.joystickId == 0)
+        {
+            SPDLOG_DEBUG("Joystick ({}) key pressed: {}", event.joystickButton.joystickId, event.joystickButton.button);
+
+            keyRegistered = true;
+            currentKey = 1000 + event.joystickButton.button;
+            keyMap[1000 + event.joystickButton.button] = true;
+            keyMapHeld[1000 + event.joystickButton.button] = true;
+        }
+    }
+
+    if (event.type == sf::Event::JoystickButtonReleased)
+    {
+        if (event.joystickButton.joystickId == 0)
+        {
+            SPDLOG_DEBUG("Joystick ({}) key released: {}", event.joystickButton.joystickId, event.joystickButton.button);
+
+            keyMapHeld[1000 + event.joystickButton.button] = false;
+        }
+    }
+
+    if (event.type == sf::Event::JoystickMoved)
+    {
+        if (event.joystickMove.joystickId == 0)
+        {
+            if (event.joystickMove.axis == sf::Joystick::PovX)
+            {
+                if (event.joystickMove.position == -100) ///left
+                {
+                    keyRegistered = true;
+                    currentKey = 1100;
+                    keyMap[1100] = true;
+                    keyMapHeld[1100] = true;
+                } else
+                {
+                    keyMapHeld[1100] = false;
+                }
+
+                if (event.joystickMove.position == 100) ///right
+                {
+                    keyRegistered = true;
+                    currentKey = 1101;
+                    keyMap[1101] = true;
+                    keyMapHeld[1101] = true;
+                } else
+                {
+                    keyMapHeld[1101] = false;
+                }
+            }
+
+            if (event.joystickMove.axis == sf::Joystick::PovY)
+            {
+                if (event.joystickMove.position == -100) ///down
+                {
+                    keyRegistered = true;
+                    currentKey = 1102;
+                    keyMap[1102] = true;
+                    keyMapHeld[1102] = true;
+                } else
+                {
+                    keyMapHeld[1102] = false;
+                }
+
+                if (event.joystickMove.position == 100) ///up
+                {
+                    keyRegistered = true;
+                    currentKey = 1103;
+                    keyMap[1103] = true;
+                    keyMapHeld[1103] = true;
+                } else
+                {
+                    keyMapHeld[1103] = false;
+                }
             }
         }
     }

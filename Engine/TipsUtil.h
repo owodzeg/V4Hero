@@ -11,11 +11,8 @@
 class TipsUtil
 {
 public:
-    Config* config;
     std::vector<std::string> backgroundFileNames;
     std::vector<std::string> iconFileNames;
-    std::vector<std::string> tipTitles;
-    std::vector<std::string> tipTexts;
 
     // refers to amount of tips in language file
     int tipAmount = 7;

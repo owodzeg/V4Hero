@@ -1,0 +1,75 @@
+{
+	"params":
+	{
+		"name": "Snow-covered Ferns of Shida Valley",
+		"background": "shidavalley",
+		"bgm": "Oofonfa Theme",
+		"rich_presence": "shida",
+		"force_weather": "snow"
+	},
+
+	"entities":
+	[
+		{ "id": 1, "params": { "xpos": -330, "layer": "ui" } },
+
+		{ "id": 3, "params": { "xpos": 500, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 580, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 660, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 1000, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 1080, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 1400, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 1480, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 1560, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 1640, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 1720, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 2500, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 2580, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 3000, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 3080, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 3160, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 3260, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 3400, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 4000, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 4080, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 4160, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 4240, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 4320, "color": "50d28c", "layer": "nature"} },
+		{ "id": 3, "params": { "xpos": 4400, "color": "50d28c", "layer": "nature"} },
+
+		{ "id": 18, "params": { "xpos": 1300, "xrange": 100, "layer": "animals"} },
+		{ "id": 18, "params": { "xpos": 1650, "xrange": 100, "layer": "animals"} },
+		{ "id": 18, "params": { "xpos": 2000, "xrange": 100, "layer": "animals"} },
+		{ "id": 18, "params": { "xpos": 2400, "xrange": 100, "layer": "animals"} },
+		{ "id": 18, "params": { "xpos": 2900, "xrange": 100, "layer": "animals"} },
+		{ "id": 18, "params": { "xpos": 3400, "xrange": 100, "layer": "animals"} },
+		{ "id": 18, "params": { "xpos": 3750, "xrange": 100, "layer": "animals"} },
+		{ "id": 18, "params": { "xpos": 3900, "xrange": 100, "layer": "animals"} },
+		{ "id": 18, "params": { "xpos": 4200, "xrange": 100, "layer": "animals"} },
+		
+		{
+			"id": 18,
+			"params":
+			{
+				"xpos": 3000,
+				"spawnrate": 25,
+				"color": "800080",
+				"loot":
+				{
+					"item": "item_dream_meat",
+					"chance": 100
+				},
+				"layer": "animals",
+				"custom_params":
+				{
+					"forceDropIfNotObtained": ["item_christmas_charm_2020", "any"]
+				}
+			}
+		},
+		
+		{ "id": 2, "params": { "xpos": 2000, "xrange": 100, "layer": "animals"} },
+		{ "id": 2, "params": { "xpos": 2900, "xrange": 100, "layer": "animals"} },
+		{ "id": 2, "params": { "xpos": 3750, "xrange": 100, "layer": "animals"} },
+		
+		{ "id": 0, "params": { "xpos": 3500, "layer": "ui" } }
+	]
+}

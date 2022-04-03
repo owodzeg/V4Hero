@@ -1,0 +1,383 @@
+// # Language: Esperanto
+altar_category_armor|Kiraso
+altar_category_key_items|Ŝlosilaj eroj
+altar_category_materials|Materialoj
+altar_category_weapon|Bataliloj
+altar_title|Altaro
+barracks_depart|Ĉu vi estas certa ke vi volas foriri?
+barracks_lvl|Nvl
+barracks_stat_attackspeed|Rapido de atako
+barracks_stat_burnchance|Ŝanco de bruligo
+barracks_stat_critchance|Ŝanco de kritikigo
+barracks_stat_damage|Damaĝo
+barracks_stat_exp|Sperto
+barracks_stat_freezechance|Ŝanco de frostigo
+barracks_stat_hp|VP
+barracks_stat_knockbackchance|Ŝanco de puŝigo
+barracks_stat_level|Nivelo
+barracks_stat_staggerchance|Ŝanco de vobligo
+barracks_unit_status|Statuso de unuo
+barracks_yaripon|Jaripono
+credits_all|Kaj ĉiuj kiuj iam asistis la projekton! Dankon!
+credits_animators|Animacistoj
+credits_artists|Artistoj
+credits_community|Manaĝistoj de komunumo
+credits_creator|Kreinto de projekto
+credits_gameplay|Ekvilibro de ludo
+credits_musicians|Muzikistoj
+credits_programmers|Programistoj
+credits_special|Speciala danko
+credits_supporters|Helpantoj
+credits_translators|Tradukistoj
+credits_writers|Verkistoj
+desc_banal_branch|Baza ligna branĉo. Kvankam ĝi eble estas simplan fragmenton de ligno, entreprena Patapono povas trovi multe da uzoj kun ili, de tenilo ĝis stango por tendo.
+desc_chaka_drum|Bonega Tamburo de Saĝo.
+desc_cherry_blossom|Laŭ legendo, la antikvaj kolosaj ĉerizaj arboj de kie tiu malmola ligna branĉo devenas en la oriento, estas ripozaj dioj.
+desc_christmas_charm_2020|Tenado de ĉi tiu ĉarmo en via inventaro donas bonŝancon al vi por la tuta jaro! Dankon pro partoprenado en Patafour Vintra Evento 2020!
+desc_digital_blueprint|Projekto trovita en Kiraĝina ĥato en Pata-pina Bosko. Ĝi vidigas la lokon de estonta konstruita Kiraĝina fortreso.
+desc_don_drum|Bonega Tamburo de Mirakloj. Oni diris pri tiu tambura takto ke ĝi havas potencon de envenigado de ĉiopovista volo en estaĵo.
+desc_dream_meat|Ĉi tiu legenda marmura viando fandas kiel sukervato, sed Pataponoj preferas pli sanan manĝon. Pataponoj kiuj gustumis ĉi tion bongustaĵon ĉiutage estas koncedita pro havado de feliĉaj kaj pacaj vivoj.
+desc_gashirin_bone|Granda, malmola osto. Oni skribis ke niaj antikvaj prauloj unufoje uzis tiujn ostojn kiel bataliloj.
+desc_gizaza_fang|La pinto de ĉi tiu dentego enhavas nenombreblajn malgrandetajn kontraŭhokojn. Iu ajn penetriĝita kun ĉi tio dentego estos pagi teruran koston provante detiri ĝin. Eĉ la plej ekzercitaj Pataponaj kuracistoj baraktas kun detirado de ĉi tio dentego de onia korpo.
+desc_hard_iron|Multe da sango disverŝita en konfliktoj ĉirkaŭe tiu rara metalo laŭ Zigotonaj mitoj. Pataponaj rakontoj diras pri kiel prauloj prenis malmolan feron el interno de montoj, sed la sekreto por tio estas longe perdita.
+desc_hinoki|Legendo diras ke eĉ hejmo de Ĉiopovisto estas konstruita de ĉi tio sankta Hinokia ligno. Pataponoj fartas senŝarĝiĝita kaj kuŝiĝita kiam ili venas en konstruaĵojn kiuj estas farita de ĉi tio kara ligno.
+desc_iron_helmet|Tiu kasko, farita de valora fero, imitas la bazan dezajnon de la ligna kasko, sed ĝi donas pli protektadon.
+desc_iron_spear|Malmola fera lanco. Pataponoj aprezas ilin ĉar ili estas pli peza kaj ili igas pli damaĝon. Tamen, ili bezonas pli forta batalisto por ĵetado kompetente.
+desc_itete_fang|Grandega dentego kiu dekoras tre akran pinton. Oni diris delonge ke vi povas scii veran ekzercitecon de ĉasisto pro kiom da ilin li devis detiri el lia kolo.
+desc_kacheek_helm|Tiu kasko, fasonita de la pelto kaj haroj de Kaĉik, gardas la uzulon sekure de damaĝo. Ĝi ankaŭ adas uzulan okulon sufiĉe da varmo kaj komforto.
+desc_kacheek_spear|Lanco forĝita de la akra dentego de kaĉik. Ĝia akreco estas sufiĉa por trapiki ŝildojn, samtempe ili igas kritajn damaĝojn.
+desc_keepsake|Hatapona memoraĵo. Ĝi ĉiam komfortas lin, kaj memorigas lin ke Ĉiopovisto venus en lia horo de la plej grandega bezono.
+desc_kirajin_helmet1|Triangula kasko farita de nekonata materialo kiu oni kredis ke ĝi estas fero, provizas maloftajn atributojn al soldato kiu portas ĝin. Ĝi pliigas punktojn de vivo kaj pliigas atakon.
+desc_kirajin_spear1|Lanco farita de malordinaraj materialoj kiu verŝajne estas fero. Pinto de ĝi estas nekredeble akra, oni povas penetri sian fingron nur kiam oni ĝentile tuŝas ĝin.
+desc_kuneri_fang|Belega, kurbigita dentego. Ĝi povas esti ĉiziĝota por uzo kiel rando de tranĉo por batalilo, kaj ankaŭ servas bone kiel ekipaĵo.
+desc_leather_meat|La grandaĝuloj diras al junaj Pataponoj, "Se ĝi plenigas vian stomakon, ne plendu" kaj ili ekscias manĝi tiun viandon.
+desc_mudada_bone|Malgranda, blankita osto, ŝajne el malgranda besto. Ili ofte estas trovita en tufo de herbo ekstere en la ĉasa tereno, aŭ en la stomako de pli grandaj bestoj.
+desc_none|Malplena angulo de la Patapona altaro, kun nur kandeloj kaj incenso
+desc_pata_drum|Bonega Tamburo de Forteco. Hatapono gardis tiun tamburon kun lia vivo.
+desc_pon_drum|Bonega Tamburo de Kuraĝo. Akirita je konsento por fariĝi la Patapona dio.
+desc_rappata_helm|Ĉi tio kasko farita el Rapataa pelto provizas pli facilan movadon kaj donas protekton kontraŭ malvarmo.
+desc_rappata_spear|Tre akra lanco farita de ostoj el ĉasitaj Rapataoj. Estas nekredeble malpeza kaj povas trapiki multe da celoj samtempe.
+desc_santa_hat|Ĉi tio komforta ĉapelo, trikita je pataponaj avinoj, donas multe da ĝojeco kaj varmeco por la uloj kiuj portas ĝin. Ĝi donas grandega protekto kontraŭ malvarmo.
+desc_scorching_spear|La magio ĵetita al ĉi tio lanco igas ĝian pinton bruli. Ĝi kaŭzas masivan damaĝon kaj bruligas malamikojn. La malamikoj estos aromi kiel rostita bovaĵo.
+desc_shubaba_mask|Heroa Masko de Spirita Striko. Ĝi donas malgrandan porcion de granda ŝubabasaa potenco, iomete multigas la rapideco de la uzantaj muskoloj kaj permesas ilin por esti pli rapidaj ol aliaj militistoj.
+desc_small_rock|Ordinara ŝtono. Ili estas plenaj de malpurecoj, sed tamen ankoraŭ gravaj por triba vivo. Pataponaj infanoj ofte provas ĵeti ilin trans la surfacon de lagoj kaj riveroj.
+desc_soggy_map|Karto akirita el enfosita trezora kesto trovita en Ŝidaa Valo. Ĝi markas la lokon de kaŝita fortreso.
+desc_steel_spear|Lanco kun akra pinto farita de la rara alojo, ŝtalo. Tiuj lancoj estas pli malpezaj ol feraj lancoj sed ili ŝargas eĉ pli punĉon!
+desc_strength_helmet|Ĉi tio magia kasko, dekorita kun farbo de ruĝaj algoj el Bovoo Vulkano, ege pliigas atakon.
+desc_tender_meat|Pataponoj amas tiun molan, bongustan viandon, sed ili manĝas ĝin rare, eĉ dum ilia naskiĝotago.
+desc_titanum_ore|Legendo diras ke ĉi tio malmola, malpeza erco estas donita al la Pataponoj je neniu alia ol Ĉiopovisto. Ĝi povas daŭri tra aĝojn kaj estas perfekta materialo por klasoj kiuj bezonas rapidajn movojn.
+desc_wooden_helmet|La tradicia ligna kasko de la Patapona tribo. Estas la registrita marko de ilia ĉasaj partioj, kaj malgraŭ ĝia simpla dezajno, ĝi savis la vivon de multaj pataponaj batalistoj.
+desc_wooden_spear|Baza ligna lanco, donita por ĉiu patapona rekruto kiam oni estas matura kaj unue unuiĝas la ĉasadon grupon. Aprezita je multajn Pataponojn, eĉ poste ili ŝanĝas ĝin por pli grandaj kaj pli bonaj armiloj.
+firstrun_dialog_1|Bonvenon en la Patafour Demonstraĵo!\Premu Z por kontinui.
+firstrun_dialog_2|Estas la unua tempo vi lanĉis Demonstraĵon,\do jen kelkaj bazaj informaĵoj. 
+firstrun_dialog_3|Patafour estas projekto kiu aktive disvolvas.\Estas nefina produkto kaj ne estas iomete proksime al fina aranĝo.
+firstrun_dialog_4|Ĉi tiu demonstraĵo vidigas plej de la bazaj\internaĵaj meĥanikoj kiuj ni manaĝis fini ĝis nun.
+firstrun_dialog_5|Patafoura teamo esperas ke vi ŝatos\nian malgrandan projekton!
+firstrun_dialog_6|Jen bazaj stiriloj:\Z - Konfermi (Kruco)\X - Nuligi (Cirklo)\Eniga klavo - Starti\Spacoklavo - Kontinui
+firstrun_dialog_7|Vi povas ŝanĝi ĉi tiujn agordojn\en la menuo de opcioj.
+firstrun_dialog_8|Ni rekomendas uzi regilon\por la plej bona sento.
+firstrun_dialog_9|Amuzon!
+item_banal_branch|Banala Branĉo
+item_chaka_drum|Tamburo ĈAKA
+item_cherry_blossom|Ćeriza Floro
+item_christmas_charm_2020|Kristnaska Ĉarmo 2020
+item_digital_blueprint|Cifereca Projekto
+item_don_drum|Tamburo DON
+item_dream_meat|Sonĝa Viando
+item_gashirin_bone|Osto Gaŝirino
+item_gizaza_fang|Dentego Gizazao
+item_hard_iron|Malmola Fero
+item_hinoki|Hinokio
+item_iron_helmet|Fera Kasko
+item_iron_spear|Fera Lanco
+item_itete_fang|Dentego Iteteo
+item_kacheek_helm|Kaĉika Kasko
+item_kacheek_spear|Kaĉika Lanco
+item_keepsake|Memoraĵo
+item_kirajin_helmet1|Fera Kasko de Kiraĝino
+item_kirajin_spear1|Fera Lanco de Kiraĝino
+item_kuneri_fang|Dentego Kunerio
+item_leather_meat|Leda Viando
+item_mudada_bone|Osto Mudadao
+item_none|Nenio!
+item_pata_drum|Tamburo PATA
+item_pon_drum|Tamburo PON
+item_rappata_helm|Rapataa Kasko
+item_rappata_spear|Rapataa Lanco
+item_santa_hat|Ĉapelo de Santa Claus
+item_scorching_spear|Brulanta Lanco
+item_shubaba_mask|Ŝubao
+item_small_rock|Ŝtono
+item_soggy_map|Fia Karto
+item_steel_spear|Ŝtala Lanco
+item_strength_helmet|Kasko de Forteco
+item_tender_meat|Mola Viando
+item_titanum_ore|Erco de Titanio
+item_wooden_helmet|Ligna Kasko
+item_wooden_spear|Ligna Lanco
+kirajin_ambush_1|Surpriza atako!\Kreu formacion!
+kirajin_ambush_2|Defendu la garda turon!\Ne lasu ilin trairi!
+kirajin_ambush_3|Bosko Patapino apartenas al la Kiraĝinojn!\Ni ne lasos vin!
+kirajin_ambush_4|Surpriza atako!\Vi ne iros plu!
+kirajin_ambush_5|Protektu la gardan turon\pro iaj kostoj!
+kirajin_ambush_6|Estas nia ŝanco!\Neniigu ilin!
+kirajin_ambush_7|Ataku! Ili devas esti frozita!
+kirajin_death_1|Morti... morti...
+kirajin_death_2|Morto estas neevitebla!
+kirajin_death_3|Ni reiros!
+kirajin_death_4|Kira...ĝin...
+kirajin_death_5|Tiom... malvarma...
+kirajin_talk_1|L... La Pataponoj\estas ĉi tie!
+kirajin_talk_10|Ni ne povas malvenki!
+kirajin_talk_11|Protektu la energiajn kristalojn!
+kirajin_talk_12|Vi pagos pro tio!\Malbenoj al vi, Pataponoj!
+kirajin_talk_13|Vi ne foriros kun ĉi tio!
+kirajin_talk_14|Ni atengos nian venĝon\pro vi, Pataponoj!!!
+kirajin_talk_15|Frozigu ilin ĝis morto!
+kirajin_talk_16|Naĝu... naĝu...
+kirajin_talk_2|Hehehe... Stultaj Pataponoj...\Tiom stulta...
+kirajin_talk_3|Klifo Eĝiĝio ne estos\prenigota for el ni!
+kirajin_talk_4|Ne lasu ilin iri ĉi tie\al nian energian devenlokon!
+kirajin_talk_5|Ataku! Vi estas morta nun!
+kirajin_talk_6|Estas via fino!
+kirajin_talk_7|Rezignu! Estas finita!
+kirajin_talk_8|Ni malamas Pataponojn!
+kirajin_talk_9|Nun, ataku!
+menu_continue|Kontinui
+menu_exit|Eliri
+menu_invaliddata|Konservdatumo estas nevalida aŭ difektita.
+menu_newgame|Nova ludo
+menu_nodata|Manko de havebla konservdatumo trovita.
+menu_nosupportdata|Konservdatumoj el pli aĝaj kaj programistaj\versioj de Patafour ne estas apogitaj.
+menu_options|Opcioj
+menu_pressanykey|Premu fakultativan klavon por starti
+menu_saveexists|Estas konservdatumo ekzistanta.\Ĉu vi volas anstataŭigi ĝin?
+mission_backtopatapolis|Ĉu vi volas reiri al Patapolison?\Ĉiuj materialoj kaj Ka-ĉing perdiĝos.
+mission_complete|MISIO KOMPLETITA!
+mission_failed|MISIO MALSUKCESITA!
+nav_agree|Konsento
+nav_attack|Atako
+nav_cancel|Nuligo
+nav_changeequip|Ŝanĝado de ekipaĵoj
+nav_charge|Ŝargiĝado
+nav_circle|Cirklo
+nav_cross|Kruco
+nav_defend|Defendado
+nav_down|Suben
+nav_enter|Eniri
+nav_entermission|Eniri mision
+nav_equipitem|Ekipiĝado de ero
+nav_exit|Elirejo
+nav_exittopatapolis|Eliri al Patapoliso
+nav_exittotitle|Eliri al titolan ekranon
+nav_interact|Interrilati
+nav_jump|Salti
+nav_leave|Deiri
+nav_left|Maldekstren
+nav_move|Movi
+nav_navigate|Navigacii
+nav_navigateitem|Navigacii eron
+nav_next|Sekva
+nav_nextpage|Sekva paĝo
+nav_no|Ne
+nav_onward|Aliri
+nav_party|Festi
+nav_previous|Antaŭa
+nav_previouspage|antaŭa paĝo
+nav_retreat|Retreti
+nav_returntofield|Deiri al elektadon de agro
+nav_returntomap|Deiri al Mondan mapon
+nav_returntopatapolis|Deiri al Patapolison
+nav_right|Dekstren
+nav_savegame|Savi ludon
+nav_scroll|Rulumi
+nav_selectequip|Elekti ekipaĵon
+nav_selectfield|Elekti agron
+nav_selectmission|Elekti mision
+nav_selectunit|Elekti unuon
+nav_square|Kvadrato
+nav_startmission|Komenci mision
+nav_summon|Voki
+nav_triangle|Triangulo
+nav_understood|Komprenita
+nav_up|Supren
+nav_viewmissions|vidigi misiojn
+nav_yes|Jes
+newgame_intro_1|Post kreado de la Patapoleo Ponto, ni\fine alvenis al novajn landojn, netuŝitajn\je la manoj de la Ĉiopova Patapono.
+newgame_intro_10|Dum ĝi komencis flugi al ni, ni bonŝance konservis nin mem\kun la antikva maŝino kiu ni uzis unufoje antaŭ,\apenaŭ eskapinta la dubaj makzeloj de morto.
+newgame_intro_11|...
+newgame_intro_12|Ĉiopovisto, mi preĝas al vi!\Bonvolu gvidi nin al ekstremaĵo de la mondo.
+newgame_intro_13|Konservu nian mondon de malamo\kaj lasu nin fine rigardi al ĜI!
+newgame_intro_14|Bonvolu, preni la sanktan tamburon\kaj lasu nin marŝi ankoraŭfoje!
+newgame_intro_2|En ĉi tio malfamiliara loko, ni trovis\la ruinojn de antikva civilizacio, kiuj estas ŝajne longa forgesita.
+newgame_intro_3|Senespera por trovi ĜIN, ni komencis alĝustigetadon\por la antikvaj meĥanikaĵoj kiuj\estas trovita enfosita en la rubo.
+newgame_intro_4|Ĉe unua premo de butono, niaj tri jariponoj,\Heroo, kaj min mem, estas sendita al bizara\kaj malfamiliara loko kiu estas plena kun naturo\kaj sovaĝvivo, ŝajne sen ia civilizacio.
+newgame_intro_5|Zorgante pri niaj kamaradoj, ni provis\ĉion ke ni povis por reveni al hejmo,\kaj dankon al la Ĉiopova Patapono ke ni sukcesis!
+newgame_intro_6|Tamen...
+newgame_intro_7|Je nia reveno, ni revenis por trovi\la korpojn de niaj aliancanoj. Juĝante per\iliaj vundoj, iliaj mortoj estis freŝaj.
+newgame_intro_8|La ĉielo supre estis tinkturita sangoruĝan,\kaj la krioj de la tre malmultaj postvivuloj\povis esti aŭdeblaj for.
+newgame_intro_9|Ni alrigardis la ĉielon supre kaj renkontis\teruran tamen misteran figuron kiu flosis\malame supre nin. Singulara okulo de ĝi estis\plena kun kolero kaj malamo.
+npc_sen_1|Ho Granda Kami!\Gvidu nin al Ekstremaĵo de la mondo.
+npc_sen_10|La Kiraĝinoj konstruis denovan\fortreson en Eĝiĝi Klifoj.
+npc_sen_11|Ni ne povas lasi ilin venki…!\Iru kaj venku ilin, Kami!
+npc_sen_12|Vi faris tion Dio! Vi faris tion!\Estas fino por nun...
+npc_sen_13|Mi ankoraŭ ne povas ekmemori kie\mi rigardis ilin antaŭe...
+npc_sen_2|Ho Potenca Kami!\Gvidu nin al Ekstremaĵo de mondo.
+npc_sen_3|Ho Potenca Patapono!\Gvidu nin al Ekstremaĵo de mondo.
+npc_sen_4|Estas multaj da bestoj\kiuj vagadas en Ŝida Valo.
+npc_sen_5|Famoj diras ke nenombreblaj trezoroj\estas enfosita en ĝia tero.
+npc_sen_6|Io atakis la Pataponajn\arbohakistojn en Patapino Bosko!
+npc_sen_7|Jariponaj skoltoj reportas ke ruĝaj,\triangulaj estuloj konstruas\fortreson de ŝtelita ligno...
+npc_sen_8|”Kiraĝinoj”...? Ĉu tio estas\kiel ili estas nomiĝita?
+npc_sen_9|Mi pensas ke mi aŭdis ĉi tion\nomon antaŭe...
+npc_wakapon_1|Mi estas Ŭakapon! Gardisto de\la Monda Ovo pro ordo de Kami!
+npc_wakapon_10|Fantasta laboro, Kami! Vi neniigis\ilian fortreson en Klifoj Eĝiĝio.
+npc_wakapon_11|Tamen, malamo neniam kuŝiĝas.\Kiraĝinoj amasiĝas energion de strangaj ruĝaj kristaloj. Neniigu\ilin por malfortigi ilian armeon!
+npc_wakapon_2|Bonvenon, Kami! Mi estas tre danka\pro paroli al vi persone!
+npc_wakapon_3|Vi povas esti konfidema pro mi,\Mi protektos la Monda Ovo\kun mia vivo, promeso!
+npc_wakapon_4|Mi povas farti ion malaman\kiu venas al nia mondo...
+npc_wakapon_5|Ĉu vi fartas tion ankaŭ, Kami?\Ĉu vi protektos nin de ia danĝero ni eble alfrontos?
+npc_wakapon_6|Ĉi tiuj triangulaj estuloj…\Kio ili estas? Kio ili volas de ni Pataponoj?
+npc_wakapon_7|Iliaj okuloj estas plenaj kun malamo…\Mi timas ke tio estas nun la komenco.
+npc_wakapon_8|Danĝera serĉo atendas\vin kaj viajn trupojn, Kami.
+npc_wakapon_9|Kiraĝinoj havas \teĥnologio kiu ne estas el ĉi tio\mondo. Vi devas postresti forta.
+options_assign_key|Asignita klavo
+options_audio|Sona opcioj
+options_audio1|Laŭtecaj opcioj
+options_audio1|Laŭtecaj opcioj
+options_audio2|Sonoj de tamburo
+options_audio3|Patapona tambura kantoj
+options_audio4|Respondoj de Pataponoj
+options_back|Reiri
+options_backtomain|Reiri al ĉefa menuo
+options_bigbutton|granda butono
+options_change_anykey|Premu fakultativan klavon por asigni ĝin al la enluda butono
+options_change_button|butono
+options_change_title|Ŝanĝado de asignita klavo por enluda butono:
+options_diff1|PLEJ BONAJ frapoj
+options_diff2|BONAJ frapoj
+options_diff3|MALBONAJ frapoj
+options_disable|Malŝalti
+options_enable|Ŝalti
+options_graphics|Grafikaj opcioj
+options_graphics1|Ekrandistingivo
+options_graphics2|Kvalito de teksturo
+options_graphics3|Glatigo
+options_graphics4|Limo de filmer-rapido
+options_graphics5|Ŝalti plenan ekranon
+options_graphics6|Senbordera fenestro
+options_ingame_btn|Enluda butono
+options_input|Enigaj opcioj
+options_input1|Agordo de regilo
+options_input2|Klavkombinoj
+options_input3|Agordo de tempomezurado (eksperimenta)
+options_input_setup1|Certigu pri via regilo estas ligita en via komputilo. Premu ian butonon en via regilo kaj ĝi devas aperi en la centro de la ekrano.
+options_input_setup10|Bonvolu premi la klavon kiu estas respondeca por movado de kamerao maldekstren. (Maldekstra baskulo)
+options_input_setup11|Bonvolu premi la klavon kiu estas respondeca por movado de kamerao dekstren. (Dekstra baskulo)
+options_input_setup12|Bonvolu premi la ekvivalenton de la Startbutono.
+options_input_setup13|Bonvolu premi la ekvivalenton de la Elektbutono.
+options_input_setup14|Ĉio finita! Via regilo estas nun preta por ludi Patafour.
+options_input_setup2|Bonvolu premi la klavon maldekstra sago.
+options_input_setup3|Bonvolu premi la klavon dekstra sago.
+options_input_setup4|Bonvolu premi la klavon suba sago.
+options_input_setup5|Bonvolu premi la klavon supra sago.
+options_input_setup6|Bonvolu premi la klavon kiu estas respondeca por frapado de la PATA tamburo. (Kvadrato)
+options_input_setup7|Bonvolu premi la klavon kiu estas respondeca por frapado de la PON tamburo. (Cirklo)
+options_input_setup8|Bonvolu premi la klavon kiu estas respondeca por frapado de la DON tamburo. (Kruco)
+options_input_setup9|Bonvolu premi la klavon kiu estas respondeca por frapado de la ĈAKA tamburo. (Triangulo)
+options_input_setup_again|Provi denove
+options_input_setup_next|Sekve
+options_input_setup_notice|Klavo de regilo sukcese registriĝita.
+options_input_setup_return|Reiri al opcioj
+options_key|Klavo
+options_language|Lingva opcioj
+options_language1|Ŝanĝi lingvon
+options_language_english|La angla
+options_options|Opcioj
+options_quality_high|Alta
+options_quality_low|Malalta
+options_quality_medium|Meza
+options_quality_ultra|Ultra
+options_restart_button1|Restartigi ludon
+options_restart_button2|Malfari ŝanĝojn
+options_restart_notice|Vi bezonas restartigi vian ludon por apliki ŝanĝojn. Ĉu restarti nun?
+options_tip1|Konsileto: Musumu la asignitan klavon kun muso aŭ elektu tion kun sagoklavoj,\poste premu la krucbutonon por ŝanĝi tion.\Premu la triangulbutonon por forigi la asignitan klavon.\Uzu la numerojn en supro de la menuo por ŝanĝi inter klavkombinaj antaŭagordoj.
+options_tip2|Konsileto: Premu fakultativan klavon por reiri al la menuo de opcioj.\Novaj klavkombinoj estos konservita poste vi eliri menuon de opcioj. 
+options_tip3|Konsileto: Premu la startbutonon sur via klavaro por kontinui.\Premu la cirklbutonon por eliri agordon de regilo.
+options_unlimited|(senlima)
+options_volume|Laŭteco:
+options_volume1|Ĉefa laŭteco:
+options_volume2|Sona laŭteco:
+options_volume3|Muzika laŭteco:
+outro_cutscene_1|Dankon pro vi ludis la demonstraĵon!
+outro_cutscene_2|Estis tia plezuro pro farado Patafour por vi!
+outro_cutscene_3|La Patafour teamo honeste esperas ke vi ŝatis tion. Ni verŝiĝis nian koron kaj animon ekstere por vi.
+outro_cutscene_4|La Kiraĝinoj revenos pli fortaj ol iam ajn...
+outro_cutscene_5|Ĉu vi traktos batali ilin for kaj repreni la perditan Pataponan hejmlandon, Pata-Stango?
+outro_cutscene_6|Lernu la antikvajn Artojn de la vere unua de la Patapona Tribo kaj gvidu vian armeon al venko.
+outro_cutscene_7|La aliaj triboj bezonos vin, Ĉiopovisto [PLAYER_NAME]...
+outro_cutscene_8|Savu la mondon en la plena versio de Patafour!
+outro_end|Dankon pro ludado!
+patapolis|Patapoliso
+patapolis_altar|Altaro
+patapolis_barracks|Kazerno
+patapolis_blacksmith|Forĝisto
+patapolis_demofinish|Gratulon! Vi Finis la provoversion!
+patapolis_demo_pick1|Rigardi agnoskojn
+patapolis_demo_pick2|Nuligi
+patapolis_egg|Ovo de Mondo
+patapolis_festival|Festivala Placo
+patapolis_obelisk|Obelisko
+patapolis_paraget|Pordo
+patapolis_returntomain|Ĉu vi volas reveni\al la titola ekrano?
+patapolis_returntomainsave|Nekonservitaj datumoj estos perditaj.\Ĉu vi estas certa?
+patapolis_save|Ĉu vi volas konserviĝi vian ludon?
+patapolis_saved|Ludo konservita.
+patapolis_sen|Seno Ranpurupono
+patapolis_trader|Vendoplaco
+patapolis_tree|Matero, Arbo de Vivo
+patapolis_wakapon|Ŭakapon, la Gardisto
+rarepon_normal|Normala
+rarepon_normal_desc|Normala batalisto el la Patapona tribo. Ili estas renoma pro ilia stoikeco kaj braveco. Dum ĉi tiuj Pataponoj eblas esti malgrandaj, kun la ĝusta sinteno, ili povas fari ĉion.
+tip1_desc|Ĉasado por kaĉikoj en Ŝido Valo\estas antikva Patapona tradicio.\\Tiuj malrapidaj bestoj estas manĝo por la tribo\dum generacioj, kaj unuigi al ĉasan partion\estas unua sperto de lanca manprenado\por multaj Pataponoj. \\Kvankam ilia flarsento ne estas bona\kiel flarsento de la nestabilaj Moĉiĉioj, estas tamen inda\atendi por kontraŭvento antaŭe aliri,\do ili ne povas flari la Pataponojn kiujn aliras.
+tip1_title|Ĉasado por Kaĉikoj
+tip2_desc|Akiru viandon de Ĉasado! \\Ĉasu kaptaĵon do la Patapona tribo povas manĝi. \Kio ajn iras en la mondon,\Pataponoj bezonas havi viandon\por pleni iliajn ventrojn!\\Se vi gvidis la Pataponojn bone, eble ili\forlasos iom viandon kiel alporto en la Altaro!\\Kaĉikoj donigas ledan viandon.\Moĉiĉioj donigas molan viandon.\\Poste vi reiras el ĉasado,\estu certa kontroli la Altaron!
+tip2_title|Meritaĵoj el Ĉasado
+tip3_desc|Patapino Bosko estas bone konata pro la ebleco\de facile perdiĝi tie.\\La grandegaj arboj estas perfekta materialo\por fortikaj konstruaĵoj, pro ilia \nekredebla daŭreco.\\Multaj Pataponaj arbohakistoj pasigas\ilian tutan vivon kolektante lignon,\kaj novaj arboj grandiĝas tie ĉiutage.
+tip3_title|Fortika ligno el Patapino Bosko
+tip4_desc|Akirado de perfektaj komandoj estas la ŝlosilo\por la plej bona rendimento.\\Kie vi frapas la tutajn 4 tamburojn perfekte,\vi aŭdos “ŝŭing” sonon.\\Multaj profitoj venas de perfektaj komandoj!\Pataponoj povas iri pli rapida kaj igi pli damaĝon.\\Estas utila ekzerciteco por lerni!
+tip4_title|Perfektaj Komandoj
+tip5_desc|PON PON ĈAKA ĈAKA amasigas viajn unuojn.\\Vi povas uzi ĉi tion komandon por via profito!\\Igu pli ol duobla damaĝo\dum atakado!\\Tio ege reduktigas recevitan damaĝon\dum defendado!\\Kelkaj klasoj havas specialan konduton dum amasigado.
+tip5_title|Memoru amasiĝi!
+tip6_desc|Ŭakapon estas la gardisto de la Monda Ovo \kiu brilas en la centro de Patastango Ponto.\\La Monda Ovo igas pacon al Patapona Mondo.\\Legendo diras ke rompado de ĝin\liberigus la tutan malamon el la infero.\\La Ŭakapon promesis al Kami ke li protektos la Ovo de Mondo ĉiakoste, gardata ĝin kun lia vivo.
+tip6_title|Ŭakapon kaj la Monda Ovo
+tip7_desc|Seno estas sacerdotino de la Antikva Patapona epoko.\\Ŝi estas rekta ligilo inter Pataponoj kaj Kami,\kaj vivis tra multajn generaciojn de Patapona tribo.\\Ranpurupon tre zorgas pri ĉiu Patapono,\kreskigas kaj edukas Pataponaj infanoj.\\Ŝi faros ion ajn por helpi la tribon kreski.
+tip7_title|Seno Ranpurupono en Antikva Patapoliso
+tip8_desc|Ĉu vi sciis ke Pataponoj solenas Kristnaskon ankaŭ?\\Por la kristnaska tempo, Pataponoj dekoras\la Patapolison kun multaj koloraj ornamentoj.\\Malgrandaj Pataponoj atendas por Santapono,\kiu donas ilin kio ili deziris.\\Kutime ili ricevas iliajn unuajn batalilojn por starti\batali por Ĉiopovisto, por atendi la Ekstremaĵon de Mondo!
+tip8_title|Kristnasko en Patapoliso
+tips_anykey|Premu fakultativan klavon por kontinui
+tips_loading|Nun Ŝarĝado
+worldmap_header_1|Patapona Mapo de Mondo
+worldmap_location_1_description|La humida mara aero kiu ventas en ĉi tiu valo faras perfektan habitaton por ĉiaj specoj de plantoj, permesas kreski la praloĝantajn filikojn por grandegaj altecoj! Por generacioj, diversaj triboj uzis ĉi tiun fertilan lokon kiel loko por ĉasado por bestoj kaj amasigado sovaĝaj legomoj. Ĝia stranga pejzaĝo de grandegaj plantoj povas esti malorientiga, kaj famoj persistas ke estas kaŝitaj sekretoj ie en la regiono.
+worldmap_location_1_title|~ Ŝido Valo ~
+worldmap_location_2_description|La pinaj arboj en tia bosko estas bone konataj pro kolosa alteco kaj malmoleco kiam uzita por konstrua materialo. Pataponaj arbohakistoj estas konata pro perlaborado tie per tranĉado tiuj arboj por uzado por konstruaĵoj. Estas famo ke feoj bone disvolviĝas pro la manĝeblaj fungoj en la abismo de la arbaro.
+worldmap_location_2_title|~ Patapino Bosko ~
+worldmap_location_3_description|Klifoj Eĝiĝio unufoje vidis la epokon de potencaj drakoj antaŭ ili malaperis el ilia naskiĝoloko pro kaŭzoj malkonataj de Rolitolandaj loĝantoj, kaj liveras bonan lokon por konstruado hejmoj kaj fortresoj kiuj estas kaŝitaj de vido egale. Rareponoj Gjaboj originas el tiu regiono kaj iuj ankoraŭ loĝas en la klifoj ĝis hodiaŭ, sed multe de tiuj Pataponaj irejoj disvastiĝis ekde iam ĉirkaŭ la mondo.
+worldmap_location_3_title|~ Klifoj Eĝiĝio ~
+worldmap_location_locked|~ Ŝlosita ~
+worldmap_mission_1_description|Multe da bestoj kolektas en la valon por ŝanco por trovado manĝeblaj plantoj kaj fungoj. Uzu tiun oportunon por ĉasi la estuloj por nutri viajn Pataponojn! Famoj diras ke la valo holdas nekonatan trezoron.
+worldmap_mission_1_title|Ĉasado en Valo Ŝido
+worldmap_mission_2_description|La Kiraĝinoj fondis bazon por piedoj en la arba Patapino Bosko! Uzate la fortika ligno el la ĉirkaŭaj arboj, ili konstruis fortreson. Kolektu vian armeon kaj neniigu la fortreson dum estado singardema pro estuloj de la arbaro!
+worldmap_mission_2_title|Fortreso en la Arbaro
+worldmap_mission_3_description|La Kiraĝinoj eble estis venkita tiam, sed ili revenis, pli forta ol iam. Ili estas decida por holdi tiun pozicion kaj la kosto ne gravas. Venku la fortreson ankoraŭfoje por holdi la Kiraĝinajn armeojn for!
+worldmap_mission_3_title|Kiraĝina Fortreso en Patapino Bosko: Nvl.
+worldmap_mission_4_description|Patapona skoltoj raportis ke en Klifoj Eĝiĝio, la Kiraĝinoj komencis konstruaĵon kun grandega fortreso por servi kiel bazon de operacio kontraŭ la Patapona armeo. Laŭraportate, la estonta fortreso estis fortikigi kun potenca Kiraĝina teknologio, kiu la Pataponoj neniam antaŭe vidis. Estu brava kaj sentima kaj neniigu tiun fortreson antaŭ ĝi estas kompleta.
+worldmap_mission_4_title|Altnivelaj Ekipaĵoj
+worldmap_mission_5_description|Eĉ post detruado tiam ilia fortreso, la Kiraĝinoj malpermesiĝos malvenki denove. Ili estas celkonscia por batalado pro tiu loko eĉ se tio kostas iliajn vivojn. Meden avertas kun grimaca tono en ŝian voĉon, "Estos eĉ pli malmola ol la antaŭa batalo".
+worldmap_mission_5_title|Obstina Kiraĝinoj en Klifoj Eĝiĝio: Nvl.
+worldmap_mission_6_description|En ĉi tio tempo de la jaro, Valo Ŝido kovrigas kun neĝo, dum la frostaj ventoj el la oceano apud la Patastango ponto alvenas. Estas perfekta oportuno por raraj bestoj por veni el ilia nestoj kaj ĉasi fiŝon sub glacio. Iafoje, vere raraj specioj povas aperiĝi...
+worldmap_mission_6_title|Neĝo-kovrita filikoj de Valo Ŝido
+worldmap_select|Elekti mision
+// # Translated by: 
+// @Artur Płatkowski
+// @Artur Płatkowski

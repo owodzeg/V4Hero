@@ -40,7 +40,9 @@ NewGameNameEntryMenu::NewGameNameEntryMenu()
 void NewGameNameEntryMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* parentMenu)
 {
     Scene::Initialise(_thisConfig, parent);
-    v4Core->menus.push_back(&optionsMenu);
+    //TO-DO: figure out what the fuck to do with this
+    //this whole class is unused i think
+    //v4Core->menus.push_back(&optionsMenu);
     savefilecreated.Initialise(_thisConfig, parent, this);
     savefilecreated.Hide();
     buttonList.Initialise(&f_font, *thisConfig, &(v4Core->currentController), this);

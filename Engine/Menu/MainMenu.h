@@ -70,6 +70,7 @@ public:
     sf::Clock patapolisClock;
 
     bool mouseInBounds = false;
+    bool initialized = false;
 
     vector<int> totem_sel_pos = {205, 490, 780, 1080};
 
@@ -77,14 +78,10 @@ public:
 
     MessageCloud msgcloud;
 
-    Config* config;
-    PatapolisMenu patapolisMenu;
     NewGameNameEntryMenu nameEntryMenu;
-    OptionsMenu optionsMenu;
     IntroductionMenu introductionMenu;
 
-    void Initialise(Config* thisConfig, V4Core* parent);
-    void Update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
+    void Update();
     void EventFired(sf::Event event);
     void OnExit();
     void SelectMenuOption();

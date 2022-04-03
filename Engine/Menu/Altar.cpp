@@ -6,61 +6,59 @@
 #include "iostream"
 #include "math.h"
 #include <spdlog/spdlog.h>
+#include "../CoreManager.h"
+#include "../StateManager.h"
 
 
 AltarMenu::AltarMenu()
 {
-    is_active = false;
-}
-
-void AltarMenu::initialise(Config* _thisConfig, V4Core* parent, PatapolisMenu* curParentMenu)
-{
     SPDLOG_INFO("Initializing Altar...");
-    Scene::Initialise(_thisConfig, parent);
-    parentMenu = curParentMenu;
 
-    int quality = _thisConfig->GetInt("textureQuality");
+    Config* config = CoreManager::getInstance().getConfig();
+    StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
+
+    int quality = config->GetInt("textureQuality");
     q = quality;
 
     switch (quality)
     {
         case 0: ///low
         {
-            ratio_x = _thisConfig->GetInt("resX") / float(640);
-            ratio_y = _thisConfig->GetInt("resY") / float(360);
+            ratio_x = config->GetInt("resX") / float(640);
+            ratio_y = config->GetInt("resY") / float(360);
             break;
         }
 
         case 1: ///med
         {
-            ratio_x = _thisConfig->GetInt("resX") / float(1280);
-            ratio_y = _thisConfig->GetInt("resY") / float(720);
+            ratio_x = config->GetInt("resX") / float(1280);
+            ratio_y = config->GetInt("resY") / float(720);
             break;
         }
 
         case 2: ///high
         {
-            ratio_x = _thisConfig->GetInt("resX") / float(1920);
-            ratio_y = _thisConfig->GetInt("resY") / float(1080);
+            ratio_x = config->GetInt("resX") / float(1920);
+            ratio_y = config->GetInt("resY") / float(1080);
             break;
         }
 
         case 3: ///ultra
         {
-            ratio_x = _thisConfig->GetInt("resX") / float(3840);
-            ratio_y = _thisConfig->GetInt("resY") / float(2160);
+            ratio_x = config->GetInt("resX") / float(3840);
+            ratio_y = config->GetInt("resY") / float(2160);
             break;
         }
     }
 
-    res_ratio_x = _thisConfig->GetInt("resX") / float(1280);
-    res_ratio_y = _thisConfig->GetInt("resY") / float(720);
+    res_ratio_x = config->GetInt("resX") / float(1280);
+    res_ratio_y = config->GetInt("resY") / float(720);
 
-    f_font.loadFromFile(_thisConfig->fontPath);
+    f_font.loadFromFile(config->fontPath);
 
     altar_main.loadFromFile("resources/graphics/ui/altar/altar_main.png", quality, 1);
 
-    altar_title.createText(f_font, 40, sf::Color(111, 71, 51, 255), Func::ConvertToUtf8String(_thisConfig->strRepo.GetString("altar_title")), q, 1);
+    altar_title.createText(f_font, 40, sf::Color(111, 71, 51, 255), Func::ConvertToUtf8String(strRepo->GetString("altar_title")), q, 1);
     altar_kaching.createText(f_font, 30, sf::Color(111, 71, 51, 255), "0 Ka-ching", q, 1);
 
     altar_item_title.createText(f_font, 24, sf::Color(111, 71, 51, 255), "", q, 1);
@@ -71,6 +69,7 @@ void AltarMenu::initialise(Config* _thisConfig, V4Core* parent, PatapolisMenu* c
 
     SPDLOG_INFO("Initializing Altar finished.");
 }
+
 void AltarMenu::showCategory()
 {
 }
@@ -81,13 +80,15 @@ void AltarMenu::showAltar()
 
 void AltarMenu::updateAltarDescriptions()
 {
+    StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
+
     int selItem = (grid_sel_y + grid_offset_y) * 4 + grid_sel_x;
 
     if (selItem < inventory_boxes.size())
     {
-        altar_item_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(inventory_boxes[selItem].data->item_name)));
-        altar_item_category.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString("altar_category_" + inventory_boxes[selItem].data->item_category)));
-        altar_item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(thisConfig->strRepo.GetString(inventory_boxes[selItem].data->item_description), 420, f_font, 26)));
+        altar_item_title.setString(Func::ConvertToUtf8String(strRepo->GetString(inventory_boxes[selItem].data->item_name)));
+        altar_item_category.setString(Func::ConvertToUtf8String(strRepo->GetString("altar_category_" + inventory_boxes[selItem].data->item_category)));
+        altar_item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(strRepo->GetString(inventory_boxes[selItem].data->item_description), 420, f_font, 26)));
     } else
     {
         altar_item_title.setString("");
@@ -98,27 +99,26 @@ void AltarMenu::updateAltarDescriptions()
 
 void AltarMenu::eventFired(sf::Event event)
 {
-    if (is_active)
+    if (event.type == sf::Event::KeyPressed)
     {
-        if (event.type == sf::Event::KeyPressed)
-        {
-            // do something here;
-        }
+        // do something here;
     }
 }
 
 void AltarMenu::reloadInventory()
 {
+    SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
+
     SPDLOG_DEBUG("AltarMenu::reloadInventory();");
 
     vector<InvBox> old_invboxes = inventory_boxes; ///for comparison and new item highlight
 
     inventory_boxes.clear();
 
-    SPDLOG_INFO("Fetching inventory entries: {} entries", v4Core->saveReader.invData.items.size());
-    for (int i = 0; i < v4Core->saveReader.invData.items.size(); i++)
+    SPDLOG_INFO("Fetching inventory entries: {} entries", saveReader->invData.items.size());
+    for (int i = 0; i < saveReader->invData.items.size(); i++)
     {
-        Item* cur_item = v4Core->saveReader.invData.items[i].item;
+        Item* cur_item = saveReader->invData.items[i].item;
 
         bool ex = false;
 
@@ -126,7 +126,7 @@ void AltarMenu::reloadInventory()
         {
             InvBox tmp;
             tmp.data = cur_item;
-            tmp.amount = v4Core->saveReader.invData.items[i].item_count;
+            tmp.amount = saveReader->invData.items[i].item_count;
 
             tmp.r_outer.setSize(sf::Vector2f(104.0 * res_ratio_x, 77.0 * res_ratio_y));
             tmp.r_outer.setFillColor(sf::Color(102, 102, 102, 255));
@@ -134,7 +134,7 @@ void AltarMenu::reloadInventory()
             tmp.r_inner.setSize(sf::Vector2f(72.0 * res_ratio_x, 72.0 * res_ratio_y));
             tmp.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
-            switch (thisConfig->thisCore->saveReader.itemReg.getCategoryIDByString(cur_item->item_category))
+            switch (saveReader->itemReg.getCategoryIDByString(cur_item->item_category))
             {
                 case 1: ///Materials
                 {
@@ -238,15 +238,20 @@ void AltarMenu::reloadInventory()
     updateAltarDescriptions();
 }
 
-void AltarMenu::update(sf::RenderWindow& window, float fps, InputController& inputCtrl)
+void AltarMenu::Update()
 {
-    if (is_active)
+    if (true)
     {
+        InputController* inputCtrl = CoreManager::getInstance().getInputController();
+        sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+        float fps = CoreManager::getInstance().getCore()->getFPS();
+
         highlight_x += 7.0 / fps;
 
-        ctrlTips.x = 0;
+        // TO-DO: control tips for new system
+        /* ctrlTips.x = 0;
         ctrlTips.y = (720 - ctrlTips.ySize);
-        ctrlTips.draw(window);
+        ctrlTips.draw(window); */
 
         altar_main.setOrigin(altar_main.getLocalBounds().width / 2, altar_main.getLocalBounds().height / 2);
         altar_main.setPosition(340, 360);
@@ -267,8 +272,8 @@ void AltarMenu::update(sf::RenderWindow& window, float fps, InputController& inp
 
                 inventory_boxes[curItem].r_outer.setPosition((40 + xpos) * res_ratio_x, (39 + ypos) * res_ratio_y);
                 inventory_boxes[curItem].r_inner.setPosition((40 + xpos + 2.5) * res_ratio_x, (39 + ypos + 2.5) * res_ratio_y);
-                window.draw(inventory_boxes[curItem].r_outer);
-                window.draw(inventory_boxes[curItem].r_inner);
+                window->draw(inventory_boxes[curItem].r_outer);
+                window->draw(inventory_boxes[curItem].r_inner);
 
                 //inventory_boxes[i].num.setOrigin(inventory_boxes[i].num.getLocalBounds().width,inventory_boxes[i].num.getLocalBounds().height);
                 //inventory_boxes[i].num_shadow.setOrigin(inventory_boxes[i].num_shadow.getLocalBounds().width,inventory_boxes[i].num_shadow.getLocalBounds().height);
@@ -289,7 +294,7 @@ void AltarMenu::update(sf::RenderWindow& window, float fps, InputController& inp
                 {
                     inventory_boxes[curItem].r_highlight.setPosition((40 + xpos) * res_ratio_x, (39 + ypos) * res_ratio_y);
                     inventory_boxes[curItem].r_highlight.setFillColor(sf::Color(255, 255, 255, 64 + (sin(highlight_x) * 64)));
-                    window.draw(inventory_boxes[curItem].r_highlight);
+                    window->draw(inventory_boxes[curItem].r_highlight);
                 }
             } else
             {
@@ -309,8 +314,8 @@ void AltarMenu::update(sf::RenderWindow& window, float fps, InputController& inp
 
                 tmp_inv.r_outer.setPosition((40 + xpos) * res_ratio_x, (39 + ypos) * res_ratio_y);
                 tmp_inv.r_inner.setPosition((40 + xpos + 2.5) * res_ratio_x, (39 + ypos + 2.5) * res_ratio_y);
-                window.draw(tmp_inv.r_outer);
-                window.draw(tmp_inv.r_inner);
+                window->draw(tmp_inv.r_outer);
+                window->draw(tmp_inv.r_inner);
             }
         }
 
@@ -320,35 +325,33 @@ void AltarMenu::update(sf::RenderWindow& window, float fps, InputController& inp
         r_sel.setOutlineColor(sf::Color(255, 0, 32, 255));
         r_sel.setPosition((41 + 72 + (grid_sel_x * 118)) * res_ratio_x, (39 + 64 + (grid_sel_y * 88)) * res_ratio_y);
 
-        window.draw(r_sel);
+        window->draw(r_sel);
 
-
-        rr_title.Create(366, 100, 20, window.getSize().x / float(1280));
+        rr_title.Create(366, 100, 20, window->getSize().x / float(1280));
         rr_title.x = 933;
         rr_title.y = 141;
         rr_title.setOrigin(sf::Vector2f((rr_title.width + 40) / 2, (rr_title.height + 40) / 2));
 
-        rr_title_sh.Create(rr_title.width + 2, rr_title.height + 2, 20, window.getSize().x / float(1280), sf::Color(0, 0, 0, 96));
+        rr_title_sh.Create(rr_title.width + 2, rr_title.height + 2, 20, window->getSize().x / float(1280), sf::Color(0, 0, 0, 96));
         rr_title_sh.x = rr_title.x - 1;
         rr_title_sh.y = rr_title.y - 1;
         rr_title_sh.setOrigin(sf::Vector2f((rr_title.width + 40) / 2, (rr_title.height + 40) / 2));
 
-        rr_title_sh.Draw(window);
-        rr_title.Draw(window);
+        rr_title_sh.Draw();
+        rr_title.Draw();
 
-
-        rr_desc.Create(440, 385, 20, window.getSize().x / float(1280));
+        rr_desc.Create(440, 385, 20, window->getSize().x / float(1280));
         rr_desc.x = rr_title.x;
         rr_desc.y = 436;
         rr_desc.setOrigin(sf::Vector2f((rr_desc.width + 40) / 2, (rr_desc.height + 40) / 2));
 
-        rr_desc_sh.Create(rr_desc.width + 2, rr_desc.height + 2, 20, window.getSize().x / float(1280), sf::Color(0, 0, 0, 96));
+        rr_desc_sh.Create(rr_desc.width + 2, rr_desc.height + 2, 20, window->getSize().x / float(1280), sf::Color(0, 0, 0, 96));
         rr_desc_sh.x = rr_desc.x - 1;
         rr_desc_sh.y = rr_desc.y - 1;
         rr_desc_sh.setOrigin(sf::Vector2f((rr_desc.width + 40) / 2, (rr_desc.height + 40) / 2));
 
-        rr_desc_sh.Draw(window);
-        rr_desc.Draw(window);
+        rr_desc_sh.Draw();
+        rr_desc.Draw();
 
         altar_title.setOrigin(altar_title.getLocalBounds().width / 2, altar_title.getLocalBounds().height / 2);
         altar_kaching.setOrigin(altar_kaching.getLocalBounds().width / 2, altar_kaching.getLocalBounds().height / 2);
@@ -371,7 +374,7 @@ void AltarMenu::update(sf::RenderWindow& window, float fps, InputController& inp
         altar_item_category.draw(window);
         altar_item_desc.draw(window);
 
-        if (inputCtrl.isKeyPressed(InputController::Keys::LEFT))
+        if (inputCtrl->isKeyPressed(InputController::Keys::LEFT))
         {
             grid_sel_x--;
 
@@ -380,7 +383,7 @@ void AltarMenu::update(sf::RenderWindow& window, float fps, InputController& inp
 
             updateAltarDescriptions();
         }
-        if (inputCtrl.isKeyPressed(InputController::Keys::RIGHT))
+        if (inputCtrl->isKeyPressed(InputController::Keys::RIGHT))
         {
             grid_sel_x++;
 
@@ -389,7 +392,7 @@ void AltarMenu::update(sf::RenderWindow& window, float fps, InputController& inp
 
             updateAltarDescriptions();
         }
-        if (inputCtrl.isKeyPressed(InputController::Keys::UP))
+        if (inputCtrl->isKeyPressed(InputController::Keys::UP))
         {
             grid_sel_y--;
 
@@ -412,7 +415,7 @@ void AltarMenu::update(sf::RenderWindow& window, float fps, InputController& inp
 
             updateAltarDescriptions();
         }
-        if (inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+        if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
         {
             grid_sel_y++;
 
@@ -431,10 +434,9 @@ void AltarMenu::update(sf::RenderWindow& window, float fps, InputController& inp
 
             updateAltarDescriptions();
         }
-        if (inputCtrl.isKeyPressed(InputController::Keys::CIRCLE))
+        if (inputCtrl->isKeyPressed(InputController::Keys::CIRCLE))
         {
-            this->Hide();
-            this->is_active = false;
+            StateManager::getInstance().setState(StateManager::PATAPOLIS);
         }
     }
 }

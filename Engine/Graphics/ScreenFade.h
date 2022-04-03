@@ -15,10 +15,12 @@ public:
 
     ScreenFade();
     void Create(Config* config, int mode, float speed);
+    void Create(int mode, float speed);
     void FadeIn();
     void FadeOut();
     bool checkFinished();
     void draw(sf::RenderWindow& window, float fps);
+    void draw();
 };
 
 #endif // SCREENFADE_H

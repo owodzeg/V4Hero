@@ -2428,6 +2428,8 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 v4Core->window.setActive(false);
                 loadingThreadInstance.launch();
 
+                //rework pending: refer to the comment below in the other rework pending section
+                /*
                 v4Core->mainMenu.patapolisMenu.doWaitKeyPress = false;
                 v4Core->mainMenu.patapolisMenu.Show();
                 v4Core->mainMenu.patapolisMenu.is_active = true;
@@ -2448,7 +2450,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 v4Core->mainMenu.patapolisMenu.camPos = v4Core->mainMenu.patapolisMenu.locations[3];
                 v4Core->mainMenu.patapolisMenu.fade_alpha = 255;
                 v4Core->mainMenu.patapolisMenu.updateStoryPoint(); ///update NPC dialogues
-
+                */
                 while (missionEndTimer.getElapsedTime().asMilliseconds() < 21000)
                 {
                     ///halt loading for a second
@@ -2528,7 +2530,12 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 v4Core->window.setActive(false);
                 loadingThreadInstance.launch();
 
-                v4Core->mainMenu.patapolisMenu.doWaitKeyPress = false;
+                //rework pending
+                //basically this code below attempts to reach patapolis functions via v4core->mainmenu
+                //this is currently being improved so this kind of chain will no longer be necessary
+                //but for now for compatibility's sake im going to comment this out
+
+                /* v4Core->mainMenu.patapolisMenu.doWaitKeyPress = false;
                 v4Core->mainMenu.patapolisMenu.Show();
                 v4Core->mainMenu.patapolisMenu.is_active = true;
                 v4Core->mainMenu.patapolisMenu.screenFade.Create(thisConfig, 0, 512);
@@ -2542,12 +2549,15 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 {
                     SPDLOG_DEBUG("Don't initialize Patapolis, just show it again");
                 }
-
-                v4Core->mainMenu.patapolisMenu.location = 3;
+                */
+                
+                //rework pending
+                /* v4Core->mainMenu.patapolisMenu.location = 3;
                 v4Core->mainMenu.patapolisMenu.SetTitle(3);
                 v4Core->mainMenu.patapolisMenu.camPos = v4Core->mainMenu.patapolisMenu.locations[3];
                 v4Core->mainMenu.patapolisMenu.fade_alpha = 255;
                 v4Core->mainMenu.patapolisMenu.updateStoryPoint(); ///update NPC dialogues
+                */
 
                 while (missionEndTimer.getElapsedTime().asMilliseconds() < 10000)
                 {
