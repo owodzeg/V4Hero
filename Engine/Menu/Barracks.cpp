@@ -953,6 +953,8 @@ void Barracks::Update()
             dialog_boxes.erase(dialog_boxes.begin() + db_e[i] - i);
         }
 
+        screenFade.draw();
+
         window->setView(lastView);
 
         if (dialog_boxes.size() <= 0)
@@ -1226,7 +1228,11 @@ void Barracks::Update()
                     parentMenu->isActive=true;*/
 
                     screenFade.Create(1, 512);
-                    StateManager::getInstance().setState(StateManager::PATAPOLIS);
+
+                    if (obelisk)
+                        StateManager::getInstance().setState(StateManager::OBELISK);
+                    else
+                        StateManager::getInstance().setState(StateManager::PATAPOLIS); 
                 }
             }
 

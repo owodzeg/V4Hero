@@ -30,6 +30,7 @@ public:
         PATAPOLIS = 6,
         PATAPOLIS_ALTAR = 7,
         BARRACKS = 8,
+        OBELISK = 9,
         MISSIONCONTROLLER = 10
     };
 
@@ -56,6 +57,7 @@ private:
     PatapolisMenu* patapolisPtr;
     AltarMenu* altarPtr;
     Barracks* barracksPtr;
+    ObeliskMenu* obeliskPtr;
 
     std::vector<std::thread> loadingThreads;
 };

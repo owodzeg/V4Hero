@@ -9,6 +9,8 @@
 #include <sstream>
 #include <string>
 #include <spdlog/spdlog.h>
+#include "../CoreManager.h"
+#include "../StateManager.h"
 
 using json = nlohmann::json;
 
@@ -38,7 +40,7 @@ void ObeliskMenu::addMission(json missiondata)
     try
     {
         std::string title_key = missiondata["mission_title"];
-        tmp.title = thisConfig->strRepo.GetString(title_key);
+        tmp.title = CoreManager::getInstance().getStrRepo()->GetString(title_key);
     } catch (const std::exception& e)
     {
         std::string title = "No Data";
@@ -47,7 +49,7 @@ void ObeliskMenu::addMission(json missiondata)
     try
     {
         std::string desc_key = missiondata["mission_description"];
-        tmp.desc = thisConfig->strRepo.GetString(desc_key);
+        tmp.desc = CoreManager::getInstance().getStrRepo()->GetString(desc_key);
     } catch (const std::exception& e)
     {
         std::string desc = "No Data";
@@ -64,9 +66,9 @@ void ObeliskMenu::addMission(json missiondata)
 
     string level = "";
 
-    if (thisConfig->thisCore->saveReader.mission_levels[tmp.mis_ID] != 0)
+    if (CoreManager::getInstance().getSaveReader()->mission_levels[tmp.mis_ID] != 0)
     {
-        level = to_string(thisConfig->thisCore->saveReader.mission_levels[tmp.mis_ID]);
+        level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[tmp.mis_ID]);
     }
 
     PText tm;
@@ -82,14 +84,20 @@ void ObeliskMenu::addMission(json missiondata)
 
 void ObeliskMenu::Initialise(Config* thisConfigs, V4Core* parent, PatapolisMenu* curParentMenu)
 {
+
+}
+
+void ObeliskMenu::Initialise()
+{
     SPDLOG_INFO("Initializing Obelisk...");
 
-    Scene::Initialise(thisConfigs, parent);
-    parentMenu = curParentMenu;
+    //TO-DO: is this needed anymore?
+    //Scene::Initialise(thisConfigs, parent);
+    //parentMenu = curParentMenu;
 
-    font.loadFromFile(thisConfigs->fontPath);
+    font.loadFromFile(CoreManager::getInstance().getConfig()->fontPath);
 
-    quality = thisConfig->GetInt("textureQuality");
+    quality = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
 
     float ratioX, ratioY;
 
@@ -97,29 +105,29 @@ void ObeliskMenu::Initialise(Config* thisConfigs, V4Core* parent, PatapolisMenu*
     {
         case 0: ///low
         {
-            ratioX = thisConfigs->GetInt("resX") / float(640);
-            ratioY = thisConfigs->GetInt("resY") / float(360);
+            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(640);
+            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(360);
             break;
         }
 
         case 1: ///med
         {
-            ratioX = thisConfigs->GetInt("resX") / float(1280);
-            ratioY = thisConfigs->GetInt("resY") / float(720);
+            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
+            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
             break;
         }
 
         case 2: ///high
         {
-            ratioX = thisConfigs->GetInt("resX") / float(1920);
-            ratioY = thisConfigs->GetInt("resY") / float(1080);
+            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1920);
+            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(1080);
             break;
         }
 
         case 3: ///ultra
         {
-            ratioX = thisConfigs->GetInt("resX") / float(3840);
-            ratioY = thisConfigs->GetInt("resY") / float(2160);
+            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(3840);
+            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(2160);
             break;
         }
     }
@@ -147,12 +155,12 @@ void ObeliskMenu::Initialise(Config* thisConfigs, V4Core* parent, PatapolisMenu*
     missionbox.setPosition(290, 542);
     missionselect.loadFromFile("resources/graphics/ui/worldmap/mission_select.png", quality, 1);
 
-    worldmap_title.createText(font, 34, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("worldmap_header_1")), quality, 1);
-    location_title.createText(font, 27, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("worldmap_location_1_title")), quality, 1);
-    string desc = Func::wrap_text(thisConfig->strRepo.GetString("worldmap_location_1_description"), 800, font, 18);
+    worldmap_title.createText(font, 34, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("worldmap_header_1")), quality, 1);
+    location_title.createText(font, 27, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("worldmap_location_1_title")), quality, 1);
+    string desc = Func::wrap_text(CoreManager::getInstance().getStrRepo()->GetString("worldmap_location_1_description"), 800, font, 18);
 
     location_desc.createText(font, 19, sf::Color::Black, Func::ConvertToUtf8String(desc), quality, 1);
-    select_quest.createText(font, 18, sf::Color::Black, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("worldmap_select")), quality, 1);
+    select_quest.createText(font, 18, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("worldmap_select")), quality, 1);
     mission_title.createText(font, 18, sf::Color::Black, "Hunting Kacheek", quality, 1);
     mission_desc.createText(font, 18, sf::Color::Black, "(no translation needed)", quality, 1);
 
@@ -164,8 +172,8 @@ void ObeliskMenu::Initialise(Config* thisConfigs, V4Core* parent, PatapolisMenu*
 
     ctrlTips.create(66, font, 20, sf::String("Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
 
-    float resRatioX = thisConfigs->GetInt("resX") / float(1280);
-    float resRatioY = thisConfigs->GetInt("resY") / float(720);
+    float resRatioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
+    float resRatioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
 
     SPDLOG_INFO("Initializing Obelisk finished.");
 }
@@ -181,8 +189,8 @@ void ObeliskMenu::Reload()
     SPDLOG_TRACE("Location_bgs capacity: {}", location_bgs.capacity());
 
     ///Access the save data
-    fields_unlocked = v4Core->saveReader.locations_unlocked;
-    missions_unlocked = v4Core->saveReader.missions_unlocked;
+    fields_unlocked = CoreManager::getInstance().getSaveReader()->locations_unlocked;
+    missions_unlocked = CoreManager::getInstance().getSaveReader()->missions_unlocked;
 
     PSprite fld;
     fld.loadFromFile("resources/graphics/ui/worldmap/location_field.png", quality, 1);
@@ -253,12 +261,21 @@ void ObeliskMenu::EventFired(sf::Event event)
 
 void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& inputCtrl)
 {
-    if (is_active)
-    {
-        window.setView(window.getDefaultView());
 
-        float resRatioX = window.getSize().x / float(1280);
-        float resRatioY = window.getSize().y / float(720);
+}
+
+void ObeliskMenu::Update()
+{
+    if (true)
+    {
+        InputController* inputCtrl = CoreManager::getInstance().getInputController();
+        sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+        float fps = CoreManager::getInstance().getCore()->getFPS();
+
+        window->setView(window->getDefaultView());
+
+        float resRatioX = window->getSize().x / float(1280);
+        float resRatioY = window->getSize().y / float(720);
 
         if (!displayMissions)
         {
@@ -357,7 +374,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
         v_render_map.setCenter((506) * resRatioX, -360 * resRatioY);
         v_render_map.setViewport(sf::FloatRect(134.0 / 1280.0, (mainbox.getPosition().y - 115) / 720.0, 1012.0 / 1280.0, 1.f));
 
-        window.setView(v_render_map);
+        window->setView(v_render_map);
 
         for (int i = 0; i < worldmap_fields.size(); i++)
         {
@@ -382,7 +399,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             }
         }
 
-        window.setView(window.getDefaultView());
+        window->setView(window->getDefaultView());
 
         if (displayMissions)
         {
@@ -408,7 +425,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
             v_render_missions_map.setCenter((1280 + 149) * resRatioX, (-720 + 60) * resRatioY);
             v_render_missions_map.setViewport(sf::FloatRect(143.0 / 1280.0, (missionbox.getPosition().y - 53) / 720.0, 298.0 / 1280.0, 120.0 / 720.0));
 
-            window.setView(v_render_missions_map);
+            window->setView(v_render_missions_map);
 
             for (int i = 0; i < missions.size(); i++)
             {
@@ -417,10 +434,10 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 missions[i].p_mis.draw(window);
             }
 
-            window.setView(window.getDefaultView());
+            window->setView(window->getDefaultView());
         }
 
-        if (inputCtrl.isKeyPressed(InputController::Keys::CIRCLE))
+        if (inputCtrl->isKeyPressed(InputController::Keys::CIRCLE))
         {
             if (displayMissions)
             {
@@ -430,14 +447,17 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 SPDLOG_DEBUG("Exited mission selection.");
             } else
             {
-                parentMenu->screenFade.Create(thisConfig, 1, 1536);
-                parentMenu->goto_id = 3;
+                //go back to patapolis
+                StateManager::getInstance().setState(StateManager::PATAPOLIS);
+
+                //parentMenu->screenFade.Create(thisConfig, 1, 1536);
+                //parentMenu->goto_id = 3;
 
                 //this->Hide();
                 //this->isActive = false;
                 SPDLOG_INFO("Exited Obelisk.");
             }
-        } else if (inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+        } else if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
         {
             if (!displayMissions)
             {
@@ -457,7 +477,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
                     for (const auto& missiondata : wmap_data)
                     {
-                        if (missiondata["location_id"] == sel_location && v4Core->saveReader.isMissionUnlocked(missiondata["mission_id"]))
+                        if (missiondata["location_id"] == sel_location && CoreManager::getInstance().getSaveReader()->isMissionUnlocked(missiondata["mission_id"]))
                         {
                             addMission(missiondata);
                         }
@@ -474,9 +494,9 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
                     string level = "";
 
-                    if (thisConfig->thisCore->saveReader.mission_levels[missions[sel_mission].mis_ID] != 0)
+                    if (CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID] != 0)
                     {
-                        level = to_string(thisConfig->thisCore->saveReader.mission_levels[missions[sel_mission].mis_ID]);
+                        level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
                     }
 
                     mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title) + level);
@@ -485,8 +505,10 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 }
             } else
             {
-                parentMenu->screenFade.Create(thisConfig, 1, 1536);
-                parentMenu->goto_id = 4;
+                screenFade.Create(1, 1536);
+                StateManager::getInstance().setState(StateManager::BARRACKS);
+
+                //parentMenu->goto_id = 4;
                 /*
                 parentMenu->barracks_menu.Show();
                 parentMenu->barracks_menu.isActive = true;
@@ -494,8 +516,8 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 parentMenu->barracks_menu.missionID = missions[sel_mission].mis_ID;
                 parentMenu->barracks_menu.mission_file = missions[sel_mission].mission_file;
 
-                if(thisConfig->thisCore->saveReader.missionLevels[missions[sel_mission].mis_ID] != 0)
-                parentMenu->barracks_menu.mission_multiplier = 0.85 + thisConfig->thisCore->saveReader.missionLevels[missions[sel_mission].mis_ID]*0.15;
+                if(CoreManager::getInstance().getSaveReader()->missionLevels[missions[sel_mission].mis_ID] != 0)
+                parentMenu->barracks_menu.mission_multiplier = 0.85 + CoreManager::getInstance().getSaveReader()->missionLevels[missions[sel_mission].mis_ID]*0.15;
                 else
                 parentMenu->barracks_menu.mission_multiplier = 1;
 
@@ -503,7 +525,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                 parentMenu->barracks_menu.UpdateInputControls();*/
                 SPDLOG_INFO("Set barracks mission to ID {}, mission file: {}", missions[sel_mission].mis_ID, missions[sel_mission].mission_file);
             }
-        } else if (inputCtrl.isKeyPressed(InputController::Keys::LTRIGGER))
+        } else if (inputCtrl->isKeyPressed(InputController::Keys::LTRIGGER))
         {
             SPDLOG_DEBUG("Skipping maps to the left (Q key).");
 
@@ -511,7 +533,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
             if (mapXdest >= 0)
                 mapXdest = 0;
-        } else if (inputCtrl.isKeyPressed(InputController::Keys::RTRIGGER))
+        } else if (inputCtrl->isKeyPressed(InputController::Keys::RTRIGGER))
         {
             SPDLOG_DEBUG("Skipping maps to the right (E key).");
 
@@ -521,7 +543,7 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
             if (mapXdest <= maxBound)
                 mapXdest = maxBound;
-        } else if (inputCtrl.isKeyPressed(InputController::Keys::LEFT))
+        } else if (inputCtrl->isKeyPressed(InputController::Keys::LEFT))
         {
             if (!displayMissions)
             {
@@ -563,20 +585,20 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     string wL1 = string(L1.begin(), L1.end());
                     string wL2 = string(L2.begin(), L2.end());
 
-                    string desc = Func::wrap_text(thisConfig->strRepo.GetString(wL2), 800, font, 18);
+                    string desc = Func::wrap_text(CoreManager::getInstance().getStrRepo()->GetString(wL2), 800, font, 18);
 
-                    location_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(wL1)));
+                    location_title.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(wL1)));
                     location_desc.setString(Func::ConvertToUtf8String(desc));
                 } else
                 {
                     string L1 = "worldmap_location_locked";
                     string wL1 = string(L1.begin(), L1.end());
 
-                    location_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(wL1)));
+                    location_title.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(wL1)));
                     location_desc.setString("");
                 }
             }
-        } else if (inputCtrl.isKeyPressed(InputController::Keys::RIGHT))
+        } else if (inputCtrl->isKeyPressed(InputController::Keys::RIGHT))
         {
             if (!displayMissions)
             {
@@ -623,20 +645,20 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
                     string wL1 = string(L1.begin(), L1.end());
                     string wL2 = string(L2.begin(), L2.end());
 
-                    string desc = Func::wrap_text(thisConfig->strRepo.GetString(wL2), 800, font, 18);
+                    string desc = Func::wrap_text(CoreManager::getInstance().getStrRepo()->GetString(wL2), 800, font, 18);
 
-                    location_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(wL1)));
+                    location_title.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(wL1)));
                     location_desc.setString(Func::ConvertToUtf8String(desc));
                 } else
                 {
                     string L1 = "worldmap_location_locked";
                     string wL1 = string(L1.begin(), L1.end());
 
-                    location_title.setString(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(wL1)));
+                    location_title.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(wL1)));
                     location_desc.setString("");
                 }
             }
-        } else if (inputCtrl.isKeyPressed(InputController::Keys::UP))
+        } else if (inputCtrl->isKeyPressed(InputController::Keys::UP))
         {
             if (displayMissions)
             {
@@ -647,16 +669,16 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
                 string level = "";
 
-                if (thisConfig->thisCore->saveReader.mission_levels[missions[sel_mission].mis_ID] != 0)
+                if (CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID] != 0)
                 {
-                    level = to_string(thisConfig->thisCore->saveReader.mission_levels[missions[sel_mission].mis_ID]);
+                    level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
                 }
 
                 mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title) + level);
                 string desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
                 mission_desc.setString(Func::ConvertToUtf8String(desc));
             }
-        } else if (inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+        } else if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
         {
             if (displayMissions)
             {
@@ -667,9 +689,9 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
                 string level = "";
 
-                if (thisConfig->thisCore->saveReader.mission_levels[missions[sel_mission].mis_ID] != 0)
+                if (CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID] != 0)
                 {
-                    level = to_string(thisConfig->thisCore->saveReader.mission_levels[missions[sel_mission].mis_ID]);
+                    level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
                 }
 
                 mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title) + level);
@@ -680,7 +702,10 @@ void ObeliskMenu::Update(sf::RenderWindow& window, float fps, InputController& i
 
         ctrlTips.x = 0;
         ctrlTips.y = (720 - ctrlTips.ySize);
-        ctrlTips.draw(window);
+        // TO-DO: fix ctrltips to not use window
+        //ctrlTips.draw(window);
+
+        screenFade.draw();
     }
 }
 
