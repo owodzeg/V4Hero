@@ -113,10 +113,9 @@ set(ENGINE_FILES
         Engine/Mission/Units/Units/Yaripon.cpp
         Engine/Mission/Units/Projectiles/Spear.cpp
         Engine/Mission/Mission.cpp
-        Engine/Utils.h
-        Engine/Menu/MaterOuter.cpp )
+        Engine/Utils.h)
 
-add_executable(V4Hero ${ENGINE_FILES} main.cpp )
+add_executable(V4Hero ${ENGINE_FILES} main.cpp "Engine/Menu/MaterOuter.cpp" "Engine/Menu/MaterOuter.h")
 
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
     message("Enabling Unity build for Release build")
