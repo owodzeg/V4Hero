@@ -7,6 +7,12 @@
 class ScreenFade
 {
 public:
+    enum Options
+    {
+        FADEIN = 0,
+        FADEOUT = 1
+    };
+
     sf::RectangleShape r_rect;
     int cur_mode = 0; ///0 - fade in, 1 - fade out
     float cur_speed = 512;
