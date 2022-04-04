@@ -957,7 +957,7 @@ void Barracks::Update()
 
         window->setView(lastView);
 
-        if (dialog_boxes.size() <= 0)
+        if ((dialog_boxes.size() <= 0) && (screenFade.checkFinished()))
         {
             if (!menu_mode)
             {
@@ -1227,12 +1227,16 @@ void Barracks::Update()
                     parentMenu->Show();
                     parentMenu->isActive=true;*/
 
-                    screenFade.Create(1, 512);
+                    screenFade.Create(ScreenFade::FADEOUT, 1024);
 
                     if (obelisk)
-                        StateManager::getInstance().setState(StateManager::OBELISK);
+                    {
+                        goto_id = 0;
+                    }
                     else
-                        StateManager::getInstance().setState(StateManager::PATAPOLIS); 
+                    {
+                        goto_id = 1;
+                    }
                 }
             }
 
@@ -1290,6 +1294,24 @@ void Barracks::Update()
                     }
                 }
             }
+        }
+
+        if (screenFade.checkFinished())
+        {
+            switch (goto_id)
+            {
+                case 0: {
+                    StateManager::getInstance().setState(StateManager::OBELISK);
+                    break;
+                }
+
+                case 1: {
+                    StateManager::getInstance().setState(StateManager::PATAPOLIS);
+                    break;
+                }
+            }
+
+            goto_id = -1;
         }
     }
 }

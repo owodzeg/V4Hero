@@ -418,7 +418,7 @@ PatapolisMenu::PatapolisMenu()
     
     credits.Initialise(config, v4Core);
     */
-    screenFade.Create(config, 0, 512);
+    screenFade.Create(ScreenFade::FADEIN, 1024);
 
     float volume = (float(config->GetInt("masterVolume")) * (float(config->GetInt("bgmVolume")) / 100.f));
 
@@ -1557,7 +1557,7 @@ void PatapolisMenu::Update()
                         SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       loadInventory();
                         SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       updateInputControls();
 
-                        screenFade.Create(0, 1536);
+                        screenFade.Create(ScreenFade::FADEIN, 1024);
                         StateManager::getInstance().setState(StateManager::BARRACKS);
 
                         break;
@@ -1570,7 +1570,7 @@ void PatapolisMenu::Update()
                         //obelisk_menu.Show();
                         //obelisk_menu.is_active = true;
 
-                        screenFade.Create(0, 1536);
+                        screenFade.Create(ScreenFade::FADEIN, 1024);
                         StateManager::getInstance().setState(StateManager::OBELISK);
 
                         break;
@@ -1584,7 +1584,7 @@ void PatapolisMenu::Update()
                         Show();
                         is_active = true;
 
-                        screenFade.Create(0, 1536);
+                        screenFade.Create(ScreenFade::FADEIN, 1024);
 
                         break;
                     }
@@ -1597,7 +1597,7 @@ void PatapolisMenu::Update()
                         //Show();
                         is_active = true;
 
-                        screenFade.Create(0, 1536);
+                        screenFade.Create(ScreenFade::FADEIN, 1024);
 
                         break;
                     }
@@ -1622,7 +1622,7 @@ void PatapolisMenu::Update()
                         SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       loadInventory();
                         SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       updateInputControls();
 
-                        screenFade.Create(0, 1536);
+                        screenFade.Create(ScreenFade::FADEIN, 1024);
 
                         break;
                     }
@@ -1644,7 +1644,7 @@ void PatapolisMenu::Update()
 
                         v4Core->continue_loading = false;
 
-                        screenFade.Create(0, 1536);
+                        screenFade.Create(ScreenFade::FADEIN, 1024);
 
                         break;
                     }
@@ -1655,7 +1655,7 @@ void PatapolisMenu::Update()
                         credits.is_active = true;
                         credits.restart();
 
-                        screenFade.Create(0, 512);
+                        screenFade.Create(ScreenFade::FADEIN, 1024);
 
                         break;
                     }
@@ -1668,7 +1668,7 @@ void PatapolisMenu::Update()
                         parentMenu->Show();
                         parentMenu->is_active = true;
 
-                        parentMenu->screenFade.Create(0, 512);
+                        parentMenu->screenFade.Create(ScreenFade::FADEIN, 1024);
 
                         break;
                     }
@@ -1720,7 +1720,7 @@ void PatapolisMenu::Update()
                         case Buildings::BARRACKS:
                             /// armory/barracks
 
-                            screenFade.Create(1, 1536);
+                            screenFade.Create(ScreenFade::FADEOUT, 1024);
                             goto_id = 0;
 
                             /*SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       Show();
@@ -1750,7 +1750,7 @@ void PatapolisMenu::Update()
                         case Buildings::OBELISK:
                             /// obelisk
 
-                            screenFade.Create(1, 1536);
+                            screenFade.Create(ScreenFade::FADEOUT, 1024);
                             goto_id = 1;
 
                             /*obelisk_menu.Reload();
@@ -1811,7 +1811,7 @@ void PatapolisMenu::Update()
                         } else if (dialogboxes[dialogboxes.size() - 1].id == 1)
                         {
                             SPDLOG_INFO("Left from Patapolis to Title screen.");
-                            screenFade.Create(1, 512);
+                            screenFade.Create(ScreenFade::FADEOUT, 1024);
                             goto_id = 7;
                         } else if (dialogboxes[dialogboxes.size() - 1].id == 2)
                         {
@@ -1838,7 +1838,7 @@ void PatapolisMenu::Update()
                         } else if (dialogboxes[dialogboxes.size() - 1].id == 4)
                         {
                             SPDLOG_INFO("Going into credits!");
-                            screenFade.Create(1, 512);
+                            screenFade.Create(ScreenFade::FADEOUT, 1024);
                             goto_id = 6;
 
                             dialogboxes[dialogboxes.size() - 1].Close();

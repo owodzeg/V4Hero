@@ -278,7 +278,7 @@ void StateManager::setState(int state)
     {
         if (mainMenuPtr != nullptr)
         {
-            mainMenuPtr->screenFade.Create(0, 512);
+            mainMenuPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
         }
     }
 
@@ -289,7 +289,7 @@ void StateManager::setState(int state)
         {
             optionsMenuPtr->state = 0;
             optionsMenuPtr->sel = 0;
-            optionsMenuPtr->screenFade.Create(0, 512);
+            optionsMenuPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
         }
     }
 
@@ -325,7 +325,7 @@ void StateManager::setState(int state)
     {
         if (barracksPtr != nullptr)
         {
-            barracksPtr->screenFade.Create(0, 512);
+            barracksPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
             barracksPtr->obelisk = false;
             barracksPtr->refreshStats();
             barracksPtr->updateInputControls();
@@ -337,7 +337,7 @@ void StateManager::setState(int state)
     {
         if (patapolisPtr != nullptr)
         {
-            patapolisPtr->screenFade.Create(0, 1536);
+            patapolisPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
         }
     }
 
@@ -346,7 +346,7 @@ void StateManager::setState(int state)
     {
         if (obeliskPtr != nullptr)
         {
-            obeliskPtr->screenFade.Create(0, 512);
+            obeliskPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
         }
     }
 
@@ -355,7 +355,7 @@ void StateManager::setState(int state)
     {
         if (patapolisPtr != nullptr)
         {
-            patapolisPtr->screenFade.Create(0, 512);
+            patapolisPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
         }
     }
 
@@ -364,7 +364,7 @@ void StateManager::setState(int state)
     {
         if (barracksPtr != nullptr)
         {
-            barracksPtr->screenFade.Create(0, 512);
+            barracksPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
             barracksPtr->obelisk = true;
             barracksPtr->refreshStats();
             barracksPtr->updateInputControls();
@@ -376,7 +376,7 @@ void StateManager::setState(int state)
     {
         if (obeliskPtr != nullptr)
         {
-            obeliskPtr->screenFade.Create(0, 512);
+            obeliskPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
         }
     }
 

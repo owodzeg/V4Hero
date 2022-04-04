@@ -141,6 +141,8 @@ private:
 
     std::vector<PataDialogBox> dialog_boxes;
 
+    int goto_id = -1;
+
 public:
     std::string mission_file;
     Camera camera;

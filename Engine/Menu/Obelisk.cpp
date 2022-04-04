@@ -437,60 +437,239 @@ void ObeliskMenu::Update()
             window->setView(window->getDefaultView());
         }
 
-        if (inputCtrl->isKeyPressed(InputController::Keys::CIRCLE))
+        if (screenFade.checkFinished())
         {
-            if (displayMissions)
+            if (inputCtrl->isKeyPressed(InputController::Keys::CIRCLE))
             {
-                ctrlTips.create(66, font, 20, sf::String("Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
-
-                displayMissions = false;
-                SPDLOG_DEBUG("Exited mission selection.");
-            } else
-            {
-                //go back to patapolis
-                StateManager::getInstance().setState(StateManager::PATAPOLIS);
-
-                //parentMenu->screenFade.Create(thisConfig, 1, 1536);
-                //parentMenu->goto_id = 3;
-
-                //this->Hide();
-                //this->isActive = false;
-                SPDLOG_INFO("Exited Obelisk.");
-            }
-        } else if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
-        {
-            if (!displayMissions)
-            {
-                SPDLOG_INFO("Displaying missions on Worldmap for location {}.", sel_location);
-
-                ///(re)load missions here
-                SPDLOG_DEBUG("Displaying missions");
-
-                missions.clear();
-
-                ifstream wmap("resources/missions/worldmap.dat", std::ios::in);
-                json wmap_data;
-
-                if (wmap.good())
+                if (displayMissions)
                 {
-                    wmap >> wmap_data;
+                    ctrlTips.create(66, font, 20, sf::String("Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
 
-                    for (const auto& missiondata : wmap_data)
+                    displayMissions = false;
+                    SPDLOG_DEBUG("Exited mission selection.");
+                } else
+                {
+                    //go back to patapolis
+                    screenFade.Create(ScreenFade::FADEOUT, 1024);
+                    goto_id = 0;
+
+                    //parentMenu->screenFade.Create(thisConfig, 1, 1536);
+                    //parentMenu->goto_id = 3;
+
+                    //this->Hide();
+                    //this->isActive = false;
+                    SPDLOG_INFO("Exited Obelisk.");
+                }
+            } else if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
+            {
+                if (!displayMissions)
+                {
+                    SPDLOG_INFO("Displaying missions on Worldmap for location {}.", sel_location);
+
+                    ///(re)load missions here
+                    SPDLOG_DEBUG("Displaying missions");
+
+                    missions.clear();
+
+                    ifstream wmap("resources/missions/worldmap.dat", std::ios::in);
+                    json wmap_data;
+
+                    if (wmap.good())
                     {
-                        if (missiondata["location_id"] == sel_location && CoreManager::getInstance().getSaveReader()->isMissionUnlocked(missiondata["mission_id"]))
+                        wmap >> wmap_data;
+
+                        for (const auto& missiondata : wmap_data)
                         {
-                            addMission(missiondata);
+                            if (missiondata["location_id"] == sel_location && CoreManager::getInstance().getSaveReader()->isMissionUnlocked(missiondata["mission_id"]))
+                            {
+                                addMission(missiondata);
+                            }
                         }
                     }
-                }
 
-                wmap.close();
+                    wmap.close();
 
-                if (missions.size() > 0)
+                    if (missions.size() > 0)
+                    {
+                        ctrlTips.create(66, font, 20, sf::String("Up/Down: Select mission      X: Enter mission      O: Return to field select"), quality);
+
+                        displayMissions = true;
+
+                        string level = "";
+
+                        if (CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID] != 0)
+                        {
+                            level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
+                        }
+
+                        mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title) + level);
+                        string desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
+                        mission_desc.setString(Func::ConvertToUtf8String(desc));
+                    }
+                } else
                 {
-                    ctrlTips.create(66, font, 20, sf::String("Up/Down: Select mission      X: Enter mission      O: Return to field select"), quality);
+                    //go to barracks
+                    screenFade.Create(ScreenFade::FADEOUT, 1024);
+                    goto_id = 1;
 
-                    displayMissions = true;
+                    //parentMenu->goto_id = 4;
+                    /*
+                    parentMenu->barracks_menu.Show();
+                    parentMenu->barracks_menu.isActive = true;
+                    parentMenu->barracks_menu.obelisk = true;
+                    parentMenu->barracks_menu.missionID = missions[sel_mission].mis_ID;
+                    parentMenu->barracks_menu.mission_file = missions[sel_mission].mission_file;
+
+                    if(CoreManager::getInstance().getSaveReader()->missionLevels[missions[sel_mission].mis_ID] != 0)
+                    parentMenu->barracks_menu.mission_multiplier = 0.85 + CoreManager::getInstance().getSaveReader()->missionLevels[missions[sel_mission].mis_ID]*0.15;
+                    else
+                    parentMenu->barracks_menu.mission_multiplier = 1;
+
+                    parentMenu->barracks_menu.ReloadInventory();
+                    parentMenu->barracks_menu.UpdateInputControls();*/
+                    SPDLOG_INFO("Set barracks mission to ID {}, mission file: {}", missions[sel_mission].mis_ID, missions[sel_mission].mission_file);
+                }
+            } else if (inputCtrl->isKeyPressed(InputController::Keys::LTRIGGER))
+            {
+                SPDLOG_DEBUG("Skipping maps to the left (Q key).");
+
+                mapXdest += float(123) * 6;
+
+                if (mapXdest >= 0)
+                    mapXdest = 0;
+            } else if (inputCtrl->isKeyPressed(InputController::Keys::RTRIGGER))
+            {
+                SPDLOG_DEBUG("Skipping maps to the right (E key).");
+
+                mapXdest -= float(123) * 6;
+
+                int maxBound = (worldmap_fields.size() * 123 - 1012) * (-1);
+
+                if (mapXdest <= maxBound)
+                    mapXdest = maxBound;
+            } else if (inputCtrl->isKeyPressed(InputController::Keys::LEFT))
+            {
+                if (!displayMissions)
+                {
+                    //mapXdest += float(123);
+
+                    //if(mapXdest >= 0)
+                    //mapXdest = 0;
+
+                    sel_prevlocation = sel_location;
+                    sel_location--;
+                    sel_mission = 0;
+
+                    if (sel_location <= 1)
+                        sel_location = 1;
+
+                    SPDLOG_DEBUG("Selecting Obelisk location {}", sel_location);
+
+                    //if((sel_location*123 + mapX - 62) < 0)
+                    //{
+                    mapXdest = (sel_location * 123 - 615) * (-1);
+
+                    if (mapXdest >= 0)
+                        mapXdest = 0;
+                    //}
+
+                    if (sel_location - 1 < location_bgs.size())
+                    {
+                        alphaA = 255;
+                        alphaB = 0;
+
+                        location_bg_a_destAlpha = 0;
+                        location_bg_b_destAlpha = 255;
+                    }
+
+                    if (std::find(unlocked.begin(), unlocked.end(), sel_location - 1) != unlocked.end())
+                    {
+                        string L1 = "worldmap_location_" + to_string(sel_location) + "_title";
+                        string L2 = "worldmap_location_" + to_string(sel_location) + "_description";
+                        string wL1 = string(L1.begin(), L1.end());
+                        string wL2 = string(L2.begin(), L2.end());
+
+                        string desc = Func::wrap_text(CoreManager::getInstance().getStrRepo()->GetString(wL2), 800, font, 18);
+
+                        location_title.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(wL1)));
+                        location_desc.setString(Func::ConvertToUtf8String(desc));
+                    } else
+                    {
+                        string L1 = "worldmap_location_locked";
+                        string wL1 = string(L1.begin(), L1.end());
+
+                        location_title.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(wL1)));
+                        location_desc.setString("");
+                    }
+                }
+            } else if (inputCtrl->isKeyPressed(InputController::Keys::RIGHT))
+            {
+                if (!displayMissions)
+                {
+                    //mapXdest -= float(123);
+
+                    //int maxBound = (worldmap_fields.size()*123 - 1012) * (-1);
+
+                    //if(mapXdest <= maxBound)
+                    //mapXdest = maxBound;
+
+                    sel_prevlocation = sel_location;
+                    sel_location++;
+                    sel_mission = 0;
+
+                    if (sel_location >= worldmap_fields.size())
+                        sel_location = worldmap_fields.size();
+
+                    SPDLOG_DEBUG("Selecting Obelisk location {}", sel_location);
+
+                    //if((sel_location*123 + mapX - 62 + 176 + 246) > 1012)
+                    //{
+                    //mapXdest -= float(123);
+                    mapXdest = (sel_location * 123 - 615) * (-1);
+
+                    int maxBound = (worldmap_fields.size() * 123 - 1012) * (-1);
+
+                    if (mapXdest <= maxBound)
+                        mapXdest = maxBound;
+                    //}
+
+                    if (sel_location - 1 < location_bgs.size())
+                    {
+                        alphaA = 255;
+                        alphaB = 0;
+
+                        location_bg_a_destAlpha = 0;
+                        location_bg_b_destAlpha = 255;
+                    }
+
+                    if (std::find(unlocked.begin(), unlocked.end(), sel_location - 1) != unlocked.end())
+                    {
+                        string L1 = "worldmap_location_" + to_string(sel_location) + "_title";
+                        string L2 = "worldmap_location_" + to_string(sel_location) + "_description";
+                        string wL1 = string(L1.begin(), L1.end());
+                        string wL2 = string(L2.begin(), L2.end());
+
+                        string desc = Func::wrap_text(CoreManager::getInstance().getStrRepo()->GetString(wL2), 800, font, 18);
+
+                        location_title.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(wL1)));
+                        location_desc.setString(Func::ConvertToUtf8String(desc));
+                    } else
+                    {
+                        string L1 = "worldmap_location_locked";
+                        string wL1 = string(L1.begin(), L1.end());
+
+                        location_title.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(wL1)));
+                        location_desc.setString("");
+                    }
+                }
+            } else if (inputCtrl->isKeyPressed(InputController::Keys::UP))
+            {
+                if (displayMissions)
+                {
+                    if (sel_mission > 0)
+                        sel_mission--;
+
+                    SPDLOG_DEBUG("Selecting Obelisk mission {}", sel_mission);
 
                     string level = "";
 
@@ -503,200 +682,26 @@ void ObeliskMenu::Update()
                     string desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
                     mission_desc.setString(Func::ConvertToUtf8String(desc));
                 }
-            } else
+            } else if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
             {
-                screenFade.Create(1, 1536);
-                StateManager::getInstance().setState(StateManager::BARRACKS);
-
-                //parentMenu->goto_id = 4;
-                /*
-                parentMenu->barracks_menu.Show();
-                parentMenu->barracks_menu.isActive = true;
-                parentMenu->barracks_menu.obelisk = true;
-                parentMenu->barracks_menu.missionID = missions[sel_mission].mis_ID;
-                parentMenu->barracks_menu.mission_file = missions[sel_mission].mission_file;
-
-                if(CoreManager::getInstance().getSaveReader()->missionLevels[missions[sel_mission].mis_ID] != 0)
-                parentMenu->barracks_menu.mission_multiplier = 0.85 + CoreManager::getInstance().getSaveReader()->missionLevels[missions[sel_mission].mis_ID]*0.15;
-                else
-                parentMenu->barracks_menu.mission_multiplier = 1;
-
-                parentMenu->barracks_menu.ReloadInventory();
-                parentMenu->barracks_menu.UpdateInputControls();*/
-                SPDLOG_INFO("Set barracks mission to ID {}, mission file: {}", missions[sel_mission].mis_ID, missions[sel_mission].mission_file);
-            }
-        } else if (inputCtrl->isKeyPressed(InputController::Keys::LTRIGGER))
-        {
-            SPDLOG_DEBUG("Skipping maps to the left (Q key).");
-
-            mapXdest += float(123) * 6;
-
-            if (mapXdest >= 0)
-                mapXdest = 0;
-        } else if (inputCtrl->isKeyPressed(InputController::Keys::RTRIGGER))
-        {
-            SPDLOG_DEBUG("Skipping maps to the right (E key).");
-
-            mapXdest -= float(123) * 6;
-
-            int maxBound = (worldmap_fields.size() * 123 - 1012) * (-1);
-
-            if (mapXdest <= maxBound)
-                mapXdest = maxBound;
-        } else if (inputCtrl->isKeyPressed(InputController::Keys::LEFT))
-        {
-            if (!displayMissions)
-            {
-                //mapXdest += float(123);
-
-                //if(mapXdest >= 0)
-                //mapXdest = 0;
-
-                sel_prevlocation = sel_location;
-                sel_location--;
-                sel_mission = 0;
-
-                if (sel_location <= 1)
-                    sel_location = 1;
-
-                SPDLOG_DEBUG("Selecting Obelisk location {}", sel_location);
-
-                //if((sel_location*123 + mapX - 62) < 0)
-                //{
-                mapXdest = (sel_location * 123 - 615) * (-1);
-
-                if (mapXdest >= 0)
-                    mapXdest = 0;
-                //}
-
-                if (sel_location - 1 < location_bgs.size())
+                if (displayMissions)
                 {
-                    alphaA = 255;
-                    alphaB = 0;
+                    if (sel_mission < missions.size() - 1)
+                        sel_mission++;
 
-                    location_bg_a_destAlpha = 0;
-                    location_bg_b_destAlpha = 255;
+                    SPDLOG_DEBUG("Selecting Obelisk mission {}", sel_mission);
+
+                    string level = "";
+
+                    if (CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID] != 0)
+                    {
+                        level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
+                    }
+
+                    mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title) + level);
+                    string desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
+                    mission_desc.setString(Func::ConvertToUtf8String(desc));
                 }
-
-                if (std::find(unlocked.begin(), unlocked.end(), sel_location - 1) != unlocked.end())
-                {
-                    string L1 = "worldmap_location_" + to_string(sel_location) + "_title";
-                    string L2 = "worldmap_location_" + to_string(sel_location) + "_description";
-                    string wL1 = string(L1.begin(), L1.end());
-                    string wL2 = string(L2.begin(), L2.end());
-
-                    string desc = Func::wrap_text(CoreManager::getInstance().getStrRepo()->GetString(wL2), 800, font, 18);
-
-                    location_title.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(wL1)));
-                    location_desc.setString(Func::ConvertToUtf8String(desc));
-                } else
-                {
-                    string L1 = "worldmap_location_locked";
-                    string wL1 = string(L1.begin(), L1.end());
-
-                    location_title.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(wL1)));
-                    location_desc.setString("");
-                }
-            }
-        } else if (inputCtrl->isKeyPressed(InputController::Keys::RIGHT))
-        {
-            if (!displayMissions)
-            {
-                //mapXdest -= float(123);
-
-                //int maxBound = (worldmap_fields.size()*123 - 1012) * (-1);
-
-                //if(mapXdest <= maxBound)
-                //mapXdest = maxBound;
-
-                sel_prevlocation = sel_location;
-                sel_location++;
-                sel_mission = 0;
-
-                if (sel_location >= worldmap_fields.size())
-                    sel_location = worldmap_fields.size();
-
-                SPDLOG_DEBUG("Selecting Obelisk location {}", sel_location);
-
-                //if((sel_location*123 + mapX - 62 + 176 + 246) > 1012)
-                //{
-                //mapXdest -= float(123);
-                mapXdest = (sel_location * 123 - 615) * (-1);
-
-                int maxBound = (worldmap_fields.size() * 123 - 1012) * (-1);
-
-                if (mapXdest <= maxBound)
-                    mapXdest = maxBound;
-                //}
-
-                if (sel_location - 1 < location_bgs.size())
-                {
-                    alphaA = 255;
-                    alphaB = 0;
-
-                    location_bg_a_destAlpha = 0;
-                    location_bg_b_destAlpha = 255;
-                }
-
-                if (std::find(unlocked.begin(), unlocked.end(), sel_location - 1) != unlocked.end())
-                {
-                    string L1 = "worldmap_location_" + to_string(sel_location) + "_title";
-                    string L2 = "worldmap_location_" + to_string(sel_location) + "_description";
-                    string wL1 = string(L1.begin(), L1.end());
-                    string wL2 = string(L2.begin(), L2.end());
-
-                    string desc = Func::wrap_text(CoreManager::getInstance().getStrRepo()->GetString(wL2), 800, font, 18);
-
-                    location_title.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(wL1)));
-                    location_desc.setString(Func::ConvertToUtf8String(desc));
-                } else
-                {
-                    string L1 = "worldmap_location_locked";
-                    string wL1 = string(L1.begin(), L1.end());
-
-                    location_title.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(wL1)));
-                    location_desc.setString("");
-                }
-            }
-        } else if (inputCtrl->isKeyPressed(InputController::Keys::UP))
-        {
-            if (displayMissions)
-            {
-                if (sel_mission > 0)
-                    sel_mission--;
-
-                SPDLOG_DEBUG("Selecting Obelisk mission {}", sel_mission);
-
-                string level = "";
-
-                if (CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID] != 0)
-                {
-                    level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
-                }
-
-                mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title) + level);
-                string desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
-                mission_desc.setString(Func::ConvertToUtf8String(desc));
-            }
-        } else if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
-        {
-            if (displayMissions)
-            {
-                if (sel_mission < missions.size() - 1)
-                    sel_mission++;
-
-                SPDLOG_DEBUG("Selecting Obelisk mission {}", sel_mission);
-
-                string level = "";
-
-                if (CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID] != 0)
-                {
-                    level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
-                }
-
-                mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title) + level);
-                string desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
-                mission_desc.setString(Func::ConvertToUtf8String(desc));
             }
         }
 
@@ -706,6 +711,24 @@ void ObeliskMenu::Update()
         //ctrlTips.draw(window);
 
         screenFade.draw();
+
+        if (screenFade.checkFinished())
+        {
+            switch (goto_id)
+            {
+                case 0: {
+                    StateManager::getInstance().setState(StateManager::PATAPOLIS);
+                    break;
+                }
+
+                case 1: {
+                    StateManager::getInstance().setState(StateManager::BARRACKS);
+                    break;
+                }
+            }
+
+            goto_id = -1;
+        }
     }
 }
 

@@ -82,6 +82,7 @@ public:
     sf::View v_render_missions_map;
 
     bool initialized = false;
+    int goto_id = -1;
 
     PatapolisMenu* parentMenu;
 
