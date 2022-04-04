@@ -63,6 +63,8 @@ public:
     float cur_y = 300;
     float dest_y = 300;
 
+    float temp_anim_t = 0;
+
     sf::Clock menuClock;
     sf::Clock startClock;
     sf::Clock frClock;

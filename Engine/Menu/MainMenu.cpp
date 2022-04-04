@@ -1,11 +1,13 @@
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "MainMenu.h"
+#include "../CoreManager.h"
+#include "../StateManager.h"
 #include "../V4Core.h"
 #include "ButtonList.h"
 #include "iostream"
-#include "../CoreManager.h"
-#include "../StateManager.h"
+#include <Graphics/ConcaveShape.h>
+#include <Graphics/CurveSegment.h>
 
 MainMenu::MainMenu()
 {
@@ -242,7 +244,8 @@ void MainMenu::EventFired(sf::Event event)
         if (event.type == sf::Event::KeyPressed)
         {
         }
-    } else */ if (is_active)
+    } else */
+    if (is_active)
     {
         if (firstrun)
         {
@@ -661,7 +664,7 @@ void MainMenu::Update()
 
             for (int i = 0; i <= 3; i++)
             {
-                PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_"+to_string(i+1)+".png");
+                PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(i + 1) + ".png");
 
                 totem.setPosition((float(120) + float(306) * i) + g_x[3] / 1.4, 720);
 
@@ -781,7 +784,7 @@ void MainMenu::Update()
                     t_option[i].setPosition(selected_totem.getPosition().x + (selected_totem.getGlobalBoundsScaled().width / 2), 720 - selected_totem.getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height - 35);
                 } else
                 {
-                    PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(i+1) + ".png");
+                    PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(i + 1) + ".png");
                     t_option[i].setPosition(totem.getPosition().x + (totem.getGlobalBoundsScaled().width / 2), 720 - totem.getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height / 2);
                 }
 
@@ -810,6 +813,51 @@ void MainMenu::Update()
             window->draw(rs_cover2);
 
             window->setView(window->getDefaultView());
+
+
+            // TEMP TESTING OF BEZIER CURVES
+            temp_anim_t += 1;
+
+            std::vector<sf::Vector2f> points;
+
+            sf::Vector2f startpoint = sf::Vector2f(100, 100);
+            sf::Vector2f endpoint = sf::Vector2f(700, 100);
+
+            CurveSegment* crv = new CurveSegment(CurveType::QUAD_CURVE, startpoint, endpoint, sf::Vector2f(200, -cos(temp_anim_t / 30.0) * 100 + 110), sf::Vector2f(600, cos(temp_anim_t / 30.0) * 100 + 110));
+            CurveSegment* crv2 = new CurveSegment(CurveType::QUAD_CURVE, startpoint, endpoint, sf::Vector2f(200, -cos(temp_anim_t / 30.0) * 100 + 90), sf::Vector2f(600, cos(temp_anim_t / 30.0) * 100 + 90));
+
+            std::vector<sf::Vector2f> curve1points = crv->points;
+            std::vector<sf::Vector2f> curve2points = crv2->points;
+
+            curve2points.erase(curve2points.begin());
+            curve2points.pop_back();
+
+            reverse(curve2points.begin(), curve2points.end());
+
+            points.insert(points.end(), curve1points.begin(), curve1points.end());
+            points.insert(points.end(), curve2points.begin(), curve2points.end());
+
+            sfml::ConcaveShape polygon = sfml::ConcaveShape(points, sf::Color::White);
+
+            std::vector<sf::Vector2f> points2;
+            CurveSegment* crv3 = new CurveSegment(CurveType::QUAD_CURVE, startpoint, endpoint, sf::Vector2f(200, cos(temp_anim_t / 30.0) * 100 + 110), sf::Vector2f(600, -cos(temp_anim_t / 30.0) * 100 + 110));
+            CurveSegment* crv4 = new CurveSegment(CurveType::QUAD_CURVE, startpoint, endpoint, sf::Vector2f(200, cos(temp_anim_t / 30.0) * 100 + 90), sf::Vector2f(600, -cos(temp_anim_t / 30.0) * 100 + 90));
+
+            std::vector<sf::Vector2f> curve3points = crv3->points;
+            std::vector<sf::Vector2f> curve4points = crv4->points;
+
+            curve4points.erase(curve4points.begin());
+            curve4points.pop_back();
+
+            reverse(curve3points.begin(), curve3points.end());
+
+            points2.insert(points2.end(), curve3points.begin(), curve3points.end());
+            points2.insert(points2.end(), curve4points.begin(), curve4points.end());
+
+            sfml::ConcaveShape polygon2 = sfml::ConcaveShape(points2, sf::Color::Black);
+
+            window->draw(polygon);
+            window->draw(polygon2);
 
             screenFade.draw();
 

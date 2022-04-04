@@ -117,7 +117,10 @@ set(ENGINE_FILES
         Engine/Mission/Units/Units/Yaripon.cpp
         Engine/Mission/Units/Projectiles/Spear.cpp
         Engine/Mission/Mission.cpp
-        Engine/Utils.h)
+        Engine/Utils.h 
+        Engine/Graphics/CurveShape.cpp 
+        Engine/Graphics/CurveSegment.cpp
+        Engine/Graphics/ConcaveShape.cpp)
 
 add_executable(V4Hero ${ENGINE_FILES} main.cpp)
 

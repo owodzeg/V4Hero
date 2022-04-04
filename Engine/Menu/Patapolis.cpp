@@ -1855,10 +1855,7 @@ void PatapolisMenu::Update()
                 }
             }
         }
-    } else
-    {
-        fade_alpha = 255;
-    }
+    } 
 }
 
 void PatapolisMenu::UpdateButtons()
