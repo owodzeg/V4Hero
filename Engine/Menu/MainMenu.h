@@ -8,7 +8,6 @@
 #include "../Graphics/PText.h"
 #include "../Mission/MissionController.h"
 #include "IntroductionMenu.h"
-#include "NewGameNameEntryMenu.h"
 #include "OptionsMenu.h"
 #include "Patapolis.h"
 #include <SFML/Graphics.hpp>
@@ -78,7 +77,6 @@ public:
 
     MessageCloud msgcloud;
 
-    NewGameNameEntryMenu nameEntryMenu;
     IntroductionMenu introductionMenu;
 
     void Update();

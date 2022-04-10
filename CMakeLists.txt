@@ -46,13 +46,7 @@ set(ENGINE_FILES
         Engine/Menu/Patapolis.cpp
         Engine/Menu/MenuButton.cpp
         Engine/Menu/Credits.cpp
-        Engine/Menu/NewGameNameEntryMenu.cpp
         Engine/Menu/Obelisk.cpp
-        Engine/Menu/NewGameMenu.cpp
-        Engine/Menu/ButtonLists/NameEntryButtonList.cpp
-        Engine/Menu/ButtonLists/SaveFileCreatedMenuButtonList.cpp
-        Engine/Menu/ButtonLists/NewGameMenuButtonList.cpp
-        Engine/Menu/SaveFileCreated.cpp
         Engine/Menu/OptionsMenu.cpp
         Engine/Menu/MaterOuter.cpp
         Engine/Menu/LoadingTip.cpp

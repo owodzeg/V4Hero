@@ -8,7 +8,6 @@
 #include "Config.h"
 #include "Graphics/Menu.h"
 #include "Menu/MainMenu.h"
-#include "Menu/NewGameMenu.h"
 #include "Mission/Background.h"
 #include "Mission/Camera.h"
 #include "Mission/MissionController.h"
@@ -61,9 +60,7 @@ public:
     std::map<int, bool> isCached; ///Check if entities have been cached already, so we can make automatic caching inside spawnEntity function
 
     //Config config;
-    NewGameMenu newGameMenu;
     SaveReader saveReader;
-    MissionController currentController;
     V4Core();
     void cacheEntity(int entityID, shared_ptr<vector<vector<sf::Image>>> swaps, shared_ptr<vector<AnimatedObject::Animation>> spritesheet, shared_ptr<vector<Object>> objects);
     void changeRichPresence(string title, string bg_image, string sm_image);
