@@ -7,9 +7,9 @@
 Wall::Wall()
 {
 }
-void Wall::LoadConfig(Config* thisConfigs)
+void Wall::LoadConfig()
 {
-    AnimatedObject::LoadConfig(thisConfigs, "resources/graphics/units/kacheek/");
+    AnimatedObject::LoadConfig("resources/graphics/units/kacheek/");
 }
 void Wall::Draw(sf::RenderWindow& window)
 {

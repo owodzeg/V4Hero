@@ -1,6 +1,7 @@
 #include "Kacheek.h"
 #include "../../../../Func.h"
 #include "../../../../V4Core.h"
+#include "../../../../CoreManager.h"
 #include "math.h"
 #include <fstream>
 #include <iostream>
@@ -10,16 +11,16 @@ Kacheek::Kacheek()
 {
 }
 
-void Kacheek::LoadConfig(Config* thisConfigs)
+void Kacheek::LoadConfig()
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs, "resources/units/entity/kacheek.p4a");
+    AnimatedObject::LoadConfig("resources/units/entity/kacheek.p4a");
     AnimatedObject::setAnimationSegment("idle");
 
     s_startle.loadFromFile("resources/sfx/level/kacheek_startled.ogg");
     s_dead.loadFromFile("resources/sfx/level/kacheek_dead.ogg");
 
-    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("sfxVolume")) / 100.f));
+    cur_sound.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
 }
 
 void Kacheek::parseAdditionalData(nlohmann::json additional_data)

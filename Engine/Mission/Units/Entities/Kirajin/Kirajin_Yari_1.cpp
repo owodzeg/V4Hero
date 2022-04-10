@@ -12,10 +12,10 @@ Kirajin_Yari_1::Kirajin_Yari_1()
     /// No significant AI other than occasionally throwing spears is necessary.
 }
 
-void Kirajin_Yari_1::LoadConfig(Config* thisConfigs)
+void Kirajin_Yari_1::LoadConfig()
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs, "resources/units/entity/kirajin.p4a");
+    AnimatedObject::LoadConfig("resources/units/entity/kirajin.p4a");
     AnimatedObject::setAnimationSegment("idle_armed_focused");
 }
 

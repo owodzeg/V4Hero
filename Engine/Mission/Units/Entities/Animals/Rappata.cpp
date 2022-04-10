@@ -1,6 +1,7 @@
 #include "Rappata.h"
 #include "../../../../Func.h"
 #include "../../../../V4Core.h"
+#include "../../../../CoreManager.h"
 #include "math.h"
 #include <fstream>
 #include <iostream>
@@ -10,13 +11,13 @@ Rappata::Rappata()
 {
 }
 
-void Rappata::LoadConfig(Config* thisConfigs)
+void Rappata::LoadConfig()
 {
     /// all (normal) Rappatas have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs, "resources/units/entity/rappata.p4a");
+    AnimatedObject::LoadConfig("resources/units/entity/rappata.p4a");
     AnimatedObject::setAnimationSegment("idle");
 
-    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("sfxVolume")) / 100.f));
+    cur_sound.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
 }
 
 void Rappata::parseAdditionalData(nlohmann::json additional_data)

@@ -12,10 +12,10 @@ Kirajin_Yari_2::Kirajin_Yari_2()
     /// Full AI required including changing layers when Patapons are nearby.
 }
 
-void Kirajin_Yari_2::LoadConfig(Config* thisConfigs)
+void Kirajin_Yari_2::LoadConfig()
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs, "resources/units/entity/kirajin.p4a");
+    AnimatedObject::LoadConfig("resources/units/entity/kirajin.p4a");
     AnimatedObject::setAnimationSegment("idle_armed_focused");
 }
 

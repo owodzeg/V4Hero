@@ -11,7 +11,7 @@ class Wall : public Entity
 {
 public:
     Wall();
-    void LoadConfig(Config* thisConfigs);
+    void LoadConfig();
     void Draw(sf::RenderWindow& window);
     void OnCollide(CollidableObject otherObject);
 };

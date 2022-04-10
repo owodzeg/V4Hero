@@ -45,7 +45,7 @@ public:
     Config* thisConfig;
     Yaripon();
     void startAttack();
-    void LoadConfig(Config* thisConfigs);
+    void LoadConfig();
     bool doAttack();
     void doRhythm(std::string current_song = "", std::string current_drum = "", int combo = 0);
     void doMissionEnd();

@@ -46,10 +46,9 @@ public:
     sf::SoundBuffer sword_swing;
     sf::SoundBuffer hit_1, hit_2, hit_3, s_dead;
 
-    Config* thisConfig;
     Tatepon();
     void startAttack();
-    void LoadConfig(Config* thisConfigs);
+    void LoadConfig();
     bool doAttack();
     void doRhythm(std::string current_song = "", std::string current_drum = "", int combo = 0);
     void doMissionEnd();

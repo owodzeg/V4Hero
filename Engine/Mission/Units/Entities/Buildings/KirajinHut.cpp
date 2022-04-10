@@ -1,6 +1,7 @@
 #include "KirajinHut.h"
 #include "../../../../Func.h"
 #include "../../../../V4Core.h"
+#include "../../../../CoreManager.h"
 #include "math.h"
 #include <fstream>
 #include <iostream>
@@ -30,13 +31,13 @@ void KirajinHut::parseAdditionalData(nlohmann::json additional_data)
     }
 }
 
-void KirajinHut::LoadConfig(Config* thisConfigs)
+void KirajinHut::LoadConfig()
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs, "resources/units/entity/kirajin_hut.p4a");
+    AnimatedObject::LoadConfig("resources/units/entity/kirajin_hut.p4a");
     AnimatedObject::setAnimationSegment("idle");
 
-    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("sfxVolume")) / 100.f));
+    cur_sound.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
 
     s_broken.loadFromFile("resources/sfx/level/building_small_broken.ogg");
 }

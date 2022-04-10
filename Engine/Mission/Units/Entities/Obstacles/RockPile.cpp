@@ -1,6 +1,7 @@
 #include "RockPile.h"
 #include "../../../../Func.h"
 #include "../../../../V4Core.h"
+#include "../../../../CoreManager.h"
 #include "math.h"
 #include <fstream>
 #include <iostream>
@@ -10,13 +11,13 @@ RockPile::RockPile()
 {
 }
 
-void RockPile::LoadConfig(Config* thisConfigs)
+void RockPile::LoadConfig()
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs, "resources/units/entity/rock_pile.p4a");
+    AnimatedObject::LoadConfig("resources/units/entity/rock_pile.p4a");
     AnimatedObject::setAnimationSegment("idle");
 
-    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("sfxVolume")) / 100.f));
+    cur_sound.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
 
     s_broken.loadFromFile("resources/sfx/level/boulder_broken.ogg");
 }

@@ -48,7 +48,7 @@ public:
     sf::Clock walk_clock; ///position updates
 
     Kirajin_Yari_2();
-    void LoadConfig(Config* thisConfigs);
+    void LoadConfig();
     void parseAdditionalData(nlohmann::json additional_data);
     void Draw(sf::RenderWindow& window);
     bool doAttack();
