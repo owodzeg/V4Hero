@@ -6,6 +6,7 @@
 #include "../../Item/Item.h"
 #include "../../P4A.h"
 #include "../../V4Core.h"
+#include "../../CoreManager.h"
 #include "Object.h"
 #include "math.h"
 #include <chrono>
@@ -31,12 +32,12 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
 
     bool cache_loaded = false;
 
-    if (thisConfig->thisCore->isCached[entityID])
+    if (CoreManager::getInstance().getCore()->isCached[entityID])
     {
         ///Load cache here
-        all_swaps_img = thisConfig->thisCore->animation_cache[entityID]->swaps;
-        animation_spritesheet = thisConfig->thisCore->animation_cache[entityID]->spritesheet;
-        //objects = thisConfig->thisCore->currentController.animation_cache[entityID]->objects;
+        all_swaps_img = CoreManager::getInstance().getCore()->animation_cache[entityID]->swaps;
+        animation_spritesheet = CoreManager::getInstance().getCore()->animation_cache[entityID]->spritesheet;
+        //objects = CoreManager::getInstance().getCore()->currentController.animation_cache[entityID]->objects;
 
         cache_loaded = true;
         //cout << "[AnimatedObject] Cache loaded" << endl;
@@ -227,9 +228,9 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
 
                         //cout << "[AnimatedObject] Checking for cache: entityID = " << entityID << endl;
 
-                        //cout << "[AnimatedObject] result: " << !thisConfig->thisCore->currentController.isCached[entityID] << endl;
+                        //cout << "[AnimatedObject] result: " << !CoreManager::getInstance().getCore()->currentController.isCached[entityID] << endl;
 
-                        //if (!thisConfig->thisCore->isCached[entityID])
+                        //if (!CoreManager::getInstance().getCore()->isCached[entityID])
                         if (true)
                         {
                             Animation tmp;
@@ -980,8 +981,8 @@ void AnimatedObject::applyEquipment(vector<int> item_id, int slot, bool offhand)
 
     SPDLOG_INFO("Applying equipment with id {}, slot: {}, offhand: {}", str_item_id, slot, offhand);
 
-    int q = stoi(thisConfig->configMap["textureQuality"]);
-    Item* equip = thisConfig->thisCore->saveReader.itemReg.getItemByID(item_id);
+    int q = stoi(CoreManager::getInstance().getConfig()->configMap["textureQuality"]);
+    Item* equip = CoreManager::getInstance().getSaveReader()->itemReg.getItemByID(item_id);
     string category = equip->item_category;
     string type = equip->item_type;
     string path = "resources/graphics/item/textures/" + equip->spritesheet + "/" + Func::num_padding(equip->spritesheet_id, 4) + ".png";
@@ -1076,14 +1077,16 @@ void AnimatedObject::applyEquipment(vector<int> item_id, int slot, bool offhand)
 
 void AnimatedObject::LoadConfig(Config* thisConfigs, std::string unitParamPath)
 {
+}
+
+void AnimatedObject::LoadConfig(std::string unitParamPath)
+{
     all_swaps_img = make_shared<vector<vector<sf::Image>>>();
     animation_spritesheet = make_shared<vector<Animation>>();
     objects = make_shared<vector<Object>>();
 
     P4A handle;
     anim_path = unitParamPath;
-
-    thisConfig = thisConfigs;
 
     if (unitParamPath != "")
     {

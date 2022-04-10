@@ -2,6 +2,8 @@
 #include "../../V4Core.h"
 #include <algorithm>
 
+#include "../../CoreManager.h"
+
 Entity::Entity()
 {
     force_drop_item.push_back(0);
@@ -68,16 +70,16 @@ void Entity::dropItem()
     {
         if (force_drop)
         {
-            std::vector<int> force_drop_id = thisConfig->thisCore->saveReader.itemReg.getItemByName(force_drop_item)->order_id;
+            std::vector<int> force_drop_id = CoreManager::getInstance().getSaveReader()->itemReg.getItemByName(force_drop_item)->order_id;
 
             ///check if there are level requirements
             if (force_drop_mission_lvl != 0)
             {
                 ///specific mission level is required, compare it
-                if (thisConfig->thisCore->saveReader.mission_levels[thisConfig->thisCore->currentController.curMissionID] == force_drop_mission_lvl)
+                if (CoreManager::getInstance().getSaveReader()->mission_levels[CoreManager::getInstance().getMissionController()->curMissionID] == force_drop_mission_lvl)
                 {
                     ///check if the item was obtained, if not, force drop it
-                    if (!thisConfig->thisCore->saveReader.invData.checkItemObtained(force_drop_id))
+                    if (!CoreManager::getInstance().getSaveReader()->invData.checkItemObtained(force_drop_id))
                     {
                         Loot tmp;
                         tmp.order_id = force_drop_id;
@@ -91,7 +93,7 @@ void Entity::dropItem()
             } else
             {
                 ///there are no level requirements, just drop the item if its not obtained yet
-                if (!thisConfig->thisCore->saveReader.invData.checkItemObtained(force_drop_id))
+                if (!CoreManager::getInstance().getSaveReader()->invData.checkItemObtained(force_drop_id))
                 {
                     Loot tmp;
                     tmp.order_id = force_drop_id;
@@ -108,7 +110,7 @@ void Entity::dropItem()
         {
             vector<int> cur_id = loot_table[i].order_id;
 
-            auto item = thisConfig->thisCore->saveReader.itemReg.getItemByID(loot_table[i].order_id);
+            auto item = CoreManager::getInstance().getSaveReader()->itemReg.getItemByID(loot_table[i].order_id);
             string id_out = to_string(cur_id[0]);
             for (int o = 1; o < cur_id.size(); o++)
             {
@@ -120,7 +122,7 @@ void Entity::dropItem()
             data["spritesheet_id"] = item->spritesheet_id;
             data["picked_item"] = id_out;
 
-            thisConfig->thisCore->currentController.spawnEntity(5, false, false, getGlobalPosition().x + hitboxes[0].o_x + (hitboxes[0].o_width / 2), 0, false, 10, 100, 1, 1, 1, 0, getGlobalPosition().y + hitboxes[0].o_y + (hitboxes[0].o_height / 2) - 60, 0, sf::Color::White, 9999, -1, {}, data);
+            CoreManager::getInstance().getMissionController()->spawnEntity(5, false, false, getGlobalPosition().x + hitboxes[0].o_x + (hitboxes[0].o_width / 2), 0, false, 10, 100, 1, 1, 1, 0, getGlobalPosition().y + hitboxes[0].o_y + (hitboxes[0].o_height / 2) - 60, 0, sf::Color::White, 9999, -1, {}, data);
         }
 
         dropped_item = true;

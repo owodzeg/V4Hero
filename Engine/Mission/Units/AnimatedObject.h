@@ -129,6 +129,7 @@ public:
     void setLoop(bool loop);
     void setColor(sf::Color new_color);
     sf::Color getColor();
+    virtual void LoadConfig(std::string unitParamPath);
     virtual void LoadConfig(Config* thisConfigs, std::string unitParamPath);
     void applyEquipment(std::vector<int> item_id, int slot, bool offhand = false);
     virtual void Draw(sf::RenderWindow& window);
