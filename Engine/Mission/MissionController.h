@@ -46,8 +46,9 @@ public:
 
     Background test_bg;
     Rhythm rhythm;
-    bool isInitialized = false;
+    bool initialized = false;
     bool isFinishedLoading = false;
+    bool loadingError = false;
 
     sf::RectangleShape fade_box;
     float fade_alpha = 255;
