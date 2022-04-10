@@ -147,7 +147,7 @@ public:
     std::string mission_file;
     Camera camera;
     Menu* parentMenu;
-    MissionController* currentController;
+    //MissionController* currentController;
 
     int mission_id = 0;
     float mission_multiplier = 1;

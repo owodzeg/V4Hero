@@ -37,6 +37,9 @@ void CoreManager::init()
     // Load tips utility so we can have the background and icon filenames ready
     tipsUtil = new TipsUtil;
 
+    // Prepare an empty mission controller for future usage
+    missionController = new MissionController;
+
     // After we created prerequisities for V4Core, we can safely create it.
     core = new V4Core;
 }
@@ -75,6 +78,11 @@ InputController* CoreManager::getInputController()
 TipsUtil* CoreManager::getTipsUtil()
 {
     return tipsUtil;
+}
+
+MissionController* CoreManager::getMissionController()
+{
+    return missionController;
 }
 
 // Returns a pointer to the window game uses.

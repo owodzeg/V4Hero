@@ -90,6 +90,27 @@ void StateManager::updateCurrentState()
 
                     break;
                 }
+
+                case MISSIONCONTROLLER: {
+
+                    if (missionControllerPtr != nullptr)
+                    {
+                        if (missionControllerPtr->initialized)
+                        {
+                            if (loadingTipPtr != nullptr)
+                            {
+                                loadingTipPtr->pressAnyKey = true;
+
+                                if (loadingTipPtr->tipFinished)
+                                {
+                                    setState(afterTipState);
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                }
             }
 
             loadingTipPtr->Draw();
@@ -235,6 +256,28 @@ void StateManager::initState(int state)
 
         case MISSIONCONTROLLER: {
 
+            if (missionControllerPtr == nullptr)
+            {
+                missionControllerPtr = CoreManager::getInstance().getMissionController();
+
+                std::string mission_file = "";
+                int mission_id = -1;
+
+                if (barracksPtr != nullptr)
+                {
+                    mission_file = barracksPtr->mission_file;
+                    mission_id = barracksPtr->mission_id;
+                } else
+                {
+                    SPDLOG_ERROR("No load mission specified, returning to Patapolis");
+                    missionControllerPtr->loadingError = true;
+                    setState(PATAPOLIS);
+                    break;
+                }
+
+                missionControllerPtr->StartMission(mission_file, false, mission_id, 1); ///last argument: placeholder, mission multiplier
+            }
+
             break;
         }
     }
@@ -366,6 +409,8 @@ void StateManager::setState(int state)
         {
             barracksPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
             barracksPtr->obelisk = true;
+            barracksPtr->mission_id = obeliskPtr->missions[obeliskPtr->sel_mission].mis_ID;
+            barracksPtr->mission_file = obeliskPtr->missions[obeliskPtr->sel_mission].mission_file;
             barracksPtr->refreshStats();
             barracksPtr->updateInputControls();
         }
@@ -377,6 +422,48 @@ void StateManager::setState(int state)
         if (obeliskPtr != nullptr)
         {
             obeliskPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
+        }
+    }
+
+    //go from barracks to missioncontroller
+    if (currentGameState == BARRACKS && state == MISSIONCONTROLLER)
+    {
+        if (loadingTipPtr == nullptr)
+        {
+            loadingTipPtr = new LoadingTip;
+        } else
+        {
+            delete loadingTipPtr;
+            loadingTipPtr = new LoadingTip;
+        }
+
+        state = TIPS;
+        afterTipState = MISSIONCONTROLLER;
+
+        initStateMT(afterTipState);
+    }
+
+    //go from tips to patapolis (mission load error)
+    if (missionControllerPtr != nullptr)
+    {
+        if (missionControllerPtr->loadingError)
+        {
+            if (currentGameState == TIPS && state == PATAPOLIS)
+            {
+                if (loadingTipPtr == nullptr)
+                {
+                    loadingTipPtr = new LoadingTip;
+                } else
+                {
+                    delete loadingTipPtr;
+                    loadingTipPtr = new LoadingTip;
+                }
+
+                state = TIPS;
+                afterTipState = PATAPOLIS;
+
+                initStateMT(afterTipState);
+            }
         }
     }
 

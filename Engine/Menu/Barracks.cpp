@@ -1264,6 +1264,9 @@ void Barracks::Update()
                             SPDLOG_DEBUG("Go on mission!");
                             dialog_boxes[dialog_boxes.size() - 1].Close();
 
+                            goto_id = 2;
+                            screenFade.Create(ScreenFade::FADEOUT, 1024);
+
                             //TO-DO: Run MissionController (but through StateManager, properly)
                             //parentMenu->screenFade.Create(thisConfig, 1, 1536);
                             //parentMenu->goto_id = 5;
@@ -1307,6 +1310,11 @@ void Barracks::Update()
 
                 case 1: {
                     StateManager::getInstance().setState(StateManager::PATAPOLIS);
+                    break;
+                }
+
+                case 2: {
+                    StateManager::getInstance().setState(StateManager::MISSIONCONTROLLER);
                     break;
                 }
             }

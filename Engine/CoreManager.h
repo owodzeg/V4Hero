@@ -18,6 +18,7 @@ public:
     SaveReader* getSaveReader();
     InputController* getInputController();
     TipsUtil* getTipsUtil();
+    MissionController* getMissionController();
     sf::RenderWindow* getWindow();
 
 private:
@@ -41,6 +42,9 @@ private:
 
     // Pointer to Tips utility
     TipsUtil* tipsUtil;
+
+    // Pointer to MissionController (handled by StateManager)
+    MissionController* missionController;
 
     // Pointer to current window
     sf::RenderWindow* window;

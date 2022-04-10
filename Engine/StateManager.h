@@ -7,7 +7,6 @@
 #include <vector>
 
 #include "Menu/MainMenu.h"
-#include "Menu/NewGameMenu.h"
 #include "Menu/OptionsMenu.h"
 #include "Menu/LoadingTip.h"
 #include "Menu/Patapolis.h"
@@ -49,7 +48,6 @@ private:
     int currentGameState = 0;
     int afterTipState = 0;
 
-    NewGameMenu* newGameMenuPtr;
     MainMenu* mainMenuPtr;
     OptionsMenu* optionsMenuPtr;
     MissionController* missionControllerPtr;
