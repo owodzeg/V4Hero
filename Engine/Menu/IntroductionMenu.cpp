@@ -56,6 +56,9 @@ void IntroductionMenu::Update(sf::RenderWindow& window, float fps, InputControll
 
     if (timeout2.getElapsedTime().asSeconds() > 3)
     {
+        //TO-DO: change state in statemanager
+
+        /*
         sf::Thread loadingThreadInstance(&V4Core::loadingThread, parentMenu->v4Core);
         parentMenu->v4Core->continue_loading = true;
         parentMenu->v4Core->window.setActive(false);
@@ -68,6 +71,7 @@ void IntroductionMenu::Update(sf::RenderWindow& window, float fps, InputControll
 
         v4Core->currentController.Initialise(*thisConfig, thisConfig->GetString("mission1Background"), *v4Core);
         v4Core->currentController.StartMission("mis1_0.p4m", false, 1);
+        */
     }
 }
 

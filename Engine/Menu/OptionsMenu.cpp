@@ -1192,9 +1192,18 @@ void OptionsMenu::Update()
 
             case 33: {
                 ///Beat Difficulty
+                
+                //TO-DO: do it differently (prob via config as it supposed to be)
+
+                /* 
                 float beat_length = config->thisCore->currentController.rhythm.beat_timer;
                 float low_range = config->thisCore->currentController.rhythm.low_range;
                 float high_range = config->thisCore->currentController.rhythm.high_range;
+                */
+
+                float beat_length = 0;
+                float low_range = 0;
+                float high_range = 0;
 
                 int right_pressed = int(inputCtrl->isKeyHeld(inputCtrl->RIGHT));
                 int left_pressed = -int(inputCtrl->isKeyHeld(inputCtrl->LEFT));
@@ -1253,8 +1262,9 @@ void OptionsMenu::Update()
                     SPDLOG_DEBUG("Good range changed to: {}", low_range);
                 }
 
-                config->thisCore->currentController.rhythm.high_range = high_range; // Apply (current session only) (to be able to load next update)
-                config->thisCore->currentController.rhythm.low_range = low_range;
+                // TO-DO: change it as said above
+                //config->thisCore->currentController.rhythm.high_range = high_range; // Apply (current session only) (to be able to load next update)
+                //config->thisCore->currentController.rhythm.low_range = low_range;
 
                 int beat_bar_size = floor(window->getSize().x / 3);
                 int high_bar_size = beat_bar_size * ((high_range - low_range) / (beat_length / 2));
@@ -1370,8 +1380,9 @@ void OptionsMenu::Update()
             }
 
             case 333: {
-                SetConfigValue("highRange", to_string(config->thisCore->currentController.rhythm.high_range));
-                SetConfigValue("lowRange", to_string(config->thisCore->currentController.rhythm.low_range));
+                //TO-DO: change it as said above
+                //SetConfigValue("highRange", to_string(config->thisCore->currentController.rhythm.high_range));
+                //SetConfigValue("lowRange", to_string(config->thisCore->currentController.rhythm.low_range));
 
                 GoBackMenuOption(3);
                 break;
