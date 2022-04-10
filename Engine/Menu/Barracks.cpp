@@ -21,13 +21,7 @@ std::string to_string_with_precision(const T a_value, const int n = 2)
 
 Barracks::Barracks()
 {
-    //ctor
-    //f_font.loadFromFile("resources/fonts/arial.ttf");
-
     SPDLOG_INFO("Initializing Barracks");
-    //TO-DO: is this needed anymore?
-    //Scene::Initialise(_thisConfig, parent);
-    //parentMenu = curParentMenu;
 
     f_font.loadFromFile(CoreManager::getInstance().getConfig()->fontPath);
 
@@ -52,9 +46,7 @@ Barracks::Barracks()
                 wip_pon.get()->entityID = -1001; ///lets say entity IDs for units will be -1000 and below, so -1001 is yaripon, -1002 will be tatepon etc
 
                 SPDLOG_DEBUG("Loading Pon");
-
-                //TO-DO: this is disabled because AnimatedObject does not work well yet.
-                //wip_pon.get()->LoadConfig(thisConfig);
+                wip_pon.get()->LoadConfig();
 
                 if (!CoreManager::getInstance().getCore()->isCached[wip_pon.get()->entityID])
                 {
@@ -278,10 +270,7 @@ Barracks::Barracks()
     //TO-DO: is this needed?
     is_active = false;
 }
-void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMenu)
-{
-    
-}
+
 void Barracks::eventFired(sf::Event event)
 {
     if (is_active)
@@ -1218,15 +1207,6 @@ void Barracks::Update()
                     refreshStats();
                 } else
                 {
-                    //TO-DO: return from barracks to Patapolis (call to StateManager i guess)
-                    //parentMenu->screenFade.Create(thisConfig, 1, 1536);
-                    //parentMenu->goto_id = 2;
-
-                    /*this->Hide();
-                    this->isActive = false;
-                    parentMenu->Show();
-                    parentMenu->isActive=true;*/
-
                     screenFade.Create(ScreenFade::FADEOUT, 1024);
 
                     if (obelisk)
@@ -1266,27 +1246,10 @@ void Barracks::Update()
 
                             goto_id = 2;
                             screenFade.Create(ScreenFade::FADEOUT, 1024);
-
-                            //TO-DO: Run MissionController (but through StateManager, properly)
-                            //parentMenu->screenFade.Create(thisConfig, 1, 1536);
-                            //parentMenu->goto_id = 5;
-
-                            /*sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
-                            v4core->continueLoading=true;
-                            v4core->window->setActive(false);
-                            loadingThreadInstance.launch();
-
-                            currentController->Initialise(*config,config->GetString("mission1Background"),*v4core);
-                            currentController->StartMission(mission_file,1,missionID,mission_multiplier);
-                            this->Hide();
-                            this->isActive = false;
-
-                            missionStarted = true;
-
-                            v4core->continueLoading=false;*/
-
                             break;
                         }
+
+                        break;
                     }
 
                     case 1: {

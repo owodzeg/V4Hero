@@ -2191,8 +2191,11 @@ void MissionController::DoRhythm(InputController& inputCtrl)
         rhythm.current_song = "";
     }
 
+    /* 
+    TO-DO: rhythm and rhythmcontroller use the coremanager config
     rhythm.rhythmController.config = thisConfig;
-    rhythm.config = thisConfig;
+    rhythm.config = thisConfig; 
+    */
 
     rhythm.doRhythm(inputCtrl);
 }
@@ -2423,13 +2426,14 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
 
                 SPDLOG_INFO("Go to Patapolis");
 
+
+                //rework pending: refer to the comment below in the other rework pending section
+                /*
                 sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
                 CoreManager::getInstance().getCore()->continue_loading = true;
                 CoreManager::getInstance().getCore()->window.setActive(false);
                 loadingThreadInstance.launch();
 
-                //rework pending: refer to the comment below in the other rework pending section
-                /*
                 CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.doWaitKeyPress = false;
                 CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.Show();
                 CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.is_active = true;
@@ -2525,17 +2529,19 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
 
                 SPDLOG_INFO("Go to Patapolis");
 
-                sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
-                CoreManager::getInstance().getCore()->continue_loading = true;
-                CoreManager::getInstance().getCore()->window.setActive(false);
-                loadingThreadInstance.launch();
-
                 //rework pending
                 //basically this code below attempts to reach patapolis functions via CoreManager::getInstance().getCore()->mainmenu
                 //this is currently being improved so this kind of chain will no longer be necessary
                 //but for now for compatibility's sake im going to comment this out
 
-                /* CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.doWaitKeyPress = false;
+                /* 
+
+                sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
+                CoreManager::getInstance().getCore()->continue_loading = true;
+                CoreManager::getInstance().getCore()->window.setActive(false);
+                loadingThreadInstance.launch();
+                
+                CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.doWaitKeyPress = false;
                 CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.Show();
                 CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.is_active = true;
                 CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.screenFade.Create(thisConfig, 0, 512);

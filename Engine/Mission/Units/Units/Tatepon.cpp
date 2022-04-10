@@ -450,7 +450,7 @@ void Tatepon::Draw(sf::RenderWindow& window)
         if (old_current_song == "chakachaka")
         {
             cout << "[DEBUG] ChakaChaka in draw function" << endl;
-            //thisConfig->thisCore->saveReader.ponreg.GetPonByID(0);
+            //CoreManager::getInstance().getSaveReader()->ponreg.GetPonByID(0);
         }
     }
 

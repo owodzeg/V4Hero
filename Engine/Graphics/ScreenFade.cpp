@@ -7,34 +7,6 @@ ScreenFade::ScreenFade()
 {
 }
 
-
-//TO-DO: fully replace this create function with one that doesnt have config in arguments
-void ScreenFade::Create(Config* config, int mode, float speed)
-{
-    cur_mode = mode;
-    cur_speed = speed;
-
-    r_rect.setSize(sf::Vector2f(config->GetInt("resX"), config->GetInt("resY")));
-    //r_rect.setFillColor(sf::Color::Black);
-
-    switch (cur_mode)
-    {
-        case 0: {
-            alpha = 255;
-            dest_alpha = 0;
-            r_rect.setFillColor(sf::Color(0, 0, 0, alpha));
-            break;
-        }
-
-        case 1: {
-            alpha = 0;
-            dest_alpha = 255;
-            r_rect.setFillColor(sf::Color(0, 0, 0, alpha));
-            break;
-        }
-    }
-}
-
 void ScreenFade::Create(int mode, float speed)
 {
     cur_mode = mode;

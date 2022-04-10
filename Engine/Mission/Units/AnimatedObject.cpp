@@ -1075,10 +1075,6 @@ void AnimatedObject::applyEquipment(vector<int> item_id, int slot, bool offhand)
     slots_origins[slot] = a;
 }
 
-void AnimatedObject::LoadConfig(Config* thisConfigs, std::string unitParamPath)
-{
-}
-
 void AnimatedObject::LoadConfig(std::string unitParamPath)
 {
     all_swaps_img = make_shared<vector<vector<sf::Image>>>();

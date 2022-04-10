@@ -113,7 +113,7 @@ public:
     std::string custom_img_key = "";
 
     vector<int> animation_frames;
-    Config* thisConfig;
+
     AnimatedObject();
     virtual ~AnimatedObject();
     void loadAnim(std::string data, P4A handle);
@@ -130,7 +130,6 @@ public:
     void setColor(sf::Color new_color);
     sf::Color getColor();
     virtual void LoadConfig(std::string unitParamPath);
-    virtual void LoadConfig(Config* thisConfigs, std::string unitParamPath);
     void applyEquipment(std::vector<int> item_id, int slot, bool offhand = false);
     virtual void Draw(sf::RenderWindow& window);
 

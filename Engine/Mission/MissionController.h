@@ -78,8 +78,6 @@ public:
 
     sf::Text t_timerMenu;
     Camera camera;
-    Config* thisConfig;
-    V4Core* v4Core;
 
     PSprite s_proj;
     sf::Font f_font;

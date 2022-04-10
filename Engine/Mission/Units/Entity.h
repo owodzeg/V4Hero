@@ -95,7 +95,7 @@ public:
     virtual bool doAttack();
     virtual void doMessages(sf::RenderWindow& window, float fps, InputController& inputCtrl); ///manage message clouds
     virtual void die();
-    virtual void LoadConfig(Config* thisConfigs, std::string unitParamPath);
+    virtual void LoadConfig(std::string unitParamPath);
     virtual void parseAdditionalData(nlohmann::json additional_data);
     virtual void dropItem();
 };

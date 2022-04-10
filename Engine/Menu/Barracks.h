@@ -146,8 +146,6 @@ private:
 public:
     std::string mission_file;
     Camera camera;
-    Menu* parentMenu;
-    //MissionController* currentController;
 
     int mission_id = 0;
     float mission_multiplier = 1;
@@ -157,7 +155,6 @@ public:
 
     bool initialized = false;
     
-    void initialise(Config* thisConfig, V4Core* v4Core, Menu* curParentMenu);
     void Update();
     void updateInputControls();
     void eventFired(sf::Event event);

@@ -183,9 +183,6 @@ MainMenu::MainMenu()
     title_loop.setLoop(true);
     title_loop.setVolume(volume);
 
-    //rework pending
-    //optionsMenu.Initialise(thisConfig, v4Core, this);
-
     ifstream fr("resources/firstrun");
     if (fr.good())
     {
@@ -212,9 +209,6 @@ MainMenu::MainMenu()
     temp_menu.push_back(strRepo->GetString("menu_continue"));
     temp_menu.push_back(strRepo->GetString("menu_options"));
     temp_menu.push_back(strRepo->GetString("menu_exit"));
-
-    //rework pending
-    //introductionMenu.Initialise(thisConfig, v4Core, this);
 
     SPDLOG_DEBUG("Main menu initialized.");
     //title_loop.play();

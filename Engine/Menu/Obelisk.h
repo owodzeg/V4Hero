@@ -87,7 +87,6 @@ public:
     PatapolisMenu* parentMenu;
 
     void addMission(nlohmann::json missiondata);
-    void Initialise(Config* thisConfig, V4Core* parent, PatapolisMenu* curParentMenu);
     void Initialise();
     void Reload();
     void Update(sf::RenderWindow& window, float fps, InputController& inputCtrl);

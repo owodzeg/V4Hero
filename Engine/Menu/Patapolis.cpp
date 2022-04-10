@@ -22,18 +22,8 @@ PatapolisMenu::PatapolisMenu()
     SPDLOG_INFO("Initializing Patapolis");
 
     Config* config = CoreManager::getInstance().getConfig();
-
-    //sf::Context context;
-    //TO-DO: is Scene still needed?
-    //Scene::Initialise(_thisConfig, parent);
     updateStoryPoint(); // Update story_point before anything else
-    
-    //TO-DO: Patapolis menus under new system
-    //altar_menu->initialise(_thisConfig, parent, this);
-    //mater_menu.initialise(_thisConfig, parent, this);
-    //SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       initialise(_thisConfig, parent, this);
-    //obelisk_menu.Initialise(_thisConfig, parent, this);
-    //parentMenu = curParentMenu;
+
     quality = config->GetInt("textureQuality");
 
     float resRatioX = config->GetInt("resX") / float(1280);
@@ -618,7 +608,7 @@ void PatapolisMenu::addCloud(std::string type, float x, float y, float xsize, fl
         clouds_A.push_back(cloud);
     } else if (type == "B")
     {
-        float resRatio = float(thisConfig->GetInt("resX")) / float(1280);
+        float resRatio = float(CoreManager::getInstance().getConfig()->GetInt("resX")) / float(1280);
 
         CloudB cloud;
         cloud.cloud.setFillColor(sf::Color::White);
@@ -634,18 +624,6 @@ void PatapolisMenu::addCloud(std::string type, float x, float y, float xsize, fl
 
         clouds_B.push_back(cloud);
     }
-}
-
-void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMenu)
-{
-    
-
-    if (doWaitKeyPress)
-    {
-        v4Core->loadingWaitForKeyPress();
-        v4Core->changeRichPresence("In Patapolis", "logo", "");
-    }
-
 }
 
 void PatapolisMenu::EventFired(sf::Event event)
@@ -666,14 +644,7 @@ void PatapolisMenu::EventFired(sf::Event event)
     {
         if (event.type == sf::Event::KeyPressed)
         {
-            /*if (event.key.code == thisConfig->GetInt("keybindBack"))
-            {
-                thisConfig->thisCore->SaveToDebugLog("Left from Patapolis to Title screen.");
-                this->Hide();
-                this->isActive = false;
-                parentMenu->Show();
-                parentMenu->isActive=true;
-            }*/
+            
 
         } else if (event.type == sf::Event::MouseButtonReleased)
         {
@@ -1551,11 +1522,6 @@ void PatapolisMenu::Update()
                     case 0: ///Barracks
                     {
                         city_loop.stop();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       Show();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       is_active = true;
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       obelisk = false;
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       loadInventory();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       updateInputControls();
 
                         screenFade.Create(ScreenFade::FADEIN, 1024);
                         StateManager::getInstance().setState(StateManager::BARRACKS);
@@ -1566,9 +1532,6 @@ void PatapolisMenu::Update()
                     case 1: ///Obelisk
                     {
                         city_loop.stop();
-                        //obelisk_menu.Reload();
-                        //obelisk_menu.Show();
-                        //obelisk_menu.is_active = true;
 
                         screenFade.Create(ScreenFade::FADEIN, 1024);
                         StateManager::getInstance().setState(StateManager::OBELISK);
@@ -1583,66 +1546,6 @@ void PatapolisMenu::Update()
                         SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       is_active = false;
                         Show();
                         is_active = true;
-
-                        screenFade.Create(ScreenFade::FADEIN, 1024);
-
-                        break;
-                    }
-
-                    case 3: ///Exit obelisk
-                    {
-                        city_loop.stop();
-                        //obelisk_menu.Hide();
-                        //obelisk_menu.is_active = false;
-                        //Show();
-                        is_active = true;
-
-                        screenFade.Create(ScreenFade::FADEIN, 1024);
-
-                        break;
-                    }
-
-                    case 4: ///Enter barracks (obelisk)
-                    {
-                        city_loop.stop();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       Show();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       is_active = true;
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       obelisk = true;
-                        
-                        //TO-DO: mission controller will probably obtain the mission to be played in a different way so discard this for now
-                        //barracks_menu.mission_id = obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID;
-                        //barracks_menu.mission_file = obelisk_menu.missions[obelisk_menu.sel_mission].mission_file;
-
-                        //TO-DO: handle obelisk difficulty calculation differently
-                        //if (config->thisCore->saveReader.mission_levels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID] != 0)
-                        //    SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_multiplier = 0.85 + config->thisCore->saveReader.mission_levels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID] * 0.15;
-                        //else
-                        //    SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_multiplier = 1;
-
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       loadInventory();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       updateInputControls();
-
-                        screenFade.Create(ScreenFade::FADEIN, 1024);
-
-                        break;
-                    }
-
-                    case 5: ///Enter mission
-                    {
-                        city_loop.stop();
-                        sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
-                        v4Core->continue_loading = true;
-                        window->setActive(false);
-                        loadingThreadInstance.launch();
-
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       currentController->Initialise(*thisConfig, config->GetString("mission1Background"), *v4Core);
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       currentController->StartMission(SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_file, 1, SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_id, SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_multiplier);
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       Hide();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       is_active = false;
-
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_started = true;
-
-                        v4Core->continue_loading = false;
 
                         screenFade.Create(ScreenFade::FADEIN, 1024);
 

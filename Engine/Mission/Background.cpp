@@ -2,6 +2,7 @@
 
 #include "Background.h"
 #include "../ResourceManager.h"
+#include "../CoreManager.h"
 
 #include "../Func.h"
 #include <fstream>
@@ -19,47 +20,46 @@ void Background::setCamera(Camera newCamera)
     camera = newCamera;
 }
 
-void Background::Load(string bg_name, Config& thisConfigs)
+void Background::Load(string bg_name)
 {
-    thisConfig = &thisConfigs;
     SPDLOG_DEBUG("Loading background: {}", bg_name);
 
-    quality = thisConfig->GetInt("textureQuality");
+    quality = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
 
     float ratioX, ratioY;
     switch (quality)
     {
         case 0: ///low
         {
-            ratioX = thisConfig->GetInt("resX") / float(640);
-            ratioY = thisConfig->GetInt("resY") / float(360);
+            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(640);
+            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(360);
             break;
         }
 
         case 1: ///med
         {
-            ratioX = thisConfig->GetInt("resX") / float(1280);
-            ratioY = thisConfig->GetInt("resY") / float(720);
+            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
+            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
             break;
         }
 
         case 2: ///high
         {
-            ratioX = thisConfig->GetInt("resX") / float(1920);
-            ratioY = thisConfig->GetInt("resY") / float(1080);
+            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1920);
+            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(1080);
             break;
         }
 
         case 3: ///ultra
         {
-            ratioX = thisConfig->GetInt("resX") / float(3840);
-            ratioY = thisConfig->GetInt("resY") / float(2160);
+            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(3840);
+            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(2160);
             break;
         }
     }
 
-    float resRatioX = thisConfig->GetInt("resX") / float(1280);
-    float resRatioY = thisConfig->GetInt("resY") / float(720);
+    float resRatioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
+    float resRatioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
 
     v_background.clear();
     vx_pos.clear();

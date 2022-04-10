@@ -42,7 +42,6 @@ public:
     sf::SoundBuffer spear_throw;
     sf::SoundBuffer hit_1, hit_2, hit_3, s_dead;
 
-    Config* thisConfig;
     Yaripon();
     void startAttack();
     void LoadConfig();

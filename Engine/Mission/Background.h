@@ -15,7 +15,6 @@ public:
     std::vector<sf::Vector2f> vx_pos;
     std::vector<sf::Color> vx_color;
 
-    Config* thisConfig;
     std::map<int, PSprite> s_background; //changed from vector to map: never use vectors for things that contain textures!!!!!!
     std::vector<sf::Vector2f> p_background;
     std::vector<float> background_xspeed;
@@ -29,7 +28,7 @@ public:
 
     Background();
     void setCamera(Camera camera);
-    void Load(std::string bg_name, Config& thisConfigs);
+    void Load(std::string bg_name);
     void Draw(sf::RenderWindow& window);
 };
 

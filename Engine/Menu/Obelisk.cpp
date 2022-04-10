@@ -82,18 +82,9 @@ void ObeliskMenu::addMission(json missiondata)
     missions.push_back(tmp);
 }
 
-void ObeliskMenu::Initialise(Config* thisConfigs, V4Core* parent, PatapolisMenu* curParentMenu)
-{
-
-}
-
 void ObeliskMenu::Initialise()
 {
     SPDLOG_INFO("Initializing Obelisk...");
-
-    //TO-DO: is this needed anymore?
-    //Scene::Initialise(thisConfigs, parent);
-    //parentMenu = curParentMenu;
 
     font.loadFromFile(CoreManager::getInstance().getConfig()->fontPath);
 

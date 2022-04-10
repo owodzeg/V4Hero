@@ -226,7 +226,7 @@ void DroppedItem::OnCollide(CollidableObject* otherObject, int collidedWith, vec
         vector<string> str_item_id = Func::Split(picked_item, ':');
         vector<int> order_id = {stoi(str_item_id[0]), stoi(str_item_id[1]), stoi(str_item_id[2])};
 
-        picked_item = thisConfig->thisCore->saveReader.itemReg.getItemByID(order_id)->item_name;
+        picked_item = CoreManager::getInstance().getSaveReader()->itemReg.getItemByID(order_id)->item_name;
 
         cout << "assigned picked_item name: " << picked_item << endl;
     }
@@ -266,7 +266,7 @@ void DroppedItem::OnCollide(CollidableObject* otherObject, int collidedWith, vec
 
                 CoreManager::getInstance().getMissionController()->projectile_sounds[CoreManager::getInstance().getMissionController()->projectile_sounds.size() - 1].setBuffer(CoreManager::getInstance().getMissionController()->s_heal);
 
-                CoreManager::getInstance().getMissionController()->projectile_sounds[CoreManager::getInstance().getMissionController()->projectile_sounds.size() - 1].setVolume(float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("sfxVolume")) / 100.f));
+                CoreManager::getInstance().getMissionController()->projectile_sounds[CoreManager::getInstance().getMissionController()->projectile_sounds.size() - 1].setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
                 CoreManager::getInstance().getMissionController()->projectile_sounds[CoreManager::getInstance().getMissionController()->projectile_sounds.size() - 1].play();
 
                 CoreManager::getInstance().getMissionController()->addPickedItem(item_group, item_id, picked_item);
