@@ -1705,12 +1705,6 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     /*
     addUnitThumb(1);
 
-    SPDLOG_INFO("Loading background {}", bgName);
-    Background bg_new;
-    test_bg = bg_new;
-
-    test_bg.Load(bgName, *thisConfig); //config.GetString("debugBackground"));
-
     SPDLOG_DEBUG("Set rich presence to {}", missionImg);
 
     string fm = "Playing mission: " + missionName;
@@ -1721,6 +1715,10 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     missionTimer.restart();
 
 	SPDLOG_DEBUG("Mission loading finished."); */
+
+    
+    SPDLOG_INFO("Loading background {}", bgName);
+    mission_bg.Load(bgName);
 
     isFinishedLoading = true;
     initialized = true;
@@ -1733,8 +1731,10 @@ void MissionController::StopMission()
     rhythm.Stop();
     initialized = false;
 }
-void MissionController::DoKeyboardEvents(sf::RenderWindow& window, float fps, InputController& inputCtrl)
+void MissionController::DoKeyboardEvents()
 {
+    InputController* inputCtrl = CoreManager::getInstance().getInputController();
+
     /**
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num5))
 	{
@@ -1770,9 +1770,9 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow& window, float fps, In
 
     if (!missionEnd)
     {
-        if ((inputCtrl.isKeyHeld(InputController::Keys::LTRIGGER)) && (inputCtrl.isKeyHeld(InputController::Keys::RTRIGGER)) && (inputCtrl.isKeyHeld(InputController::Keys::SQUARE)))
+        if ((inputCtrl->isKeyHeld(InputController::Keys::LTRIGGER)) && (inputCtrl->isKeyHeld(InputController::Keys::RTRIGGER)) && (inputCtrl->isKeyHeld(InputController::Keys::SQUARE)))
         {
-            if (inputCtrl.isKeyPressed(InputController::Keys::SELECT))
+            if (inputCtrl->isKeyPressed(InputController::Keys::SELECT))
             {
                 std::vector<sf::String> a = {"Show hitboxes", "Hide hitboxes", "Heal units", "Kill all player units", "Kill Hatapon", "Enable verbose logging"};
 
@@ -1781,7 +1781,7 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow& window, float fps, In
                 db.id = 999;
                 dialog_boxes.push_back(db);
             }
-        } else if (inputCtrl.isKeyPressed(InputController::Keys::START))
+        } else if (inputCtrl->isKeyPressed(InputController::Keys::START))
         {
             std::vector<sf::String> a = {Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("nav_yes")), Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("nav_no"))};
 
@@ -1971,7 +1971,8 @@ bool MissionController::DoCollisionStepInAxis(float currentAxisAngle, HitboxFram
         return false;
     }
 }
-void MissionController::DoMovement(sf::RenderWindow& window, float fps, InputController& inputCtrl)
+
+void MissionController::DoMovement()
 {
     /** Make Patapon walk (temporary) **/
     float booster = 1.0;
@@ -2217,8 +2218,10 @@ void MissionController::ClearMissionMemory()
     droppable_cache.clear();
 }
 
-void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
+void MissionController::DoMissionEnd()
 {
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+
     /** Make the missionEndTimer unusable until the mission is not finished **/
     if (!missionEnd)
         missionEndTimer.restart();
@@ -2291,7 +2294,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
 
     if (missionEndTimer.getElapsedTime().asMilliseconds() < 7700)
     {
-        camera.followobject_x = army_x * (window.getSize().x / float(1280));
+        camera.followobject_x = army_x * (window->getSize().x / float(1280));
     }
 
     /** Mission fade in and fade out **/
@@ -2340,9 +2343,9 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
         }
     }
 
-    fade_box.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+    fade_box.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
     fade_box.setFillColor(sf::Color(0, 0, 0, fade_alpha));
-    window.draw(fade_box);
+    window->draw(fade_box);
 
     /** Mission end event (Mission complete/Mission failed screen + transition to Patapolis **/
 
@@ -2408,9 +2411,9 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                     fadeout_alpha = 255;
                 }
 
-                fadeout_box.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+                fadeout_box.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
                 fadeout_box.setFillColor(sf::Color(0, 0, 0, fadeout_alpha));
-                window.draw(fadeout_box);
+                window->draw(fadeout_box);
             }
 
             if (missionEndTimer.getElapsedTime().asMilliseconds() > 19000)
@@ -2431,7 +2434,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 /*
                 sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
                 CoreManager::getInstance().getCore()->continue_loading = true;
-                CoreManager::getInstance().getCore()->window.setActive(false);
+                CoreManager::getInstance().getCore()->window->setActive(false);
                 loadingThreadInstance.launch();
 
                 CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.doWaitKeyPress = false;
@@ -2513,9 +2516,9 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                     fadeout_alpha = 255;
                 }
 
-                fadeout_box.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+                fadeout_box.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
                 fadeout_box.setFillColor(sf::Color(0, 0, 0, fadeout_alpha));
-                window.draw(fadeout_box);
+                window->draw(fadeout_box);
             }
 
             if (missionEndTimer.getElapsedTime().asMilliseconds() >= 8000)
@@ -2538,7 +2541,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
 
                 sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
                 CoreManager::getInstance().getCore()->continue_loading = true;
-                CoreManager::getInstance().getCore()->window.setActive(false);
+                CoreManager::getInstance().getCore()->window->setActive(false);
                 loadingThreadInstance.launch();
                 
                 CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.doWaitKeyPress = false;
@@ -2623,7 +2626,7 @@ void MissionController::DoVectorCleanup(vector<int> units_rm, vector<int> dmg_rm
     }
 }
 
-std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
+std::vector<int> MissionController::DrawProjectiles()
 {
     /** Projectile management **/
 
@@ -2637,7 +2640,7 @@ std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
         float yspeed = p->GetYSpeed();
         yspeed += (gravity / fps);
         p->SetNewSpeedVector(xspeed, yspeed);
-        p->Update(window, fps);
+        p->Update();
     }
 
     /// step 3: any projectiles that hit any collidableobject are informed
@@ -2784,7 +2787,7 @@ std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
             }
         }
 
-        p->Draw(window, fps);
+        p->Draw();
 
         if (removeProjectile)
             pr_e.push_back(i);
@@ -3051,7 +3054,7 @@ void MissionController::DrawHitboxes(sf::RenderWindow& window)
     }
 }
 
-std::vector<int> MissionController::DrawDamageCounters(sf::RenderWindow& window)
+std::vector<int> MissionController::DrawDamageCounters()
 {
     vector<int> dmg_rm;
 
@@ -3113,7 +3116,7 @@ std::vector<int> MissionController::DrawDamageCounters(sf::RenderWindow& window)
                 dmgCounters[i].spr[d].setScale(curScale, curScale);
                 dmgCounters[i].spr[d].setColor(sf::Color(255, 255, 255, dmgCounters[i].alpha[d]));
 
-                dmgCounters[i].spr[d].draw(window);
+                dmgCounters[i].spr[d].draw();
 
                 a += dmgCounters[i].alpha[d];
             }
@@ -3126,8 +3129,10 @@ std::vector<int> MissionController::DrawDamageCounters(sf::RenderWindow& window)
     return dmg_rm;
 }
 
-std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
+std::vector<int> MissionController::DrawEntities()
 {
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+
     //cout << "[MissionController::DrawEntities] Start" << endl;
     vector<int> tlo_rm;
 
@@ -3154,17 +3159,17 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
             if (!missionEnd)
             {
                 entity->Update();
-                entity->Draw(window);
+                entity->Draw();
             }
         } else
         {
             ///Check if entity is off bounds, if yes, don't render it.
             entity->offbounds = false;
 
-            if (entity->getGlobalPosition().x > (camera.followobject_x) / (window.getSize().x / float(1280)) + 2400)
+            if (entity->getGlobalPosition().x > (camera.followobject_x) / (window->getSize().x / float(1280)) + 2400)
                 entity->offbounds = true;
 
-            if (entity->getGlobalPosition().x < (camera.followobject_x) / (window.getSize().x / float(1280)) - 1000)
+            if (entity->getGlobalPosition().x < (camera.followobject_x) / (window->getSize().x / float(1280)) - 1000)
                 entity->offbounds = true;
 
             entity->distance_to_unit = abs(farthestUnitPosition - entity->getGlobalPosition().x);
@@ -3226,7 +3231,7 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
 
             //cout << "[MissionController::DrawEntities] Draw entity" << endl;
             entity->Update();
-            entity->Draw(window);
+            entity->Draw();
         }
 
         //cout << "[MissionController::DrawEntities] Check if finished" << endl;
@@ -3238,7 +3243,7 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
     return tlo_rm;
 }
 
-std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
+std::vector<int> MissionController::DrawUnits()
 {
     vector<int> units_rm;
 
@@ -3434,7 +3439,7 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
 
             unit->fps = fps;
             unit->Update();
-            unit->Draw(window);
+            unit->Draw();
 
             if (unit->ready_to_erase)
                 units_rm.push_back(i);
@@ -3455,6 +3460,14 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
 
 void MissionController::Update(sf::RenderWindow& window, float cfps, InputController& inputCtrl)
 {
+}
+
+void MissionController::Update()
+{
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    InputController* inputCtrl = CoreManager::getInstance().getInputController();
+    float cfps = CoreManager::getInstance().getCore()->getFPS();
+
     SPDLOG_TRACE("Start of MissionController update routine (NEW FRAME)");
 
     ///remove stopped sounds
@@ -3478,6 +3491,9 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
               });
 
     ///Globally disable the controls when Dialogbox is opened, but preserve original controller for controlling the DialogBoxes later
+    
+    // TO-DO: what to do with this section? still needed?
+    /*
     InputController o_inputCtrl;
     InputController cur_inputCtrl;
 
@@ -3489,7 +3505,7 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
 
         InputController a;
         cur_inputCtrl = a;
-    }
+    }*/
 
     /** Update loop, everything here happens per each frame of the game **/
     fps = cfps;
@@ -3500,15 +3516,16 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
     
     SPDLOG_TRACE("Handle camera and background");
     camera.missionEnd = missionEnd; ///disable camera controls when needed
-    camera.Work(window, fps, cur_inputCtrl);
-    test_bg.setCamera(camera);
-    test_bg.Draw(window);
+    camera.Work();
+
+    mission_bg.setCamera(camera);
+    mission_bg.Draw();
 
     /** Execute Keyboard events and Movement **/
     
     SPDLOG_TRACE("Handle input and movement");
-    DoKeyboardEvents(window, fps, cur_inputCtrl);
-    DoMovement(window, fps, cur_inputCtrl);
+    DoKeyboardEvents();
+    DoMovement();
 
     vector<int> k_e;
 
@@ -3602,22 +3619,23 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
 
     /** Draw all Entities **/
     SPDLOG_TRACE("Draw all entities");
-    vector<int> tlo_rm = DrawEntities(window);
+    vector<int> tlo_rm = DrawEntities();
 
     /** Draw all Units **/
     SPDLOG_TRACE("Draw all units");
-    vector<int> units_rm = DrawUnits(window);
+    vector<int> units_rm = DrawUnits();
 
     /** Draw projectiles **/
     SPDLOG_TRACE("Draw all projectiles");
-    vector<int> pr_rm = DrawProjectiles(window);
+    vector<int> pr_rm = DrawProjectiles();
 
     /** Draw message clouds **/
     SPDLOG_TRACE("Draw all message clouds");
     for (int e = 0; e < tangibleLevelObjects.size(); e++)
     {
-        Entity* entity = tangibleLevelObjects[e].get();
-        entity->doMessages(window, fps, inputCtrl);
+        //TO-DO: handle messages with new system
+        //Entity* entity = tangibleLevelObjects[e].get();
+        //entity->doMessages(window, fps, inputCtrl);
     }
 
     /** Draw hitboxes **/
@@ -3625,17 +3643,18 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
     if (showHitboxes)
     {
         SPDLOG_TRACE("Draw all hitboxes");
-        DrawHitboxes(window);
+        //TO-DO: hitboxes later bc im lazy and its a debug setting
+        //DrawHitboxes(window);
     }
 
     /** Draw damage counters **/
     SPDLOG_TRACE("Draw all damage counters");
-    vector<int> dmg_rm = DrawDamageCounters(window);
+    vector<int> dmg_rm = DrawDamageCounters();
 
     /**  Draw static UI elements **/
 
-    auto lastView = window.getView();
-    window.setView(window.getDefaultView());
+    auto lastView = window->getView();
+    window->setView(window->getDefaultView());
 
     /**
 
@@ -3697,10 +3716,10 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
 		sf::Color fadeColor = fade.getFillColor();
 		fadeColor.a = currentAlpha;
 		fade.setFillColor(fadeColor);
-		fade.setSize(sf::Vector2f(window.getSize().x,window.getSize().y));
+		fade.setSize(sf::Vector2f(window->getSize().x,window->getSize().y));
 
 		fade.setPosition(0,0);
-		window.draw(fade);
+		window->draw(fade);
 	}
 	if (inCutscene)
 	{
@@ -3708,10 +3727,10 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
 		{
 			sf::Text currentLine = t_cutscene_text[i];
 
-			currentLine.setPosition(window.getSize().x/2,300 + 39*i);
+			currentLine.setPosition(window->getSize().x/2,300 + 39*i);
 			sf::Time currentTime = timer.getElapsedTime();
 
-			window.draw(currentLine);
+			window->draw(currentLine);
 		}
 	}*/
 
@@ -3721,23 +3740,26 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
     {
         t_timerMenu.setString(Func::ConvertToUtf8String(std::to_string(missionTimer.getElapsedTime().asSeconds()) + " Seconds"));
         t_timerMenu.setOrigin(t_timerMenu.getGlobalBounds().width / 2, t_timerMenu.getGlobalBounds().height / 2);
-        t_timerMenu.setPosition(window.getSize().x / 2, 100);
-        window.draw(t_timerMenu);
+        t_timerMenu.setPosition(window->getSize().x / 2, 100);
+        window->draw(t_timerMenu);
     }
 
     /** Draw floor **/
 
-    float resRatioX = window.getSize().x / float(1280);
-    float resRatioY = window.getSize().y / float(720);
+    float resRatioX = window->getSize().x / float(1280);
+    float resRatioY = window->getSize().y / float(720);
     r_floor.setSize(sf::Vector2f(1280 * resRatioX, 110 * resRatioY));
     r_floor.setFillColor(sf::Color::Black);
     r_floor.setPosition(0, 610 * resRatioY);
-    window.draw(r_floor);
+    window->draw(r_floor);
 
     SPDLOG_TRACE("Draw UI (user interface)");
+    //TO-DO: draw user interface (update to new system)
+    /*
     drawCommandList(window);
     DrawUnitThumbs(window);
     DrawPickedItems(window);
+    */
 
     /** If mission isn't finished, execute and draw Rhythm **/
 
@@ -3748,20 +3770,23 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
         //ctrlTips.draw(window);
 
         //cout << "[MissionController] Rhythm" << endl;
-        rhythm.fps = fps;
-        DoRhythm(cur_inputCtrl);
-        rhythm.Draw(window);
+        
+        //TO-DO: do rhythm for new system
+        //DoRhythm(cur_inputCtrl);
+        //rhythm.Draw(window);
     }
 
     /** Execute all mission end related things **/
 
     SPDLOG_TRACE("Handle mission ending");
-    DoMissionEnd(window, fps);
+    DoMissionEnd();
 
     SPDLOG_TRACE("Handle dialog boxes");
     if (dialog_boxes.size() > 0)
     {
-        if (o_inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+        // TO-DO: theres some old code referring to alternate input controller. still needed? replaced with current inputCtrl
+        // old_code: if (o_inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+        if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
         {
             switch (dialog_boxes[dialog_boxes.size() - 1].CheckSelectedOption())
             {
@@ -3866,7 +3891,7 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
     {
         dialog_boxes[i].x = 640;
         dialog_boxes[i].y = 360;
-        dialog_boxes[i].Draw(window, fps, o_inputCtrl);
+        dialog_boxes[i].Draw();
 
         if (dialog_boxes[i].closed)
             db_e.push_back(i);
@@ -3877,7 +3902,7 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
         dialog_boxes.erase(dialog_boxes.begin() + db_e[i] - i);
     }
 
-    window.setView(lastView);
+    window->setView(lastView);
 
     /** Remove vector objects that are no longer in use **/
     SPDLOG_TRACE("Perform vector cleanup");

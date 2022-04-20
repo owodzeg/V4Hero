@@ -173,7 +173,13 @@ void StateManager::updateCurrentState()
         }
 
         case MISSIONCONTROLLER: {
-            //missionControllerPtr->Update();
+
+            if (missionControllerPtr == nullptr)
+            {
+                missionControllerPtr = new MissionController;
+            }
+
+            missionControllerPtr->Update();
             break;
         }
     }

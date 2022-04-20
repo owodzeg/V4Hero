@@ -44,7 +44,7 @@ public:
 
     bool showHitboxes = false;
 
-    Background test_bg;
+    Background mission_bg;
     Rhythm rhythm;
     bool initialized = false;
     bool isFinishedLoading = false;
@@ -266,25 +266,26 @@ public:
     void StopMission();
 
     /** Mission update stuff **/
-    void DoMovement(sf::RenderWindow& window, float fps, InputController& inputCtrl);
+    void DoMovement();
     void DoRhythm(InputController& inputCtrl);
     void ClearMissionMemory();
-    void DoMissionEnd(sf::RenderWindow& window, float fps);
+    void DoMissionEnd();
     void DoVectorCleanup(std::vector<int> units_rm, std::vector<int> dmg_rm, std::vector<int> tlo_rm, std::vector<int> pr_rm);
     void drawCommandList(sf::RenderWindow& window);
-    std::vector<int> DrawProjectiles(sf::RenderWindow& window);
+    std::vector<int> DrawProjectiles();
     void DrawUnitThumbs(sf::RenderWindow& window);
     void DrawPickedItems(sf::RenderWindow& window);
     void DrawHitboxes(sf::RenderWindow& window);
-    std::vector<int> DrawDamageCounters(sf::RenderWindow& window);
-    std::vector<int> DrawEntities(sf::RenderWindow& window);
-    std::vector<int> DrawUnits(sf::RenderWindow& window);
+    std::vector<int> DrawDamageCounters();
+    std::vector<int> DrawEntities();
+    std::vector<int> DrawUnits();
 
     /** Main update function **/
     void Update(sf::RenderWindow& window, float cfps, InputController& inputCtrl);
+    void Update();
 
     /** Events **/
-    void DoKeyboardEvents(sf::RenderWindow& window, float fps, InputController& inputCtrl);
+    void DoKeyboardEvents();
 
 
     MissionController();
