@@ -28,7 +28,7 @@ void EndFlag::Draw(sf::RenderWindow& window)
 
     }
 
-    AnimatedObject::Draw(window);
+    AnimatedObject::Draw();
 }
 void EndFlag::OnCollide(CollidableObject* otherObject, int collidedWith, vector<string> collisionData)
 {

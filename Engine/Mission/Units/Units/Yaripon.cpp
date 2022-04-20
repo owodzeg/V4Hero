@@ -242,7 +242,7 @@ void Yaripon::Update()
 }
 
 // State update -> Animation -> Draw
-void Yaripon::Draw(sf::RenderWindow& window)
+void Yaripon::Draw()
 {
     if (AnimatedObject::getAnimationSegment() == "walk")
     {
@@ -298,7 +298,7 @@ void Yaripon::Draw(sf::RenderWindow& window)
         }
     }
 
-    AnimatedObject::Draw(window);
+    AnimatedObject::Draw();
 }
 
 void Yaripon::UpdateRhythm(std::string current_song, std::string current_drum, int combo)

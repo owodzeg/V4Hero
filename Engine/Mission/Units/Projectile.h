@@ -30,8 +30,8 @@ public:
     float GetYSpeed();
     void SetNewSpeedVector(float xSpeed, float ySpeed);
     virtual void OnCollide(CollidableObject* otherObject);
-    virtual void Update(sf::RenderWindow& window, float fps);
-    virtual void Draw(sf::RenderWindow& window, float fps);
+    virtual void Update();
+    virtual void Draw();
 };
 
 #endif // PROJECTILE_H

@@ -199,7 +199,7 @@ void Kacheek::Draw(sf::RenderWindow& window)
     }
 
     /// call the parent function to draw the animations
-    AnimatedObject::Draw(window);
+    AnimatedObject::Draw();
 }
 void Kacheek::OnCollide(CollidableObject* otherObject, int collidedWith, vector<string> collisionData)
 {

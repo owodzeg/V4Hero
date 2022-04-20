@@ -86,7 +86,7 @@ void KirajinPoweredTowerSmall::Draw(sf::RenderWindow& window)
     }
 
     /// call the parent function to draw the animations
-    AnimatedObject::Draw(window);
+    AnimatedObject::Draw();
 }
 void KirajinPoweredTowerSmall::OnCollide(CollidableObject* otherObject, int collidedWith, vector<string> collisionData)
 {

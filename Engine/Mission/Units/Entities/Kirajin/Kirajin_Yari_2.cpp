@@ -391,7 +391,7 @@ void Kirajin_Yari_2::Draw(sf::RenderWindow& window)
     local_y += vspeed / fps;
 
     /// call the parent function to draw the animations
-    AnimatedObject::Draw(window);
+    AnimatedObject::Draw();
 }
 
 void Kirajin_Yari_2::die()

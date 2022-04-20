@@ -28,7 +28,7 @@ void Hatapon::LoadConfig()
 void Hatapon::Draw(sf::RenderWindow& window)
 {
     /// call the parent function to draw the animations
-    AnimatedObject::Draw(window);
+    AnimatedObject::Draw();
 }
 
 void Hatapon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<string> collisionData)

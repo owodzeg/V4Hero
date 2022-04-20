@@ -13,7 +13,7 @@ void Wall::LoadConfig()
 }
 void Wall::Draw(sf::RenderWindow& window)
 {
-    AnimatedObject::Draw(window);
+    AnimatedObject::Draw();
 }
 void Wall::OnCollide(CollidableObject otherObject)
 {

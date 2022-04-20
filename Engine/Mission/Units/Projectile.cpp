@@ -3,6 +3,7 @@
 #include "CollidableObject.h"
 #include "HitboxFrame.h"
 #include <math.h>
+#include "../../CoreManager.h"
 
 using namespace std;
 
@@ -31,8 +32,10 @@ void Projectile::OnCollide(CollidableObject* otherObject)
     // this space intentionally left blank
     cout << "[COLLISION_SYSTEM]: Class derived from Projectile has not overridden OnCollide() method" << endl;
 }
-void Projectile::Update(sf::RenderWindow& window, float fps)
+void Projectile::Update()
 {
+    float fps = CoreManager::getInstance().getCore()->getFPS();
+
     vspeed += float(981) / fps;
 
     /// FOR REWORK: projectile should not be dependant on enemy whether it goes to left or to right.
@@ -64,7 +67,7 @@ Projectile::Projectile(PSprite& tsprite)
     sprite->setOrigin(sprite->getLocalBounds().width / 2, sprite->getLocalBounds().height / 2);
 }
 
-void Projectile::Draw(sf::RenderWindow& window, float fps)
+void Projectile::Draw()
 {
 
     /*HitboxFrame tmp;
@@ -92,5 +95,5 @@ void Projectile::Draw(sf::RenderWindow& window, float fps)
 
     sprite->setPosition(xPos, yPos);
     sprite->setRotation(3.14159265358 / 2 + angle);
-    sprite->draw(window);
+    sprite->draw();
 }

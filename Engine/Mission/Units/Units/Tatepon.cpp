@@ -475,7 +475,7 @@ void Tatepon::Draw(sf::RenderWindow& window)
     local_x += hspeed / fps;
     local_y += vspeed / fps;
 
-    AnimatedObject::Draw(window);
+    AnimatedObject::Draw();
 }
 
 void Tatepon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<string> collisionData)

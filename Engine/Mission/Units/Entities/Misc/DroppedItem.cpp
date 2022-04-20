@@ -210,7 +210,7 @@ void DroppedItem::Draw(sf::RenderWindow& window)
     scaleX = curXscale;
     scaleY = curYscale;
 
-    AnimatedObject::Draw(window);
+    AnimatedObject::Draw();
 }
 
 void DroppedItem::OnCollide(CollidableObject* otherObject, int collidedWith, vector<string> collisionData)

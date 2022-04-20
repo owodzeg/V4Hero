@@ -147,7 +147,7 @@ void FeverWorm::Draw(sf::RenderWindow& window)
     window.setView(window.getDefaultView());
 
     /// call the parent function to draw the animations
-    AnimatedObject::Draw(window);
+    AnimatedObject::Draw();
 
     if ((AnimatedObject::getAnimationSegment() != "fever") && (AnimatedObject::getAnimationSegment() != "transform") && ((f_combo >= 2) && (f_combo <= 9)))
     {

@@ -11,7 +11,7 @@ void Grass1::LoadConfig()
 void Grass1::Draw(sf::RenderWindow& window)
 {
     /// call the parent function to draw the animations
-    AnimatedObject::Draw(window);
+    AnimatedObject::Draw();
 }
 void Grass1::OnCollide(CollidableObject* otherObject, int collidedWith, vector<string> collisionData)
 {
