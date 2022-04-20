@@ -2,6 +2,7 @@
 
 #include "PSprite.h"
 #include "../TextureManager.h"
+#include "../CoreManager.h"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -96,7 +97,7 @@ void PSprite::setOrigin(float x, float y)
 {
     if (x != orX || y != orY)
     {
-        SPDLOG_TRACE("Change origin of {} to {} {}", texturePath, x, y);
+        SPDLOG_DEBUG("Change origin of {} to {} {}", texturePath, x, y);
         orX = x;
         orY = y;
         s.setOrigin(orX, orY);
@@ -308,6 +309,93 @@ void PSprite::draw(sf::RenderWindow& window)
 
 void PSprite::draw(sf::RenderWindow* window)
 {
+    switch (qualitySetting)
+    {
+        case 0: ///low
+        {
+            ratioX = window->getSize().x / float(640);
+            ratioY = window->getSize().y / float(360);
+            break;
+        }
+
+        case 1: ///med
+        {
+            ratioX = window->getSize().x / float(1280);
+            ratioY = window->getSize().y / float(720);
+            break;
+        }
+
+        case 2: ///high
+        {
+            ratioX = window->getSize().x / float(1920);
+            ratioY = window->getSize().y / float(1080);
+            break;
+        }
+
+        case 3: ///ultra
+        {
+            ratioX = window->getSize().x / float(3840);
+            ratioY = window->getSize().y / float(2160);
+            break;
+        }
+    }
+
+    switch (resSetting)
+    {
+        case 0: ///low
+        {
+            resRatioX = window->getSize().x / float(640);
+            resRatioY = window->getSize().y / float(360);
+            break;
+        }
+
+        case 1: ///med
+        {
+            resRatioX = window->getSize().x / float(1280);
+            resRatioY = window->getSize().y / float(720);
+            break;
+        }
+
+        case 2: ///high
+        {
+            resRatioX = window->getSize().x / float(1920);
+            resRatioY = window->getSize().y / float(1080);
+            break;
+        }
+
+        case 3: ///ultra
+        {
+            resRatioX = window->getSize().x / float(3840);
+            resRatioY = window->getSize().y / float(2160);
+            break;
+        }
+    }
+
+    //s.setTexture(t);
+    s.setScale(ratioX * scaleX, ratioY * scaleY);
+    s.setOrigin(orX, orY);
+    s.setPosition(lx * resRatioX, ly * resRatioY);
+    s.setRotation(angle * (180 / 3.14159265358));
+    window->draw(s);
+
+    if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
+    {
+        if (!exported)
+        {
+            sf::Image img;
+            img = s.getTexture()->copyToImage();
+            int rrr = rand() % 100000000;
+            img.saveToFile("texDump/" + std::to_string(rrr) + ".png");
+
+            exported = true;
+        }
+    }
+}
+
+void PSprite::draw()
+{
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+
     switch (qualitySetting)
     {
         case 0: ///low

@@ -406,7 +406,7 @@ void Object::SetPosFrame(float time, int frame)
     // cout << x << " " << y << " " << r << " " << or_x << " " << or_y << " " << s_x << " " << s_y << endl;
 }
 
-void Object::Draw(sf::RenderWindow& window, int orx, int ory)
+void Object::Draw(int orx, int ory)
 {
     if (!disable)
     {
@@ -416,7 +416,7 @@ void Object::Draw(sf::RenderWindow& window, int orx, int ory)
         s_obj.setPosition(x + g_x + gl_x, y + g_y + gl_y);
         s_obj.setRotation(g_r + r);
         s_obj.setColor(color);
-        s_obj.draw(window);
+        s_obj.draw();
 
         if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
         {
@@ -434,7 +434,7 @@ void Object::Draw(sf::RenderWindow& window, int orx, int ory)
 }
 
 
-void Object::Draw(sf::RenderWindow& window, int x1, int y1, int x2, int y2, int orx, int ory)
+void Object::Draw(int x1, int y1, int x2, int y2, int orx, int ory)
 {
     if (!disable)
     {
@@ -447,7 +447,7 @@ void Object::Draw(sf::RenderWindow& window, int x1, int y1, int x2, int y2, int 
         s_obj.setPosition(x + g_x + gl_x, y + g_y + gl_y);
         s_obj.setRotation(g_r + r);
         s_obj.setColor(color);
-        s_obj.draw(window);
+        s_obj.draw();
 
 
         if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))

@@ -1098,7 +1098,7 @@ void AnimatedObject::LoadConfig(std::string unitParamPath)
     }
 }
 
-void AnimatedObject::Draw(sf::RenderWindow& window)
+void AnimatedObject::Draw()
 {
     //cout << "[AnimatedObject::Draw] DRAW START" << endl;
     if (!manual_mode) ///manual mode is restricted only to unique entities, never intended for use since it disables the whole animation
@@ -1252,29 +1252,29 @@ void AnimatedObject::Draw(sf::RenderWindow& window)
 
                     if (force_origin_null) ///nullify the origin when the object is inanimate or you set a custom origin
                     {
-                        (*objects)[i].Draw(window, animation_origins[index][curFrame].x, animation_origins[index][curFrame].y);
+                        (*objects)[i].Draw(animation_origins[index][curFrame].x, animation_origins[index][curFrame].y);
                     } else
                     {
                         if (ao_version != 3)
                         {
                             //cout << "[AnimatedObject::Draw] Type 5" << endl;
-                            (*objects)[i].Draw(window, afb[index][curFrame].origin.x, afb[index][curFrame].origin.y);
+                            (*objects)[i].Draw(afb[index][curFrame].origin.x, afb[index][curFrame].origin.y);
                         } else
                         {
                             //cout << "[AnimatedObject::Draw] Type 6" << endl;
-                            (*objects)[i].Draw(window, (*animation_spritesheet)[index].spritesheet.getSize().x / 2, (*animation_spritesheet)[index].spritesheet.getSize().y / 2);
+                            (*objects)[i].Draw((*animation_spritesheet)[index].spritesheet.getSize().x / 2, (*animation_spritesheet)[index].spritesheet.getSize().y / 2);
                         }
                     }
                 } else
                 {
                     //cout << "[AnimatedObject::Draw] Type 7" << endl;
-                    (*objects)[i].Draw(window, animation_bounds[index][curFrame].left, animation_bounds[index][curFrame].top, animation_bounds[index][curFrame].width, animation_bounds[index][curFrame].height, animation_origins[index][curFrame].x, animation_origins[index][curFrame].y);
+                    (*objects)[i].Draw(animation_bounds[index][curFrame].left, animation_bounds[index][curFrame].top, animation_bounds[index][curFrame].width, animation_bounds[index][curFrame].height, animation_origins[index][curFrame].x, animation_origins[index][curFrame].y);
                 }
             } else if ((*objects)[i].object_name.substr(0, 3) == "eq_")
             {
                 //cout << "[AnimatedObject::Draw] Type 8" << endl;
                 sf::Vector2f obj_origin = slots_origins[stoi((*objects)[i].object_name.substr((*objects)[i].object_name.find_first_of("_") + 1))];
-                (*objects)[i].Draw(window, obj_origin.x, obj_origin.y);
+                (*objects)[i].Draw(obj_origin.x, obj_origin.y);
             }
         }
     }

@@ -43,6 +43,7 @@ public:
     void setSmooth(bool smooth);
     void draw(sf::RenderWindow& window);
     void draw(sf::RenderWindow* window);
+    void draw();
     void update(sf::RenderWindow& window);
     void saveToFile(std::string file);
 };

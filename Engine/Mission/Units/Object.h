@@ -72,8 +72,8 @@ public:
     void SetCustomFrame(float in_time, float in_pos_x, float in_pos_y, float in_or_x, float in_or_y, float in_rotation, float in_scale_x, float in_scale_y);
     void SetPos(float time);
     void SetPosFrame(float time, int frame); //Try to find frames from already prepared frame
-    void Draw(sf::RenderWindow& window, int orx, int ory);
-    void Draw(sf::RenderWindow& window, int x1, int y1, int x2, int y2, int orx, int ory);
+    void Draw(int orx, int ory);
+    void Draw(int x1, int y1, int x2, int y2, int orx, int ory);
 };
 
 #endif // OBJECT_H

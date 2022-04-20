@@ -131,7 +131,7 @@ public:
     sf::Color getColor();
     virtual void LoadConfig(std::string unitParamPath);
     void applyEquipment(std::vector<int> item_id, int slot, bool offhand = false);
-    virtual void Draw(sf::RenderWindow& window);
+    virtual void Draw();
 
     /**
      * Updates the `AnimationObject` internal state. Should be called each frame.
