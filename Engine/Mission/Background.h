@@ -26,10 +26,13 @@ public:
     int quality = 0;
     int bg_layer = 0;
 
+    std::vector<std::string> t_background;
+    std::vector<sf::Color> c_background;
+
     Background();
     void setCamera(Camera camera);
     void Load(std::string bg_name);
-    void Draw(sf::RenderWindow& window);
+    void Draw();
 };
 
 #endif // BACKGROUND_H
