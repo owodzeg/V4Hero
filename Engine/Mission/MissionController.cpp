@@ -1710,15 +1710,13 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     string fm = "Playing mission: " + missionName;
     CoreManager::getInstance().getCore()->changeRichPresence(fm.c_str(), missionImg.c_str(), "logo");
 
-    rhythm.config = thisConfig;
-    rhythm.LoadTheme(songName); // CoreManager::getInstance().getConfig()->GetString("debugTheme")
-    missionTimer.restart();
-
 	SPDLOG_DEBUG("Mission loading finished."); */
 
     
     SPDLOG_INFO("Loading background {}", bgName);
     mission_bg.Load(bgName);
+    rhythm.LoadTheme(songName);
+    missionTimer.restart();
 
     isFinishedLoading = true;
     initialized = true;
@@ -2157,9 +2155,10 @@ bool MissionController::isColliding(PlayableUnit* unit, const unique_ptr<Entity>
     return foundCollision || forceCollision;
 }
 
-void MissionController::DoRhythm(InputController& inputCtrl)
+void MissionController::DoRhythm()
 {
     /** Call Rhythm functions **/
+    InputController* inputCtrl = CoreManager::getInstance().getInputController();
 
     if ((rhythm.current_song == "patapata") || (rhythm.current_song == "chakapata"))
     {
@@ -2198,7 +2197,7 @@ void MissionController::DoRhythm(InputController& inputCtrl)
     rhythm.config = thisConfig; 
     */
 
-    rhythm.doRhythm(inputCtrl);
+    rhythm.doRhythm();
 }
 
 void MissionController::ClearMissionMemory()
@@ -3772,8 +3771,8 @@ void MissionController::Update()
         //cout << "[MissionController] Rhythm" << endl;
         
         //TO-DO: do rhythm for new system
-        //DoRhythm(cur_inputCtrl);
-        //rhythm.Draw(window);
+        DoRhythm();
+        rhythm.Draw();
     }
 
     /** Execute all mission end related things **/

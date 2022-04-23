@@ -104,6 +104,7 @@ void StateManager::updateCurrentState()
                                 if (loadingTipPtr->tipFinished)
                                 {
                                     setState(afterTipState);
+                                    missionControllerPtr->rhythm.Start();
                                 }
                             }
                         }

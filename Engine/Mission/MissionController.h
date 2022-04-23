@@ -267,7 +267,7 @@ public:
 
     /** Mission update stuff **/
     void DoMovement();
-    void DoRhythm(InputController& inputCtrl);
+    void DoRhythm();
     void ClearMissionMemory();
     void DoMissionEnd();
     void DoVectorCleanup(std::vector<int> units_rm, std::vector<int> dmg_rm, std::vector<int> tlo_rm, std::vector<int> pr_rm);
