@@ -4,6 +4,7 @@
 #include <cmath>
 #include <iostream>
 #include <spdlog/spdlog.h>
+#include "../CoreManager.h"
 
 using namespace std;
 
@@ -20,11 +21,13 @@ void RhythmGUI::Initialise(Config& config, std::map<int, bool>& keymap)
 
 
 ///TO BE PORTED TO AN EXTERNAL CLASS
-void RhythmGUI::doVisuals(sf::RenderWindow& window, int bgm_cycle, sf::Clock* rhythmClock, int combo, float* flicker, float fps, std::vector<Drum>* drums)
+void RhythmGUI::doVisuals(int bgm_cycle, sf::Clock* rhythmClock, int combo, float* flicker, float fps, std::vector<Drum>* drums)
 {
-    auto lastView = window.getView();
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
 
-    window.setView(window.getDefaultView());
+    auto lastView = window->getView();
+
+    window->setView(window->getDefaultView());
 
     /**
     clock250 - full white
@@ -41,9 +44,9 @@ void RhythmGUI::doVisuals(sf::RenderWindow& window, int bgm_cycle, sf::Clock* rh
     if (true)
     {
         ///Calculate the ratio for other window sizes (default is 1280x720)
-        float ratio_X = window.getSize().x / float(1280);
-        float ratio_Y = window.getSize().y / float(720);
-        float ratio_universal = (window.getSize().x * window.getSize().y) / (float(1280) * float(720));
+        float ratio_X = window->getSize().x / float(1280);
+        float ratio_Y = window->getSize().y / float(720);
+        float ratio_universal = (window->getSize().x * window->getSize().y) / (float(1280) * float(720));
 
         /// Beat frame
         if ((combo <= 1) || ((combo > 1) && (combo < 11) && (v_cycle_mode == 0)))
@@ -127,15 +130,15 @@ void RhythmGUI::doVisuals(sf::RenderWindow& window, int bgm_cycle, sf::Clock* rh
         beatBounce = sizeMod / 30;
     }
 
-    window.draw(r_rhythm);
-    window.draw(r_rhythm2);
+    window->draw(r_rhythm);
+    window->draw(r_rhythm2);
 
     std::vector<int> drumsToErase;
 
     for (int i = 0; i < drums->size(); i++)
     {
         (*drums)[i].fps = fps;
-        (*drums)[i].Draw(window);
+        (*drums)[i].Draw();
 
         if ((*drums)[i].alpha <= 0)
         {
@@ -149,7 +152,7 @@ void RhythmGUI::doVisuals(sf::RenderWindow& window, int bgm_cycle, sf::Clock* rh
         drums->erase(drums->begin() + (drumsToErase[i] - i));
     }
 
-    window.setView(lastView);
+    window->setView(lastView);
 }
 
 //void RhythmGUI::Update(sf::RenderWindow &window, float fps){

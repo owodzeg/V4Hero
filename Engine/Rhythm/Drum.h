@@ -53,7 +53,7 @@ public:
 
     Drum();
     void Load(std::string drum, int perfection, sf::Texture& drum_texture, sf::Texture& flash_texture);
-    void Draw(sf::RenderWindow& window);
+    void Draw();
 };
 
 #endif // DRUM_H

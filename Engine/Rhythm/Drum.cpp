@@ -2,6 +2,8 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include "../CoreManager.h"
+
 using namespace std;
 
 Drum::Drum()
@@ -119,11 +121,13 @@ void Drum::Load(string drum, int perfection, sf::Texture& drum_texture, sf::Text
     drumClock.restart();
 }
 
-void Drum::Draw(sf::RenderWindow& window)
+void Drum::Draw()
 {
-    float ratio_X = window.getSize().x / float(1280);
-    float ratio_Y = window.getSize().y / float(720);
-    float ratio_universal = (window.getSize().x * window.getSize().y) / (float(1280) * float(720));
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+
+    float ratio_X = window->getSize().x / float(1280);
+    float ratio_Y = window->getSize().y / float(720);
+    float ratio_universal = (window->getSize().x * window->getSize().y) / (float(1280) * float(720));
 
     if (isDon)
     {
@@ -248,8 +252,8 @@ void Drum::Draw(sf::RenderWindow& window)
 
     s_drum.draw(window);
     s_flash.draw(window);
-    window.draw(c_shockwave);
-    window.draw(c_shockwave2);
+    window->draw(c_shockwave);
+    window->draw(c_shockwave2);
 
     for (int i = 0; i < c_particle.size(); i++)
     {
@@ -287,6 +291,6 @@ void Drum::Draw(sf::RenderWindow& window)
         }
 
         c_particle[i].setPosition(particle_x[i], particle_y[i]);
-        window.draw(c_particle[i]);
+        window->draw(c_particle[i]);
     }
 }

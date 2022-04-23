@@ -15,8 +15,7 @@ public:
     float beatBounce = 0;
 
     void Initialise(Config& config, std::map<int, bool>& keymap);
-    void doVisuals(sf::RenderWindow& window, int bgm_cycle, sf::Clock* rhythmClock, int combo, float* flicker, float fps, std::vector<Drum>* drums);
-    void Draw(sf::RenderWindow& window);
+    void doVisuals(int bgm_cycle, sf::Clock* rhythmClock, int combo, float* flicker, float fps, std::vector<Drum>* drums);
     RhythmGUI();
     ~RhythmGUI();
 };

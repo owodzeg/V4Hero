@@ -120,9 +120,9 @@ public:
     int GetCombo();
     int GetRealCombo();
     float GetSatisfaction();
-    void checkRhythmController(InputController& inputCtrl);
-    void doRhythm(InputController& inputCtrl);
-    void Draw(sf::RenderWindow& window);
+    void checkRhythmController();
+    void doRhythm();
+    void Draw();
 };
 
 #endif // RHYTHM_H

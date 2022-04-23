@@ -3,6 +3,7 @@
 #include "RhythmController.h"
 #include <iostream>
 #include <spdlog/spdlog.h>
+#include "../CoreManager.h"
 
 using namespace std;
 
@@ -34,8 +35,10 @@ RhythmController::RhythmController()
     patterns["chaka"] = 0;
 }
 
-bool RhythmController::checkForInput(InputController& inputCtrl)
+bool RhythmController::checkForInput()
 {
+    InputController* inputCtrl = CoreManager::getInstance().getInputController();
+
     ///Flush the buffers
     vector<int> s_rm;
 
@@ -56,10 +59,10 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
     int drum_quality = 2;
     bool add_to_commandtable = false;
 
-    bool pata = inputCtrl.isKeyPressed(InputController::Keys::SQUARE);
-    bool pon = inputCtrl.isKeyPressed(InputController::Keys::CIRCLE);
-    bool don = inputCtrl.isKeyPressed(InputController::Keys::CROSS);
-    bool chaka = inputCtrl.isKeyPressed(InputController::Keys::TRIANGLE);
+    bool pata = inputCtrl->isKeyPressed(InputController::Keys::SQUARE);
+    bool pon = inputCtrl->isKeyPressed(InputController::Keys::CIRCLE);
+    bool don = inputCtrl->isKeyPressed(InputController::Keys::CROSS);
+    bool chaka = inputCtrl->isKeyPressed(InputController::Keys::TRIANGLE);
 
     ///Determine the quality of given drum input
     if (pata || pon || don || chaka)
@@ -91,8 +94,8 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         drum_nc.setBuffer(b_pata[drum_quality]);
         drum_c.setBuffer(b_chpata[drum_quality]);
 
-        drum_nc.setVolume(float(config->GetInt("masterVolume")) * (float(config->GetInt("sfxVolume")) / 100.f));
-        drum_c.setVolume(float(config->GetInt("masterVolume")) * (float(config->GetInt("sfxVolume")) / 100.f));
+        drum_nc.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
+        drum_c.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
 
         ///Add PATA drum to user input table
         if (add_to_commandtable)
@@ -113,8 +116,8 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         drum_nc.setBuffer(b_pon[drum_quality]);
         drum_c.setBuffer(b_chpon[drum_quality]);
 
-        drum_nc.setVolume(float(config->GetInt("masterVolume")) * (float(config->GetInt("sfxVolume")) / 100.f));
-        drum_c.setVolume(float(config->GetInt("masterVolume")) * (float(config->GetInt("sfxVolume")) / 100.f));
+        drum_nc.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
+        drum_c.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
 
         ///Add PON drum to user input table
         if (add_to_commandtable)
@@ -135,8 +138,8 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         drum_nc.setBuffer(b_chaka[drum_quality]);
         drum_c.setBuffer(b_chchaka[drum_quality]);
 
-        drum_nc.setVolume(float(config->GetInt("masterVolume")) * (float(config->GetInt("sfxVolume")) / 100.f));
-        drum_c.setVolume(float(config->GetInt("masterVolume")) * (float(config->GetInt("sfxVolume")) / 100.f));
+        drum_nc.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
+        drum_c.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
 
         ///Add CHAKA drum to user input table
         if (add_to_commandtable)
@@ -157,8 +160,8 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         drum_nc.setBuffer(b_don[drum_quality]);
         drum_c.setBuffer(b_chdon[drum_quality]);
 
-        drum_nc.setVolume(float(config->GetInt("masterVolume")) * (float(config->GetInt("sfxVolume")) / 100.f));
-        drum_c.setVolume(float(config->GetInt("masterVolume")) * (float(config->GetInt("sfxVolume")) / 100.f));
+        drum_nc.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
+        drum_c.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
 
         ///Add DON drum to user input table
         if (add_to_commandtable)
@@ -246,7 +249,7 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         }
 
         ///Check config if drum sound effect should be played
-        if (config->GetInt("enableDrums"))
+        if (CoreManager::getInstance().getConfig()->GetInt("enableDrums"))
         {
             ///And play it
             s_drums.push_back(drum_nc);
@@ -254,7 +257,7 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
         }
 
         ///Check config if drum chant sound effect should be played
-        if (config->GetInt("enableDrumChants"))
+        if (CoreManager::getInstance().getConfig()->GetInt("enableDrumChants"))
         {
             ///And play it
             s_drums.push_back(drum_c);
@@ -285,7 +288,7 @@ bool RhythmController::checkForInput(InputController& inputCtrl)
                 {
                     s_perfect.stop();
                     s_perfect.setBuffer(b_perfect);
-                    s_perfect.setVolume(float(config->GetInt("masterVolume")) * (float(config->GetInt("sfxVolume")) / 100.f));
+                    s_perfect.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
                     s_perfect.play();
                 }
             }
