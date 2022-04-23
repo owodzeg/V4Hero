@@ -152,6 +152,10 @@ menu_nosupportdata|Save datas from older and development\Patafour versions are n
 menu_options|Options
 menu_pressanykey|Press any key to start
 menu_saveexists|There is an existing save data.\Do you want to overwrite it?
+menu_languageselect|Select language
+menu_languagetip|Translations are here thanks to our wonderful contributors.
+menu_languagetip2|Want to help? Click here to visit the Patafour website for more information.
+menu_controlleradvice|Controller is recommended for best game experience.
 mission_backtopatapolis|Do you want to go back to Patapolis?\All materials and Ka-ching will be lost.
 mission_complete|MISSION COMPLETE!
 mission_failed|MISSION FAILED!
@@ -364,6 +368,10 @@ worldmap_location_2_description|The pine trees in this grove are well-known for 
 worldmap_location_2_title|~ Patapine Grove ~
 worldmap_location_3_description|Ejiji Cliffs once saw the age of mighty dragons before they disappeared from their place of birth for reasons unknown to Rolitoland's inhabitants, and provides a good spot for building homes and fortresses hidden from plain sight alike. Gyaba Rarepons originate from this region and some still inhabit the cliffs to this day, but many of these Patapon lines have since then become widespread around the world.
 worldmap_location_3_title|~ Ejiji Cliffs ~
+worldmap_location_4_description|no description
+worldmap_location_4_title|~ Auro Ruro Peaks ~
+worldmap_location_5_description|no description
+worldmap_location_5_title|~ Sunken Ruins of Gaeenika ~
 worldmap_location_locked|~ Locked ~
 worldmap_mission_1_description|Many animals gather in the valley for a chance to find edible plants and fungi. Use this opportunity to hunt the creatures to feed your Patapons! Rumors say that the valley holds an unknown treasure.
 worldmap_mission_1_title|Hunting in Shida Valley
@@ -377,6 +385,17 @@ worldmap_mission_5_description|Even after destroying their fortress once, the Ki
 worldmap_mission_5_title|Relentless Kirajins at Ejiji Cliffs: Lv. 
 worldmap_mission_6_description|In this time of the year, Shida Valley gets covered in snow, as the freezing winds from the ocean near the Patapole Bridge are coming. That's a perfect opportunity for rare animals to come out from their nests and hunt for fish under the ice. Sometimes, really rare species can show up...
 worldmap_mission_6_title|Snow-covered Ferns of Shida Valley
+worldmap_mission_7_title|
+worldmap_mission_7_description|
+worldmap_mission_8_title|
+worldmap_mission_8_description|
+worldmap_mission_9_title|
+worldmap_mission_9_description|
+worldmap_mission_10_title|
+worldmap_mission_10_description|
+worldmap_mission_11_title|
+worldmap_mission_11_description|
+
 worldmap_select|Select a quest
 // # Translated by: 
 // @owocek
