@@ -8,6 +8,7 @@
 #include "iostream"
 #include <Graphics/ConcaveShape.h>
 #include <Graphics/CurveSegment.h>
+#include <Graphics/CurveShape.h>
 
 MainMenu::MainMenu()
 {
@@ -223,6 +224,23 @@ MainMenu::MainMenu()
     startClock.restart();
     frClock.restart();
 
+   /* std::vector<CurveShape> c_frames;
+
+    for (size_t i = 0; i < 120; i++)
+    {
+        sf::Vector2f startpoint = sf::Vector2f(100, 100);
+        sf::Vector2f endpoint = sf::Vector2f(700, 100);
+
+        CurveSegment* crv3 = new CurveSegment(CurveType::QUAD_CURVE, startpoint, endpoint, sf::Vector2f(200, 110 + i), sf::Vector2f(600, 110 + i));
+        CurveSegment* crv4 = new CurveSegment(CurveType::QUAD_CURVE, endpoint, startpoint, sf::Vector2f(600, 90 + i), sf::Vector2f(200, 90 + i));
+
+        std::vector<CurveSegment*> crvs2 = {crv3, crv4};
+        CurveShape shp2 = CurveShape(crvs2, sf::Color(0, 0, 0, 50));
+        c_frames.push_back(shp2);
+    }
+    shp = new AnimatedCurveShape(c_frames, sf::Color(0, 0, 0, 50));*/
+    SPDLOG_INFO("Loading AnimatedCurveShape at aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    shp = new AnimatedCurveShape("resources/data/item_data.json");
     initialized = true;
 }
 
@@ -817,47 +835,8 @@ void MainMenu::Update()
 
             // TEMP TESTING OF BEZIER CURVES
             temp_anim_t += 1;
-
-            std::vector<sf::Vector2f> points;
-
-            sf::Vector2f startpoint = sf::Vector2f(100, 100);
-            sf::Vector2f endpoint = sf::Vector2f(700, 100);
-
-            CurveSegment* crv = new CurveSegment(CurveType::QUAD_CURVE, startpoint, endpoint, sf::Vector2f(200, -cos(temp_anim_t / 30.0) * 100 + 110), sf::Vector2f(600, cos(temp_anim_t / 30.0) * 100 + 110));
-            CurveSegment* crv2 = new CurveSegment(CurveType::QUAD_CURVE, startpoint, endpoint, sf::Vector2f(200, -cos(temp_anim_t / 30.0) * 100 + 90), sf::Vector2f(600, cos(temp_anim_t / 30.0) * 100 + 90));
-
-            std::vector<sf::Vector2f> curve1points = crv->points;
-            std::vector<sf::Vector2f> curve2points = crv2->points;
-
-            curve2points.erase(curve2points.begin());
-            curve2points.pop_back();
-
-            reverse(curve2points.begin(), curve2points.end());
-
-            points.insert(points.end(), curve1points.begin(), curve1points.end());
-            points.insert(points.end(), curve2points.begin(), curve2points.end());
-
-            sfml::ConcaveShape polygon = sfml::ConcaveShape(points, sf::Color::White);
-
-            std::vector<sf::Vector2f> points2;
-            CurveSegment* crv3 = new CurveSegment(CurveType::QUAD_CURVE, startpoint, endpoint, sf::Vector2f(200, cos(temp_anim_t / 30.0) * 100 + 110), sf::Vector2f(600, -cos(temp_anim_t / 30.0) * 100 + 110));
-            CurveSegment* crv4 = new CurveSegment(CurveType::QUAD_CURVE, startpoint, endpoint, sf::Vector2f(200, cos(temp_anim_t / 30.0) * 100 + 90), sf::Vector2f(600, -cos(temp_anim_t / 30.0) * 100 + 90));
-
-            std::vector<sf::Vector2f> curve3points = crv3->points;
-            std::vector<sf::Vector2f> curve4points = crv4->points;
-
-            curve4points.erase(curve4points.begin());
-            curve4points.pop_back();
-
-            reverse(curve3points.begin(), curve3points.end());
-
-            points2.insert(points2.end(), curve3points.begin(), curve3points.end());
-            points2.insert(points2.end(), curve4points.begin(), curve4points.end());
-
-            sfml::ConcaveShape polygon2 = sfml::ConcaveShape(points2, sf::Color::Black);
-
-            window->draw(polygon);
-            window->draw(polygon2);
+            shp->fps = fps;
+            shp->Draw();
 
             screenFade.draw();
 

@@ -1,0 +1,36 @@
+{
+"frames":[
+	{"frameid":1,"fillcolor":[255,255,255,0], "curves":[
+		{"curvetype":1,"point1":[-70, 97],"controlpoint1":[100,110],"point2":[82, 97],"controlpoint2":[82, 107]},
+		{"curvetype":1,"point2":[-70, 97],"controlpoint2":[100,90],"point1":[82, 97],"controlpoint1":[82, 87]}
+	]},
+	{"frameid":1,"fillcolor":[255,255,255,64], "curves":[
+		{"curvetype":1,"point1":[10, 97],"controlpoint1":[100,110],"point2":[163, 113],"controlpoint2":[123, 123]},
+		{"curvetype":1,"point2":[10, 97],"controlpoint2":[100,90],"point1":[163, 113],"controlpoint1":[123, 103]}
+	]},
+	{"frameid":1,"fillcolor":[255,255,255,128], "curves":[
+		{"curvetype":1,"point1":[82, 97],"controlpoint1":[102, 107],"point2":[230, 152],"controlpoint2":[190, 162]},
+		{"curvetype":1,"point2":[82, 97],"controlpoint2":[102, 87],"point1":[230, 152],"controlpoint1":[190, 142]}
+	]},
+	{"frameid":1,"fillcolor":[255,255,255,128], "curves":[
+		{"curvetype":1,"point1":[163, 113],"controlpoint1":[183, 123],"point2":[290, 206],"controlpoint2":[250, 216]},
+		{"curvetype":1,"point2":[163, 113],"controlpoint2":[183, 103],"point1":[290, 206],"controlpoint1":[250, 196]}
+	]},
+	{"frameid":1,"fillcolor":[255,255,255,128], "curves":[
+		{"curvetype":1,"point1":[230, 152],"controlpoint1":[250,162],"point2":[353, 265],"controlpoint2":[313, 275]},
+		{"curvetype":1,"point2":[230, 152],"controlpoint2":[250,142],"point1":[353, 265],"controlpoint1":[313, 255]}
+	]},
+	{"frameid":1,"fillcolor":[255,255,255,128], "curves":[
+		{"curvetype":1,"point1":[290, 206],"controlpoint1":[310,216],"point2":[426, 321],"controlpoint2":[386, 331]},
+		{"curvetype":1,"point2":[290, 206],"controlpoint2":[310,196],"point1":[426, 321],"controlpoint1":[386, 311]}
+	]},
+	{"frameid":1,"fillcolor":[255,255,255,64], "curves":[
+		{"curvetype":1,"point1":[353, 265],"controlpoint1":[363,275],"point2":[518, 365],"controlpoint2":[478, 375]},
+		{"curvetype":1,"point2":[353, 265],"controlpoint2":[363,255],"point1":[518, 365],"controlpoint1":[478, 355]}
+	]},
+	{"frameid":1,"fillcolor":[255,255,255,0], "curves":[
+		{"curvetype":1,"point1":[426, 321],"controlpoint1":[446,331],"point2":[637, 388],"controlpoint2":[597, 398]},
+		{"curvetype":1,"point2":[426, 321],"controlpoint2":[446,311],"point1":[637, 388],"controlpoint1":[597, 378]}
+	]}
+],
+"framerate":5}

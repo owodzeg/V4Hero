@@ -12,11 +12,14 @@ enum CurveType
 
 class CurveSegment
 {
-private:
-    CurveType type;
 public:
     std::vector<sf::Vector2f> points;
     const int NUM_INTERP = 15;
+    sf::Vector2f point1;
+    sf::Vector2f point2;
+    sf::Vector2f control_point1;
+    sf::Vector2f control_point2;
+    CurveType type;
 
     std::vector<sf::Vector2f> CalculateCurvePoints(sf::Vector2f point1, sf::Vector2f point2, sf::Vector2f control_point1, sf::Vector2f control_point2);
 

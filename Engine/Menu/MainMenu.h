@@ -12,6 +12,7 @@
 #include "OptionsMenu.h"
 #include "Patapolis.h"
 #include <SFML/Graphics.hpp>
+#include <Graphics/AnimatedCurveShape.h>
 class V4Core;
 class MainMenu : public Menu
 {
@@ -64,6 +65,7 @@ public:
     float dest_y = 300;
 
     float temp_anim_t = 0;
+    AnimatedCurveShape* shp;
 
     sf::Clock menuClock;
     sf::Clock startClock;

@@ -120,7 +120,7 @@ set(ENGINE_FILES
         Engine/Utils.h 
         Engine/Graphics/CurveShape.cpp 
         Engine/Graphics/CurveSegment.cpp
-        Engine/Graphics/ConcaveShape.cpp)
+        Engine/Graphics/ConcaveShape.cpp "Engine/Graphics/AnimatedCurveShape.cpp" "Engine/Graphics/AnimatedCurveShape.h")
 
 add_executable(V4Hero ${ENGINE_FILES} main.cpp)
 
