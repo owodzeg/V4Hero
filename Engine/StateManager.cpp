@@ -217,22 +217,7 @@ void StateManager::initState(int state)
             {
                 optionsMenuPtr = new OptionsMenu;
             }
-
-            break;
-        }
-
-        case OPTIONSMENU: {
-
-            if (optionsMenuPtr == nullptr)
-            {
-                optionsMenuPtr = new OptionsMenu;
-            }
-
-            break;
-        }
-
-        case INTRODUCTION: {
-
+            
             if (introductionPtr == nullptr)
             {
                 introductionPtr = new IntroductionMenu;
