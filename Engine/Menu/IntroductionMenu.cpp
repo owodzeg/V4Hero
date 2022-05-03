@@ -9,7 +9,7 @@ IntroductionMenu::IntroductionMenu()
     is_active = false;
 }
 
-void IntroductionMenu::Initialise()
+void IntroductionMenu::Initialize()
 {
     SPDLOG_DEBUG("Initialize Introduction menu");
 
