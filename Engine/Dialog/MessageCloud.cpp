@@ -75,6 +75,12 @@ void MessageCloud::Show()
 
         active = true;
 
+        if (ptext.size() <= 0)
+        {
+            SPDLOG_ERROR("No messages found in message cloud.");
+            AddDialog(sf::String("no message"), true);
+        }
+
         dest_xsize = ptext[cur_dialog].getLocalBounds().width + 64 + (ptext[cur_dialog].getLocalBounds().width / 10);
         dest_ysize = ptext[cur_dialog].getLocalBounds().height + 64 + (ptext[cur_dialog].getLocalBounds().height / 1.5);
 
