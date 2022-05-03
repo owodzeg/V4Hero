@@ -12,6 +12,7 @@
 #include "Menu/Patapolis.h"
 #include "Menu/Altar.h"
 #include "Menu/Barracks.h"
+#include "Menu/IntroductionMenu.h"
 #include "Mission/MissionController.h"
 
 // Class for holding the pointers to commonly used important game contents
@@ -56,6 +57,7 @@ private:
     AltarMenu* altarPtr;
     Barracks* barracksPtr;
     ObeliskMenu* obeliskPtr;
+    IntroductionMenu* introductionPtr;
 
     std::vector<std::thread> loadingThreads;
 };

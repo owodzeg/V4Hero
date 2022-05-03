@@ -61,6 +61,16 @@ void StateManager::updateCurrentState()
             break;
         }
 
+        case INTRODUCTION: {
+            if (introductionPtr == nullptr)
+            {
+                introductionPtr = new IntroductionMenu;
+            }
+
+            introductionPtr->Update();
+            break;
+        }
+
         case TIPS: {
 
             if (loadingTipPtr == nullptr)
@@ -212,12 +222,23 @@ void StateManager::initState(int state)
         }
 
         case OPTIONSMENU: {
-       
+
             if (optionsMenuPtr == nullptr)
             {
                 optionsMenuPtr = new OptionsMenu;
             }
-            
+
+            break;
+        }
+
+        case INTRODUCTION: {
+
+            if (introductionPtr == nullptr)
+            {
+                introductionPtr = new IntroductionMenu;
+                introductionPtr->Initialize();
+            }
+
             break;
         }
 
