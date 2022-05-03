@@ -9,7 +9,7 @@ IntroductionMenu::IntroductionMenu()
     is_active = false;
 }
 
-void IntroductionMenu::Initialise(Config* thisConfig, V4Core* parent, Menu* curParentMenu)
+void IntroductionMenu::Initialise()
 {
     SPDLOG_DEBUG("Initialize Introduction menu");
 
@@ -29,7 +29,7 @@ void IntroductionMenu::Initialise(Config* thisConfig, V4Core* parent, Menu* curP
     msgcloud.AddDialog(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("newgame_intro_13")), true);
     msgcloud.AddDialog(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("newgame_intro_14")), true);
 
-    timeout.restart();
+    timeout.restart(); 
 
     SPDLOG_DEBUG("Introduction menu initialized.");
 }
@@ -38,15 +38,19 @@ void IntroductionMenu::EventFired(sf::Event event)
 {
 }
 
-void IntroductionMenu::Update(sf::RenderWindow& window, float fps, InputController& inputCtrl)
+void IntroductionMenu::Update()
 {
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    float fps = CoreManager::getInstance().getCore()->getFPS();
+    InputController* inputCtrl = CoreManager::getInstance().getInputController();
+
     if (timeout.getElapsedTime().asSeconds() > 1)
     {
         if (!msgcloud.done)
             msgcloud.Show();
     }
 
-    msgcloud.Draw(window, fps, inputCtrl);
+    msgcloud.Draw();
 
     if (!msgcloud.done)
         timeout2.restart();
