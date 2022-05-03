@@ -222,6 +222,7 @@ void StateManager::initState(int state)
             {
                 introductionPtr = new IntroductionMenu;
                 introductionPtr->Initialize();
+                introductionPtr->timeout.restart();
             }
 
             break;
