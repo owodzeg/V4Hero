@@ -274,13 +274,9 @@ void StateManager::initState(int state)
             {
                 missionControllerPtr = CoreManager::getInstance().getMissionController();
 
-                std::string mission_file = "";
-                int mission_id = -1;
-
-                if (barracksPtr != nullptr)
+                if (CoreManager::getInstance().getCore()->mission_id >= 0)
                 {
-                    mission_file = barracksPtr->mission_file;
-                    mission_id = barracksPtr->mission_id;
+                    missionControllerPtr->StartMission(CoreManager::getInstance().getCore()->mission_file, false, CoreManager::getInstance().getCore()->mission_id, CoreManager::getInstance().getCore()->mission_multiplier);
                 } else
                 {
                     SPDLOG_ERROR("No load mission specified, returning to Patapolis");
@@ -288,8 +284,6 @@ void StateManager::initState(int state)
                     setState(PATAPOLIS);
                     break;
                 }
-
-                missionControllerPtr->StartMission(mission_file, false, mission_id, 1); ///last argument: placeholder, mission multiplier
             }
 
             break;
@@ -340,7 +334,7 @@ void StateManager::setState(int state)
     }
 
     //go from main to options
-    if (currentGameState == MAINMENU && state == OPTIONSMENU) 
+    if (currentGameState == MAINMENU && state == OPTIONSMENU)
     {
         if (optionsMenuPtr != nullptr)
         {
@@ -348,6 +342,33 @@ void StateManager::setState(int state)
             optionsMenuPtr->sel = 0;
             optionsMenuPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
         }
+    }
+
+    //go from main to introduction
+    if (currentGameState == MAINMENU && state == INTRODUCTION)
+    {
+        if (introductionPtr != nullptr)
+        {
+            introductionPtr->timeout.restart();
+        }
+    }
+
+    //go from introduction to kami's return mission
+    if (currentGameState == INTRODUCTION && state == MISSIONCONTROLLER)
+    {
+        if (loadingTipPtr == nullptr)
+        {
+            loadingTipPtr = new LoadingTip;
+        } else
+        {
+            delete loadingTipPtr;
+            loadingTipPtr = new LoadingTip;
+        }
+
+        state = TIPS;
+        afterTipState = MISSIONCONTROLLER;
+
+        initStateMT(afterTipState);
     }
 
     //go from main to patapolis (forward through tips)

@@ -59,6 +59,10 @@ public:
     std::map<int, std::shared_ptr<AnimationCache>> animation_cache;
     std::map<int, bool> isCached; ///Check if entities have been cached already, so we can make automatic caching inside spawnEntity function
 
+    std::string mission_file = ""; //name of the mission file to be loaded
+    int mission_id = -1; //id of the mission to be loaded
+    float mission_multiplier = 1; //difficulty multiplier
+
     //Config config;
     SaveReader saveReader;
     V4Core();

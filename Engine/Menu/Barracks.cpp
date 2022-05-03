@@ -1277,6 +1277,10 @@ void Barracks::Update()
                 }
 
                 case 2: {
+                    CoreManager::getInstance().getCore()->mission_file = mission_file;
+                    CoreManager::getInstance().getCore()->mission_id = mission_id;
+                    CoreManager::getInstance().getCore()->mission_multiplier = 1;
+
                     StateManager::getInstance().setState(StateManager::MISSIONCONTROLLER);
                     break;
                 }

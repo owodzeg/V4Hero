@@ -3,6 +3,7 @@
 #include "IntroductionMenu.h"
 #include "../V4Core.h"
 #include "../CoreManager.h"
+#include "../StateManager.h"
 
 IntroductionMenu::IntroductionMenu()
 {
@@ -55,6 +56,12 @@ void IntroductionMenu::Update()
 
     if (timeout2.getElapsedTime().asSeconds() > 3)
     {
+        CoreManager::getInstance().getCore()->mission_file = "mis1_0.p4m";
+        CoreManager::getInstance().getCore()->mission_id = 0;
+        CoreManager::getInstance().getCore()->mission_multiplier = 1;
+
+        StateManager::getInstance().setState(StateManager::MISSIONCONTROLLER);
+
         //TO-DO: change state in statemanager
 
         /*
