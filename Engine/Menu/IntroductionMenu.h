@@ -14,9 +14,8 @@ public:
     MessageCloud msgcloud;
     sf::Clock timeout, timeout2;
 
-    Menu* parentMenu;
-    void Initialise(Config* thisConfig, V4Core* parent, Menu* curParentMenu);
-    void Update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
+    void Initialize();
+    void Update();
     void EventFired(sf::Event event);
     IntroductionMenu();
     ~IntroductionMenu();
