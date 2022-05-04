@@ -31,6 +31,7 @@ void IntroductionMenu::Initialize()
     msgcloud.AddDialog(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("newgame_intro_14")), true);
 
     SPDLOG_DEBUG("Introduction menu initialized.");
+    initialized = true;
 }
 
 void IntroductionMenu::EventFired(sf::Event event)

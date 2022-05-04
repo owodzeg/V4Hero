@@ -13,6 +13,7 @@ class IntroductionMenu : public Menu
 public:
     MessageCloud msgcloud;
     sf::Clock timeout, timeout2;
+    bool initialized = false;
 
     void Initialize();
     void Update();

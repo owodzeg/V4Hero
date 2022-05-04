@@ -26,13 +26,29 @@ void StateManager::updateCurrentState()
     switch (currentGameState)
     {
         case ENTRY: {
-            if (mainMenuPtr != nullptr && optionsMenuPtr != nullptr)
+
+            if (loadingTipPtr == nullptr)
+            {
+                loadingTipPtr = new LoadingTip(1);
+            } else
+            {
+                delete loadingTipPtr;
+                loadingTipPtr = new LoadingTip(1);
+            }
+
+            setState(TIPS);
+            afterTipState = MAINMENU;
+
+            initStateMT(MAINMENU);
+
+            /* if (mainMenuPtr != nullptr && optionsMenuPtr != nullptr)
             {
                 if (mainMenuPtr->initialized && optionsMenuPtr->initialized)
                 {
                     setState(MAINMENU);
                 }
-            }
+            } */
+
             break;
         }
 
@@ -80,6 +96,26 @@ void StateManager::updateCurrentState()
 
             switch (afterTipState)
             {
+                case MAINMENU: {
+                    if (mainMenuPtr != nullptr && optionsMenuPtr != nullptr && introductionPtr != nullptr)
+                    {
+                        if (mainMenuPtr->initialized && optionsMenuPtr->initialized && introductionPtr->initialized)
+                        {
+                            if (loadingTipPtr != nullptr)
+                            {
+                                loadingTipPtr->pressAnyKey = true;
+
+                                if (loadingTipPtr->tipFinished)
+                                {
+                                    setState(afterTipState);
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                }
+
                 case PATAPOLIS: {
 
                     if (patapolisPtr != nullptr && altarPtr != nullptr && barracksPtr != nullptr && obeliskPtr != nullptr)
@@ -350,12 +386,17 @@ void StateManager::setState(int state)
         if (introductionPtr != nullptr)
         {
             introductionPtr->timeout.restart();
+
+            //clean main menu components
+            delete mainMenuPtr;
+            delete optionsMenuPtr;
         }
     }
 
     //go from introduction to kami's return mission
     if (currentGameState == INTRODUCTION && state == MISSIONCONTROLLER)
     {
+        //load tips
         if (loadingTipPtr == nullptr)
         {
             loadingTipPtr = new LoadingTip;
@@ -364,7 +405,11 @@ void StateManager::setState(int state)
             delete loadingTipPtr;
             loadingTipPtr = new LoadingTip;
         }
+        
+        //clean introduction menu
+        delete introductionPtr;
 
+        //run tips and load up mission controller
         state = TIPS;
         afterTipState = MISSIONCONTROLLER;
 
@@ -385,6 +430,24 @@ void StateManager::setState(int state)
 
         state = TIPS;
         afterTipState = PATAPOLIS;
+
+        initStateMT(afterTipState);
+    }
+
+    // go from patapolis to main menu
+    if (currentGameState == PATAPOLIS && state == MAINMENU)
+    {
+        if (loadingTipPtr == nullptr)
+        {
+            loadingTipPtr = new LoadingTip(1);
+        } else
+        {
+            delete loadingTipPtr;
+            loadingTipPtr = new LoadingTip(1);
+        }
+
+        state = TIPS;
+        afterTipState = MAINMENU;
 
         initStateMT(afterTipState);
     }
@@ -504,6 +567,7 @@ void StateManager::setState(int state)
 
     // Change the state
     SPDLOG_DEBUG("Changing state to {}", state);
+    prevGameState = currentGameState;
     currentGameState = state;
 }
 

@@ -46,6 +46,7 @@ private:
     StateManager();
     ~StateManager();
 
+    int prevGameState = 0;
     int currentGameState = 0;
     int afterTipState = 0;
 
