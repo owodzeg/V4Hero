@@ -434,7 +434,7 @@ void V4Core::init()
     StateManager::getInstance().setState(StateManager::ENTRY);
 
     //StateManager& instance = StateManager::getInstance();
-    StateManager::getInstance().initStateMT(StateManager::MAINMENU);
+    //StateManager::getInstance().initStateMT(StateManager::MAINMENU);
 
     // Execute the main game loop
     while (window->isOpen())
