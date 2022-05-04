@@ -25,7 +25,12 @@ public:
 
     float angle_1=0, angle_2=0;
 
-    LoadingTip();
+    // loading tip mode
+    // 0 - regular loading tip with random splash and text
+    // 1 - very brief loading screen for some transitions, no splash and no text
+    bool tipMode = 0;
+
+    LoadingTip(int mode=0);
     void Draw();
 };
 
