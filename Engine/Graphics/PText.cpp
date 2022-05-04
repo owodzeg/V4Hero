@@ -4,6 +4,7 @@
 #include <regex>
 #include <iostream>
 #include <spdlog/spdlog.h>
+#include "../CoreManager.h"
 
 using namespace std;
 
@@ -17,12 +18,11 @@ void PText::createText(sf::Font& font, float characterSize, sf::Color color, sf:
     log_str = std::regex_replace(log_str, std::regex("\n"), "\\n");
     SPDLOG_DEBUG("Creating a new PText object: size: {} text: {} q: {} r: {}", characterSize, log_str, q, r);
 
-    f = font;
     cS = characterSize;
     c = color;
     txt = text_string;
 
-    t.setFont(f);
+    t.setFont(CoreManager::getInstance().getStrRepo()->font);
     t.setCharacterSize(cS);
     t.setFillColor(c);
     t.setString(txt);
@@ -110,7 +110,7 @@ void PText::setScale(float s)
 
 sf::FloatRect PText::getLocalBounds()
 {
-    t.setFont(f);
+    t.setFont(CoreManager::getInstance().getStrRepo()->font);
     t.setCharacterSize(cS);
     t.setFillColor(c);
     t.setString(txt);
@@ -119,7 +119,7 @@ sf::FloatRect PText::getLocalBounds()
 
 sf::FloatRect PText::getGlobalBounds()
 {
-    t.setFont(f);
+    t.setFont(CoreManager::getInstance().getStrRepo()->font);
     t.setCharacterSize(cS);
     t.setFillColor(c);
     t.setString(txt);
@@ -131,7 +131,7 @@ sf::FloatRect PText::getGlobalBoundsScaled()
     float nw = 1;
     float nh = 1;
 
-    t.setFont(f);
+    t.setFont(CoreManager::getInstance().getStrRepo()->font);
     if (t.getGlobalBounds().width > 0)
         nw = t.getGlobalBounds().width / resRatioX;
 
@@ -206,7 +206,7 @@ void PText::draw(sf::RenderWindow& window)
         }
     }
 
-    t.setFont(f);
+    t.setFont(CoreManager::getInstance().getStrRepo()->font);
     t.setFillColor(c);
     t.setCharacterSize(cS);
     t.setString(txt);
@@ -285,7 +285,7 @@ void PText::draw(sf::RenderWindow* window)
         }
     }
 
-    t.setFont(f);
+    t.setFont(CoreManager::getInstance().getStrRepo()->font);
     t.setFillColor(c);
     t.setCharacterSize(cS);
     t.setString(txt);
@@ -365,7 +365,7 @@ void PText::update(sf::RenderWindow& window)
         }
     }
 
-    t.setFont(f);
+    t.setFont(CoreManager::getInstance().getStrRepo()->font);
     t.setFillColor(c);
     t.setCharacterSize(cS);
     t.setString(txt);
@@ -439,7 +439,7 @@ void PText::update(sf::RenderWindow* window)
         }
     }
 
-    t.setFont(f);
+    t.setFont(CoreManager::getInstance().getStrRepo()->font);
     t.setFillColor(c);
     t.setCharacterSize(cS);
     t.setString(txt);

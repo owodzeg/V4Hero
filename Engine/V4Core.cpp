@@ -404,17 +404,18 @@ void V4Core::init()
     strRepo->LoadLanguageFiles(config->GetInt("lang"));
 
     config->fontPath = "resources/fonts/" + strRepo->langFonts[config->GetInt("lang") - 1];
+    SPDLOG_DEBUG("Font path is {}", config->fontPath);
 
     /** "Alpha release" text **/
     SPDLOG_DEBUG("Creating text for version and FPS");
-    f_font.loadFromFile(config->fontPath);
+    strRepo->font.loadFromFile(config->fontPath);
 
-    t_version.setFont(f_font);
+    t_version.setFont(strRepo->font);
     t_version.setCharacterSize(24);
     t_version.setFillColor(sf::Color(255, 255, 255, 32));
     t_version.setString("V4Hero Client " + hero_version);
 
-    t_fps.setFont(f_font);
+    t_fps.setFont(strRepo->font);
     t_fps.setCharacterSize(24);
     t_fps.setFillColor(sf::Color(255, 255, 255, 96));
     t_fps.setOutlineColor(sf::Color(0, 0, 0, 96));
