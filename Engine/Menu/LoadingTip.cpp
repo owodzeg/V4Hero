@@ -168,23 +168,12 @@ void LoadingTip::Draw()
             tipFinished = true;
         } else
         {
-            t_nowLoading.setOrigin(t_nowLoading.getLocalBounds().width, t_nowLoading.getLocalBounds().height / 2);
-            t_nowLoading.setPosition(722 + 230 + 256, 658 + 26);
-            t_nowLoading.draw(window);
-
-            loading_head.setPosition(t_nowLoading.getPosition().x - t_nowLoading.getLocalBounds().width - 46, t_nowLoading.getPosition().y - 28);
-            loading_eye1.setPosition(t_nowLoading.getPosition().x - t_nowLoading.getLocalBounds().width + 19 - 46, t_nowLoading.getPosition().y + 43 - 28);
-            loading_eye1.setRotation(angle_1);
-            loading_head.draw(window);
-            loading_eye1.draw(window);
-
-            loading_head.setPosition(t_nowLoading.getPosition().x + 12, t_nowLoading.getPosition().y - 28);
-            loading_eye2.setPosition(t_nowLoading.getPosition().x + 19 + 12, t_nowLoading.getPosition().y + 43 - 28);
+            loading_head.setPosition(1220, 650);
+            loading_eye2.setPosition(1239, 693);
             loading_eye2.setRotation(angle_2);
             loading_head.draw(window);
             loading_eye2.draw(window);
 
-            angle_1 += 2.f / fps;
             angle_2 -= 2.f / fps;
         }
     }
