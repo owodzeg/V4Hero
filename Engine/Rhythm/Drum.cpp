@@ -123,7 +123,10 @@ void Drum::Load(string drum, int perfection, sf::Texture& drum_texture, sf::Text
 
 void Drum::Draw()
 {
+    //TO-DO: overhaul needed here. make it more optimized and less weighty
+
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    float fps = CoreManager::getInstance().getCore()->getFPS();
 
     float ratio_X = window->getSize().x / float(1280);
     float ratio_Y = window->getSize().y / float(720);

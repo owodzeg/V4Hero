@@ -28,9 +28,7 @@ public:
     float shockwave2Size = 30;
     float shockwave2Alpha = 40;
 
-
     float rotation = 0;
-    float fps = 60;
     bool isBest = false;
     bool isDon = false;
 

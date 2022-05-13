@@ -137,7 +137,6 @@ void RhythmGUI::doVisuals(int bgm_cycle, sf::Clock* rhythmClock, int combo, floa
 
     for (int i = 0; i < drums->size(); i++)
     {
-        (*drums)[i].fps = fps;
         (*drums)[i].Draw();
 
         if ((*drums)[i].alpha <= 0)
