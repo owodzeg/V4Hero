@@ -5,6 +5,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "../../../../CoreManager.h"
+
 FeverWorm::FeverWorm()
 {
     tex_number[2].loadFromFile("resources/graphics/rhythm/worm/2.png");
@@ -123,8 +125,10 @@ void FeverWorm::doRhythm(std::string current_song, std::string current_drum, int
     }
 }
 
-void FeverWorm::Draw(sf::RenderWindow& window)
+void FeverWorm::Draw()
 {
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow(); 
+
     if (AnimatedObject::getAnimationSegment() != "transform")
     {
         if (worm_fever)
@@ -143,8 +147,8 @@ void FeverWorm::Draw(sf::RenderWindow& window)
             global_x += speed / fps;
     }
 
-    auto view = window.getView();
-    window.setView(window.getDefaultView());
+    auto view = window->getView();
+    window->setView(window->getDefaultView());
 
     /// call the parent function to draw the animations
     AnimatedObject::Draw();
@@ -180,5 +184,5 @@ void FeverWorm::Draw(sf::RenderWindow& window)
         }
     }
 
-    window.setView(view);
+    window->setView(view);
 }
