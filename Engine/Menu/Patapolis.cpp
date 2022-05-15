@@ -1568,10 +1568,11 @@ void PatapolisMenu::Update()
                         city_loop.stop();
                         this->Hide();
                         this->is_active = false;
-                        parentMenu->Show();
-                        parentMenu->is_active = true;
+                        //parentMenu->Show();
+                        //parentMenu->is_active = true;
 
-                        parentMenu->screenFade.Create(ScreenFade::FADEIN, 1024);
+                        screenFade.Create(ScreenFade::FADEIN, 1024);
+                        StateManager::getInstance().setState(StateManager::MAINMENU);
 
                         break;
                     }
