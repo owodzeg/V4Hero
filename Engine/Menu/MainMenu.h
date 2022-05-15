@@ -77,8 +77,6 @@ public:
 
     MessageCloud msgcloud;
 
-    IntroductionMenu introductionMenu;
-
     void Update();
     void EventFired(sf::Event event);
     void OnExit();

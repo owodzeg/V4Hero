@@ -805,110 +805,6 @@ void MainMenu::Update()
 
             window->setView(window->getDefaultView());
 
-            screenFade.draw();
-
-            if (screenFade.checkFinished())
-            {
-                if (goto_id != -1)
-                {
-                    switch (goto_id)
-                    {
-                        case 0: ///New game
-                        {
-                            SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
-
-                            saveReader->Flush();
-                            saveReader->CreateBlankSave();
-
-                            title_loop.stop();
-
-                            //TO-DO: replace with StateManager
-                            /* introductionMenu.Show();
-                            introductionMenu.is_active = true;
-                            introductionMenu.timeout.restart();
-
-                            patapolisMenu.save_loaded = false;*/
-
-                            StateManager::getInstance().setState(StateManager::INTRODUCTION);
-
-                            break;
-                        }
-
-                        case 1: ///Continue
-                        {
-                            title_loop.stop();
-
-                            StateManager::getInstance().setState(StateManager::PATAPOLIS);
-
-                            //TO-DO: replace by StateManager
-                            /*
-                            Hide();
-                            patapolisClock.restart();
-
-                            if (!patapolisMenu.initialised)
-                            {
-                                sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
-                                v4Core->continue_loading = true;
-                                //rework pending v4Core->window->setActive(false);
-                                loadingThreadInstance.launch();
-
-                                patapolisMenu.Show();
-                                patapolisMenu.is_active = true;
-                                patapolisMenu.save_loaded = true;
-                                //TO-DO: handle it by statemanager
-                                //patapolisMenu.Initialise(config, v4Core, this);
-
-                                v4Core->continue_loading = false;
-                            } else
-                            {
-                                sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
-                                v4Core->continue_loading = true;
-                                //rework pending v4Core->window->setActive(false);
-                                loadingThreadInstance.launch();
-
-                                patapolisMenu.Show();
-                                patapolisMenu.is_active = true;
-                                patapolisMenu.screenFade.Create(0, 512);
-
-                                patapolisMenu.location = 3;
-                                patapolisMenu.ctrlTips.create(54, patapolisMenu.f_font, 20, sf::String("L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
-                                patapolisMenu.SetTitle(patapolisMenu.location);
-                                patapolisMenu.camPos = patapolisMenu.locations[patapolisMenu.location];
-
-                                while (patapolisClock.getElapsedTime().asSeconds() < 3)
-                                {
-                                    ///do nothing lol
-                                }
-
-                                v4Core->loadingWaitForKeyPress();
-                                v4Core->continue_loading = false;
-                            }*/
-
-                            break;
-                        }
-
-                        case 2: ///Options
-                        {
-                            title_loop.stop();
-                            Hide();
-                            //v4Core->changeRichPresence("In Options menu", "logo", "");
-
-                            StateManager::getInstance().setState(StateManager::OPTIONSMENU);
-
-                            //optionsMenu.state = 0;
-                            //optionsMenu.sel = 0;
-                            //optionsMenu.Show();
-
-                            //optionsMenu.screenFade.Create(0, 512);
-
-                            break;
-                        }
-                    }
-
-                    goto_id = -1;
-                }
-            }
-
             vector<int> db_e; ///dialog box erase
 
             for (int i = 0; i < dialogboxes.size(); i++)
@@ -995,6 +891,47 @@ void MainMenu::Update()
                     }
                 }
             }
+
+            screenFade.draw();
+
+            if (screenFade.checkFinished())
+            {
+                if (goto_id != -1)
+                {
+                    switch (goto_id)
+                    {
+                        case 0: ///New game
+                        {
+                            SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
+
+                            saveReader->Flush();
+                            saveReader->CreateBlankSave();
+
+                            title_loop.stop();
+                            StateManager::getInstance().setState(StateManager::INTRODUCTION);
+
+                            break;
+                        }
+
+                        case 1: ///Continue
+                        {
+                            title_loop.stop();
+                            StateManager::getInstance().setState(StateManager::PATAPOLIS);
+
+                            break;
+                        }
+
+                        case 2: ///Options
+                        {
+                            title_loop.stop();
+                            Hide();
+
+                            StateManager::getInstance().setState(StateManager::OPTIONSMENU);
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -1010,4 +947,5 @@ void MainMenu::OnExit()
 MainMenu::~MainMenu()
 {
     //dtor
+    SPDLOG_DEBUG("MainMenu destructor");
 }
