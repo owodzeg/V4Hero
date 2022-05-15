@@ -235,6 +235,11 @@ void TextureManager::loadTextureFromImage(const std::string& img_key)
     }
 }
 
+void TextureManager::unloadTexture(const std::string& key)
+{
+    loadedTextures.erase(key);
+}
+
 void TextureManager::unloadImage(const std::string& key)
 {
     loadedImages.erase(key);

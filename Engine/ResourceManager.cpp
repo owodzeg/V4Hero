@@ -2,6 +2,7 @@
 
 #include "ResourceManager.h"
 #include "CoreManager.h"
+#include "StateManager.h"
 #include "V4Core.h"
 
 ResourceManager::ResourceManager()
@@ -33,6 +34,10 @@ int ResourceManager::getCurrentQuality()
 void ResourceManager::loadSprite(std::string path)
 {
     loadedSprites[path].loadFromFile(path, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
+    loadedSources[path] = StateManager::getInstance().getState();
+
+    loadedPaths[StateManager::getInstance().getState()].push_back(path);
+
     SPDLOG_INFO("Loaded sprite with path {}", path);
     ///have to add handling for when texture doesn't exist
 }
@@ -63,7 +68,22 @@ PSprite& ResourceManager::getSprite(const std::string& path)
 
 void ResourceManager::unloadSprite(const std::string& path)
 {
+    loadedSprites.erase(path);
 
+    int source = loadedSources[path];
+    loadedSources.erase(path);
+}
+
+void ResourceManager::unloadState(int state)
+{
+    for(auto a : loadedPaths[state])
+    {
+        unloadSprite(a);
+        TextureManager::getInstance().unloadImage(a);
+        TextureManager::getInstance().unloadTexture(a);
+    }
+
+    loadedPaths[state].clear();
 }
 
 // this action reloads all currently loaded PSprites with actual quality setting.

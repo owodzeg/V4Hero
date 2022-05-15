@@ -392,12 +392,16 @@ void StateManager::setState(int state)
             {
                 delete mainMenuPtr;
                 mainMenuPtr = nullptr;
+
+                ResourceManager::getInstance().unloadState(MAINMENU);
             }
             
             if (optionsMenuPtr != nullptr)
             {
                 delete optionsMenuPtr;
+
                 optionsMenuPtr = nullptr;
+                ResourceManager::getInstance().unloadState(OPTIONSMENU);
             }
         }
     }
@@ -419,6 +423,9 @@ void StateManager::setState(int state)
         if (introductionPtr != nullptr)
         {
             delete introductionPtr;
+            introductionPtr = nullptr;
+
+            ResourceManager::getInstance().unloadState(INTRODUCTION);
         }
 
         //run tips and load up mission controller
@@ -445,12 +452,24 @@ void StateManager::setState(int state)
         {
             delete mainMenuPtr;
             mainMenuPtr = nullptr;
+
+            ResourceManager::getInstance().unloadState(MAINMENU);
         }
 
         if (optionsMenuPtr != nullptr)
         {
             delete optionsMenuPtr;
             optionsMenuPtr = nullptr;
+
+            ResourceManager::getInstance().unloadState(OPTIONSMENU);
+        }
+
+        if (introductionPtr != nullptr)
+        {
+            delete introductionPtr;
+            introductionPtr = nullptr;
+
+            ResourceManager::getInstance().unloadState(INTRODUCTION);
         }
 
         state = TIPS;
@@ -469,6 +488,14 @@ void StateManager::setState(int state)
         {
             delete loadingTipPtr;
             loadingTipPtr = new LoadingTip(1);
+        }
+
+        if (patapolisPtr != nullptr)
+        {
+            delete patapolisPtr;
+            patapolisPtr = nullptr;
+
+            ResourceManager::getInstance().unloadState(PATAPOLIS);
         }
 
         state = TIPS;
@@ -598,5 +625,8 @@ void StateManager::setState(int state)
 
 int StateManager::getState()
 {
-    return currentGameState;
+    if (currentGameState == TIPS)
+        return afterTipState;
+    else 
+        return currentGameState;
 }

@@ -22,6 +22,7 @@ public:
     void loadImageFromMemory(const std::string& key, sf::Image image);
     sf::Image& getImage(const std::string& key);
     void loadTextureFromImage(const std::string& img_key);
+    void unloadTexture(const std::string& key);
     void unloadImage(const std::string& key);
     void applyForceLoad(bool force);
     void reloadTextures(int quality);

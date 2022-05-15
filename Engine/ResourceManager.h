@@ -18,13 +18,17 @@ class ResourceManager
         void loadSprite(std::string path);
         PSprite& getSprite(const std::string& path);
         void unloadSprite(const std::string& path);
+        void unloadState(int state);
         void reloadPSprites();
 
 	private:
         ResourceManager();
         ~ResourceManager();
 
-        std::unordered_map<std::string, PSprite> loadedSprites;
+        std::unordered_map<std::string, PSprite> loadedSprites; //holds PSprites
+        std::unordered_map<std::string, int> loadedSources; //holds source state
+
+        std::unordered_map<int, std::vector<std::string>> loadedPaths; //holds list of paths for each source
 
         enum Quality
         {
