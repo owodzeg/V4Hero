@@ -388,8 +388,17 @@ void StateManager::setState(int state)
             introductionPtr->timeout.restart();
 
             //clean main menu components
-            delete mainMenuPtr;
-            delete optionsMenuPtr;
+            if (mainMenuPtr != nullptr)
+            {
+                delete mainMenuPtr;
+                mainMenuPtr = nullptr;
+            }
+            
+            if (optionsMenuPtr != nullptr)
+            {
+                delete optionsMenuPtr;
+                optionsMenuPtr = nullptr;
+            }
         }
     }
 
@@ -405,9 +414,12 @@ void StateManager::setState(int state)
             delete loadingTipPtr;
             loadingTipPtr = new LoadingTip;
         }
-        
+
         //clean introduction menu
-        delete introductionPtr;
+        if (introductionPtr != nullptr)
+        {
+            delete introductionPtr;
+        }
 
         //run tips and load up mission controller
         state = TIPS;
@@ -426,6 +438,19 @@ void StateManager::setState(int state)
         {
             delete loadingTipPtr;
             loadingTipPtr = new LoadingTip;
+        }
+
+        //clean main menu components
+        if (mainMenuPtr != nullptr)
+        {
+            delete mainMenuPtr;
+            mainMenuPtr = nullptr;
+        }
+
+        if (optionsMenuPtr != nullptr)
+        {
+            delete optionsMenuPtr;
+            optionsMenuPtr = nullptr;
         }
 
         state = TIPS;
