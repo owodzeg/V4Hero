@@ -44,17 +44,10 @@ class PatapolisMenu : public Menu
         std::map<std::string, PSprite> ps_layer_6, ps_layer_2; ///we split PSprites and the position vectors; we will use only one PSprite to draw all of the elements of the background
         std::vector<L> layer_2, layer_6; ///here we store locations and type only
 
-		PSprite L5;
-		PSprite L4;
-
 		float floor_x_base = 0;
 		float floor_x = 0;
 
-		PSprite edge;
-		PSprite bridge;
-		PSprite rainbow;
-
-		PSprite back_layer[4];
+		std::string back_layer[4];
 		vector<float> back_pos = {0, 3900, 7400, 9560};
 
 		struct Sparkle ///for rainbow
@@ -95,8 +88,8 @@ class PatapolisMenu : public Menu
 		};
 
 		struct Fire {
-			PSprite fire[3];
-			PSprite glow;
+            std::string fire[3];
+            std::string glow;
 			float x = 0, y = 0;
 			float baseX = 0, baseY = 0;
 			float curScale = 1;
@@ -105,7 +98,6 @@ class PatapolisMenu : public Menu
 		};
 
 		struct SmokeParticle {
-			PSprite smk;
 			float curScale = 0.1;
 			float baseX = 0, baseY = 0;
 			float x = 0, y = 0;
@@ -113,7 +105,6 @@ class PatapolisMenu : public Menu
 		};
 
 		struct CloudA {
-			PSprite cloud;
 			float x = 0, y = 0;
 		};
 
@@ -127,19 +118,14 @@ class PatapolisMenu : public Menu
 		float rayXbase = 12215;
 		float rayX = 12215;
 
-		PSprite wakapon;
-
 		AnimatedObject a_wakapon;
 		AnimatedObject a_sen;
 
-		PSprite world_egg;
-		PSprite light_1, light_2, egg_light;
+        float light_value = 0;
 
 		float camPos = 1280;
 		float camDest = 1280;
         float materoffset = 200; 
-
-		bool light = false;
 
 		std::vector<Sparkle> sparkles;
 		std::vector<LightRay> lightrays;
@@ -148,21 +134,12 @@ class PatapolisMenu : public Menu
 		std::vector<CloudA> clouds_A;
 		std::vector<CloudB> clouds_B;
 
-		PSprite p_smoke;
 		float smokepath1 = 0;
 
 		std::vector<int> locations;
 		int location = 3;
 		bool left = false;
 
-		PSprite market;
-        PSprite mater;
-		PSprite forge_main, forge_back, forge_glow, forge_fence, forge_slab, forge_slab_glow;
-		PSprite barracks;
-		PSprite festival_main;
-		PSprite altar;
-		PSprite obelisk;
-		PSprite paraget_main, paraget_crystal_glow, paraget_crystal;
 		std::vector<ParagetSparkle> paraget_sparkles;
 
 		float crystal_y = 0;
@@ -226,7 +203,6 @@ class PatapolisMenu : public Menu
         Fire addFire(int type, float x, float y, bool add);
         void addSmokeParticle(float x, float y);
         void addCloud(std::string type, float x, float y, float xsize, float ysize);
-        void Initialise(Config* thisConfig, V4Core* parent, Menu* curParentMenu);
         void Update();
 		void EventFired(sf::Event event);
 		void SetTitle(int menuPosition);
