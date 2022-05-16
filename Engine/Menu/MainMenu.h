@@ -6,12 +6,11 @@
 #include "../Graphics/Menu.h"
 #include "../Graphics/PSprite.h"
 #include "../Graphics/PText.h"
-#include "../Mission/MissionController.h"
 #include "IntroductionMenu.h"
 #include "OptionsMenu.h"
 #include "Patapolis.h"
 #include <SFML/Graphics.hpp>
-class V4Core;
+
 class MainMenu : public Menu
 {
 public:
