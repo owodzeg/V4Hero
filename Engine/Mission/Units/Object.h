@@ -60,6 +60,9 @@ public:
     bool disable = true;
     bool exported = false;
 
+    // wip - rework
+    std::string tex_path = "";
+
     Object();
     Object(std::string mem, int xpos, int ypos, int l, int p);
     void Load(string filename, int xpos, int ypos);
