@@ -194,16 +194,26 @@ void TextureManager::loadImageFromFile(const std::string& path)
     }
 }
 
-void TextureManager::loadImageFromMemory(const std::string& key, sf::Image image)
+void TextureManager::loadImageFromMemory(const std::string& key, sf::Image image, bool asTexture)
 {
-    if (loadedImages.find(key) == loadedImages.end())
+    if (!asTexture)
     {
-        SPDLOG_INFO("Loading image from memory with key {}", key);
-        loadedImages[key] = image;
+        if (loadedImages.find(key) == loadedImages.end())
+        {
+            SPDLOG_INFO("Loading image from memory with key {}", key);
+            loadedImages[key] = image;
+        } else
+        {
+            //SPDLOG_ERROR("Couldn't load image {}: image already loaded", key);
+            //in theory this shouldnt be an error
+        }
     } else
     {
-        //SPDLOG_ERROR("Couldn't load image {}: image already loaded", key);
-        //in theory this shouldnt be an error 
+        if (loadedImages.find(key) == loadedImages.end())
+        {
+            SPDLOG_INFO("Loading image from memory into texture with key {}", key);
+            loadedTextures[key].loadFromImage(image);
+        }
     }
 }
 

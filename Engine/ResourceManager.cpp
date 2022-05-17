@@ -42,6 +42,19 @@ void ResourceManager::loadSprite(std::string path)
     ///have to add handling for when texture doesn't exist
 }
 
+//this function works only when specifically called. use case: load up memory images
+void ResourceManager::loadImageAsSprite(std::string path, sf::Image image)
+{
+    TextureManager::getInstance().loadImageFromMemory(path, image, true);
+    loadedSprites[path].loadFromFile(path, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
+    loadedSources[path] = StateManager::getInstance().getState();
+
+    loadedPaths[StateManager::getInstance().getState()].push_back(path);
+
+    SPDLOG_INFO("Loaded sprite with path {}", path);
+    ///have to add handling for when texture doesn't exist
+}
+
 PSprite& ResourceManager::getSprite(const std::string& path)
 {
     if (loadedSprites.find(path) != loadedSprites.end())

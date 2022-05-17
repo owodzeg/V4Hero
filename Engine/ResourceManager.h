@@ -16,6 +16,7 @@ class ResourceManager
         void getQuality();
         int getCurrentQuality();
         void loadSprite(std::string path);
+        void loadImageAsSprite(std::string path, sf::Image image);
         PSprite& getSprite(const std::string& path);
         void unloadSprite(const std::string& path);
         void unloadState(int state);
