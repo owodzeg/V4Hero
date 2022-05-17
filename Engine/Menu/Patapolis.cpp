@@ -1591,6 +1591,8 @@ void PatapolisMenu::Update()
                         screenFade.Create(ScreenFade::FADEIN, 1024);
                         StateManager::getInstance().setState(StateManager::MAINMENU);
 
+                        return; //i return the function here so no more routines are executed when Patapolis is destroyed.
+
                         break;
                     }
                 }
