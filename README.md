@@ -8,8 +8,8 @@ An official client for Patafour.
 
 - [Setup](#setup)
   - [Required Libraries and Tools](#required-libraries-and-tools)
-  - [Note for Linux Users](#note-for-linux-users)
-  - [Note for Windows Users](#note-for-windows-users)
+  - [Linux installation](#linux-installation)
+  - [Windows installation](#windows-installation)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -25,9 +25,9 @@ Simply clone the repo and CMake should automatically grab everything for you. Vi
 
 ### Linux installation
 
-On Linux also the X11 library needs to be installed (if you're on Ubuntu it's the `libx11-dev` package and you can install it with `sudo apt install libx11-dev`).
+On Linux you also need to install the X11 library. On Ubuntu you can install it with `sudo apt install libx11-dev`.
 
-Note that currently we only support the proprietary NVidia driver for NVidia GPUs.
+Note that we currently only support the proprietary NVidia driver for NVidia GPUs.
 
 ### Windows installation
 
@@ -35,7 +35,7 @@ You should enable [Developer Mode](https://docs.microsoft.com/en-us/windows/apps
 
 Create an environment variable called `SFML_ROOT` that points to a valid SFML root directory.
 
-After building, an error may appear that you're missing OpenAL32.dll. You can simply copy it from SFML/bin folder to V4Hero.exe directory.
+After building, an error may appear in relation to a missing OpenAL32.dll. You can simply copy it from SFML/bin folder to V4Hero.exe directory.
 
 Make sure that you select proper architecture when building. Downloading 32-bit SFML will only compile x86 builds and 64-bit SFML will only compile x64 builds.
 
