@@ -55,6 +55,9 @@ LoadingTip::LoadingTip(int mode)
 
         bg_key = "resources/graphics/ui/tips/" + tipsUtil->backgroundFileNames[tipBackground];
         icon_key = "resources/graphics/ui/tips/" + tipsUtil->iconFileNames[tipIcon];
+
+        PSprite& s_bg = ResourceManager::getInstance().getSprite(bg_key);
+        PSprite& s_icon = ResourceManager::getInstance().getSprite(icon_key);
     } else if (tipMode == 1)
     {
         sf::RenderWindow* window = CoreManager::getInstance().getWindow();
