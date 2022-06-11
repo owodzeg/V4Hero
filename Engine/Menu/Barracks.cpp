@@ -1282,6 +1282,9 @@ void Barracks::Update()
                     CoreManager::getInstance().getCore()->mission_multiplier = 1;
 
                     StateManager::getInstance().setState(StateManager::MISSIONCONTROLLER);
+
+                    return; //we return here because Barracks get destroyed, so no illegal memory accesses are made.
+
                     break;
                 }
             }

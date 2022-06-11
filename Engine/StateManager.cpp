@@ -494,9 +494,21 @@ void StateManager::setState(int state)
         {
             delete patapolisPtr;
             patapolisPtr = nullptr;
-
-            ResourceManager::getInstance().unloadState(PATAPOLIS);
         }
+
+        if (barracksPtr != nullptr)
+        {
+            delete barracksPtr;
+            barracksPtr = nullptr;
+        }
+
+        if (obeliskPtr != nullptr)
+        {
+            delete obeliskPtr;
+            obeliskPtr = nullptr;
+        }
+
+        ResourceManager::getInstance().unloadState(PATAPOLIS);
 
         state = TIPS;
         afterTipState = MAINMENU;
@@ -586,6 +598,26 @@ void StateManager::setState(int state)
             delete loadingTipPtr;
             loadingTipPtr = new LoadingTip;
         }
+
+        if (patapolisPtr != nullptr)
+        {
+            delete patapolisPtr;
+            patapolisPtr = nullptr;
+        }
+
+        if (barracksPtr != nullptr)
+        {
+            delete barracksPtr;
+            barracksPtr = nullptr;
+        }
+
+        if (obeliskPtr != nullptr)
+        {
+            delete obeliskPtr;
+            obeliskPtr = nullptr;
+        }
+
+        ResourceManager::getInstance().unloadState(PATAPOLIS);
 
         state = TIPS;
         afterTipState = MISSIONCONTROLLER;
