@@ -13,6 +13,7 @@
 #include <string>
 #include <thread>
 #include "../CoreManager.h"
+#include "../StateManager.h"
 
 using json = nlohmann::json;
 
@@ -2428,45 +2429,7 @@ void MissionController::DoMissionEnd()
 
                 SPDLOG_INFO("Go to Patapolis");
 
-
-                //rework pending: refer to the comment below in the other rework pending section
-                /*
-                sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
-                CoreManager::getInstance().getCore()->continue_loading = true;
-                CoreManager::getInstance().getCore()->window->setActive(false);
-                loadingThreadInstance.launch();
-
-                CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.doWaitKeyPress = false;
-                CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.Show();
-                CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.is_active = true;
-                CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.screenFade.Create(thisConfig, 0, 512);
-
-                if (!CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.initialised)
-                {
-                    /// patapolis might not be initialised because we could be running the pre-patapolis scripted first mission.
-					SPDLOG_DEBUG("Initialize Patapolis for the first time");
-                    CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.Initialise(thisConfig, v4Core, &CoreManager::getInstance().getCore()->mainMenu);
-                } else
-                {
-                    SPDLOG_DEBUG("Don't initialize Patapolis, just show it again");
-                }
-
-                CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.location = 3;
-                CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.SetTitle(3);
-                CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.camPos = CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.locations[3];
-                CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.fade_alpha = 255;
-                CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.updateStoryPoint(); ///update NPC dialogues
-                */
-                while (missionEndTimer.getElapsedTime().asMilliseconds() < 21000)
-                {
-                    ///halt loading for a second
-                }
-
-                CoreManager::getInstance().getCore()->loadingWaitForKeyPress();
-
-                CoreManager::getInstance().getCore()->continue_loading = false;
-
-                CoreManager::getInstance().getCore()->changeRichPresence("In Patapolis", "logo", "");
+                StateManager::getInstance().setState(StateManager::PATAPOLIS);
             }
         }
     } else ///Failure
@@ -2531,52 +2494,7 @@ void MissionController::DoMissionEnd()
 
                 SPDLOG_INFO("Go to Patapolis");
 
-                //rework pending
-                //basically this code below attempts to reach patapolis functions via CoreManager::getInstance().getCore()->mainmenu
-                //this is currently being improved so this kind of chain will no longer be necessary
-                //but for now for compatibility's sake im going to comment this out
-
-                /* 
-
-                sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
-                CoreManager::getInstance().getCore()->continue_loading = true;
-                CoreManager::getInstance().getCore()->window->setActive(false);
-                loadingThreadInstance.launch();
-                
-                CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.doWaitKeyPress = false;
-                CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.Show();
-                CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.is_active = true;
-                CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.screenFade.Create(thisConfig, 0, 512);
-
-                if (!CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.initialised)
-                {
-                    /// patapolis might not be initialised because we could be running the pre-patapolis scripted first mission.
-                    SPDLOG_DEBUG("Initialize Patapolis for the first time");
-                    CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.Initialise(thisConfig, v4Core, &CoreManager::getInstance().getCore()->mainMenu);
-                } else
-                {
-                    SPDLOG_DEBUG("Don't initialize Patapolis, just show it again");
-                }
-                */
-                
-                //rework pending
-                /* CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.location = 3;
-                CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.SetTitle(3);
-                CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.camPos = CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.locations[3];
-                CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.fade_alpha = 255;
-                CoreManager::getInstance().getCore()->mainMenu.patapolisMenu.updateStoryPoint(); ///update NPC dialogues
-                */
-
-                while (missionEndTimer.getElapsedTime().asMilliseconds() < 10000)
-                {
-                    ///halt loading for a second
-                }
-
-                CoreManager::getInstance().getCore()->loadingWaitForKeyPress();
-
-                CoreManager::getInstance().getCore()->continue_loading = false;
-
-                CoreManager::getInstance().getCore()->changeRichPresence("In Patapolis", "logo", "");
+                StateManager::getInstance().setState(StateManager::PATAPOLIS);
             }
         }
     }

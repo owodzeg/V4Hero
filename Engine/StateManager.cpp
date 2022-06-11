@@ -625,6 +625,33 @@ void StateManager::setState(int state)
         initStateMT(afterTipState);
     }
 
+    //go from missioncontroller to patapolis
+    if (currentGameState == MISSIONCONTROLLER && state == PATAPOLIS)
+    {
+        if (loadingTipPtr == nullptr)
+        {
+            loadingTipPtr = new LoadingTip;
+        } else
+        {
+            delete loadingTipPtr;
+            loadingTipPtr = new LoadingTip;
+        }
+
+        //clean mission controller components
+        if (missionControllerPtr != nullptr)
+        {
+            delete missionControllerPtr;
+            missionControllerPtr = nullptr;
+
+            ResourceManager::getInstance().unloadState(MISSIONCONTROLLER);
+        }
+
+        state = TIPS;
+        afterTipState = PATAPOLIS;
+
+        initStateMT(afterTipState);
+    }
+
     //go from tips to patapolis (mission load error)
     if (missionControllerPtr != nullptr)
     {
