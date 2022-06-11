@@ -44,6 +44,12 @@ LoadingTip::LoadingTip(int mode)
         string wtitle_key(title_key.begin(), title_key.end());
         string wdesc_key(desc_key.begin(), desc_key.end());
 
+        bg_key = "resources/graphics/ui/tips/" + tipsUtil->backgroundFileNames[tipBackground];
+        icon_key = "resources/graphics/ui/tips/" + tipsUtil->iconFileNames[tipIcon];
+
+        PSprite& s_bg = ResourceManager::getInstance().getSprite(bg_key);
+        PSprite& s_icon = ResourceManager::getInstance().getSprite(icon_key);
+
         f_font.loadFromFile(config->fontPath);
 
         sf::String str_tipText = Func::ConvertToUtf8String(strRepo->GetString(wdesc_key));
@@ -52,12 +58,6 @@ LoadingTip::LoadingTip(int mode)
         t_tipText.createText(f_font, 32, sf::Color(255, 255, 255, 255), str_tipText, config->GetInt("textureQuality"), 1);
         t_pressAnyKey.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(strRepo->GetString("tips_anykey")), config->GetInt("textureQuality"), 1);
         t_nowLoading.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(strRepo->GetString("tips_loading")), config->GetInt("textureQuality"), 1);
-
-        bg_key = "resources/graphics/ui/tips/" + tipsUtil->backgroundFileNames[tipBackground];
-        icon_key = "resources/graphics/ui/tips/" + tipsUtil->iconFileNames[tipIcon];
-
-        PSprite& s_bg = ResourceManager::getInstance().getSprite(bg_key);
-        PSprite& s_icon = ResourceManager::getInstance().getSprite(icon_key);
     } else if (tipMode == 1)
     {
         sf::RenderWindow* window = CoreManager::getInstance().getWindow();
