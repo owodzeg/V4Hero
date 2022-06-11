@@ -3780,11 +3780,13 @@ void MissionController::Update()
     SPDLOG_TRACE("Handle mission ending");
     DoMissionEnd();
 
+    inputCtrl->lockRhythm = false;
+
     SPDLOG_TRACE("Handle dialog boxes");
     if (dialog_boxes.size() > 0)
     {
-        // TO-DO: theres some old code referring to alternate input controller. still needed? replaced with current inputCtrl
-        // old_code: if (o_inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+        inputCtrl->lockRhythm = true;
+
         if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
         {
             switch (dialog_boxes[dialog_boxes.size() - 1].CheckSelectedOption())

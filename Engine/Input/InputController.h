@@ -41,6 +41,8 @@ public:
     bool keyRegistered = false; //checks if any key is pressed
     int currentKey = -1;        //reads what key has been pressed
 
+    bool lockRhythm = false;
+
     InputController();
 
     void LoadKeybinds();

@@ -39,6 +39,9 @@ bool RhythmController::checkForInput()
 {
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
 
+    if (inputCtrl->lockRhythm)
+        return false;
+
     ///Flush the buffers
     vector<int> s_rm;
 
