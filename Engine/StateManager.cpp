@@ -308,6 +308,9 @@ void StateManager::initState(int state)
 
             if (missionControllerPtr == nullptr)
             {
+                //Since MissionController is handled separately, tell CoreManager to reinitialize it
+                CoreManager::getInstance().reinitMissionController();
+
                 missionControllerPtr = CoreManager::getInstance().getMissionController();
 
                 if (CoreManager::getInstance().getCore()->mission_id >= 0)
@@ -640,9 +643,13 @@ void StateManager::setState(int state)
         //clean mission controller components
         if (missionControllerPtr != nullptr)
         {
-            delete missionControllerPtr;
+            //we handle deletion on CoreManager's side
+            CoreManager::getInstance().deleteMissionController();
+
+            //but we also have a local pointer which we should set to null, to mark that it doesnt exist anymore
             missionControllerPtr = nullptr;
 
+            //unload assets
             ResourceManager::getInstance().unloadState(MISSIONCONTROLLER);
         }
 

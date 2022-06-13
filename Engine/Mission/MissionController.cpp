@@ -2416,8 +2416,7 @@ void MissionController::DoMissionEnd()
                 ClearMissionMemory();
 
                 SPDLOG_INFO("Go to Patapolis");
-
-                StateManager::getInstance().setState(StateManager::PATAPOLIS);
+                returnToPatapolis = true;
             }
         }
     } else ///Failure
@@ -2481,8 +2480,7 @@ void MissionController::DoMissionEnd()
                 ClearMissionMemory();
 
                 SPDLOG_INFO("Go to Patapolis");
-
-                StateManager::getInstance().setState(StateManager::PATAPOLIS);
+                returnToPatapolis = true;
             }
         }
     }
@@ -3816,6 +3814,11 @@ void MissionController::Update()
     DoVectorCleanup(units_rm, dmg_rm, tlo_rm, pr_rm);
 
     SPDLOG_TRACE("Finished drawing the frame.");
+
+    if (returnToPatapolis)
+    {
+        StateManager::getInstance().setState(StateManager::PATAPOLIS);
+    }
 }
 void MissionController::FinishLastCutscene()
 {

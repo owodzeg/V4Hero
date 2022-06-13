@@ -19,6 +19,8 @@ public:
     InputController* getInputController();
     TipsUtil* getTipsUtil();
     MissionController* getMissionController();
+    void reinitMissionController();
+    void deleteMissionController();
     sf::RenderWindow* getWindow();
 
 private:

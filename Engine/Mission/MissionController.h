@@ -229,6 +229,8 @@ public:
 
     bool verboseLogs = false;
 
+    bool returnToPatapolis = false;
+
     /** Resolve enums **/
     int layerStr2Enum(string layer);
 
