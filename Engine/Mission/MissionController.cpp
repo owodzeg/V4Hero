@@ -1015,18 +1015,6 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
 }
 void MissionController::StartMission(std::string missionFile, bool showCutscene, int missionID, float mission_multiplier)
 {
-    PSprite ps_temp;
-    ps_temp.loadFromFile("resources/graphics/item/icon/spear.png", 1);
-    ps_temp.setRepeated(false);
-    ps_temp.setTextureRect(sf::IntRect(0, 0, ps_temp.t.getSize().x, ps_temp.t.getSize().y)); ///affect later with ratio
-    ps_temp.setOrigin(ps_temp.t.getSize().x, 0);
-    ps_temp.setColor(sf::Color(255, 255, 255, 255));
-    ps_temp.setPosition(0, 0);
-
-    s_proj = ps_temp;
-    s_proj.scaleX = 0.15f;
-    s_proj.scaleY = 0.15f;
-
     int q = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
     qualitySetting = q;
     resSetting = 1;
