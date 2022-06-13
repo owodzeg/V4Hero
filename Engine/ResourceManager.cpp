@@ -33,6 +33,7 @@ int ResourceManager::getCurrentQuality()
 
 void ResourceManager::loadSprite(std::string path)
 {
+    std::lock_guard<std::mutex> guard(resource_mutex);
     loadedSprites[path].loadFromFile(path, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
     loadedSources[path] = StateManager::getInstance().getState();
 
@@ -45,6 +46,7 @@ void ResourceManager::loadSprite(std::string path)
 //this function works only when specifically called. use case: load up memory images
 void ResourceManager::loadImageAsSprite(std::string path, sf::Image image)
 {
+    std::lock_guard<std::mutex> guard(resource_mutex);
     TextureManager::getInstance().loadImageFromMemory(path, image, true);
     loadedSprites[path].loadFromFile(path, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
     loadedSources[path] = StateManager::getInstance().getState();
