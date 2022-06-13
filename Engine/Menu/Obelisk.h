@@ -4,6 +4,7 @@
 #include "../Dialog/ControlTips.h"
 #include "../Graphics/Menu.h"
 #include "../Graphics/PText.h"
+#include "../Graphics/SpriteWrapper.h"
 #include <SFML/Graphics.hpp>
 #include <nlohmann/json.hpp>
 
@@ -27,7 +28,7 @@ public:
     PSprite dullpon;
 
     ///boxes
-    PSprite mainbox, descbox, iconbox, missionbox;
+    SpriteWrapper mainbox, descbox, iconbox, missionbox;
     PSprite missionselect;
 
     ///text

@@ -16,7 +16,91 @@ using json = nlohmann::json;
 
 ObeliskMenu::ObeliskMenu()
 {
-    is_active = false;
+    SPDLOG_INFO("Initializing Obelisk...");
+
+    font.loadFromFile(CoreManager::getInstance().getConfig()->fontPath);
+
+    quality = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
+
+    float ratioX, ratioY;
+
+    switch (quality)
+    {
+        case 0: ///low
+        {
+            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(640);
+            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(360);
+            break;
+        }
+
+        case 1: ///med
+        {
+            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
+            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
+            break;
+        }
+
+        case 2: ///high
+        {
+            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1920);
+            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(1080);
+            break;
+        }
+
+        case 3: ///ultra
+        {
+            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(3840);
+            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(2160);
+            break;
+        }
+    }
+
+    PSprite i_hunt;
+    i_hunt.loadFromFile("resources/graphics/ui/worldmap/hunting_icon.png", quality, 1);
+    PSprite i_fortress;
+    i_fortress.loadFromFile("resources/graphics/ui/worldmap/fortress_icon.png", quality, 1);
+
+    mission_icons.push_back(i_hunt);
+    mission_icons.push_back(i_fortress);
+
+    dullpon.loadFromFile("resources/graphics/ui/worldmap/dullpon.png", quality, 1);
+
+    ///boxes
+    mainbox.load("resources/graphics/ui/worldmap/main_box.png");
+    mainbox.setOrigin(sf::Vector2f(mainbox.getLocalBounds().width / 2, mainbox.getLocalBounds().height / 2));
+    mainbox.setPosition(sf::Vector2f(640, 320));
+    descbox.load("resources/graphics/ui/worldmap/description_box.png");
+    descbox.setOrigin(sf::Vector2f(descbox.getLocalBounds().width / 2, descbox.getLocalBounds().height / 2));
+    descbox.setPosition(sf::Vector2f(820, 542));
+    iconbox.load("resources/graphics/ui/worldmap/icon_box.png");
+    missionbox.load("resources/graphics/ui/worldmap/mission_box.png");
+    missionbox.setOrigin(sf::Vector2f(missionbox.getLocalBounds().width / 2, missionbox.getLocalBounds().height / 2));
+    missionbox.setPosition(sf::Vector2f(290, 542));
+
+
+    missionselect.loadFromFile("resources/graphics/ui/worldmap/mission_select.png", quality, 1);
+
+    worldmap_title.createText(font, 34, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("worldmap_header_1")), quality, 1);
+    location_title.createText(font, 27, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("worldmap_location_1_title")), quality, 1);
+    string desc = Func::wrap_text(CoreManager::getInstance().getStrRepo()->GetString("worldmap_location_1_description"), 800, font, 18);
+
+    location_desc.createText(font, 19, sf::Color::Black, Func::ConvertToUtf8String(desc), quality, 1);
+    select_quest.createText(font, 18, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("worldmap_select")), quality, 1);
+    mission_title.createText(font, 18, sf::Color::Black, "Hunting Kacheek", quality, 1);
+    mission_desc.createText(font, 18, sf::Color::Black, "(no translation needed)", quality, 1);
+
+    unavailable.loadFromFile("resources/graphics/ui/worldmap/unavailable.png", quality, 1);
+    location_highlight.loadFromFile("resources/graphics/ui/worldmap/location_highlight.png", quality, 1);
+    location_highlight.setOrigin(location_highlight.getLocalBounds().width / 2, location_highlight.getLocalBounds().height / 2);
+
+    mission_select.loadFromFile("resources/graphics/ui/worldmap/mission_select.png", quality, 1);
+
+    ctrlTips.create(66, font, 20, sf::String("Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
+
+    float resRatioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
+    float resRatioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
+
+    SPDLOG_INFO("Initializing Obelisk finished.");
 }
 
 void ObeliskMenu::addMission(json missiondata)
@@ -84,89 +168,7 @@ void ObeliskMenu::addMission(json missiondata)
 
 void ObeliskMenu::Initialise()
 {
-    SPDLOG_INFO("Initializing Obelisk...");
-
-    font.loadFromFile(CoreManager::getInstance().getConfig()->fontPath);
-
-    quality = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
-
-    float ratioX, ratioY;
-
-    switch (quality)
-    {
-        case 0: ///low
-        {
-            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(640);
-            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(360);
-            break;
-        }
-
-        case 1: ///med
-        {
-            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
-            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
-            break;
-        }
-
-        case 2: ///high
-        {
-            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1920);
-            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(1080);
-            break;
-        }
-
-        case 3: ///ultra
-        {
-            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(3840);
-            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(2160);
-            break;
-        }
-    }
-
-    PSprite i_hunt;
-    i_hunt.loadFromFile("resources/graphics/ui/worldmap/hunting_icon.png", quality, 1);
-    PSprite i_fortress;
-    i_fortress.loadFromFile("resources/graphics/ui/worldmap/fortress_icon.png", quality, 1);
-
-    mission_icons.push_back(i_hunt);
-    mission_icons.push_back(i_fortress);
-
-    dullpon.loadFromFile("resources/graphics/ui/worldmap/dullpon.png", quality, 1);
-
-    ///boxes
-    mainbox.loadFromFile("resources/graphics/ui/worldmap/main_box.png", quality, 1);
-    mainbox.setOrigin(mainbox.getLocalBounds().width / 2, mainbox.getLocalBounds().height / 2);
-    mainbox.setPosition(640, 320);
-    descbox.loadFromFile("resources/graphics/ui/worldmap/description_box.png", quality, 1);
-    descbox.setOrigin(descbox.getLocalBounds().width / 2, descbox.getLocalBounds().height / 2);
-    descbox.setPosition(820, 542);
-    iconbox.loadFromFile("resources/graphics/ui/worldmap/icon_box.png", quality, 1);
-    missionbox.loadFromFile("resources/graphics/ui/worldmap/mission_box.png", quality, 1);
-    missionbox.setOrigin(missionbox.getLocalBounds().width / 2, missionbox.getLocalBounds().height / 2);
-    missionbox.setPosition(290, 542);
-    missionselect.loadFromFile("resources/graphics/ui/worldmap/mission_select.png", quality, 1);
-
-    worldmap_title.createText(font, 34, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("worldmap_header_1")), quality, 1);
-    location_title.createText(font, 27, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("worldmap_location_1_title")), quality, 1);
-    string desc = Func::wrap_text(CoreManager::getInstance().getStrRepo()->GetString("worldmap_location_1_description"), 800, font, 18);
-
-    location_desc.createText(font, 19, sf::Color::Black, Func::ConvertToUtf8String(desc), quality, 1);
-    select_quest.createText(font, 18, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("worldmap_select")), quality, 1);
-    mission_title.createText(font, 18, sf::Color::Black, "Hunting Kacheek", quality, 1);
-    mission_desc.createText(font, 18, sf::Color::Black, "(no translation needed)", quality, 1);
-
-    unavailable.loadFromFile("resources/graphics/ui/worldmap/unavailable.png", quality, 1);
-    location_highlight.loadFromFile("resources/graphics/ui/worldmap/location_highlight.png", quality, 1);
-    location_highlight.setOrigin(location_highlight.getLocalBounds().width / 2, location_highlight.getLocalBounds().height / 2);
-
-    mission_select.loadFromFile("resources/graphics/ui/worldmap/mission_select.png", quality, 1);
-
-    ctrlTips.create(66, font, 20, sf::String("Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
-
-    float resRatioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
-    float resRatioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
-
-    SPDLOG_INFO("Initializing Obelisk finished.");
+    
 }
 
 void ObeliskMenu::Reload()
@@ -278,24 +280,24 @@ void ObeliskMenu::Update()
             mainbox_destY = 230;
         }
 
-        if (round(mainbox.lx) != mainbox_destX)
+        if (round(mainbox.getPosition().x) != mainbox_destX)
         {
-            float speed = abs(mainbox.lx - mainbox_destX) * 10;
+            float speed = abs(mainbox.getPosition().x - mainbox_destX) * 10;
 
-            if (mainbox.lx > mainbox_destX)
-                mainbox.lx -= speed / fps;
+            if (mainbox.getPosition().x > mainbox_destX)
+                mainbox.setPosition(sf::Vector2f(mainbox.getPosition().x - (speed / fps), mainbox.getPosition().y));
             else
-                mainbox.lx += speed / fps;
+                mainbox.setPosition(sf::Vector2f(mainbox.getPosition().x + (speed / fps), mainbox.getPosition().y));
         }
 
-        if (round(mainbox.ly) != mainbox_destY)
+        if (round(mainbox.getPosition().y) != mainbox_destY)
         {
-            float speed = abs(mainbox.ly - mainbox_destY) * 10;
+            float speed = abs(mainbox.getPosition().y - mainbox_destY) * 10;
 
-            if (mainbox.ly > mainbox_destY)
-                mainbox.ly -= speed / fps;
+            if (mainbox.getPosition().y > mainbox_destY)
+                mainbox.setPosition(sf::Vector2f(mainbox.getPosition().x, mainbox.getPosition().y - (speed / fps)));
             else
-                mainbox.ly += speed / fps;
+                mainbox.setPosition(sf::Vector2f(mainbox.getPosition().x, mainbox.getPosition().y + (speed / fps)));
         }
 
         if (round(alphaA) != location_bg_a_destAlpha)
@@ -329,7 +331,7 @@ void ObeliskMenu::Update()
             location_bgs[renderCur].draw(window);
         }
 
-        mainbox.draw(window);
+        mainbox.draw();
 
         worldmap_title.setOrigin(worldmap_title.getLocalBounds().width / 2, worldmap_title.getLocalBounds().height / 2);
         worldmap_title.setPosition(mainbox.getPosition().x - 303, mainbox.getPosition().y - 174);
@@ -394,8 +396,8 @@ void ObeliskMenu::Update()
 
         if (displayMissions)
         {
-            missionbox.draw(window);
-            descbox.draw(window);
+            missionbox.draw();
+            descbox.draw();
 
             select_quest.setOrigin(0, select_quest.getLocalBounds().height / 2);
             select_quest.setPosition(missionbox.getPosition().x - 141, missionbox.getPosition().y - 74);
