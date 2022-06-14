@@ -10,15 +10,20 @@ class SpriteWrapper
     std::string spritePath;
     sf::Vector2f position, origin, scale;
     sf::FloatRect l_bounds, g_bounds;
+    sf::Color color;
 
     SpriteWrapper();
     void load(std::string path);
     void setPosition(sf::Vector2f pos);
+    void setPosition(float x, float y);
     sf::Vector2f getPosition();
     void setOrigin(sf::Vector2f ori);
+    void setOrigin(float x, float y);
     void setScale(sf::Vector2f sc);
+    void setScale(float x, float y);
     sf::FloatRect getLocalBounds();
     sf::FloatRect getGlobalBounds();
+    void setColor(sf::Color c);
     void draw();
 };
 
