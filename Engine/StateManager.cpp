@@ -555,6 +555,7 @@ void StateManager::setState(int state)
         if (obeliskPtr != nullptr)
         {
             obeliskPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
+            obeliskPtr->Reload();
         }
     }
 
