@@ -19,17 +19,17 @@ public:
     ControlTips ctrlTips;
 
     ///worldmap contents
-    std::vector<PSprite> location_bgs;
-    std::vector<PSprite> location_icons;
-    std::vector<PSprite> mission_icons;
-    std::vector<PSprite> worldmap_icons;
-    std::vector<PSprite> worldmap_fields;
-    PSprite location_bg_a, location_bg_b;
-    PSprite dullpon;
+    std::vector<SpriteWrapper> location_bgs;
+    std::vector<SpriteWrapper> location_icons;
+    std::vector<SpriteWrapper> mission_icons;
+    std::vector<SpriteWrapper> worldmap_icons;
+    std::vector<SpriteWrapper> worldmap_fields;
+    SpriteWrapper location_bg_a, location_bg_b;
+    SpriteWrapper dullpon;
 
     ///boxes
     SpriteWrapper mainbox, descbox, iconbox, missionbox;
-    PSprite missionselect;
+    SpriteWrapper missionselect;
 
     ///text
     PText worldmap_title;
@@ -49,9 +49,9 @@ public:
     bool displayMissions = false;
     bool runonce = false;
 
-    PSprite unavailable;
-    PSprite location_highlight;
-    PSprite mission_select;
+    SpriteWrapper unavailable;
+    SpriteWrapper location_highlight;
+    SpriteWrapper mission_select;
 
     int sel_prevlocation = 1;
     int sel_location = 1;
@@ -85,16 +85,9 @@ public:
     bool initialized = false;
     int goto_id = -1;
 
-    PatapolisMenu* parentMenu;
-
     void addMission(nlohmann::json missiondata);
-    void Initialise();
     void Reload();
-    void Update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
     void Update();
-    void EventFired(sf::Event event);
-    void OnExit();
-    void UpdateButtons();
     ObeliskMenu();
     ~ObeliskMenu();
 };
