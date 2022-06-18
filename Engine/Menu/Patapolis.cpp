@@ -223,14 +223,13 @@ PatapolisMenu::PatapolisMenu()
     addSparkle(11620 + 937, 401);
     addSparkle(11620 + 860, 244);
 
-    //TO-DO: something doesn't work here. get Patapolis to load up first, then figure out what's wrong
-    /* a_wakapon.LoadConfig(config, "resources/units/unit/wakapon.p4a");
+    a_wakapon.LoadConfig("resources/units/unit/wakapon.p4a");
     a_wakapon.setAnimationSegment("idle");
     a_wakapon.global_y = 395;
 
-    a_sen.LoadConfig(config, "resources/units/unit/ranpurupon.p4a");
+    a_sen.LoadConfig("resources/units/unit/ranpurupon.p4a");
     a_sen.setAnimationSegment("idle");
-    a_sen.global_y = 629; */
+    a_sen.global_y = 629;
 
     ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/egg.png");
     ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/light.png");
@@ -1378,16 +1377,13 @@ void PatapolisMenu::Update()
         bridge.setPosition(floor_x + 11200, 720);
         bridge.draw(window);
 
-        //TO-DO: AnimatedObject waits for a refactor, so im commenting it out for now
-        /*
         /// Wakapon
         a_wakapon.fps = fps;
-        a_wakapon.Draw(window);
+        a_wakapon.Draw();
 
         /// Sen
         a_sen.fps = fps;
-        a_sen.Draw(window);
-        */
+        a_sen.Draw();
 
         PSprite& world_egg = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/egg.png");
         world_egg.setPosition(12215, 462);
@@ -1646,11 +1642,6 @@ void PatapolisMenu::Update()
                             screenFade.Create(ScreenFade::FADEOUT, 1024);
                             goto_id = 0;
 
-                            /*SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       Show();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       is_active = true;
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       obelisk = false;
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       ReloadInventory();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       UpdateInputControls();*/
                             break;
                         case Buildings::FESTIVAL:
                             /// festival
