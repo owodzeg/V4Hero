@@ -638,8 +638,7 @@ void Barracks::Update()
         {
             units[i].get()->setGlobalPosition(sf::Vector2f(500 + (75 * (i)), patapon_y));
             units[i].get()->fps = fps;
-            //TO-DO: animated objects doesn't work yet. implement new system
-            //units[i].get()->Draw(window);
+            units[i].get()->Draw();
         }
 
         s_pon_highlight.setPosition(highlight_width * 2, 675);
@@ -815,8 +814,7 @@ void Barracks::Update()
 
         ctrlTips.x = 0;
         ctrlTips.y = (720 - ctrlTips.ySize);
-        //TO-DO: this doesn't work. check why
-        //ctrlTips.draw(window);
+        ctrlTips.draw();
 
         if (menu_mode)
         {
