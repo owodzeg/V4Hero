@@ -32,16 +32,18 @@ void AnimatedObject::loadAnim(std::string data, P4A handle)
 
     bool cache_loaded = false;
 
-    if (CoreManager::getInstance().getCore()->isCached[entityID])
-    {
+    //TO-DO: since we are using new resourcemanager cache, it should replace the entity caching
+    // 
+    //if (CoreManager::getInstance().getCore()->isCached[entityID])
+    //{
         ///Load cache here
-        all_swaps_img = CoreManager::getInstance().getCore()->animation_cache[entityID]->swaps;
-        animation_spritesheet = CoreManager::getInstance().getCore()->animation_cache[entityID]->spritesheet;
+        //all_swaps_img = CoreManager::getInstance().getCore()->animation_cache[entityID]->swaps;
+        //animation_spritesheet = CoreManager::getInstance().getCore()->animation_cache[entityID]->spritesheet;
         //objects = CoreManager::getInstance().getCore()->currentController.animation_cache[entityID]->objects;
 
-        cache_loaded = true;
+        //cache_loaded = true;
         //cout << "[AnimatedObject] Cache loaded" << endl;
-    }
+    //}
 
     bool legit = false;
     string version = "";

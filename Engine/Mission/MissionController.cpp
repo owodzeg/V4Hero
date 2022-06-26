@@ -352,7 +352,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!CoreManager::getInstance().getCore()->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
                     //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
@@ -375,7 +375,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!CoreManager::getInstance().getCore()->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
                     //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
@@ -398,7 +398,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!CoreManager::getInstance().getCore()->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
                     //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
@@ -421,7 +421,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!CoreManager::getInstance().getCore()->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
                     //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
@@ -444,7 +444,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!CoreManager::getInstance().getCore()->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
                     //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
@@ -463,7 +463,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
                 entity.get()->LoadConfig();
 
-                if (!CoreManager::getInstance().getCore()->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
                     //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
@@ -494,7 +494,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!CoreManager::getInstance().getCore()->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
                     //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
@@ -517,7 +517,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!CoreManager::getInstance().getCore()->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
                     //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
@@ -540,7 +540,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!CoreManager::getInstance().getCore()->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
                     //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
@@ -563,7 +563,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!CoreManager::getInstance().getCore()->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
                     //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
@@ -586,7 +586,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!CoreManager::getInstance().getCore()->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
                     //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
@@ -609,7 +609,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!CoreManager::getInstance().getCore()->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
                     //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
@@ -632,7 +632,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!CoreManager::getInstance().getCore()->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
                     //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
@@ -655,7 +655,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!CoreManager::getInstance().getCore()->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
                     //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
@@ -678,7 +678,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!CoreManager::getInstance().getCore()->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
                     //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
@@ -701,7 +701,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!CoreManager::getInstance().getCore()->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
                     //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
@@ -724,7 +724,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!CoreManager::getInstance().getCore()->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
                     //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }

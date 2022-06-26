@@ -48,10 +48,11 @@ Barracks::Barracks()
                 SPDLOG_DEBUG("Loading Pon");
                 wip_pon.get()->LoadConfig();
 
-                if (!CoreManager::getInstance().getCore()->isCached[wip_pon.get()->entityID])
-                {
+                //TO-DO: is caching needed anymore?
+                // if (!CoreManager::getInstance().getCore()->isCached[wip_pon.get()->entityID])
+                //{
                     //CoreManager::getInstance().getCore()->cacheEntity(wip_pon.get()->entityID, wip_pon.get()->all_swaps_img, wip_pon.get()->animation_spritesheet, wip_pon.get()->objects);
-                }
+                //}
 
                 wip_pon.get()->setAnimationSegment("idle_armed");
 
