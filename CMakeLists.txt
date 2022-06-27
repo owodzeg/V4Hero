@@ -7,8 +7,8 @@ set(CMAKE_CXX_STANDARD 20)
 add_definitions(-DPATAFOUR_VERSION="${CMAKE_PROJECT_VERSION}")
 
 set(SFML_STATIC_LIBRARIES TRUE)
-find_package(SFML 2.5.1 COMPONENTS graphics audio REQUIRED)
 find_package(DiscordSDK 2.5.6 COMPONENTS x86_64 REQUIRED)
+find_package(SFML 2.5.1 COMPONENTS graphics audio REQUIRED)
 
 include(FetchContent)
 
@@ -113,7 +113,21 @@ set(ENGINE_FILES
         Engine/Mission/Units/Units/Yaripon.cpp
         Engine/Mission/Units/Projectiles/Spear.cpp
         Engine/Mission/Mission.cpp
-        Engine/Utils.h)
+        Engine/Utils.h
+        DiscordSDK/achievement_manager.cpp
+        DiscordSDK/activity_manager.cpp
+        DiscordSDK/application_manager.cpp
+        DiscordSDK/core.cpp
+        DiscordSDK/image_manager.cpp
+        DiscordSDK/lobby_manager.cpp
+        DiscordSDK/network_manager.cpp
+        DiscordSDK/overlay_manager.cpp
+        DiscordSDK/relationship_manager.cpp
+        DiscordSDK/storage_manager.cpp
+        DiscordSDK/store_manager.cpp
+        DiscordSDK/types.cpp
+        DiscordSDK/user_manager.cpp
+        DiscordSDK/voice_manager.cpp)
 
 add_executable(V4Hero ${ENGINE_FILES} main.cpp)
 
