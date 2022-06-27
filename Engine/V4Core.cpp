@@ -4,6 +4,7 @@
 #include "CoreManager.h"
 #include "StateManager.h"
 #include <chrono>
+#include <discord.h>
 
 V4Core::V4Core()
 {
@@ -15,25 +16,22 @@ V4Core::V4Core()
     SPDLOG_DEBUG("Max antialiasing level: {}", rtx.getMaximumAntialiasingLevel());
 
     // TO-DO: Discord support is disabled for now
-    /*auto result = discord::Core::Create(712761245752623226, DiscordCreateFlags_NoRequireDiscord, &core);
-    state.core.reset(core);
-    if (!state.core) {
-        std::cout << "Failed to instantiate discord core! (err " << static_cast<int>(result)
-                  << ")\n";
-    }*/
+    auto result = discord::Core::Create(712761245752623226, DiscordCreateFlags_NoRequireDiscord, &core);
 
-    /*if(state.core)
+    if (!core) 
+    {
+        SPDLOG_ERROR("Failed to initialize Discord Rich Presence (err code: {})", static_cast<int>(result));
+    } else
     {
         discord::Activity activity{};
         activity.SetDetails(rpc_details.c_str());
         activity.SetState("In Main menu");
         activity.GetAssets().SetLargeImage("logo");
         activity.SetType(discord::ActivityType::Playing);
-        state.core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
-            std::cout << ((result == discord::Result::Ok) ? "Succeeded" : "Failed")
-                      << " updating activity!\n";
+        core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
+            SPDLOG_INFO("Discord Rich Presence has {} updating activity", ((result == discord::Result::Ok) ? "Succeeded" : "Failed"));
         });
-    }*/
+    }
 
     /** Load config from config.cfg **/
     Config* config = CoreManager::getInstance().getConfig();
@@ -67,7 +65,7 @@ V4Core::V4Core()
 
 void V4Core::changeRichPresence(std::string title, std::string bg_image, std::string sm_image)
 {
-    /*if(state.core)
+    if(core)
     {
         if(rpc_current != title)
         {
@@ -79,12 +77,11 @@ void V4Core::changeRichPresence(std::string title, std::string bg_image, std::st
             activity.GetAssets().SetLargeImage(bg_image.c_str());
             activity.GetAssets().SetSmallImage(sm_image.c_str());
             activity.SetType(discord::ActivityType::Playing);
-            state.core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
-                std::cout << ((result == discord::Result::Ok) ? "Succeeded" : "Failed")
-                          << " updating activity\n";
+            core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
+                SPDLOG_INFO("Discord Rich Presence has {} updating activity", ((result == discord::Result::Ok) ? "Succeeded" : "Failed"));
             });
         }
-    }*/
+    }
 }
 
 float V4Core::getFPS()
@@ -253,8 +250,8 @@ void V4Core::init()
         }
 
         // Discord rich presence callbacks
-        //if(state.core)
-        //state.core->RunCallbacks();
+        if(core)
+        core->RunCallbacks();
     }
 
     SPDLOG_INFO("Main game loop exited. Shutting down...");

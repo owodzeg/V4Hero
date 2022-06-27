@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <random>
+#include <discord.h>
 
 class V4Core
 {
@@ -30,14 +31,7 @@ public:
     std::string rpc_details;
     std::string rpc_current;
 
-    /*struct DiscordState {
-            discord::User currentUser;
-
-            std::unique_ptr<discord::Core> core;
-        };*/
-
-    //DiscordState state{};
-    //discord::Core* core{};
+    discord::Core* core{};
 
     V4Core();
     void changeRichPresence(std::string title, std::string bg_image, std::string sm_image);
