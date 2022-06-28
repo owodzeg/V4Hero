@@ -52,7 +52,6 @@ set(ENGINE_FILES
         Engine/Menu/MaterOuter.cpp
         Engine/Menu/LoadingTip.cpp
         Engine/Graphics/PSpritesheet.cpp
-        Engine/Graphics/Scene.cpp
         Engine/Graphics/PSprite.cpp
         Engine/Graphics/SpriteWrapper.cpp
         Engine/Graphics/Menu.cpp
