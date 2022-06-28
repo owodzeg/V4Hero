@@ -370,6 +370,8 @@ void StateManager::setState(int state)
         {
             mainMenuPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
         }
+
+        CoreManager::getInstance().getCore()->changeRichPresence("In Main menu", "logo", "");
     }
 
     //go from main to options
@@ -381,6 +383,8 @@ void StateManager::setState(int state)
             optionsMenuPtr->sel = 0;
             optionsMenuPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
         }
+
+        CoreManager::getInstance().getCore()->changeRichPresence("In Options menu", "logo", "");
     }
 
     //go from main to introduction
@@ -407,6 +411,8 @@ void StateManager::setState(int state)
                 ResourceManager::getInstance().unloadState(OPTIONSMENU);
             }
         }
+
+        CoreManager::getInstance().getCore()->changeRichPresence("Begins a new adventure", "logo", "");
     }
 
     //go from introduction to kami's return mission
@@ -479,6 +485,8 @@ void StateManager::setState(int state)
         afterTipState = PATAPOLIS;
 
         initStateMT(afterTipState);
+
+        CoreManager::getInstance().getCore()->changeRichPresence("In Ancient Patapolis", "logo", "");
     }
 
     // go from patapolis to main menu
@@ -517,6 +525,8 @@ void StateManager::setState(int state)
         afterTipState = MAINMENU;
 
         initStateMT(afterTipState);
+
+        CoreManager::getInstance().getCore()->changeRichPresence("In Main menu", "logo", "");
     }
 
     // go from patapolis to altar
@@ -537,6 +547,8 @@ void StateManager::setState(int state)
             barracksPtr->obelisk = false;
             barracksPtr->refreshStats();
             barracksPtr->updateInputControls();
+
+            CoreManager::getInstance().getCore()->changeRichPresence("In Barracks", "logo", "");
         }
     }
 
@@ -546,6 +558,8 @@ void StateManager::setState(int state)
         if (patapolisPtr != nullptr)
         {
             patapolisPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
+
+            CoreManager::getInstance().getCore()->changeRichPresence("In Ancient Patapolis", "logo", "");
         }
     }
 
@@ -556,6 +570,8 @@ void StateManager::setState(int state)
         {
             obeliskPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
             obeliskPtr->Reload();
+
+            CoreManager::getInstance().getCore()->changeRichPresence("In Obelisk", "logo", "");
         }
     }
 
@@ -565,6 +581,8 @@ void StateManager::setState(int state)
         if (patapolisPtr != nullptr)
         {
             patapolisPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
+
+            CoreManager::getInstance().getCore()->changeRichPresence("In Ancient Patapolis", "logo", "");
         }
     }
 
@@ -579,6 +597,8 @@ void StateManager::setState(int state)
             barracksPtr->mission_file = obeliskPtr->missions[obeliskPtr->sel_mission].mission_file;
             barracksPtr->refreshStats();
             barracksPtr->updateInputControls();
+
+            CoreManager::getInstance().getCore()->changeRichPresence("In Barracks", "logo", "");
         }
     }
 
@@ -588,6 +608,8 @@ void StateManager::setState(int state)
         if (obeliskPtr != nullptr)
         {
             obeliskPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
+
+            CoreManager::getInstance().getCore()->changeRichPresence("In Obelisk", "logo", "");
         }
     }
 
@@ -658,6 +680,8 @@ void StateManager::setState(int state)
         afterTipState = PATAPOLIS;
 
         initStateMT(afterTipState);
+
+        CoreManager::getInstance().getCore()->changeRichPresence("In Ancient Patapolis", "logo", "");
     }
 
     //go from tips to patapolis (mission load error)
@@ -680,6 +704,8 @@ void StateManager::setState(int state)
                 afterTipState = PATAPOLIS;
 
                 initStateMT(afterTipState);
+
+                CoreManager::getInstance().getCore()->changeRichPresence("In Ancient Patapolis", "logo", "");
             }
         }
     }

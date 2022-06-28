@@ -1694,13 +1694,12 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     /*
     addUnitThumb(1);
 
+	SPDLOG_DEBUG("Mission loading finished."); */
+
     SPDLOG_DEBUG("Set rich presence to {}", missionImg);
 
     string fm = "Playing mission: " + missionName;
     CoreManager::getInstance().getCore()->changeRichPresence(fm.c_str(), missionImg.c_str(), "logo");
-
-	SPDLOG_DEBUG("Mission loading finished."); */
-
     
     SPDLOG_INFO("Loading background {}", bgName);
     mission_bg.Load(bgName);
