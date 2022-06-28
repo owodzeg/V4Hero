@@ -412,7 +412,7 @@ void StateManager::setState(int state)
             }
         }
 
-        CoreManager::getInstance().getCore()->changeRichPresence("Begins a new adventure", "logo", "");
+        CoreManager::getInstance().getCore()->changeRichPresence("A new adventure begins!", "logo", "");
     }
 
     //go from introduction to kami's return mission
