@@ -394,7 +394,6 @@ void MaterOuterMenu::update(sf::RenderWindow& window, float fps, InputController
         }
         if (inputCtrl.isKeyPressed(InputController::Keys::CIRCLE))
         {
-            this->Hide();
             this->is_active = false;
         }
     }

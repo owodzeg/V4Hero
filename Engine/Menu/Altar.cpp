@@ -1,10 +1,6 @@
 #define SDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "Altar.h"
-#include "../V4Core.h"
-#include "ButtonList.h"
-#include "iostream"
-#include "math.h"
 #include <spdlog/spdlog.h>
 #include "../CoreManager.h"
 #include "../StateManager.h"
@@ -70,14 +66,6 @@ AltarMenu::AltarMenu()
     SPDLOG_INFO("Initializing Altar finished.");
 }
 
-void AltarMenu::showCategory()
-{
-}
-
-void AltarMenu::showAltar()
-{
-}
-
 void AltarMenu::updateAltarDescriptions()
 {
     StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
@@ -94,14 +82,6 @@ void AltarMenu::updateAltarDescriptions()
         altar_item_title.setString("");
         altar_item_category.setString("");
         altar_item_desc.setString("");
-    }
-}
-
-void AltarMenu::eventFired(sf::Event event)
-{
-    if (event.type == sf::Event::KeyPressed)
-    {
-        // do something here;
     }
 }
 
@@ -439,14 +419,6 @@ void AltarMenu::Update()
             StateManager::getInstance().setState(StateManager::PATAPOLIS);
         }
     }
-}
-
-void AltarMenu::updateButtons()
-{
-}
-
-void AltarMenu::onExit()
-{
 }
 
 AltarMenu::~AltarMenu()

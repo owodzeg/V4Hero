@@ -1400,7 +1400,7 @@ void OptionsMenu::Update()
 
             case 51: {
                 config->SaveConfig();
-                v4Core->close_window = true;
+                CoreManager::getInstance().getCore()->close_window = true;
 
                 ///Run the game process again
                 /**STARTUPINFO info = {sizeof(info)};
@@ -1766,10 +1766,6 @@ void OptionsMenu::Update()
 
 void OptionsMenu::Back()
 {
-    /// this should go back to the previous menu.
-    Hide();
-    //parentMenu->Show();
-    //v4Core->changeRichPresence("In Main menu", "logo", "");
     StateManager::getInstance().setState(StateManager::MAINMENU);
     OnExit();
 }

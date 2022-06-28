@@ -1,10 +1,10 @@
 #ifndef ALTAR_H
 #define ALTAR_H
-#include "../Config.h"
+
 #include "../Dialog/ControlTips.h"
 #include "../Dialog/RoundedRect.h"
-#include "../Graphics/Menu.h"
-#include "../Input/InputController.h"
+#include "../Graphics/PSprite.h"
+#include "../Item/Item.h"
 #include <SFML/Graphics.hpp>
 
 class AltarMenu
@@ -35,7 +35,7 @@ public:
         PSprite icon;
     };
 
-    vector<InvBox> inventory_boxes;
+    std::vector<InvBox> inventory_boxes;
     RoundedRect rr_title, rr_title_sh;
     RoundedRect rr_desc, rr_desc_sh;
 
@@ -51,13 +51,8 @@ public:
     bool initialized = false;
 
     void Update();
-    void eventFired(sf::Event event);
     void reloadInventory();
-    void showCategory();
-    void onExit();
-    void showAltar();
     void updateAltarDescriptions();
-    void updateButtons();
     AltarMenu();
     ~AltarMenu();
 };

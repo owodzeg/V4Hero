@@ -583,10 +583,11 @@ void PatapolisMenu::EventFired(sf::Event event)
     //{
     //    obelisk_menu.EventFired(event);
     //} else 
-    if (mater_menu.is_active)
-    {
-        mater_menu.EventFired(event);
-    } else if (is_active)
+    //if (mater_menu.is_active)
+    //{
+    //    mater_menu.EventFired(event);
+    //} else 
+    if (is_active)
     {
         if (event.type == sf::Event::KeyPressed)
         {
@@ -1555,9 +1556,6 @@ void PatapolisMenu::Update()
                     case 2: ///Exit barracks
                     {
                         city_loop.stop();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       Hide();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       is_active = false;
-                        Show();
                         is_active = true;
 
                         screenFade.Create(ScreenFade::FADEIN, 1024);
@@ -1579,10 +1577,7 @@ void PatapolisMenu::Update()
                     case 7: ///go to title screen
                     {
                         city_loop.stop();
-                        this->Hide();
                         this->is_active = false;
-                        //parentMenu->Show();
-                        //parentMenu->is_active = true;
 
                         screenFade.Create(ScreenFade::FADEIN, 1024);
                         StateManager::getInstance().setState(StateManager::MAINMENU);

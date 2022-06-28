@@ -924,8 +924,6 @@ void MainMenu::Update()
                         case 2: ///Options
                         {
                             title_loop.stop();
-                            Hide();
-
                             StateManager::getInstance().setState(StateManager::OPTIONSMENU);
                             break;
                         }
