@@ -4,20 +4,20 @@
 #include "CoreManager.h"
 #include "StateManager.h"
 #include <chrono>
-#include <discord.h>
 
 V4Core::V4Core()
 {
-    rpc_details = "Running Patafour " + hero_version;
-
+    /** Check possible graphical settings (for debugging purposes) **/
     const unsigned int maxSize = sf::Texture::getMaximumSize();
     SPDLOG_DEBUG("Max allowed texture size: {}", maxSize);
     sf::RenderTexture rtx;
     SPDLOG_DEBUG("Max antialiasing level: {}", rtx.getMaximumAntialiasingLevel());
 
-    // TO-DO: Discord support is disabled for now
+    /** Initialize Discord Rich Presence **/
     auto result = discord::Core::Create(712761245752623226, DiscordCreateFlags_NoRequireDiscord, &core);
+    rpc_details = "Running V4Hero Client " + hero_version;
 
+    /** Check if Discord RPC works and set a status **/
     if (!core) 
     {
         SPDLOG_ERROR("Failed to initialize Discord Rich Presence (err code: {})", static_cast<int>(result));
@@ -59,8 +59,6 @@ V4Core::V4Core()
 
     /** Load Resource Manager **/
     ResourceManager::getInstance().getQuality();
-
-    config->configDebugID = 10;
 }
 
 void V4Core::changeRichPresence(std::string title, std::string bg_image, std::string sm_image)
@@ -192,7 +190,7 @@ void V4Core::init()
             StateManager::getInstance().parseCurrentStateEvents(event);
         }
 
-        // Calculate framerate per second
+        // Calculate framerate per second (delta time)
         fps = float(1000000) / fpsclock.getElapsedTime().asMicroseconds();
         float rawFps = fps;
         frame_times.push_back(fps);
@@ -215,6 +213,7 @@ void V4Core::init()
 
         window->clear();
 
+        // Draw whatever state is currently in use
         StateManager::getInstance().updateCurrentState();
 
         // Reset view for static GUI

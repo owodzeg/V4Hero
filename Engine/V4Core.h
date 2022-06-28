@@ -5,37 +5,45 @@
 #include <random>
 #include <discord.h>
 
+// Main game class that handles the engine
 class V4Core
 {
 private:
+    // Static GUI always on screen
     sf::Font f_font;
     sf::Text t_version;
     sf::Text t_fps;
 
+    // Variables for delta time calc
     float fps = 60;
     sf::Clock fpsclock;
+    int framerate_limit = 60;
+    std::vector<float> frame_times;
 
-public:
+    // Fetch current version from CMakeLists.txt
     std::string hero_version = PATAFOUR_VERSION;
 
+    // Discord Rich Presence variables
+    std::string rpc_details;
+    std::string rpc_current;
+    discord::Core* core{};
+
+public:
+    // Randomization purposes
     std::mt19937::result_type seed;
     std::mt19937 gen;
 
+    // Mission variables
     std::string mission_file = "mis1_0.p4m";
     int mission_id = 0;
     float mission_multiplier = 1;
 
-    int framerate_limit = 60;
-    std::vector<float> frame_times;
+    // Misc
+    bool close_window = false;
 
-    std::string rpc_details;
-    std::string rpc_current;
-
-    discord::Core* core{};
-
+    // Functions
     V4Core();
     void changeRichPresence(std::string title, std::string bg_image, std::string sm_image);
-    bool close_window = false;
     float getFPS();
     void init();
 };
