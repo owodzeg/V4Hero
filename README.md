@@ -18,6 +18,7 @@ An official client for Patafour.
  * [CMake](https://cmake.org/download/) >= 3.19
  * [SFML](https://www.sfml-dev.org/download.php) >= 2.5
  * [Git](https://git-scm.com/downloads)
+ * [Discord Game SDK](https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip)
  
 ## Setup
 
@@ -35,7 +36,7 @@ You should enable [Developer Mode](https://docs.microsoft.com/en-us/windows/apps
 
 Create an environment variable called `SFML_ROOT` that points to a valid SFML root directory.
 
-After building, an error may appear in relation to a missing OpenAL32.dll. You can simply copy it from SFML/bin folder to V4Hero.exe directory.
+After building, an error may appear in relation to a missing OpenAL32.dll. You can simply copy it from SFML/bin folder to V4Hero.exe directory. The same thing applies to a missing discord_game_sdk.dll, which can be copied from the lib folder within Discord Game SDK package.
 
 Make sure that you select proper architecture when building. Downloading 32-bit SFML will only compile x86 builds and 64-bit SFML will only compile x64 builds.
 
