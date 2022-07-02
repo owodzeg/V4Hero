@@ -3,13 +3,12 @@
 #include "../Config.h"
 #include "../ResourceManager.h"
 #include "../Dialog/DialogBox.h"
+#include "../Dialog/MessageCloud.h"
 #include "../Graphics/Menu.h"
-#include "../Graphics/PSprite.h"
+#include "../Graphics/SpriteWrapper.h"
 #include "../Graphics/PText.h"
-#include "IntroductionMenu.h"
-#include "OptionsMenu.h"
-#include "Patapolis.h"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 class MainMenu : public Menu
 {
@@ -35,9 +34,10 @@ public:
 
     int totem_sel = 0;
     int old_sel = 0;
-    float fire = 0;
+    float fire_count = 0;
     bool UsingMouseSelection = true;
     float g_x[4], g_dest[4];
+    float g_y[4] = {630, 696, 724, 724};
 
     ///Pre-menu screen
     sf::RectangleShape rs_cover;
@@ -65,22 +65,25 @@ public:
     sf::Clock startClock;
     sf::Clock frClock;
     sf::Clock frwaitClock;
-    sf::Clock patapolisClock;
 
     bool mouseInBounds = false;
     bool initialized = false;
 
-    vector<int> totem_sel_pos = {205, 490, 780, 1080};
+    std::vector<int> totem_sel_pos = {205, 490, 780, 1080};
 
-    vector<PataDialogBox> dialogboxes;
+    std::vector<PataDialogBox> dialogboxes;
 
     MessageCloud msgcloud;
 
+    // new sprites
+    SpriteWrapper logow_bg, logow_text, logow_shadow;
+    SpriteWrapper grass[5], totem[5], fire[4], sword[3];
+    SpriteWrapper logo, logo_shadow;
+    SpriteWrapper aura;
+
     void Update();
     void EventFired(sf::Event event);
-    void OnExit();
     void SelectMenuOption();
-    void UpdateButtons();
     MainMenu();
     ~MainMenu();
 };

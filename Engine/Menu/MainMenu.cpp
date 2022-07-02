@@ -1,9 +1,6 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
 
 #include "MainMenu.h"
-#include "../V4Core.h"
-#include "ButtonList.h"
-#include "iostream"
 #include "../CoreManager.h"
 #include "../StateManager.h"
 
@@ -23,39 +20,6 @@ MainMenu::MainMenu()
 
     quality = q;
 
-    float ratioX, ratioY;
-
-    switch (q)
-    {
-        case 0: ///low
-        {
-            ratioX = config->GetInt("resX") / float(640);
-            ratioY = config->GetInt("resY") / float(360);
-            break;
-        }
-
-        case 1: ///med
-        {
-            ratioX = config->GetInt("resX") / float(1280);
-            ratioY = config->GetInt("resY") / float(720);
-            break;
-        }
-
-        case 2: ///high
-        {
-            ratioX = config->GetInt("resX") / float(1920);
-            ratioY = config->GetInt("resY") / float(1080);
-            break;
-        }
-
-        case 3: ///ultra
-        {
-            ratioX = config->GetInt("resX") / float(3840);
-            ratioY = config->GetInt("resY") / float(2160);
-            break;
-        }
-    }
-
     float resRatioX = config->GetInt("resX") / float(1280);
     float resRatioY = config->GetInt("resY") / float(720);
 
@@ -64,9 +28,9 @@ MainMenu::MainMenu()
     rs_cover2.setSize(sf::Vector2f(config->GetInt("resX"), config->GetInt("resY")));
     rs_cover2.setFillColor(sf::Color(0, 0, 0, 0));
 
-    PSprite& logow_bg = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowbg.png");
-    PSprite& logow_text = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowtxt.png");
-    PSprite& logow_shadow = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowsh.png");
+    logow_bg.load("resources/graphics/ui/menu/logowbg.png");
+    logow_text.load("resources/graphics/ui/menu/logowtxt.png");
+    logow_shadow.load("resources/graphics/ui/menu/logowsh.png");
 
     logow_bg.setColor(sf::Color(120, 0, 0, ui_alpha));
     logow_shadow.setColor(sf::Color(64, 64, 64, ui_alpha));
@@ -78,40 +42,39 @@ MainMenu::MainMenu()
     s_smash.setBuffer(sb_smash);
     s_smash.setVolume(float(config->GetInt("masterVolume")) * (float(config->GetInt("sfxVolume")) / 100.f));
 
-    for (int g = 1; g <= 4; g++)
+    for (int g = 0; g < 4; g++)
     {
-        PSprite& grass = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_" + to_string(g) + ".png");
-        grass.setScale(1.05, 1.05);
-        grass.setOrigin(grass.getLocalBounds().width / float(100), grass.getLocalBounds().height);
+        grass[g].load("resources/graphics/ui/menu/grass_" + to_string(g+1) + ".png");
+        grass[g].setScale(1.05, 1.05);
+        grass[g].setOrigin(grass[g].getGlobalBounds().width / float(100), grass[g].getGlobalBounds().height);
     }
 
-    PSprite& logo = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logo.png");
-    PSprite& logo_shadow = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logo_shadow.png");
+    logo.load("resources/graphics/ui/menu/logo.png");
+    logo_shadow.load("resources/graphics/ui/menu/logo_shadow.png");
 
-    logo.setOrigin(logo.getLocalBounds().width / 2, logo.getLocalBounds().height / 2);
-    logo_shadow.setOrigin(logo_shadow.getLocalBounds().width / 2, logo_shadow.getLocalBounds().height / 2);
+    logo.setOrigin(logo.getGlobalBounds().width / 2, logo.getGlobalBounds().height / 2);
+    logo_shadow.setOrigin(logo_shadow.getGlobalBounds().width / 2, logo_shadow.getGlobalBounds().height / 2);
 
-    for (int t = 1; t <= 4; t++)
+    for (int t = 0; t < 4; t++)
     {
-        PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(t) + ".png");
-        totem.setOrigin(0, totem.getLocalBounds().height);
+        totem[t].load("resources/graphics/ui/menu/totem_" + to_string(t+1) + ".png");
+        totem[t].setOrigin(0, totem[t].getGlobalBounds().height);
     }
 
-    PSprite& fire_1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/fire_1.png");
-    PSprite& fire_2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/fire_2.png");
-    PSprite& fire_3 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/fire_3.png");
-    PSprite& aura = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/aura.png");
-    PSprite& sword_1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/sword.png");
-    PSprite& sword_2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/sword.png");
+    for (int f = 0; f < 3; f++)
+    {
+        fire[f].load("resources/graphics/ui/menu/fire_" + to_string(f+1) + ".png");
+        fire[f].setOrigin(fire[f].getGlobalBounds().width / 2, fire[f].getGlobalBounds().height);
+    }
 
-    fire_1.setOrigin(fire_1.getLocalBounds().width / 2, fire_1.getLocalBounds().height);
-    fire_2.setOrigin(fire_2.getLocalBounds().width / 2, fire_2.getLocalBounds().height);
-    fire_3.setOrigin(fire_3.getLocalBounds().width / 2, fire_3.getLocalBounds().height);
+    for (int s = 0; s < 2; s++)
+    {
+        sword[s].load("resources/graphics/ui/menu/sword.png");
+        sword[s].setOrigin(sword[s].getGlobalBounds().width / 2, sword[s].getGlobalBounds().height);
+    }
 
-    aura.setOrigin(aura.getLocalBounds().width / 2, aura.getLocalBounds().height / 2);
-
-    sword_1.setOrigin(sword_1.getLocalBounds().width / 2, sword_1.getLocalBounds().height / 2);
-    sword_2.setOrigin(sword_2.getLocalBounds().width / 2, sword_2.getLocalBounds().height / 2);
+    aura.load("resources/graphics/ui/menu/aura.png");
+    aura.setOrigin(aura.getGlobalBounds().width / 2, aura.getGlobalBounds().height / 2);
 
     for (int i = 0; i <= 3; i++)
     {
@@ -220,23 +183,7 @@ MainMenu::MainMenu()
 
 void MainMenu::EventFired(sf::Event event)
 {
-    /*
-    rework pending
-    if (patapolisMenu.is_active)
-    {
-        patapolisMenu.EventFired(event);
-    } else if (nameEntryMenu.is_active)
-    {
-        nameEntryMenu.EventFired(event);
-    } else if (optionsMenu.is_active)
-    {
-        optionsMenu.EventFired(event);
-    } else if (v4Core->currentController.isInitialized)
-    {
-        if (event.type == sf::Event::KeyPressed)
-        {
-        }
-    } else */ if (is_active)
+    if (is_active)
     {
         if (firstrun)
         {
@@ -276,20 +223,6 @@ void MainMenu::SelectMenuOption()
     {
         case 0: // load the start game cutscenes and menu
         {
-            /*title_loop.stop();
-
-            Hide();
-            sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
-            v4core->continueLoading=true;
-            v4core->window.setActive(false);
-            loadingThreadInstance.launch();
-
-            nameEntryMenu.Show();
-            nameEntryMenu.isActive = true;
-            nameEntryMenu.Initialise(config,v4core,this);
-
-            v4core->continueLoading=false;*/
-
             ifstream check("resources/data/sv1.p4sv");
             bool exists = check.good();
             check.close();
@@ -300,17 +233,6 @@ void MainMenu::SelectMenuOption()
 
                 screenFade.Create(1, 512);
                 goto_id = 0;
-
-                /*v4core->saveReader.Flush();
-                v4core->saveReader.CreateBlankSave();
-
-                title_loop.stop();
-
-                introductionMenu.Show();
-                introductionMenu.isActive = true;
-                introductionMenu.timeout.restart();
-
-                patapolisMenu.loadedSave = false;*/
             } else
             {
                 SPDLOG_INFO("There is an existing save data. Ask if overwrite");
@@ -385,563 +307,493 @@ void MainMenu::Update()
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
     float fps = CoreManager::getInstance().getCore()->getFPS();
 
-    /* if (v4Core->currentController.isInitialized)
+    if (firstrun)
     {
-        v4Core->currentController.Update(window, fps, inputCtrl);
-    } else if (patapolisMenu.is_active)
-    {
-        patapolisMenu.Update(window, fps, inputCtrl);
-    } else if (introductionMenu.is_active)
-    {
-        introductionMenu.Update(window, fps, inputCtrl);
-    } else if (optionsMenu.is_active)
-    {
-        optionsMenu.Update(window, fps, inputCtrl);
-    } else if (is_active) */
-    {
-        if (firstrun)
+        if (frClock.getElapsedTime().asSeconds() > 2)
         {
-            if (frClock.getElapsedTime().asSeconds() > 2)
+            if (!msgcloud.done)
             {
-                if (!msgcloud.done)
-                {
-                    if (msgcloud.firstrender)
-                        msgcloud.Show();
-                }
+                if (msgcloud.firstrender)
+                    msgcloud.Show();
             }
+        }
 
-            if (msgcloud.done)
-            {
-                if (!premenu)
-                    frwaitClock.restart();
-
-                premenu = true;
-
-                startClock.restart();
-            }
-
-            if (premenu)
-            {
-                if (frwaitClock.getElapsedTime().asSeconds() > 1)
-                {
-                    firstrun = false;
-
-                    ofstream fr("resources/firstrun", ios::trunc);
-                    fr.close();
-                }
-            }
-
-            msgcloud.Draw();
-
-        } else if (premenu)
+        if (msgcloud.done)
         {
-            PSprite& logow_bg = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowbg.png");
-            PSprite& logow_text = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowtxt.png");
-            PSprite& logow_shadow = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logowsh.png");
+            if (!premenu)
+                frwaitClock.restart();
 
-            if (startClock.getElapsedTime().asSeconds() > 2)
-            {
-                if (!keypressed)
-                {
-                    if (ui_alpha < 255)
-                    {
-                        ui_alpha += 255.0 / fps;
-                    }
+            premenu = true;
 
-                    if (ui_alpha >= 255)
-                    {
-                        ui_alpha = 255;
-                    }
+            startClock.restart();
+        }
 
-                    if (t_alpha < 128)
-                    {
-                        t_alpha += 128.0 / fps;
-                    }
-
-                    if (t_alpha >= 128)
-                    {
-                        t_alpha = 128;
-                    }
-
-                    logow_bg.setColor(sf::Color(120, 0, 0, ui_alpha));
-                    logow_text.setColor(sf::Color(255, 255, 255, ui_alpha));
-                    logow_shadow.setColor(sf::Color(64, 0, 0, ui_alpha));
-
-                    if (inputCtrl->isAnyKeyPressed())
-                    {
-                        s_smash.play();
-                        logow_bg.setColor(sf::Color(200, 0, 0, 255));
-                        logow_shadow.setColor(sf::Color(200, 0, 0, 255));
-                        logow_text.setColor(sf::Color(255, 255, 255, 255));
-                        ui_alpha = 255;
-                        logow_scale = 1.2;
-                        logow_shscale = 1.2;
-                        dest_y = 360;
-                        keypressed = true;
-                        menuClock.restart();
-                    }
-                }
-
-                logow_bg.setOrigin(logow_bg.getLocalBounds().width / 2, logow_bg.getLocalBounds().height / 2);
-                logow_text.setOrigin(logow_text.getLocalBounds().width / 2, logow_text.getLocalBounds().height / 2);
-                logow_shadow.setOrigin(logow_shadow.getLocalBounds().width / 2, logow_shadow.getLocalBounds().height / 2);
-
-                if (dest_y > cur_y)
-                {
-                    cur_y += abs(dest_y - cur_y) * 2 / fps;
-                }
-                if (dest_y < cur_y)
-                {
-                    cur_y -= abs(dest_y - cur_y) * 2 / fps;
-                }
-
-                logow_bg.setPosition(640, cur_y);
-                logow_text.setPosition(logow_bg.getPosition().x + 1, logow_bg.getPosition().y - 3);
-                logow_shadow.setPosition(logow_bg.getPosition().x, logow_bg.getPosition().y);
-
-                if (logow_scale > 1)
-                    logow_scale -= 0.5 / fps;
-                if (logow_shscale > 1)
-                    logow_shscale -= 0.5 / fps;
-
-                if (logow_scale <= 1)
-                    logow_scale = 1;
-                if (logow_shscale <= 1)
-                    logow_shscale = 1;
-
-                logow_bg.setScale(logow_scale);
-                logow_text.setScale(logow_scale);
-                logow_shadow.setScale(logow_shscale);
-
-                window->draw(rs_cover);
-
-                logow_shadow.draw(window);
-                logow_bg.draw(window);
-                logow_text.draw(window);
-
-                if (keypressed)
-                {
-                    t_alpha -= 255.0 / fps;
-
-                    if (t_alpha <= 0)
-                        t_alpha = 0;
-
-                    if (menuClock.getElapsedTime().asSeconds() > 3)
-                    {
-                        cv_alpha += 255.0 / fps;
-
-                        if (cv_alpha >= 255)
-                            cv_alpha = 255;
-                    }
-
-                    if (menuClock.getElapsedTime().asSeconds() > 4.5)
-                    {
-                        premenu = false;
-                    }
-                }
-
-                t_pressanykey.setOrigin(t_pressanykey.getLocalBounds().width / 2, t_pressanykey.getLocalBounds().height / 2);
-                t_pressanykey.setPosition(640, 440);
-                t_pressanykey.setColor(sf::Color(255, 255, 255, t_alpha));
-                t_pressanykey.draw(window);
-
-                rs_cover2.setFillColor(sf::Color(0, 0, 0, cv_alpha));
-                window->draw(rs_cover2);
-            }
-        } else
+        if (premenu)
         {
-            PSprite& fire_1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/fire_1.png");
-            PSprite& fire_2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/fire_2.png");
-            PSprite& fire_3 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/fire_3.png");
-            PSprite& aura = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/aura.png");
-            PSprite& sword_1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/sword.png");
-            PSprite& sword_2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/sword.png");
-            PSprite& logo = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logo.png");
-            PSprite& logo_shadow = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/logo_shadow.png");
-
-            if (title_loop.getStatus() == sf::Sound::Status::Stopped)
+            if (frwaitClock.getElapsedTime().asSeconds() > 1)
             {
-                SPDLOG_DEBUG("Playing title_loop");
-                title_loop.play();
+                firstrun = false;
+
+                ofstream fr("resources/firstrun", ios::trunc);
+                fr.close();
             }
+        }
 
-            window->draw(v_background);
+        msgcloud.Draw();
 
-            if (fade == 0)
-                alpha -= float(15) / fps;
-
-            if (fade == 1)
-                alpha += float(15) / fps;
-
-            if (alpha <= 220)
-                fade = 1;
-
-            if (alpha >= 250)
-                fade = 0;
-
-            float scale = 1 + ((alpha - 220) / 500);
-            float aurascale = 1 + ((alpha - 220)) / 250;
-
-            g_dest[0] = (mouseX / 320.f - 2.f) * (-1);
-            g_dest[1] = (mouseX / 106.f - 6.f) * (-1);
-            g_dest[2] = (mouseX / 45.f - 14.f) * (-1);
-            g_dest[3] = (mouseX / 21.f - 30.f) * (-1);
-
-            for (int i = 0; i <= 3; i++)
+    } else if (premenu)
+    {
+        if (startClock.getElapsedTime().asSeconds() > 2)
+        {
+            if (!keypressed)
             {
-                if (g_dest[i] < g_x[i])
-                    g_x[i] -= abs(g_dest[i] - g_x[i]) / 100 / fps * 240;
-                if (g_dest[i] > g_x[i])
-                    g_x[i] += abs(g_dest[i] - g_x[i]) / 100 / fps * 240;
-            }
-
-
-            ///dont make it go off bounds
-            if (g_x[0] > 2)
-                g_x[0] = 2;
-
-            if (g_x[0] < -2)
-                g_x[0] = -2;
-
-
-            if (g_x[1] > 6)
-                g_x[1] = 6;
-
-            if (g_x[1] < -6)
-                g_x[1] = -6;
-
-
-            if (g_x[2] > 14)
-                g_x[2] = 14;
-
-            if (g_x[2] < -14)
-                g_x[2] = -14;
-
-
-            if (g_x[3] > 30)
-                g_x[3] = 30;
-
-            if (g_x[3] < -30)
-                g_x[3] = -30;
-
-            PSprite& grass_1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_1.png");
-            PSprite& grass_2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_2.png");
-            PSprite& grass_3 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_3.png");
-            PSprite& grass_4 = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/grass_4.png");
-
-            grass_1.setPosition(g_x[0], 630);
-            grass_2.setPosition(g_x[1], 696);
-            grass_3.setPosition(g_x[2], 724);
-            grass_4.setPosition(g_x[3], 724);
-
-            grass_1.draw(window);
-            grass_2.draw(window);
-            grass_3.draw(window);
-
-            logo_shadow.setPosition(640, 140);
-            logo.setPosition(640, 140);
-
-            logo_shadow.setColor(sf::Color(255, 255, 255, alpha));
-            logo_shadow.setScale(scale, scale);
-
-            logo_shadow.draw(window);
-            logo.draw(window);
-
-            float fire_shift = 0;
-
-            //cout << "MouseX: " << (mouseX / window->getSize().x) * 1280 << endl;
-
-            mouseInBounds = false;
-
-            for (int i = 0; i <= 3; i++)
-            {
-                PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_"+to_string(i+1)+".png");
-
-                totem.setPosition((float(120) + float(306) * i) + g_x[3] / 1.4, 720);
-
-                if (UsingMouseSelection)
+                if (ui_alpha < 255)
                 {
-                    if ((mouseX / window->getSize().x) * 1280 > totem.getPosition().x)
-                    {
-                        if ((mouseX / window->getSize().x) * 1280 < (totem.getPosition().x + totem.getGlobalBounds().width))
-                        {
-                            if ((mouseY / window->getSize().y) * 720 > totem.getPosition().y - totem.getGlobalBounds().height)
-                            {
-                                totem_sel = i;
-                                mouseInBounds = true;
-                            }
-                        }
-                    }
+                    ui_alpha += 255.0 / fps;
                 }
-            }
 
-            float fire_x = 0, fire_y = 0;
-
-            switch (totem_sel)
-            {
-                case 0: {
-                    fire_shift = float(34);
-                    fire_x = float(72.333);
-                    fire_y = float(320);
-                    break;
-                }
-                case 1: {
-                    fire_shift = float(40);
-                    fire_x = float(59.5);
-                    fire_y = float(371);
-                    break;
-                }
-                case 2: {
-                    fire_shift = float(6);
-                    fire_x = float(55);
-                    fire_y = float(451.667);
-                    break;
-                }
-                case 3: {
-                    fire_shift = float(10);
-                    fire_x = float(59.3333);
-                    fire_y = float(498.667);
-                    break;
-                }
-            }
-
-            PSprite& selected_totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(totem_sel + 1) + ".png");
-
-            fire_1.setPosition(selected_totem.getPosition().x + fire_x, fire_y + fire_shift);
-            fire_2.setPosition(selected_totem.getPosition().x + fire_x, fire_y + fire_shift);
-            fire_3.setPosition(selected_totem.getPosition().x + fire_x, fire_y + fire_shift);
-
-            //cout << int(floor(fire)) << " " << totem[totem_sel].getGlobalBounds().width << " " << totem[totem_sel].getGlobalBounds().height << " vs " << fire_1.getPosition().x << " " << fire_1.getPosition().y << endl;
-
-            switch (int(floor(fire)))
-            {
-                case 0:
-                    fire_1.draw(window);
-                    break;
-
-                case 1:
-                    fire_2.draw(window);
-                    break;
-
-                case 2:
-                    fire_3.draw(window);
-                    break;
-            }
-
-            fire += float(14) / fps;
-            if (fire >= 3)
-                fire = 0;
-
-            aura.setPosition(fire_1.getPosition().x, fire_1.getPosition().y - (fire_1.getGlobalBoundsScaled().height / 2));
-            aura.setScale(aurascale, aurascale);
-            aura.draw(window);
-
-            for (int i = 0; i <= 3; i++)
-            {
-                PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(i + 1) + ".png");
-                totem.draw(window);
-            }
-
-            grass_4.draw(window);
-
-            if (old_sel != totem_sel)
-            {
-                SPDLOG_TRACE("Totem changed to {}", totem_sel);
-                t_option[totem_sel].setScale(1.2, 1.2);
-            }
-
-            for (int i = 0; i <= 3; i++)
-            {
-                if (t_option[i].getScale().x > 1)
+                if (ui_alpha >= 255)
                 {
-                    float new_scale = t_option[i].getScale().x - float(1) / fps;
-                    t_option[i].setScale(new_scale, new_scale);
-                } else
-                {
-                    t_option[i].setScale(1, 1);
+                    ui_alpha = 255;
                 }
 
-                t_option[i].setString(Func::ConvertToUtf8String(temp_menu[i]));
-
-                //cout << "Text " << i << ": " << t_option[i].orX << " " << t_option[i].orY << " " << t_option[i].getGlobalBounds().width << " " << t_option[i].getGlobalBounds().height << " " << t_option[i].getGlobalBoundsScaled().width << " " << t_option[i].getGlobalBoundsScaled().height << endl;
-
-                //cout << t_option[i].getGlobalBoundsScaled().width/2 << " " << t_option[i].getGlobalBoundsScaled().height/2 << endl;
-                t_option[i].setOrigin(t_option[i].getLocalBounds().width / 2, t_option[i].getLocalBounds().height / 2);
-
-                //cout << "Text " << i << ": " << t_option[i].orX << " " << t_option[i].orY << " " << t_option[i].getGlobalBounds().width << " " << t_option[i].getGlobalBounds().height << " " << t_option[i].getGlobalBoundsScaled().width << " " << t_option[i].getGlobalBoundsScaled().height << endl;
-
-                if (i == totem_sel)
+                if (t_alpha < 128)
                 {
-                    t_option[i].setPosition(selected_totem.getPosition().x + (selected_totem.getGlobalBoundsScaled().width / 2), 720 - selected_totem.getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height - 35);
-                } else
-                {
-                    PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(i+1) + ".png");
-                    t_option[i].setPosition(totem.getPosition().x + (totem.getGlobalBoundsScaled().width / 2), 720 - totem.getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height / 2);
+                    t_alpha += 128.0 / fps;
                 }
 
-                t_option[i].setColor(sf::Color(255, 255, 255, 96));
-                t_option[totem_sel].setColor(sf::Color::White);
+                if (t_alpha >= 128)
+                {
+                    t_alpha = 128;
+                }
 
-                t_option[i].draw(window);
+                logow_bg.setColor(sf::Color(120, 0, 0, ui_alpha));
+                logow_text.setColor(sf::Color(255, 255, 255, ui_alpha));
+                logow_shadow.setColor(sf::Color(64, 0, 0, ui_alpha));
+
+                if (inputCtrl->isAnyKeyPressed())
+                {
+                    s_smash.play();
+                    logow_bg.setColor(sf::Color(200, 0, 0, 255));
+                    logow_shadow.setColor(sf::Color(200, 0, 0, 255));
+                    logow_text.setColor(sf::Color(255, 255, 255, 255));
+                    ui_alpha = 255;
+                    logow_scale = 1.2;
+                    logow_shscale = 1.2;
+                    dest_y = 360;
+                    keypressed = true;
+                    menuClock.restart();
+                }
             }
 
-            sword_1.setScale(1, 1);
-            sword_1.setPosition(fire_1.getPosition().x - (fire_1.getGlobalBoundsScaled().width / 2 + t_option[totem_sel].getGlobalBoundsScaled().width / 2 + sword_1.getGlobalBoundsScaled().width / 2), 720 - selected_totem.getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height - 30);
-            sword_1.draw(window);
+            logow_bg.setOrigin(logow_bg.getGlobalBounds().width / 2, logow_bg.getGlobalBounds().height / 2);
+            logow_text.setOrigin(logow_text.getGlobalBounds().width / 2, logow_text.getGlobalBounds().height / 2);
+            logow_shadow.setOrigin(logow_shadow.getGlobalBounds().width / 2, logow_shadow.getGlobalBounds().height / 2);
 
-            sword_2.setScale(-1, 1);
-            sword_2.setPosition(fire_1.getPosition().x + (fire_1.getGlobalBoundsScaled().width / 2 + t_option[totem_sel].getGlobalBoundsScaled().width / 2 + sword_2.getGlobalBoundsScaled().width / 2), 720 - selected_totem.getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height - 30);
-            sword_2.draw(window);
+            if (dest_y > cur_y)
+            {
+                cur_y += abs(dest_y - cur_y) * 2 / fps;
+            }
+            if (dest_y < cur_y)
+            {
+                cur_y -= abs(dest_y - cur_y) * 2 / fps;
+            }
 
-            old_sel = totem_sel;
+            logow_bg.setPosition(640, cur_y);
+            logow_text.setPosition(logow_bg.getPosition().x + 1, logow_bg.getPosition().y - 3);
+            logow_shadow.setPosition(logow_bg.getPosition().x, logow_bg.getPosition().y);
 
-            cv_alpha -= 255.0 / fps;
+            if (logow_scale > 1)
+                logow_scale -= 0.5 / fps;
+            if (logow_shscale > 1)
+                logow_shscale -= 0.5 / fps;
 
-            if (cv_alpha <= 0)
-                cv_alpha = 0;
+            if (logow_scale <= 1)
+                logow_scale = 1;
+            if (logow_shscale <= 1)
+                logow_shscale = 1;
+
+            logow_bg.setScale(logow_scale);
+            logow_text.setScale(logow_scale);
+            logow_shadow.setScale(logow_shscale);
+
+            window->draw(rs_cover);
+
+            logow_shadow.draw();
+            logow_bg.draw();
+            logow_text.draw();
+
+            if (keypressed)
+            {
+                t_alpha -= 255.0 / fps;
+
+                if (t_alpha <= 0)
+                    t_alpha = 0;
+
+                if (menuClock.getElapsedTime().asSeconds() > 3)
+                {
+                    cv_alpha += 255.0 / fps;
+
+                    if (cv_alpha >= 255)
+                        cv_alpha = 255;
+                }
+
+                if (menuClock.getElapsedTime().asSeconds() > 4.5)
+                {
+                    premenu = false;
+                }
+            }
+
+            t_pressanykey.setOrigin(t_pressanykey.getLocalBounds().width / 2, t_pressanykey.getLocalBounds().height / 2);
+            t_pressanykey.setPosition(640, 440);
+            t_pressanykey.setColor(sf::Color(255, 255, 255, t_alpha));
+            t_pressanykey.draw(window);
 
             rs_cover2.setFillColor(sf::Color(0, 0, 0, cv_alpha));
             window->draw(rs_cover2);
+        }
+    } else
+    {
+        if (title_loop.getStatus() == sf::Sound::Status::Stopped)
+        {
+            SPDLOG_DEBUG("Playing title_loop");
+            title_loop.play();
+        }
 
-            window->setView(window->getDefaultView());
+        window->draw(v_background);
 
-            vector<int> db_e; ///dialog box erase
+        if (fade == 0)
+            alpha -= float(15) / fps;
 
-            for (int i = 0; i < dialogboxes.size(); i++)
+        if (fade == 1)
+            alpha += float(15) / fps;
+
+        if (alpha <= 220)
+            fade = 1;
+
+        if (alpha >= 250)
+            fade = 0;
+
+        float scale = 1 + ((alpha - 220) / 500);
+        float aurascale = 1 + ((alpha - 220)) / 250;
+
+        g_dest[0] = (mouseX / 320.f - 2.f) * (-1);
+        g_dest[1] = (mouseX / 106.f - 6.f) * (-1);
+        g_dest[2] = (mouseX / 45.f - 14.f) * (-1);
+        g_dest[3] = (mouseX / 21.f - 30.f) * (-1);
+
+        for (int i = 0; i <= 3; i++)
+        {
+            if (g_dest[i] < g_x[i])
+                g_x[i] -= abs(g_dest[i] - g_x[i]) / 100 / fps * 240;
+            if (g_dest[i] > g_x[i])
+                g_x[i] += abs(g_dest[i] - g_x[i]) / 100 / fps * 240;
+        }
+
+
+        ///dont make it go off bounds
+        if (g_x[0] > 2)
+            g_x[0] = 2;
+
+        if (g_x[0] < -2)
+            g_x[0] = -2;
+
+
+        if (g_x[1] > 6)
+            g_x[1] = 6;
+
+        if (g_x[1] < -6)
+            g_x[1] = -6;
+
+
+        if (g_x[2] > 14)
+            g_x[2] = 14;
+
+        if (g_x[2] < -14)
+            g_x[2] = -14;
+
+
+        if (g_x[3] > 30)
+            g_x[3] = 30;
+
+        if (g_x[3] < -30)
+            g_x[3] = -30;
+
+        for (int g=0; g<3; g++)
+        {
+            grass[g].setPosition(g_x[g], g_y[g]);
+            grass[g].draw();
+        }
+
+        logo_shadow.setPosition(640, 140);
+        logo.setPosition(640, 140);
+
+        logo_shadow.setColor(sf::Color(255, 255, 255, alpha));
+        logo_shadow.setScale(scale);
+
+        logo_shadow.draw();
+        logo.draw();
+
+        float fire_shift = 0;
+
+        //cout << "MouseX: " << (mouseX / window->getSize().x) * 1280 << endl;
+
+        mouseInBounds = false;
+
+        for (int i = 0; i < 4; i++)
+        {
+            totem[i].setPosition((float(120) + float(306) * (i)) + g_x[3] / 1.4, 720);
+
+            if (UsingMouseSelection)
             {
-                dialogboxes[i].x = 640;
-                dialogboxes[i].y = 360;
-                dialogboxes[i].Draw();
-
-                if (dialogboxes[i].closed)
-                    db_e.push_back(i);
-            }
-
-            for (int i = 0; i < db_e.size(); i++)
-            {
-                dialogboxes.erase(dialogboxes.begin() + db_e[i] - i);
-            }
-
-            if (dialogboxes.size() <= 0)
-            {
-                if ((inputCtrl->isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl->isKeyPressed(InputController::Keys::LTRIGGER)))
+                if ((mouseX / window->getSize().x) * 1280 > totem[i].getPosition().x)
                 {
-                    UsingMouseSelection = false;
-
-                    totem_sel -= 1;
-                    if (totem_sel < 0)
-                        totem_sel = 3;
-                    old_sel = totem_sel;
-
-                    mouseX = totem_sel_pos[totem_sel];
-                }
-
-                if ((inputCtrl->isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl->isKeyPressed(InputController::Keys::RTRIGGER)))
-                {
-                    UsingMouseSelection = false;
-
-                    totem_sel += 1;
-                    if (totem_sel > 3)
-                        totem_sel = 0;
-                    old_sel = totem_sel;
-
-                    mouseX = totem_sel_pos[totem_sel];
-                }
-
-                if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
-                {
-                    UsingMouseSelection = false;
-
-                    SelectMenuOption();
-                    //title_loop.stop();
-                }
-            } else
-            {
-                if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
-                {
-                    switch (dialogboxes[dialogboxes.size() - 1].CheckSelectedOption())
+                    if ((mouseX / window->getSize().x) * 1280 < (totem[i].getPosition().x + totem[i].getLocalBounds().width))
                     {
-                        case 0: {
-                            if (dialogboxes[dialogboxes.size() - 1].id == 0)
-                            {
-                                SPDLOG_INFO("Starting new game!");
-                                dialogboxes[dialogboxes.size() - 1].Close();
-
-                                screenFade.Create(1, 512);
-                                goto_id = 0;
-
-                                break;
-                            } else if (dialogboxes[dialogboxes.size() - 1].id == 1)
-                            {
-                                dialogboxes[dialogboxes.size() - 1].Close();
-                                break;
-                            } else if (dialogboxes[dialogboxes.size() - 1].id == 2)
-                            {
-                                dialogboxes[dialogboxes.size() - 1].Close();
-                                break;
-                            }
-                        }
-
-                        case 1: {
-                            SPDLOG_INFO("Returning to title screen!");
-                            dialogboxes[dialogboxes.size() - 1].Close();
-
-                            break;
+                        if ((mouseY / window->getSize().y) * 720 > totem[i].getPosition().y - totem[i].getLocalBounds().height)
+                        {
+                            totem_sel = i;
+                            mouseInBounds = true;
                         }
                     }
                 }
             }
+        }
 
-            screenFade.draw();
+        float fire_x = 0, fire_y = 0;
 
-            if (screenFade.checkFinished())
+        switch (totem_sel)
+        {
+            case 0: {
+                fire_shift = float(34);
+                fire_x = float(72.333);
+                fire_y = float(320);
+                break;
+            }
+            case 1: {
+                fire_shift = float(40);
+                fire_x = float(59.5);
+                fire_y = float(371);
+                break;
+            }
+            case 2: {
+                fire_shift = float(6);
+                fire_x = float(55);
+                fire_y = float(451.667);
+                break;
+            }
+            case 3: {
+                fire_shift = float(10);
+                fire_x = float(59.3333);
+                fire_y = float(498.667);
+                break;
+            }
+        }
+
+        for (int f = 0; f < 3; f++)
+        {
+            fire[f].setPosition(totem[totem_sel].getPosition().x + fire_x, fire_y + fire_shift);
+        }
+
+        fire[int(floor(fire_count))].draw();
+
+        fire_count += float(14) / fps;
+        if (fire_count >= 3)
+            fire_count = 0;
+
+        aura.setPosition(fire[0].getPosition().x, fire[0].getPosition().y - (fire[0].getLocalBounds().height / 2));
+        aura.setScale(aurascale);
+        aura.draw();
+
+        for (int i = 0; i < 4; i++)
+        {
+            totem[i].draw();
+        }
+
+        grass[3].draw();
+
+        if (old_sel != totem_sel)
+        {
+            SPDLOG_TRACE("Totem changed to {}", totem_sel);
+            t_option[totem_sel].setScale(1.2, 1.2);
+        }
+
+        for (int i = 0; i <= 3; i++)
+        {
+            if (t_option[i].getScale().x > 1)
             {
-                if (goto_id != -1)
+                float new_scale = t_option[i].getScale().x - float(1) / fps;
+                t_option[i].setScale(new_scale, new_scale);
+            } else
+            {
+                t_option[i].setScale(1, 1);
+            }
+
+            t_option[i].setString(Func::ConvertToUtf8String(temp_menu[i]));
+            t_option[i].setOrigin(t_option[i].getLocalBounds().width / 2, t_option[i].getLocalBounds().height / 2);
+
+            if (i == totem_sel)
+            {
+                t_option[i].setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getLocalBounds().width / 2), 720 - totem[totem_sel].getLocalBounds().height - fire[1].getLocalBounds().height - 35);
+            } else
+            {
+                t_option[i].setPosition(totem[i].getPosition().x + (totem[i].getLocalBounds().width / 2), 720 - totem[i].getLocalBounds().height - fire[0].getLocalBounds().height / 2);
+            }
+
+            t_option[i].setColor(sf::Color(255, 255, 255, 96));
+            t_option[totem_sel].setColor(sf::Color::White);
+
+            t_option[i].draw(window);
+        }
+
+        sword[0].setScale(1, 1);
+        sword[0].setPosition(fire[0].getPosition().x - (fire[0].getLocalBounds().width / 2 + t_option[totem_sel].getLocalBounds().width / 2 + sword[0].getLocalBounds().width / 2), 720 - totem[totem_sel].getLocalBounds().height - fire[0].getLocalBounds().height - 10);
+        sword[0].draw();
+
+        sword[1].setScale(-1, 1);
+        sword[1].setPosition(fire[0].getPosition().x + (fire[0].getLocalBounds().width / 2 + t_option[totem_sel].getLocalBounds().width / 2 + sword[1].getLocalBounds().width / 2), 720 - totem[totem_sel].getLocalBounds().height - fire[0].getLocalBounds().height - 10);
+        sword[1].draw();
+
+        old_sel = totem_sel;
+
+        cv_alpha -= 255.0 / fps;
+
+        if (cv_alpha <= 0)
+            cv_alpha = 0;
+
+        rs_cover2.setFillColor(sf::Color(0, 0, 0, cv_alpha));
+        window->draw(rs_cover2);
+
+        window->setView(window->getDefaultView());
+
+        vector<int> db_e; ///dialog box erase
+
+        for (int i = 0; i < dialogboxes.size(); i++)
+        {
+            dialogboxes[i].x = 640;
+            dialogboxes[i].y = 360;
+            dialogboxes[i].Draw();
+
+            if (dialogboxes[i].closed)
+                db_e.push_back(i);
+        }
+
+        for (int i = 0; i < db_e.size(); i++)
+        {
+            dialogboxes.erase(dialogboxes.begin() + db_e[i] - i);
+        }
+
+        if (dialogboxes.size() <= 0)
+        {
+            if ((inputCtrl->isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl->isKeyPressed(InputController::Keys::LTRIGGER)))
+            {
+                UsingMouseSelection = false;
+
+                totem_sel -= 1;
+                if (totem_sel < 0)
+                    totem_sel = 3;
+                old_sel = totem_sel;
+
+                mouseX = totem_sel_pos[totem_sel];
+            }
+
+            if ((inputCtrl->isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl->isKeyPressed(InputController::Keys::RTRIGGER)))
+            {
+                UsingMouseSelection = false;
+
+                totem_sel += 1;
+                if (totem_sel > 3)
+                    totem_sel = 0;
+                old_sel = totem_sel;
+
+                mouseX = totem_sel_pos[totem_sel];
+            }
+
+            if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
+            {
+                UsingMouseSelection = false;
+
+                SelectMenuOption();
+                //title_loop.stop();
+            }
+        } else
+        {
+            if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
+            {
+                switch (dialogboxes[dialogboxes.size() - 1].CheckSelectedOption())
                 {
-                    switch (goto_id)
+                    case 0: {
+                        if (dialogboxes[dialogboxes.size() - 1].id == 0)
+                        {
+                            SPDLOG_INFO("Starting new game!");
+                            dialogboxes[dialogboxes.size() - 1].Close();
+
+                            screenFade.Create(1, 512);
+                            goto_id = 0;
+
+                            break;
+                        } else if (dialogboxes[dialogboxes.size() - 1].id == 1)
+                        {
+                            dialogboxes[dialogboxes.size() - 1].Close();
+                            break;
+                        } else if (dialogboxes[dialogboxes.size() - 1].id == 2)
+                        {
+                            dialogboxes[dialogboxes.size() - 1].Close();
+                            break;
+                        }
+                    }
+
+                    case 1: {
+                        SPDLOG_INFO("Returning to title screen!");
+                        dialogboxes[dialogboxes.size() - 1].Close();
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        screenFade.draw();
+
+        if (screenFade.checkFinished())
+        {
+            if (goto_id != -1)
+            {
+                switch (goto_id)
+                {
+                    case 0: ///New game
                     {
-                        case 0: ///New game
-                        {
-                            SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
+                        SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
 
-                            saveReader->Flush();
-                            saveReader->CreateBlankSave();
+                        saveReader->Flush();
+                        saveReader->CreateBlankSave();
 
-                            title_loop.stop();
-                            StateManager::getInstance().setState(StateManager::INTRODUCTION);
+                        title_loop.stop();
+                        StateManager::getInstance().setState(StateManager::INTRODUCTION);
 
-                            break;
-                        }
+                        break;
+                    }
 
-                        case 1: ///Continue
-                        {
-                            title_loop.stop();
-                            StateManager::getInstance().setState(StateManager::PATAPOLIS);
+                    case 1: ///Continue
+                    {
+                        title_loop.stop();
+                        StateManager::getInstance().setState(StateManager::PATAPOLIS);
 
-                            break;
-                        }
+                        break;
+                    }
 
-                        case 2: ///Options
-                        {
-                            title_loop.stop();
-                            StateManager::getInstance().setState(StateManager::OPTIONSMENU);
-                            break;
-                        }
+                    case 2: ///Options
+                    {
+                        title_loop.stop();
+                        StateManager::getInstance().setState(StateManager::OPTIONSMENU);
+                        break;
                     }
                 }
             }
         }
     }
 }
-void MainMenu::UpdateButtons()
-{
-    /// this should update the text on all the buttons
-}
-void MainMenu::OnExit()
-{
-    /// when we exit the main menu, we do nothing for now.
-    /// perhaps we would want to unload sprites or songs etc
-}
+
 MainMenu::~MainMenu()
 {
     //dtor
