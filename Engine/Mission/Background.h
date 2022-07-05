@@ -2,7 +2,7 @@
 #define BACKGROUND_H
 
 #include "../Config.h"
-#include "../Graphics/PSprite.h"
+#include "../Graphics/SpriteWrapper.h"
 #include "Camera.h"
 #include <SFML/Graphics.hpp>
 
@@ -10,6 +10,15 @@ class Background
 {
 public:
     Camera camera;
+
+    struct BGObject {
+        SpriteWrapper texture;
+        sf::Color color;
+        sf::Vector2f position;
+        float x_speed;
+    };
+
+    std::vector<BGObject> bg_objects;
 
     sf::VertexArray v_background;
     std::vector<sf::Vector2f> vx_pos;

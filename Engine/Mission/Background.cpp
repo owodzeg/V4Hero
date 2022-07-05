@@ -129,7 +129,7 @@ void Background::Load(string bg_name)
             SPDLOG_DEBUG("Loading texture: {}/{}", bg_name, v_params[0]);
             std::string t_name = "resources/graphics/bg/" + bg_name + "/" + v_params[0];
 
-            ResourceManager::getInstance().loadSprite(t_name);
+            /* ResourceManager::getInstance().loadSprite(t_name);
             t_background.push_back(t_name);
 
             c_background.push_back(sf::Color(atoi(v_params[3].c_str()), atoi(v_params[4].c_str()), atoi(v_params[5].c_str()), 255));
@@ -142,7 +142,14 @@ void Background::Load(string bg_name)
             p_background.push_back(tmpp);
             background_xspeed.push_back(atof(v_params[2].c_str()));
 
-            bg_layer++;
+            bg_layer++; */
+
+            BGObject tmp;
+            tmp.texture.load(t_name);
+            tmp.color = sf::Color(atoi(v_params[3].c_str()), atoi(v_params[4].c_str()), atoi(v_params[5].c_str()), 255);
+            tmp.position = sf::Vector2f(-1000, atoi(v_params[1].c_str()));
+            tmp.x_speed = atof(v_params[2].c_str());
+            bg_objects.push_back(tmp);
         }
     }
 
@@ -172,7 +179,7 @@ void Background::Draw()
 
     window->setView(lastView);
 
-    for (int i = 0; i < bg_layer; i++)
+    /* for (int i = 0; i < bg_layer; i++)
     {
         PSprite& layer = ResourceManager::getInstance().getSprite(t_background[i]);
         
@@ -184,6 +191,17 @@ void Background::Draw()
         SPDLOG_DEBUG("s_background[{}] x:{} y:{} height_global:{} height_local:{} height_globalscaled:{} origin_y:{}", i, layer.getPosition().x, layer.getPosition().y, layer.getGlobalBounds().height, layer.getLocalBounds().height, layer.getGlobalBoundsScaled().height, layer.orY);
 
         layer.draw();
+    } */
+
+    for (int i=0; i<bg_objects.size(); i++)
+    {
+        bg_objects[i].texture.setTextureRect(sf::IntRect(0, 0, 500000, bg_objects[i].texture.getGlobalBounds().height));
+        SPDLOG_DEBUG("bg_objects {} {}", bg_objects[i].texture.spritePath, bg_objects[i].texture.getTextureRect().width);
+        bg_objects[i].texture.setRepeated(true);
+        bg_objects[i].texture.setOrigin(0, bg_objects[i].texture.getGlobalBounds().height);
+        bg_objects[i].texture.setColor(bg_objects[i].color);
+        bg_objects[i].texture.setPosition((-(bg_objects[i].x_speed * camera.camera_x) - (bg_objects[i].x_speed * camera.manual_x) - (bg_objects[i].x_speed * camera.debug_x) - 1000), bg_objects[i].position.y);
+        bg_objects[i].texture.draw();
     }
 
     auto lastView2 = window->getView();
