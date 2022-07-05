@@ -1,10 +1,7 @@
 #ifndef INTRODUCTIONMENU_H
 #define INTRODUCTIONMENU_H
-#include "../Config.h"
-#include "../Dialog/MessageCloud.h"
 #include "../Graphics/Menu.h"
-#include "../Graphics/PSprite.h"
-#include "../Graphics/PText.h"
+#include "../Dialog/MessageCloud.h"
 #include "../Input/InputController.h"
 #include <SFML/Graphics.hpp>
 

@@ -40,12 +40,10 @@ set(ENGINE_FILES
         Engine/Dialog/DialogBox.cpp
         Engine/Binary.cpp
         Engine/Menu/MainMenu.cpp
-        Engine/Menu/ButtonList.cpp
         Engine/Menu/Barracks.cpp
         Engine/Menu/IntroductionMenu.cpp
         Engine/Menu/Altar.cpp
         Engine/Menu/Patapolis.cpp
-        Engine/Menu/MenuButton.cpp
         Engine/Menu/Credits.cpp
         Engine/Menu/Obelisk.cpp
         Engine/Menu/OptionsMenu.cpp

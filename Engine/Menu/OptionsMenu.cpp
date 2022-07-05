@@ -1,11 +1,9 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "OptionsMenu.h"
-#include "ButtonList.h"
 #include <iostream>
 #include <spdlog/spdlog.h>
 //#include <windows.h>
-#include "../V4Core.h"
 #include "math.h"
 #include "../CoreManager.h"
 #include "../StateManager.h"

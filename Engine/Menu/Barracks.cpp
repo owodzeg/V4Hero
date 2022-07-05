@@ -1,10 +1,7 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "Barracks.h"
-#include "../V4Core.h"
 #include "Altar.h"
-#include "ButtonList.h"
-#include <iostream>
 #include <sstream>
 #include <spdlog/spdlog.h>
 #include "../CoreManager.h"

@@ -1,7 +1,6 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
 
 #include "IntroductionMenu.h"
-#include "../V4Core.h"
 #include "../CoreManager.h"
 #include "../StateManager.h"
 
@@ -64,21 +63,6 @@ void IntroductionMenu::Update()
         StateManager::getInstance().setState(StateManager::MISSIONCONTROLLER);
 
         //TO-DO: change state in statemanager
-
-        /*
-        sf::Thread loadingThreadInstance(&V4Core::loadingThread, parentMenu->v4Core);
-        parentMenu->v4Core->continue_loading = true;
-        parentMenu->v4Core->window.setActive(false);
-        loadingThreadInstance.launch();
-
-        parentMenu->Hide();
-        parentMenu->is_active = false;
-        Hide();
-        is_active = false;
-
-        v4Core->currentController.Initialise(*thisConfig, thisConfig->GetString("mission1Background"), *v4Core);
-        v4Core->currentController.StartMission("mis1_0.p4m", false, 1);
-        */
     }
 }
 

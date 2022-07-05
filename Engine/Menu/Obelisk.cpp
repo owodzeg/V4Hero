@@ -1,9 +1,6 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "Obelisk.h"
-#include "../V4Core.h"
-#include "ButtonList.h"
-#include "iostream"
 #include "math.h"
 #include <nlohmann/json.hpp>
 #include <sstream>

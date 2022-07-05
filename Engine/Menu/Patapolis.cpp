@@ -12,10 +12,6 @@
 
 PatapolisMenu::PatapolisMenu()
 {
-    //ctor
-
-    //f_font.loadFromFile("resources/fonts/arial.ttf");
-
     //TO-DO: is this still needed?
     is_active = false;
 

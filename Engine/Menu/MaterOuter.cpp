@@ -3,8 +3,6 @@
 #include "../V4Core.h"
 #include "../CoreManager.h"
 #include "MaterOuter.h"
-#include "ButtonList.h"
-#include <iostream>
 #include <math.h>
 #include <spdlog/spdlog.h>
 #include <span>
