@@ -1,8 +1,6 @@
 #ifndef SPRITEWRAPPER_H
 #define SPRITEWRAPPER_H
 
-#include "../ResourceManager.h"
-#include "../CoreManager.h"
 #include "PSprite.h"
 
 class SpriteWrapper
@@ -11,7 +9,10 @@ class SpriteWrapper
     std::string spritePath;
     sf::Vector2f position, origin, scale;
     sf::FloatRect l_bounds, g_bounds;
+    sf::IntRect texture_rect;
     sf::Color color;
+    bool repeated;
+    float rotation;
 
     SpriteWrapper();
     void load(std::string path);
@@ -27,6 +28,11 @@ class SpriteWrapper
     sf::FloatRect getLocalBounds();
     sf::FloatRect getGlobalBounds();
     void setColor(sf::Color c);
+    sf::IntRect getTextureRect();
+    void setTextureRect(sf::IntRect rect);
+    void setRepeated(bool isRepeated);
+    void setRotation(float angle);
+    float getRotation();
     void draw();
 };
 

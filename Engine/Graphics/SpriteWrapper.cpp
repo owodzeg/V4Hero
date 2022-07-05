@@ -1,5 +1,8 @@
 #include "SpriteWrapper.h"
 
+#include "../ResourceManager.h"
+#include "../CoreManager.h"
+
 /* IMPORTANT!!!!!!!
 * when taking a position of something, we want it scaled, so we use local bounds
 * when we set the origin, sfml scales the origin itself, so we use global bounds to prevent double scaling
@@ -18,10 +21,13 @@ void SpriteWrapper::load(std::string path)
     origin = sf::Vector2f(0, 0);
     scale = sf::Vector2f(1, 1);
     color = sf::Color(255, 255, 255, 255);
+    repeated = false;
+    rotation = 0;
 
     PSprite& spr = ResourceManager::getInstance().getSprite(path);
     l_bounds = spr.getLocalBounds();
     g_bounds = spr.getGlobalBounds();
+    texture_rect = spr.getTextureRect();
 }
 
 void SpriteWrapper::setPosition(sf::Vector2f pos)
@@ -95,12 +101,40 @@ void SpriteWrapper::setColor(sf::Color c)
     color = c;
 }
 
+sf::IntRect SpriteWrapper::getTextureRect()
+{
+    return texture_rect;
+}
+
+void SpriteWrapper::setTextureRect(sf::IntRect rect)
+{
+    texture_rect = rect;
+}
+
+void SpriteWrapper::setRepeated(bool isRepeated)
+{
+    repeated = isRepeated;
+}
+
+void SpriteWrapper::setRotation(float angle)
+{
+    rotation = angle;
+}
+
+float SpriteWrapper::getRotation()
+{
+    return rotation;
+}
+
 void SpriteWrapper::draw()
 {
     PSprite& spr = ResourceManager::getInstance().getSprite(spritePath);
+    spr.setTextureRect(texture_rect);
+    spr.setRepeated(repeated);
     spr.setPosition(position.x, position.y);
     spr.setOrigin(origin.x, origin.y);
     spr.setScale(scale.x, scale.y);
+    spr.setRotation(rotation);
     spr.setColor(color);
     spr.draw();
 }

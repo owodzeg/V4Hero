@@ -26,6 +26,7 @@ public:
     void loadFromFile(std::string file, int q, int r);
     void setRepeated(bool r);
     void setTextureRect(sf::IntRect rect);
+    sf::IntRect getTextureRect();
     void setOrigin(float x, float y);
     void setScale(float x, float y);
     void setRotation(float a);

@@ -84,13 +84,18 @@ void PSprite::setRepeated(bool r)
 {
     SPDLOG_TRACE("Change repeated state of {} to {}", texturePath, r);
     TextureManager::getInstance().getTexture(texturePath).setRepeated(r);
-    s.setTexture(TextureManager::getInstance().getTexture(texturePath), true);
+    //s.setTexture(TextureManager::getInstance().getTexture(texturePath), true);
 }
 
 void PSprite::setTextureRect(sf::IntRect rect)
 {
     SPDLOG_TRACE("Set texture rect of {} to {} {} {} {}", texturePath, rect.top, rect.left, rect.width, rect.height);
     s.setTextureRect(rect);
+}
+
+sf::IntRect PSprite::getTextureRect()
+{
+    return s.getTextureRect();
 }
 
 void PSprite::setOrigin(float x, float y)
