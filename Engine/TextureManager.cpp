@@ -183,6 +183,8 @@ bool TextureManager::checkImageExists(const std::string& key)
 
 void TextureManager::loadImageFromFile(const std::string& path)
 {
+    std::lock_guard<std::mutex> guard(resource_mutex);
+
     if (loadedImages.find(path) == loadedImages.end() || forceLoad)
     {
         SPDLOG_INFO("Loading image from file {}", path);
@@ -196,6 +198,8 @@ void TextureManager::loadImageFromFile(const std::string& path)
 
 void TextureManager::loadImageFromMemory(const std::string& key, sf::Image image, bool asTexture)
 {
+    std::lock_guard<std::mutex> guard(resource_mutex);
+
     if (!asTexture)
     {
         if (loadedImages.find(key) == loadedImages.end())
@@ -233,6 +237,8 @@ sf::Image& TextureManager::getImage(const std::string& key)
 
 void TextureManager::loadTextureFromImage(const std::string& img_key)
 {
+    std::lock_guard<std::mutex> guard(resource_mutex);
+
     if (loadedImages.find(img_key) == loadedImages.end())
     {
         SPDLOG_WARN("Couldn't find image {}, texture may be missing", img_key);

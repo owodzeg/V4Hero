@@ -59,6 +59,8 @@ void ResourceManager::loadImageAsSprite(std::string path, sf::Image image)
 
 PSprite& ResourceManager::getSprite(const std::string& path)
 {
+    std::lock_guard<std::recursive_mutex> guard(access_mutex);
+
     if (loadedSprites.find(path) != loadedSprites.end())
     {
         SPDLOG_TRACE("Provided sprite with path {}", path);

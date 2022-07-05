@@ -32,6 +32,7 @@ class ResourceManager
         std::unordered_map<int, std::vector<std::string>> loadedPaths; //holds list of paths for each source
 
         std::mutex resource_mutex;
+        std::recursive_mutex access_mutex;
 
         enum Quality
         {

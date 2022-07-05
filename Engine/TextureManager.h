@@ -12,6 +12,8 @@
 class TextureManager
 {
 public:
+    std::mutex resource_mutex;
+
     static TextureManager& getInstance();
     void loadTexture(const std::string& path, int quality);
     sf::Texture& getTexture(const std::string& path);
