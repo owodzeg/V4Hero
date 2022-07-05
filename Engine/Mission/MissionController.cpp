@@ -3,7 +3,6 @@
 #include "MissionController.h"
 #include "../Math/PVector.h"
 #include "../Utils.h"
-#include "../V4Core.h"
 #include "Units/HitboxFrame.h"
 #include "Units/Projectile.h"
 #include <algorithm>
