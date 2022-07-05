@@ -19,11 +19,11 @@ LoadingTip::LoadingTip(int mode)
         box_1.setSize(sf::Vector2f(1280 * resRatioX, 80 * resRatioY));
         box_2.setSize(sf::Vector2f(1280 * resRatioX, 514 * resRatioY));
 
-        PSprite& tip_logo = ResourceManager::getInstance().getSprite("resources/graphics/ui/tips/tip-logo.png");
+        tip_logo.load("resources/graphics/ui/tips/tip-logo.png");
 
-        PSprite& loading_head = ResourceManager::getInstance().getSprite("resources/graphics/ui/tips/loading_head.png");
-        PSprite& loading_eye1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/tips/loading_eye.png");
-        PSprite& loading_eye2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/tips/loading_eye.png");
+        loading_head.load("resources/graphics/ui/tips/loading_head.png");
+        loading_eye1.load("resources/graphics/ui/tips/loading_eye.png");
+        loading_eye2.load("resources/graphics/ui/tips/loading_eye.png");
 
         loading_eye1.setOrigin(loading_eye1.getLocalBounds().width * 0.85, loading_eye1.getLocalBounds().height * 0.85);
         loading_eye2.setOrigin(loading_eye2.getLocalBounds().width * 0.85, loading_eye2.getLocalBounds().height * 0.85);
@@ -47,8 +47,8 @@ LoadingTip::LoadingTip(int mode)
         bg_key = "resources/graphics/ui/tips/" + tipsUtil->backgroundFileNames[tipBackground];
         icon_key = "resources/graphics/ui/tips/" + tipsUtil->iconFileNames[tipIcon];
 
-        PSprite& s_bg = ResourceManager::getInstance().getSprite(bg_key);
-        PSprite& s_icon = ResourceManager::getInstance().getSprite(icon_key);
+        s_bg.load(bg_key);
+        s_icon.load(icon_key);
 
         f_font.loadFromFile(config->fontPath);
 
@@ -70,9 +70,9 @@ LoadingTip::LoadingTip(int mode)
         box_1.setSize(sf::Vector2f(1280 * resRatioX, 80 * resRatioY));
         box_2.setSize(sf::Vector2f(1280 * resRatioX, 514 * resRatioY));
 
-        PSprite& loading_head = ResourceManager::getInstance().getSprite("resources/graphics/ui/tips/loading_head.png");
-        PSprite& loading_eye1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/tips/loading_eye.png");
-        PSprite& loading_eye2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/tips/loading_eye.png");
+        loading_head.load("resources/graphics/ui/tips/loading_head.png");
+        loading_eye1.load("resources/graphics/ui/tips/loading_eye.png");
+        loading_eye2.load("resources/graphics/ui/tips/loading_eye.png");
 
         loading_eye1.setOrigin(loading_eye1.getLocalBounds().width * 0.85, loading_eye1.getLocalBounds().height * 0.85);
         loading_eye2.setOrigin(loading_eye2.getLocalBounds().width * 0.85, loading_eye2.getLocalBounds().height * 0.85);
@@ -100,26 +100,17 @@ void LoadingTip::Draw()
 
     if (tipMode == 0)
     {
-        PSprite& s_bg = ResourceManager::getInstance().getSprite(bg_key);
-        PSprite& s_icon = ResourceManager::getInstance().getSprite(icon_key);
-
-        PSprite& tip_logo = ResourceManager::getInstance().getSprite("resources/graphics/ui/tips/tip-logo.png");
-
-        PSprite& loading_head = ResourceManager::getInstance().getSprite("resources/graphics/ui/tips/loading_head.png");
-        PSprite& loading_eye1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/tips/loading_eye.png");
-        PSprite& loading_eye2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/tips/loading_eye.png");
-
-        s_bg.draw(window);
+        s_bg.draw();
 
         window->draw(box_1);
         window->draw(box_2);
 
         tip_logo.setPosition(1060, 20);
-        tip_logo.draw(window);
+        tip_logo.draw();
 
         s_icon.setOrigin(s_icon.getLocalBounds().width / 2, s_icon.getLocalBounds().height / 2);
         s_icon.setPosition(1040, 380);
-        s_icon.draw(window);
+        s_icon.draw();
 
         t_tipTitle.setPosition(24, 32);
         t_tipTitle.draw(window);
@@ -147,24 +138,20 @@ void LoadingTip::Draw()
             loading_head.setPosition(t_nowLoading.getPosition().x - t_nowLoading.getLocalBounds().width - 46, t_nowLoading.getPosition().y - 28);
             loading_eye1.setPosition(t_nowLoading.getPosition().x - t_nowLoading.getLocalBounds().width + 19 - 46, t_nowLoading.getPosition().y + 43 - 28);
             loading_eye1.setRotation(angle_1);
-            loading_head.draw(window);
-            loading_eye1.draw(window);
+            loading_head.draw();
+            loading_eye1.draw();
 
             loading_head.setPosition(t_nowLoading.getPosition().x + 12, t_nowLoading.getPosition().y - 28);
             loading_eye2.setPosition(t_nowLoading.getPosition().x + 19 + 12, t_nowLoading.getPosition().y + 43 - 28);
             loading_eye2.setRotation(angle_2);
-            loading_head.draw(window);
-            loading_eye2.draw(window);
+            loading_head.draw();
+            loading_eye2.draw();
 
             angle_1 += 2.f / fps;
             angle_2 -= 2.f / fps;
         }
     } else if (tipMode == 1)
     {
-        PSprite& loading_head = ResourceManager::getInstance().getSprite("resources/graphics/ui/tips/loading_head.png");
-        PSprite& loading_eye1 = ResourceManager::getInstance().getSprite("resources/graphics/ui/tips/loading_eye.png");
-        PSprite& loading_eye2 = ResourceManager::getInstance().getSprite("resources/graphics/ui/tips/loading_eye.png");
-
         // drawing some text
         if (pressAnyKey)
         {
@@ -174,8 +161,8 @@ void LoadingTip::Draw()
             loading_head.setPosition(1220, 650);
             loading_eye2.setPosition(1239, 693);
             loading_eye2.setRotation(angle_2);
-            loading_head.draw(window);
-            loading_eye2.draw(window);
+            loading_head.draw();
+            loading_eye2.draw();
 
             angle_2 -= 2.f / fps;
         }
