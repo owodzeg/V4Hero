@@ -85,10 +85,16 @@ PSprite& ResourceManager::getSprite(const std::string& path)
 
 void ResourceManager::unloadSprite(const std::string& path)
 {
-    loadedSprites.erase(path);
+    if (loadedSprites.find(path) != loadedSprites.end())
+    {
+        loadedSprites.erase(path);
 
-    int source = loadedSources[path];
-    loadedSources.erase(path);
+        int source = loadedSources[path];
+        loadedSources.erase(path);
+
+        TextureManager::getInstance().unloadImage(path);
+        TextureManager::getInstance().unloadTexture(path);
+    }
 }
 
 void ResourceManager::unloadState(int state)
