@@ -3,13 +3,10 @@
 #include "Background.h"
 #include "../ResourceManager.h"
 #include "../CoreManager.h"
-
 #include "../Func.h"
-#include <fstream>
-#include <iostream>
-#include <spdlog/spdlog.h>
 
-using namespace std;
+#include <fstream>
+#include <spdlog/spdlog.h>
 
 Background::Background()
 {
@@ -20,43 +17,9 @@ void Background::setCamera(Camera newCamera)
     camera = newCamera;
 }
 
-void Background::Load(string bg_name)
+void Background::Load(std::string bg_name)
 {
     SPDLOG_DEBUG("Loading background: {}", bg_name);
-
-    quality = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
-
-    float ratioX, ratioY;
-    switch (quality)
-    {
-        case 0: ///low
-        {
-            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(640);
-            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(360);
-            break;
-        }
-
-        case 1: ///med
-        {
-            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
-            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
-            break;
-        }
-
-        case 2: ///high
-        {
-            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1920);
-            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(1080);
-            break;
-        }
-
-        case 3: ///ultra
-        {
-            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(3840);
-            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(2160);
-            break;
-        }
-    }
 
     float resRatioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
     float resRatioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
@@ -64,29 +27,22 @@ void Background::Load(string bg_name)
     v_background.clear();
     vx_pos.clear();
     vx_color.clear();
-    p_background.clear();
-    s_background.clear();
-    background_xspeed.clear();
-    background_y.clear();
 
     temp_camerax = 0;
-    bg_layer = 0;
 
-    ifstream param_file("resources/graphics/bg/" + bg_name + "/param.dat");
+    std::ifstream param_file("resources/graphics/bg/" + bg_name + "/param.dat");
 
-    string buff;
+    std::string buff;
     while (getline(param_file, buff))
     {
         if (buff.find("@back:") != std::string::npos)
         {
-            string vx_params = buff.substr(buff.find_first_of(":") + 1);
-            vector<string> v_vxparams = Func::Split(vx_params, ';');
-
-            //float resRatioY = float(720) / float(720);
+            std::string vx_params = buff.substr(buff.find_first_of(":") + 1);
+            std::vector<std::string> v_vxparams = Func::Split(vx_params, ';');
 
             for (int i = 0; i < v_vxparams.size(); i++)
             {
-                vector<string> tmp = Func::Split(v_vxparams[i], ',');
+                std::vector<std::string> tmp = Func::Split(v_vxparams[i], ',');
 
                 sf::Vector2f tmp_vector;
                 sf::Color tmp_color;
@@ -124,25 +80,10 @@ void Background::Load(string bg_name)
             v_background = tmp;
         } else
         {
-            vector<string> v_params = Func::Split(buff, ',');
+            std::vector<std::string> v_params = Func::Split(buff, ',');
 
             SPDLOG_DEBUG("Loading texture: {}/{}", bg_name, v_params[0]);
             std::string t_name = "resources/graphics/bg/" + bg_name + "/" + v_params[0];
-
-            /* ResourceManager::getInstance().loadSprite(t_name);
-            t_background.push_back(t_name);
-
-            c_background.push_back(sf::Color(atoi(v_params[3].c_str()), atoi(v_params[4].c_str()), atoi(v_params[5].c_str()), 255));
-
-            sf::Vector2f tmpp;
-
-            tmpp.x = -1000;
-            tmpp.y = atoi(v_params[1].c_str());
-
-            p_background.push_back(tmpp);
-            background_xspeed.push_back(atof(v_params[2].c_str()));
-
-            bg_layer++; */
 
             BGObject tmp;
             tmp.texture.load(t_name);
@@ -162,9 +103,6 @@ void Background::Draw()
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
 
-    float resRatioX = window->getSize().x / float(1280);
-    float resRatioY = window->getSize().y / float(720);
-
     for (int i = 0; i < vx_pos.size(); i++)
     {
         v_background[i].position = vx_pos[i];
@@ -179,24 +117,9 @@ void Background::Draw()
 
     window->setView(lastView);
 
-    /* for (int i = 0; i < bg_layer; i++)
-    {
-        PSprite& layer = ResourceManager::getInstance().getSprite(t_background[i]);
-        
-        //layer.setTextureRect(sf::IntRect(0, 0, 500000, layer.getGlobalBounds().height));
-        layer.setOrigin(0, layer.getLocalBounds().height);
-        layer.setColor(c_background[i]);
-        layer.setRepeated(true);
-        layer.setPosition((-(background_xspeed[i] * camera.camera_x) - (background_xspeed[i] * camera.manual_x) - (background_xspeed[i] * camera.debug_x) - 1000), p_background[i].y);
-        SPDLOG_DEBUG("s_background[{}] x:{} y:{} height_global:{} height_local:{} height_globalscaled:{} origin_y:{}", i, layer.getPosition().x, layer.getPosition().y, layer.getGlobalBounds().height, layer.getLocalBounds().height, layer.getGlobalBoundsScaled().height, layer.orY);
-
-        layer.draw();
-    } */
-
     for (int i=0; i<bg_objects.size(); i++)
     {
         bg_objects[i].texture.setTextureRect(sf::IntRect(0, 0, 500000, bg_objects[i].texture.getGlobalBounds().height));
-        SPDLOG_DEBUG("bg_objects {} {}", bg_objects[i].texture.spritePath, bg_objects[i].texture.getTextureRect().width);
         bg_objects[i].texture.setRepeated(true);
         bg_objects[i].texture.setOrigin(0, bg_objects[i].texture.getGlobalBounds().height);
         bg_objects[i].texture.setColor(bg_objects[i].color);
