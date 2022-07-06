@@ -19,6 +19,8 @@ public:
     ControlTips ctrlTips;
 
     ///worldmap contents
+    std::vector<SpriteWrapper> preloaded_location_bgs;
+    std::vector<SpriteWrapper> preloaded_worldmap_icons;
     std::vector<SpriteWrapper> location_bgs;
     std::vector<SpriteWrapper> location_icons;
     std::vector<SpriteWrapper> mission_icons;

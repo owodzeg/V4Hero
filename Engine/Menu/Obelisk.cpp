@@ -58,6 +58,18 @@ ObeliskMenu::ObeliskMenu()
 
     mission_select.load("resources/graphics/ui/worldmap/mission_select.png");
 
+    int fields = 3; //make it be detected via a file or automatically, later
+    for (int i = 1; i <= fields; i++)
+    {
+        SpriteWrapper bg;
+        bg.load("resources/graphics/ui/worldmap/locationbg_" + to_string(i) + ".png");
+        preloaded_location_bgs.push_back(bg);
+
+        SpriteWrapper loc;
+        loc.load("resources/graphics/ui/worldmap/location_" + to_string(i) + ".png");
+        preloaded_worldmap_icons.push_back(loc);
+    }
+
     ctrlTips.create(66, font, 20, sf::String("Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
 
     SPDLOG_INFO("Initializing Obelisk finished.");
@@ -150,14 +162,8 @@ void ObeliskMenu::Reload()
         if (std::find(fields_unlocked.begin(), fields_unlocked.end(), i) != fields_unlocked.end())
         {
             int curIdx = std::find(fields_unlocked.begin(), fields_unlocked.end(), i) - fields_unlocked.begin();
-
-            SpriteWrapper bg;
-            bg.load("resources/graphics/ui/worldmap/locationbg_" + to_string(fields_unlocked[curIdx]) + ".png");
-            location_bgs.push_back(bg);
-
-            SpriteWrapper loc;
-            loc.load("resources/graphics/ui/worldmap/location_" + to_string(fields_unlocked[curIdx]) + ".png");
-            worldmap_icons.push_back(loc);
+            location_bgs.push_back(preloaded_location_bgs[fields_unlocked[curIdx]-1]);
+            worldmap_icons.push_back(preloaded_worldmap_icons[fields_unlocked[curIdx]-1]);
         } else
         {
             worldmap_fields.push_back(fld);

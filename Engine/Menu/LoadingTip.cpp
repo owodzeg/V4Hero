@@ -25,8 +25,8 @@ LoadingTip::LoadingTip(int mode)
         loading_eye1.load("resources/graphics/ui/tips/loading_eye.png");
         loading_eye2.load("resources/graphics/ui/tips/loading_eye.png");
 
-        loading_eye1.setOrigin(loading_eye1.getLocalBounds().width * 0.85, loading_eye1.getLocalBounds().height * 0.85);
-        loading_eye2.setOrigin(loading_eye2.getLocalBounds().width * 0.85, loading_eye2.getLocalBounds().height * 0.85);
+        loading_eye1.setOrigin(loading_eye1.getGlobalBounds().width * 0.85, loading_eye1.getGlobalBounds().height * 0.85);
+        loading_eye2.setOrigin(loading_eye2.getGlobalBounds().width * 0.85, loading_eye2.getGlobalBounds().height * 0.85);
 
         box_1.setPosition(0, 20 * resRatioY);
         box_2.setPosition(0, 120 * resRatioY);
@@ -74,8 +74,8 @@ LoadingTip::LoadingTip(int mode)
         loading_eye1.load("resources/graphics/ui/tips/loading_eye.png");
         loading_eye2.load("resources/graphics/ui/tips/loading_eye.png");
 
-        loading_eye1.setOrigin(loading_eye1.getLocalBounds().width * 0.85, loading_eye1.getLocalBounds().height * 0.85);
-        loading_eye2.setOrigin(loading_eye2.getLocalBounds().width * 0.85, loading_eye2.getLocalBounds().height * 0.85);
+        loading_eye1.setOrigin(loading_eye1.getGlobalBounds().width * 0.85, loading_eye1.getGlobalBounds().height * 0.85);
+        loading_eye2.setOrigin(loading_eye2.getGlobalBounds().width * 0.85, loading_eye2.getGlobalBounds().height * 0.85);
 
         box_1.setPosition(0, 20 * resRatioY);
         box_2.setPosition(0, 120 * resRatioY);
@@ -108,7 +108,7 @@ void LoadingTip::Draw()
         tip_logo.setPosition(1060, 20);
         tip_logo.draw();
 
-        s_icon.setOrigin(s_icon.getLocalBounds().width / 2, s_icon.getLocalBounds().height / 2);
+        s_icon.setOrigin(s_icon.getGlobalBounds().width / 2, s_icon.getGlobalBounds().height / 2);
         s_icon.setPosition(1040, 380);
         s_icon.draw();
 
