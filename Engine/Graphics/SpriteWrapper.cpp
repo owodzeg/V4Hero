@@ -4,10 +4,9 @@
 #include "../CoreManager.h"
 
 /* IMPORTANT!!!!!!!
-* when taking a position of something, we want it scaled, so we use local bounds
-* when we set the origin, sfml scales the origin itself, so we use global bounds to prevent double scaling
-* remember this forever please im so tired figuring out for the 100th time why something is misaligned
-* thanks */
+* LOCAL BOUNDS mean before transformations.
+* GLOBAL BOUNDS mean everything past transformations, so including scaling, positioning, etc 
+* i am dumb */
 
 SpriteWrapper::SpriteWrapper()
 {
@@ -77,7 +76,7 @@ void SpriteWrapper::setScale(float x)
 
 sf::FloatRect SpriteWrapper::getLocalBounds()
 {
-    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    /* sf::RenderWindow* window = CoreManager::getInstance().getWindow();
     sf::Vector2u windowSize = window->getSize();
 
     std::vector<float> x = {640, 1280, 1920, 3840};
@@ -88,11 +87,15 @@ sf::FloatRect SpriteWrapper::getLocalBounds()
     sf::Vector2f ratio(windowSize.x / x[quality], windowSize.y / y[quality]);
     sf::Vector2f r((fabs(scale.x) * ratio.x), (fabs(scale.y) * ratio.y));
 
-    return sf::FloatRect(l_bounds.top * r.x, l_bounds.left * r.y, l_bounds.width * r.x, l_bounds.height * r.y);
+    return sf::FloatRect(l_bounds.top * r.x, l_bounds.left * r.y, l_bounds.width * r.x, l_bounds.height * r.y); */
+
+    // lol 
+    return l_bounds;
 }
 
 sf::FloatRect SpriteWrapper::getGlobalBounds()
 {
+    // turns out everything works fine if you force local bounds everywhere
     return l_bounds;
 }
 
