@@ -30,17 +30,17 @@ ObeliskMenu::ObeliskMenu()
 
     ///boxes
     mainbox.load("resources/graphics/ui/worldmap/main_box.png");
-    mainbox.setOrigin(mainbox.getGlobalBounds().width / 2, mainbox.getGlobalBounds().height / 2);
+    mainbox.setOrigin(mainbox.getLocalBounds().width / 2, mainbox.getLocalBounds().height / 2);
     mainbox.setPosition(640, 320);
 
     descbox.load("resources/graphics/ui/worldmap/description_box.png");
-    descbox.setOrigin(descbox.getGlobalBounds().width / 2, descbox.getGlobalBounds().height / 2);
+    descbox.setOrigin(descbox.getLocalBounds().width / 2, descbox.getLocalBounds().height / 2);
     descbox.setPosition(820, 542);
 
     iconbox.load("resources/graphics/ui/worldmap/icon_box.png");
 
     missionbox.load("resources/graphics/ui/worldmap/mission_box.png");
-    missionbox.setOrigin(missionbox.getGlobalBounds().width / 2, missionbox.getGlobalBounds().height / 2);
+    missionbox.setOrigin(missionbox.getLocalBounds().width / 2, missionbox.getLocalBounds().height / 2);
     missionbox.setPosition(290, 542);
 
     worldmap_title.createText(font, 34, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("worldmap_header_1")), quality, 1);
@@ -54,7 +54,7 @@ ObeliskMenu::ObeliskMenu()
 
     unavailable.load("resources/graphics/ui/worldmap/unavailable.png");
     location_highlight.load("resources/graphics/ui/worldmap/location_highlight.png");
-    location_highlight.setOrigin(location_highlight.getGlobalBounds().width / 2, location_highlight.getGlobalBounds().height / 2);
+    location_highlight.setOrigin(location_highlight.getLocalBounds().width / 2, location_highlight.getLocalBounds().height / 2);
 
     mission_select.load("resources/graphics/ui/worldmap/mission_select.png");
 
@@ -276,15 +276,15 @@ void ObeliskMenu::Update()
 
         mainbox.draw();
 
-        worldmap_title.setOrigin(worldmap_title.getGlobalBounds().width / 2, worldmap_title.getGlobalBounds().height / 2);
+        worldmap_title.setOrigin(worldmap_title.getLocalBounds().width / 2, worldmap_title.getLocalBounds().height / 2);
         worldmap_title.setPosition(mainbox.getPosition().x - 303, mainbox.getPosition().y - 174);
         worldmap_title.draw(window);
 
-        location_title.setOrigin(location_title.getGlobalBounds().width / 2, location_title.getGlobalBounds().height / 2);
+        location_title.setOrigin(location_title.getLocalBounds().width / 2, location_title.getLocalBounds().height / 2);
         location_title.setPosition(mainbox.getPosition().x, mainbox.getPosition().y + 72);
         location_title.draw(window);
 
-        location_desc.setOrigin(location_desc.getGlobalBounds().width / 2, location_desc.getGlobalBounds().height / 2);
+        location_desc.setOrigin(location_desc.getLocalBounds().width / 2, location_desc.getLocalBounds().height / 2);
         location_desc.setPosition(mainbox.getPosition().x, mainbox.getPosition().y + 142);
         location_desc.draw(window);
 
@@ -318,13 +318,13 @@ void ObeliskMenu::Update()
             worldmap_fields[i].draw();
         }
 
-        location_highlight.setOrigin(location_highlight.getGlobalBounds().width / 2, location_highlight.getGlobalBounds().height / 2);
+        location_highlight.setOrigin(location_highlight.getLocalBounds().width / 2, location_highlight.getLocalBounds().height / 2);
         location_highlight.setPosition(sel_location * 123 + mapX - 62, 78 - 720);
         location_highlight.draw();
 
         for (int i = 0; i < worldmap_fields.size(); i++)
         {
-            worldmap_icons[i].setOrigin(worldmap_icons[i].getGlobalBounds().width / 2, worldmap_icons[i].getGlobalBounds().height);
+            worldmap_icons[i].setOrigin(worldmap_icons[i].getLocalBounds().width / 2, worldmap_icons[i].getLocalBounds().height);
             worldmap_icons[i].setPosition(i * 123 + mapX + 61, 155 - 720);
             worldmap_icons[i].draw();
 
@@ -342,11 +342,11 @@ void ObeliskMenu::Update()
             missionbox.draw();
             descbox.draw();
 
-            select_quest.setOrigin(0, select_quest.getGlobalBounds().height / 2);
+            select_quest.setOrigin(0, select_quest.getLocalBounds().height / 2);
             select_quest.setPosition(missionbox.getPosition().x - 141, missionbox.getPosition().y - 74);
             select_quest.draw(window);
 
-            mission_title.setOrigin(0, mission_title.getGlobalBounds().height / 2);
+            mission_title.setOrigin(0, mission_title.getLocalBounds().height / 2);
             mission_title.setPosition(descbox.getPosition().x - 315, descbox.getPosition().y - 74);
             mission_title.draw(window);
 
