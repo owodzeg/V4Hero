@@ -786,6 +786,7 @@ void MainMenu::Update()
                     {
                         title_loop.stop();
                         StateManager::getInstance().setState(StateManager::OPTIONSMENU);
+                        goto_id = -1;
                         break;
                     }
                 }
