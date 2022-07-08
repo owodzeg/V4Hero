@@ -55,6 +55,7 @@ void TextureManager::loadTexture(const std::string& path, int quality)
 
 sf::Texture& TextureManager::getTexture(const std::string& path)
 {
+    std::lock_guard<std::mutex> guard(resource_mutex);
     // first texture initialization should be used with quality setting.
     // if you are using this function, that means the texture is already loaded
     // if it's not, this code will crash
