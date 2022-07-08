@@ -93,7 +93,7 @@ sf::FloatRect SpriteWrapper::getLocalBounds()
 
 sf::FloatRect SpriteWrapper::getGlobalBounds()
 {
-    return g_bounds;
+    return l_bounds;
 }
 
 void SpriteWrapper::setColor(sf::Color c)

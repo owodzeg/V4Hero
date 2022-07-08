@@ -314,174 +314,84 @@ void PSprite::draw(sf::RenderWindow& window)
 
 void PSprite::draw(sf::RenderWindow* window)
 {
-    switch (qualitySetting)
+    qualitySetting = ResourceManager::getInstance().getCurrentQuality();
+
+    if (oldQualitySetting != qualitySetting)
     {
-        case 0: ///low
-        {
-            ratioX = window->getSize().x / float(640);
-            ratioY = window->getSize().y / float(360);
-            break;
-        }
+        sf::Vector2u windowSize = window->getSize();
 
-        case 1: ///med
-        {
-            ratioX = window->getSize().x / float(1280);
-            ratioY = window->getSize().y / float(720);
-            break;
-        }
+        std::vector<float> x = {640, 1280, 1920, 3840};
+        std::vector<float> y = {360, 720, 1080, 2160};
 
-        case 2: ///high
-        {
-            ratioX = window->getSize().x / float(1920);
-            ratioY = window->getSize().y / float(1080);
-            break;
-        }
+        sf::Vector2f ratio(windowSize.x / x[qualitySetting], windowSize.y / y[qualitySetting]);
 
-        case 3: ///ultra
-        {
-            ratioX = window->getSize().x / float(3840);
-            ratioY = window->getSize().y / float(2160);
-            break;
-        }
+        ratioX = ratio.x;
+        ratioY = ratio.y;
     }
 
-    switch (resSetting)
+    if (oldResSetting != resSetting)
     {
-        case 0: ///low
-        {
-            resRatioX = window->getSize().x / float(640);
-            resRatioY = window->getSize().y / float(360);
-            break;
-        }
+        sf::Vector2u windowSize = window->getSize();
 
-        case 1: ///med
-        {
-            resRatioX = window->getSize().x / float(1280);
-            resRatioY = window->getSize().y / float(720);
-            break;
-        }
+        std::vector<float> x = {640, 1280, 1920, 3840};
+        std::vector<float> y = {360, 720, 1080, 2160};
 
-        case 2: ///high
-        {
-            resRatioX = window->getSize().x / float(1920);
-            resRatioY = window->getSize().y / float(1080);
-            break;
-        }
+        sf::Vector2f ratio(windowSize.x / x[resSetting], windowSize.y / y[resSetting]);
 
-        case 3: ///ultra
-        {
-            resRatioX = window->getSize().x / float(3840);
-            resRatioY = window->getSize().y / float(2160);
-            break;
-        }
+        resRatioX = ratio.x;
+        resRatioY = ratio.y;
     }
 
-    //s.setTexture(t);
     s.setScale(ratioX * scaleX, ratioY * scaleY);
     s.setOrigin(orX, orY);
     s.setPosition(lx * resRatioX, ly * resRatioY);
     s.setRotation(angle * (180 / 3.14159265358));
     window->draw(s);
 
-    if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
-    {
-        if (!exported)
-        {
-            sf::Image img;
-            img = s.getTexture()->copyToImage();
-            int rrr = rand() % 100000000;
-            img.saveToFile("texDump/" + std::to_string(rrr) + ".png");
-
-            exported = true;
-        }
-    }
+    oldQualitySetting = qualitySetting;
+    oldResSetting = resSetting;
 }
 
 void PSprite::draw()
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
 
-    switch (qualitySetting)
+    qualitySetting = ResourceManager::getInstance().getCurrentQuality();
+
+    if (oldQualitySetting != qualitySetting)
     {
-        case 0: ///low
-        {
-            ratioX = window->getSize().x / float(640);
-            ratioY = window->getSize().y / float(360);
-            break;
-        }
+        sf::Vector2u windowSize = window->getSize();
 
-        case 1: ///med
-        {
-            ratioX = window->getSize().x / float(1280);
-            ratioY = window->getSize().y / float(720);
-            break;
-        }
+        std::vector<float> x = {640, 1280, 1920, 3840};
+        std::vector<float> y = {360, 720, 1080, 2160};
 
-        case 2: ///high
-        {
-            ratioX = window->getSize().x / float(1920);
-            ratioY = window->getSize().y / float(1080);
-            break;
-        }
+        sf::Vector2f ratio(windowSize.x / x[qualitySetting], windowSize.y / y[qualitySetting]);
 
-        case 3: ///ultra
-        {
-            ratioX = window->getSize().x / float(3840);
-            ratioY = window->getSize().y / float(2160);
-            break;
-        }
+        ratioX = ratio.x;
+        ratioY = ratio.y;
     }
 
-    switch (resSetting)
+    if (oldResSetting != resSetting)
     {
-        case 0: ///low
-        {
-            resRatioX = window->getSize().x / float(640);
-            resRatioY = window->getSize().y / float(360);
-            break;
-        }
+        sf::Vector2u windowSize = window->getSize();
 
-        case 1: ///med
-        {
-            resRatioX = window->getSize().x / float(1280);
-            resRatioY = window->getSize().y / float(720);
-            break;
-        }
+        std::vector<float> x = {640, 1280, 1920, 3840};
+        std::vector<float> y = {360, 720, 1080, 2160};
 
-        case 2: ///high
-        {
-            resRatioX = window->getSize().x / float(1920);
-            resRatioY = window->getSize().y / float(1080);
-            break;
-        }
+        sf::Vector2f ratio(windowSize.x / x[resSetting], windowSize.y / y[resSetting]);
 
-        case 3: ///ultra
-        {
-            resRatioX = window->getSize().x / float(3840);
-            resRatioY = window->getSize().y / float(2160);
-            break;
-        }
+        resRatioX = ratio.x;
+        resRatioY = ratio.y;
     }
 
-    //s.setTexture(t);
     s.setScale(ratioX * scaleX, ratioY * scaleY);
     s.setOrigin(orX, orY);
     s.setPosition(lx * resRatioX, ly * resRatioY);
     s.setRotation(angle * (180 / 3.14159265358));
     window->draw(s);
 
-    if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
-    {
-        if (!exported)
-        {
-            sf::Image img;
-            img = s.getTexture()->copyToImage();
-            int rrr = rand() % 100000000;
-            img.saveToFile("texDump/" + std::to_string(rrr) + ".png");
-
-            exported = true;
-        }
-    }
+    oldQualitySetting = qualitySetting;
+    oldResSetting = resSetting;
 }
 
 void PSprite::update(sf::RenderWindow& window)
