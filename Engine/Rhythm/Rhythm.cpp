@@ -16,19 +16,6 @@ Rhythm::Rhythm()
     b_fever_start.loadFromFile("resources/sfx/bgm/fever_start.ogg");
     b_fever_fail.loadFromFile("resources/sfx/bgm/fever_fail.ogg");
 
-    t_drums["pata"].loadFromFile("resources/graphics/rhythm/drums/pata.png");
-    t_drums["pon"].loadFromFile("resources/graphics/rhythm/drums/pon.png");
-    t_drums["don"].loadFromFile("resources/graphics/rhythm/drums/don.png");
-    t_drums["chaka"].loadFromFile("resources/graphics/rhythm/drums/chaka.png");
-
-    t_drums["pata"].setSmooth(true);
-    t_drums["pon"].setSmooth(true);
-    t_drums["don"].setSmooth(true);
-    t_drums["chaka"].setSmooth(true);
-
-    t_flash.loadFromFile("resources/graphics/rhythm/drums/flash.png");
-    t_flash.setSmooth(true);
-
     s_badrhythm1.loadFromFile("resources/sfx/level/badrhythm_1.ogg");
     s_badrhythm2.loadFromFile("resources/sfx/level/badrhythm_2.ogg");
 
@@ -196,8 +183,10 @@ void Rhythm::checkRhythmController()
 
     if (rhythmController.checkForInput())
     {
+        std::string drum_path = "resources/graphics/rhythm/drums/" + rhythmController.drumToLoad + ".png";
+
         Drum temp;
-        temp.Load(rhythmController.drumToLoad, rhythmController.drum_perfection, t_drums[rhythmController.drumToLoad], t_flash);
+        temp.Load(rhythmController.drumToLoad, rhythmController.drum_perfection, drum_path);
         temp.pattern = rhythmController.currentPattern;
         drums.push_back(temp);
 

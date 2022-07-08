@@ -50,9 +50,6 @@ private:
     sf::Sound s_fever_start; ///FEVER!
     sf::Sound s_chant;       ///For playing chants
 
-    std::map<std::string, sf::Texture> t_drums;
-    sf::Texture t_flash;
-
     /// Initialize clocks ///
     sf::Clock beatCycleClock; ///Clock for proper command inputs and requirements
 
