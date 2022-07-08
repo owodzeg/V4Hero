@@ -126,6 +126,28 @@ sf::FloatRect PText::getGlobalBounds()
     return t.getGlobalBounds();
 }
 
+sf::FloatRect PText::getTransformedBounds()
+{
+    //refer to spritewrapper
+
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    sf::Vector2u windowSize = window->getSize();
+
+    std::vector<float> x = {640, 1280, 1920, 3840};
+    std::vector<float> y = {360, 720, 1080, 2160};
+
+    sf::Vector2f resRatio(windowSize.x / float(1280), windowSize.y / float(720));
+
+    int quality = ResourceManager::getInstance().getCurrentQuality();
+
+    sf::Vector2f ratio(windowSize.x / x[quality], windowSize.y / y[quality]);
+    sf::Vector2f r((fabs(scaleX) / resRatio.x), (fabs(scaleY) / resRatio.y));
+
+    sf::FloatRect l_bounds = getLocalBounds();
+
+    return sf::FloatRect(l_bounds.top * r.x, l_bounds.left * r.y, l_bounds.width * r.x, l_bounds.height * r.y);
+}
+
 sf::FloatRect PText::getGlobalBoundsScaled()
 {
     float nw = 1;

@@ -27,6 +27,7 @@ class SpriteWrapper
     void setScale(float x);
     sf::FloatRect getLocalBounds();
     sf::FloatRect getGlobalBounds();
+    sf::FloatRect getTransformedBounds();
     void setColor(sf::Color c);
     sf::IntRect getTextureRect();
     void setTextureRect(sf::IntRect rect);

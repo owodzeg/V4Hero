@@ -6,7 +6,8 @@
 /* IMPORTANT!!!!!!!
 * LOCAL BOUNDS mean before transformations.
 * GLOBAL BOUNDS mean everything past transformations, so including scaling, positioning, etc 
-* i am dumb */
+* i am dumb
+  also take care of resRatio, if object is 800px on screen, we should take resRatio in account because on RR=1 it will be bigger than screen */
 
 SpriteWrapper::SpriteWrapper()
 {
@@ -97,6 +98,31 @@ sf::FloatRect SpriteWrapper::getGlobalBounds()
 {
     // turns out everything works fine if you force local bounds everywhere
     return l_bounds;
+}
+
+sf::FloatRect SpriteWrapper::getTransformedBounds()
+{
+    // for positioning purpose only, when something needs to depend on sprite's position
+    // we dont want to use local bounds then, because we're taking a whole ass sprite
+    // in hopes of explaining it to myself within next few months:
+    // since we pretty much load everything in resratio=1, then when the window is huge, the transformed bounds will not be enough
+    // totem on 1440p is 800px on screen, but our screen real estate is 720 pixels max. so we need to divide by resratio to bring it to the original 720p dimensions.
+    // should change it later to default resratio=3 for more precise alignments
+
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    sf::Vector2u windowSize = window->getSize();
+
+    std::vector<float> x = {640, 1280, 1920, 3840};
+    std::vector<float> y = {360, 720, 1080, 2160};
+
+    sf::Vector2f resRatio(windowSize.x / float(1280), windowSize.y / float(720));
+
+    int quality = ResourceManager::getInstance().getCurrentQuality();
+
+    sf::Vector2f ratio(windowSize.x / x[quality], windowSize.y / y[quality]);
+    sf::Vector2f r((fabs(scale.x) * ratio.x / resRatio.x), (fabs(scale.y) * ratio.y / resRatio.y));
+
+    return sf::FloatRect(l_bounds.top * r.x, l_bounds.left * r.y, l_bounds.width * r.x, l_bounds.height * r.y);
 }
 
 void SpriteWrapper::setColor(sf::Color c)
