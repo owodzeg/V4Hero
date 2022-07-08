@@ -601,7 +601,7 @@ void MainMenu::Update()
         if (fire_count >= 3)
             fire_count = 0;
 
-        aura.setPosition(fire[0].getPosition().x, fire[0].getPosition().y - (fire[0].getLocalBounds().height / 2));
+        aura.setPosition(fire[0].getPosition().x, fire[0].getPosition().y - (fire[0].getTransformedBounds().height / 2));
         aura.setScale(aurascale);
         aura.draw();
 
@@ -632,12 +632,11 @@ void MainMenu::Update()
             t_option[i].setString(Func::ConvertToUtf8String(temp_menu[i]));
             t_option[i].setOrigin(t_option[i].getLocalBounds().width / 2, t_option[i].getLocalBounds().height / 2);
 
+            t_option[i].setPosition(totem[i].getPosition().x + totem[i].getTransformedBounds().width / 2.f, 720 - totem[i].getTransformedBounds().height - 28);
+            
             if (i == totem_sel)
             {
-                t_option[i].setPosition(totem[totem_sel].getPosition().x + (totem[totem_sel].getLocalBounds().width / 2), 720 - totem[totem_sel].getLocalBounds().height - fire[1].getLocalBounds().height - 35);
-            } else
-            {
-                t_option[i].setPosition(totem[i].getPosition().x + (totem[i].getLocalBounds().width / 2), 720 - totem[i].getLocalBounds().height - fire[0].getLocalBounds().height / 2);
+                t_option[i].setPosition(totem[i].getPosition().x + totem[i].getTransformedBounds().width / 2.f, 720 - totem[i].getTransformedBounds().height - 70);
             }
 
             t_option[i].setColor(sf::Color(255, 255, 255, 96));
@@ -647,11 +646,11 @@ void MainMenu::Update()
         }
 
         sword[0].setScale(1, 1);
-        sword[0].setPosition(fire[0].getPosition().x - (fire[0].getLocalBounds().width / 2 + t_option[totem_sel].getLocalBounds().width / 2 + sword[0].getLocalBounds().width / 2), 720 - totem[totem_sel].getLocalBounds().height - fire[0].getLocalBounds().height - 10);
+        sword[0].setPosition(t_option[totem_sel].getPosition().x - t_option[totem_sel].getLocalBounds().width / 2 - sword[0].getTransformedBounds().width / 2 - 5, t_option[totem_sel].getPosition().y + 21);
         sword[0].draw();
 
         sword[1].setScale(-1, 1);
-        sword[1].setPosition(fire[0].getPosition().x + (fire[0].getLocalBounds().width / 2 + t_option[totem_sel].getLocalBounds().width / 2 + sword[1].getLocalBounds().width / 2), 720 - totem[totem_sel].getLocalBounds().height - fire[0].getLocalBounds().height - 10);
+        sword[1].setPosition(t_option[totem_sel].getPosition().x + t_option[totem_sel].getLocalBounds().width / 2 + sword[0].getTransformedBounds().width / 2 + 5, t_option[totem_sel].getPosition().y + 21);
         sword[1].draw();
 
         old_sel = totem_sel;
