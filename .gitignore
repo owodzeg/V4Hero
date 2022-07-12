@@ -516,3 +516,18 @@ FodyWeavers.xsd
 # Patafour resource files
 resources/data/sv1.p4sv
 resources/firstrun
+resources/lang_backup/str_VN.txt
+resources/lang_backup/str_SP.txt
+resources/lang_backup/str_RUS.txt
+resources/lang_backup/str_JP.txt
+resources/lang_backup/str_ITA.txt
+resources/lang_backup/str_IND.txt
+resources/lang_backup/str_FR.txt
+resources/lang_backup/str_ESP.txt
+resources/lang_backup/str_ENG_backup.txt
+resources/lang_backup/str_ENG.txt
+resources/lang_backup/str_DEU.txt
+resources/lang_backup/str_CN.txt
+resources/lang_backup/str_BPT.txt
+resources/lang_backup/lang.txt
+resources/lang/str_ENG_backup.txt

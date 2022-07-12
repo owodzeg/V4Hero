@@ -1,8 +1,16 @@
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "MainMenu.h"
 #include "../CoreManager.h"
 #include "../StateManager.h"
+
+#include "../V4Core.h"
+#include "ButtonList.h"
+#include "iostream"
+#include <Graphics/ConcaveShape.h>
+#include <Graphics/CurveSegment.h>
+#include <Graphics/CurveShape.h>
+
 
 MainMenu::MainMenu()
 {
@@ -178,11 +186,45 @@ MainMenu::MainMenu()
     startClock.restart();
     frClock.restart();
 
+   /* std::vector<CurveShape> c_frames;
+
+    for (size_t i = 0; i < 120; i++)
+    {
+        sf::Vector2f startpoint = sf::Vector2f(100, 100);
+        sf::Vector2f endpoint = sf::Vector2f(700, 100);
+
+        CurveSegment* crv3 = new CurveSegment(CurveType::QUAD_CURVE, startpoint, endpoint, sf::Vector2f(200, 110 + i), sf::Vector2f(600, 110 + i));
+        CurveSegment* crv4 = new CurveSegment(CurveType::QUAD_CURVE, endpoint, startpoint, sf::Vector2f(600, 90 + i), sf::Vector2f(200, 90 + i));
+
+        std::vector<CurveSegment*> crvs2 = {crv3, crv4};
+        CurveShape shp2 = CurveShape(crvs2, sf::Color(0, 0, 0, 50));
+        c_frames.push_back(shp2);
+    }
+    shp = new AnimatedCurveShape(c_frames, sf::Color(0, 0, 0, 50));*/
+    SPDLOG_INFO("Loading AnimatedCurveShape at aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    shp = new AnimatedCurveShape("resources/data/item_data.json");
     initialized = true;
 }
 
 void MainMenu::EventFired(sf::Event event)
 {
+    /*
+    rework pending
+    if (patapolisMenu.is_active)
+    {
+        patapolisMenu.EventFired(event);
+    } else if (nameEntryMenu.is_active)
+    {
+        nameEntryMenu.EventFired(event);
+    } else if (optionsMenu.is_active)
+    {
+        optionsMenu.EventFired(event);
+    } else if (v4Core->currentController.isInitialized)
+    {
+        if (event.type == sf::Event::KeyPressed)
+        {
+        }
+    } else */
     if (is_active)
     {
         if (firstrun)
@@ -539,6 +581,10 @@ void MainMenu::Update()
         //cout << "MouseX: " << (mouseX / window->getSize().x) * 1280 << endl;
 
         mouseInBounds = false;
+            for (int i = 0; i <= 3; i++)
+            {
+                PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(i + 1) + ".png");
+
 
         for (int i = 0; i < 4; i++)
         {
@@ -657,6 +703,16 @@ void MainMenu::Update()
 
         cv_alpha -= 255.0 / fps;
 
+                if (i == totem_sel)
+                {
+                    t_option[i].setPosition(selected_totem.getPosition().x + (selected_totem.getGlobalBoundsScaled().width / 2), 720 - selected_totem.getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height - 35);
+                } else
+                {
+                    PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(i + 1) + ".png");
+                    t_option[i].setPosition(totem.getPosition().x + (totem.getGlobalBoundsScaled().width / 2), 720 - totem.getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height / 2);
+                }
+
+
         if (cv_alpha <= 0)
             cv_alpha = 0;
 
@@ -695,6 +751,14 @@ void MainMenu::Update()
 
                 mouseX = totem_sel_pos[totem_sel];
             }
+
+            // TEMP TESTING OF BEZIER CURVES
+            temp_anim_t += 1;
+            shp->fps = fps;
+            shp->Draw();
+
+            screenFade.draw();
+
 
             if ((inputCtrl->isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl->isKeyPressed(InputController::Keys::RTRIGGER)))
             {
