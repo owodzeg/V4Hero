@@ -6,56 +6,54 @@
 #include <math.h>
 #include <spdlog/spdlog.h>
 #include <span>
+#include "../StateManager.h"
 
 MaterOuterMenu::MaterOuterMenu()
 {
     is_active = false;
-}
-
-void MaterOuterMenu::initialise(Config* _thisConfig, V4Core* parent, PatapolisMenu* curParentMenu)
-{
     SPDLOG_INFO("Initializing Altar...");
-    //Scene::Initialise(_thisConfig, parent);
-    parentMenu = curParentMenu;
+    Config* config = CoreManager::getInstance().getConfig();
 
-    int quality = _thisConfig->GetInt("textureQuality");
+    int quality = config->GetInt("textureQuality");
     q = quality;
 
     switch (quality)
     {
         case 0: ///low
         {
-            ratio_x = _thisConfig->GetInt("resX") / float(640);
-            ratio_y = _thisConfig->GetInt("resY") / float(360);
+            ratio_x = config->GetInt("resX") / float(640);
+            ratio_y = config->GetInt("resY") / float(360);
             break;
         }
 
         case 1: ///med
         {
-            ratio_x = _thisConfig->GetInt("resX") / float(1280);
-            ratio_y = _thisConfig->GetInt("resY") / float(720);
+            ratio_x = config->GetInt("resX") / float(1280);
+            ratio_y = config->GetInt("resY") / float(720);
             break;
         }
 
         case 2: ///high
         {
-            ratio_x = _thisConfig->GetInt("resX") / float(1920);
-            ratio_y = _thisConfig->GetInt("resY") / float(1080);
+            ratio_x = config->GetInt("resX") / float(1920);
+            ratio_y = config->GetInt("resY") / float(1080);
             break;
         }
 
         case 3: ///ultra
+        default:
         {
-            ratio_x = _thisConfig->GetInt("resX") / float(3840);
-            ratio_y = _thisConfig->GetInt("resY") / float(2160);
+            ratio_x = config->GetInt("resX") / float(3840);
+            ratio_y = config->GetInt("resY") / float(2160);
             break;
         }
+        
     }
 
-    res_ratio_x = _thisConfig->GetInt("resX") / float(1280);
-    res_ratio_y = _thisConfig->GetInt("resY") / float(720);
+    res_ratio_x = config->GetInt("resX") / float(1280);
+    res_ratio_y = config->GetInt("resY") / float(720);
 
-    f_font.loadFromFile(_thisConfig->fontPath);
+    f_font.loadFromFile(config->fontPath);
 
     ResourceManager::getInstance().loadSprite("path/to/sprite.png");
 
@@ -77,11 +75,16 @@ void MaterOuterMenu::initialise(Config* _thisConfig, V4Core* parent, PatapolisMe
 
     mater_title.createText(f_font, 40, sf::Color(255, 234, 191, 255), Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("mater_title")), q, 1);
     altar_kaching.createText(f_font, 30, sf::Color(255, 234, 191, 255), "0 Ka-ching", q, 1);
-    squad_title.createText(f_font, 30, sf::Color(255, 234, 191, 255),  Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("yaripon_squad")), q, 1);
+    squad_title.createText(f_font, 30, sf::Color(255, 234, 191, 255), Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("yaripon_squad")), q, 1);
 
     ctrlTips.create(54, f_font, 20, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("mater_outer_ctrl_tips")), quality);
 
     SPDLOG_INFO("Initializing Altar finished.");
+}
+
+void MaterOuterMenu::initialise(Config* _thisConfig, V4Core* parent, PatapolisMenu* curParentMenu)
+{
+    
 }
 void MaterOuterMenu::showCategory()
 {
@@ -162,7 +165,7 @@ void MaterOuterMenu::eventFired(sf::Event event)
         }
     }
 }
-void MaterOuterMenu::DrawAsleepSquad(MaterOuterMenu::SquadBox& squad, int squad_alpha, sf::RenderWindow& window)
+void MaterOuterMenu::DrawAsleepSquad(MaterOuterMenu::SquadBox& squad, int squad_alpha, sf::RenderWindow* window)
 {
     PSprite& bg = ResourceManager::getInstance().getSprite("resources/graphics/ui/mater/matersquad_bg_asleep.png");
     PSprite& slot = ResourceManager::getInstance().getSprite("resources/graphics/ui/mater/matersquad_slot_asleep.png");
@@ -224,15 +227,18 @@ vector<MaterOuterMenu::SquadBox*> MaterOuterMenu::GetSquadsCentered()
     return out;
 }
 
-void MaterOuterMenu::update(sf::RenderWindow& window, float fps, InputController& inputCtrl)
+void MaterOuterMenu::Update()
 {
-    if (is_active)
+    if (true)
     {
+        InputController* inputCtrl = CoreManager::getInstance().getInputController();
+        sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+        float fps = CoreManager::getInstance().getCore()->getFPS();
         highlight_x += 7.0 / fps;
 
         ctrlTips.x = 0;
         ctrlTips.y = (720 - ctrlTips.ySize);
-        ctrlTips.draw(window);
+        ctrlTips.draw(*window);
 
         mater_main.setOrigin(mater_main.getLocalBounds().width / 2, mater_main.getLocalBounds().height / 2);
         mater_main.setPosition(1050, 322);
@@ -248,7 +254,7 @@ void MaterOuterMenu::update(sf::RenderWindow& window, float fps, InputController
         mater_title.draw(window);
         altar_kaching.draw(window);
 
-        vector<MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
+        vector < MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
 
 
         std::span<SquadBox*> beforesquads = std::span(centered_squads).subspan(0, 2);
@@ -352,15 +358,15 @@ void MaterOuterMenu::update(sf::RenderWindow& window, float fps, InputController
 
             
         }
-        if (inputCtrl.isKeyPressed(InputController::Keys::LEFT))
+        if (inputCtrl->isKeyPressed(InputController::Keys::LEFT))
         {
             this->MoveSquadPos(-1);
         }
-        if (inputCtrl.isKeyPressed(InputController::Keys::RIGHT))
+        if (inputCtrl->isKeyPressed(InputController::Keys::RIGHT))
         {
             this->MoveSquadPos(1);
         }
-        if (inputCtrl.isKeyPressed(InputController::Keys::UP))
+        if (inputCtrl->isKeyPressed(InputController::Keys::UP))
         {
             cursquad--;
             if (cursquad < 0)
@@ -375,7 +381,7 @@ void MaterOuterMenu::update(sf::RenderWindow& window, float fps, InputController
                 centered_squads[i]->y = 165 + 100 * i; // re-center the squads
             }
         }
-        if (inputCtrl.isKeyPressed(InputController::Keys::DOWN))
+        if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
         {
             cursquad++;
             if (cursquad > squads.size()-1)
@@ -390,9 +396,10 @@ void MaterOuterMenu::update(sf::RenderWindow& window, float fps, InputController
                 centered_squads[i]->y = 165 + 100 * i; // re-center the squads
             }
         }
-        if (inputCtrl.isKeyPressed(InputController::Keys::CIRCLE))
+        if (inputCtrl->isKeyPressed(InputController::Keys::CIRCLE))
         {
-            this->is_active = false;
+            is_active = false;
+            StateManager::getInstance().setState(StateManager::PATAPOLIS);
         }
     }
 }

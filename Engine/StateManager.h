@@ -11,6 +11,7 @@
 #include "Menu/LoadingTip.h"
 #include "Menu/Patapolis.h"
 #include "Menu/Altar.h"
+#include "Menu/MaterOuter.h"
 #include "Menu/Barracks.h"
 #include "Menu/IntroductionMenu.h"
 #include "Mission/MissionController.h"
@@ -31,7 +32,8 @@ public:
         PATAPOLIS_ALTAR = 7,
         BARRACKS = 8,
         OBELISK = 9,
-        MISSIONCONTROLLER = 10
+        MISSIONCONTROLLER = 10,
+        MATER_OUTER = 11
     };
 
     static StateManager& getInstance();
@@ -56,6 +58,7 @@ private:
     LoadingTip* loadingTipPtr;
     PatapolisMenu* patapolisPtr;
     AltarMenu* altarPtr;
+    MaterOuterMenu* materPtr;
     Barracks* barracksPtr;
     ObeliskMenu* obeliskPtr;
     IntroductionMenu* introductionPtr;

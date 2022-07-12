@@ -708,7 +708,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
             a += "X: Interact      ";
             break;
         case Buildings::MATER:
-            t_title.setString(Func::ConvertToUtf8String(strRepo->GetString("patapolis_mater")));
+            t_title.setString(Func::ConvertToUtf8String(strRepo->GetString("patapolis_tree")));
             break;
         case Buildings::PARAGET:
             t_title.setString(Func::ConvertToUtf8String(strRepo->GetString("patapolis_paraget")));
@@ -818,7 +818,10 @@ void PatapolisMenu::Update()
         window->draw(v_background);
 
         camDest = locations[location];
-        if (mater_menu.is_active) {
+
+        
+        if (StateManager::getInstance().getState() == StateManager::MATER_OUTER)
+        {
             camDest += materoffset; // when mater menu is open, offset slightly so we still see the tree
         }
 
@@ -1499,13 +1502,13 @@ void PatapolisMenu::Update()
         lastView = window->getView();
         window->setView(window->getDefaultView());
 
-        if ((!mater_menu.is_active) && (!credits.is_active))
-        {
-            ctrlTips.x = 0;
-            ctrlTips.y = (720 - ctrlTips.ySize);
+        //if ((!mater_menu.is_active) && (!credits.is_active))
+        //{
+            //ctrlTips.x = 0;
+            //ctrlTips.y = (720 - ctrlTips.ySize);
             //TO-DO: control tips without window argument
             //ctrlTips.draw(window);
-        }
+        //}
 
         /*if(fade_alpha > 0)
         {
@@ -1592,7 +1595,7 @@ void PatapolisMenu::Update()
 
         if (dialogboxes.size() <= 0)
         {
-            if ((StateManager::getInstance().getState() != StateManager::PATAPOLIS_ALTAR) && (!mater_menu.is_active) && (!credits.is_active) && (screenFade.checkFinished()))
+            if ((StateManager::getInstance().getState() != StateManager::PATAPOLIS_ALTAR) && (StateManager::getInstance().getState() != StateManager::MATER_OUTER) && (!credits.is_active) && (screenFade.checkFinished()))
             {
                 if ((inputCtrl->isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl->isKeyPressed(InputController::Keys::LTRIGGER)))
                 {
@@ -1665,9 +1668,10 @@ void PatapolisMenu::Update()
                         case Buildings::MATER:
                             /// festival
                             // open barracks screen
-                            mater_menu.save_loaded = save_loaded;
-                            mater_menu.is_active = true;
-                            mater_menu.showMater();
+                            StateManager::getInstance().setState(StateManager::MATER_OUTER);
+                            //mater_menu.save_loaded = save_loaded;
+                            //mater_menu.is_active = true;
+                            //mater_menu.showMater();
                             break;
                         default:
                             /// nothing

@@ -200,7 +200,7 @@ MainMenu::MainMenu()
         c_frames.push_back(shp2);
     }
     shp = new AnimatedCurveShape(c_frames, sf::Color(0, 0, 0, 50));*/
-    SPDLOG_INFO("Loading AnimatedCurveShape at aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    SPDLOG_INFO("Loading AnimatedCurveShape");
     shp = new AnimatedCurveShape("resources/data/item_data.json");
     initialized = true;
 }
