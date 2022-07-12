@@ -124,7 +124,7 @@ set(ENGINE_FILES
         DiscordSDK/store_manager.cpp
         DiscordSDK/types.cpp
         DiscordSDK/user_manager.cpp
-        DiscordSDK/voice_manager.cpp)
+        DiscordSDK/voice_manager.cpp
         Engine/Graphics/CurveShape.cpp 
         Engine/Graphics/CurveSegment.cpp
         Engine/Graphics/ConcaveShape.cpp "Engine/Graphics/AnimatedCurveShape.cpp" "Engine/Graphics/AnimatedCurveShape.h")

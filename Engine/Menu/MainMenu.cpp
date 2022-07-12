@@ -5,7 +5,6 @@
 #include "../StateManager.h"
 
 #include "../V4Core.h"
-#include "ButtonList.h"
 #include "iostream"
 #include <Graphics/ConcaveShape.h>
 #include <Graphics/CurveSegment.h>
@@ -581,10 +580,10 @@ void MainMenu::Update()
         //cout << "MouseX: " << (mouseX / window->getSize().x) * 1280 << endl;
 
         mouseInBounds = false;
-            for (int i = 0; i <= 3; i++)
-            {
-                PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(i + 1) + ".png");
-
+        for (int i = 0; i <= 3; i++)
+        {
+            PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(i + 1) + ".png");
+        }
 
         for (int i = 0; i < 4; i++)
         {
@@ -703,14 +702,7 @@ void MainMenu::Update()
 
         cv_alpha -= 255.0 / fps;
 
-                if (i == totem_sel)
-                {
-                    t_option[i].setPosition(selected_totem.getPosition().x + (selected_totem.getGlobalBoundsScaled().width / 2), 720 - selected_totem.getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height - 35);
-                } else
-                {
-                    PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(i + 1) + ".png");
-                    t_option[i].setPosition(totem.getPosition().x + (totem.getGlobalBoundsScaled().width / 2), 720 - totem.getGlobalBoundsScaled().height - fire_1.getGlobalBoundsScaled().height / 2);
-                }
+                
 
 
         if (cv_alpha <= 0)
