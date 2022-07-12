@@ -1,5 +1,6 @@
 #include "Tatepon.h"
 #include "../../../Func.h"
+#include "../../../CoreManager.h"
 #include "math.h"
 #include <fstream>
 #include <iostream>
@@ -7,10 +8,10 @@
 Tatepon::Tatepon()
 {
 }
-void Tatepon::LoadConfig(Config* thisConfigs)
+void Tatepon::LoadConfig()
 {
     /// load patapon from p4a file
-    AnimatedObject::LoadConfig(thisConfigs, "resources/units/unit/yaripon.p4a");
+    AnimatedObject::LoadConfig("resources/units/unit/yaripon.p4a");
     setAnimationSegment("idle_armed");
 
     sword_swing.loadFromFile("resources/sfx/level/spear_throw.ogg");
@@ -21,7 +22,7 @@ void Tatepon::LoadConfig(Config* thisConfigs)
 
     s_dead.loadFromFile("resources/sfx/level/dead_2.ogg");
 
-    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("sfxVolume")) / 100.f));
+    cur_sound.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
 
 
     can_shield = true;
@@ -449,7 +450,7 @@ void Tatepon::Draw(sf::RenderWindow& window)
         if (old_current_song == "chakachaka")
         {
             cout << "[DEBUG] ChakaChaka in draw function" << endl;
-            //thisConfig->thisCore->saveReader.ponreg.GetPonByID(0);
+            //CoreManager::getInstance().getSaveReader()->ponreg.GetPonByID(0);
         }
     }
 
@@ -474,7 +475,7 @@ void Tatepon::Draw(sf::RenderWindow& window)
     local_x += hspeed / fps;
     local_y += vspeed / fps;
 
-    AnimatedObject::Draw(window);
+    AnimatedObject::Draw();
 }
 
 void Tatepon::OnCollide(CollidableObject* otherObject, int collidedWith, vector<string> collisionData)

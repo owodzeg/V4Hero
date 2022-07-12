@@ -1,10 +1,7 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "Barracks.h"
-#include "../V4Core.h"
 #include "Altar.h"
-#include "ButtonList.h"
-#include <iostream>
 #include <sstream>
 #include <spdlog/spdlog.h>
 #include "../CoreManager.h"
@@ -21,13 +18,7 @@ std::string to_string_with_precision(const T a_value, const int n = 2)
 
 Barracks::Barracks()
 {
-    //ctor
-    //f_font.loadFromFile("resources/fonts/arial.ttf");
-
     SPDLOG_INFO("Initializing Barracks");
-    //TO-DO: is this needed anymore?
-    //Scene::Initialise(_thisConfig, parent);
-    //parentMenu = curParentMenu;
 
     f_font.loadFromFile(CoreManager::getInstance().getConfig()->fontPath);
 
@@ -52,14 +43,13 @@ Barracks::Barracks()
                 wip_pon.get()->entityID = -1001; ///lets say entity IDs for units will be -1000 and below, so -1001 is yaripon, -1002 will be tatepon etc
 
                 SPDLOG_DEBUG("Loading Pon");
+                wip_pon.get()->LoadConfig();
 
-                //TO-DO: this is disabled because AnimatedObject does not work well yet.
-                //wip_pon.get()->LoadConfig(thisConfig);
-
-                if (!CoreManager::getInstance().getCore()->isCached[wip_pon.get()->entityID])
-                {
+                //TO-DO: is caching needed anymore?
+                // if (!CoreManager::getInstance().getCore()->isCached[wip_pon.get()->entityID])
+                //{
                     //CoreManager::getInstance().getCore()->cacheEntity(wip_pon.get()->entityID, wip_pon.get()->all_swaps_img, wip_pon.get()->animation_spritesheet, wip_pon.get()->objects);
-                }
+                //}
 
                 wip_pon.get()->setAnimationSegment("idle_armed");
 
@@ -278,10 +268,7 @@ Barracks::Barracks()
     //TO-DO: is this needed?
     is_active = false;
 }
-void Barracks::initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMenu)
-{
-    
-}
+
 void Barracks::eventFired(sf::Event event)
 {
     if (is_active)
@@ -649,8 +636,7 @@ void Barracks::Update()
         {
             units[i].get()->setGlobalPosition(sf::Vector2f(500 + (75 * (i)), patapon_y));
             units[i].get()->fps = fps;
-            //TO-DO: animated objects doesn't work yet. implement new system
-            //units[i].get()->Draw(window);
+            units[i].get()->Draw();
         }
 
         s_pon_highlight.setPosition(highlight_width * 2, 675);
@@ -826,8 +812,7 @@ void Barracks::Update()
 
         ctrlTips.x = 0;
         ctrlTips.y = (720 - ctrlTips.ySize);
-        //TO-DO: this doesn't work. check why
-        //ctrlTips.draw(window);
+        ctrlTips.draw();
 
         if (menu_mode)
         {
@@ -957,7 +942,7 @@ void Barracks::Update()
 
         window->setView(lastView);
 
-        if (dialog_boxes.size() <= 0)
+        if ((dialog_boxes.size() <= 0) && (screenFade.checkFinished()))
         {
             if (!menu_mode)
             {
@@ -1218,21 +1203,16 @@ void Barracks::Update()
                     refreshStats();
                 } else
                 {
-                    //TO-DO: return from barracks to Patapolis (call to StateManager i guess)
-                    //parentMenu->screenFade.Create(thisConfig, 1, 1536);
-                    //parentMenu->goto_id = 2;
-
-                    /*this->Hide();
-                    this->isActive = false;
-                    parentMenu->Show();
-                    parentMenu->isActive=true;*/
-
-                    screenFade.Create(1, 512);
+                    screenFade.Create(ScreenFade::FADEOUT, 1024);
 
                     if (obelisk)
-                        StateManager::getInstance().setState(StateManager::OBELISK);
+                    {
+                        goto_id = 0;
+                    }
                     else
-                        StateManager::getInstance().setState(StateManager::PATAPOLIS); 
+                    {
+                        goto_id = 1;
+                    }
                 }
             }
 
@@ -1260,26 +1240,12 @@ void Barracks::Update()
                             SPDLOG_DEBUG("Go on mission!");
                             dialog_boxes[dialog_boxes.size() - 1].Close();
 
-                            //TO-DO: Run MissionController (but through StateManager, properly)
-                            //parentMenu->screenFade.Create(thisConfig, 1, 1536);
-                            //parentMenu->goto_id = 5;
-
-                            /*sf::Thread loadingThreadInstance(v4core->LoadingThread,v4core);
-                            v4core->continueLoading=true;
-                            v4core->window->setActive(false);
-                            loadingThreadInstance.launch();
-
-                            currentController->Initialise(*config,config->GetString("mission1Background"),*v4core);
-                            currentController->StartMission(mission_file,1,missionID,mission_multiplier);
-                            this->Hide();
-                            this->isActive = false;
-
-                            missionStarted = true;
-
-                            v4core->continueLoading=false;*/
-
+                            goto_id = 2;
+                            screenFade.Create(ScreenFade::FADEOUT, 1024);
                             break;
                         }
+
+                        break;
                     }
 
                     case 1: {
@@ -1290,6 +1256,36 @@ void Barracks::Update()
                     }
                 }
             }
+        }
+
+        if (screenFade.checkFinished())
+        {
+            switch (goto_id)
+            {
+                case 0: {
+                    StateManager::getInstance().setState(StateManager::OBELISK);
+                    break;
+                }
+
+                case 1: {
+                    StateManager::getInstance().setState(StateManager::PATAPOLIS);
+                    break;
+                }
+
+                case 2: {
+                    CoreManager::getInstance().getCore()->mission_file = mission_file;
+                    CoreManager::getInstance().getCore()->mission_id = mission_id;
+                    CoreManager::getInstance().getCore()->mission_multiplier = 1;
+
+                    StateManager::getInstance().setState(StateManager::MISSIONCONTROLLER);
+
+                    return; //we return here because Barracks get destroyed, so no illegal memory accesses are made.
+
+                    break;
+                }
+            }
+
+            goto_id = -1;
         }
     }
 }

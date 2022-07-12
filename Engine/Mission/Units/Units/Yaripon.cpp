@@ -3,6 +3,7 @@
 #include "Yaripon.h"
 #include "../../../Func.h"
 #include "../../../V4Core.h"
+#include "../../../CoreManager.h"
 #include <cmath>
 #include <iostream>
 #include <spdlog/spdlog.h>
@@ -11,10 +12,10 @@
 Yaripon::Yaripon()
 {
 }
-void Yaripon::LoadConfig(Config* thisConfigs)
+void Yaripon::LoadConfig()
 {
     /// load patapon from p4a file
-    AnimatedObject::LoadConfig(thisConfigs, "resources/units/unit/yaripon.p4a");
+    AnimatedObject::LoadConfig("resources/units/unit/yaripon.p4a");
     setAnimationSegment("idle_armed");
 
     spear_throw.loadFromFile("resources/sfx/level/spear_throw.ogg");
@@ -25,7 +26,7 @@ void Yaripon::LoadConfig(Config* thisConfigs)
 
     s_dead.loadFromFile("resources/sfx/level/dead_2.ogg");
 
-    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("sfxVolume")) / 100.f));
+    cur_sound.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
 
     isCollidable = true;
     isAttackable = true;
@@ -241,7 +242,7 @@ void Yaripon::Update()
 }
 
 // State update -> Animation -> Draw
-void Yaripon::Draw(sf::RenderWindow& window)
+void Yaripon::Draw()
 {
     if (AnimatedObject::getAnimationSegment() == "walk")
     {
@@ -297,7 +298,7 @@ void Yaripon::Draw(sf::RenderWindow& window)
         }
     }
 
-    AnimatedObject::Draw(window);
+    AnimatedObject::Draw();
 }
 
 void Yaripon::UpdateRhythm(std::string current_song, std::string current_drum, int combo)

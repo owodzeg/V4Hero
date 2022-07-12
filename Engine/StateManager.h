@@ -7,12 +7,12 @@
 #include <vector>
 
 #include "Menu/MainMenu.h"
-#include "Menu/NewGameMenu.h"
 #include "Menu/OptionsMenu.h"
 #include "Menu/LoadingTip.h"
 #include "Menu/Patapolis.h"
 #include "Menu/Altar.h"
 #include "Menu/Barracks.h"
+#include "Menu/IntroductionMenu.h"
 #include "Mission/MissionController.h"
 
 // Class for holding the pointers to commonly used important game contents
@@ -46,10 +46,10 @@ private:
     StateManager();
     ~StateManager();
 
+    int prevGameState = 0;
     int currentGameState = 0;
     int afterTipState = 0;
 
-    NewGameMenu* newGameMenuPtr;
     MainMenu* mainMenuPtr;
     OptionsMenu* optionsMenuPtr;
     MissionController* missionControllerPtr;
@@ -58,6 +58,7 @@ private:
     AltarMenu* altarPtr;
     Barracks* barracksPtr;
     ObeliskMenu* obeliskPtr;
+    IntroductionMenu* introductionPtr;
 
     std::vector<std::thread> loadingThreads;
 };

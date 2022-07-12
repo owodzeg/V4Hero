@@ -5,6 +5,13 @@
 #include <spdlog/spdlog.h>
 
 #include "V4Core.h"
+#include "Config.h"
+#include "SaveReader.h"
+#include "ResourceManager.h"
+#include "TextureManager.h"
+#include "StringRepository.h"
+#include "TipsUtil.h"
+#include "Mission/MissionController.h"
 
 // Class for holding the pointers to commonly used important game contents
 class CoreManager
@@ -18,6 +25,9 @@ public:
     SaveReader* getSaveReader();
     InputController* getInputController();
     TipsUtil* getTipsUtil();
+    MissionController* getMissionController();
+    void reinitMissionController();
+    void deleteMissionController();
     sf::RenderWindow* getWindow();
 
 private:
@@ -41,6 +51,9 @@ private:
 
     // Pointer to Tips utility
     TipsUtil* tipsUtil;
+
+    // Pointer to MissionController (handled by StateManager)
+    MissionController* missionController;
 
     // Pointer to current window
     sf::RenderWindow* window;

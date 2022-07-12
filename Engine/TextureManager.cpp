@@ -55,6 +55,7 @@ void TextureManager::loadTexture(const std::string& path, int quality)
 
 sf::Texture& TextureManager::getTexture(const std::string& path)
 {
+    std::lock_guard<std::mutex> guard(resource_mutex);
     // first texture initialization should be used with quality setting.
     // if you are using this function, that means the texture is already loaded
     // if it's not, this code will crash
@@ -183,6 +184,8 @@ bool TextureManager::checkImageExists(const std::string& key)
 
 void TextureManager::loadImageFromFile(const std::string& path)
 {
+    std::lock_guard<std::mutex> guard(resource_mutex);
+
     if (loadedImages.find(path) == loadedImages.end() || forceLoad)
     {
         SPDLOG_INFO("Loading image from file {}", path);
@@ -194,16 +197,28 @@ void TextureManager::loadImageFromFile(const std::string& path)
     }
 }
 
-void TextureManager::loadImageFromMemory(const std::string& key, sf::Image image)
+void TextureManager::loadImageFromMemory(const std::string& key, sf::Image image, bool asTexture)
 {
-    if (loadedImages.find(key) == loadedImages.end())
+    std::lock_guard<std::mutex> guard(resource_mutex);
+
+    if (!asTexture)
     {
-        SPDLOG_INFO("Loading image from memory with key {}", key);
-        loadedImages[key] = image;
+        if (loadedImages.find(key) == loadedImages.end())
+        {
+            SPDLOG_INFO("Loading image from memory with key {}", key);
+            loadedImages[key] = image;
+        } else
+        {
+            //SPDLOG_ERROR("Couldn't load image {}: image already loaded", key);
+            //in theory this shouldnt be an error
+        }
     } else
     {
-        //SPDLOG_ERROR("Couldn't load image {}: image already loaded", key);
-        //in theory this shouldnt be an error 
+        if (loadedImages.find(key) == loadedImages.end())
+        {
+            SPDLOG_INFO("Loading image from memory into texture with key {}", key);
+            loadedTextures[key].loadFromImage(image);
+        }
     }
 }
 
@@ -223,6 +238,8 @@ sf::Image& TextureManager::getImage(const std::string& key)
 
 void TextureManager::loadTextureFromImage(const std::string& img_key)
 {
+    std::lock_guard<std::mutex> guard(resource_mutex);
+
     if (loadedImages.find(img_key) == loadedImages.end())
     {
         SPDLOG_WARN("Couldn't find image {}, texture may be missing", img_key);
@@ -233,6 +250,11 @@ void TextureManager::loadTextureFromImage(const std::string& img_key)
         SPDLOG_DEBUG("Loading image {} into texture", img_key);
         loadedTextures[img_key].loadFromImage(loadedImages[img_key]);
     }
+}
+
+void TextureManager::unloadTexture(const std::string& key)
+{
+    loadedTextures.erase(key);
 }
 
 void TextureManager::unloadImage(const std::string& key)

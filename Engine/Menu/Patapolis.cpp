@@ -1,39 +1,25 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "Patapolis.h"
-#include "../V4Core.h"
 #include "Altar.h"
-#include "ButtonList.h"
-#include "iostream"
+
 #include <sstream>
 #include <spdlog/spdlog.h>
+
 #include "../CoreManager.h"
 #include "../StateManager.h"
+#include "../ResourceManager.h"
 
 PatapolisMenu::PatapolisMenu()
 {
-    //ctor
-
-    //f_font.loadFromFile("resources/fonts/arial.ttf");
-
     //TO-DO: is this still needed?
     is_active = false;
 
     SPDLOG_INFO("Initializing Patapolis");
 
     Config* config = CoreManager::getInstance().getConfig();
-
-    //sf::Context context;
-    //TO-DO: is Scene still needed?
-    //Scene::Initialise(_thisConfig, parent);
     updateStoryPoint(); // Update story_point before anything else
-    
-    //TO-DO: Patapolis menus under new system
-    //altar_menu->initialise(_thisConfig, parent, this);
-    //mater_menu.initialise(_thisConfig, parent, this);
-    //SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       initialise(_thisConfig, parent, this);
-    //obelisk_menu.Initialise(_thisConfig, parent, this);
-    //parentMenu = curParentMenu;
+
     quality = config->GetInt("textureQuality");
 
     float resRatioX = config->GetInt("resX") / float(1280);
@@ -107,12 +93,12 @@ PatapolisMenu::PatapolisMenu()
 
     for (int i = 0; i < l2_str.size(); i++)
     {
-        ps_layer_2[l2_str[i]].loadFromFile("resources/graphics/bg/patapolis/2" + l2_str[i] + ".png", quality, 1);
+        ps_layer_2[l2_str[i]] = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/2" + l2_str[i] + ".png");
     }
 
     for (int i = 0; i < l6_str.size(); i++)
     {
-        ps_layer_6[l6_str[i]].loadFromFile("resources/graphics/bg/patapolis/6" + l6_str[i] + ".png", quality, 1);
+        ps_layer_6[l6_str[i]] = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/6" + l6_str[i] + ".png");
     }
 
 
@@ -157,11 +143,8 @@ PatapolisMenu::PatapolisMenu()
     addL6("d", 9930, 750 - floor_height);
     addL6("d", 10040, 737 - floor_height);
 
-    L5 = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/5.png");
-    L4 = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/4.png");
-
-    L5.setPosition(3060, 740 - floor_height);
-    L4.setPosition(2530, 750 - floor_height);
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/5.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/4.png");
 
     addL2("a", 800, 766 - floor_height);
     addL2("b", 2900, 740 - floor_height);
@@ -206,15 +189,15 @@ PatapolisMenu::PatapolisMenu()
     addL2("d", 9000, 728 - floor_height);
     addL2("d", 10500, 728 - floor_height);
 
-    edge = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/edge.png");
-    bridge = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/bridge.png");
-    rainbow = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/rainbow.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/edge.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/bridge.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/rainbow.png");
 
     for (int i = 0; i < 4; i++)
     {
-        back_layer[i] = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/back_" + to_string(i + 1) + ".png");
-        back_layer[i].setOrigin(0, back_layer[i].getLocalBounds().height);
-        back_layer[i].setPosition(back_pos[i], 715);
+        back_layer[i] = "resources/graphics/bg/patapolis/back_" + to_string(i + 1) + ".png";
+
+        ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/back_" + to_string(i + 1) + ".png");
     }
 
     // to be replaced to store only data in vectors and draw the same sprite in draw call
@@ -236,34 +219,17 @@ PatapolisMenu::PatapolisMenu()
     addSparkle(11620 + 937, 401);
     addSparkle(11620 + 860, 244);
 
-    wakapon.loadFromFile("resources/graphics/bg/patapolis/wakapon.png", quality, 1);
-    wakapon.setPosition(11920, 462);
-    wakapon.setOrigin(wakapon.getLocalBounds().width / 2, wakapon.getLocalBounds().height);
-
-    //TO-DO: something doesn't work here. get Patapolis to load up first, then figure out what's wrong
-    /* a_wakapon.LoadConfig(config, "resources/units/unit/wakapon.p4a");
+    a_wakapon.LoadConfig("resources/units/unit/wakapon.p4a");
     a_wakapon.setAnimationSegment("idle");
     a_wakapon.global_y = 395;
 
-    a_sen.LoadConfig(config, "resources/units/unit/ranpurupon.p4a");
+    a_sen.LoadConfig("resources/units/unit/ranpurupon.p4a");
     a_sen.setAnimationSegment("idle");
-    a_sen.global_y = 629; */
+    a_sen.global_y = 629;
 
-    world_egg.loadFromFile("resources/graphics/bg/patapolis/egg.png", quality, 1);
-    world_egg.setPosition(12215, 462);
-    world_egg.setOrigin(world_egg.getLocalBounds().width / 2, world_egg.getLocalBounds().height);
-
-    light_1.loadFromFile("resources/graphics/bg/patapolis/light.png", quality, 1);
-    light_1.setPosition(11715, 161);
-    light_1.setOrigin(light_1.getLocalBounds().width / 2, light_1.getLocalBounds().height / 2);
-
-    light_2.loadFromFile("resources/graphics/bg/patapolis/light.png", quality, 1);
-    light_2.setPosition(12720, 161);
-    light_2.setOrigin(light_2.getLocalBounds().width / 2, light_2.getLocalBounds().height / 2);
-
-    egg_light.loadFromFile("resources/graphics/bg/patapolis/egg_light.png", quality, 1);
-    egg_light.setPosition(12217, 288);
-    egg_light.setOrigin(egg_light.getLocalBounds().width / 2, egg_light.getLocalBounds().height / 2);
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/egg.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/light.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/egg_light.png");
 
     addRay(10, 331, 18, 321);
     addRay(21, 321, 25, 316);
@@ -309,77 +275,34 @@ PatapolisMenu::PatapolisMenu()
         lightrays.push_back(tmp);
     }
 
-    barracks.loadFromFile("resources/graphics/bg/patapolis/barracks.png", quality, 1);
-    barracks.setPosition(640, 765 - floor_height);
-    barracks.setOrigin(barracks.getLocalBounds().width / 2, barracks.getLocalBounds().height);
+    //preload patapolis locations
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/barracks.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/forge_main.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/blacksmith_forge.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/blacksmith_forge_glow.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/blacksmith_fence.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/slab.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/slab_glow.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/market.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/mater.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/festival_main.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/altar.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/obelisk.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/paraget_main.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/paraget_crystal_glow.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/paraget_crystal.png");
 
-    forge_main.loadFromFile("resources/graphics/bg/patapolis/forge_main.png", quality, 1);
-    forge_main.setPosition(2300, 721 - floor_height);
-    forge_main.setOrigin(forge_main.getLocalBounds().width / 2, forge_main.getLocalBounds().height);
-
-    forge_back.loadFromFile("resources/graphics/bg/patapolis/blacksmith_forge.png", quality, 1);
-    forge_back.setPosition(2300, 721 - floor_height - 29);
-    forge_back.setOrigin(forge_back.getLocalBounds().width / 2, forge_back.getLocalBounds().height);
-
-    forge_glow.loadFromFile("resources/graphics/bg/patapolis/blacksmith_forge_glow.png", quality, 1);
-    forge_glow.setPosition(2300, 720 - floor_height - 178);
-    forge_glow.setOrigin(forge_glow.getLocalBounds().width / 2, forge_glow.getLocalBounds().height);
-
-    forge_fence.loadFromFile("resources/graphics/bg/patapolis/blacksmith_fence.png", quality, 1);
-    forge_fence.setPosition(2043, 720 - floor_height - 306);
-    forge_fence.setOrigin(forge_fence.getLocalBounds().width / 2, 0);
-
-    forge_slab.loadFromFile("resources/graphics/bg/patapolis/slab.png", quality, 1);
-    forge_slab.setPosition(2300 - 65, 720 - floor_height - 84);
-    forge_slab.setOrigin(forge_slab.getLocalBounds().width / 2, forge_slab.getLocalBounds().height);
-
-    forge_slab_glow.loadFromFile("resources/graphics/bg/patapolis/slab_glow.png", quality, 1);
-    forge_slab_glow.setPosition(2300 - 72, 720 - floor_height - 92);
-    forge_slab_glow.setOrigin(forge_slab_glow.getLocalBounds().width / 2, forge_slab_glow.getLocalBounds().height);
-
-    market.loadFromFile("resources/graphics/bg/patapolis/market.png", quality, 1);
-    market.setPosition(3960, 728 - floor_height);
-    market.setOrigin(market.getLocalBounds().width / 2, market.getLocalBounds().height);
-
-    mater.loadFromFile("resources/graphics/bg/patapolis/mater.png", quality, 1);
-    mater.setPosition(9340, 728 - floor_height);
-    mater.setOrigin(mater.getLocalBounds().width / 2, mater.getLocalBounds().height);
-
-    festival_main.loadFromFile("resources/graphics/bg/patapolis/festival_main.png", quality, 1);
-    festival_main.setPosition(5620, 721 - floor_height);
-    festival_main.setOrigin(festival_main.getLocalBounds().width / 2, festival_main.getLocalBounds().height);
-
-    altar.loadFromFile("resources/graphics/bg/patapolis/altar.png", quality, 1);
-    altar.setPosition(7280, 720 - floor_height);
-    altar.setOrigin(altar.getLocalBounds().width / 2, altar.getLocalBounds().height);
-
-    obelisk.loadFromFile("resources/graphics/bg/patapolis/obelisk.png", quality, 1);
-    obelisk.setPosition(8300, 722 - floor_height);
-    obelisk.setOrigin(obelisk.getLocalBounds().width / 2, obelisk.getLocalBounds().height);
-
-    paraget_main.loadFromFile("resources/graphics/bg/patapolis/paraget_main.png", quality, 1);
-    paraget_main.setPosition(10600, 722 - floor_height);
-    paraget_main.setOrigin(paraget_main.getLocalBounds().width / 2, paraget_main.getLocalBounds().height);
-
-    paraget_crystal_glow.loadFromFile("resources/graphics/bg/patapolis/paraget_crystal_glow.png", quality, 1);
-    paraget_crystal_glow.setPosition(10600, 430);
-    paraget_crystal_glow.setOrigin(paraget_crystal_glow.getLocalBounds().width / 2, paraget_crystal_glow.getLocalBounds().height / 2);
-
-    paraget_crystal.loadFromFile("resources/graphics/bg/patapolis/paraget_crystal.png", quality, 1);
-    paraget_crystal.setPosition(10600, 430);
-    paraget_crystal.setOrigin(paraget_crystal.getLocalBounds().width / 2, paraget_crystal.getLocalBounds().height / 2);
-
-    locations.push_back(barracks.getPosition().x - 640);
-    locations.push_back(forge_main.getPosition().x - 640);
-    locations.push_back(market.getPosition().x - 640);
-    locations.push_back(festival_main.getPosition().x - 640);
+    locations.push_back(640 - 640); //Barracks
+    locations.push_back(2300 - 640); //Blacksmith
+    locations.push_back(3960 - 640); //Market
+    locations.push_back(5620 - 640); //Festival
     locations.push_back(6450 - 640); ///Sen
-    locations.push_back(altar.getPosition().x - 640);
-    locations.push_back(obelisk.getPosition().x - 640);
-    locations.push_back(mater.getPosition().x - 530); // mater needs to be offset differently because sprite is not centered
-    locations.push_back(paraget_main.getPosition().x - 640);
-    locations.push_back(11290);
-    locations.push_back(11569);
+    locations.push_back(7280 - 640); // Altar
+    locations.push_back(8300 - 640); // Obelisk
+    locations.push_back(9340 - 530); // Mater (needs to be offset differently because sprite is not centered)
+    locations.push_back(10600 - 640); //Paraget
+    locations.push_back(11290); // Wakapon
+    locations.push_back(11569); // Egg
 
     int range = rand() % 30 + 50;
     for (int i = 0; i < range; i++)
@@ -403,12 +326,19 @@ PatapolisMenu::PatapolisMenu()
     forge_big = addFire(2, 2050, 542, false); // blacksmith
     forge_purple = addFire(3, 2370, 404, false);
 
-    p_smoke = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/smoke.png");
-    p_smoke.setOrigin(p_smoke.getLocalBounds().width / 2, p_smoke.getLocalBounds().height / 2);
-
     addCloud("A", 9500, 140, 0, 0);
     addCloud("A", 8800, 240, 0, 0);
     addCloud("A", 8000, 170, 0, 0);
+
+    // preload all the tiny effect png's beforehand
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/smoke.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/sparkle.png");
+
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/1a.png");
+
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/paraget_sparkle_1.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/paraget_sparkle_2.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/paraget_sparkle_3.png");
 
     ctrlTips.create(54, f_font, 20, sf::String("L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
 
@@ -418,7 +348,7 @@ PatapolisMenu::PatapolisMenu()
     
     credits.Initialise(config, v4Core);
     */
-    screenFade.Create(config, 0, 512);
+    screenFade.Create(ScreenFade::FADEIN, 1024);
 
     float volume = (float(config->GetInt("masterVolume")) * (float(config->GetInt("bgmVolume")) / 100.f));
 
@@ -571,11 +501,17 @@ PatapolisMenu::Fire PatapolisMenu::addFire(int type, float x, float y, bool add)
         }
     }
 
-    tmp.fire[0] = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/" + str_type + "_fire1.png");
-    tmp.fire[1] = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/" + str_type + "_fire2.png");
-    tmp.fire[2] = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/" + str_type + "_fire3.png");
+    //preload assets
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/" + str_type + "_fire1.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/" + str_type + "_fire2.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/" + str_type + "_fire3.png");
+    ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/" + str_type + "_glow.png");
 
-    tmp.glow = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/" + str_type + "_glow.png");
+    tmp.fire[0] = "resources/graphics/bg/patapolis/" + str_type + "_fire1.png";
+    tmp.fire[1] = "resources/graphics/bg/patapolis/" + str_type + "_fire2.png";
+    tmp.fire[2] = "resources/graphics/bg/patapolis/" + str_type + "_fire3.png";
+
+    tmp.glow = "resources/graphics/bg/patapolis/" + str_type + "_glow.png";
 
     tmp.baseX = x;
     tmp.baseY = y;
@@ -593,7 +529,6 @@ void PatapolisMenu::addSmokeParticle(float x, float y)
     SPDLOG_TRACE("Adding Smoke Particle: x {} y {}", x, y);
 
     SmokeParticle tmp;
-    tmp.smk = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/smoke.png");
     tmp.x = x;
     tmp.y = y;
     tmp.baseX = x;
@@ -609,16 +544,13 @@ void PatapolisMenu::addCloud(std::string type, float x, float y, float xsize, fl
     if (type == "A")
     {
         CloudA cloud;
-        cloud.cloud = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/1a.png");
-        cloud.cloud.baseX = x;
-        cloud.cloud.baseY = y;
         cloud.x = x;
         cloud.y = y;
 
         clouds_A.push_back(cloud);
     } else if (type == "B")
     {
-        float resRatio = float(thisConfig->GetInt("resX")) / float(1280);
+        float resRatio = float(CoreManager::getInstance().getConfig()->GetInt("resX")) / float(1280);
 
         CloudB cloud;
         cloud.cloud.setFillColor(sf::Color::White);
@@ -636,18 +568,6 @@ void PatapolisMenu::addCloud(std::string type, float x, float y, float xsize, fl
     }
 }
 
-void PatapolisMenu::Initialise(Config* _thisConfig, V4Core* parent, Menu* curParentMenu)
-{
-    
-
-    if (doWaitKeyPress)
-    {
-        v4Core->loadingWaitForKeyPress();
-        v4Core->changeRichPresence("In Patapolis", "logo", "");
-    }
-
-}
-
 void PatapolisMenu::EventFired(sf::Event event)
 {
     //TO-DO: fire events for barracks menu? probably through CoreManager
@@ -659,21 +579,15 @@ void PatapolisMenu::EventFired(sf::Event event)
     //{
     //    obelisk_menu.EventFired(event);
     //} else 
-    if (mater_menu.is_active)
-    {
-        mater_menu.EventFired(event);
-    } else if (is_active)
+    //if (mater_menu.is_active)
+    //{
+    //    mater_menu.EventFired(event);
+    //} else 
+    if (is_active)
     {
         if (event.type == sf::Event::KeyPressed)
         {
-            /*if (event.key.code == thisConfig->GetInt("keybindBack"))
-            {
-                thisConfig->thisCore->SaveToDebugLog("Left from Patapolis to Title screen.");
-                this->Hide();
-                this->isActive = false;
-                parentMenu->Show();
-                parentMenu->isActive=true;
-            }*/
+            
 
         } else if (event.type == sf::Event::MouseButtonReleased)
         {
@@ -930,9 +844,11 @@ void PatapolisMenu::Update()
 
         for (int i = 0; i < clouds_A.size(); i++)
         {
-            clouds_A[i].cloud.lx = clouds_A[i].cloud.baseX - (camPos / 1.3);
-            clouds_A[i].cloud.ly = clouds_A[i].cloud.baseY;
-            clouds_A[i].cloud.draw(window);
+            PSprite& cloud = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/1a.png");
+            cloud.setPosition(clouds_A[i].x, clouds_A[i].y);
+            cloud.lx = clouds_A[i].x - (camPos / 1.3);
+            cloud.ly = clouds_A[i].y;
+            cloud.draw(window);
         }
 
         for (int i = 0; i < clouds_B.size(); i++)
@@ -944,55 +860,41 @@ void PatapolisMenu::Update()
             window->draw(clouds_B[i].cloud);
         }
 
+        PSprite& rainbow = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/rainbow.png");
         rainbow.setOrigin(0, rainbow.getLocalBounds().height);
         rainbow.setPosition(9000 - (camPos / 1.3), 592);
         rainbow.draw(window);
 
         for (int i = 0; i < 4; i++)
         {
-            back_layer[i].lx = back_layer[i].baseX - (camPos / 1.3);
-            back_layer[i].draw(window);
+            PSprite& b_layer = ResourceManager::getInstance().getSprite(back_layer[i]);
+
+            b_layer.setOrigin(0, b_layer.getLocalBounds().height);
+            b_layer.setPosition(back_pos[i], 715);
+
+            b_layer.lx = b_layer.baseX - (camPos / 1.3);
+            b_layer.draw(window);
         }
 
         for (int i = 0; i < layer_6.size(); i++)
         {
-            //cout << "layer_6[" << i << "]: " << layer_6[i].getGlobalBounds().width/2 << " " << layer_6[i].getGlobalBounds().height << " " << layer_6[i].getPosition().x << " " << layer_6[i].getPosition().y << endl;
-            //layer_6[i].lx = layer_6[i].baseX - (camPos / 1.1428571428571428571428571428571);
-
-            //layer_6[i].setOrigin(layer_6[i].getLocalBounds().width / 2, layer_6[i].getLocalBounds().height);
-            //layer_6[i].draw(window);
-
             ps_layer_6[layer_6[i].type].setPosition(layer_6[i].x, layer_6[i].y);
             ps_layer_6[layer_6[i].type].lx = layer_6[i].x - (camPos / 1.1428571428571428571428571428571);
             ps_layer_6[layer_6[i].type].setOrigin(ps_layer_6[layer_6[i].type].getLocalBounds().width / 2, ps_layer_6[layer_6[i].type].getLocalBounds().height);
             ps_layer_6[layer_6[i].type].draw(window);
         }
 
+        PSprite& L5 = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/5.png");
+        PSprite& L4 = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/4.png");
+
+        L5.setPosition(3060, 740 - floor_height);
+        L4.setPosition(2530, 750 - floor_height);
+
         L5.lx = L5.baseX - (camPos / 1.1111111111111111111);
         L4.lx = L4.baseX - (camPos / 1.0526315789473684210526315789474);
-        wakapon.lx = wakapon.baseX - camPos;
-        a_wakapon.global_x = wakapon.baseX - camPos;
-        a_sen.global_x = 6450.0 - camPos;
-        world_egg.lx = world_egg.baseX - camPos;
-        light_1.lx = light_1.baseX - camPos;
-        light_2.lx = light_2.baseX - camPos;
-        egg_light.lx = egg_light.baseX - camPos;
 
-        market.lx = market.baseX - camPos;
-        mater.lx = mater.baseX - camPos;
-        forge_main.lx = forge_main.baseX - camPos;
-        forge_back.lx = forge_back.baseX - camPos;
-        forge_glow.lx = forge_glow.baseX - camPos;
-        forge_fence.lx = forge_fence.baseX - camPos;
-        forge_slab.lx = forge_slab.baseX - camPos;
-        forge_slab_glow.lx = forge_slab_glow.baseX - camPos;
-        barracks.lx = barracks.baseX - camPos;
-        festival_main.lx = festival_main.baseX - camPos;
-        altar.lx = altar.baseX - camPos;
-        obelisk.lx = obelisk.baseX - camPos;
-        paraget_main.lx = paraget_main.baseX - camPos;
-        paraget_crystal.lx = paraget_crystal.baseX - camPos;
-        paraget_crystal_glow.lx = paraget_crystal_glow.baseX - camPos;
+        a_wakapon.global_x = 11920.0 - camPos;
+        a_sen.global_x = 6450.0 - camPos;
 
         rayX = rayXbase - camPos;
 
@@ -1038,16 +940,20 @@ void PatapolisMenu::Update()
             if (fires[i].glowsize >= 360)
                 fires[i].glowsize -= 360;
 
-            fires[i].glow.setOrigin(fires[i].glow.getLocalBounds().width / 2, fires[i].glow.getLocalBounds().height / 2);
-            fires[i].glow.setScale(1.05 + (cos(fires[i].glowsize * 3.141592 / 180) / 10));
-            fires[i].glow.setPosition(fires[i].baseX - camPos, fires[i].baseY);
+            PSprite& glow = ResourceManager::getInstance().getSprite(fires[i].glow);
 
-            fires[i].glow.draw(window);
+            glow.setOrigin(glow.getLocalBounds().width / 2, glow.getLocalBounds().height / 2);
+            glow.setScale(1.05 + (cos(fires[i].glowsize * 3.141592 / 180) / 10));
+            glow.setPosition(fires[i].baseX - camPos, fires[i].baseY);
 
-            fires[i].fire[id].setOrigin(fires[i].fire[id].getLocalBounds().width / 2, fires[i].fire[id].getLocalBounds().height / 2);
-            fires[i].fire[id].setPosition(fires[i].baseX - camPos, fires[i].baseY);
+            glow.draw(window);
 
-            fires[i].fire[id].draw(window);
+            PSprite& fire = ResourceManager::getInstance().getSprite(fires[i].fire[id]);
+
+            fire.setOrigin(fire.getLocalBounds().width / 2, fire.getLocalBounds().height / 2);
+            fire.setPosition(fires[i].baseX - camPos, fires[i].baseY);
+
+            fire.draw(window);
         }
 
         //cout << "for: " << endl;
@@ -1061,12 +967,47 @@ void PatapolisMenu::Update()
                 case Buildings::MARKET: ///Marketplace
                 {
                     //for some reason, barracks are marketplace. what the fuck?
+
+                    PSprite& barracks = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/barracks.png");
+                    barracks.setPosition(640, 765 - floor_height);
+                    barracks.setOrigin(barracks.getLocalBounds().width / 2, barracks.getLocalBounds().height);
+                    barracks.lx = barracks.baseX - camPos;
                     barracks.draw(window);
                     break;
                 }
 
                 case Buildings::FORGE: ///Blacksmith
                 {
+                    PSprite& forge_main = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/forge_main.png");
+                    forge_main.setPosition(2300, 721 - floor_height);
+                    forge_main.setOrigin(forge_main.getLocalBounds().width / 2, forge_main.getLocalBounds().height);
+                    forge_main.lx = forge_main.baseX - camPos;
+
+                    PSprite& forge_back = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/blacksmith_forge.png");
+                    forge_back.setPosition(2300, 721 - floor_height - 29);
+                    forge_back.setOrigin(forge_back.getLocalBounds().width / 2, forge_back.getLocalBounds().height);
+                    forge_back.lx = forge_back.baseX - camPos;
+
+                    PSprite& forge_glow = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/blacksmith_forge_glow.png");
+                    forge_glow.setPosition(2300, 720 - floor_height - 178);
+                    forge_glow.setOrigin(forge_glow.getLocalBounds().width / 2, forge_glow.getLocalBounds().height);
+                    forge_glow.lx = forge_glow.baseX - camPos;
+
+                    PSprite& forge_fence = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/blacksmith_fence.png");
+                    forge_fence.setPosition(2043, 720 - floor_height - 306);
+                    forge_fence.setOrigin(forge_fence.getLocalBounds().width / 2, 0);
+                    forge_fence.lx = forge_fence.baseX - camPos;
+
+                    PSprite& forge_slab = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/slab.png");
+                    forge_slab.setPosition(2300 - 65, 720 - floor_height - 84);
+                    forge_slab.setOrigin(forge_slab.getLocalBounds().width / 2, forge_slab.getLocalBounds().height);
+                    forge_slab.lx = forge_slab.baseX - camPos;
+
+                    PSprite& forge_slab_glow = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/slab_glow.png");
+                    forge_slab_glow.setPosition(2300 - 72, 720 - floor_height - 92);
+                    forge_slab_glow.setOrigin(forge_slab_glow.getLocalBounds().width / 2, forge_slab_glow.getLocalBounds().height);
+                    forge_slab_glow.lx = forge_slab_glow.baseX - camPos;
+
                     forge_big.id += float(12) / fps;
 
                     if (round(forge_big.id) >= 3)
@@ -1079,16 +1020,20 @@ void PatapolisMenu::Update()
                     if (forge_big.glowsize >= 360)
                         forge_big.glowsize -= 360;
 
-                    forge_big.glow.setOrigin(forge_big.glow.getLocalBounds().width / 2, forge_big.glow.getLocalBounds().height / 2);
-                    forge_big.glow.setScale(1.05 + (cos(forge_big.glowsize * 3.141592 / 180) / 10));
-                    forge_big.glow.setPosition(forge_big.baseX - camPos, forge_big.baseY);
+                    PSprite& glow = ResourceManager::getInstance().getSprite(forge_big.glow);
 
-                    forge_big.glow.draw(window);
+                    glow.setOrigin(glow.getLocalBounds().width / 2, glow.getLocalBounds().height / 2);
+                    glow.setScale(1.05 + (cos(forge_big.glowsize * 3.141592 / 180) / 10));
+                    glow.setPosition(forge_big.baseX - camPos, forge_big.baseY);
 
-                    forge_big.fire[id].setOrigin(forge_big.fire[id].getLocalBounds().width / 2, forge_big.fire[id].getLocalBounds().height / 2);
-                    forge_big.fire[id].setPosition(forge_big.baseX - camPos, forge_big.baseY);
+                    glow.draw(window);
 
-                    forge_big.fire[id].draw(window);
+                    PSprite& fire = ResourceManager::getInstance().getSprite(forge_big.fire[id]);
+
+                    fire.setOrigin(fire.getLocalBounds().width / 2, fire.getLocalBounds().height / 2);
+                    fire.setPosition(forge_big.baseX - camPos, forge_big.baseY);
+
+                    fire.draw(window);
 
                     forge_back.draw(window);
 
@@ -1113,16 +1058,20 @@ void PatapolisMenu::Update()
                     if (forge_purple.glowsize >= 360)
                         forge_purple.glowsize -= 360;
 
-                    forge_purple.glow.setOrigin(forge_purple.glow.getLocalBounds().width / 2, forge_purple.glow.getLocalBounds().height / 2);
-                    forge_purple.glow.setScale(1.05 + (cos(forge_purple.glowsize * 3.141592 / 180) / 10));
-                    forge_purple.glow.setPosition(forge_purple.baseX - camPos, forge_purple.baseY);
+                    PSprite& glow2 = ResourceManager::getInstance().getSprite(forge_purple.glow);
 
-                    forge_purple.glow.draw(window);
+                    glow2.setOrigin(glow2.getLocalBounds().width / 2, glow2.getLocalBounds().height / 2);
+                    glow2.setScale(1.05 + (cos(forge_purple.glowsize * 3.141592 / 180) / 10));
+                    glow2.setPosition(forge_purple.baseX - camPos, forge_purple.baseY);
 
-                    forge_purple.fire[id].setOrigin(forge_purple.fire[id].getLocalBounds().width / 2, forge_purple.fire[id].getLocalBounds().height / 2);
-                    forge_purple.fire[id].setPosition(forge_purple.baseX - camPos, forge_purple.baseY);
+                    glow2.draw(window);
 
-                    forge_purple.fire[id].draw(window);
+                    PSprite& fire2 = ResourceManager::getInstance().getSprite(forge_purple.fire[id]);
+
+                    fire2.setOrigin(fire2.getLocalBounds().width / 2, fire2.getLocalBounds().height / 2);
+                    fire2.setPosition(forge_purple.baseX - camPos, forge_purple.baseY);
+
+                    fire2.draw(window);
 
                     forge_slab_glow.setOrigin(forge_slab_glow.getLocalBounds().width / 2, forge_slab_glow.getLocalBounds().height / 2);
                     forge_slab_glow.setScale(1.05 + (cos(forge_glowsize * 3.141592 / 180) / 10));
@@ -1139,18 +1088,41 @@ void PatapolisMenu::Update()
                 case Buildings::BARRACKS: ///Barracks
                 {
                     //for some reason, marketplace is barracks. ??????
+                    PSprite& market = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/market.png");
+                    market.setPosition(3960, 728 - floor_height);
+                    market.setOrigin(market.getLocalBounds().width / 2, market.getLocalBounds().height);
+                    market.lx = market.baseX - camPos;
                     market.draw(window);
                     break;
                 }
 
                 case Buildings::MATER:
                 {
+                    PSprite& mater = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/mater.png");
+                    mater.setPosition(9340, 728 - floor_height);
+                    mater.setOrigin(mater.getLocalBounds().width / 2, mater.getLocalBounds().height);
+                    mater.lx = mater.baseX - camPos;
                     mater.draw(window);
                     break;
                 }
 
                 case Buildings::PARAGET: ///Paraget
                 {
+                    PSprite& paraget_main = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/paraget_main.png");
+                    paraget_main.setPosition(10600, 722 - floor_height);
+                    paraget_main.setOrigin(paraget_main.getLocalBounds().width / 2, paraget_main.getLocalBounds().height);
+                    paraget_main.lx = paraget_main.baseX - camPos;
+
+                    PSprite& paraget_crystal_glow = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/paraget_crystal_glow.png");
+                    paraget_crystal_glow.setPosition(10600, 430);
+                    paraget_crystal_glow.setOrigin(paraget_crystal_glow.getLocalBounds().width / 2, paraget_crystal_glow.getLocalBounds().height / 2);
+                    paraget_crystal_glow.lx = paraget_crystal_glow.baseX - camPos;
+
+                    PSprite& paraget_crystal = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/paraget_crystal.png");
+                    paraget_crystal.setPosition(10600, 430);
+                    paraget_crystal.setOrigin(paraget_crystal.getLocalBounds().width / 2, paraget_crystal.getLocalBounds().height / 2);
+                    paraget_crystal.lx = paraget_crystal.baseX - camPos;
+
                     crystal_y += float(90) / fps;
 
                     if (crystal_y >= 360)
@@ -1214,17 +1186,34 @@ void PatapolisMenu::Update()
                     break;
                 }
 
-                case Buildings::OBELISK: {
+                case Buildings::OBELISK: 
+                {
+                    PSprite& obelisk = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/obelisk.png");
+                    obelisk.setPosition(8300, 722 - floor_height);
+                    obelisk.setOrigin(obelisk.getLocalBounds().width / 2, obelisk.getLocalBounds().height);
+                    obelisk.lx = obelisk.baseX - camPos;
                     obelisk.draw(window);
                     break;
                 }
             }
         }
 
+        // Festival
+        PSprite& festival_main = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/festival_main.png");
+        festival_main.setPosition(5620, 721 - floor_height);
+        festival_main.setOrigin(festival_main.getLocalBounds().width / 2, festival_main.getLocalBounds().height);
+        festival_main.lx = festival_main.baseX - camPos;
         festival_main.draw(window);
 
+        /// Altar
+        PSprite& altar = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/altar.png");
+        altar.setPosition(7280, 720 - floor_height);
+        altar.setOrigin(altar.getLocalBounds().width / 2, altar.getLocalBounds().height);
+        altar.lx = altar.baseX - camPos;
+        altar.draw(window);
+
         /// Smoke
-        smokepath1 += float(40) / fps;
+        smokepath1 += 40.f / fps;
 
         if (smokepath1 >= 360)
             smokepath1 = 0;
@@ -1248,11 +1237,11 @@ void PatapolisMenu::Update()
 
             smoke[i].curScale += float(0.14) / fps;
 
-            smoke[i].smk.setPosition(smoke[i].x, smoke[i].y);
-            smoke[i].smk.setColor(sf::Color(255, 255, 255, smoke[i].alpha));
-            smoke[i].smk.setScale(smoke[i].curScale);
-
-            smoke[i].smk.draw(window);
+            PSprite& p_smoke = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/smoke.png");
+            p_smoke.setPosition(smoke[i].x, smoke[i].y);
+            p_smoke.setColor(sf::Color(255, 255, 255, smoke[i].alpha));
+            p_smoke.setScale(smoke[i].curScale);
+            p_smoke.draw(window);
 
             if (smoke[i].alpha <= 0)
             {
@@ -1265,12 +1254,10 @@ void PatapolisMenu::Update()
             smoke.erase(smoke.begin() + e_s[i] - i);
         }
 
-        /// Altar
-        altar.draw(window);
-
         r_ground.setPosition(floor_x * resRatioX, (float(720) - floor_height) * resRatioY);
         window->draw(r_ground);
 
+        PSprite& edge = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/edge.png");
         edge.setOrigin(0, edge.getLocalBounds().height);
         edge.setPosition(floor_x + 11500, 720);
         edge.draw(window);
@@ -1318,36 +1305,28 @@ void PatapolisMenu::Update()
         }
 
         /// Egg light and light rays
-        if (!light)
-        {
-            light_1.setScale(light_1.scaleX + (float(0.15) / fps));
-            light_2.setScale(light_2.scaleX + (float(0.15) / fps));
-            egg_light.setScale(egg_light.scaleX + (float(0.15) / fps));
+        light_value += 2.f / fps;
+        float scale = cos(light_value) * 0.125;
 
-            if (light_1.scaleX > 1.15)
-            {
-                light = true;
-                light_1.setScale(1.15);
-                light_2.setScale(1.15);
-                egg_light.setScale(1.15);
-            }
-        } else
-        {
-            light_1.setScale(light_1.scaleX - (float(0.15) / fps));
-            light_2.setScale(light_2.scaleX - (float(0.15) / fps));
-            egg_light.setScale(egg_light.scaleX - (float(0.15) / fps));
-
-            if (light_1.scaleX < 0.9)
-            {
-                light = false;
-                light_1.setScale(0.9);
-                light_2.setScale(0.9);
-                egg_light.setScale(0.9);
-            }
-        }
-
+        PSprite& light_1 = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/light.png");
+        light_1.setPosition(11715, 161);
+        light_1.setOrigin(light_1.getLocalBounds().width / 2, light_1.getLocalBounds().height / 2);
+        light_1.lx = light_1.baseX - camPos;
+        light_1.setScale(0.9 + scale);
         light_1.draw(window);
+
+        PSprite& light_2 = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/light.png");
+        light_2.setPosition(12720, 161);
+        light_2.setOrigin(light_2.getLocalBounds().width / 2, light_2.getLocalBounds().height / 2);
+        light_2.lx = light_2.baseX - camPos;
+        light_2.setScale(0.9 + scale);
         light_2.draw(window);
+
+        PSprite& egg_light = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/egg_light.png");
+        egg_light.setPosition(12217, 288);
+        egg_light.setOrigin(egg_light.getLocalBounds().width / 2, egg_light.getLocalBounds().height / 2);
+        egg_light.lx = egg_light.baseX - camPos;
+        egg_light.setScale(0.9 + scale);
         egg_light.draw(window);
 
         for (int i = 0; i < lightrays.size(); i++)
@@ -1390,21 +1369,23 @@ void PatapolisMenu::Update()
             }
         }
 
+        PSprite& bridge = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/bridge.png");
         bridge.setOrigin(0, bridge.getLocalBounds().height); // could consider not drawing this + wakapon unless player camera is close
         bridge.setPosition(floor_x + 11200, 720);
         bridge.draw(window);
 
-        //TO-DO: AnimatedObject waits for a refactor, so im commenting it out for now
-        /*
         /// Wakapon
         a_wakapon.fps = fps;
-        a_wakapon.Draw(window);
+        a_wakapon.Draw();
 
         /// Sen
         a_sen.fps = fps;
-        a_sen.Draw(window);
-        */
+        a_sen.Draw();
 
+        PSprite& world_egg = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/egg.png");
+        world_egg.setPosition(12215, 462);
+        world_egg.setOrigin(world_egg.getLocalBounds().width / 2, world_egg.getLocalBounds().height);
+        world_egg.lx = world_egg.baseX - camPos;
         world_egg.draw(window);
 
         //TO-DO: replace with something else probably core manager blabla
@@ -1551,13 +1532,8 @@ void PatapolisMenu::Update()
                     case 0: ///Barracks
                     {
                         city_loop.stop();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       Show();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       is_active = true;
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       obelisk = false;
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       loadInventory();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       updateInputControls();
 
-                        screenFade.Create(0, 1536);
+                        screenFade.Create(ScreenFade::FADEIN, 1024);
                         StateManager::getInstance().setState(StateManager::BARRACKS);
 
                         break;
@@ -1566,11 +1542,8 @@ void PatapolisMenu::Update()
                     case 1: ///Obelisk
                     {
                         city_loop.stop();
-                        //obelisk_menu.Reload();
-                        //obelisk_menu.Show();
-                        //obelisk_menu.is_active = true;
 
-                        screenFade.Create(0, 1536);
+                        screenFade.Create(ScreenFade::FADEIN, 1024);
                         StateManager::getInstance().setState(StateManager::OBELISK);
 
                         break;
@@ -1579,72 +1552,9 @@ void PatapolisMenu::Update()
                     case 2: ///Exit barracks
                     {
                         city_loop.stop();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       Hide();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       is_active = false;
-                        Show();
                         is_active = true;
 
-                        screenFade.Create(0, 1536);
-
-                        break;
-                    }
-
-                    case 3: ///Exit obelisk
-                    {
-                        city_loop.stop();
-                        //obelisk_menu.Hide();
-                        //obelisk_menu.is_active = false;
-                        //Show();
-                        is_active = true;
-
-                        screenFade.Create(0, 1536);
-
-                        break;
-                    }
-
-                    case 4: ///Enter barracks (obelisk)
-                    {
-                        city_loop.stop();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       Show();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       is_active = true;
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       obelisk = true;
-                        
-                        //TO-DO: mission controller will probably obtain the mission to be played in a different way so discard this for now
-                        //barracks_menu.mission_id = obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID;
-                        //barracks_menu.mission_file = obelisk_menu.missions[obelisk_menu.sel_mission].mission_file;
-
-                        //TO-DO: handle obelisk difficulty calculation differently
-                        //if (config->thisCore->saveReader.mission_levels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID] != 0)
-                        //    SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_multiplier = 0.85 + config->thisCore->saveReader.mission_levels[obelisk_menu.missions[obelisk_menu.sel_mission].mis_ID] * 0.15;
-                        //else
-                        //    SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_multiplier = 1;
-
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       loadInventory();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       updateInputControls();
-
-                        screenFade.Create(0, 1536);
-
-                        break;
-                    }
-
-                    case 5: ///Enter mission
-                    {
-                        city_loop.stop();
-                        sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
-                        v4Core->continue_loading = true;
-                        window->setActive(false);
-                        loadingThreadInstance.launch();
-
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       currentController->Initialise(*thisConfig, config->GetString("mission1Background"), *v4Core);
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       currentController->StartMission(SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_file, 1, SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_id, SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_multiplier);
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       Hide();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       is_active = false;
-
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       mission_started = true;
-
-                        v4Core->continue_loading = false;
-
-                        screenFade.Create(0, 1536);
+                        screenFade.Create(ScreenFade::FADEIN, 1024);
 
                         break;
                     }
@@ -1655,7 +1565,7 @@ void PatapolisMenu::Update()
                         credits.is_active = true;
                         credits.restart();
 
-                        screenFade.Create(0, 512);
+                        screenFade.Create(ScreenFade::FADEIN, 1024);
 
                         break;
                     }
@@ -1663,12 +1573,12 @@ void PatapolisMenu::Update()
                     case 7: ///go to title screen
                     {
                         city_loop.stop();
-                        this->Hide();
                         this->is_active = false;
-                        parentMenu->Show();
-                        parentMenu->is_active = true;
 
-                        parentMenu->screenFade.Create(0, 512);
+                        screenFade.Create(ScreenFade::FADEIN, 1024);
+                        StateManager::getInstance().setState(StateManager::MAINMENU);
+
+                        return; //i return the function here so no more routines are executed when Patapolis is destroyed.
 
                         break;
                     }
@@ -1720,14 +1630,9 @@ void PatapolisMenu::Update()
                         case Buildings::BARRACKS:
                             /// armory/barracks
 
-                            screenFade.Create(1, 1536);
+                            screenFade.Create(ScreenFade::FADEOUT, 1024);
                             goto_id = 0;
 
-                            /*SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       Show();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       is_active = true;
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       obelisk = false;
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       ReloadInventory();
-                        SPDLOG_TRACE("barracks_menu leftover"); //TO-DO: replace this       UpdateInputControls();*/
                             break;
                         case Buildings::FESTIVAL:
                             /// festival
@@ -1750,7 +1655,7 @@ void PatapolisMenu::Update()
                         case Buildings::OBELISK:
                             /// obelisk
 
-                            screenFade.Create(1, 1536);
+                            screenFade.Create(ScreenFade::FADEOUT, 1024);
                             goto_id = 1;
 
                             /*obelisk_menu.Reload();
@@ -1811,12 +1716,13 @@ void PatapolisMenu::Update()
                         } else if (dialogboxes[dialogboxes.size() - 1].id == 1)
                         {
                             SPDLOG_INFO("Left from Patapolis to Title screen.");
-                            screenFade.Create(1, 512);
+                            screenFade.Create(ScreenFade::FADEOUT, 1024);
                             goto_id = 7;
                         } else if (dialogboxes[dialogboxes.size() - 1].id == 2)
                         {
                             SPDLOG_DEBUG("Saving game should happen here. Game not saving yet.");
-                            v4Core->saveReader.Save();
+                            //TO-DO: change to coremanager savereader
+                            //v4Core->saveReader.Save();
                             SPDLOG_INFO("Saved the game.");
 
                             dialogboxes[dialogboxes.size() - 1].Close();
@@ -1838,7 +1744,7 @@ void PatapolisMenu::Update()
                         } else if (dialogboxes[dialogboxes.size() - 1].id == 4)
                         {
                             SPDLOG_INFO("Going into credits!");
-                            screenFade.Create(1, 512);
+                            screenFade.Create(ScreenFade::FADEOUT, 1024);
                             goto_id = 6;
 
                             dialogboxes[dialogboxes.size() - 1].Close();
@@ -1870,4 +1776,8 @@ void PatapolisMenu::OnExit()
 PatapolisMenu::~PatapolisMenu()
 {
     //dtor
+    SPDLOG_DEBUG("Patapolis destructor");
+
+    //TO-DO: if you want to clean the memory that is taken from Patapolis, look at AnimatedObject and optimize it first.
+    //       probably won't happen before we get new animations and someone (me) is motivated enough to write it from beginning. /owocek
 }

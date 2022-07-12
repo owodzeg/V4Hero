@@ -42,5 +42,12 @@
 		"mission_title": "worldmap_mission_6_title",
 		"mission_description": "worldmap_mission_6_description",
 		"mission_file": "mis1_3_seasonal.p4m"
+	},
+	{
+		"mission_id": 7,
+		"location_id": 4,
+		"mission_title": "worldmap_mission_7_title",
+		"mission_description": "worldmap_mission_7_description",
+		"mission_file": "mis4_1.p4m"
 	}
 ]

@@ -36,7 +36,6 @@ public:
     void LoadSave();
     void Flush();
     void CreateBlankSave();
-    Config* thisConfig;
     bool isNewSave;
     void Save();
     bool isMissionUnlocked(int mission);

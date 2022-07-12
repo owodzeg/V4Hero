@@ -45,7 +45,7 @@ public:
     sf::SoundBuffer s_item, s_keyitem;
 
     DroppedItem();
-    void LoadConfig(Config* thisConfigs);
+    void LoadConfig();
     void Draw(sf::RenderWindow& window);
     void OnCollide(CollidableObject* otherObject, int collidedWith = -1, vector<string> collisionData = {});
 };

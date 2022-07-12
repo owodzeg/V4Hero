@@ -4,6 +4,7 @@
 #include "../Dialog/ControlTips.h"
 #include "../Graphics/Menu.h"
 #include "../Graphics/PText.h"
+#include "../Graphics/SpriteWrapper.h"
 #include <SFML/Graphics.hpp>
 #include <nlohmann/json.hpp>
 
@@ -18,17 +19,19 @@ public:
     ControlTips ctrlTips;
 
     ///worldmap contents
-    std::vector<PSprite> location_bgs;
-    std::vector<PSprite> location_icons;
-    std::vector<PSprite> mission_icons;
-    std::vector<PSprite> worldmap_icons;
-    std::vector<PSprite> worldmap_fields;
-    PSprite location_bg_a, location_bg_b;
-    PSprite dullpon;
+    std::vector<SpriteWrapper> preloaded_location_bgs;
+    std::vector<SpriteWrapper> preloaded_worldmap_icons;
+    std::vector<SpriteWrapper> location_bgs;
+    std::vector<SpriteWrapper> location_icons;
+    std::vector<SpriteWrapper> mission_icons;
+    std::vector<SpriteWrapper> worldmap_icons;
+    std::vector<SpriteWrapper> worldmap_fields;
+    SpriteWrapper location_bg_a, location_bg_b;
+    SpriteWrapper dullpon;
 
     ///boxes
-    PSprite mainbox, descbox, iconbox, missionbox;
-    PSprite missionselect;
+    SpriteWrapper mainbox, descbox, iconbox, missionbox;
+    SpriteWrapper missionselect;
 
     ///text
     PText worldmap_title;
@@ -48,9 +51,9 @@ public:
     bool displayMissions = false;
     bool runonce = false;
 
-    PSprite unavailable;
-    PSprite location_highlight;
-    PSprite mission_select;
+    SpriteWrapper unavailable;
+    SpriteWrapper location_highlight;
+    SpriteWrapper mission_select;
 
     int sel_prevlocation = 1;
     int sel_location = 1;
@@ -82,18 +85,11 @@ public:
     sf::View v_render_missions_map;
 
     bool initialized = false;
-
-    PatapolisMenu* parentMenu;
+    int goto_id = -1;
 
     void addMission(nlohmann::json missiondata);
-    void Initialise(Config* thisConfig, V4Core* parent, PatapolisMenu* curParentMenu);
-    void Initialise();
     void Reload();
-    void Update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
     void Update();
-    void EventFired(sf::Event event);
-    void OnExit();
-    void UpdateButtons();
     ObeliskMenu();
     ~ObeliskMenu();
 };

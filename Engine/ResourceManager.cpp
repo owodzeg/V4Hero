@@ -2,6 +2,7 @@
 
 #include "ResourceManager.h"
 #include "CoreManager.h"
+#include "StateManager.h"
 #include "V4Core.h"
 
 ResourceManager::ResourceManager()
@@ -32,13 +33,34 @@ int ResourceManager::getCurrentQuality()
 
 void ResourceManager::loadSprite(std::string path)
 {
+    std::lock_guard<std::mutex> guard(resource_mutex);
     loadedSprites[path].loadFromFile(path, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
+    loadedSources[path] = StateManager::getInstance().getState();
+
+    loadedPaths[StateManager::getInstance().getState()].push_back(path);
+
+    SPDLOG_INFO("Loaded sprite with path {}", path);
+    ///have to add handling for when texture doesn't exist
+}
+
+//this function works only when specifically called. use case: load up memory images
+void ResourceManager::loadImageAsSprite(std::string path, sf::Image image)
+{
+    std::lock_guard<std::mutex> guard(resource_mutex);
+    TextureManager::getInstance().loadImageFromMemory(path, image, true);
+    loadedSprites[path].loadFromFile(path, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
+    loadedSources[path] = StateManager::getInstance().getState();
+
+    loadedPaths[StateManager::getInstance().getState()].push_back(path);
+
     SPDLOG_INFO("Loaded sprite with path {}", path);
     ///have to add handling for when texture doesn't exist
 }
 
 PSprite& ResourceManager::getSprite(const std::string& path)
 {
+    std::lock_guard<std::recursive_mutex> guard(access_mutex);
+
     if (loadedSprites.find(path) != loadedSprites.end())
     {
         SPDLOG_TRACE("Provided sprite with path {}", path);
@@ -63,7 +85,28 @@ PSprite& ResourceManager::getSprite(const std::string& path)
 
 void ResourceManager::unloadSprite(const std::string& path)
 {
+    if (loadedSprites.find(path) != loadedSprites.end())
+    {
+        loadedSprites.erase(path);
 
+        int source = loadedSources[path];
+        loadedSources.erase(path);
+
+        TextureManager::getInstance().unloadImage(path);
+        TextureManager::getInstance().unloadTexture(path);
+    }
+}
+
+void ResourceManager::unloadState(int state)
+{
+    for(auto a : loadedPaths[state])
+    {
+        unloadSprite(a);
+        TextureManager::getInstance().unloadImage(a);
+        TextureManager::getInstance().unloadTexture(a);
+    }
+
+    loadedPaths[state].clear();
 }
 
 // this action reloads all currently loaded PSprites with actual quality setting.

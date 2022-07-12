@@ -1,15 +1,15 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
 
 #include <filesystem>
-#include <iostream>
-#include "Engine/CoreManager.h"
-#include "Engine/V4Core.h"
+#include <sstream>
 #include <spdlog/spdlog.h>
 #include <spdlog/cfg/env.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/basic_file_sink.h>
 
-using namespace std;
+#include "Engine/CoreManager.h"
+#include "Engine/V4Core.h"
+
 namespace fs = std::filesystem;
 
 #ifdef __linux__
@@ -23,13 +23,20 @@ void setupPlatform() {}
 
 int main(int argc, char *argv[])
 {
+    // Init spdlog and set base log level
     spdlog::cfg::load_env_levels();
     spdlog::set_level(spdlog::level::trace);
-    auto rhythm_logger = spdlog::stdout_color_mt("rhythm");
 
-    std::string log_file = "logs/V4Hero-" + std::string(PATAFOUR_VERSION) + ".log";
+    // get current date for log file (there's probably a better way for that)
+    auto now = floor<std::chrono::days>(std::chrono::zoned_time{std::chrono::current_zone(), std::chrono::system_clock::now()}.get_local_time());
+    std::chrono::year_month_day ymd{now};
+    std::stringstream a;
+    a << ymd;
 
-    /// Create a multi-sink logger to output for console and the logfile
+    // Path to where logs are stored (TO-DO: this might be different on Android)
+    std::string log_file = "logs/" + a.str() + "-V4Hero-" + std::string(PATAFOUR_VERSION) + ".log";
+
+    // Create a multi-sink logger to output for console and the logfile
     std::vector<spdlog::sink_ptr> sinks;
     sinks.push_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
     sinks.push_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>(log_file));
@@ -37,8 +44,8 @@ int main(int argc, char *argv[])
     // Combine them and set as default
     auto combined_logger = std::make_shared<spdlog::logger>("patalogger", begin(sinks), end(sinks));
 
-    // Setting custom log pattern
-    // [30-07-2021 16:01:24] [<start color>main.cpp: main:29<end color>] message
+    // Setting custom log pattern, example:
+    // [30-07-2021 16:01:24] [info] [main.cpp: main:42] log message
     combined_logger->set_pattern("[%d-%m-%Y %H:%M:%S] [%^%l%$] [%s: %!:%#] %v");
     combined_logger->set_level(spdlog::level::trace);
 
@@ -46,22 +53,20 @@ int main(int argc, char *argv[])
     spdlog::register_logger(combined_logger);
     spdlog::set_default_logger(combined_logger);
 
-    // note i'm using SPDLOG_x macros, its because they allow to log cpp file, function and line
+    // note i'm using SPDLOG_x macros, its because they allow to log cpp file, function and line (regular spdlog::x doesnt do that)
     SPDLOG_INFO("Starting V4Hero v{}.", std::string(PATAFOUR_VERSION));
     SPDLOG_INFO("SFML version: {}.{}.{}", SFML_VERSION_MAJOR, SFML_VERSION_MINOR, SFML_VERSION_PATCH);
     SPDLOG_INFO("Saving logs to {}", log_file);
 
+    // additional initialization for other platforms
     setupPlatform();
 
+    // change working directory to where the executable is
     auto executable_path = weakly_canonical(fs::path(argv[0])).parent_path();
-    SPDLOG_INFO("Executable directory: {}", executable_path.string());
-    //_setmode(_fileno(stdout), _O_U16TEXT);
-    //wchar_t * unicode_text = L"aäbcdefghijklmnoöpqrsßtuüvwxyz";
-    //wprintf(L"%s", unicode_text);
-
     fs::current_path(executable_path);
+    SPDLOG_INFO("Executable directory: {}", executable_path.string());
 
-    //std::unique_ptr<V4Core> V4 = std::make_unique<V4Core>();
+    // initialize CoreManager and the main V4Core class
     CoreManager::getInstance().init();
     CoreManager::getInstance().getCore()->init();
 

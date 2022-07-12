@@ -1,5 +1,6 @@
 #include "Object.h"
 #include "../../TextureManager.h"
+#include "../../ResourceManager.h"
 #include <iostream>
 
 using namespace std;
@@ -124,8 +125,9 @@ void Object::swapTexture(sf::Image first, vector<Pixel> px)
 
 void Object::swapTexture(std::string img_key)
 {
-    TextureManager::getInstance().loadTextureFromImage(img_key);
-    s_obj.setTexture(TextureManager::getInstance().getTexture(img_key));
+    //TextureManager::getInstance().loadTextureFromImage(img_key);
+    //s_obj.setTexture(TextureManager::getInstance().getTexture(img_key));
+    tex_path = img_key;
 }
 
 void Object::SetFrame(float time)
@@ -406,17 +408,27 @@ void Object::SetPosFrame(float time, int frame)
     // cout << x << " " << y << " " << r << " " << or_x << " " << or_y << " " << s_x << " " << s_y << endl;
 }
 
-void Object::Draw(sf::RenderWindow& window, int orx, int ory)
+void Object::Draw(int orx, int ory)
 {
     if (!disable)
     {
         //s_obj.setTexture(tex_obj);
-        s_obj.setScale(s_x + (g_sx - 1), s_y + (g_sy - 1));
+
+        PSprite& obj = ResourceManager::getInstance().getSprite(tex_path);
+
+        /* s_obj.setScale(s_x + (g_sx - 1), s_y + (g_sy - 1));
         s_obj.setOrigin(or_x + orx, or_y + ory);
         s_obj.setPosition(x + g_x + gl_x, y + g_y + gl_y);
         s_obj.setRotation(g_r + r);
         s_obj.setColor(color);
-        s_obj.draw(window);
+        s_obj.draw(); */
+
+        obj.setScale(s_x + (g_sx - 1), s_y + (g_sy - 1));
+        obj.setOrigin(or_x + orx, or_y + ory);
+        obj.setPosition(x + g_x + gl_x, y + g_y + gl_y);
+        obj.setRotation(g_r + r);
+        obj.setColor(color);
+        obj.draw();
 
         if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
         {
@@ -434,7 +446,7 @@ void Object::Draw(sf::RenderWindow& window, int orx, int ory)
 }
 
 
-void Object::Draw(sf::RenderWindow& window, int x1, int y1, int x2, int y2, int orx, int ory)
+void Object::Draw(int x1, int y1, int x2, int y2, int orx, int ory)
 {
     if (!disable)
     {
@@ -447,7 +459,7 @@ void Object::Draw(sf::RenderWindow& window, int x1, int y1, int x2, int y2, int 
         s_obj.setPosition(x + g_x + gl_x, y + g_y + gl_y);
         s_obj.setRotation(g_r + r);
         s_obj.setColor(color);
-        s_obj.draw(window);
+        s_obj.draw();
 
 
         if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))

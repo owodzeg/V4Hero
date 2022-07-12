@@ -3,7 +3,6 @@
 #include "MissionController.h"
 #include "../Math/PVector.h"
 #include "../Utils.h"
-#include "../V4Core.h"
 #include "Units/HitboxFrame.h"
 #include "Units/Projectile.h"
 #include <algorithm>
@@ -12,6 +11,8 @@
 #include <spdlog/spdlog.h>
 #include <string>
 #include <thread>
+#include "../CoreManager.h"
+#include "../StateManager.h"
 
 using json = nlohmann::json;
 
@@ -238,7 +239,7 @@ void MissionController::parseEntityLoot(mt19937& gen, uniform_real_distribution<
         {
             Entity::Loot tmp;
             json parsedArray = parseLootArray(gen, roll, loot);
-            tmp.order_id = v4Core->saveReader.itemReg.getItemByName(parsedArray["item"])->order_id;
+            tmp.order_id = CoreManager::getInstance().getSaveReader()->itemReg.getItemByName(parsedArray["item"])->order_id;
             to_drop.push_back(tmp);
         }
     } else if (loot.is_object() && loot.size() > 1)
@@ -256,7 +257,7 @@ void MissionController::parseEntityLoot(mt19937& gen, uniform_real_distribution<
             if (roll(gen) <= float(loot["chance"]) / 100) // Assume it's the below else if
             {
                 Entity::Loot tmp;
-                tmp.order_id = v4Core->saveReader.itemReg.getItemByName(loot["item"])->order_id;
+                tmp.order_id = CoreManager::getInstance().getSaveReader()->itemReg.getItemByName(loot["item"])->order_id;
                 to_drop.push_back(tmp);
             }
         }
@@ -266,7 +267,7 @@ void MissionController::parseEntityLoot(mt19937& gen, uniform_real_distribution<
         if (roll(gen) <= float(loot["chance"]) / 100)
         {
             Entity::Loot tmp;
-            tmp.order_id = v4Core->saveReader.itemReg.getItemByName(loot["item"])->order_id;
+            tmp.order_id = CoreManager::getInstance().getSaveReader()->itemReg.getItemByName(loot["item"])->order_id;
             to_drop.push_back(tmp);
         }
     }
@@ -278,7 +279,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
 
     uniform_real_distribution<double> roll(0.0, 1.0);
 
-    int mission_level = v4Core->saveReader.mission_levels[curMissionID];
+    int mission_level = CoreManager::getInstance().getSaveReader()->mission_levels[curMissionID];
     float mission_diff = 0.85 + mission_level * 0.15;
 
     ///need to somehow optimize this to not copy paste the same code over and over
@@ -287,7 +288,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
 
     bool spawn = false;
 
-    if (roll(v4Core->gen) <= spawnrate / 100)
+    if (roll(CoreManager::getInstance().getCore()->gen) <= spawnrate / 100)
     {
         spawn = true;
     }
@@ -312,7 +313,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
         if (additional_data.contains("forceSpawnIfNotObtained"))
         {
             SPDLOG_DEBUG("Force Spawn If Not Obtained");
-            if (!v4Core->saveReader.invData.checkItemObtainedByName(additional_data["forceSpawnIfNotObtained"]))
+            if (!CoreManager::getInstance().getSaveReader()->invData.checkItemObtainedByName(additional_data["forceSpawnIfNotObtained"]))
             {
                 spawn = true;
             }
@@ -322,7 +323,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
         if (additional_data.contains("forceDropIfNotObtained"))
         {
             SPDLOG_DEBUG("Force Drop If Not Obtained");
-            Item* itm = v4Core->saveReader.itemReg.getItemByName(additional_data["forceDropIfNotObtained"][0]);
+            Item* itm = CoreManager::getInstance().getSaveReader()->itemReg.getItemByName(additional_data["forceDropIfNotObtained"][0]);
             
             PSprite ps_itm = ResourceManager::getInstance().getSprite("resources/graphics/item/textures/" + itm->spritesheet + "/" + Func::num_padding(itm->spritesheet_id, 4) + ".png");
             sf::Image i_itm = ps_itm.s.getTexture()->copyToImage();
@@ -344,15 +345,15 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             case 0: {
                 unique_ptr<EndFlag> entity = make_unique<EndFlag>();
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
-                entity.get()->LoadConfig(thisConfig);
+                entity.get()->LoadConfig();
                 if (additional_data.size() >= 1)
                 {
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!v4Core->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
-                    //v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -367,15 +368,15 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             case 1: {
                 unique_ptr<FeverWorm> entity = make_unique<FeverWorm>();
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
-                entity.get()->LoadConfig(thisConfig);
+                entity.get()->LoadConfig();
                 if (additional_data.size() >= 1)
                 {
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!v4Core->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
-                    //v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -390,15 +391,15 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             case 2: {
                 unique_ptr<Kacheek> entity = make_unique<Kacheek>();
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
-                entity.get()->LoadConfig(thisConfig);
+                entity.get()->LoadConfig();
                 if (additional_data.size() >= 1)
                 {
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!v4Core->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
-                    //v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -413,15 +414,15 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             case 3: {
                 unique_ptr<Grass1> entity = make_unique<Grass1>();
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
-                entity.get()->LoadConfig(thisConfig);
+                entity.get()->LoadConfig();
                 if (additional_data.size() >= 1)
                 {
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!v4Core->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
-                    //v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -436,15 +437,15 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             case 4: {
                 unique_ptr<Grass2> entity = make_unique<Grass2>();
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
-                entity.get()->LoadConfig(thisConfig);
+                entity.get()->LoadConfig();
                 if (additional_data.size() >= 1)
                 {
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!v4Core->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
-                    //v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -459,11 +460,11 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             case 5: {
                 unique_ptr<DroppedItem> entity = make_unique<DroppedItem>();
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
-                entity.get()->LoadConfig(thisConfig);
+                entity.get()->LoadConfig();
 
-                if (!v4Core->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
-                    //v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -486,15 +487,15 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             case 6: {
                 unique_ptr<Kirajin_Yari_1> entity = make_unique<Kirajin_Yari_1>();
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
-                entity.get()->LoadConfig(thisConfig);
+                entity.get()->LoadConfig();
                 if (additional_data.size() >= 1)
                 {
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!v4Core->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
-                    //v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -509,15 +510,15 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             case 7: {
                 unique_ptr<TreasureChest> entity = make_unique<TreasureChest>();
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
-                entity.get()->LoadConfig(thisConfig);
+                entity.get()->LoadConfig();
                 if (additional_data.size() >= 1)
                 {
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!v4Core->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
-                    //v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -532,15 +533,15 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             case 8: {
                 unique_ptr<RockBig> entity = make_unique<RockBig>();
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
-                entity.get()->LoadConfig(thisConfig);
+                entity.get()->LoadConfig();
                 if (additional_data.size() >= 1)
                 {
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!v4Core->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
-                    //v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -555,15 +556,15 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             case 9: {
                 unique_ptr<RockSmall> entity = make_unique<RockSmall>();
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
-                entity.get()->LoadConfig(thisConfig);
+                entity.get()->LoadConfig();
                 if (additional_data.size() >= 1)
                 {
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!v4Core->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
-                    //v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -578,15 +579,15 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             case 10: {
                 unique_ptr<WoodenSpikes> entity = make_unique<WoodenSpikes>();
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
-                entity.get()->LoadConfig(thisConfig);
+                entity.get()->LoadConfig();
                 if (additional_data.size() >= 1)
                 {
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!v4Core->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
-                    //v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -601,15 +602,15 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             case 11: {
                 unique_ptr<RockPile> entity = make_unique<RockPile>();
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
-                entity.get()->LoadConfig(thisConfig);
+                entity.get()->LoadConfig();
                 if (additional_data.size() >= 1)
                 {
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!v4Core->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
-                    //v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -624,15 +625,15 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             case 12: {
                 unique_ptr<KirajinHut> entity = make_unique<KirajinHut>();
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
-                entity.get()->LoadConfig(thisConfig);
+                entity.get()->LoadConfig();
                 if (additional_data.size() >= 1)
                 {
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!v4Core->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
-                    //v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -647,15 +648,15 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             case 13: {
                 unique_ptr<KirajinGuardTower> entity = make_unique<KirajinGuardTower>();
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
-                entity.get()->LoadConfig(thisConfig);
+                entity.get()->LoadConfig();
                 if (additional_data.size() >= 1)
                 {
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!v4Core->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
-                    //v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -670,15 +671,15 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             case 14: {
                 unique_ptr<KirajinPoweredTowerSmall> entity = make_unique<KirajinPoweredTowerSmall>();
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
-                entity.get()->LoadConfig(thisConfig);
+                entity.get()->LoadConfig();
                 if (additional_data.size() >= 1)
                 {
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!v4Core->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
-                    //v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -693,15 +694,15 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             case 15: {
                 unique_ptr<KirajinPoweredTowerBig> entity = make_unique<KirajinPoweredTowerBig>();
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
-                entity.get()->LoadConfig(thisConfig);
+                entity.get()->LoadConfig();
                 if (additional_data.size() >= 1)
                 {
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!v4Core->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
-                    //v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -716,15 +717,15 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             case 16: {
                 unique_ptr<Kirajin_Yari_2> entity = make_unique<Kirajin_Yari_2>();
                 entity->setEntityID(id); ///id must be set before LoadConfig so loadAnim can get the right cache ID
-                entity.get()->LoadConfig(thisConfig);
+                entity.get()->LoadConfig();
                 if (additional_data.size() >= 1)
                 {
                     entity.get()->parseAdditionalData(additional_data);
                 }
 
-                if (!v4Core->isCached[id])
+                //if (!CoreManager::getInstance().getCore()->isCached[id])
                 {
-                    //v4Core->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
+                    //CoreManager::getInstance().getCore()->cacheEntity(id, entity.get()->all_swaps_img, entity.get()->animation_spritesheet, entity.get()->objects);
                 }
 
                 ///To be replaced with param file
@@ -777,7 +778,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             entity->isAttackable = attackable;
 
             vector<Entity::Loot> new_loot;
-            parseEntityLoot(v4Core->gen, roll, loot, new_loot);
+            parseEntityLoot(CoreManager::getInstance().getCore()->gen, roll, loot, new_loot);
 
             entity->loot_table = new_loot;
 
@@ -785,7 +786,7 @@ void MissionController::spawnEntity(int id, bool collidable, bool attackable, in
             for (int i = 0; i < new_loot.size(); i++)
             {
                 vector<int> loot_id = new_loot[i].order_id;
-                Item* itm = v4Core->saveReader.itemReg.getItemByID(loot_id);
+                Item* itm = CoreManager::getInstance().getSaveReader()->itemReg.getItemByID(loot_id);
 
                 //ps_itm.loadFromFile("resources/graphics/item/textures/" + itm->spritesheet + "/" + Func::num_padding(itm->spritesheet_id, 4) + ".png", qualitySetting, resSetting);
                 
@@ -885,7 +886,7 @@ void MissionController::addPickedItem(std::string spritesheet, int spritesheet_i
         ///set radius in draw loop to get appropriate resratiox size
         tmp.item_name = picked_item;
 
-        Item* itm = v4Core->saveReader.itemReg.getItemByName(tmp.item_name);
+        Item* itm = CoreManager::getInstance().getSaveReader()->itemReg.getItemByName(tmp.item_name);
 
         ///This unique entity needs to be loaded differently, read additional data for spritesheet info to be passed from the item registry.
         //vector<char> di_data = droppeditem_spritesheet[spritesheet].retrieve_char();
@@ -932,26 +933,26 @@ void MissionController::submitPickedItems()
     for (int i = 0; i < pickedItems.size(); i++)
     {
         InventoryData::InventoryItem invItem;
-        v4Core->saveReader.invData.addItem(v4Core->saveReader.itemReg.getItemByName(pickedItems[i].item_name)->order_id, v4Core->saveReader.itemReg);
+        CoreManager::getInstance().getSaveReader()->invData.addItem(CoreManager::getInstance().getSaveReader()->itemReg.getItemByName(pickedItems[i].item_name)->order_id, CoreManager::getInstance().getSaveReader()->itemReg);
         if (pickedItems[i].item_name == "item_soggy_map") ///Grubby map
         {
             ///Check if Patapine Grove missions doesnt exist, and if Patapine Grove is not unlocked already
-            if (!v4Core->saveReader.isMissionUnlocked(3) && !v4Core->saveReader.isMissionUnlocked(2) && !v4Core->saveReader.isLocationUnlocked(2))
+            if (!CoreManager::getInstance().getSaveReader()->isMissionUnlocked(3) && !CoreManager::getInstance().getSaveReader()->isMissionUnlocked(2) && !CoreManager::getInstance().getSaveReader()->isLocationUnlocked(2))
             {
                 ///Add first patapine mission and unlock second location
-                v4Core->saveReader.missions_unlocked.push_back(2);
-                v4Core->saveReader.locations_unlocked.push_back(2);
+                CoreManager::getInstance().getSaveReader()->missions_unlocked.push_back(2);
+                CoreManager::getInstance().getSaveReader()->locations_unlocked.push_back(2);
             }
         }
 
         if (pickedItems[i].item_name == "item_digital_blueprint")
         {
             ///Check if Ejiji Cliffs missions doesnt exist, and if Ejiji Cliffs is not unlocked already
-            if (!v4Core->saveReader.isMissionUnlocked(5) && !v4Core->saveReader.isMissionUnlocked(4) && !v4Core->saveReader.isLocationUnlocked(3))
+            if (!CoreManager::getInstance().getSaveReader()->isMissionUnlocked(5) && !CoreManager::getInstance().getSaveReader()->isMissionUnlocked(4) && !CoreManager::getInstance().getSaveReader()->isLocationUnlocked(3))
             {
                 ///Add first patapine mission and unlock second location
-                v4Core->saveReader.missions_unlocked.push_back(4);
-                v4Core->saveReader.locations_unlocked.push_back(3);
+                CoreManager::getInstance().getSaveReader()->missions_unlocked.push_back(4);
+                CoreManager::getInstance().getSaveReader()->locations_unlocked.push_back(3);
             }
         }
     }
@@ -965,34 +966,34 @@ void MissionController::updateMissions()
     switch (curMissionID)
     {
         case 2: {
-            if (!v4Core->saveReader.isMissionUnlocked(3))
+            if (!CoreManager::getInstance().getSaveReader()->isMissionUnlocked(3))
             {
-                v4Core->saveReader.missions_unlocked.push_back(3);
-                v4Core->saveReader.mission_levels[3] = 2;
+                CoreManager::getInstance().getSaveReader()->missions_unlocked.push_back(3);
+                CoreManager::getInstance().getSaveReader()->mission_levels[3] = 2;
 
-                auto it = std::find(v4Core->saveReader.missions_unlocked.begin(), v4Core->saveReader.missions_unlocked.end(), 2);
-                v4Core->saveReader.missions_unlocked.erase(it);
+                auto it = std::find(CoreManager::getInstance().getSaveReader()->missions_unlocked.begin(), CoreManager::getInstance().getSaveReader()->missions_unlocked.end(), 2);
+                CoreManager::getInstance().getSaveReader()->missions_unlocked.erase(it);
             }
 
             break;
         }
 
         case 4: {
-            if (!v4Core->saveReader.isMissionUnlocked(5))
+            if (!CoreManager::getInstance().getSaveReader()->isMissionUnlocked(5))
             {
-                v4Core->saveReader.missions_unlocked.push_back(5);
-                v4Core->saveReader.mission_levels[5] = 2;
+                CoreManager::getInstance().getSaveReader()->missions_unlocked.push_back(5);
+                CoreManager::getInstance().getSaveReader()->mission_levels[5] = 2;
 
-                auto it = std::find(v4Core->saveReader.missions_unlocked.begin(), v4Core->saveReader.missions_unlocked.end(), 4);
-                v4Core->saveReader.missions_unlocked.erase(it);
+                auto it = std::find(CoreManager::getInstance().getSaveReader()->missions_unlocked.begin(), CoreManager::getInstance().getSaveReader()->missions_unlocked.end(), 4);
+                CoreManager::getInstance().getSaveReader()->missions_unlocked.erase(it);
             }
 
             break;
         }
     }
 
-    if (v4Core->saveReader.mission_levels[curMissionID] != 0)
-        v4Core->saveReader.mission_levels[curMissionID] += 1;
+    if (CoreManager::getInstance().getSaveReader()->mission_levels[curMissionID] != 0)
+        CoreManager::getInstance().getSaveReader()->mission_levels[curMissionID] += 1;
 }
 
 void MissionController::addUnitThumb(int unit_class)
@@ -1009,22 +1010,11 @@ void MissionController::addUnitThumb(int unit_class)
 
 void MissionController::Initialise(Config& config, std::string backgroundString, V4Core& _v4Core)
 {
-    v4Core = &_v4Core;
-    //sf::Context context;
-
-    PSprite ps_temp;
-    ps_temp.loadFromFile("resources/graphics/item/icon/spear.png", 1);
-    ps_temp.setRepeated(false);
-    ps_temp.setTextureRect(sf::IntRect(0, 0, ps_temp.t.getSize().x, ps_temp.t.getSize().y)); ///affect later with ratio
-    ps_temp.setOrigin(ps_temp.t.getSize().x, 0);
-    ps_temp.setColor(sf::Color(255, 255, 255, 255));
-    ps_temp.setPosition(0, 0);
-
-    s_proj = ps_temp;
-    s_proj.scaleX = 0.15f;
-    s_proj.scaleY = 0.15f;
-
-    int q = config.GetInt("textureQuality");
+    
+}
+void MissionController::StartMission(std::string missionFile, bool showCutscene, int missionID, float mission_multiplier)
+{
+    int q = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
     qualitySetting = q;
     resSetting = 1;
 
@@ -1034,12 +1024,12 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
     failure = false;
 
     //ctor
-    f_font.loadFromFile(config.fontPath);
+    f_font.loadFromFile(CoreManager::getInstance().getConfig()->fontPath);
 
-    if (config.fontPath == "resources/fonts/p4kakupop-pro.ttf")
+    if (CoreManager::getInstance().getConfig()->fontPath == "resources/fonts/p4kakupop-pro.ttf")
         f_moji.loadFromFile("resources/fonts/mojipon.otf");
     else
-        f_moji.loadFromFile(config.fontPath);
+        f_moji.loadFromFile(CoreManager::getInstance().getConfig()->fontPath);
 
     f_unicode.loadFromFile("resources/fonts/p4kakupop-pro.ttf");
 
@@ -1052,9 +1042,8 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
 
     //t_cutscene_text.setCharacterSize(35);
     //t_cutscene_text.setFillColor(sf::Color::White);
-    //t_cutscene_text.setString(Func::ConvertToUtf8String(config.strRepo.GetString("intro_cutscene_1")));
+    //t_cutscene_text.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("intro_cutscene_1")));
     //t_cutscene_text.setOrigin(t_cutscene_text.getGlobalBounds().width/2,t_cutscene_text.getGlobalBounds().height/2);
-    thisConfig = &config;
 
     std::vector<std::string> commands;
     commands.push_back("patapata");
@@ -1079,7 +1068,7 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
     {
 
         PText t_command_desc;
-        t_command_desc.createText(f_font, 28, sf::Color(128, 128, 128, 255), Func::ConvertToUtf8String(thisConfig->strRepo.GetString(command_lang_keys[i])) + ":", qualitySetting, 1);
+        t_command_desc.createText(f_font, 28, sf::Color(128, 128, 128, 255), Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(command_lang_keys[i])) + ":", qualitySetting, 1);
         command_descs.push_back(t_command_desc);
 
         PText t_command;
@@ -1092,7 +1081,7 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
     {
 
         PText t_command_desc;
-        t_command_desc.createText(f_font, 28, sf::Color(128, 128, 128, 255), Func::ConvertToUtf8String(thisConfig->strRepo.GetString(command_lang_keys[i])) + ":", qualitySetting, 1);
+        t_command_desc.createText(f_font, 28, sf::Color(128, 128, 128, 255), Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(command_lang_keys[i])) + ":", qualitySetting, 1);
         command_descs.push_back(t_command_desc);
 
         PText t_command;
@@ -1100,8 +1089,6 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
         command_inputs.push_back(t_command);
     }
 
-
-    isInitialized = true;
     // this is outside the loop
     startAlpha = 255;
     endAlpha = 0;
@@ -1120,12 +1107,12 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
     sb_cheer2.loadFromFile("resources/sfx/level/cheer2.ogg");
     sb_cheer3.loadFromFile("resources/sfx/level/cheer1.ogg");
 
-    t_win.createText(f_moji, 56, sf::Color(222, 83, 0, 255), Func::ConvertToUtf8String(config.strRepo.GetString("mission_complete")), q, 1);
-    t_win_outline.createText(f_moji, 56, sf::Color(255, 171, 0, 255), Func::ConvertToUtf8String(config.strRepo.GetString("mission_complete")), q, 1);
+    t_win.createText(f_moji, 56, sf::Color(222, 83, 0, 255), Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("mission_complete")), q, 1);
+    t_win_outline.createText(f_moji, 56, sf::Color(255, 171, 0, 255), Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("mission_complete")), q, 1);
     t_win_outline.setOutlineColor(sf::Color(255, 171, 0, 255));
     t_win_outline.setOutlineThickness(10);
-    t_lose.createText(f_moji, 56, sf::Color(138, 15, 26, 255), Func::ConvertToUtf8String(config.strRepo.GetString("mission_failed")), q, 1);
-    t_lose_outline.createText(f_moji, 56, sf::Color(254, 48, 55, 255), Func::ConvertToUtf8String(config.strRepo.GetString("mission_failed")), q, 1);
+    t_lose.createText(f_moji, 56, sf::Color(138, 15, 26, 255), Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("mission_failed")), q, 1);
+    t_lose_outline.createText(f_moji, 56, sf::Color(254, 48, 55, 255), Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("mission_failed")), q, 1);
     t_lose_outline.setOutlineColor(sf::Color(254, 48, 55, 255));
     t_lose_outline.setOutlineThickness(10);
 
@@ -1161,10 +1148,8 @@ void MissionController::Initialise(Config& config, std::string backgroundString,
     spear_hit_solid.loadFromFile("resources/sfx/level/spear_hit_solid.ogg");
     s_heal.loadFromFile("resources/sfx/level/picked_heal.ogg");
 
-	SPDLOG_INFO("Mission initialization finished");
-}
-void MissionController::StartMission(std::string missionFile, bool showCutscene, int missionID, float mission_multiplier)
-{
+    SPDLOG_INFO("Mission initialization finished");
+
     SPDLOG_INFO("Starting mission");
 
     curMissionID = missionID;
@@ -1188,7 +1173,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 
 
     //sf::Context context;
-    int quality = thisConfig->GetInt("textureQuality");
+    int quality = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
     float ratioX, ratioY;
 
     army_x = 0;
@@ -1199,29 +1184,29 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     {
         case 0: ///low
         {
-            ratioX = thisConfig->GetInt("resX") / float(640);
-            ratioY = thisConfig->GetInt("resY") / float(360);
+            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(640);
+            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(360);
             break;
         }
 
         case 1: ///med
         {
-            ratioX = thisConfig->GetInt("resX") / float(1280);
-            ratioY = thisConfig->GetInt("resY") / float(720);
+            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
+            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
             break;
         }
 
         case 2: ///high
         {
-            ratioX = thisConfig->GetInt("resX") / float(1920);
-            ratioY = thisConfig->GetInt("resY") / float(1080);
+            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1920);
+            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(1080);
             break;
         }
 
         case 3: ///ultra
         {
-            ratioX = thisConfig->GetInt("resX") / float(3840);
-            ratioY = thisConfig->GetInt("resY") / float(2160);
+            ratioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(3840);
+            ratioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(2160);
             break;
         }
     }
@@ -1269,8 +1254,6 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     string missionName;  ///rpc_name
     string missionImg;   ///rpc_img
     string forceWeather; // Force Weather
-
-    string buff;
 
     ifstream elist("resources/units/entitylist.dat");
 
@@ -1595,18 +1578,19 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     }
 
     ///make this unit load based on how the army is built later
-    int army_size = v4Core->saveReader.ponReg.pons.size();
+    int army_size = CoreManager::getInstance().getSaveReader()->ponReg.pons.size();
 
+    // TO-DO: fix animated object to work with new system
     unique_ptr<Hatapon> wip_hatapon = make_unique<Hatapon>(); ///Hatapon's a special snowflake and isn't in the saveReader.ponreg.pons vector lol
-    wip_hatapon.get()->LoadConfig(thisConfig);
+    wip_hatapon.get()->LoadConfig();
     wip_hatapon.get()->setUnitID(0);
     units.push_back(std::move(wip_hatapon));
-    addUnitThumb(0);
+    //TO-DO: addUnitThumb(0);
 
     for (int i = 0; i < army_size; i++)
     {
         SPDLOG_DEBUG("Trying to find pon: {}", i);
-        Pon* current_pon = v4Core->saveReader.ponReg.GetPonByID(i);
+        Pon* current_pon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i);
         SPDLOG_DEBUG("Making pon with class: {}", current_pon->pon_class);
         switch (current_pon->pon_class)
         {
@@ -1619,12 +1603,13 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
                 unique_ptr<Yaripon> wip_pon = make_unique<Yaripon>();
                 wip_pon.get()->entityID = -1001; ///lets say entity IDs for units will be -1000 and below, so -1001 is yaripon, -1002 will be tatepon etc
                 wip_pon.get()->setUnitID(current_pon->pon_class + 1); ///have to set unit ID from 0 to 1 because 0 is already occupied by Hatapon
-                wip_pon.get()->LoadConfig(thisConfig);
+                wip_pon.get()->LoadConfig();
 
-                if (!v4Core->isCached[wip_pon.get()->entityID])
-                {
-                    //v4Core->cacheEntity(wip_pon.get()->entityID, wip_pon.get()->all_swaps_img, wip_pon.get()->animation_spritesheet, wip_pon.get()->objects);
-                }
+                // TO-DO: what to do with cache now?
+                //if (!CoreManager::getInstance().getCore()->isCached[wip_pon.get()->entityID])
+                //{
+                    //CoreManager::getInstance().getCore()->cacheEntity(wip_pon.get()->entityID, wip_pon.get()->all_swaps_img, wip_pon.get()->animation_spritesheet, wip_pon.get()->objects);
+                //}
 
                 wip_pon.get()->mindmg = current_pon->pon_min_dmg;
                 wip_pon.get()->maxdmg = current_pon->pon_max_dmg;
@@ -1633,7 +1618,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 
                 if (current_pon->slots[0] != -1)
                 {
-                    wip_pon.get()->applyEquipment(v4Core->saveReader.invData.items[current_pon->slots[0]].item->order_id, 0);
+                    //TO-DO: wip_pon.get()->applyEquipment(CoreManager::getInstance().getSaveReader()->invData.items[current_pon->slots[0]].item->order_id, 0);
                 } else
                 {
                     SPDLOG_ERROR("Yaripon has an empty equipment slot 1");
@@ -1641,7 +1626,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 
                 if (current_pon->slots[1] != -1)
                 {
-                    wip_pon.get()->applyEquipment(v4Core->saveReader.invData.items[current_pon->slots[1]].item->order_id, 1);
+                    //TO-DO: wip_pon.get()->applyEquipment(CoreManager::getInstance().getSaveReader()->invData.items[current_pon->slots[1]].item->order_id, 1);
                 } else
                 {
                     SPDLOG_ERROR("Yaripon has an empty equipment slot 2");
@@ -1659,8 +1644,8 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 				wip_pon.get()->maxdmg = current_pon->pon_max_dmg;
 				wip_pon.get()->current_hp = current_pon->pon_hp;
 				wip_pon.get()->max_hp = current_pon->pon_hp;
-				wip_pon.get()->applyEquipment(v4Core->saveReader.invData.items[current_pon->slots[0]].item->order_id, 0);
-				wip_pon.get()->applyEquipment(v4Core->saveReader.invData.items[current_pon->slots[1]].item->order_id, 1);
+				wip_pon.get()->applyEquipment(CoreManager::getInstance().getSaveReader()->invData.items[current_pon->slots[0]].item->order_id, 0);
+				wip_pon.get()->applyEquipment(CoreManager::getInstance().getSaveReader()->invData.items[current_pon->slots[1]].item->order_id, 1);
 				units.push_back(std::move(wip_pon));
 				break;*/
                 break;
@@ -1685,8 +1670,8 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 			wip_pon.get()->maxdmg = current_pon->pon_max_dmg;
 			wip_pon.get()->current_hp = current_pon->pon_hp;
 			wip_pon.get()->max_hp = current_pon->pon_hp;
-			wip_pon.get()->applyWeapon(v4Core->saveReader.invData.GetItemByInvID(current_pon->weapon_invItem_id).item->item_type, v4Core->saveReader.invData.GetItemByInvID(current_pon->weapon_invItem_id).item->item_id, 1);
-			wip_pon.get()->applyHelm(v4Core->saveReader.invData.GetItemByInvID(current_pon->armour_invItem_id).item->item_id);
+			wip_pon.get()->applyWeapon(CoreManager::getInstance().getSaveReader()->invData.GetItemByInvID(current_pon->weapon_invItem_id).item->item_type, CoreManager::getInstance().getSaveReader()->invData.GetItemByInvID(current_pon->weapon_invItem_id).item->item_id, 1);
+			wip_pon.get()->applyHelm(CoreManager::getInstance().getSaveReader()->invData.GetItemByInvID(current_pon->armour_invItem_id).item->item_id);
 			units.push_back(std::move(wip_pon));
 		}*/
         ///-_-
@@ -1704,37 +1689,37 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
         }**/
     }
 
+    // TO-DO: this whole section needs a rewrite to the new code mechanics
+    /*
     addUnitThumb(1);
 
-    SPDLOG_INFO("Loading background {}", bgName);
-    Background bg_new;
-    test_bg = bg_new;
-
-    test_bg.Load(bgName, *thisConfig); //config.GetString("debugBackground"));
+	SPDLOG_DEBUG("Mission loading finished."); */
 
     SPDLOG_DEBUG("Set rich presence to {}", missionImg);
 
     string fm = "Playing mission: " + missionName;
-    v4Core->changeRichPresence(fm.c_str(), missionImg.c_str(), "logo");
-
-    rhythm.config = thisConfig;
-    rhythm.LoadTheme(songName); // thisConfig->GetString("debugTheme")
+    CoreManager::getInstance().getCore()->changeRichPresence(fm.c_str(), missionImg.c_str(), "logo");
+    
+    SPDLOG_INFO("Loading background {}", bgName);
+    mission_bg.Load(bgName);
+    rhythm.LoadTheme(songName);
     missionTimer.restart();
 
-	SPDLOG_DEBUG("Mission loading finished.");
-
     isFinishedLoading = true;
-    v4Core->loadingWaitForKeyPress();
+    initialized = true;
 
-    rhythm.Start();
+    //TO-DO: start rhythm when tips are clicked
+    //rhythm.Start();
 }
 void MissionController::StopMission()
 {
     rhythm.Stop();
-    isInitialized = false;
+    initialized = false;
 }
-void MissionController::DoKeyboardEvents(sf::RenderWindow& window, float fps, InputController& inputCtrl)
+void MissionController::DoKeyboardEvents()
 {
+    InputController* inputCtrl = CoreManager::getInstance().getInputController();
+
     /**
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num5))
 	{
@@ -1745,7 +1730,7 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow& window, float fps, In
 	{
 		if(!debug_map_drop)
 		{
-			auto item = v4core->saveReader.itemreg.GetItemByID(23);
+			auto item = CoreManager::getInstance().getSaveReader()->itemreg.GetItemByID(23);
 			vector<string> data = {item->spritesheet, to_string(item->spritesheet_id), to_string(23)};
 
 			spawnEntity("droppeditem",5,0,500,0,600,0,0,1,sf::Color::White,0,0,vector<Entity::Loot>(), data);
@@ -1770,23 +1755,23 @@ void MissionController::DoKeyboardEvents(sf::RenderWindow& window, float fps, In
 
     if (!missionEnd)
     {
-        if ((inputCtrl.isKeyHeld(InputController::Keys::LTRIGGER)) && (inputCtrl.isKeyHeld(InputController::Keys::RTRIGGER)) && (inputCtrl.isKeyHeld(InputController::Keys::SQUARE)))
+        if ((inputCtrl->isKeyHeld(InputController::Keys::LTRIGGER)) && (inputCtrl->isKeyHeld(InputController::Keys::RTRIGGER)) && (inputCtrl->isKeyHeld(InputController::Keys::SQUARE)))
         {
-            if (inputCtrl.isKeyPressed(InputController::Keys::SELECT))
+            if (inputCtrl->isKeyPressed(InputController::Keys::SELECT))
             {
                 std::vector<sf::String> a = {"Show hitboxes", "Hide hitboxes", "Heal units", "Kill all player units", "Kill Hatapon", "Enable verbose logging"};
 
                 PataDialogBox db;
-                db.Create(f_font, "Debug menu", a, thisConfig->GetInt("textureQuality"));
+                db.Create(f_font, "Debug menu", a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
                 db.id = 999;
                 dialog_boxes.push_back(db);
             }
-        } else if (inputCtrl.isKeyPressed(InputController::Keys::START))
+        } else if (inputCtrl->isKeyPressed(InputController::Keys::START))
         {
-            std::vector<sf::String> a = {Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_yes")), Func::ConvertToUtf8String(thisConfig->strRepo.GetString("nav_no"))};
+            std::vector<sf::String> a = {Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("nav_yes")), Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("nav_no"))};
 
             PataDialogBox db;
-            db.Create(f_font, Func::ConvertToUtf8String(thisConfig->strRepo.GetString("mission_backtopatapolis")), a, thisConfig->GetInt("textureQuality"));
+            db.Create(f_font, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("mission_backtopatapolis")), a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
             dialog_boxes.push_back(db);
         }
     }
@@ -1971,7 +1956,8 @@ bool MissionController::DoCollisionStepInAxis(float currentAxisAngle, HitboxFram
         return false;
     }
 }
-void MissionController::DoMovement(sf::RenderWindow& window, float fps, InputController& inputCtrl)
+
+void MissionController::DoMovement()
 {
     /** Make Patapon walk (temporary) **/
     float booster = 1.0;
@@ -2156,9 +2142,10 @@ bool MissionController::isColliding(PlayableUnit* unit, const unique_ptr<Entity>
     return foundCollision || forceCollision;
 }
 
-void MissionController::DoRhythm(InputController& inputCtrl)
+void MissionController::DoRhythm()
 {
     /** Call Rhythm functions **/
+    InputController* inputCtrl = CoreManager::getInstance().getInputController();
 
     if ((rhythm.current_song == "patapata") || (rhythm.current_song == "chakapata"))
     {
@@ -2191,10 +2178,13 @@ void MissionController::DoRhythm(InputController& inputCtrl)
         rhythm.current_song = "";
     }
 
+    /* 
+    TO-DO: rhythm and rhythmcontroller use the coremanager config
     rhythm.rhythmController.config = thisConfig;
-    rhythm.config = thisConfig;
+    rhythm.config = thisConfig; 
+    */
 
-    rhythm.doRhythm(inputCtrl);
+    rhythm.doRhythm();
 }
 
 void MissionController::ClearMissionMemory()
@@ -2214,8 +2204,10 @@ void MissionController::ClearMissionMemory()
     droppable_cache.clear();
 }
 
-void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
+void MissionController::DoMissionEnd()
 {
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+
     /** Make the missionEndTimer unusable until the mission is not finished **/
     if (!missionEnd)
         missionEndTimer.restart();
@@ -2232,7 +2224,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 {
                     s_cheer.stop();
                     s_cheer.setBuffer(sb_cheer1);
-                    s_cheer.setVolume(float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("sfxVolume")) / 100.f));
+                    s_cheer.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
                     s_cheer.play();
                     playCheer[0] = true;
                 }
@@ -2244,7 +2236,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 {
                     s_cheer.stop();
                     s_cheer.setBuffer(sb_cheer2);
-                    s_cheer.setVolume(float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("sfxVolume")) / 100.f));
+                    s_cheer.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
                     s_cheer.play();
                     playCheer[1] = true;
                 }
@@ -2256,7 +2248,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 {
                     s_cheer.stop();
                     s_cheer.setBuffer(sb_cheer3);
-                    s_cheer.setVolume(float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("sfxVolume")) / 100.f));
+                    s_cheer.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
                     s_cheer.play();
                     playCheer[2] = true;
                 }
@@ -2267,7 +2259,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 if (!playJingle)
                 {
                     s_jingle.setBuffer(sb_win_jingle);
-                    s_jingle.setVolume(float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("sfxVolume")) / 100.f));
+                    s_jingle.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
                     s_jingle.play();
                     playJingle = true;
                 }
@@ -2277,7 +2269,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
             if (!playJingle)
             {
                 s_jingle.setBuffer(sb_lose_jingle);
-                s_jingle.setVolume(float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("sfxVolume")) / 100.f));
+                s_jingle.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
                 s_jingle.play();
                 playJingle = true;
             }
@@ -2288,7 +2280,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
 
     if (missionEndTimer.getElapsedTime().asMilliseconds() < 7700)
     {
-        camera.followobject_x = army_x * (window.getSize().x / float(1280));
+        camera.followobject_x = army_x * (window->getSize().x / float(1280));
     }
 
     /** Mission fade in and fade out **/
@@ -2337,9 +2329,9 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
         }
     }
 
-    fade_box.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+    fade_box.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
     fade_box.setFillColor(sf::Color(0, 0, 0, fade_alpha));
-    window.draw(fade_box);
+    window->draw(fade_box);
 
     /** Mission end event (Mission complete/Mission failed screen + transition to Patapolis **/
 
@@ -2405,9 +2397,9 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                     fadeout_alpha = 255;
                 }
 
-                fadeout_box.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+                fadeout_box.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
                 fadeout_box.setFillColor(sf::Color(0, 0, 0, fadeout_alpha));
-                window.draw(fadeout_box);
+                window->draw(fadeout_box);
             }
 
             if (missionEndTimer.getElapsedTime().asMilliseconds() > 19000)
@@ -2422,45 +2414,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 ClearMissionMemory();
 
                 SPDLOG_INFO("Go to Patapolis");
-
-                sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
-                v4Core->continue_loading = true;
-                v4Core->window.setActive(false);
-                loadingThreadInstance.launch();
-
-                //rework pending: refer to the comment below in the other rework pending section
-                /*
-                v4Core->mainMenu.patapolisMenu.doWaitKeyPress = false;
-                v4Core->mainMenu.patapolisMenu.Show();
-                v4Core->mainMenu.patapolisMenu.is_active = true;
-                v4Core->mainMenu.patapolisMenu.screenFade.Create(thisConfig, 0, 512);
-
-                if (!v4Core->mainMenu.patapolisMenu.initialised)
-                {
-                    /// patapolis might not be initialised because we could be running the pre-patapolis scripted first mission.
-					SPDLOG_DEBUG("Initialize Patapolis for the first time");
-                    v4Core->mainMenu.patapolisMenu.Initialise(thisConfig, v4Core, &v4Core->mainMenu);
-                } else
-                {
-                    SPDLOG_DEBUG("Don't initialize Patapolis, just show it again");
-                }
-
-                v4Core->mainMenu.patapolisMenu.location = 3;
-                v4Core->mainMenu.patapolisMenu.SetTitle(3);
-                v4Core->mainMenu.patapolisMenu.camPos = v4Core->mainMenu.patapolisMenu.locations[3];
-                v4Core->mainMenu.patapolisMenu.fade_alpha = 255;
-                v4Core->mainMenu.patapolisMenu.updateStoryPoint(); ///update NPC dialogues
-                */
-                while (missionEndTimer.getElapsedTime().asMilliseconds() < 21000)
-                {
-                    ///halt loading for a second
-                }
-
-                v4Core->loadingWaitForKeyPress();
-
-                v4Core->continue_loading = false;
-
-                v4Core->changeRichPresence("In Patapolis", "logo", "");
+                returnToPatapolis = true;
             }
         }
     } else ///Failure
@@ -2509,9 +2463,9 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                     fadeout_alpha = 255;
                 }
 
-                fadeout_box.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+                fadeout_box.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
                 fadeout_box.setFillColor(sf::Color(0, 0, 0, fadeout_alpha));
-                window.draw(fadeout_box);
+                window->draw(fadeout_box);
             }
 
             if (missionEndTimer.getElapsedTime().asMilliseconds() >= 8000)
@@ -2524,51 +2478,7 @@ void MissionController::DoMissionEnd(sf::RenderWindow& window, float fps)
                 ClearMissionMemory();
 
                 SPDLOG_INFO("Go to Patapolis");
-
-                sf::Thread loadingThreadInstance(&V4Core::loadingThread, v4Core);
-                v4Core->continue_loading = true;
-                v4Core->window.setActive(false);
-                loadingThreadInstance.launch();
-
-                //rework pending
-                //basically this code below attempts to reach patapolis functions via v4core->mainmenu
-                //this is currently being improved so this kind of chain will no longer be necessary
-                //but for now for compatibility's sake im going to comment this out
-
-                /* v4Core->mainMenu.patapolisMenu.doWaitKeyPress = false;
-                v4Core->mainMenu.patapolisMenu.Show();
-                v4Core->mainMenu.patapolisMenu.is_active = true;
-                v4Core->mainMenu.patapolisMenu.screenFade.Create(thisConfig, 0, 512);
-
-                if (!v4Core->mainMenu.patapolisMenu.initialised)
-                {
-                    /// patapolis might not be initialised because we could be running the pre-patapolis scripted first mission.
-                    SPDLOG_DEBUG("Initialize Patapolis for the first time");
-                    v4Core->mainMenu.patapolisMenu.Initialise(thisConfig, v4Core, &v4Core->mainMenu);
-                } else
-                {
-                    SPDLOG_DEBUG("Don't initialize Patapolis, just show it again");
-                }
-                */
-                
-                //rework pending
-                /* v4Core->mainMenu.patapolisMenu.location = 3;
-                v4Core->mainMenu.patapolisMenu.SetTitle(3);
-                v4Core->mainMenu.patapolisMenu.camPos = v4Core->mainMenu.patapolisMenu.locations[3];
-                v4Core->mainMenu.patapolisMenu.fade_alpha = 255;
-                v4Core->mainMenu.patapolisMenu.updateStoryPoint(); ///update NPC dialogues
-                */
-
-                while (missionEndTimer.getElapsedTime().asMilliseconds() < 10000)
-                {
-                    ///halt loading for a second
-                }
-
-                v4Core->loadingWaitForKeyPress();
-
-                v4Core->continue_loading = false;
-
-                v4Core->changeRichPresence("In Patapolis", "logo", "");
+                returnToPatapolis = true;
             }
         }
     }
@@ -2617,7 +2527,7 @@ void MissionController::DoVectorCleanup(vector<int> units_rm, vector<int> dmg_rm
     }
 }
 
-std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
+std::vector<int> MissionController::DrawProjectiles()
 {
     /** Projectile management **/
 
@@ -2631,7 +2541,7 @@ std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
         float yspeed = p->GetYSpeed();
         yspeed += (gravity / fps);
         p->SetNewSpeedVector(xspeed, yspeed);
-        p->Update(window, fps);
+        p->Update();
     }
 
     /// step 3: any projectiles that hit any collidableobject are informed
@@ -2664,7 +2574,7 @@ std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
 
             projectile_sounds[projectile_sounds.size() - 1].setBuffer(spear_hit_solid);
 
-            projectile_sounds[projectile_sounds.size() - 1].setVolume(float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("sfxVolume")) / 100.f));
+            projectile_sounds[projectile_sounds.size() - 1].setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
             projectile_sounds[projectile_sounds.size() - 1].play();
 
             removeProjectile = true;
@@ -2766,7 +2676,7 @@ std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
                             }
                         }
 
-                        projectile_sounds[projectile_sounds.size() - 1].setVolume(float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("sfxVolume")) / 100.f));
+                        projectile_sounds[projectile_sounds.size() - 1].setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
                         projectile_sounds[projectile_sounds.size() - 1].play();
 
                         addDmgCounter(0, total * cevent[e].defend_factor, xpos, ypos, qualitySetting, resSetting);
@@ -2778,7 +2688,7 @@ std::vector<int> MissionController::DrawProjectiles(sf::RenderWindow& window)
             }
         }
 
-        p->Draw(window, fps);
+        p->Draw();
 
         if (removeProjectile)
             pr_e.push_back(i);
@@ -3045,7 +2955,7 @@ void MissionController::DrawHitboxes(sf::RenderWindow& window)
     }
 }
 
-std::vector<int> MissionController::DrawDamageCounters(sf::RenderWindow& window)
+std::vector<int> MissionController::DrawDamageCounters()
 {
     vector<int> dmg_rm;
 
@@ -3107,7 +3017,7 @@ std::vector<int> MissionController::DrawDamageCounters(sf::RenderWindow& window)
                 dmgCounters[i].spr[d].setScale(curScale, curScale);
                 dmgCounters[i].spr[d].setColor(sf::Color(255, 255, 255, dmgCounters[i].alpha[d]));
 
-                dmgCounters[i].spr[d].draw(window);
+                dmgCounters[i].spr[d].draw();
 
                 a += dmgCounters[i].alpha[d];
             }
@@ -3120,8 +3030,10 @@ std::vector<int> MissionController::DrawDamageCounters(sf::RenderWindow& window)
     return dmg_rm;
 }
 
-std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
+std::vector<int> MissionController::DrawEntities()
 {
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+
     //cout << "[MissionController::DrawEntities] Start" << endl;
     vector<int> tlo_rm;
 
@@ -3148,17 +3060,17 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
             if (!missionEnd)
             {
                 entity->Update();
-                entity->Draw(window);
+                entity->Draw();
             }
         } else
         {
             ///Check if entity is off bounds, if yes, don't render it.
             entity->offbounds = false;
 
-            if (entity->getGlobalPosition().x > (camera.followobject_x) / (window.getSize().x / float(1280)) + 2400)
+            if (entity->getGlobalPosition().x > (camera.followobject_x) / (window->getSize().x / float(1280)) + 2400)
                 entity->offbounds = true;
 
-            if (entity->getGlobalPosition().x < (camera.followobject_x) / (window.getSize().x / float(1280)) - 1000)
+            if (entity->getGlobalPosition().x < (camera.followobject_x) / (window->getSize().x / float(1280)) - 1000)
                 entity->offbounds = true;
 
             entity->distance_to_unit = abs(farthestUnitPosition - entity->getGlobalPosition().x);
@@ -3220,7 +3132,7 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
 
             //cout << "[MissionController::DrawEntities] Draw entity" << endl;
             entity->Update();
-            entity->Draw(window);
+            entity->Draw();
         }
 
         //cout << "[MissionController::DrawEntities] Check if finished" << endl;
@@ -3232,7 +3144,7 @@ std::vector<int> MissionController::DrawEntities(sf::RenderWindow& window)
     return tlo_rm;
 }
 
-std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
+std::vector<int> MissionController::DrawUnits()
 {
     vector<int> units_rm;
 
@@ -3428,7 +3340,7 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
 
             unit->fps = fps;
             unit->Update();
-            unit->Draw(window);
+            unit->Draw();
 
             if (unit->ready_to_erase)
                 units_rm.push_back(i);
@@ -3449,6 +3361,14 @@ std::vector<int> MissionController::DrawUnits(sf::RenderWindow& window)
 
 void MissionController::Update(sf::RenderWindow& window, float cfps, InputController& inputCtrl)
 {
+}
+
+void MissionController::Update()
+{
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    InputController* inputCtrl = CoreManager::getInstance().getInputController();
+    float cfps = CoreManager::getInstance().getCore()->getFPS();
+
     SPDLOG_TRACE("Start of MissionController update routine (NEW FRAME)");
 
     ///remove stopped sounds
@@ -3472,6 +3392,9 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
               });
 
     ///Globally disable the controls when Dialogbox is opened, but preserve original controller for controlling the DialogBoxes later
+    
+    // TO-DO: what to do with this section? still needed?
+    /*
     InputController o_inputCtrl;
     InputController cur_inputCtrl;
 
@@ -3483,7 +3406,7 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
 
         InputController a;
         cur_inputCtrl = a;
-    }
+    }*/
 
     /** Update loop, everything here happens per each frame of the game **/
     fps = cfps;
@@ -3494,15 +3417,16 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
     
     SPDLOG_TRACE("Handle camera and background");
     camera.missionEnd = missionEnd; ///disable camera controls when needed
-    camera.Work(window, fps, cur_inputCtrl);
-    test_bg.setCamera(camera);
-    test_bg.Draw(window);
+    camera.Work();
+
+    mission_bg.setCamera(camera);
+    mission_bg.Draw();
 
     /** Execute Keyboard events and Movement **/
     
     SPDLOG_TRACE("Handle input and movement");
-    DoKeyboardEvents(window, fps, cur_inputCtrl);
-    DoMovement(window, fps, cur_inputCtrl);
+    DoKeyboardEvents();
+    DoMovement();
 
     vector<int> k_e;
 
@@ -3596,22 +3520,23 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
 
     /** Draw all Entities **/
     SPDLOG_TRACE("Draw all entities");
-    vector<int> tlo_rm = DrawEntities(window);
+    vector<int> tlo_rm = DrawEntities();
 
     /** Draw all Units **/
     SPDLOG_TRACE("Draw all units");
-    vector<int> units_rm = DrawUnits(window);
+    vector<int> units_rm = DrawUnits();
 
     /** Draw projectiles **/
     SPDLOG_TRACE("Draw all projectiles");
-    vector<int> pr_rm = DrawProjectiles(window);
+    vector<int> pr_rm = DrawProjectiles();
 
     /** Draw message clouds **/
     SPDLOG_TRACE("Draw all message clouds");
     for (int e = 0; e < tangibleLevelObjects.size(); e++)
     {
-        Entity* entity = tangibleLevelObjects[e].get();
-        entity->doMessages(window, fps, inputCtrl);
+        //TO-DO: handle messages with new system
+        //Entity* entity = tangibleLevelObjects[e].get();
+        //entity->doMessages(window, fps, inputCtrl);
     }
 
     /** Draw hitboxes **/
@@ -3619,17 +3544,18 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
     if (showHitboxes)
     {
         SPDLOG_TRACE("Draw all hitboxes");
-        DrawHitboxes(window);
+        //TO-DO: hitboxes later bc im lazy and its a debug setting
+        //DrawHitboxes(window);
     }
 
     /** Draw damage counters **/
     SPDLOG_TRACE("Draw all damage counters");
-    vector<int> dmg_rm = DrawDamageCounters(window);
+    vector<int> dmg_rm = DrawDamageCounters();
 
     /**  Draw static UI elements **/
 
-    auto lastView = window.getView();
-    window.setView(window.getDefaultView());
+    auto lastView = window->getView();
+    window->setView(window->getDefaultView());
 
     /**
 
@@ -3691,10 +3617,10 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
 		sf::Color fadeColor = fade.getFillColor();
 		fadeColor.a = currentAlpha;
 		fade.setFillColor(fadeColor);
-		fade.setSize(sf::Vector2f(window.getSize().x,window.getSize().y));
+		fade.setSize(sf::Vector2f(window->getSize().x,window->getSize().y));
 
 		fade.setPosition(0,0);
-		window.draw(fade);
+		window->draw(fade);
 	}
 	if (inCutscene)
 	{
@@ -3702,10 +3628,10 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
 		{
 			sf::Text currentLine = t_cutscene_text[i];
 
-			currentLine.setPosition(window.getSize().x/2,300 + 39*i);
+			currentLine.setPosition(window->getSize().x/2,300 + 39*i);
 			sf::Time currentTime = timer.getElapsedTime();
 
-			window.draw(currentLine);
+			window->draw(currentLine);
 		}
 	}*/
 
@@ -3715,23 +3641,26 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
     {
         t_timerMenu.setString(Func::ConvertToUtf8String(std::to_string(missionTimer.getElapsedTime().asSeconds()) + " Seconds"));
         t_timerMenu.setOrigin(t_timerMenu.getGlobalBounds().width / 2, t_timerMenu.getGlobalBounds().height / 2);
-        t_timerMenu.setPosition(window.getSize().x / 2, 100);
-        window.draw(t_timerMenu);
+        t_timerMenu.setPosition(window->getSize().x / 2, 100);
+        window->draw(t_timerMenu);
     }
 
     /** Draw floor **/
 
-    float resRatioX = window.getSize().x / float(1280);
-    float resRatioY = window.getSize().y / float(720);
+    float resRatioX = window->getSize().x / float(1280);
+    float resRatioY = window->getSize().y / float(720);
     r_floor.setSize(sf::Vector2f(1280 * resRatioX, 110 * resRatioY));
     r_floor.setFillColor(sf::Color::Black);
     r_floor.setPosition(0, 610 * resRatioY);
-    window.draw(r_floor);
+    window->draw(r_floor);
 
     SPDLOG_TRACE("Draw UI (user interface)");
+    //TO-DO: draw user interface (update to new system)
+    /*
     drawCommandList(window);
     DrawUnitThumbs(window);
     DrawPickedItems(window);
+    */
 
     /** If mission isn't finished, execute and draw Rhythm **/
 
@@ -3742,20 +3671,25 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
         //ctrlTips.draw(window);
 
         //cout << "[MissionController] Rhythm" << endl;
-        rhythm.fps = fps;
-        DoRhythm(cur_inputCtrl);
-        rhythm.Draw(window);
+        
+        //TO-DO: do rhythm for new system
+        DoRhythm();
+        rhythm.Draw();
     }
 
     /** Execute all mission end related things **/
 
     SPDLOG_TRACE("Handle mission ending");
-    DoMissionEnd(window, fps);
+    DoMissionEnd();
+
+    inputCtrl->lockRhythm = false;
 
     SPDLOG_TRACE("Handle dialog boxes");
     if (dialog_boxes.size() > 0)
     {
-        if (o_inputCtrl.isKeyPressed(InputController::Keys::CROSS))
+        inputCtrl->lockRhythm = true;
+
+        if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
         {
             switch (dialog_boxes[dialog_boxes.size() - 1].CheckSelectedOption())
             {
@@ -3860,7 +3794,7 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
     {
         dialog_boxes[i].x = 640;
         dialog_boxes[i].y = 360;
-        dialog_boxes[i].Draw(window, fps, o_inputCtrl);
+        dialog_boxes[i].Draw();
 
         if (dialog_boxes[i].closed)
             db_e.push_back(i);
@@ -3871,13 +3805,18 @@ void MissionController::Update(sf::RenderWindow& window, float cfps, InputContro
         dialog_boxes.erase(dialog_boxes.begin() + db_e[i] - i);
     }
 
-    window.setView(lastView);
+    window->setView(lastView);
 
     /** Remove vector objects that are no longer in use **/
     SPDLOG_TRACE("Perform vector cleanup");
     DoVectorCleanup(units_rm, dmg_rm, tlo_rm, pr_rm);
 
     SPDLOG_TRACE("Finished drawing the frame.");
+
+    if (returnToPatapolis)
+    {
+        StateManager::getInstance().setState(StateManager::PATAPOLIS);
+    }
 }
 void MissionController::FinishLastCutscene()
 {
@@ -3892,10 +3831,10 @@ void MissionController::StartCutscene(const std::string& text, bool isBlackScree
 {
     /// because the description needs to be able to go over multiple lines, we have to split it into a series of lines
     t_cutscene_text.clear();
-    std::vector<std::string> wordsinDesc = Func::Split(thisConfig->strRepo.GetString(text), ' ');
+    std::vector<std::string> wordsinDesc = Func::Split(CoreManager::getInstance().getStrRepo()->GetString(text), ' ');
     sf::String oldTotalString;
     sf::String currentTotalString;
-    int maxWidth = thisConfig->GetInt("resX") * 0.4;
+    int maxWidth = CoreManager::getInstance().getConfig()->GetInt("resX") * 0.4;
     timer.restart();
     inCutscene = true;
     isBlackScreenCutscene = isBlackScreen;

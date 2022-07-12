@@ -2,10 +2,13 @@
 cmake_minimum_required(VERSION 3.13)
 
 ### Sets project name and version.
-project(DiscordSDK VERSION 0.1)
+project(DiscordSDK VERSION 2.5.6)
 
 ### Module used to download Discord Game SDK.
 include(FetchContent)
+
+### Find the target build architecture
+math(EXPR BITS "8*${CMAKE_SIZEOF_VOID_P}")
 
 ### OS Requirements
 ### - OS must contain an identifier corresponding to your current operating system: Windows, Macos, Linux.
@@ -54,18 +57,20 @@ install(DIRECTORY ${DISCORD_GAME_SDK_PATH}/cpp/ DESTINATION include/ FILES_MATCH
 ### Target To Download Discord Game SDK
 set(CMAKE_DISCORD_GAME_SDK_CONFIG_TARGET_NAME ${PROJECT_NAME}_config)
 set(CMAKE_DISCORD_GAME_SDK_INCLUDE_DIR ${DISCORD_GAME_SDK_PATH}/c;${DISCORD_GAME_SDK_PATH}/cpp)
+
 add_library(${CMAKE_DISCORD_GAME_SDK_CONFIG_TARGET_NAME} INTERFACE)
 target_include_directories(${CMAKE_DISCORD_GAME_SDK_CONFIG_TARGET_NAME}
         INTERFACE ${CMAKE_DISCORD_GAME_SDK_INCLUDE_DIR})
+
 target_link_libraries(${CMAKE_DISCORD_GAME_SDK_CONFIG_TARGET_NAME} INTERFACE discord_game_sdk)
 set_target_properties(${CMAKE_DISCORD_GAME_SDK_CONFIG_TARGET_NAME} PROPERTIES INTERFACE_COMPILE_DEFINITIONS
         CMAKE_DISCORD_GAME_SDK_VERSION="${DiscordSDK_FIND_VERSION_MAJOR}.${DiscordSDK_FIND_VERSION_MINOR}.${DiscordSDK_FIND_VERSION_PATCH}")
 
 ### Installs Discord Game SDK binaries
 if (OS STREQUAL "Windows")
-    if (ARCH STREQUAL "x86_64")
+    if (BITS EQUAL 64)
         set(CMAKE_DISCORD_GAME_SDK_LIB_PATH ${DISCORD_GAME_SDK_PATH}/lib/x86_64/discord_game_sdk.dll.lib)
-    else ()
+    else (BITS EQUAL 32)
         set(CMAKE_DISCORD_GAME_SDK_LIB_PATH ${DISCORD_GAME_SDK_PATH}/lib/x86/discord_game_sdk.dll.lib)
     endif ()
 elseif (OS STREQUAL "Linux")
@@ -83,3 +88,7 @@ set_target_properties(${CMAKE_DISCORD_GAME_SDK_TARGET_NAME} PROPERTIES
         IMPORTED_LOCATION "${CMAKE_DISCORD_GAME_SDK_LIB_PATH}"
         IMPORTED_IMPLIB "${CMAKE_DISCORD_GAME_SDK_LIB_PATH}"
         INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_DISCORD_GAME_SDK_INCLUDE_DIR}")
+        
+message(STATUS "[DiscordSDK] Target name: " ${CMAKE_DISCORD_GAME_SDK_TARGET_NAME})
+message(STATUS "[DiscordSDK] Lib path: " ${CMAKE_DISCORD_GAME_SDK_LIB_PATH})
+message(STATUS "[DiscordSDK] Include paths: " ${CMAKE_DISCORD_GAME_SDK_INCLUDE_DIR})

@@ -148,7 +148,7 @@ void SaveReader::LoadSave()
         }
     } else
     {
-        spdlog::error("Could not load save file");
+        SPDLOG_ERROR("Could not load save file");
     }
     conf.close();
 }
@@ -170,7 +170,7 @@ void SaveReader::Flush() ///Empties the save data.
 
 void SaveReader::CreateBlankSave()
 {
-    spdlog::info("Creating blank save...");
+    SPDLOG_INFO("Creating blank save...");
 
     kami_name = "Kamipon";
 
@@ -207,7 +207,7 @@ void SaveReader::CreateBlankSave()
 
     story_point = 1;
 
-    spdlog::info("Finished creating blank save");
+    SPDLOG_INFO("Finished creating blank save");
 }
 
 void SaveReader::Save()
@@ -304,7 +304,7 @@ void SaveReader::Save()
     save_file << std::setw(4) << save_json;
     save_file.close();
 
-    spdlog::info("Done saving.");
+    SPDLOG_INFO("Done saving.");
 }
 
 bool SaveReader::isMissionUnlocked(int mission)

@@ -4,6 +4,7 @@
 #include <regex>
 #include <iostream>
 #include <spdlog/spdlog.h>
+#include "../CoreManager.h"
 
 using namespace std;
 
@@ -17,12 +18,11 @@ void PText::createText(sf::Font& font, float characterSize, sf::Color color, sf:
     log_str = std::regex_replace(log_str, std::regex("\n"), "\\n");
     SPDLOG_DEBUG("Creating a new PText object: size: {} text: {} q: {} r: {}", characterSize, log_str, q, r);
 
-    f = font;
     cS = characterSize;
     c = color;
     txt = text_string;
 
-    t.setFont(f);
+    t.setFont(CoreManager::getInstance().getStrRepo()->font);
     t.setCharacterSize(cS);
     t.setFillColor(c);
     t.setString(txt);
@@ -110,7 +110,7 @@ void PText::setScale(float s)
 
 sf::FloatRect PText::getLocalBounds()
 {
-    t.setFont(f);
+    t.setFont(CoreManager::getInstance().getStrRepo()->font);
     t.setCharacterSize(cS);
     t.setFillColor(c);
     t.setString(txt);
@@ -119,11 +119,33 @@ sf::FloatRect PText::getLocalBounds()
 
 sf::FloatRect PText::getGlobalBounds()
 {
-    t.setFont(f);
+    t.setFont(CoreManager::getInstance().getStrRepo()->font);
     t.setCharacterSize(cS);
     t.setFillColor(c);
     t.setString(txt);
     return t.getGlobalBounds();
+}
+
+sf::FloatRect PText::getTransformedBounds()
+{
+    //refer to spritewrapper
+
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    sf::Vector2u windowSize = window->getSize();
+
+    std::vector<float> x = {640, 1280, 1920, 3840};
+    std::vector<float> y = {360, 720, 1080, 2160};
+
+    sf::Vector2f resRatio(windowSize.x / float(1280), windowSize.y / float(720));
+
+    int quality = ResourceManager::getInstance().getCurrentQuality();
+
+    sf::Vector2f ratio(windowSize.x / x[quality], windowSize.y / y[quality]);
+    sf::Vector2f r((fabs(scaleX) / resRatio.x), (fabs(scaleY) / resRatio.y));
+
+    sf::FloatRect l_bounds = getLocalBounds();
+
+    return sf::FloatRect(l_bounds.top * r.x, l_bounds.left * r.y, l_bounds.width * r.x, l_bounds.height * r.y);
 }
 
 sf::FloatRect PText::getGlobalBoundsScaled()
@@ -131,7 +153,7 @@ sf::FloatRect PText::getGlobalBoundsScaled()
     float nw = 1;
     float nh = 1;
 
-    t.setFont(f);
+    t.setFont(CoreManager::getInstance().getStrRepo()->font);
     if (t.getGlobalBounds().width > 0)
         nw = t.getGlobalBounds().width / resRatioX;
 
@@ -206,7 +228,7 @@ void PText::draw(sf::RenderWindow& window)
         }
     }
 
-    t.setFont(f);
+    t.setFont(CoreManager::getInstance().getStrRepo()->font);
     t.setFillColor(c);
     t.setCharacterSize(cS);
     t.setString(txt);
@@ -285,7 +307,7 @@ void PText::draw(sf::RenderWindow* window)
         }
     }
 
-    t.setFont(f);
+    t.setFont(CoreManager::getInstance().getStrRepo()->font);
     t.setFillColor(c);
     t.setCharacterSize(cS);
     t.setString(txt);
@@ -365,7 +387,7 @@ void PText::update(sf::RenderWindow& window)
         }
     }
 
-    t.setFont(f);
+    t.setFont(CoreManager::getInstance().getStrRepo()->font);
     t.setFillColor(c);
     t.setCharacterSize(cS);
     t.setString(txt);
@@ -439,7 +461,7 @@ void PText::update(sf::RenderWindow* window)
         }
     }
 
-    t.setFont(f);
+    t.setFont(CoreManager::getInstance().getStrRepo()->font);
     t.setFillColor(c);
     t.setCharacterSize(cS);
     t.setString(txt);

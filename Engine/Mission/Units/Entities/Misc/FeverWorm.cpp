@@ -5,6 +5,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "../../../../CoreManager.h"
+
 FeverWorm::FeverWorm()
 {
     tex_number[2].loadFromFile("resources/graphics/rhythm/worm/2.png");
@@ -38,9 +40,9 @@ FeverWorm::FeverWorm()
     let_exc.setOrigin(let_exc.getGlobalBounds().width / 2, let_exc.getGlobalBounds().height);
 }
 
-void FeverWorm::LoadConfig(Config* thisConfigs)
+void FeverWorm::LoadConfig()
 {
-    AnimatedObject::LoadConfig(thisConfigs, "resources/units/entity/fever_worm.p4a");
+    AnimatedObject::LoadConfig("resources/units/entity/fever_worm.p4a");
 }
 
 void FeverWorm::doRhythm(std::string current_song, std::string current_drum, int combo, int realcombo, bool advanced_prefever, float beatBounce, float satisfaction)
@@ -123,8 +125,10 @@ void FeverWorm::doRhythm(std::string current_song, std::string current_drum, int
     }
 }
 
-void FeverWorm::Draw(sf::RenderWindow& window)
+void FeverWorm::Draw()
 {
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow(); 
+
     if (AnimatedObject::getAnimationSegment() != "transform")
     {
         if (worm_fever)
@@ -143,11 +147,11 @@ void FeverWorm::Draw(sf::RenderWindow& window)
             global_x += speed / fps;
     }
 
-    auto view = window.getView();
-    window.setView(window.getDefaultView());
+    auto view = window->getView();
+    window->setView(window->getDefaultView());
 
     /// call the parent function to draw the animations
-    AnimatedObject::Draw(window);
+    AnimatedObject::Draw();
 
     if ((AnimatedObject::getAnimationSegment() != "fever") && (AnimatedObject::getAnimationSegment() != "transform") && ((f_combo >= 2) && (f_combo <= 9)))
     {
@@ -180,5 +184,5 @@ void FeverWorm::Draw(sf::RenderWindow& window)
         }
     }
 
-    window.setView(view);
+    window->setView(view);
 }

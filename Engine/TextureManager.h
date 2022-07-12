@@ -12,6 +12,8 @@
 class TextureManager
 {
 public:
+    std::mutex resource_mutex;
+
     static TextureManager& getInstance();
     void loadTexture(const std::string& path, int quality);
     sf::Texture& getTexture(const std::string& path);
@@ -19,9 +21,10 @@ public:
     sf::Texture& scaleTexture(const std::string& path, int ratio);
     bool checkImageExists(const std::string& key);
     void loadImageFromFile(const std::string& path);
-    void loadImageFromMemory(const std::string& key, sf::Image image);
+    void loadImageFromMemory(const std::string& key, sf::Image image, bool asTexture = false);
     sf::Image& getImage(const std::string& key);
     void loadTextureFromImage(const std::string& img_key);
+    void unloadTexture(const std::string& key);
     void unloadImage(const std::string& key);
     void applyForceLoad(bool force);
     void reloadTextures(int quality);

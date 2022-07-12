@@ -26,9 +26,9 @@ public:
     bool fever_achieved = false;
 
     FeverWorm();
-    void LoadConfig(Config* thisConfigs);
+    void LoadConfig();
     void doRhythm(std::string current_song, std::string current_drum, int combo, int realcombo, bool advanced_prefever, float beatBounce, float satisfaction);
-    void Draw(sf::RenderWindow& window);
+    void Draw();
 };
 
 #endif // FEVERWORM_H

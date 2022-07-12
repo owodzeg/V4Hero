@@ -60,7 +60,7 @@ public:
     std::vector<string> av_commands;
 
     RhythmController();
-    bool checkForInput(InputController& inputCtrl);
+    bool checkForInput();
     void resetValues();
 private:
     std::shared_ptr<spdlog::logger> logger = spdlog::get("rhythm");

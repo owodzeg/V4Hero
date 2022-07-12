@@ -1,0 +1,421 @@
+// You can use your native special characters
+// Comments starts with // and will not be read by game
+// The format is as follows:
+// string_id | string (without containing any "|")
+// Where string_id is NOT CHANGEABLE! Change only the second part after the | character.
+// Example:
+// english_word|English word
+// polish_word|Polskie słowo
+// Good luck!
+// ## main menu
+menu_newgame|Nova ludo
+menu_continue|Kontinui
+menu_options|Opcioj
+menu_exit|Eliri
+// ## options
+options_graphics|Grafika opcioj
+options_audio|Sona opcioj
+options_input|Eniga opcioj
+options_language|Lingva opcioj
+options_backtomain|Reiri al cxefa menuo
+options_back|Reiri
+options_graphics1|Ekrandistingivo
+options_graphics2|Kvalito de teksturo
+options_graphics3|Glatigo
+options_graphics4|Limo de filmer-rapido
+options_graphics5|Sxalti plenan ekranon
+options_graphics6|Senbordera fenestro
+options_unlimited|(senlima)
+options_quality_low|Malalta
+options_quality_medium|Meza
+options_quality_high|Alta
+options_quality_ultra|Ultra
+options_enable|Sxalti
+options_disable|Malsxalti
+options_audio1|Cxefa lauxteco
+options_audio2|Sono de tamburoj
+options_audio3|Tamburaj kantoj de Pataponoj
+options_audio4|Respondoj de Pataponoj
+options_volume|Lauxteco:
+options_input1|Agordo de regilo
+options_input_setup1|Certigxu pri via regilo estas ligita en via komputilo. Premu ian butonon en via regilo kaj gxi devos aperi en la centro de la ekrano.
+options_input_setup2|Bonvolu premi la klavon de sago maldekstren.
+options_input_setup3|Bonvolu premi la klavon de sago dekstren.
+options_input_setup4|Bonvolu premi la klavon de sago malsupren.
+options_input_setup5|Bonvolu premi la klavon de sago supren.
+options_input_setup6|Bonvolu premi la klavon ke estas responda por frapado de la PATA tamburo. (Kvadrato)
+options_input_setup7|Bonvolu premi la klavon ke estas responda por frapado de la PON tamburo. (Cirklo)
+options_input_setup8|Bonvolu premi la klavon ke estas responda por frapado de la DON tamburo. (Kruco)
+options_input_setup9|Bonvolu premi la klavon ke estas responda por frapado de la CXAKA tamburo. (Triangulo)
+options_input_setup10|Bonvolu premi la klavon ke estas responda por movado de observadopunkto maldekstren. (Maldekstra baskulo)
+options_input_setup11|Bonvolu premi la klavon ke estas responda por movado observadopunkto dekstren. (Dekstra baskulo)
+options_input_setup12|Bonvolu premi la ekvivalenton de la Start klavo.
+options_input_setup13|Bonvolu premi la ekvivalenton de la Select klavo.
+options_input_setup14|Cxio finita! Via regilo estas nun preta por ludado Patafour.
+options_input_setup_notice|Klavo de regilo sukcese registrigxita
+options_input_setup_again|Provi denove
+options_input_setup_next|nekste
+options_input_setup_return|Reiri al opcioj
+options_language1|Sxangxi lingvon
+options_language_english|La angla
+options_language_esperanto|Esperanto
+options_restart_notice|Vi bezonas restartigi vian ludon por apliki sxangxojn. Restartigi nun?
+options_restart_button1|Restartigi ludon
+options_restart_button2|Malfari sxangxojn
+// ## patapolis
+patapolis|Patapolis
+patapolis_trader|Vendoplaco
+patapolis_blacksmith|Forgxisto
+patapolis_barracks|Kazerno
+patapolis_tree|Mater, Arbo de Vivo
+patapolis_festival|Festoplaco
+patapolis_altar|Altaro
+patapolis_obelisk|Obelisko
+patapolis_paraget|Pordo
+patapolis_wakapon|Uxakapon, la Gardisto
+patapolis_egg|Ovo de Mondo
+// ## altar
+altar_title|Altaro
+altar_item_title|Ero por Testo
+altar_item_category|Kategorio por Testo
+altar_item_description|Estas testa priskribo. Gxi bezonas esti suficxe longa por atingi multoblan linion, por ke ni povas testi la rulumajn funkciojn de la priskriba tekstokampo.
+// ## barracks
+barracks_testunitname|Heroo
+barracks_test_stat_text|999,999,999/999,999,999
+barracks_unitstatus|Statuso de Unito
+barracks_lvl|Nivelo
+barracks_exp|Sperto
+barracks_dmg|Damagxo
+barracks_hp|VP
+barracks_crit|Krit
+barracks_attack_speed|Atakrapido
+// ## world map
+worldmap_header_1|Patapona Mapo de Mondo
+worldmap_select|Elekti mision
+worldmap_location_locked|~ Sxlosita ~
+worldmap_location_1_title|~ Sxida Valo ~
+worldmap_location_1_description|La humida mara aero ke ventas en tian valon faras perfektan habitaton por cxiaj plantoj, permesas kreski la pralogxantajn filikojn por ke gxi havas grandegan altecon! Por generacioj, diversaj triboj uzis cxi tion fertilan lokon kiel loko por cxasado de bestoj kaj amasigado sovagxaj legomoj. Gxia stranga pejzagxo de grandegaj plantoj povas esti malorientiga, kaj famoj persistas de kasxitaj sekretoj ie en la regiono.
+worldmap_location_2_title|~ Patapino Bosko ~
+worldmap_location_2_description| La pinarboj en tia bosko estas bone konataj pro kolosa alteco kaj malmoleco kiam uzita por konstrua materialo. Pataponaj arbhakistoj estas konata pro perlaborado tie tra trancxado tiuj arboj por uzado por konstruajxoj. Estas famo ke feoj bone disvolvigxas pro la mangxeblaj fungoj en la abismo de la arbaro.
+worldmap_location_3_title|~ Egxigxi klifoj ~
+worldmap_location_3_description|Egxigxi Klifoj unufoje vidis la agxon de potencaj drakoj antaux ili malaperis el ilia naskigxoloko pro kauxzoj malkonata de Rolitolandaj logxantoj, kaj liveras bonan lokon por konstruado hejmoj kaj fortresoj ke estas kasxita de vido egale. Gjaba Rareponoj originas el tiu regiono kaj iuj ankoraux logxas en la klifoj gxis hodiaux, sed multe de tiuj Pataponaj irejoj disvastigxis ekde iam cxirkaux la mondo.
+worldmap_mission_1_title|Cxasado en Sxida Valo
+worldmap_mission_1_description|Multe da bestoj kolektas en la valon por sxanco por trovado mangxeblaj plantoj kaj fungoj. Uzu tiun oportunon por cxasi la estuloj por nutri viajn Pataponojn! Famoj diras ke la valo holdas nekonatan trezoron.
+worldmap_mission_2_title|Fortreso en la Arbaro
+worldmap_mission_2_description|La Kiragxinoj fondis bazon por piedoj en la arba Patapino Bosko! Uzado la fortika ligno disde la cxirkauxaj arboj, ili konstruis fortreson. Kolektu vian armeon kaj malkonstruu la fortreson dum estado singardema pro estuloj de la arbaro!
+worldmap_mission_3_title|Kiragxina Fortreso en Patapino Bosko: Nivelo
+worldmap_mission_3_description|La Kiragxinoj eble estis venki tiam, sed ili revenis, pli forta ol iam. Ili estas celkonsciaj pro holdado tiu pozicio kaj la kosto ne gravas. Venku la fortreson ankorauxfoje por holdi la Kiragxinajn armeojn for!
+worldmap_mission_4_title|Altnivelaj ekipajxoj
+worldmap_mission_4_description|Patapona skoltoj raportis ke en Egxigxi Klifoj, la Kiragxinoj komencis konstruajxon por grandega fortreso por servi kiel bazon de operacio kontraux la Patapona armeo. Lauxraportado, la estonta fortreso estis fortikigi kun potenca Kiragxina teknologio, ke la Pataponoj neniam antauxe vidis. Estu brava kaj sentima kaj detruu tiu fortreson antaux gxi estas kompleta.
+worldmap_mission_5_title|Obstina Kiraĝinoj en Eĝiĝi Klifoj: Nivelo
+worldmap_mission_5_description|Ecx post detruado tiam ilia fortreso, la Kiragxinoj malpermesigxos malvenki denove. Ili estas celkonscia por batalado pro tiu loko ecx se gxi kostas iliajn vivojn. Meden avertas kun grimaca tono en sxian vocxon, "Estos ecx pli malmola ol la antauxa batalo".
+// ## missiondata
+mission_complete|MISIO KOMPLETA!
+mission_failed|MISIO MALSUKCESA!
+intro_cutscene_1|Bonvenon en unua demonstrajxa eldono de Patafour!
+intro_cutscene_2|Tiu demonstrajxo havas multe da aferojn por ludado, kaj ankaux malmultaj kasxitaj sekretoj. Cxu vi povas trovi ilin cxiom?
+intro_cutscene_3|Ho Potenca Patapono, mi petegas vin...
+Intro_cutscene_4|La Patapona tribo bezonas vin plu ol iam!
+intro_cutscene_5|Senespera perdita en Sxida valo, ili ne povas reveni al hejmo sen la sanktaj tamburoj kaj via gvidado.
+intro_cutscene_6|Frapu kun PATA PATA PATA PON en tempomezurado kun la takto por procedi antauxen.
+intro_cutscene_7|Se la Pataponoj stopas kanti pro kvar mezuroj, startu frapi denove.
+outro_cutscene_1|Dankon pro ludado la demonstrajxon!
+outro_cutscene_2|Estis tia plezuro pro farado Patafour por vi!
+outro_cutscene_3|La Patafour teamo honeste esperas ke vi sxatis gxin. Ni versxis nian koron kaj animon ekstere por vi.
+outro_cutscene_4|La Kiragxinoj revenos pli forta ol iam...
+outro_cutscene_5|Cxu vi traktos batali ilin for kaj vi reprenas la perditan Pataponan hejmlandon, Pata-stango?
+outro_cutscene_6|Lernu la antikvajn batalartojn el la vera unua de la Patapona Tribo kaj gvidu vian armeon al venko.
+outro_cutscene_7|La aliaj triboj bezonos vin, Cxiopovisto [PLAYER_NAME]...
+outro_cutscene_8|Savu la mondo en la plena versio de Patafour!
+outro_end|Dankon pro ludado!
+// # credits
+credits_creator|Projekta kreinto
+credits_programmers|Programistoj
+credits_artists|Artistoj
+credits_animators|Movbildisto
+credits_musicians|Muzikisto
+credits_gameplay|Ekvilibro de ludo
+credits_community|Komunumaj manaĝistoj
+credits_writers|Verkistoj
+credits_translators|tradukistoj
+credits_supporters|Asistuloj
+credits_special|Speciala dankado
+credits_all|Kaj cxiuj kiu iam asistis la projekton! Dankon!
+// # New Game Text
+newgame_what_is_your_name|Bonvenon en hejmo, Cxiopovisto. Kio nomo vi volas uzi?
+newgame_name_error_prompt|Via nomo devas enhavi inter 2 kaj 50 signoj.
+newgame_game_save_created|Savdosiero verkis kun sukceso.
+newgame_welcome|Bonvenon, Cxiopovisto
+newgame_welcome2|Cxu vi estas preta por eniri la demonstrajxon de Patafour?
+// ## items
+item_wooden_spear|Ligna Lanco
+desc_wooden_spear|Baza ligna lanco, donado por Cxiu Patapon rekruto kiam ili estas matura kaj unue unuigxas la cxasadon grupon. Aprezado de multaj Pataponoj, ecx poste ili sxaltas por uzi pli grandan kaj pli bonan armilojn.
+item_iron_spear|Fera Lanco
+desc_iron_spear|Malmola fera lanco. Pataponoj aprezas ilin cxar ili estas pli peza kaj ili faras pli damagxon. Tamen, ili bezonas pli forta batalisto por jxetado kompetente.
+item_steel_spear|Sxtala Lanco
+desc_steel_spear|Lanco kun akra pinto farita de la rara alojo, sxtalo. Tiuj lancoj estas pli malpezaj ol feraj lancoj sed gxi sxargas ecx pli puncxon!
+item_kacheek_spear|Kacxik Lanco
+desc_kacheek_spear|Lanco forgxita de la akra dentego de kacxik. Gxia akreco estas suficxa por trapiki tra sxildojn, farado kritajn damagxojn.
+item_shubaba_mask|Sxuba
+desc_shubaba_mask|Heroo masko de Spirita Striko. Gxi donas malgrandan porcion de granda sxubabassa potenco, iomete multigado la rapideco de la uzantaj muskoloj, permesado ilin por esti pli rapidajn ol aliaj militistoj.
+item_none|Nenio!
+desc_none|Malplena stratangulo de la Patapon altaro, kun nur kandelo kaj incenso
+item_banal_branch|Banala Brancxo
+desc_banal_branch|Baza brancxo. Kvankam gxi eblas esti simplan fragmenton de ligno, entreprena Patapon povas trovi multe da uzoj pro ili. El tenilo al tendo-stango.
+item_cherry_blossom|Cxeriza Floro
+desc_cherry_blossom|Lauxlegendo, la antikvaj kolosaj cxerizaj arboj ke tiu malmola ligna brancxo devenas de en la oriento ili estas ripozadoj dioj.
+item_small_rock|Sxtono
+desc_small_rock|Ordinara sxtono. Malpurecoforta, sed akoraux grava por triba vivo. Pataponaj infanoj ofte provas jxeti ilin trans lagon kaj riveron.
+item_hard_iron|Malmola Fero
+desc_hard_iron|Multe da sango disversxita en konfliktoj cxirkauxe tiu rara metalo laux Zigotonaj mitoj. Pataponaj rakontoj diras kiel prauloj kutimitis preni malmolan feron el interno de montoj, sed la sekreto por gxi estas longe perdita.
+item_leather_meat|Leda Viando
+desc_leather_meat|La grandagxuloj diras al juna Pataponoj, "Se gxi plenigas vian stomakon, ne plendu" kaj ili eksciis mangxi tiun viandon.
+item_tender_meat|Mola Viando
+desc_tender_meat|Pataponoj amas tiu molan, bongustan viandon, sed ili mangxas gxin rare, ecx dum ilia naskigxotago.
+item_pon_drum|Pon Tamburo
+desc_pon_drum|Bonega Tamburo de Kuragxo. Akirita laux konsento por igxi la Patapona dio.
+item_pata_drum|Pata Tamburo
+desc_pata_drum|Bonega Tamburo de Forteco. Hatapon gardis tiun tamburon kun lia vivo.
+item_chaka_drum|Cxaka Tamburo
+desc_chaka_drum|Bonega Tamburo de Sagxeco.
+item_don_drum|Don Tamburo
+desc_don_drum|Bonega Tamburo de Mirakloj. Oni diras pri tiu tambura takto ke gxi havas potencon por envenigi cxiopovistan volon en estado.
+item_keepsake|Memorajxo
+desc_keepsake|Hatapona memorajxo. Ĝi ĉiam komfortas lin, kaj memorigas lin ke Cxiopovisto venus en lia horo de grandega bezono.
+item_wooden_helmet|Ligna Kasko
+desc_wooden_helmet|La tradicia ligna kasko de la Patapona tribo. Estas la varmarko de ilia cxasa partio, kaj malgraux estas simpla dezajno, gxi savis la vivon de multaj Pataponaj batalistoj.
+item_iron_helmet|Fera Kasko
+desc_iron_helmet|Tiu kasko, farita de valora fero, imitas la bazan dezajnon de la ligna kasko, sed gxi donas pli protektado.
+item_kacheek_helm|Kacxik Kasko
+desc_kacheek_helm|Tiu kasko, fasonita de la pelto kaj haroj de Kacxik, gardas la uzulon sekura de damagxo. Gxi ankaux adas uzulan okulon suficxe varmon kaj komforton.
+item_mudada_bone|Mudado Osto
+desc_mudada_bone|Malgranda, blankigxa osto, sxajne el malgranda besto. Ili ofte trovita en tufon de herbo ekster en la cxasa tereno, aux en la stomako de pli grandaj bestoj.
+item_gashirin_bone|Gasxirino Osto
+desc_gashirin_bone|Granda, harda osto. Skribita ke niaj antikvaj prauloj unufoje uzis tiuj ostojn por batalilo.
+item_kuneri_fang|Kunero Piko
+desc_kuneri_fang|Belega, kurbigita piko. Gxi povas esti cxizita por uzo por trancxrando por batalilo, kaj ankaux antauxmetas bone por ekipajxo.
+item_itete_fang|Iteto Piko
+desc_itete_fang|Grandega piko fanfaronado tre akra pinto. Longa dirita ke vi povas scii cxasista vera ekzerciteco pro kiom da ilin li devis detiri el lia kolo.
+item_soggy_map|Fia Karto
+desc_soggy_map|Karto akiradita el enfosita trezora kesto trovita en Sxidan Valon. Gxi markas la lokon de kasxita fortreso.
+item_digital_blueprint|Cifereca Blukopio
+desc_digital_blueprint|Blukopio trovita en Kiragxina hxato en Patapina Bosko. Gxi vidigas la loko de estonta konstrua Kiragxino fortreso.
+item_category_material|Materialoj
+item_category_weapon|Bataliloj
+item_category_masks|Maskoj
+item_category_masks|Kiraso
+item_category_nothing|Malplena Spaco
+// ## enemies
+enemy_kacheek|Kacxik
+enemy_mochichi|Mocxicxi
+enemy_kirajin|Kiragxin
+// ## rarepons
+rarepon_normal|Normala
+rarepon_normal_desc|Normala batalisto el la Patapona tribo. Ili estas renoma por ilia stoikeco kaj braveco. Dume tiuj Pataponoj eblas esti malgranda, kun la gxusta pensado, ili povas fari cxion.
+// ## navigation
+nav_next|Neksta
+nav_previous|Antauxa
+nav_nextpage|Neksta pagxo
+nav_previouspage|antauxa pagxo
+nav_enter|Eniri
+nav_leave|Deiri
+nav_exit|Elirejo
+nav_savegame|Savi ludon
+nav_exittotitle|Deiri al titola bildekrano
+nav_left|Maldekstren
+nav_right|Dekstren
+nav_up|Supren
+nav_down|Suben
+nav_circle|Cirklo
+nav_triangle|Triangulo
+nav_square|Kvadrato
+nav_cross|Kruco
+nav_move|Agi
+nav_scroll|Rulumi
+nav_yes|Jes
+nav_no|Ne
+nav_agree|Interakordi
+// ## main menu NEW
+menu_pressanykey|Premu fakultativan klavon pro starti
+menu_saveexists|Estas konservdatumo ke ekzistas.\Cxu vi volas anstatauxigi gxin?
+menu_nodata|Manko de havebla konservdatumo trovita.
+menu_nosupportdata|Konservdatumo el pli agxaj kaj programistaj\Patafour versioj ne estas apogitaj.
+menu_invaliddata|Konservdatumo estas nevalida aux difektita.
+// ## options NEW
+options_options|Opcioj
+options_ingame_btn|Enluda butono
+options_assign_key|Asignita klavo
+options_key|Klavo
+options_change_title|Sxangxado de la asignita klavo por enluda butono:
+options_change_button|butono
+options_change_anykey|Premu fakultativan klavon pro asigni gxin al la enluda butono
+options_tip1|Konsileto: Musumu la asignitan klavon kun muso aux elektu gxin kun sagoklavoj,\poste premu la krucbutonon pro sxangxi gxin.\Premu la triangulbutonon pro forigi la asignitan klavon.\Uzu la numerojn supren la menuo por sxangxi inter klavkombino antauxagordo.
+options_tip2|Konsileto: Premu fakultativan klavon por reiri al la menuopcioj.\Novajn klavkombinojn estos konservita poste vi eliri menuopciojn. 
+options_tip3|Konsileto: Premu la startbutonon en via klavaro por kontinui.\Premu la cirklbutonon por eliri agordon de regilo.
+options_bigbutton|granda butono
+options_audio1|Lauxtecagordoj
+options_volume1|Cxeflauxteco:
+options_volume2|Sonlauxteco:
+options_volume3|Muziklauxteco:
+options_input2|Klavarkombinoj
+// ## intro cutscene NEW
+newgame_intro_1|Poste elfaro de la Patapole Brigxo, ni\fine alvenis al novaj landoj, netusxita\per la manoj de la Cxiopovisto Patapon.
+newgame_intro_2|En cxi tio malfamiliara loko, ni trovis\la ruinojn de antikva civilizacio, sxajne estas longa forgesita.
+newgame_intro_3|Senespera por trovi GXIN, ni komencis algxustigetado\kun la antikva mehxanikajxoj ke\estas trovita enfosita en rubo.
+newgame_intro_4|Kun unua premo de butono, nia tri jariponoj,\heroo, kaj min mem, estas sendita al bizara\kaj malfamiliara loko ke estas plena kun naturo\kaj sovagxvivo, sxajne sen ia civilizacio.
+newgame_intro_5|Zorgis pri niaj kamaradoj, ni provis\cxio ni povis por reveni al hejmo,\kaj dankon al la Cxiopovisto Patapon por ke ni sukcesis!
+newgame_intro_6|Sed tamen...
+newgame_intro_7|Sur nia reveno, ni revenis por trovi\la korpojn de niaj aliancanoj. Jugxando\iliajn vundojn, iliajn mortojn estis lastatempajn.
+newgame_intro_8|La cxielon supre estis tinkturi sangorugxan,\kaj la kriojn de tre malmultajn postvivulojn\povis esti auxdeblajn for.
+newgame_intro_9|Ni alrigardis la cxielon supren kaj renkontis\teruran tamen misteran figuron flosita\gravegan supre nin. Singularan okulon de gxi estis\plena kun kolero kaj malamo.
+newgame_intro_10|Dum gxi komencis flugi al ni, ni bonsxanse konservis nin mem\kun la antikva masxino ke ni uzis unufoje antaux,\apenaux eskapita la dubajn makzelojn de morto.
+newgame_intro_11|...
+newgame_intro_12|Cxiopovisto, mi pregxas al vi!\Bonvolu gvidi nin al ekstremajxo de la mondo.
+newgame_intro_13|Konservu nian mondon de malamo\kaj lasu nin fine rigardi al GXI!
+newgame_intro_14|Bonvolu preni la sanktan tamburon\kaj lasu nin marsxi unufoje!
+// ## first run NEW
+firstrun_dialog_1|Bonvenon en la Patafour provoversio!\Premu Z por kontinui.
+firstrun_dialog_2|Estas la unua tempo vi lancxis provoversion,\do jen kelkaj bazaj informajxoj. 
+firstrun_dialog_3|Patafour estas projekto ke aktive disvolvigxas.\Estas ne fina produkto kaj estas nenie proksime finarangxo.
+firstrun_dialog_4|Cxi tio provoversio demonstras al vi plej de la bazaj\internajxaj mehxanikoj ke ni manipulis fini gxis nun.
+firstrun_dialog_5|Patafour teamo esperas ke vi sxatos\nian malgrandan projekton!
+firstrun_dialog_6|Jen bazaj stiriloj:\Z - Konfermi (Kruco)\X - Nuligi (Cirklo)\Eniga klavo - Starti\Spacoklavo - Kontinui
+firstrun_dialog_7|Vi povas sxangxi cxi tiujn agordojn\en la menuo de opcioj.
+firstrun_dialog_8|Ni rekomendas uzi regilon\por la plej bona sento.
+firstrun_dialog_9|Amuzigxu!
+patapolis_returntomain|Cxu vi volas reveni\al la titolekrano?
+patapolis_returntomainsave|Nekonservitaj datumoj estos perditaj.\Cxu vi estas certa?
+patapolis_save|Cxu vi volas konservi vian ludon?
+patapolis_saved|Ludo konservita.
+patapolis_demofinish|Gratulon! Vi Finis la provoversion!
+patapolis_demo_pick1|Rigardi dankemojn
+patapolis_demo_pick2|Nuligi
+patapolis_sen|Sen Ranpurpuron
+// ## npc dialogue NEW
+npc_wakapon_1|Mi estas Wxakapon! Gardisto de\la Mondovo por ordo de Kami!
+npc_wakapon_2|Bonvenon, Kami! Mi estas tre danka\pro paroli al vi proprapersone!
+npc_wakapon_3|Vi povas esti konfidema pro mi,\Mi protektos la Mondovo\kun mia vivo, Promeso!
+npc_wakapon_4|Mi povas farti ion malaman\ke venas al nia mondo...
+npc_wakapon_5|Cxu vi fartas gxin ankaux, Kami?\Cxu vi protektos nin de io ajn dangxero ni eble alfrontos?
+npc_wakapon_6|Cxi tiuj triangulaj estuloj…\Kiu ili estas? Kio ili volas de ni Pataponojn?
+npc_wakapon_7|Ilia okuloj estas plenaj kun malamo…\Mi timas ke gxi estas nun la komenco.
+npc_wakapon_8|Dangxera sercxo atendas\vin kaj viajn trupojn, Kami.
+npc_wakapon_9|Kiragxinoj havas tehxnologio ke ne estas el cxi tio\mondo. Vi devas resti forta.
+npc_wakapon_10|Fantasta laboro, Kami! Vi Detruis\ilian fortreson en Egxigxi Klifoj.
+npc_wakapon_11|Sed tamen, malamo neniam kusxigxas.\Kiragxinoj amasigas energion de strangaj rugxaj kristaloj. Detruu\ilin por malfortigi ilian armeon!
+npc_sen_1|Ho Granda Kami!\Gvidu nin al Ekstremajxo de la mondo.
+npc_sen_2|Ho Potenca Kami!\Gvidu nin al Ekstremajxo de la mondo.
+npc_sen_3|Ho Potenca Patapon!\Gvidu nin al Ekstremajxo de la mondo.
+npc_sen_4|Estas multaj bestoj\ke vagadas en Sxida Valo.
+npc_sen_5|Famoj diras ke nenombreblaj trezoroj\estas enfosita en gxia tero.
+npc_sen_6|Io atakis la Patapona\arbohakistojn en Patapino Bosko!
+npc_sen_7|Jariponaj skoltoj reportas ke rugxaj,\triangulaj estuloj konstruas\fortreson de sxtelita ligno...
+npc_sen_8|”Kiragxinoj”...? Cxu cxi tio kiel ili estas nomigxita?
+npc_sen_9|Mi pensas ke mi auxdi cxi tion\nomon antaux...
+npc_sen_10|La Kiragxinoj konstruis denovan\fortreson en Egxigxi Klifoj.
+npc_sen_11|Ni nepovas lasi ilin venki…!\Iru kaj malvenku ilin, Kami!
+npc_sen_12|Vi faris gxin Dio! Vi faris gxin!\Estas fino por nun...
+npc_sen_13|Mi ankoraux ne povas ekmemori kie\mi rigardis ilin antauxe...
+// ## altar NEW
+altar_category0|Materialo
+altar_category1|Lanco
+altar_category2|Masko
+altar_category3|Kasko
+altar_category4|Sxlosila elemento
+// ## barracks NEW
+barracks_yaripon|Jaripon
+barracks_unit_status|Unito Statuso
+barracks_stat_level|Nivelo
+barracks_stat_exp|Sperteco
+barracks_stat_hp|VP
+barracks_stat_damage|Damagxo
+barracks_stat_attackspeed|Atakrapideco
+barracks_stat_critchance|Kritasxanco
+barracks_stat_knockbackchance|Pusxosxanco
+barracks_stat_staggerchance|Sxancelsxanco
+barracks_stat_burnchance|Brulsxanco
+barracks_stat_freezechance|Frostsxanco
+barracks_depart|Cxu vi estas certa ke vi volas foriri?
+// ## items NEW
+item_titanum_ore|Erco de Titanio
+desc_titanum_ore|Legendo diras ke cxi tio malmola, malpeza erco estas donita al la Pataponoj je neniu alia ol Cxiopovisto. Gxi povas dauxri dum agxoj kaj estas perfekta materialo por klasoj ke bezonas rapidajn movojn.
+item_hinoki|Hinoki
+desc_hinoki|Legendo diras ke ecx la Potenca Granda Patapona hejmo estas konstruita de cxi tio sankta Hinoki ligno. Pataponoj fartas sensxargxigita kaj kusxigxita kiam ili venas en konstruajxojn farita de cxi tio kara ligno.
+item_gizaza_fang|Gizaza Dentego
+desc_gizaza_fang|La pinto de cxi tio dentego enhavas nenombreblajn malgrandetajn kontrauxhokojn. Iu ajn penetrita per cxi tio dentego estos pagi teruran koston provante detiri gxin. Ecx la plej ekzercitaj Pataponaj kuracistoj baraktas por detiri cxi tion dentegon de onia korpo.
+item_dream_meat|Viando de Songxo
+desc_dream_meat|Cxi tio legenda marmura viando fandas kiel sukervato, sed Pataponoj preferas pli sanan mangxon. Pataponoj kiu gustumas cxi tion bongustajxon cxiutage estas koncedita kun felicxaj kaj pacaj vivoj.
+item_scorching_spear|Brula Lanco
+desc_scorching_spear|La magio jxetita al cxi tio lanco igas gxin pinton bruli. Gxi kauxzas masivan damagxon kaj bruligas malamikojn. La malamikoj estos aromi kiel rostita bovajxo.
+item_strength_helmet|Kasko de Forteco
+desc_strength_helmet|Cxi tio magia kasko, dekorita kun farbo de rugxaj algoj el Bovo Vulkano, ege pliigas atakon.
+item_kirajin_helmet1|Fera Kasko de Kiragxinoj
+desc_kirajin_helmet1|Triangula kasko farita de nekonata materialo ke estas kredita esti fero, provizas maloftajn atributojn al soldato kiu portas gxin. Gxi pliigas punktoj de vivo kaj pliigas atakon.
+item_kirajin_spear1|Fera Lanco de Kiragxinoj
+desc_kirajin_spear1|Lanco farita de malordinaraj materialoj ke versxajne estas fero. Pinto de gxin estas nekredeble akra, oni povas penetri ilian fingron nur kiam oni gxentile tusxas gxin.
+// ## navigation NEW
+nav_understood|Komprenita
+// ## tips NEW
+tips_anykey|Premu fakultativan klavon pro kontunui
+tips_loading|Nun Sxargxado
+tip1_title|Cxasado de Kacxikoj
+tip1_desc|Cxasado de kacxikoj en Sxida Valo\estas antikva Patapona tradicio.\\Tiuj malrapidaj bestoj donitaj mangxo al la tribo\por generacioj, kaj unuigado cxasa partio\estas unua sperto de manprenado lancon\de multaj Pataponoj. \\Kvankam ilia flarsento ne estas bona\kiel la nestabilaj Mocxicxioj, estas tamen inda\atendado por kontrauxvento antaux alirado,\do ili nepovas flari la Pataponojn kiu aliras.
+tip2_title|Meritajxo el Cxasado
+tip2_desc|Akiru viandon el Cxasado! \\Cxasu kaptajxon do la Patapona tribo povas mangxi. \Kio ajn iras en la mondo,\Pataponoj bezonas havi viandon\por pleni iliajn ventrojn!\\Se vi gvidis la Pataponojn bone, eble ili\forlasos kelke viandon kiel alporto al la Altaro!
+tip3_title|Fortika ligno el Patapino Bosko
+tip3_desc|Patapino Bosko estas bone konata pro la ebleco\por facile perdigxi tie.\\La grandegaj arboj estas perfekta materialo\por fortika konstruajxo, pro ilia \nekredebla fortikeco.\\Multaj Pataponaj arbohakistoj pasigas\ilian tutan vivon amasigadante lignon,\kaj novaj arboj grandigxas tie cxiutage.
+tip4_title|Perfektaj Komandoj
+tip4_desc|Akirado de perfektaj komandoj estas la sxlosilo\por la plej bona rendimento.\\Kie vi frapos la tutajn 4 tamburojn perfekte,\vi auxdos “sxuxing” sonon.\\Multaj profitoj venas de perfektaj komandoj!\Pataponoj povas iri pli rapida kaj doni pli damagxon.\\Estas utila ekzerciteco por lerni!
+tip5_title|Memoru amasigxi!
+tip5_desc|PON PON CXAKA CXAKA amasigas viajn unitojn.\\Vi povas uzi cxi tion komandon por via profito!\\Donu pli ol duobla damagxo\dum atakado!\\Gxi ege malplingrandigas recevitan damagxon\kiam defendado!\\Kelkaj klasoj havas specialan kondutecon kiam amasigita.
+tip6_title|Uxakapon kaj la Ovo de Mondo
+tip6_desc|Uxakapon estas la gardisto de la Ovo de Mondo\ke brilas en la centro de Patapole Brigxo.\\La Ovo de Mondo donas pacon al Patapona Mondo.\\Legendo diras ke rompado gxin\liberigos la tutan malamon el la infero.\\La Uxakapon promesis Kami ke li protektos la Ovo de Mondo cxiakoste, gardado gxin kun lia vivo.
+tip7_title|Sen Ranpurupon en Antikva Patapolis
+tip7_desc|Sen estas sacerdotino de la Antikva Patapon agxo.\\Sxi estas rekta ligo inter Pataponoj kaj Kami,\kaj vivis tra multajn generaciojn de Patapona tribo.\\Ranpurupon estas tre zorga por cxiu Patapon,\kreskigado kaj edukado Pataponaj infanoj.\\Sxi faros ion ajn por helpi la tribo kreski.
+// ## mission data NEW
+kirajin_ambush_1|
+kirajin_ambush_2|
+kirajin_ambush_3|
+kirajin_ambush_4|
+kirajin_ambush_5|
+kirajin_ambush_6|
+kirajin_talk_1|
+kirajin_talk_2|
+kirajin_talk_3|
+kirajin_talk_4|
+kirajin_talk_5|
+kirajin_talk_6|
+kirajin_talk_7|
+kirajin_talk_8|
+kirajin_talk_8|
+kirajin_talk_9|
+kirajin_talk_10|
+kirajin_talk_11|
+kirajin_talk_12|
+kirajin_talk_13|
+kirajin_talk_14|
+kirajin_death_1|
+kirajin_death_2|
+kirajin_death_3|
+kirajin_death_4|
+// ## christmas event NEW
+tip8_title|
+tip8_desc|
+item_rappata_spear|
+desc_rappata_spear|
+item_rappata_helm|
+desc_rappata_helm|
+item_christmas_charm_2020|
+desc_christmas_charm_2020|
+item_santa_hat|
+desc_santa_hat|
+worldmap_mission_6_title|
+worldmap_mission_6_description|
+kirajin_talk_15|
+kirajin_talk_16|
+kirajin_ambush_7|
+kirajin_death_5|
+// # Add your name here if you worked on the translation!
+// # name1 @Artur Płatkowski
+// # name2
+// # name3

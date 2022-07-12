@@ -6,8 +6,9 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 set(CMAKE_CXX_STANDARD 20)
 add_definitions(-DPATAFOUR_VERSION="${CMAKE_PROJECT_VERSION}")
 
-find_package(SFML 2.5.1 COMPONENTS graphics audio REQUIRED)
+set(SFML_STATIC_LIBRARIES TRUE)
 find_package(DiscordSDK 2.5.6 COMPONENTS x86_64 REQUIRED)
+find_package(SFML 2.5.1 COMPONENTS graphics audio REQUIRED)
 
 include(FetchContent)
 
@@ -39,26 +40,18 @@ set(ENGINE_FILES
         Engine/Dialog/DialogBox.cpp
         Engine/Binary.cpp
         Engine/Menu/MainMenu.cpp
-        Engine/Menu/ButtonList.cpp
         Engine/Menu/Barracks.cpp
         Engine/Menu/IntroductionMenu.cpp
         Engine/Menu/Altar.cpp
         Engine/Menu/Patapolis.cpp
-        Engine/Menu/MenuButton.cpp
         Engine/Menu/Credits.cpp
-        Engine/Menu/NewGameNameEntryMenu.cpp
         Engine/Menu/Obelisk.cpp
-        Engine/Menu/NewGameMenu.cpp
-        Engine/Menu/ButtonLists/NameEntryButtonList.cpp
-        Engine/Menu/ButtonLists/SaveFileCreatedMenuButtonList.cpp
-        Engine/Menu/ButtonLists/NewGameMenuButtonList.cpp
-        Engine/Menu/SaveFileCreated.cpp
         Engine/Menu/OptionsMenu.cpp
         Engine/Menu/MaterOuter.cpp
         Engine/Menu/LoadingTip.cpp
         Engine/Graphics/PSpritesheet.cpp
-        Engine/Graphics/Scene.cpp
         Engine/Graphics/PSprite.cpp
+        Engine/Graphics/SpriteWrapper.cpp
         Engine/Graphics/Menu.cpp
         Engine/Graphics/PText.cpp
         Engine/Graphics/ScreenFade.cpp
@@ -117,10 +110,25 @@ set(ENGINE_FILES
         Engine/Mission/Units/Units/Yaripon.cpp
         Engine/Mission/Units/Projectiles/Spear.cpp
         Engine/Mission/Mission.cpp
-        Engine/Utils.h 
+        Engine/Utils.h
+        DiscordSDK/achievement_manager.cpp
+        DiscordSDK/activity_manager.cpp
+        DiscordSDK/application_manager.cpp
+        DiscordSDK/core.cpp
+        DiscordSDK/image_manager.cpp
+        DiscordSDK/lobby_manager.cpp
+        DiscordSDK/network_manager.cpp
+        DiscordSDK/overlay_manager.cpp
+        DiscordSDK/relationship_manager.cpp
+        DiscordSDK/storage_manager.cpp
+        DiscordSDK/store_manager.cpp
+        DiscordSDK/types.cpp
+        DiscordSDK/user_manager.cpp
+        DiscordSDK/voice_manager.cpp
         Engine/Graphics/CurveShape.cpp 
         Engine/Graphics/CurveSegment.cpp
         Engine/Graphics/ConcaveShape.cpp "Engine/Graphics/AnimatedCurveShape.cpp" "Engine/Graphics/AnimatedCurveShape.h")
+
 
 add_executable(V4Hero ${ENGINE_FILES} main.cpp)
 

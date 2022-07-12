@@ -77,6 +77,24 @@ TipsUtil* CoreManager::getTipsUtil()
     return tipsUtil;
 }
 
+MissionController* CoreManager::getMissionController()
+{
+    return missionController;
+}
+
+void CoreManager::reinitMissionController()
+{
+    missionController = new MissionController;
+}
+
+void CoreManager::deleteMissionController()
+{
+    if (missionController != nullptr)
+        delete missionController;
+
+    missionController = nullptr;
+}
+
 // Returns a pointer to the window game uses.
 sf::RenderWindow* CoreManager::getWindow()
 {

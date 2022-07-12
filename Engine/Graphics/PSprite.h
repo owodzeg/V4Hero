@@ -11,8 +11,8 @@ public:
     sf::Texture t; //deprecated
     sf::Sprite s;
     std::string texturePath;
-    int qualitySetting = -1;
-    int resSetting = 1;
+    int qualitySetting = -1, oldQualitySetting = -999;
+    int resSetting = 1, oldResSetting = -999;
     float ratioX = 1, ratioY = 1;
     float resRatioX = 1, resRatioY = 1;
     float scaleX = 1, scaleY = 1;
@@ -26,6 +26,7 @@ public:
     void loadFromFile(std::string file, int q, int r);
     void setRepeated(bool r);
     void setTextureRect(sf::IntRect rect);
+    sf::IntRect getTextureRect();
     void setOrigin(float x, float y);
     void setScale(float x, float y);
     void setRotation(float a);
@@ -43,6 +44,7 @@ public:
     void setSmooth(bool smooth);
     void draw(sf::RenderWindow& window);
     void draw(sf::RenderWindow* window);
+    void draw();
     void update(sf::RenderWindow& window);
     void saveToFile(std::string file);
 };

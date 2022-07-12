@@ -8,33 +8,37 @@ An official client for Patafour.
 
 - [Setup](#setup)
   - [Required Libraries and Tools](#required-libraries-and-tools)
-  - [Note for Linux Users](#note-for-linux-users)
-  - [Note for Windows Users](#note-for-windows-users)
+  - [Linux installation](#linux-installation)
+  - [Windows installation](#windows-installation)
 - [Contributing](#contributing)
 - [License](#license)
-
-
-## Setup
-
-After cloning the repo, get a copy the `resources` folder from an existing Patafour install or request an updated copy from a developer on [Discord](https://discord.gg/dawfDyM) and copy the folder in the project root directory.
 
 ### Required Libraries and Tools
 
  * [CMake](https://cmake.org/download/) >= 3.19
  * [SFML](https://www.sfml-dev.org/download.php) >= 2.5
  * [Git](https://git-scm.com/downloads)
+ * [Discord Game SDK](https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip)
+ 
+## Setup
 
-### Note for Linux users
+Simply clone the repo and CMake should automatically grab everything for you. Visual Studio 2019+ is recommended.
 
-On Linux also the X11 library needs to be installed (if you're on Ubuntu it's the `libx11-dev` package and you can install it with `sudo apt install libx11-dev`).
+### Linux installation
 
-Note that currently we only support the proprietary NVidia driver for NVidia GPUs.
+On Linux you also need to install the X11 library. On Ubuntu you can install it with `sudo apt install libx11-dev`.
 
-### Note for Windows users
+Note that we currently only support the proprietary NVidia driver for NVidia GPUs.
+
+### Windows installation
 
 You should enable [Developer Mode](https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development) in order to successfully configure the project.
 
-Please also make sure that the environment variable `SFML_ROOT` points to a valid SFML installation and that the `/bin` folder of the SFML installation is also added to `PATH`.
+Create an environment variable called `SFML_ROOT` that points to a valid SFML root directory.
+
+After building, an error may appear in relation to a missing OpenAL32.dll. You can simply copy it from SFML/bin folder to V4Hero.exe directory. The same thing applies to a missing discord_game_sdk.dll, which can be copied from the lib folder within Discord Game SDK package.
+
+Make sure that you select proper architecture when building. Downloading 32-bit SFML will only compile x86 builds and 64-bit SFML will only compile x64 builds.
 
 
 ## Contributing

@@ -26,13 +26,29 @@ void StateManager::updateCurrentState()
     switch (currentGameState)
     {
         case ENTRY: {
-            if (mainMenuPtr != nullptr && optionsMenuPtr != nullptr)
+
+            if (loadingTipPtr == nullptr)
+            {
+                loadingTipPtr = new LoadingTip(1);
+            } else
+            {
+                delete loadingTipPtr;
+                loadingTipPtr = new LoadingTip(1);
+            }
+
+            setState(TIPS);
+            afterTipState = MAINMENU;
+
+            initStateMT(MAINMENU);
+
+            /* if (mainMenuPtr != nullptr && optionsMenuPtr != nullptr)
             {
                 if (mainMenuPtr->initialized && optionsMenuPtr->initialized)
                 {
                     setState(MAINMENU);
                 }
-            }
+            } */
+
             break;
         }
 
@@ -61,6 +77,16 @@ void StateManager::updateCurrentState()
             break;
         }
 
+        case INTRODUCTION: {
+            if (introductionPtr == nullptr)
+            {
+                introductionPtr = new IntroductionMenu;
+            }
+
+            introductionPtr->Update();
+            break;
+        }
+
         case TIPS: {
 
             if (loadingTipPtr == nullptr)
@@ -70,6 +96,26 @@ void StateManager::updateCurrentState()
 
             switch (afterTipState)
             {
+                case MAINMENU: {
+                    if (mainMenuPtr != nullptr && optionsMenuPtr != nullptr && introductionPtr != nullptr)
+                    {
+                        if (mainMenuPtr->initialized && optionsMenuPtr->initialized && introductionPtr->initialized)
+                        {
+                            if (loadingTipPtr != nullptr)
+                            {
+                                loadingTipPtr->pressAnyKey = true;
+
+                                if (loadingTipPtr->tipFinished)
+                                {
+                                    setState(afterTipState);
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                }
+
                 case PATAPOLIS: {
 
                     if (patapolisPtr != nullptr && altarPtr != nullptr && barracksPtr != nullptr && obeliskPtr != nullptr)
@@ -83,6 +129,28 @@ void StateManager::updateCurrentState()
                                 if (loadingTipPtr->tipFinished)
                                 {
                                     setState(afterTipState);
+                                }
+                            }
+                        }
+                    }
+
+                    break;
+                }
+
+                case MISSIONCONTROLLER: {
+
+                    if (missionControllerPtr != nullptr)
+                    {
+                        if (missionControllerPtr->initialized)
+                        {
+                            if (loadingTipPtr != nullptr)
+                            {
+                                loadingTipPtr->pressAnyKey = true;
+
+                                if (loadingTipPtr->tipFinished)
+                                {
+                                    setState(afterTipState);
+                                    missionControllerPtr->rhythm.Start();
                                 }
                             }
                         }
@@ -152,7 +220,13 @@ void StateManager::updateCurrentState()
         }
 
         case MISSIONCONTROLLER: {
-            //missionControllerPtr->Update();
+
+            if (missionControllerPtr == nullptr)
+            {
+                missionControllerPtr = new MissionController;
+            }
+
+            missionControllerPtr->Update();
             break;
         }
     }
@@ -179,17 +253,14 @@ void StateManager::initState(int state)
             {
                 optionsMenuPtr = new OptionsMenu;
             }
-
-            break;
-        }
-
-        case OPTIONSMENU: {
-       
-            if (optionsMenuPtr == nullptr)
-            {
-                optionsMenuPtr = new OptionsMenu;
-            }
             
+            if (introductionPtr == nullptr)
+            {
+                introductionPtr = new IntroductionMenu;
+                introductionPtr->Initialize();
+                introductionPtr->timeout.restart();
+            }
+
             break;
         }
 
@@ -235,6 +306,25 @@ void StateManager::initState(int state)
 
         case MISSIONCONTROLLER: {
 
+            if (missionControllerPtr == nullptr)
+            {
+                //Since MissionController is handled separately, tell CoreManager to reinitialize it
+                CoreManager::getInstance().reinitMissionController();
+
+                missionControllerPtr = CoreManager::getInstance().getMissionController();
+
+                if (CoreManager::getInstance().getCore()->mission_id >= 0)
+                {
+                    missionControllerPtr->StartMission(CoreManager::getInstance().getCore()->mission_file, false, CoreManager::getInstance().getCore()->mission_id, CoreManager::getInstance().getCore()->mission_multiplier);
+                } else
+                {
+                    SPDLOG_ERROR("No load mission specified, returning to Patapolis");
+                    missionControllerPtr->loadingError = true;
+                    setState(PATAPOLIS);
+                    break;
+                }
+            }
+
             break;
         }
     }
@@ -278,19 +368,80 @@ void StateManager::setState(int state)
     {
         if (mainMenuPtr != nullptr)
         {
-            mainMenuPtr->screenFade.Create(0, 512);
+            mainMenuPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
         }
+
+        CoreManager::getInstance().getCore()->changeRichPresence("In Main menu", "logo", "");
     }
 
     //go from main to options
-    if (currentGameState == MAINMENU && state == OPTIONSMENU) 
+    if (currentGameState == MAINMENU && state == OPTIONSMENU)
     {
         if (optionsMenuPtr != nullptr)
         {
             optionsMenuPtr->state = 0;
             optionsMenuPtr->sel = 0;
-            optionsMenuPtr->screenFade.Create(0, 512);
+            optionsMenuPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
         }
+
+        CoreManager::getInstance().getCore()->changeRichPresence("In Options menu", "logo", "");
+    }
+
+    //go from main to introduction
+    if (currentGameState == MAINMENU && state == INTRODUCTION)
+    {
+        if (introductionPtr != nullptr)
+        {
+            introductionPtr->timeout.restart();
+
+            //clean main menu components
+            if (mainMenuPtr != nullptr)
+            {
+                delete mainMenuPtr;
+                mainMenuPtr = nullptr;
+
+                ResourceManager::getInstance().unloadState(MAINMENU);
+            }
+            
+            if (optionsMenuPtr != nullptr)
+            {
+                delete optionsMenuPtr;
+
+                optionsMenuPtr = nullptr;
+                ResourceManager::getInstance().unloadState(OPTIONSMENU);
+            }
+        }
+
+        CoreManager::getInstance().getCore()->changeRichPresence("A new adventure begins!", "logo", "");
+    }
+
+    //go from introduction to kami's return mission
+    if (currentGameState == INTRODUCTION && state == MISSIONCONTROLLER)
+    {
+        //load tips
+        if (loadingTipPtr == nullptr)
+        {
+            loadingTipPtr = new LoadingTip;
+        } else
+        {
+            delete loadingTipPtr;
+            loadingTipPtr = new LoadingTip;
+        }
+
+        //clean introduction menu
+        if (introductionPtr != nullptr)
+        {
+            delete introductionPtr;
+            introductionPtr = nullptr;
+
+            ResourceManager::getInstance().unloadState(INTRODUCTION);
+        }
+
+        //run tips and load up mission controller
+        state = TIPS;
+        afterTipState = MISSIONCONTROLLER;
+
+        initStateMT(afterTipState);
     }
 
     //go from main to patapolis (forward through tips)
@@ -305,10 +456,77 @@ void StateManager::setState(int state)
             loadingTipPtr = new LoadingTip;
         }
 
+        //clean main menu components
+        if (mainMenuPtr != nullptr)
+        {
+            delete mainMenuPtr;
+            mainMenuPtr = nullptr;
+
+            ResourceManager::getInstance().unloadState(MAINMENU);
+        }
+
+        if (optionsMenuPtr != nullptr)
+        {
+            delete optionsMenuPtr;
+            optionsMenuPtr = nullptr;
+
+            ResourceManager::getInstance().unloadState(OPTIONSMENU);
+        }
+
+        if (introductionPtr != nullptr)
+        {
+            delete introductionPtr;
+            introductionPtr = nullptr;
+
+            ResourceManager::getInstance().unloadState(INTRODUCTION);
+        }
+
         state = TIPS;
         afterTipState = PATAPOLIS;
 
         initStateMT(afterTipState);
+
+        CoreManager::getInstance().getCore()->changeRichPresence("In Ancient Patapolis", "logo", "");
+    }
+
+    // go from patapolis to main menu
+    if (currentGameState == PATAPOLIS && state == MAINMENU)
+    {
+        if (loadingTipPtr == nullptr)
+        {
+            loadingTipPtr = new LoadingTip(1);
+        } else
+        {
+            delete loadingTipPtr;
+            loadingTipPtr = new LoadingTip(1);
+        }
+
+        if (patapolisPtr != nullptr)
+        {
+            delete patapolisPtr;
+            patapolisPtr = nullptr;
+        }
+
+        if (barracksPtr != nullptr)
+        {
+            delete barracksPtr;
+            barracksPtr = nullptr;
+        }
+
+        if (obeliskPtr != nullptr)
+        {
+            delete obeliskPtr;
+            obeliskPtr = nullptr;
+        }
+
+        ResourceManager::getInstance().unloadState(PATAPOLIS);
+
+        state = TIPS;
+        afterTipState = MAINMENU;
+
+        initStateMT(afterTipState);
+
+        CoreManager::getInstance().getCore()->changeRichPresence("In Main menu", "logo", "");
     }
 
     // go from patapolis to altar
@@ -325,10 +543,12 @@ void StateManager::setState(int state)
     {
         if (barracksPtr != nullptr)
         {
-            barracksPtr->screenFade.Create(0, 512);
+            barracksPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
             barracksPtr->obelisk = false;
             barracksPtr->refreshStats();
             barracksPtr->updateInputControls();
+
+            CoreManager::getInstance().getCore()->changeRichPresence("In Barracks", "logo", "");
         }
     }
 
@@ -337,7 +557,9 @@ void StateManager::setState(int state)
     {
         if (patapolisPtr != nullptr)
         {
-            patapolisPtr->screenFade.Create(0, 1536);
+            patapolisPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
+
+            CoreManager::getInstance().getCore()->changeRichPresence("In Ancient Patapolis", "logo", "");
         }
     }
 
@@ -346,7 +568,10 @@ void StateManager::setState(int state)
     {
         if (obeliskPtr != nullptr)
         {
-            obeliskPtr->screenFade.Create(0, 512);
+            obeliskPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
+            obeliskPtr->Reload();
+
+            CoreManager::getInstance().getCore()->changeRichPresence("In Obelisk", "logo", "");
         }
     }
 
@@ -355,7 +580,9 @@ void StateManager::setState(int state)
     {
         if (patapolisPtr != nullptr)
         {
-            patapolisPtr->screenFade.Create(0, 512);
+            patapolisPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
+
+            CoreManager::getInstance().getCore()->changeRichPresence("In Ancient Patapolis", "logo", "");
         }
     }
 
@@ -364,10 +591,14 @@ void StateManager::setState(int state)
     {
         if (barracksPtr != nullptr)
         {
-            barracksPtr->screenFade.Create(0, 512);
+            barracksPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
             barracksPtr->obelisk = true;
+            barracksPtr->mission_id = obeliskPtr->missions[obeliskPtr->sel_mission].mis_ID;
+            barracksPtr->mission_file = obeliskPtr->missions[obeliskPtr->sel_mission].mission_file;
             barracksPtr->refreshStats();
             barracksPtr->updateInputControls();
+
+            CoreManager::getInstance().getCore()->changeRichPresence("In Barracks", "logo", "");
         }
     }
 
@@ -376,16 +607,119 @@ void StateManager::setState(int state)
     {
         if (obeliskPtr != nullptr)
         {
-            obeliskPtr->screenFade.Create(0, 512);
+            obeliskPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
+
+            CoreManager::getInstance().getCore()->changeRichPresence("In Obelisk", "logo", "");
+        }
+    }
+
+    //go from barracks to missioncontroller
+    if (currentGameState == BARRACKS && state == MISSIONCONTROLLER)
+    {
+        if (loadingTipPtr == nullptr)
+        {
+            loadingTipPtr = new LoadingTip;
+        } else
+        {
+            delete loadingTipPtr;
+            loadingTipPtr = new LoadingTip;
+        }
+
+        if (patapolisPtr != nullptr)
+        {
+            delete patapolisPtr;
+            patapolisPtr = nullptr;
+        }
+
+        if (barracksPtr != nullptr)
+        {
+            delete barracksPtr;
+            barracksPtr = nullptr;
+        }
+
+        if (obeliskPtr != nullptr)
+        {
+            delete obeliskPtr;
+            obeliskPtr = nullptr;
+        }
+
+        ResourceManager::getInstance().unloadState(PATAPOLIS);
+
+        state = TIPS;
+        afterTipState = MISSIONCONTROLLER;
+
+        initStateMT(afterTipState);
+    }
+
+    //go from missioncontroller to patapolis
+    if (currentGameState == MISSIONCONTROLLER && state == PATAPOLIS)
+    {
+        if (loadingTipPtr == nullptr)
+        {
+            loadingTipPtr = new LoadingTip;
+        } else
+        {
+            delete loadingTipPtr;
+            loadingTipPtr = new LoadingTip;
+        }
+
+        //clean mission controller components
+        if (missionControllerPtr != nullptr)
+        {
+            //we handle deletion on CoreManager's side
+            CoreManager::getInstance().deleteMissionController();
+
+            //but we also have a local pointer which we should set to null, to mark that it doesnt exist anymore
+            missionControllerPtr = nullptr;
+
+            //unload assets
+            ResourceManager::getInstance().unloadState(MISSIONCONTROLLER);
+        }
+
+        state = TIPS;
+        afterTipState = PATAPOLIS;
+
+        initStateMT(afterTipState);
+
+        CoreManager::getInstance().getCore()->changeRichPresence("In Ancient Patapolis", "logo", "");
+    }
+
+    //go from tips to patapolis (mission load error)
+    if (missionControllerPtr != nullptr)
+    {
+        if (missionControllerPtr->loadingError)
+        {
+            if (currentGameState == TIPS && state == PATAPOLIS)
+            {
+                if (loadingTipPtr == nullptr)
+                {
+                    loadingTipPtr = new LoadingTip;
+                } else
+                {
+                    delete loadingTipPtr;
+                    loadingTipPtr = new LoadingTip;
+                }
+
+                state = TIPS;
+                afterTipState = PATAPOLIS;
+
+                initStateMT(afterTipState);
+
+                CoreManager::getInstance().getCore()->changeRichPresence("In Ancient Patapolis", "logo", "");
+            }
         }
     }
 
     // Change the state
     SPDLOG_DEBUG("Changing state to {}", state);
+    prevGameState = currentGameState;
     currentGameState = state;
 }
 
 int StateManager::getState()
 {
-    return currentGameState;
+    if (currentGameState == TIPS)
+        return afterTipState;
+    else 
+        return currentGameState;
 }

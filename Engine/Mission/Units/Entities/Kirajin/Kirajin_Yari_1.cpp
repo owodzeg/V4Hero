@@ -1,6 +1,7 @@
 #include "Kirajin_Yari_1.h"
 #include "../../../../Func.h"
 #include "../../../../V4Core.h"
+#include "../../../../CoreManager.h"
 #include "math.h"
 #include <fstream>
 #include <iostream>
@@ -12,10 +13,10 @@ Kirajin_Yari_1::Kirajin_Yari_1()
     /// No significant AI other than occasionally throwing spears is necessary.
 }
 
-void Kirajin_Yari_1::LoadConfig(Config* thisConfigs)
+void Kirajin_Yari_1::LoadConfig()
 {
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
-    AnimatedObject::LoadConfig(thisConfigs, "resources/units/entity/kirajin.p4a");
+    AnimatedObject::LoadConfig("resources/units/entity/kirajin.p4a");
     AnimatedObject::setAnimationSegment("idle_armed_focused");
 }
 
@@ -63,7 +64,7 @@ void Kirajin_Yari_1::parseAdditionalData(nlohmann::json additional_data)
         {
             if (additional_data["equip"][i] != "") // allows for overriding helmet but not spear etc.
             {
-                applyEquipment(thisConfig->thisCore->saveReader.itemReg.getItemByName(additional_data["equip"][i])->order_id, i);
+                applyEquipment(CoreManager::getInstance().getSaveReader()->itemReg.getItemByName(additional_data["equip"][i])->order_id, i);
             }
         }
     }
@@ -228,9 +229,10 @@ void Kirajin_Yari_1::Draw(sf::RenderWindow& window)
             {
                 if (talk)
                 {
+                    //TO-DO: messageclouds could be loaded beforehand. when loading them on the spot, you're putting strain on the thread that requires no interruptions.
                     MessageCloud tmp;
-                    tmp.Create(20, sf::Vector2f(getGlobalPosition().x - 5, getGlobalPosition().y - 25), sf::Color(222, 102, 102, 255), false, thisConfig->GetInt("textureQuality"), thisConfig->fontPath);
-                    tmp.AddDialog(Func::ConvertToUtf8String(thisConfig->strRepo.GetString(talk_id)), false);
+                    tmp.Create(20, sf::Vector2f(getGlobalPosition().x - 5, getGlobalPosition().y - 25), sf::Color(222, 102, 102, 255), false, CoreManager::getInstance().getConfig()->GetInt("textureQuality"), CoreManager::getInstance().getConfig()->fontPath);
+                    tmp.AddDialog(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(talk_id)), false);
                     messageclouds.push_back(tmp);
 
                     message_clock.restart();
@@ -269,7 +271,7 @@ void Kirajin_Yari_1::Draw(sf::RenderWindow& window)
     local_y += vspeed / fps;
 
     /// call the parent function to draw the animations
-    AnimatedObject::Draw(window);
+    AnimatedObject::Draw();
 }
 
 void Kirajin_Yari_1::die()

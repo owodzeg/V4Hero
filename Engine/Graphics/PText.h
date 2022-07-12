@@ -46,6 +46,7 @@ public:
     sf::FloatRect getLocalBounds();
     sf::FloatRect getGlobalBounds();
     sf::FloatRect getGlobalBoundsScaled();
+    sf::FloatRect getTransformedBounds();
     void setScale(float s);
     void draw(sf::RenderWindow& window);
     void draw(sf::RenderWindow* window);

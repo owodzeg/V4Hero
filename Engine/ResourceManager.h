@@ -16,15 +16,23 @@ class ResourceManager
         void getQuality();
         int getCurrentQuality();
         void loadSprite(std::string path);
+        void loadImageAsSprite(std::string path, sf::Image image);
         PSprite& getSprite(const std::string& path);
         void unloadSprite(const std::string& path);
+        void unloadState(int state);
         void reloadPSprites();
 
 	private:
         ResourceManager();
         ~ResourceManager();
 
-        std::unordered_map<std::string, PSprite> loadedSprites;
+        std::unordered_map<std::string, PSprite> loadedSprites; //holds PSprites
+        std::unordered_map<std::string, int> loadedSources; //holds source state
+
+        std::unordered_map<int, std::vector<std::string>> loadedPaths; //holds list of paths for each source
+
+        std::mutex resource_mutex;
+        std::recursive_mutex access_mutex;
 
         enum Quality
         {

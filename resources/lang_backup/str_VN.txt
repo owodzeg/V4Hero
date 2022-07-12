@@ -1,0 +1,421 @@
+// You can use your native special characters
+// Comments starts with // and will not be read by game
+// The format is as follows:
+// string_id | string (without containing any "|")
+// Where string_id is NOT CHANGEABLE! Change only the second part after the | character.
+// Example:
+// english_word|English word
+// polish_word|Polskie słowo
+// Good luck!
+// ## main menu
+menu_newgame| Chơi mới
+menu_continue| Tiếp tục
+menu_options| Tùy chỉnh
+menu_exit| Thoát
+// ## options
+options_graphics|Đồ họa
+options_audio| m thanh
+options_input|Bàn phím
+options_language|Ngôn ngữ
+options_backtomain| Trở về menu
+options_back| Quay lại
+options_graphics1|Độ phân giải
+options_graphics2|Chất lượng hình ảnh
+options_graphics3|Loại bỏ ảnh chéo/răng cưa
+options_graphics4|Giới hạn framerate (Tốc độ khung hình)
+options_graphics5|Chuyển sang toàn màn hình
+options_graphics6|Màn hình không bờ
+options_unlimited|(Không giới hạn)
+options_quality_low| Thấp
+options_quality_medium|Trung bình
+options_quality_high|Cao
+options_quality_ultra|Tốt nhất
+options_enable|Bật
+options_disable|Tắt
+options_audio1| m thanh
+options_audio2|Tiếng trống
+options_audio3|Tiếng hô của Patapon
+options_audio4|Tiếng trả lời của Patapon
+options_volume| m lượng
+options_input1| Tùy chỉnh thiết bị điều khiển
+options_input_setup1| Hãy đảm bảo rằng thiết bị điều khiển của bạn đã được cắm vào PC. Bấm bất kỳ nút nào và nó sẽ xuất hiện ở giữa màn hình của bạn
+options_input_setup2|Xin hãy bấm nút mũi tên chỉ bên trái
+options_input_setup3|Xin hãy bấm nút mũi tên chỉ bên phải
+options_input_setup4|Xin hãy bấm nút mũi tên chỉ xuống dưới
+options_input_setup5|Xin hãy bấm nút mũi tên chỉ lên trên 
+options_input_setup6|Xin hãy bấm nút mà bạn muốn dùng để đánh trống PATA (Ô vuông)
+options_input_setup7|Xin hãy bấm nút mà bạn muốn dùng để đánh trống PON (Hình tròn)
+options_input_setup8|Xin hãy bấm nút mà bạn muốn dùng để đánh trống DON (Dấu X)
+options_input_setup9|Xin hãy bấm nút mà bạn muốn dùng để đánh trống CHAKA (Tam giác)
+options_input_setup10|Xin hãy bấm nút mà bạn muốn dùng để chỉnh camera về bên trái (Phím L)
+options_input_setup11|Xin hãy bấm nút mà bạn muốn dùng để chỉnh camera về bên phải (Phím R)
+options_input_setup12|Xin hãy bấm nút mà bạn muốn dùng để bấm nút Start
+options_input_setup13|Xin hãy bấm nút mà bạn muốn dùng để bấm nút Select
+options_input_setup14|Đã xong! Thiết bị điều khiển của bạn đã sẵn sàng để chơi Patafour!
+options_input_setup_notice|Phím điều khiển đã được nhập thành công
+options_input_setup_again|Thử lại
+options_input_setup_next|Tiếp theo
+options_input_setup_return|Trở lại mục tùy chỉnh
+options_language1|Thay đổi ngôn ngữ
+options_language_english|Tiếng Anh
+options_language_<yourlanguage>|Tiếng Việt
+options_restart_notice|Bạn cần phải khởi động lại Patafour để lưu những thay đổi trên. Khởi động lại luôn bây giờ?
+options_restart_button1|Khởi động lại game
+options_restart_button2|Hủy thay đổi
+// ## patapolis
+patapolis|Patapolis
+patapolis_trader|Patapolis
+patapolis_blacksmith|Lò rèn
+patapolis_barracks|Doanh trại
+patapolis_tree|Cây Sự Sống
+patapolis_festival|Quảng trường lễ hội
+patapolis_altar|Đền thờ
+patapolis_obelisk|Tượng Obelisk
+patapolis_paraget|Cổng Paraget
+patapolis_wakapon|Wakapon, người bảo vệ
+patapolis_egg|”World Egg”
+// ## altar
+altar_title|Đền thờ
+altar_item_title|Thử nghiệm vật phẩm
+altar_item_category|Thử nghiệm danh mục
+altar_item_description|Đây là phần mô tả thử nghiệm. 
+// ## barracks
+barracks_testunitname|Anh Hùng
+barracks_test_stat_text|999,999,999/999,999,999
+barracks_unitstatus|Chỉ số
+barracks_lvl|Cấp độ
+barracks_exp|Kinh nghiệm
+barracks_dmg|Sát thương
+barracks_hp|Máu
+barracks_crit|Tỉ lệ chí mạng
+barracks_attack_speed|Tốc đánh
+// ## world map
+worldmap_header_1|Bản đồ thế giới
+worldmap_select|Chọn nhiệm vụ
+worldmap_location_locked|~ Chưa mở ~
+worldmap_location_1_title|~Thung Lũng Shida~
+worldmap_location_1_description|Không khí biển ẩm thổi vào thung lũng này tạo nên một môi trường sống hoàn hảo cho các loại thực vật, cho phép các loài dương xỉ bản địa phát triển đến độ cao khủng khiếp! Qua nhiều thế hệ, các bộ tộc khác nhau đã sử dụng khu vực màu mỡ này làm nơi săn bắt động vật và hái rau dại. Khung cảnh kỳ lạ của những loài thực vật khổng lồ có thể gây mất phương hướng, và những tin đồn vẫn tồn tại những bí mật ẩn giấu ở đâu đó trong khu vực.
+worldmap_location_2_title|
+worldmap_location_2_description|Những cây thông trong khu rừng này nổi tiếng với chiều cao khổng lồ và sự chắc chắn khi được sử dụng làm vật liệu xây dựng. Những Patapon làm nghề thợ mộc được biết đã kiếm sống ở đây bằng cách chặt những cây này để sử dụng cho xây dựng. Có tin đồn rằng các nàng tiên phát triển mạnh từ những cây nấm ăn được ở sâu trong rừng.
+worldmap_location_3_title|
+worldmap_location_3_description|Vách núi Ejiji từng chứng kiến thời kỳ của của những con rồng hùng mạnh trước khi chúng biến mất khỏi nơi sinh của chúng vì những lý do mà người dân Rolitoland không biết, và cung cấp một vị trí tốt để xây dựng nhà cửa và pháo đài được che giấu khỏi tầm nhìn. Rarepons dòng dõi Gyaba có nguồn gốc từ khu vực này và một số vẫn còn sống trên các vách đá cho đến ngày nay, nhưng nhiều dòng dõi Patapon này đã trở nên phổ biến trên toàn thế giới.
+worldmap_mission_1_title|Săn bắt ở Thung lũng Shida
+worldmap_mission_1_description|Nhiều loài động vật tụ tập trong thung lũng để có cơ hội tìm thấy các loài thực vật và nấm có thể ăn được. Sử dụng cơ hội này để săn các sinh vật để nuôi Patapons của bạn! Tin đồn có nói rằng thung lũng này chứa một kho báu chưa được biết đến.
+worldmap_mission_2_title|Pháo đài ở trong rừng Patapine
+worldmap_mission_2_description|Kirajins đã tạo dựng được chỗ đứng tại Rừng Patapine! Sử dụng loại gỗ chắc chắn từ những cây xung quanh, họ đã xây dựng một pháo đài. Tập hợp lực lượng của bạn và phá hủy pháo đài trong khi giữ cảnh giác với những sinh vật từ rừng!
+worldmap_mission_3_title|Pháo đài Kirajins ở Rừng Patapine: Cấp
+worldmap_mission_3_description|Kirajins có thể đã bị đánh bại một lần, nhưng chúng đã trở lại, mạnh mẽ hơn bao giờ hết. Chúng quyết tâm giữ vị trí này bằng mọi giá. Đánh bại pháo đài một lần nữa để kìm hãm lực lượng Kirajin!
+worldmap_mission_4_title|Vũ khí nâng cao
+worldmap_mission_4_description|Các trinh sát của Patapon đã báo cáo rằng tại Vách núi Ejiji, Kirajins đã bắt đầu xây dựng một pháo đài lớn để làm căn cứ hoạt động chống lại lực lượng Patapon. Theo các báo cáo, pháo đài sắp được củng cố bằng công nghệ Kirajin mạnh mẽ, công nghệ mà các Patapon chưa từng thấy trước đây. Hãy dũng cảm và không sợ hãi, và phá hủy pháo đài này trước khi nó hoàn thành.
+worldmap_mission_5_title|Kirajins tại Vách núi Ejiji: Cấp
+worldmap_mission_5_description|Ngay cả sau khi phá hủy pháo đài của họ, các Kirajins không cho phép mình thua thêm một lần nữa. Chúng quyết tâm chiến đấu cho vị trí này ngay cả khi phải trả giá bằng mạng sống. Meden cảnh báo bằng một giọng đầy dữ tợn, “Trận chiến này sẽ còn khó khăn hơn trận chiến vừa rồi”.
+// ## missiondata
+mission_complete|NHIỆM VỤ THÀNH CÔNG!
+mission_failed|NHIỆM VỤ THẤT BẠI!
+intro_cutscene_1|Chào mừng bạn đến với bản demo đầu tiên của Patafour!
+intro_cutscene_2|Bản demo này có rất nhiều nội dung để khám phá, cũng như một số bí mật ẩn. Bạn có thể tìm thấy tất cả chúng không?
+intro_cutscene_3|Ôi thần Patapon hùng mạnh, tôi cầu xin ngài
+Intro_cutscene_4|Bộ lạc Patapon cần Người hơn bao giờ hết!
+intro_cutscene_5|Lạc lối, vô vọng tại Thung lũng Shida, họ không thể trở về nhà nếu không có trống thần và sự hướng dẫn của bạn.
+intro_cutscene_6|Đánh trống với lệnh PATA PATA PATA PON đúng lúc với nhịp để tiến về phía trước!
+intro_cutscene_7|Khi các Patapon ngừng niệm bốn nhịp, bắt đầu đánh trống một lần nữa.
+outro_cutscene_1|Cảm ơn bạn đã hoàn thành bản Demo!
+outro_cutscene_2|Thật vui khi được làm Patafour cho bạn!
+outro_cutscene_3|Nhóm lập trình Patafour chân thành hy vọng rằng bạn thích nó. Chúng tôi dành cả trái tim và tâm hồn của chúng tôi cho bạn.
+outro_cutscene_4|Kirajins sẽ trở lại, mạnh mẽ hơn bao giờ hết ...
+outro_cutscene_5|Bạn sẽ xoay sở để chống lại chúng và giành lại quê hương đã mất của Patapon, Pata-Pole?
+outro_cutscene_6|Tìm hiểu nghệ thuật cổ đại từ lần đầu tiên của Bộ lạc Patapon và dẫn dắt quân đội của bạn đến chiến thắng.
+outro_cutscene_7|Các bộ lạc khác sẽ cần bạn, Thần [PLAYER_NAME] ...
+outro_cutscene_8|Giải cứu thế giới trong phiên bản FULL của Patafour!
+outro_end|Cảm ơn bạn đã tham gia trải nghiệm!
+// # credits
+credits_creator|Chủ dự án
+credits_programmers|Lập trình viên
+credits_artists|Họa sĩ
+credits_animators|Hoạt ảnh viên
+credits_musicians|Nhạc sĩ
+credits_gameplay|Cân bằng trải nghiệm game
+credits_community|Quản lý cộng đồng
+credits_writers|Người viết
+credits_translators|Biên dịch viên
+credits_supporters|Những người hỗ trợ
+credits_special|Lời đặc biệt tới
+credits_all|Và mọi người đã hỗ trợ dự án này! Cảm ơn!
+// # New Game Text
+newgame_what_is_your_name|Chào mừng về nhà,Thần Patapon! Người muốn sử dụng tên gì?
+newgame_name_error_prompt|Tên của Người phải chứa từ 2 đến 50 ký tự.
+newgame_game_save_created|Dữ liệu lưu trữ đã được tạo thành công.
+newgame_welcome|Chào mừng, Thần Patapon.
+newgame_welcome2|Người đã sẵn sàng tham gia bản demo của Patafour chưa?
+// ## items
+item_wooden_spear|Giáo gỗ
+desc_wooden_spear|Một cây giáo gỗ cơ bản, được trao cho mọi lính Patapon khi họ đến tuổi nhập ngũ và lần đầu tiên tham gia nhóm săn bắt. Được nhiều Patapon trân trọng, ngay cả sau khi họ chuyển sang vũ khí lớn hơn và tốt hơn.
+item_iron_spear|Giáo sắt
+desc_iron_spear|Một ngọn giáo sắt cứng rắn. Patapons trân trọng vũ khí này, cho rằng chúng nặng hơn và gây nhiều sát thương hơn. Tuy nhiên, họ yêu cầu một chiến binh khỏe hơn để ném thành thạo.
+item_steel_spear|Giáo thép
+desc_steel_spear|Một cây giáo có đầu nhọn được làm từ hợp kim quý hiếm - thép. Những ngọn giáo này không những nhẹ hơn những ngọn giáo bằng sắt mà thậm chí còn đau hơn một cú đấm nhiều!
+item_kacheek_spear|Giáo Kacheek
+desc_kacheek_spear|Một ngọn giáo được rèn từ chiếc ngà nhọn của loài Kacheek. Độ sắc bén của nó đủ để xuyên qua các tấm khiên, gây sát thương chí mạng.
+item_shubaba_mask|Mặt nạ Shubaba
+desc_shubaba_mask|Mặt nạ anh hùng “Phantom Strike”. Nó cung cấp một phần nhỏ sức mạnh tấn công thần thánh của Shubabassa, tăng một chút tốc độ của cơ bắp của người mặc, cho phép họ tung đòn nhanh hơn các chiến binh khác.
+item_none|Không gì hết!
+desc_none|Một góc trống của đển thờ Patapon, chỉ có nến và hương
+item_banal_branch|Cành gỗ
+desc_banal_branch|Một nhánh gỗ cơ bản. Mặc dù nó có thể chỉ là một mảnh gỗ đơn giản, nhưng một người bảo trợ dám nghĩ dám làm có thể tìm thấy nhiều công dụng cho những thứ này, từ cán rìu đến cột lều.
+item_cherry_blossom|Cành đào
+desc_cherry_blossom|Theo truyền thuyết, những cây anh đào khổng lồ cổ xưa mà nhánh gỗ cứng này bắt nguồn từ phương Đông là những vị thần đang yên nghỉ.
+item_small_rock|Đá nhỏ
+desc_small_rock|Một viên đá thông thường. Đầy tạp chất, nhưng dù sao cũng rất quan trọng đối với cuộc sống của bộ lạc. Trẻ em Patapon thường cố gắng ném những thứ này qua các mặt hồ và sông.
+item_hard_iron|Sắt cứng
+desc_hard_iron|Máu đã đổ trong các cuộc xung đột xung quanh kim loại quý hiếm này theo thần thoại Zigoton. Những câu chuyện về Patapon kể về cách tổ tiên từng lấy sắt cứng từ trong lòng núi, nhưng bí mật về điều này đã bị thất truyền qua nhiều thời đại.
+item_leather_meat|Thịt da
+desc_leather_meat|Những người già làng nói với Patapons trẻ tuổi rằng "Nếu nó lấp đầy dạ dày của mày, đừng kêu ca" và họ học cách ăn thịt này.
+item_tender_meat|Thịt mềm
+desc_tender_meat|Patapons thích loại thịt mềm, ngon này, nhưng họ hiếm khi có thể ăn nó, kể cả trong dịp sinh nhật.
+item_pon_drum|Trống PON
+desc_pon_drum|Trống Thần Của Sự Can Đảm. Có được bằng cách đồng ý trở thành vị thần của Patapon.
+item_pata_drum|Trống PATA
+desc_pata_drum|Trống Thần Của Sức Mạnh. Hatapon đã bảo vệ chiếc trống thần này bằng cả mạng sống của mình.
+item_chaka_drum|Trống CHAKA
+desc_chaka_drum|Trống Thần Của Sự Thông Thái.
+item_don_drum|Trống DON
+desc_don_drum|Trống Thần Của Những Phép Màu
+item_keepsake|Vật kỷ niệm
+desc_keepsake|Vật kỷ niệm của Hatapon. Nó luôn an ủi Hatapon, và nhắc nhở rằng vị thần sẽ đến vào thời khắc cần nhất.
+item_wooden_helmet|Mũ gỗ
+desc_wooden_helmet|Mũ bằng gỗ truyền thống của bộ tộc Patapon. Nó là đặc trưng của các nhóm săn bắt của họ, và mặc dù có thiết kế đơn giản nhưng nó đã cứu mạng nhiều chiến binh Patapon.
+item_iron_helmet|Mũ sắt
+desc_iron_helmet|Mũ này, được làm từ sắt quý, bắt chước thiết kế tiêu chuẩn của mũ gỗ, nhưng cung cấp khả năng bảo vệ tốt hơn.
+item_kacheek_helm|Mũ Kacheek
+desc_kacheek_helm|Mũ này, được làm từ vải và lông của Kacheek, giúp người đội an toàn khỏi những tổn hại. Nó cũng giữ cho mắt người đeo khá ấm áp và ấm cúng.
+item_mudada_bone|Xương Mudada
+desc_mudada_bone|Một khúc xương nhỏ đã được tẩy trắng, hình như là của một con vật nhỏ. Chúng thường được tìm thấy trong các đám cỏ ngoài bãi săn, hoặc trong dạ dày của các loài động vật lớn hơn.
+item_gashirin_bone|Xương Gashirin
+desc_gashirin_bone|Một khúc xương lớn và chắc chắn. Tương truyền đã viết rằng tổ tiên xa xưa của Patapon đã từng sử dụng những mảnh xương này làm vũ khí.
+item_kuneri_fang|Răng nanh Kuneri
+desc_kuneri_fang|Một chiếc răng nanh cong vênh tuyệt đẹp. Nó có thể được cạo xuống để sử dụng làm cạnh cho vũ khí và cũng có thể là trang bị.
+item_itete_fang|Răng nanh Itete
+desc_itete_fang|Một chiếc răng nanh lớn có đầu rất nhọn. Người ta đã nói từ lâu rằng bạn có thể biết kỹ năng thực sự của một thợ săn bằng cách đếm số lượng răng nanh này mà hắn ta phải loại bỏ khỏi cổ mình.
+item_soggy_map|Bản đồ bị ướt
+desc_soggy_map|Một bản đồ thu được từ một rương kho báu bị chôn vùi được tìm thấy ở Thung lũng Shida. Nó đánh dấu vị trí của một pháo đài ẩn.
+item_digital_blueprint|Bản đồ điện tử
+desc_digital_blueprint|Một bản thiết kế được tìm thấy bên trong một túp lều Kirajin tại Rừng Patapine. Nó cho thấy vị trí của một pháo đài Kirajin sắp được xây dựng.
+item_category_material|Nguyên liệu
+item_category_weapon|Vũ khí
+item_category_masks|Mặt nạ
+item_category_masks|Áo giáp
+item_category_nothing|(Ô Trống)
+// ## enemies
+enemy_kacheek|Kacheek
+enemy_mochichi|Mochichi
+enemy_kirajin|Kirajin
+// ## rarepons
+rarepon_normal|Cơ bản
+rarepon_normal_desc|Một chiến binh bình thường của làng Patapon. Họ nổi tiếng với tính cách khắc kỷ và dũng cảm. Mặc dù những Patapons này có thể nhỏ nhưng với tư duy đúng đắn, họ có thể làm bất cứ điều gì!
+// ## navigation
+nav_next|Tiếp theo
+nav_previous|Trước
+nav_nextpage|Trang sau
+nav_previouspage|Trang trước
+nav_enter|Vào
+nav_leave|Ra
+nav_exit|Thoát
+nav_savegame|Lưu
+nav_exittotitle|Trở về menu
+nav_left|Trái
+nav_right|Phải
+nav_up|Lên
+nav_down|Xuống
+nav_circle|Hình tròn
+nav_triangle|Hình vuông
+nav_square|Tam giác
+nav_cross|Dấu X
+nav_move|Di chuyển
+nav_scroll|Cuộn 
+nav_yes|Có
+nav_no|Không
+nav_agree|Đồng ý
+// ## main menu NEW
+menu_pressanykey|Nhấn phím bất kỳ để bắt đầu
+menu_saveexists|Hiện nay đã có một tệp dữ liệu lưu. \ Bạn có muốn ghi đè vào tệp dữ liệu đó không?
+menu_nodata|Không có tệp lưu trữ có sẵn.
+menu_nosupportdata|Dữ liệu đã lưu từ các phiên bản cũ hơn của\ Patafour không được hỗ trợ.
+menu_invaliddata|Dữ liệu lưu không hợp lệ hoặc đã bị hỏng hóc.
+// ## options NEW
+options_options|Tùy chỉnh
+options_ingame_btn|Phím nhập trong trò chơi
+options_assign_key|Phím đã chỉ định
+options_key|Phím
+options_change_title|Thay đổi phím được chỉ định cho phím nhập trong trò chơi:
+options_change_button|(phím)
+options_change_anykey|Nhấn một phím bất kỳ để gán nó vào phím nhập trong trò chơi:
+options_tip1|Mẹo: Di chuột vào phím được chỉ định hoặc chọn nó bằng các phím mũi tên, sau đó nhấn nút X để thay đổi. \ Nhấn nút tam giác để xóa phím đã chỉ định. \ Sử dụng các số ở đầu menu để chuyển đổi giữa các phím nhập cài đặt trước.
+options_tip2|Mẹo: Nhấn phím bất kỳ để quay lại menu tùy chỉnh. \ Các tổ hợp phím mới sẽ được lưu sau khi bạn thoát menu tùy chọn.
+options_tip3|Nhấn nút Bắt đầu trên bàn phím của bạn để tiếp tục. \ Nhấn nút hình tròn để thoát thiết lập bộ điều khiển.
+options_bigbutton|phím lớn
+options_audio1|Tùy chỉnh âm thanh
+options_volume1|Am lượng
+options_volume2|Tiếng
+options_volume3|Nhạc
+options_input2|Tùy chỉnh bàn phím
+// ## intro cutscene NEW
+newgame_intro_1|Sau khi hoàn thành Cầu Patapole, cuối cùng chúng ta cũng đã đặt chân đến vùng đất mới, chưa bị động chạm bởi bàn tay của Thần Patapon.
+newgame_intro_2|Ở nơi xa lạ này, chúng ta đã khám phá ra \ những tàn tích của một nền văn minh cổ đại, \ dường như bị lãng quên từ lâu.
+newgame_intro_3|Khát vọng tìm ra “IT”, chúng tôi bắt đầu mày mò \ với những cơ chế cổ xưa \ được tìm thấy trong đống đổ nát.
+newgame_intro_4|Chỉ với một lần nhấn nút, ba Yaripons của chúng tôi, \ Hero và tôi, đã được đưa đến một địa điểm kỳ lạ \ và xa lạ, đầy thiên nhiên \ và động vật hoang dã, dường như không có bất kỳ nền văn minh nào.
+newgame_intro_5|Lo lắng cho đồng đội của mình, chúng tôi đã cố gắng \ mọi thứ có thể để trở về nhà \ và cảm ơn Thần Patapon rằng chúng tôi đã thành công!
+newgame_intro_6|Tuy nhiên...
+newgame_intro_7|Khi trở về, chúng tôi quay lại chỉ để thấy\ xác chết của các đồng minh của mình. Nhìn qua vết thương của họ, họ chỉ mới chết gần đây.
+newgame_intro_8|Bầu trời phía trên nhuộm một màu đỏ như máu \ và tiếng la hét của rất ít người sống sót ở phía xa có thể được nghe thấy.
+newgame_intro_9|Chúng tôi nhìn lên bầu trời và bắt gặp \ một sinh vật đáng sợ nhưng bí ẩn đang bay lơ lửng trên chúng tôi. Con mắt kỳ lạ của nó chứa đầy oán hận và thù ghét.
+newgame_intro_10|Khi nó bắt đầu tiếp cận chúng tôi, chúng tôi đã may mắn tự cứu mình \ bằng chiếc máy cổ xưa mà chúng tôi đã sử dụng lần trước đó, thoát khỏi cái chết trong tuyệt vọng.
+newgame_intro_11|. . .
+newgame_intro_12|Thần Toàn Năng, tôi cầu nguyện cho Người! \ Hãy đưa chúng tôi đến Earthend.
+newgame_intro_13|Cứu thế giới của chúng ta khỏi cái ác \ và để cho chúng ta nhìn vào “IT”!
+newgame_intro_14|Làm ơn, nhận chiếc trống thần và để cho chúng tôi tiến bước một lần nữa!
+// ## first run NEW
+firstrun_dialog_1|Chào mừng bạn đến với Patafour Demo! \ Nhấn phím Z để tiếp tục.
+firstrun_dialog_2|Đây là lần đầu tiên bạn chạy Demo, \ vì vậy đây là một số thông tin cơ bản
+firstrun_dialog_3|Patafour là một dự án đang được tích cực phát triển. \ Đây chưa phải là sản phẩm cuối cùng và chưa hoàn thiện.
+firstrun_dialog_4|Bản Demo này sẽ cho bạn thấy hầu hết các cơ chế \ cốt lõi cơ bản mà chúng tôi đã hoàn thành cho đến nay.
+firstrun_dialog_5|Patafour Team hy vọng bạn sẽ thích \ dự án nhỏ này của chúng tôi!
+firstrun_dialog_6|Đây là các điều khiển cơ bản: \ Z - Xác nhận (Chéo) \ X - Hủy (Hình tròn) \ Enter - Bắt đầu \ Dấu cách - Chọn
+firstrun_dialog_7|Bạn có thể thay đổi các cài đặt này \ trong menu tùy chỉnh.
+firstrun_dialog_8|Chúng tôi khuyên sử dụng bộ điều khiển \ để có trải nghiệm tốt nhất.
+firstrun_dialog_9|Chúc vui vẻ!
+patapolis_returntomain|Bạn có muốn quay lại màn hình chính không?
+patapolis_returntomainsave|Dữ liệu chưa lưu sẽ bị mất. \ Bạn có chắc không?
+patapolis_save|Bạn có muốn lưu dữ liệu của mình không?
+patapolis_saved|Dữ liệu của bạn đã được lưu.
+patapolis_demofinish|Chúc mừng, bạn đả phá đảo bản Demo này!
+patapolis_demo_pick1|Xem credits
+patapolis_demo_pick2|Hủy
+patapolis_sen|Sen Ranpurupon
+// ## npc dialogue NEW
+npc_wakapon_1|Tôi là Wakapon! Người bảo vệ \ World Egg theo lệnh của Thần Patapon!
+npc_wakapon_2|Chào mừng, Thần Patapon! Tôi rất biết ơn \ được nói chuyện trực tiếp với Người!
+npc_wakapon_3|Người có thể tin tưởng vào tôi, tôi sẽ bảo vệ World Egg \ bằng mạng sống của mình, xin hứa!
+npc_wakapon_4|Tôi có thể cảm thấy điều gì đó xấu xa đang đến với thế giới của chúng ta ...
+npc_wakapon_5|Người cũng cảm thấy điều đó chứ, Thần Patapon? \ Người sẽ bảo vệ chúng tôi khỏi \ bất kỳ nguy hiểm nào chúng tôi có thể gặp phải?
+npc_wakapon_6|Những sinh vật hình tam giác này ... \ Chúng là gì? Họ muốn gì ở Patapon chúng tôi?
+npc_wakapon_7|Đôi mắt của họ đầy hận thù ... Tôi e rằng đó mới chỉ là khởi đầu.
+npc_wakapon_8|Một nhiệm vụ nguy hiểm đang chờ Người và quân đội của Người, Thần Patapon.
+npc_wakapon_9|Kirajins sở hữu \ công nghệ không thuộc về thế giới này. Bạn phải luôn mạnh mẽ.
+npc_wakapon_10|Công việc tuyệt vời, Thần Patapon! Pháo đài Kirajin tại \  Vách núi Ejiji đã bị phá hủy!
+npc_wakapon_11|Tuy nhiên, cái ác không bao giờ yên. \ Kirajins thu thập năng lượng từ \ những tinh thể màu đỏ kỳ lạ. Phá hủy\ chúng để làm suy yếu quân đội Kirajin!
+npc_sen_1|Ôi Thần Patapon vĩ đại! \ Dẫn chúng tôi đến Earthend.
+npc_sen_2|Ôi Thần Patapon vĩ đại! \ Dẫn chúng tôi đến Earthend.
+npc_sen_3|Ôi Thần Patapon toàn năng! \ Dẫn chúng tôi đến Earthend.
+npc_sen_4|Có rất nhiều động vật lang thang trên Thung lũng Shida.
+npc_sen_5|Tin đồn nói rằng vô số kho báu \ đã được chôn cất trong khuôn viên của nó.
+npc_sen_6|Có thứ gì đó đã tấn công những Patapon \ thợ rừng tại Patapine Grove!
+npc_sen_7|Các trinh sát Yaripon báo cáo màu đỏ, \ những sinh vật hình tam giác đang xây dựng \ một pháo đài từ gỗ bị đánh cắp ...
+npc_sen_8|"Kirajins" ...? Đây có phải \ là cách họ được gọi không?
+npc_sen_9|Tôi nghĩ rằng tôi đã nghe thấy \ tên này trước đây ...
+npc_sen_10|Kirajins đã xây dựng một \ pháo đài khác tại Vách đá Ejiji.
+npc_sen_11|Chúng ta không thể để họ thắng ...! \ Hãy đi và đánh bại họ, Thần Patapon!
+npc_sen_12|Người đã làm được, Thần Patapon! Người đã làm được! \ Hiện tại đã kết thúc ...
+npc_sen_13|Tôi vẫn không thể nhớ nơi mà \ tôi đã nhìn thấy chúng trước đây ...
+// ## altar NEW
+altar_category0|Nguyên liệu
+altar_category1|Giáo
+altar_category2|Mặt nạ
+altar_category3|Mũ
+altar_category4|Vật phẩm quan trọng
+// ## barracks NEW
+barracks_yaripon|Yaripon
+barracks_unit_status|Thông tin
+barracks_stat_level|Cấp độ
+barracks_stat_exp|Kinh nghiệm
+barracks_stat_hp|Máu
+barracks_stat_damage|Sát thương
+barracks_stat_attackspeed|Tốc đánh
+barracks_stat_critchance|Tỉ lệ chí mạng
+barracks_stat_knockbackchance|Tỉ lệ đẩy lùi
+barracks_stat_staggerchance|Tỉ lệ gây choáng
+barracks_stat_burnchance|Tỉ lệ thiêu đốt
+barracks_stat_freezechance|Tỉ lệ đóng băng
+barracks_depart|Bạn có chắc là muốn xuất quân không?
+// ## items NEW
+item_titanum_ore|Quặng Titanium
+desc_titanum_ore|Truyền thuyết kể rằng loại quặng nhẹ và cứng này được ban cho Patapon bởi không ai khác hơn là Thần Patapon. Nó có thể tồn tại qua nhiều thế hệ và là vật liệu trang bị hoàn hảo cho các chức vụ mà yêu cầu chuyển động nhanh.
+item_hinoki|Gỗ Hinoki
+desc_hinoki|Truyền thuyết kể rằng ngay cả ngôi nhà của Thần Patapon cũng được dựng nên từ gỗ Hinoki linh thiêng này. Patapons cảm thấy an toàn và nghỉ ngơi khi bước vào bên trong những ngôi nhà được làm từ loại gỗ quý này.
+item_gizaza_fang|Răng nanh Gizaza
+desc_gizaza_fang|Đầu của chiếc răng nanh này chứa vô số ngạnh nhỏ. Bất cứ ai bị chiếc nanh này đâm vào sẽ phải trả một cái giá khủng khiếp khi cố gắng loại bỏ nó. Ngay cả những bác sĩ Patapon lành nghề nhất cũng phải vật lộn để lấy chiếc răng nanh này ra khỏi cơ thể một người.
+item_dream_meat|Thịt hiếm
+desc_dream_meat|Món thịt thần thoại này tan chảy như kẹo bông, nhưng Patapons thích một bữa ăn đầy đủ hơn. Những Patapon mà được nếm món ngon này hàng ngày được có cuộc sống hạnh phúc và bình yên.
+item_scorching_spear|Giáo hỏa thiêu
+desc_scorching_spear|Ma thuật tác động lên ngọn giáo này làm cho đầu ngọn giáo trở nên rực lửa. Nó gây sát thương cao, và thiêu cháy kẻ thù. Những kẻ thù sẽ có mùi giống như thịt bò nướng.
+item_strength_helmet|Mũ sức mạnh
+desc_strength_helmet|Chiếc mũ ma thuật này, được trang trí bằng sơn tảo đỏ từ núi lửa Bovo, giúp tăng sức tấn công đáng kể.
+item_kirajin_helmet1|Mũ Kirajin
+desc_kirajin_helmet1|Mũ hình tam giác làm từ tài nguyên không xác định được cho là sắt, cung cấp các thuộc tính bất thường cho người lính đội nó. Tăng máu và sức tấn công.
+item_kirajin_spear1|Giáo Kirajin
+desc_kirajin_spear1|Cây giáo làm bằng vật liệu khác thường được cho là sắt. Mũi nhọn của nó sắc đến mức khó tin, một người có thể chọc thủng ngón tay của mình chỉ qua việc chạm nhẹ vào nó.
+// ## navigation NEW
+nav_understood|
+// ## tips NEW
+tips_anykey|Bấm nút bất kỳ để tiếp tục!
+tips_loading|Đang Tải
+tip1_title|Săn Kacheeks
+tip1_desc|Đi săn Kacheeks trên Thung lũng Shida \ là một truyền thống cổ xưa của Patapon. \\ Những con thú chậm chạp này đã nuôi sống bộ tộc \ qua nhiều thế hệ, và tham gia một nhóm săn bắn \ là trải nghiệm đầu tiên của Patapon khi \ cầm giáo. \\ Mặc dù khứu giác của chúng không tốt bằng những con Mochichis, nhưng vẫn đáng để \ chờ một cơn gió ngược trước khi đến gần, \ vì vậy chúng không thể ngửi thấy mùi của Patapons đang đến.
+tip2_title|Phần thưởng của việc đi săn
+tip2_desc|Lấy thịt từ săn bắn! \\ Săn mồi để bộ tộc Patapon có thể ăn. \ Dù điều gì đang xảy ra trên thế giới, \ Patapons cần phải có thịt \ để no bụng! \\ Nếu bạn đã lãnh đạo các Patapon tốt, họ có thể \ để lại một ít thịt làm lễ vật tại đền thờ! \\ Kacheeks cho bạn thịt. da \ Mochichis cung cấp cho bạn thịt mềm. \\ Sau khi bạn đi săn trở về, \ hãy nhớ kiểm tra đền thờ!
+tip3_title|Gỗ bền trong Rừng Patapine
+tip3_desc|Rừng Patapine nổi tiếng với việc \ dễ dàng bị lạc trong rừng. \\ Những cây to lớn trong rừng là vật liệu hoàn hảo \ cho các tòa nhà kiên cố, do \ độ bền đáng kinh ngạc của chúng. \\ Nhiều tiều phu Patapon dành \ cả đời để thu thập gỗ , \ và những cây mới đang phát triển ở đó mỗi ngày.
+tip4_title|Câu lệnh hoàn hảo
+tip4_desc|Các lệnh hoàn hảo có vai trò quan trọng\ nếu bạn muốn đạt hiệu quả cao nhất. \\ Sau khi bạn đánh hoàn hảo cả 4 nhịp trống, \ bạn sẽ nghe thấy âm thanh "shwing". \\ Rất nhiều lợi ích đến từ các lệnh hoàn hảo! \ Patapons có thể hành quân nhanh hơn và gây nhiều sát thương hơn . \\ Đó là một kỹ năng hữu ích để học!
+tip5_title|Chuẩn bị Nạp
+tip5_desc|PON PON CHAKA CHAKA tăng sức mạnh cho toàn bộ Patapon. Bạn có thể sử dụng lệnh này về lợi thế của mình! \\ Gây nhiều hơn hai lần sát thương \ khi tấn công! \\ Giảm đáng kể sát thương phải nhận \ khi phòng thủ! \\ Một số quân lính sẽ có những chiêu thức đặc biệt khi được tăng sức mạnh.
+tip6_title|Wakapon và World Egg
+tip6_desc|Wakapon là người giám hộ của Quả trứng Thế giới \ tỏa sáng ở trung tâm của Cầu Patapole. \\World Egg mang lại hòa bình cho thế giới của Patapon. \\ Truyền thuyết nói rằng việc phá vỡ nó \ sẽ giải phóng tất cả tội ác ra khỏi Thế giới ngầm. \\ Wakapon đã hứa với Thần Patapon rằng sẽ bảo vệ World Egg \ bằng mọi giá, giữ gìn nó bằng cả mạng sống của mình.
+tip7_title|Sen Ranpurupon ở Patapolis cổ đại
+tip7_desc|Sen là một nữ tư tế của thời đại Patapon cổ đại. \\ Sen là liên kết trực tiếp giữa Patapons và Thần Patapon, và đã sống qua nhiều thế hệ của bộ tộc Patapon. \\ Ranpurupon rất quan tâm đến mọi Patapon, \ nuôi nấng và dạy dỗ những đứa trẻ Patapon. \ \ Sen sẽ làm bất cứ điều gì để giúp bộ tộc phát triển.
+// ## mission data NEW
+kirajin_ambush_1|
+kirajin_ambush_2|
+kirajin_ambush_3|
+kirajin_ambush_4|
+kirajin_ambush_5|
+kirajin_ambush_6|
+kirajin_talk_1|
+kirajin_talk_2|
+kirajin_talk_3|
+kirajin_talk_4|
+kirajin_talk_5|
+kirajin_talk_6|
+kirajin_talk_7|
+kirajin_talk_8|
+kirajin_talk_8|
+kirajin_talk_9|
+kirajin_talk_10|
+kirajin_talk_11|
+kirajin_talk_12|
+kirajin_talk_13|
+kirajin_talk_14|
+kirajin_death_1|
+kirajin_death_2|
+kirajin_death_3|
+kirajin_death_4|
+// ## christmas event NEW
+tip8_title|
+tip8_desc|
+item_rappata_spear|
+desc_rappata_spear|
+item_rappata_helm|
+desc_rappata_helm|
+item_christmas_charm_2020|
+desc_christmas_charm_2020|
+item_santa_hat|
+desc_santa_hat|
+worldmap_mission_6_title|
+worldmap_mission_6_description|
+kirajin_talk_15|
+kirajin_talk_16|
+kirajin_ambush_7|
+kirajin_death_5|
+// # Add your name here if you worked on the translation!
+// # name1 @HarryR
+// # name2
+// # name3

@@ -38,7 +38,7 @@ public:
     sf::Clock message_clock;
 
     Kirajin_Yari_1();
-    void LoadConfig(Config* thisConfigs);
+    void LoadConfig();
     void parseAdditionalData(nlohmann::json additional_data);
     void Draw(sf::RenderWindow& window);
     bool doAttack();

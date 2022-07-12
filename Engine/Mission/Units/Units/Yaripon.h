@@ -42,14 +42,13 @@ public:
     sf::SoundBuffer spear_throw;
     sf::SoundBuffer hit_1, hit_2, hit_3, s_dead;
 
-    Config* thisConfig;
     Yaripon();
     void startAttack();
-    void LoadConfig(Config* thisConfigs);
+    void LoadConfig();
     bool doAttack();
     void doRhythm(std::string current_song = "", std::string current_drum = "", int combo = 0);
     void doMissionEnd();
-    void Draw(sf::RenderWindow& window);
+    void Draw();
     void OnCollide(CollidableObject* otherObject, int collidedWith = -1, vector<string> collisionData = {});
     void Update() override;
     void UpdateRhythm(std::string current_song, std::string current_drum, int combo) override;

@@ -1,13 +1,14 @@
 #include "DroppedItem.h"
 #include "../../../../V4Core.h"
+#include "../../../../CoreManager.h"
 
 DroppedItem::DroppedItem()
 {
 }
 
-void DroppedItem::LoadConfig(Config* thisConfigs)
+void DroppedItem::LoadConfig()
 {
-    AnimatedObject::LoadConfig(thisConfigs, "resources/units/entity/droppeditem.p4a");
+    AnimatedObject::LoadConfig("resources/units/entity/droppeditem.p4a");
 
     /// You need to load the appropriate spritesheet for given item and quality settings.
     float rand_hs = (rand() % 500) / float(10);
@@ -23,7 +24,7 @@ void DroppedItem::LoadConfig(Config* thisConfigs)
     s_item.loadFromFile("resources/sfx/level/picked_item.ogg");
     s_keyitem.loadFromFile("resources/sfx/level/picked_keyitem.ogg");
 
-    cur_sound.setVolume(float(thisConfigs->GetInt("masterVolume")) * (float(thisConfigs->GetInt("sfxVolume")) / 100.f));
+    cur_sound.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
 }
 
 void DroppedItem::Draw(sf::RenderWindow& window)
@@ -209,7 +210,7 @@ void DroppedItem::Draw(sf::RenderWindow& window)
     scaleX = curXscale;
     scaleY = curYscale;
 
-    AnimatedObject::Draw(window);
+    AnimatedObject::Draw();
 }
 
 void DroppedItem::OnCollide(CollidableObject* otherObject, int collidedWith, vector<string> collisionData)
@@ -225,7 +226,7 @@ void DroppedItem::OnCollide(CollidableObject* otherObject, int collidedWith, vec
         vector<string> str_item_id = Func::Split(picked_item, ':');
         vector<int> order_id = {stoi(str_item_id[0]), stoi(str_item_id[1]), stoi(str_item_id[2])};
 
-        picked_item = thisConfig->thisCore->saveReader.itemReg.getItemByID(order_id)->item_name;
+        picked_item = CoreManager::getInstance().getSaveReader()->itemReg.getItemByID(order_id)->item_name;
 
         cout << "assigned picked_item name: " << picked_item << endl;
     }
@@ -249,7 +250,7 @@ void DroppedItem::OnCollide(CollidableObject* otherObject, int collidedWith, vec
                 }
 
                 ///add to the missioncontroller list so it can be displayed in the upper right corner VERY COOL!
-                thisConfig->thisCore->currentController.addPickedItem(item_group, item_id, picked_item);
+                CoreManager::getInstance().getMissionController()->addPickedItem(item_group, item_id, picked_item);
 
                 ///do visuals
                 pickedup = true;
@@ -261,14 +262,14 @@ void DroppedItem::OnCollide(CollidableObject* otherObject, int collidedWith, vec
                 //cur_sound.setBuffer(s_heal);
                 //cur_sound.play();
 
-                thisConfig->thisCore->currentController.projectile_sounds.emplace_back();
+                CoreManager::getInstance().getMissionController()->projectile_sounds.emplace_back();
 
-                thisConfig->thisCore->currentController.projectile_sounds[thisConfig->thisCore->currentController.projectile_sounds.size() - 1].setBuffer(thisConfig->thisCore->currentController.s_heal);
+                CoreManager::getInstance().getMissionController()->projectile_sounds[CoreManager::getInstance().getMissionController()->projectile_sounds.size() - 1].setBuffer(CoreManager::getInstance().getMissionController()->s_heal);
 
-                thisConfig->thisCore->currentController.projectile_sounds[thisConfig->thisCore->currentController.projectile_sounds.size() - 1].setVolume(float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("sfxVolume")) / 100.f));
-                thisConfig->thisCore->currentController.projectile_sounds[thisConfig->thisCore->currentController.projectile_sounds.size() - 1].play();
+                CoreManager::getInstance().getMissionController()->projectile_sounds[CoreManager::getInstance().getMissionController()->projectile_sounds.size() - 1].setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
+                CoreManager::getInstance().getMissionController()->projectile_sounds[CoreManager::getInstance().getMissionController()->projectile_sounds.size() - 1].play();
 
-                thisConfig->thisCore->currentController.addPickedItem(item_group, item_id, picked_item);
+                CoreManager::getInstance().getMissionController()->addPickedItem(item_group, item_id, picked_item);
                 ready_to_erase = true;
             }
         }

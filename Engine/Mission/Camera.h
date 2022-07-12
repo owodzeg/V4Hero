@@ -20,8 +20,8 @@ public:
     bool missionEnd = false;
 
     Camera();
-    void zoomViewAt(sf::Vector2i pixel, sf::RenderWindow& window, float zoom, float fps);
-    void Work(sf::RenderWindow& window, float fps, InputController& inputCtrl);
+    void zoomViewAt(sf::Vector2i pixel, float zoom);
+    void Work();
 };
 
 

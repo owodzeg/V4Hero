@@ -1,0 +1,422 @@
+// You can use your native special characters
+// Comments starts with // and will not be read by game
+// The format is as follows:
+// string_id | string (without containing any "|")
+// Where string_id is NOT CHANGEABLE! Change only the second part after the | character.
+// Example:
+// english_word|English word
+// polish_word|Polskie słowo
+// Good luck!
+// ## main menu
+menu_newgame|Game Baru
+menu_continue|Teruskan
+menu_options|Pengaturan
+menu_exit|Keluar
+// ## options
+options_graphics|Grafik
+options_audio|Audio
+options_input|Input
+options_language|Bahasa
+options_backtomain|Kembali ke menu
+options_back|Kembali
+options_graphics1|Resolusi Layar
+options_graphics2|Kualitas Tekstur
+options_graphics3|Anti-Aliasing
+options_graphics4|Batas Framerate
+options_graphics5|Layar Penuh
+options_graphics6|Berjendela
+options_unlimited|(tidak dibatas)
+options_quality_low|Rendah
+options_quality_medium|Sedang
+options_quality_high|Tinggi
+options_quality_ultra|Sangat Tinggi
+options_enable|Aktifkan
+options_disable|Nonaktifkan
+options_audio1|Volume Utama
+options_audio2|Suara Gendang
+options_audio3|Nyanyian Gendang Patapon
+options_audio4|Balasan Patapon
+options_volume|Volume:
+options_input1|Aturan Kontroler
+options_input_setup1|Pastikan kontroler tersambung ke PC-mu. Tekan tombol apapun di kontrolermu dan tombol tersebut akan muncul di tengah layar.
+options_input_setup2|Silahkan tekan tombol panah kiri.
+options_input_setup3|Silahkan tekan tombol panah kanan.
+options_input_setup4|Silahkan tekan tombol panah bawah.
+options_input_setup5|Silahkan tekan tombol panah atas.
+options_input_setup6|Silahkan tekan tombol untuk memainkan gendang PATA. (Kotak)
+options_input_setup7|Silahkan tekan tombol untuk memainkan gendang PON. (Lingkaran)
+options_input_setup8|Silahkan tekan tombol untuk memainkan gendang DON. (Silang)
+options_input_setup9|Silahkan tekan tombol untuk memainkan gendang CHAKA. (Segititga)
+options_input_setup10|Silahkan tekan tombol untuk menggeserkan kamera ke kiri. (Trigger Kiri)
+options_input_setup11|Silahkan tekan tombol untuk menggeserkan kamera ke kanan. (Trigger Kanan)
+options_input_setup12|Silahkan tekan tombol Start.
+options_input_setup13|Silahkan tekan tombol Select.
+options_input_setup14|Selesai! Kontrolermu sekarang siap dipakai untuk main Patafour.
+options_input_setup_notice| terdaftar sebagai tombol kontroler.
+options_input_setup_again|Coba Lagi
+options_input_setup_next|Lanjut
+options_input_setup_return|Kembali ke pengaturan
+options_language1|Ganti Bahasa
+options_language_english|Bahasa Inggris
+options_language_indonesian|Bahasa Indonesia
+options_restart_notice|Anda harus restart game agar perubahan berlaku. Restart sekarang?
+options_restart_button1|Restart game
+options_restart_button2|Kembalikan Perubahan
+// ## patapolis
+patapolis|Patapolis
+patapolis_trader|Pasar
+patapolis_blacksmith|Tukang Besi
+patapolis_barracks|Barak
+patapolis_tree|Mater, Pohon Kehidupan
+patapolis_festival|Alun-alun Festival
+patapolis_altar|Altar
+patapolis_obelisk|Tugu
+patapolis_paraget|Paraget
+patapolis_wakapon|Wakapon Sang Penjaga
+patapolis_egg|Telur Dunia
+// ## altar
+altar_title|Altar
+altar_item_title|Item Test
+altar_item_category|Kategori Test
+altar_item_description|Ini adalah kategori test. Deskripsi ini harus mencapai beberapa baris agar kita dapat menguji fungsi scrolling dalam bidang teks deskripsi ini.
+// ## barracks
+barracks_testunitname|Sang Pahlawan
+barracks_test_stat_text|999.999.999/999.999.999
+barracks_unitstatus|Status Rombongan
+barracks_lvl|Lvl
+barracks_exp|Exp
+barracks_dmg|Dmg
+barracks_hp|HP
+barracks_crit|Krit
+barracks_attack_speed|Kecepatan
+// ## world map
+worldmap_header_1|Peta Dunia Patapon
+worldmap_select|Pilih Petualangan
+worldmap_location_locked|~ Terkunci ~
+worldmap_location_1_title|~ Lembah Shida~
+worldmap_location_1_description|Udara lembab yang meniup membuat lembah ini sempurna sebagai habitat kepada hampir semua jenis tumbuhan, bahkan pakis asal dari lembah ini tumbuh hingga ketinggian dahsyat! Untuk beberapa generasi, berbagai suku telah menggunakan area subur ini untuk berburu hewan dan mengumpulkan sayuran. Ini adalah bentang darat aneh yang dapat membingungkan, dan banyak orang berdesas-desus bahwa ada rahasia tersembunyi di wilayah ini.
+worldmap_location_2_title|~ Belukar Patapine ~
+worldmap_location_2_description|Pohon-pohon pinus di hutan ini terkenal karena tingginya bagai raksasa dan kekokohannya saat dipakai sebagai bahan bangunan. Banyak penebang di sini mencari nafkah dengan menebang pohon-pohon pinus agar dapat digunakan untuk konstruksi. Banyak desas-desus bahwa ada peri-peri yang hidup di hutan ini dengan memakan jamur.
+worldmap_location_3_title|~ Tebing Ejiji ~
+worldmap_location_3_description|Tebang Ejiji pernah melewati masa naga-naga kuat sebelum mereka menghilang dari tempat lahirnya untuk alasan-alasan yang tidak diketahui oleh penduduk Rolitoland, dan menyediakan tempat yang bagus untuk membangun rumah dan benteng yang tersembunyi. Rarepon Gyaba berasal dari wilayah ini dan banyak yang masih menduduki tebing ini, tetapi banyak dari Patapon sejak kemudian telah tersebar luas mengelilingi dunia.
+worldmap_mission_1_title|Berburu di Lembah Shida
+worldmap_mission_1_description|Banyak hewan yang datang ke lembah ini untuk mencari tumbuhan dan fungi untuk dimakan. Gunakan kesempatan ini untuk berburu dan memberi makan Pataponmu! Banyak desas-desus bahwa ada harta tersembunyi di lembah ini.
+worldmap_mission_2_title|Benteng di dalam Perhutanan
+worldmap_mission_2_description|Para Kirajin telah mendirikan sebuah kedudukan dalam Belukar Patapine! Menggunakan kayu kokoh di perhutanan ini, mereka dapat membangun sebuah benteng. Kumpulkan kekuatanmu dan jatuhkan benteng tersebut sambil waspada terhadap hewan yang hidup di perhutanan ini!
+worldmap_mission_3_title|Benteng Kirajin di Belukar Patapine: Lv.
+worldmap_mission_3_description|Para Kirjain mungkin telah dikalahkan sekali, tetapi mereka telah kembali lebih kuat dari sebelumnya. Mereka dengan tekad akan tetap menahankan posisi ini tanpa memedulikan apapun. Kalahkan mereka lagi untuk menahankan kekuatan para Kirajin!
+worldmap_mission_4_title|Persenjataan Maju
+worldmap_mission_4_description|Patapon-patapon pengintai telah melaporkan bahwa dalam Tebing Ejiji, para Kirajin telah memulai konstruksi untuk sebuah benteng besar untuk dipakai sebagai basis operasi melawan kekuatan Patapon. Menurut laporan-laporan, benteng tersebut dipenuhi oleh teknologi-teknologi Kirajin yang kuat, kebanyakan darinya belum pernah dilihat oleh Patapon sebelumnya. Lupakan ketakutan dan jadilah berani, hancurkanlah benteng ini sampai selesai.
+worldmap_mission_5_title|Kirajin-kirajin keras hati di Tebing Ejiji: Lv.
+worldmap_mission_5_description|Walaupun benteng mereka telah dihancurkan, para Kirajin tidak akan memperbolehkan dirinya untuk kalah lagi. Mereka tekad untuk mempertahankan lokasi ini bahkan jika mereka harus memberi jiwa mereka. Meden memperingatkan dengan nada suram, “Ini akan lebih sulit daripada sebelumnya.”
+// ## missiondata
+mission_complete|MISI SELESAI!
+mission_failed|MISI GAGAL!
+intro_cutscene_1|Selamat datang ke rilis demo pertama Patafour!
+intro_cutscene_2|Demo ini mempunyai banyak fitur-fitur untuk dicoba, dan juga beberapa rahasia. Apakah kamu dapat menemukan semuanya?
+intro_cutscene_3|Oh Patapon Mahakuasa, saya memohon kepada beliau...
+Intro_cutscene_4|Suku Patapon membutuhkan beliau lebih dari sebelumnya!
+intro_cutscene_5|Tersesat dan putus asa dalam Lembah Shida, mereka tidak dapat pulang tanpa gendang suci dan bimbingan beliau.
+intro_cutscene_6|Mainkan PATA PATA PATA PON mengikuti ketukan untuk maju!
+intro_cutscene_7|Saat Patapon-patapon berhenti bernyanyi untuk empat ketukan, mainkan gendang lagi.
+outro_cutscene_1|Terima kasih untuk memainkan demo!
+outro_cutscene_2|Membuat Patafour adalah suatu kesenangan!
+outro_cutscene_3|Tim Patafour berharap anda menyukai ini. Kami menuangkan hati kita untuk membuat game ini!
+outro_cutscene_4|Para Kirajin akan kembali lebih kuat daripada sebelumnya...
+outro_cutscene_5|Apakah anda akan bisa menyingkirkan mereka dan memperoleh kembali tanah air Patapon, Pata-Pole?
+outro_cutscene_6|Belajar seni kuno dari yang paling pertama di suku Patapon dan pimpin mereka ke kemenangan.
+outro_cutscene_7|Suku-suku yang lain juga akan membutuhkan beliau juga, Sang Mahakuasa [PLAYER_NAME]...
+outro_cutscene_8|Selamatkan dunia di versi lengkap Patafour!
+outro_end|Terima kasih sudah bermain!
+// # credits
+credits_creator|Pencipta Proyek
+credits_programmers|Programmer-programmer
+credits_artists|Artis-artis
+credits_animators|Animator-animator
+credits_musicians|Musisi-musisi
+credits_gameplay|Penyeimbang Gameplay
+credits_community|Pengelola Komunitas
+credits_writers|Penulis-penulis
+credits_translators|Penerjemah-penerjemah
+credits_supporters|Pendukung-pendukung
+credits_special|Terima kasih special
+credits_all|Dan semua yang mendukung projek ini! Terima Kasih!
+// # New Game Text
+newgame_what_is_your_name|Selamat datang, Mahakuasa! Beliau ingin dipanggil apa?
+newgame_name_error_prompt|Nama beliau harus di tengah-tengah 2 dan 50 karakter.
+newgame_game_save_created|Save File berhasil dibuat.
+newgame_welcome|Selamat datang, Sang Mahakuasa
+newgame_welcome2|Apakah anda siap untuk masuk demo Patafour?
+// ## items
+item_wooden_spear|Tombak Kayu
+desc_wooden_spear|Sebuah tombak kayu biasa yang diberikan kepada setiap rekrut Patapon saat mencapai umur dewasa dan mulai berburu. Dihargai oleh banyak Patapon, bahkan saat mereka telah mendapatkan senjata yang lebih kuat.
+item_iron_spear|Tombak Besi
+desc_iron_spear|Tombak Besi yang kuat. Patapon menghargai tombak ini karena tombak ini lebih berat dan lebih menyakiti. Tetapi, prajurit yang lebih kuat dibutuhkan untuk melempar tombak ini secara kompeten.
+item_steel_spear|Tombak Baja
+desc_steel_spear|Tombak yang ujung tajamnya dibuat dari paduan yang langa, baja. Tombak ini lebih ringan dari tombak besi, tapi bisa lebih menyakiti!
+item_kacheek_spear|Tombak Kachik
+desc_kacheek_spear|Sebuah tombak yang ditempa menggunakan gading Kachik. Tombak ini tajam sekali hingga bisa merusak tameng, menyakiti musuh dengan parah.
+item_shubaba_mask|Shuba
+desc_shubaba_mask|Topeng Pahlawan Serangan Hantu. Topeng ini memberi bagian kecil dari kekuatan kecepatan Shubabassa, dengan meningkatkan kecepatan otot pemakai topeng ini, membantunya untuk mengayun lebih cepat dari prajurit lain.
+item_none|Kosong!
+desc_none|Bagian kosong dari altar Patapon. Hanya ada lilin dan dupa.
+item_banal_branch|Cabang Banal
+desc_banal_branch|Sebuah cabang kayu biasa. Walaupun ini hanya sebuah cabang kayu, banyak Patapon giat dapat menggunakannya untuk banyak hal, dari pegangan kapak ke tiang tenda.
+item_cherry_blossom|Bunga Sakura
+desc_cherry_blossom|Menurut legenda, pohon-pohon sakura kuno raksasa di Timur yang menghasilkan kayu ini adalah para dewa yang sedang beristirahat.
+item_small_rock|Batu Kecil
+desc_small_rock|Batu biasa. Tidak sempurna, tetapi tetap penting untuk kehidupan suku. Banyak anak-anak Patapon yang suka melemparkannya menyeberang sungai dan danau.
+item_hard_iron|Besi Keras
+desc_hard_iron|Menuruti mitos-mitos Zigoton, banyak darah telah ditumpahkan dalam berbagai konflik meliputi logam langka ini. Beberapa sage Patapon menceritakan cara leluhur Patapon mengambil besi keras dari dalam gunung, tetapi teknik rahasia ini sudah terlupakan.
+item_leather_meat|Daging Kulit
+desc_leather_meat|Patapon tua memberi tahu kepada yang muda, “Jika perutmu penuh, janganlah mengeluh,” dan mereka makanlah.
+item_tender_meat|Daging Lembut
+desc_tender_meat|Para Patapon sangat menyukai daging yang lezat lembut ini, tetapi mereka jarang sekali makannya, bahkan di hari ulang tahunnya.
+item_pon_drum|Gendang Pon
+desc_pon_drum|Gendang maha berani. Didapatkan dengan setuju untuk berkuasa atas Patapon.
+item_pata_drum|Gendang Pata
+desc_pata_drum|Gendang maha kuat. Hatapon menjaga ini dengan jiwanya.
+item_chaka_drum|Gendang Chaka
+desc_chaka_drum|Gendang maha bijaksana. Ketukan gendang ini dipercayakan untuk membawakan keinginan Sang Mahakuasa menjadi nyata.
+item_don_drum|Gendang Don
+desc_don_drum|Gendang maha ajaib.
+item_keepsake|Kenang-kenangan
+desc_keepsake|Kenang-kenangan milik Hatapon. Kenangan-kenangan ini selalu menenangkannya dan mengingatkannya bahwa Sang Mahakuasa akan datang saat dia membutuhkannya.
+item_wooden_helmet|Helm Kayu
+desc_wooden_helmet|Helm kayu tradisional asal Patapon. Helm ini adalah merek regu pemburunya, dan meskipun desainnya yang sederhana, helm ini telah menyelamati banyak Patapon.
+item_iron_helmet|Helm Besi
+desc_iron_helmet|Helm yang terbuat dari besi ini mengikuti desain standar helm kayu, tetapi lebih melindungi.
+item_kacheek_helm|Helm Kachik
+desc_kacheek_helm|Helm terbuat dari kulit dan bulu Kachik melindungi pemakainya dari bahaya. Helm ini juga menjaga kehangatan dan kenyamatan pemakainya.
+item_mudada_bone|Tulang Mudada
+desc_mudada_bone|Tulang kecil yang telah diputihkan, berasal dari suatu hewan kecil. Tulang ini sering ditemukan di tengah-tengah rumput-rumputan di tempat berburu, atau di dalam perut hewan yang lebih besar.
+item_gashirin_bone|Tulang Gashirin
+desc_gashirin_bone|Sebuah tulang yang besar dan kokoh. Pernah tertulis bahwa leluhur menggunakan tulang ini sebagai senjata.
+item_kuneri_fang|Taring Kuneri
+desc_kuneri_fang|Sebuah taring indah yang melengkung. Taring ini bisa ditajamkan untuk dipakai sebagai ujung senjata, dan juga bagus sebagai alat.
+item_itete_fang|Taring Itete
+desc_itete_fang|Taring besar yang mempunyai ujung yang sangat tajam. Sangat terkenal bahwa keterampilan sebuah pemburu dapat diketahui dari jumlah taring Itete yang harus dia lepaskan dari badannya.
+item_soggy_map|Peta Kotor
+desc_soggy_map|Sebuah peta ditemukan dari sebuah peti di dalam Lembah Shida. Peta ini menandai lokasi sebuah benteng tersembunyi.
+item_digital_blueprint|Cetak Biru Digital
+desc_digital_blueprint|Sebuah cetak biru yang diambil dari sebuah pondok kecil di benteng Belukar Patapine milik para Kirajin. Cetak biru ini mennunjukan lokasi di mana para Kirajin akan membuat sebuah benteng.
+item_category_material|Bahan-bahan
+item_category_weapon|Senjata-senjata
+item_category_masks|Topeng-Topeng
+item_category_nothing|Ruang Kosong
+// ## enemies
+enemy_kacheek|Kachik
+enemy_mochichi|Mochichi
+enemy_kirajin|Kirajin
+// ## rarepons
+rarepon_normal|Normal
+rarepon_normal_desc|Sebuah pejuang asal suku Patapon yang biasa. Mereka terkenal untuk sikapnya yang tabah dan berani. Walaupun Patapon ini kecil, dengan pola pikir yang benar, mereka dapat melakukan apapun!
+// ## navigation
+nav_next|Lanjut
+nav_previous|Sebelum
+nav_nextpage|Halaman Selanjutnya
+nav_previouspage|Halaman Sebelumnya
+nav_enter|Masuk
+nav_leave|Pergi
+nav_exit|Keluar
+nav_savegame|Save Game
+nav_exittotitle|Keluar ke Judul
+nav_left|Kiri
+nav_right|Kanan
+nav_up|Atas
+nav_down|Bawah
+nav_circle|Lingkaran
+nav_triangle|Segitiga
+nav_square|Kotak
+nav_cross|Silang
+nav_move|Pindah
+nav_scroll|Gulir
+nav_yes|Iya
+nav_no|Tidak
+nav_agree|Setuju
+// ## main menu NEW
+menu_pressanykey|Pencet tombol apapun untuk mulai
+menu_saveexists|Sudah ada data save.\Apakah anda ingin menghapuskannya?
+menu_nodata|Tidak dapat menemukan data save.
+menu_nosupportdata|Data save dari versi lama\Patafour tidak dapat dipakai.
+menu_invaliddata|Data save tidak valid atau terkorupsi.
+mission_backtopatapolis|Apakah tentu ingin kembali ke Patapolis?\Semua barang yang sudah terkumpul di misi ini akan hilang.
+// ## options NEW
+options_options|Pengaturan
+options_ingame_btn|Tombol dalam game
+options_assign_key|Tombol terpilih
+options_key|Tombol
+options_change_title|Mengganti keybind untuk:
+options_change_button|tombol
+options_change_anykey|Tekan tombol apapun untuk ditetapkan sebagai keybind.
+options_tip1|Tip: Arahkan kursor ke sebuah keybind atau pilih menggunakan tombol panah,\lalu tekan tombol Silang untuk menggantikannya.\Gunakan tombol segitiga untuk menghapus sebuah keybind.\Gunakan nomor-nomor yang ada di atas menu untuk beralih antara preset keybind.
+options_tip2|Tip: Tekan tombol apapun untuk kembali ke menu pengaturan.\Keybind yang baru akan ditetapkan setelah anda keluar dari menu pengaturan.
+options_tip3|Tip: Tekan tombol Start di keyboard untuk lanjut.\Tekan tombol Lingkaran untuk keluar dari pengaturan kontroler.
+options_bigbutton|tombol besar
+options_audio1|Pengaturan Volume
+options_volume1|Volume Master:
+options_volume2|Volume Suara:
+options_volume3|Volume Musik:
+options_input2|Pengaturan Keybind
+// ## intro cutscene NEW
+newgame_intro_1|Setelah menyelesaikan jembatan Patapolis,\kita akhirnya sampai di tanah baru,\tak tersentuh oleh tangan Patapon Mahakuasa.
+newgame_intro_2|Di tanah asing ini, kami menemukan\reruntuhan dari peradaban kuno\yang terlihat sudah lama terlupakan.
+newgame_intro_3|Putus asa ingin menemukan ITU, kami mulai mengutak-atik\dengan mekanisme-mekanisme kuno yang\kami temukan terkubur di reruntuhan tersebut.
+newgame_intro_4|Dengan sebuah tekanan tombol, ketiga Yaripon kita,\Sang Pahlawan, dan saya telah terkirim ke\tempat yang aneh dan asing, dipenuhi oleh margasatwa dan tanaman,\seperti tidak ada penghuni.
+newgame_intro_5|Cemas dengan kawan-kawan kami,\kami mencoba semuanya untuk kembali,\dan kami berhasil!
+newgame_intro_6|Tetapi...
+newgame_intro_7|Saat kami kembali, kami melihat\mayat-mayat kawan-kawan kami. Dilihat dari\luka-luka mereka, mereka baru saja meninggal.
+newgame_intro_8|Langit berwarna merah seperti darah,\dan jeritan dari beberapa penyintas\dapat kami dengar dari jauh.
+newgame_intro_9|Kami melihat ke atas langit, dan\melihat sosok misterius mengapung\di atas kita. Matanya dipenuhi oleh kebencian.
+newgame_intro_10|Saat sosok tersebut mulai mendekati kami, kami terselamatkan oleh\mesin kuno yang kami telah gunakan,\nyaris melarikan diri dari kematian.
+newgame_intro_11|...
+newgame_intro_12|Mahakuasa, saya berdoa kepadamu!\Pandukan kita ke ujung dunia!
+newgame_intro_13|Selamatkan dunia kita dari kejahatan\dan bantu kita melihat ITU!
+newgame_intro_14|Tolong ambillah Gendang Mulia ini\dan kami akan berbaris!
+// ## first run NEW
+firstrun_dialog_1|Selamat datang ke Demo Patafour!\Tekan Z untuk lanjut.
+firstrun_dialog_2|Ini adalah pertama kali anda menjalankan Demo ini,\jadi inilah beberapa informasi penting.
+firstrun_dialog_3|Patafour adalah proyek yang sedang dikembangkan secara aktif.\Ini bukan produk akhir dan masih jauh dari selesai.
+firstrun_dialog_4|Demo ini akan menunjukkan beberapa\mekanisme dasar yang telah dapat kami selesaikan.
+firstrun_dialog_5|Tim Patafour berharap anda akan suka\proyek kami ini!
+firstrun_dialog_6|Inilah beberapa petunjuk:\Z - Konfirmasi (Silang)\X - Batalkan (Lingkaran)\Enter - Start\Space - Select
+firstrun_dialog_7|Anda dapat mengatur dan menggantinya\di menu pengaturan.
+firstrun_dialog_8|Kami merekomendasi menggunakan sebuah kontroler\untuk pengalaman yang terbaik.
+firstrun_dialog_9|Selamat bermain!
+// ## patapolis NEW
+patapolis_returntomain|Apakah anda ingin balik\ke menu utama?
+patapolis_returntomainsave|Data yang belum di-save akan hilang.\Apakah anda tentu?
+patapolis_save|Apakah anda ingin save game?
+patapolis_saved|Game telah di-save.
+patapolis_demofinish|Selamat, Anda telah menyelesaikan Demo Patafour!
+patapolis_demo_pick1|Tonton Kredit
+patapolis_demo_pick2|Batalkan
+patapolis_sen|Sen Ranpurupon
+// ## npc dialogue NEW
+npc_wakapon_1|Saya adalah Wakapon! Penjaga Telur Dunia\di bawah pemerintahan Tuhan!
+npc_wakapon_2|Selamat datang, Tuhan! Saya sangat bersyukur\untuk dapat berbicara dengan Beliau!
+npc_wakapon_3|Beliau dapat mempercayai saya,\saya akan menjaga Telur Dunia\dengan nyawaku, saya berjanji!
+npc_wakapon_4|Saya dapat merasakan sesuatu yang jahat\datang ke dunia kita...
+npc_wakapon_5|Apakah Beliau merasakannya juga?\Apakah Beliau akan melindungi kami\dari bahaya ini?
+npc_wakapon_6|Makhluk-makhluk segitiga itu...\Apakah mereka? Apa yang mereka\inginkan dari kita?
+npc_wakapon_7|Mata-mata mereka dipenuhi oleh kebencian...\Saya takut ini hanya awalnya.
+npc_wakapon_8|Sebuah perjalanan yang berbahaya menunggu\Beliau dan pasukan Beliau, Kami.
+npc_wakapon_9|Kirajin memiliki teknologi teknologi\yang tidak dari dunia ini.\Beliau harus tetap kuat.
+npc_wakapon_10|Pekerjaan luar biasa, Kami! Beliau\menghancurkan Benteng mereka di Tebing Ejiji! 
+npc_wakapon_11|Namun, kejahatan tidak beristirahat.\Para Kirajin mengumpulkan energi dari\kristal-kristal merah yang aneh.\Hancurkan kristalnya untuk melemahkan pasukan mereka!
+npc_sen_1|Oh Tuhan yang hebat,\pimpinlah kami ke ujung dunia!
+npc_sen_2|Oh Tuhan yang kuat,\pimpinlah kami ke ujung dunia!
+npc_sen_3|Oh Patapon Mahakuasa,\pimpinlah kami ke ujung dunia!
+npc_sen_4|Ada banyak hewan-hewan\yang hidup di Lembah Shida.
+npc_sen_5|Ada juga desas-desus bahwa\banyak sekali harta yang\terkubur di tanahnya.
+npc_sen_6|Sesuatu menyerang Patapon\penebang kayu di Belukar Patapine!
+npc_sen_7|Yaripon Pengintai melaporkan bahwa\makhluk-makhluk merah sedang membangun\benteng dari kayu yang dicuri...
+npc_sen_8|Kirajin...?\Apakah itu nama mereka? 
+npc_sen_9|Saya merasa seperti pernah\mendengar nama itu sebelumnya...
+npc_sen_10|Para Kirajin membangun benteng lagi\di Tebing Ejiji.
+npc_sen_11|Kita tidak boleh memperbolehkan\mereka menang...! Pergi dan\kalahkan mereka, Tuhan!
+npc_sen_12|Tuhan, Engkau telah melakukannya!\Semuanya sudah berakhir\untuk sekarang...
+npc_sen_13|Saya masih belum ingat di mana\saya pernah lihat mereka sebelumnya...
+// ## altar NEW
+altar_category0|Bahan
+altar_category1|Tombak
+altar_category2|Topeng
+altar_category3|Helm
+altar_category4|Barang Penting
+// ## barracks NEW
+barracks_yaripon|Yaripon
+barracks_unit_status|Status Rombongan
+barracks_stat_level|Level
+barracks_stat_exp|EXP
+barracks_stat_hp|HP
+barracks_stat_damage|Kekuatan
+barracks_stat_attackspeed|Kecepatan
+barracks_stat_critchance|Kesempatan Krit
+barracks_stat_knockbackchance|Kesempatan Knockback
+barracks_stat_staggerchance|Kesempatan Menjatuhkan
+barracks_stat_burnchance|Kesempatan Membakar
+barracks_stat_freezechance|Kesempatan Membeku
+barracks_depart|Apakah tentu ingin berangkat?
+// ## items NEW
+item_titanum_ore|Bijih Titanium
+desc_titanum_ore|Legenda berkata bahwa bijih yang keras dan ringan ini diberikan kepada Patapon oleh Mahakuasa. Titanium dapat bertahan selama bertahun-tahun dan merupakan bahan sempurna untuk jenis pasukan yang membutuhkan pergerakan cepat.
+item_hinoki|Hinoki
+desc_hinoki|Legenda berkata bahwa rumah Patapon Mahakuasa terbuat dari kayu Hinoki yang suci. Patapon merasa lega saat mereka masuk ke bangunan yang dibuat dari kayu berharga ini.
+item_gizaza_fang|Taring Gizaza
+desc_gizaza_fang|Ujung taring ini memiliki duri-duri kecil yang tak terhitung. Siapapun yang ditusuk taring ini akan mengalami kesulitan untuk melepaskannya. Bahkan Patapon Medis yang paling terampil kesulitan untuk melepaskannya.
+item_dream_meat|Daging Mimpi
+desc_dream_meat|Daging legendaris ini meleleh seperti permen kapas, tetapi para Patapon lebih memilih makanan yang sehat. Patapon yang merasakan kelezatan makanan ini setiap hari diberikan kehidupan yang senang dan damai.
+item_scorching_spear|Tombak Panas
+desc_scorching_spear|Sihir yang dipakai saat membuat tombak ini menghasilkan ujung yang berupa api. Tombak ini sangat kuat dan dapat membakar musuh.
+item_strength_helmet|Helm Kekuatan
+desc_strength_helmet|Helm ajaib ini dihias oleh cat alga merah dari Gunung Bovo, dan meningkatkan kekuatan.
+item_kirajin_helmet1|Helm Besi Kirajin
+desc_kirajin_helmet1|Helm segitiga terbuat dari suatu bahan yang seperti besi, memberi atribut-atribut aneh kepada yang memakainya. Helm ini meningkatkan HP dan kekuatan.
+item_kirajin_spear1|Tombak Besi Kirajin
+desc_kirajin_spear1|Sebuah tombak terbuat dari suatu bahan yang sepertinya besi. Ujungnya sangat tajam, sehingga siapapun dapat berdarah hanya karena menyentuhnya.
+// ## navigation NEW
+nav_understood|Saya mengerti
+// ## tips NEW
+tips_anykey|Tekan tombol apapun untuk lanjut
+tips_loading|Memuat
+tip1_title|Berburu Kachik
+tip1_desc|Berburu Kachik di Lembah Shida adalah tradisi kuno Patapon.\\Binatang lambat ini telah memberi makan\suku Patapon dari banyak generasi,\dan bergabung sebuah perburuan biasanya adalah \pengalaman pertama Patapon memegang tombak.\\Walaupun indra penciumannya tidak sebaik Mochichi,\masih lebih baik untuk menunggu\angin sakal sebelum mendekatinya,\agar mereka tidak tahu didekati oleh Patapon.
+tip2_title|Hasil Berburu
+tip2_desc|Dapatkan daging dari berburu!\\Burulah mangsa agar suku Patapon dapat makan.\Apapun yang terjadi di dunia, Patapon membutuhkan\daging untuk mengisi perutnya!\\Bila anda telah memimpin para Patapon dengan baik,\mereka akan mempersembahkan daging untukmu di Altar!\\Kachik-kachik memberikan Daging Kulit.\Mochichi memberikan Daging Halus.\\Sesudah berburu, jangan lupa untuk pergi ke Altar!
+tip3_title|Kayu Kokoh dari Belukar Patapine
+tip3_desc|Belukar Patapine terkenal karena\seringnya Patapon tersesat di tempat itu.\\Pohon-pohon besar dari Patapine Grove adalah\bahan yang sempurna untuk bangunan yang kuat,\karena daya tahannya yang luar biasa.\\Banyak Patapon penebang kayu menghabiskan hidupnya\mengumpulkan kayu, dan pohon-pohon baru\tumbuh di sana setiap hari.
+tip4_title|Perintah Sempurna
+tip4_desc|Mendapatkan Perintah Sempurna adalah kunci\untuk kinerja maksimal.\\Ketika anda mengetuk gendang dengan sempurna,\anda akan mendengarkan suara “shing.”\\Berbagai manfaat datang dari Perintah Sempurna.\\Mengetuk dengan tepat adalah keterampilan yang berguna!
+tip5_title|Ingat untuk bersiap!
+tip5_desc|PON PON CHAKA CHAKA menyiapkan pasukanmu.\\Anda dapat menggunakan perintah ini untuk keuntunganmu!\\Jadilah lebih kuat saat menyerang!\\Jadilah lebih kuat saat berlindung!\\Beberapa jenis pasukan mempunyai perilaku khusus saat disiapkan.
+tip6_title|Wakapon dan Telur Dunia
+tip6_desc|Wakapon adalah penjaga Telur Dunia yang bersinar\di tengah jembatan Patapolis.\\Telur Dunia membawa perdamaian ke dunia Patapon.\\Legenda-legenda berkata bahwa memecahkannya akan\melepaskan kejahatan dari neraka.\\Sang Wakapon berjanji kepada Tuhan bahwa ia akan\melakukan apapun untuk menjaganya,\bahkan akan memberi nyawanya.
+tip7_title|Sen Ranrurupon di Patapolis Kuno
+tip7_desc|Sen adalah pendeta wanita dari peradaban kuno Patapon.\\Dia adalah tautan langsung antara Patapon dan Tuhan,\dan hidup melalui beberapa generasi suku Patapon.\\Ranrurupon sangat sekali peduli untuk setiap Patapon,\membesarkan dan mengajarkan anak-anak.\\Dia akan melakukan apapun untuk\membantu suku Patapon bertumbuh.
+// ## missiondata NEW
+kirajin_ambush_1|Serang kejutan!\Ambil posisi!
+kirajin_ambush_2|Jaga menara!\Jangan biarkan mereka lewat!
+kirajin_ambush_3|Patapine Grove milik Kirajin!\Kita tidak akan membolehkan kalian lewat!
+kirajin_ambush_4|Serangan kejutan!\Kalian tidak akan melewatkan tempat ini!
+kirajin_ambush_5|Jagalah menara\dengan segala cara!
+kirajin_ambush_6|Ini adalah kesempatan kita!\Hancurkan mereka!
+kirajin_talk_1|Para… Para Patapon\sudah datang!
+kirajin_talk_2|Hehehe... Patapon-Patapon bodoh...\Bodoh sekali...
+kirajin_talk_3|Ejiji Cliffs tidak akan\diambil dari kita!
+kirajin_talk_4|Jangan biarkan mereka\dekat ke sumber energi kita!
+kirajin_talk_5|Serang! Kalian akan mati!
+kirajin_talk_6|Inilah akhir kamu!
+kirajin_talk_7|Menyerahlah! Ini sudah berakhir!
+kirajin_talk_8|Kami benci Patapons!
+kirajin_talk_8|Tunggu sebentar... Siap-siap...
+kirajin_talk_9|Sekarang, serang!
+kirajin_talk_10|Kami tidak akan kalah!
+kirajin_talk_11|Jagalah kristal energi!
+kirajin_talk_12|Kamu akan membayar untuk itu!\Terkutuklah, Patapon!
+kirajin_talk_13|Kalian tidak akan lolos dengan itu!
+kirajin_talk_14|Kami akan balas dendam\kepadamu, Patapon!!!
+kirajin_death_1|Bunuh... bunuh...
+kirajin_death_2|Kematian tidak dapat dihindari!
+kirajin_death_3|Kami akan kembali!
+kirajin_death_4|Kira...jin…
+// ## christmas event NEW
+tip8_title|Natal di Patapolis
+tip8_desc|Apakah anda tahu bahwa Patapolis merayakan natal?\\Selama perayaan natal, Patapon menghias\Patapolis dengan berbagai ornamen warna-warni.\\Patapon-patapon kecil menunggu Santapon\untuk memberi mereka apa yang mereka harapkan.\\Biasanya, mereka mendapatkan senjata pertamanya\agar mereka dapat mulai bertempur untuk Sang Mahakuasa.
+item_rappata_spear|Tombak Rappata
+desc_rappata_spear|Tombak yang sangat tajam terbuat dari tulang Rappata. Tombak ini sangat ringan dan dapat menembus beberapa target sekaligus.
+item_rappata_helm|Helm Rappata
+desc_rappata_helm|Helm ini terbuat dari bulu Rappata dan membantu gerak lebih mudah sambil memberikan perlindungan dari hawa dingin.
+item_christmas_charm_2020|Jimat Natal 2020
+desc_christmas_charm_2020|Mempunyai jimat ini di inventaris memberi anda keberuntungan untuk seluruh tahun! Terima kasih telah berpartisipasi di Patafour Winter Event 2020!
+item_santa_hat|Topi Santa
+desc_santa_hat|Topi nyaman yang dirajut oleh nenek-nenek Patapon ini memberi kebahagian dan kehangatan kepada siapapun yang memakainya. Memberi perlindungan dari hawa dingin.
+worldmap_mission_6_title|Pakis-pakis tertutup salju di Lembah Shida
+worldmap_mission_6_description|Setahun sekali, Lembah Shida ditutupi oleh salju, sambil angin dingin dari lautan dekat jembatan Patapolis datang. Ini adalah kesempatan terbaik untuk hewan-hewan langka yang ingin keluar dari sarangnya dan memburu ikan di bawah es. Terkadang, hewan-hewan yang sangat langka dapat terlihat...
+kirajin_talk_15|Beku mereka!
+kirajin_talk_16|Biarkan salju turun... biarkan salju turun...
+kirajin_ambush_7|Serang! Mereka pasti kedinginan!
+kirajin_death_5|Dingin... sekali...
+// # Add your name here if you worked on the translation!
+// # @Kijillo
+// # name2
+// # name3

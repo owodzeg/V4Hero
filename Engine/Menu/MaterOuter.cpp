@@ -1,10 +1,9 @@
 #define SDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "../V4Core.h"
+#include "../CoreManager.h"
 #include "MaterOuter.h"
-#include "ButtonList.h"
-#include "iostream"
-#include "math.h"
+#include <math.h>
 #include <spdlog/spdlog.h>
 #include <span>
 
@@ -16,7 +15,7 @@ MaterOuterMenu::MaterOuterMenu()
 void MaterOuterMenu::initialise(Config* _thisConfig, V4Core* parent, PatapolisMenu* curParentMenu)
 {
     SPDLOG_INFO("Initializing Altar...");
-    Scene::Initialise(_thisConfig, parent);
+    //Scene::Initialise(_thisConfig, parent);
     parentMenu = curParentMenu;
 
     int quality = _thisConfig->GetInt("textureQuality");
@@ -76,11 +75,11 @@ void MaterOuterMenu::initialise(Config* _thisConfig, V4Core* parent, PatapolisMe
 
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/mater/yaripon_icon.png");
 
-    mater_title.createText(f_font, 40, sf::Color(255, 234, 191, 255), Func::ConvertToUtf8String(_thisConfig->strRepo.GetString("mater_title")), q, 1);
+    mater_title.createText(f_font, 40, sf::Color(255, 234, 191, 255), Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("mater_title")), q, 1);
     altar_kaching.createText(f_font, 30, sf::Color(255, 234, 191, 255), "0 Ka-ching", q, 1);
-    squad_title.createText(f_font, 30, sf::Color(255, 234, 191, 255),  Func::ConvertToUtf8String(_thisConfig->strRepo.GetString("yaripon_squad")), q, 1);
+    squad_title.createText(f_font, 30, sf::Color(255, 234, 191, 255),  Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("yaripon_squad")), q, 1);
 
-    ctrlTips.create(54, f_font, 20, Func::ConvertToUtf8String(_thisConfig->strRepo.GetString("mater_outer_ctrl_tips")), quality);
+    ctrlTips.create(54, f_font, 20, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("mater_outer_ctrl_tips")), quality);
 
     SPDLOG_INFO("Initializing Altar finished.");
 }
@@ -393,7 +392,6 @@ void MaterOuterMenu::update(sf::RenderWindow& window, float fps, InputController
         }
         if (inputCtrl.isKeyPressed(InputController::Keys::CIRCLE))
         {
-            this->Hide();
             this->is_active = false;
         }
     }
