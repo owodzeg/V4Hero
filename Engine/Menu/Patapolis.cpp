@@ -9,7 +9,6 @@
 #include "../CoreManager.h"
 #include "../StateManager.h"
 #include "../ResourceManager.h"
-#include <chrono>
 
 PatapolisMenu::PatapolisMenu()
 {
@@ -244,31 +243,6 @@ PatapolisMenu::PatapolisMenu()
     addRay(16, 223, 9, 217);
     addRay(7, 214, 0, 211);
     addRay(2, 210, -2, 210);
-
-    const std::string fragmentShader =
-            "uniform sampler2D texture;"
-            "uniform float amt;"
-            "void main()"
-            "{"
-            "   vec4 pixel = texture2D(texture, gl_TexCoord[0].xy);    "
-            "   pixel.r += amt;"
-            "   if (pixel.r>1.0) pixel.r=1.0;"
-            "   pixel.g += amt;"
-            "   if (pixel.g>1.0) pixel.g=1.0;"
-            "   pixel.b += amt;"
-            "   if (pixel.b>1.0) pixel.b=1.0;"
-            "   gl_FragColor = gl_Color * pixel;"
-            "}";
-    if (!silouette.fadeShader.loadFromMemory(fragmentShader, sf::Shader::Fragment))
-    {
-        SPDLOG_TRACE("USER GRAPHICS CARD DOES NOT SUPPORT SHADERS (must be very old)");
-        silouette.canshader = false;
-    } 
-    else
-    {
-        // does support shaders
-        silouette.fadeShader.setParameter("texture", sf::Shader::CurrentTexture);
-    }
 
     for (int i = 11; i >= 0; i--)
     {
@@ -844,9 +818,7 @@ void PatapolisMenu::Update()
         window->draw(v_background);
 
         camDest = locations[location];
-        float val = sin(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() / 1000.0) / 2 + 0.5;
-        silouette.fadeShader.setParameter("amt", val);
-        SPDLOG_INFO("amt" + std::to_string(val));
+
         
         if (StateManager::getInstance().getState() == StateManager::MATER_OUTER)
         {
@@ -904,7 +876,7 @@ void PatapolisMenu::Update()
             b_layer.setPosition(back_pos[i], 715);
 
             b_layer.lx = b_layer.baseX - (camPos / 1.3);
-            b_layer.drawShader(window, silouette.fadeShader);
+            b_layer.draw(window);
         }
 
         for (int i = 0; i < layer_6.size(); i++)
@@ -912,7 +884,7 @@ void PatapolisMenu::Update()
             ps_layer_6[layer_6[i].type].setPosition(layer_6[i].x, layer_6[i].y);
             ps_layer_6[layer_6[i].type].lx = layer_6[i].x - (camPos / 1.1428571428571428571428571428571);
             ps_layer_6[layer_6[i].type].setOrigin(ps_layer_6[layer_6[i].type].getLocalBounds().width / 2, ps_layer_6[layer_6[i].type].getLocalBounds().height);
-            ps_layer_6[layer_6[i].type].drawShader(window, silouette.fadeShader);
+            ps_layer_6[layer_6[i].type].draw(window);
         }
 
         PSprite& L5 = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/5.png");
@@ -934,8 +906,8 @@ void PatapolisMenu::Update()
         L5.setOrigin(L5.getLocalBounds().width / 2, L5.getLocalBounds().height);
         L4.setOrigin(L4.getLocalBounds().width / 2, L4.getLocalBounds().height);
 
-        L5.drawShader(window,silouette.fadeShader);
-        L4.drawShader(window, silouette.fadeShader);
+        L5.draw(window);
+        L4.draw(window);
 
 
         for (int i = 0; i < layer_2.size(); i++)
@@ -950,7 +922,7 @@ void PatapolisMenu::Update()
             ps_layer_2[layer_2[i].type].setPosition(layer_2[i].x, layer_2[i].y);
             ps_layer_2[layer_2[i].type].lx = layer_2[i].x - camPos;
             ps_layer_2[layer_2[i].type].setOrigin(ps_layer_2[layer_2[i].type].getLocalBounds().width / 2, ps_layer_2[layer_2[i].type].getLocalBounds().height);
-            ps_layer_2[layer_2[i].type].drawShader(window, silouette.fadeShader);
+            ps_layer_2[layer_2[i].type].draw(window);
         }
 
         float resRatioX = window->getSize().x / float(1280);
