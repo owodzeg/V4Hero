@@ -746,8 +746,8 @@ void MainMenu::Update()
 
             // TEMP TESTING OF BEZIER CURVES
             temp_anim_t += 1;
-            shp->fps = fps;
-            shp->Draw();
+            //shp->fps = fps;
+            //shp->Draw(); 
 
             screenFade.draw();
 

@@ -44,6 +44,7 @@ public:
     void setSmooth(bool smooth);
     void draw(sf::RenderWindow& window);
     void draw(sf::RenderWindow* window);
+    void drawShader(sf::RenderWindow* window, sf::Shader& shader);
     void draw();
     void update(sf::RenderWindow& window);
     void saveToFile(std::string file);

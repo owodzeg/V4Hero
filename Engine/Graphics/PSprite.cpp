@@ -346,7 +346,49 @@ void PSprite::draw(sf::RenderWindow* window)
     s.setOrigin(orX, orY);
     s.setPosition(lx * resRatioX, ly * resRatioY);
     s.setRotation(angle * (180 / 3.14159265358));
+    
     window->draw(s);
+
+    oldQualitySetting = qualitySetting;
+    oldResSetting = resSetting;
+}
+
+void PSprite::drawShader(sf::RenderWindow* window, sf::Shader& shader)
+{
+    qualitySetting = ResourceManager::getInstance().getCurrentQuality();
+
+    if (oldQualitySetting != qualitySetting)
+    {
+        sf::Vector2u windowSize = window->getSize();
+
+        std::vector<float> x = {640, 1280, 1920, 3840};
+        std::vector<float> y = {360, 720, 1080, 2160};
+
+        sf::Vector2f ratio(windowSize.x / x[qualitySetting], windowSize.y / y[qualitySetting]);
+
+        ratioX = ratio.x;
+        ratioY = ratio.y;
+    }
+
+    if (oldResSetting != resSetting)
+    {
+        sf::Vector2u windowSize = window->getSize();
+
+        std::vector<float> x = {640, 1280, 1920, 3840};
+        std::vector<float> y = {360, 720, 1080, 2160};
+
+        sf::Vector2f ratio(windowSize.x / x[resSetting], windowSize.y / y[resSetting]);
+
+        resRatioX = ratio.x;
+        resRatioY = ratio.y;
+    }
+
+    s.setScale(ratioX * scaleX, ratioY * scaleY);
+    s.setOrigin(orX, orY);
+    s.setPosition(lx * resRatioX, ly * resRatioY);
+    s.setRotation(angle * (180 / 3.14159265358));
+
+    window->draw(s,&shader);
 
     oldQualitySetting = qualitySetting;
     oldResSetting = resSetting;
