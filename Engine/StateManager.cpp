@@ -229,6 +229,24 @@ void StateManager::updateCurrentState()
             missionControllerPtr->Update();
             break;
         }
+
+        case MATER_OUTER: {
+
+            if (patapolisPtr == nullptr)
+            {
+                patapolisPtr = new PatapolisMenu;
+            }
+
+            if (materPtr == nullptr)
+            {
+                materPtr = new MaterOuterMenu;
+            }
+
+            patapolisPtr->Update();
+            materPtr->Update();
+
+            break;
+        }
     }
 }
 
@@ -299,6 +317,12 @@ void StateManager::initState(int state)
                 obeliskPtr = new ObeliskMenu;
                 obeliskPtr->Reload();
                 obeliskPtr->initialized = true;
+            }
+            if (materPtr == nullptr)
+            {
+                materPtr = new MaterOuterMenu;
+                materPtr->save_loaded = patapolisPtr->save_loaded;
+                materPtr->showMater();
             }
 
             break;

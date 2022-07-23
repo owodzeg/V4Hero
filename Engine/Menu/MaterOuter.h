@@ -53,9 +53,9 @@ public:
     PatapolisMenu* parentMenu;
 
     void initialise(Config* thisConfig, V4Core* parent, PatapolisMenu* curParentMenu);
-    void update(sf::RenderWindow& window, float fps, InputController& inputCtrl);
+    void Update();
     void eventFired(sf::Event event);
-    void DrawAsleepSquad(MaterOuterMenu::SquadBox& squad, int squad_alpha, sf::RenderWindow& window);
+    void DrawAsleepSquad(MaterOuterMenu::SquadBox& squad, int squad_alpha, sf::RenderWindow* window);
     vector<MaterOuterMenu::SquadBox*> GetSquadsCentered();
     void showCategory();
     void onExit();

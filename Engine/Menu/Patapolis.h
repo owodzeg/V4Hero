@@ -160,7 +160,6 @@ class PatapolisMenu : public Menu
 		bool save_loaded = false;
 
 		ControlTips ctrlTips;
-        MaterOuterMenu mater_menu;
 		Menu* parentMenu;
 		int currentMenuPosition;
 		std::vector<float> possibleMenuPositions;

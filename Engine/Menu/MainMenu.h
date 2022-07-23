@@ -9,7 +9,8 @@
 #include "../Graphics/PText.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-
+#include <Graphics/AnimatedCurveShape.h>
+class V4Core;
 class MainMenu : public Menu
 {
 public:
@@ -60,6 +61,9 @@ public:
 
     float cur_y = 300;
     float dest_y = 300;
+
+    float temp_anim_t = 0;
+    AnimatedCurveShape* shp;
 
     sf::Clock menuClock;
     sf::Clock startClock;
