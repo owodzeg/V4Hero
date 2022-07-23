@@ -580,10 +580,6 @@ void MainMenu::Update()
         //cout << "MouseX: " << (mouseX / window->getSize().x) * 1280 << endl;
 
         mouseInBounds = false;
-        for (int i = 0; i <= 3; i++)
-        {
-            PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(i + 1) + ".png");
-        }
 
         for (int i = 0; i < 4; i++)
         {
@@ -748,8 +744,6 @@ void MainMenu::Update()
             temp_anim_t += 1;
             //shp->fps = fps;
             //shp->Draw(); 
-
-            screenFade.draw();
 
 
             if ((inputCtrl->isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl->isKeyPressed(InputController::Keys::RTRIGGER)))
