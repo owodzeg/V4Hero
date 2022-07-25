@@ -8,7 +8,7 @@ void Grass2::LoadConfig()
     /// all (normal) kacheeks have the same animations, so we load them from a hardcoded file
     AnimatedObject::LoadConfig("resources/units/entity/grass_2.p4a");
 }
-void Grass2::Draw(sf::RenderWindow& window)
+void Grass2::Draw()
 {
     /// call the parent function to draw the animations
     AnimatedObject::Draw();

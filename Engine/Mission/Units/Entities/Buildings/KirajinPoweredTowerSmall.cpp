@@ -42,7 +42,7 @@ void KirajinPoweredTowerSmall::LoadConfig()
     s_broken.loadFromFile("resources/sfx/level/building_medium_broken.ogg");
 }
 
-void KirajinPoweredTowerSmall::Draw(sf::RenderWindow& window)
+void KirajinPoweredTowerSmall::Draw()
 {
     if (dead)
     {

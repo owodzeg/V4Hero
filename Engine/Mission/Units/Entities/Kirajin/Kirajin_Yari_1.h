@@ -40,7 +40,7 @@ public:
     Kirajin_Yari_1();
     void LoadConfig();
     void parseAdditionalData(nlohmann::json additional_data);
-    void Draw(sf::RenderWindow& window);
+    void Draw();
     bool doAttack();
     void doMessages(sf::RenderWindow& window, float fps, InputController& inputCtrl);
     void die();

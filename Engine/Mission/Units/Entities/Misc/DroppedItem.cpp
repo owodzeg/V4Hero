@@ -27,13 +27,15 @@ void DroppedItem::LoadConfig()
     cur_sound.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
 }
 
-void DroppedItem::Draw(sf::RenderWindow& window)
+void DroppedItem::Draw()
 {
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+
     /// Draw the DroppedItem, however! Lock the animation status to make it appear inanimate
     if (!pickedup)
     {
-        resRatioX = window.getSize().x / float(1280);
-        resRatioY = window.getSize().y / float(720);
+        resRatioX = window->getSize().x / float(1280);
+        resRatioY = window->getSize().y / float(720);
 
         vspeed += float(981) / fps;
         hspeed += float(100) / fps;
@@ -104,7 +106,7 @@ void DroppedItem::Draw(sf::RenderWindow& window)
             glow[i].circle.setRadius(glow[i].radius);
             glow[i].circle.setOrigin(glow[i].circle.getLocalBounds().width / 2, glow[i].circle.getLocalBounds().height / 2);
 
-            window.draw(glow[i].circle);
+            window->draw(glow[i].circle);
 
             if (glow[i].alpha <= 0)
                 rm.push_back(i);

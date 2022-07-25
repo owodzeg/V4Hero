@@ -40,7 +40,7 @@ void Rappata::parseAdditionalData(nlohmann::json additional_data)
     }
 }
 
-void Rappata::Draw(sf::RenderWindow& window)
+void Rappata::Draw()
 {
     /// before we draw the object, check if we are walking and
     if (AnimatedObject::getAnimationSegment() != "death")

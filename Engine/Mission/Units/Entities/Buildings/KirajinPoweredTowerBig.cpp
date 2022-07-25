@@ -42,7 +42,7 @@ void KirajinPoweredTowerBig::LoadConfig()
     s_broken.loadFromFile("resources/sfx/level/building_big_broken.ogg");
 }
 
-void KirajinPoweredTowerBig::Draw(sf::RenderWindow& window)
+void KirajinPoweredTowerBig::Draw()
 {
     if (dead)
     {

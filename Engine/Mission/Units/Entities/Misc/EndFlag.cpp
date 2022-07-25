@@ -21,7 +21,7 @@ void EndFlag::LoadConfig()
     s_end.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
 }
 
-void EndFlag::Draw(sf::RenderWindow& window)
+void EndFlag::Draw()
 {
     if (missionEnd)
     {

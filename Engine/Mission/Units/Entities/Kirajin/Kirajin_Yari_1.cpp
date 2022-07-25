@@ -122,7 +122,7 @@ void Kirajin_Yari_1::doMessages(sf::RenderWindow& window, float fps, InputContro
     }
 }
 
-void Kirajin_Yari_1::Draw(sf::RenderWindow& window)
+void Kirajin_Yari_1::Draw()
 {
     if (dead)
     {

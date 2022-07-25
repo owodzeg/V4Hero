@@ -42,7 +42,7 @@ void WoodenSpikes::parseAdditionalData(nlohmann::json additional_data)
     }
 }
 
-void WoodenSpikes::Draw(sf::RenderWindow& window)
+void WoodenSpikes::Draw()
 {
     if (dead)
     {

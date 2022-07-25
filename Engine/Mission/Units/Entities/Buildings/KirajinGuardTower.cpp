@@ -44,7 +44,7 @@ void KirajinGuardTower::parseAdditionalData(nlohmann::json additional_data)
     }
 }
 
-void KirajinGuardTower::Draw(sf::RenderWindow& window)
+void KirajinGuardTower::Draw()
 {
     if (dead)
     {

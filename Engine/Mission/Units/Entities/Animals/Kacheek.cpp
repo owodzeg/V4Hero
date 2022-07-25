@@ -45,7 +45,7 @@ void Kacheek::parseAdditionalData(nlohmann::json additional_data)
     }
 }
 
-void Kacheek::Draw(sf::RenderWindow& window)
+void Kacheek::Draw()
 {
     /// before we draw the object, check if we are walking and
     if (AnimatedObject::getAnimationSegment() != "death")

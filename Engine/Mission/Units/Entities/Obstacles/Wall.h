@@ -12,7 +12,7 @@ class Wall : public Entity
 public:
     Wall();
     void LoadConfig();
-    void Draw(sf::RenderWindow& window);
+    void Draw();
     void OnCollide(CollidableObject otherObject);
 };
 

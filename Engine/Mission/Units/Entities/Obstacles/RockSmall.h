@@ -18,7 +18,7 @@ public:
     RockSmall();
     void LoadConfig();
     void parseAdditionalData(nlohmann::json additional_data);
-    void Draw(sf::RenderWindow& window);
+    void Draw();
     void OnCollide(CollidableObject* otherObject, int collidedWith = -1, vector<string> collisionData = {});
 };
 
