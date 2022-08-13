@@ -203,6 +203,14 @@ MainMenu::MainMenu()
     SPDLOG_INFO("Loading AnimatedCurveShape");
     shp = new AnimatedCurveShape("resources/data/item_data.json");
     initialized = true;
+    
+    //Checks if there is a save then use "continue" as default totem*/
+    ifstream check("resources/data/sv1.p4sv");
+    bool exists = check.good();
+    check.close();
+    if (exists) {
+        totem_sel = 1;
+    }
 }
 
 void MainMenu::EventFired(sf::Event event)
