@@ -1725,8 +1725,7 @@ void PatapolisMenu::Update()
                         } else if (dialogboxes[dialogboxes.size() - 1].id == 2)
                         {
                             SPDLOG_DEBUG("Saving game should happen here. Game not saving yet.");
-                            //TO-DO: change to coremanager savereader
-                            //v4Core->saveReader.Save();
+                            CoreManager::getInstance().getSaveReader()->Save();
                             SPDLOG_INFO("Saved the game.");
 
                             dialogboxes[dialogboxes.size() - 1].Close();
