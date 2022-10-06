@@ -80,6 +80,7 @@ set(ENGINE_FILES
         Engine/Mission/Weather.cpp
         Engine/Mission/Units/CollidableObject.cpp
         Engine/Mission/Units/AnimatedObject.cpp
+        Engine/Mission/Units/PNGAnimation.cpp
         Engine/Mission/Units/Hitbox.cpp
         Engine/Mission/Units/Object.cpp
         Engine/Mission/Units/Projectile.cpp
