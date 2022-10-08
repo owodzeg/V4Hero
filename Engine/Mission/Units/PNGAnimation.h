@@ -10,7 +10,7 @@ class PNGAnimation
         struct Animation {
             std::string name;
             std::vector<std::string> frame_paths;
-            std::vector<sf::Image> spritesheets;
+            std::vector<std::string> spritesheet_paths;
         };
 
         std::vector<Animation> animations;

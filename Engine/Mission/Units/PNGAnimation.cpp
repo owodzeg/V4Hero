@@ -42,6 +42,44 @@ void PNGAnimation::Load(const std::string& path)
         }
 
         //Step 2: Compose frames into a spritesheet for each animation
+        int maxSize = sf::Texture::getMaximumSize();
+        maxSize = 1024;
+
+        for (Animation x : animations)
+        {
+            // load a sample image for spritesheet calculation
+            sf::Image thumb;
+            thumb.loadFromFile(x.frame_paths[0]);
+
+            int img_x = thumb.getSize().x;
+            int img_y = thumb.getSize().y;
+            int frames = x.frame_paths.size();
+
+            int x_size = img_x * frames;
+            int rows = ceil(float(x_size) / float(maxSize));
+
+            int maxCols = floor(float(maxSize) / float(img_x));
+            int maxRows = floor(float(maxSize) / float(img_y));
+            int sheetsNeeded = ceil(float(rows) / float(maxRows));
+
+            int maxFramesPerSheet = maxCols * maxRows;
+
+            SPDLOG_INFO("Animation info dump: name {} img_x {} img_y {} frames {} x_size {} rows {} maxCols {} maxRows {} sheetsNeeded {} maxFramesPerSheet {}", x.name, img_x, img_y, frames, x_size, rows, maxCols, maxRows, sheetsNeeded, maxFramesPerSheet);
+
+            sf::Image spritesheet_buffer;
+            spritesheet_buffer.create(maxCols * img_x, maxRows * img_y, sf::Color(255,255,255,0));
+
+            int frameBuffer = maxFramesPerSheet;
+
+            //TO-DO: put images together on the spritesheet(s)
+            for (auto f : x.frame_paths)
+            {
+                sf::Image f_img;
+                f_img.loadFromFile(f);
+
+                --frameBuffer;
+            }
+        }
 
         //Step 3: Load spritesheets to ResourceManager
     }
