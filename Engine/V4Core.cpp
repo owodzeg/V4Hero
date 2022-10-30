@@ -14,24 +14,24 @@ V4Core::V4Core()
     SPDLOG_DEBUG("Max antialiasing level: {}", rtx.getMaximumAntialiasingLevel());
 
     /** Initialize Discord Rich Presence **/
-    //auto result = discord::Core::Create(712761245752623226, DiscordCreateFlags_NoRequireDiscord, &core);
-    //rpc_details = "Running V4Hero Client " + hero_version;
+    auto result = discord::Core::Create(712761245752623226, DiscordCreateFlags_NoRequireDiscord, &core);
+    rpc_details = "Running V4Hero Client " + hero_version;
 
     /** Check if Discord RPC works and set a status **/
-    //if (!core) 
-    //{
-    //    SPDLOG_ERROR("Failed to initialize Discord Rich Presence (err code: {})", static_cast<int>(result));
-    //} else
-    //{
-    //    discord::Activity activity{};
-    //    activity.SetDetails(rpc_details.c_str());
-    //    activity.SetState("In Main menu");
-    //    activity.GetAssets().SetLargeImage("logo");
-    //    activity.SetType(discord::ActivityType::Playing);
-    //    core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
-    //        SPDLOG_INFO("Discord Rich Presence has {} updating activity", ((result == discord::Result::Ok) ? "Succeeded" : "Failed"));
-    //    });
-    //}
+    if (!core) 
+    {
+        SPDLOG_ERROR("Failed to initialize Discord Rich Presence (err code: {})", static_cast<int>(result));
+    } else
+    {
+        discord::Activity activity{};
+        activity.SetDetails(rpc_details.c_str());
+        activity.SetState("In Main menu");
+        activity.GetAssets().SetLargeImage("logo");
+        activity.SetType(discord::ActivityType::Playing);
+        core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
+            SPDLOG_INFO("Discord Rich Presence has {} updating activity", ((result == discord::Result::Ok) ? "Succeeded" : "Failed"));
+        });
+    }
 
     /** Load config from config.cfg **/
     Config* config = CoreManager::getInstance().getConfig();
@@ -63,7 +63,7 @@ V4Core::V4Core()
 
 void V4Core::changeRichPresence(std::string title, std::string bg_image, std::string sm_image)
 {
-    /*if(core)
+    if(core)
     {
         if(rpc_current != title)
         {
@@ -79,7 +79,7 @@ void V4Core::changeRichPresence(std::string title, std::string bg_image, std::st
                 SPDLOG_INFO("Discord Rich Presence has {} updating activity", ((result == discord::Result::Ok) ? "Succeeded" : "Failed"));
             });
         }
-    }*/
+    }
 }
 
 float V4Core::getFPS()
@@ -249,8 +249,8 @@ void V4Core::init()
         }
 
         // Discord rich presence callbacks
-        //if(core)
-        //core->RunCallbacks();
+        if(core)
+        core->RunCallbacks();
     }
 
     SPDLOG_INFO("Main game loop exited. Shutting down...");
