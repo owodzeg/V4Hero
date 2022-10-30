@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <sstream>
+#include <chrono>
 #include <spdlog/spdlog.h>
 #include <spdlog/cfg/env.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
@@ -28,13 +29,14 @@ int main(int argc, char *argv[])
     spdlog::set_level(spdlog::level::trace);
 
     // get current date for log file (there's probably a better way for that)
-    auto now = floor<std::chrono::days>(std::chrono::zoned_time{std::chrono::current_zone(), std::chrono::system_clock::now()}.get_local_time());
-    std::chrono::year_month_day ymd{now};
-    std::stringstream a;
-    a << ymd;
+    auto t = std::time(nullptr);
+    auto tm = *std::localtime(&t);
+
+    std::ostringstream oss;
+    oss << std::put_time(&tm, "%d-%m-%Y %H-%M-%S");
 
     // Path to where logs are stored (TO-DO: this might be different on Android)
-    std::string log_file = "logs/" + a.str() + "-V4Hero-" + std::string(PATAFOUR_VERSION) + ".log";
+    std::string log_file = "logs/" + oss.str() + "-V4Hero-" + std::string(PATAFOUR_VERSION) + ".log";
 
     // Create a multi-sink logger to output for console and the logfile
     std::vector<spdlog::sink_ptr> sinks;

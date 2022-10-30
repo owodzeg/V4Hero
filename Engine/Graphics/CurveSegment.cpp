@@ -52,7 +52,7 @@ std::vector<sf::Vector2f> CurveSegment::CalculateCurvePoints(sf::Vector2f point1
 
     result->push_back(sf::Vector2f(int(pointX), int(pointY)));
 
-    for (size_t i = 0; i < numSteps; i++)
+    for (std::size_t i = 0; i < numSteps; i++)
     {
 
         pointX += firstFDX;

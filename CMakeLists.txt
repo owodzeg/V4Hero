@@ -4,13 +4,27 @@ project(V4Hero VERSION 1.2)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
 add_definitions(-DPATAFOUR_VERSION="${CMAKE_PROJECT_VERSION}")
 
 set(SFML_STATIC_LIBRARIES TRUE)
+
+if (WIN32)
 find_package(DiscordSDK 2.5.6 COMPONENTS x86_64 REQUIRED)
-find_package(SFML 2.5.1 COMPONENTS graphics audio REQUIRED)
+endif (WIN32)
+
+#find_package(SFML 2.5.1 COMPONENTS graphics audio REQUIRED)
 
 include(FetchContent)
+
+set(BUILD_SHARED_LIBS OFF)
+FetchContent_Declare(
+ SFML
+ GIT_REPOSITORY https://github.com/SFML/SFML.git
+ GIT_TAG 2.5.1
+)
+FetchContent_MakeAvailable(SFML)
 
 FetchContent_Declare(json
   GIT_REPOSITORY https://github.com/ArthurSonzogni/nlohmann_json_cmake_fetchcontent
@@ -112,6 +126,13 @@ set(ENGINE_FILES
         Engine/Mission/Units/Projectiles/Spear.cpp
         Engine/Mission/Mission.cpp
         Engine/Utils.h
+        Engine/Graphics/CurveShape.cpp 
+        Engine/Graphics/CurveSegment.cpp
+        Engine/Graphics/ConcaveShape.cpp 
+        Engine/Graphics/AnimatedCurveShape.cpp
+        Engine/Graphics/AnimatedCurveShape.h)
+
+set(DISCORD_FILES
         DiscordSDK/achievement_manager.cpp
         DiscordSDK/activity_manager.cpp
         DiscordSDK/application_manager.cpp
@@ -125,13 +146,14 @@ set(ENGINE_FILES
         DiscordSDK/store_manager.cpp
         DiscordSDK/types.cpp
         DiscordSDK/user_manager.cpp
-        DiscordSDK/voice_manager.cpp
-        Engine/Graphics/CurveShape.cpp 
-        Engine/Graphics/CurveSegment.cpp
-        Engine/Graphics/ConcaveShape.cpp "Engine/Graphics/AnimatedCurveShape.cpp" "Engine/Graphics/AnimatedCurveShape.h")
+        DiscordSDK/voice_manager.cpp)
 
 
+if (WIN32)
+add_executable(V4Hero ${ENGINE_FILES} ${DISCORD_FILES} main.cpp)
+else()
 add_executable(V4Hero ${ENGINE_FILES} main.cpp)
+endif ()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
     message("Enabling Unity build for Release build")
@@ -150,12 +172,20 @@ endif()
 target_include_directories(V4Hero PRIVATE Engine/)
 target_include_directories(V4Hero PRIVATE DiscordSDK)
 
+if (WIN32)
 target_link_libraries(V4Hero PRIVATE
         sfml-graphics
         sfml-audio
         DiscordSDK
         nlohmann_json::nlohmann_json
         spdlog::spdlog)
+else()
+target_link_libraries(V4Hero PRIVATE
+        sfml-graphics
+        sfml-audio
+        nlohmann_json::nlohmann_json
+        spdlog::spdlog)
+endif ()
 
 if (OS STREQUAL "Linux")
     find_package(X11 REQUIRED)

@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <random>
-#include <discord.h>
+//#include <discord.h>
 
 // Main game class that handles the engine
 class V4Core
@@ -26,7 +26,7 @@ private:
     // Discord Rich Presence variables
     std::string rpc_details;
     std::string rpc_current;
-    discord::Core* core{};
+    //discord::Core* core{};
 
 public:
     // Randomization purposes

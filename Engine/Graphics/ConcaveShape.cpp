@@ -1,7 +1,6 @@
 
 #include "ConcaveShape.h"
-
-
+#include <math.h>
 
 namespace sfml 
 {
