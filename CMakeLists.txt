@@ -10,9 +10,7 @@ add_definitions(-DPATAFOUR_VERSION="${CMAKE_PROJECT_VERSION}")
 
 set(SFML_STATIC_LIBRARIES TRUE)
 
-if (WIN32)
 find_package(DiscordSDK 2.5.6 COMPONENTS x86_64 REQUIRED)
-endif (WIN32)
 
 #find_package(SFML 2.5.1 COMPONENTS graphics audio REQUIRED)
 
@@ -148,12 +146,7 @@ set(DISCORD_FILES
         DiscordSDK/user_manager.cpp
         DiscordSDK/voice_manager.cpp)
 
-
-if (WIN32)
 add_executable(V4Hero ${ENGINE_FILES} ${DISCORD_FILES} main.cpp)
-else()
-add_executable(V4Hero ${ENGINE_FILES} main.cpp)
-endif ()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
     message("Enabling Unity build for Release build")
@@ -172,20 +165,12 @@ endif()
 target_include_directories(V4Hero PRIVATE Engine/)
 target_include_directories(V4Hero PRIVATE DiscordSDK)
 
-if (WIN32)
 target_link_libraries(V4Hero PRIVATE
         sfml-graphics
         sfml-audio
         DiscordSDK
         nlohmann_json::nlohmann_json
         spdlog::spdlog)
-else()
-target_link_libraries(V4Hero PRIVATE
-        sfml-graphics
-        sfml-audio
-        nlohmann_json::nlohmann_json
-        spdlog::spdlog)
-endif ()
 
 if (OS STREQUAL "Linux")
     find_package(X11 REQUIRED)
