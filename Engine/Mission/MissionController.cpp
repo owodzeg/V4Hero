@@ -1759,7 +1759,7 @@ void MissionController::DoKeyboardEvents()
         {
             if (inputCtrl->isKeyPressed(InputController::Keys::SELECT))
             {
-                std::vector<sf::String> a = {"Show hitboxes", "Hide hitboxes", "Heal units", "Kill all player units", "Kill Hatapon", "Enable verbose logging"};
+                std::vector<sf::String> a = {"Show hitboxes", "Hide hitboxes", "Heal units", "Kill all player units", "Kill Hatapon", "Enable verbose logging", "Mission complete"};
 
                 PataDialogBox db;
                 db.Create(f_font, "Debug menu", a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
@@ -3779,6 +3779,21 @@ void MissionController::Update()
                     {
                         SPDLOG_DEBUG("Deprecated: verbose logging");
                         verboseLogs = !verboseLogs;
+                        dialog_boxes[dialog_boxes.size() - 1].Close();
+                    }
+
+                    break;
+                }
+
+                case 6: {
+                    if (dialog_boxes[dialog_boxes.size() - 1].id == 999)
+                    {
+                        SPDLOG_DEBUG("Mission complete");
+
+                        missionEnd = true;
+                        rhythm.Stop();
+                        missionEndTimer.restart();
+
                         dialog_boxes[dialog_boxes.size() - 1].Close();
                     }
 
