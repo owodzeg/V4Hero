@@ -289,7 +289,28 @@ void SaveReader::Save()
     }
 
     std::vector<json> missions; // Doing this like so skips saving an accidental null value in the array
-    map<int, int>::iterator it;
+
+    // previous approach with mission levels wasn't going to cut it because we often sit at level 0 and therefore it is not added to the mission_levels map
+    // this causes missions to become unavailable after saving because game looks for mission_levels which don't exist
+    // thats why we take the furthest unlocked mission and fill in the blanks
+    // it might be more weighty on the savedata but it guarantees that all missions id's are properly initialized after saving and loading back
+    // and we'll keep an incremental order of these missions anyway...
+    // TODO: what to do with potential DLC ids? probably handle separately in some "DLC" savedata clusters (to-be-invented in the future)
+
+    auto it = max_element(std::begin(missions_unlocked), std::end(missions_unlocked));
+    
+    for (int i=1; i<=*it; i++)
+    {
+        json tmp;
+        tmp[0] = i;
+        tmp[1] = mission_levels[i];
+        tmp[2] = isMissionUnlocked(i);
+        missions.push_back(tmp);
+    }
+
+    // old solution
+
+    /*map<int, int>::iterator it;
     for (it = mission_levels.begin(); it != mission_levels.end(); it++)
     {
         json tmp;
@@ -298,6 +319,8 @@ void SaveReader::Save()
         tmp[2] = isMissionUnlocked(it->first);
         missions.push_back(tmp);
     }
+    */
+
     save_json["save"]["missions"] = missions;
 
     /// make sure to prettify the output json because otherwise it's pain in the ass
