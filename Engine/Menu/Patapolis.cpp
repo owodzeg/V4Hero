@@ -1753,6 +1753,8 @@ void PatapolisMenu::Update()
                             dialogboxes[dialogboxes.size() - 1].Close();
                             break;
                         }
+
+                        break;
                     }
 
                     case 1: {

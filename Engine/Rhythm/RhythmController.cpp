@@ -199,7 +199,7 @@ bool RhythmController::checkForInput()
 
         string check = "";
 
-        for (int i = 0; i < commandInput.size(); i++)
+        for (unsigned int i = 0; i < commandInput.size(); i++)
         {
             check += commandInput[i];
         }
@@ -210,7 +210,7 @@ bool RhythmController::checkForInput()
 
             bool found = false;
 
-            for (int i = 0; i < av_commands.size(); i++)
+            for (unsigned int i = 0; i < av_commands.size(); i++)
             {
                 if (av_commands[i].find(check) != std::string::npos)
                 {

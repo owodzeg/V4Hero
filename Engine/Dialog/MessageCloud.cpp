@@ -134,13 +134,6 @@ void MessageCloud::SpeedUp()
     speedup = true;
 }
 
-// rework pending; get rid of arguments
-
-void MessageCloud::Draw(sf::RenderWindow& window, float fps, InputController& inputCtrl)
-{
-    //compatibility measure so i dont have to edit the entire code for now
-}
-
 void MessageCloud::Draw()
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
@@ -164,7 +157,7 @@ void MessageCloud::Draw()
         }
     }
 
-    for (int i = 0; i < ptext.size(); i++)
+    for (unsigned int i = 0; i < ptext.size(); i++)
         ptext[i].update(window);
 
     if (active)

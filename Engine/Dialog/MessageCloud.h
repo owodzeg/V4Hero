@@ -37,7 +37,7 @@ public:
     bool active = false;
     std::vector<bool> next_dialog;
 
-    int cur_dialog = 0;
+    unsigned int cur_dialog = 0;
 
     float old_xsize = 0, old_ysize = 0;
     float xsize = 0, ysize = 0;
@@ -67,7 +67,6 @@ public:
     void Show();
     void Hide();
     void End();
-    void Draw(sf::RenderWindow& window, float fps, InputController& inputCtrl);
     void Draw();
 };
 

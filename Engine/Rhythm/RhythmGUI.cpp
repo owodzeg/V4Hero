@@ -15,12 +15,8 @@ RhythmGUI::RhythmGUI()
     r_rhythm.setFillColor(sf::Color::White);
 }
 
-void RhythmGUI::Initialise(Config& config, std::map<int, bool>& keymap)
-{
-}
-
-
-///TO BE PORTED TO AN EXTERNAL CLASS
+///TO-DO: TO BE PORTED TO AN EXTERNAL CLASS
+// another TO-DO: this is old, what i meant by this? ^
 void RhythmGUI::doVisuals(int bgm_cycle, sf::Clock* rhythmClock, int combo, float* flicker, float fps, std::vector<Drum>* drums)
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();

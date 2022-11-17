@@ -13,7 +13,6 @@ Camera::Camera()
 void Camera::zoomViewAt(sf::Vector2i pixel, float zoom)
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
-    float fps = CoreManager::getInstance().getCore()->getFPS();
 
     const sf::Vector2f beforeCoord{window->mapPixelToCoords(pixel)};
     sf::View view{window->getView()};

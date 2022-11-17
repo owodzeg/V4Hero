@@ -1008,10 +1008,6 @@ void MissionController::addUnitThumb(int unit_class)
     unitThumbs.push_back(tmp);
 }
 
-void MissionController::Initialise(Config& config, std::string backgroundString, V4Core& _v4Core)
-{
-    
-}
 void MissionController::StartMission(std::string missionFile, bool showCutscene, int missionID, float mission_multiplier)
 {
     int q = CoreManager::getInstance().getConfig()->GetInt("textureQuality");

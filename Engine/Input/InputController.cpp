@@ -197,7 +197,7 @@ bool InputController::isKeyPressed(int keyID, int restrictMode)
     ///RestrictMode = 1 - only keyboard
     ///RestrictMode = 2 - only joystick
 
-    for (int i = 0; i < keybinds[keyID].size(); i++)
+    for (unsigned int i = 0; i < keybinds[keyID].size(); i++)
     {
         int realKey = keybinds[keyID][i];
 
@@ -229,7 +229,7 @@ bool InputController::isKeyPressed(int keyID, int restrictMode)
 
 bool InputController::isKeyHeld(int keyID, int restrictMode)
 {
-    for (int i = 0; i < keybinds[keyID].size(); i++)
+    for (unsigned int i = 0; i < keybinds[keyID].size(); i++)
     {
         int realKey = keybinds[keyID][i];
 

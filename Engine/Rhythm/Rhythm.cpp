@@ -264,7 +264,7 @@ void Rhythm::doRhythm()
                 if (rhythmController.commandInput.size() == 4) ///If user input is 4 drums
                 {
                     string fullcom = rhythmController.commandInput[0] + rhythmController.commandInput[1] + rhythmController.commandInput[2] + rhythmController.commandInput[3]; ///Create a full command using 4 individual hits
-                    int index = distance(av_commands.begin(), find(av_commands.begin(), av_commands.end(), fullcom));
+                    unsigned int index = distance(av_commands.begin(), find(av_commands.begin(), av_commands.end(), fullcom));
 
                     if (index < av_commands.size()) ///Check if the command exists in available commands
                     {
@@ -357,7 +357,7 @@ void Rhythm::doRhythm()
 
                 string fullcom = rhythmController.commandInput[0] + rhythmController.commandInput[1] + rhythmController.commandInput[2] + rhythmController.commandInput[3]; ///Create a full command using 4 individual hits
 
-                int index = distance(av_commands.begin(), find(av_commands.begin(), av_commands.end(), fullcom));
+                unsigned int index = distance(av_commands.begin(), find(av_commands.begin(), av_commands.end(), fullcom));
 
                 if (index < av_commands.size()) ///Check if the command exists in available commands
                 {

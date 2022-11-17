@@ -33,12 +33,6 @@ void RoundedRect::setOrigin(sf::Vector2f origin)
     ory = origin.y;
 }
 
-//TO-DO: left for compatibility. have rounded rect require no parameters
-void RoundedRect::Draw(sf::RenderWindow& window)
-{
-
-}
-
 void RoundedRect::Draw()
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();

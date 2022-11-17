@@ -192,7 +192,7 @@ void Kirajin_Yari_2::doMessages(sf::RenderWindow& window, float fps, InputContro
         if ((messageclouds[i].done) && (floor(messageclouds[i].xsize) == 0) && (floor(messageclouds[i].ysize) == 0))
             messageclouds[i].Hide();
 
-        messageclouds[i].Draw(window, fps, inputCtrl);
+        messageclouds[i].Draw();
 
         if ((!messageclouds[i].active) && (messageclouds[i].done))
             m_rm.push_back(i);

@@ -11,23 +11,6 @@ PataDialogBox::PataDialogBox()
 {
 }
 
-/*void PataDialogBox::Create(sf::Font font, std::string text, std::vector<std::string> options, int qualitySetting)
-{
-    t_dialogType.createText(font, 16, sf::Color::Red, "Information", qualitySetting, 1);
-    t_dialogText.createText(font, 30, sf::Color::Black, text, qualitySetting, 1);
-
-    for(int i=0; i<options.size(); i++)
-    {
-        PText tmp;
-        tmp.createText(font, 22, sf::Color::Black, options[i], qualitySetting, 1);
-        t_options.push_back(tmp);
-    }
-
-    arrow.loadFromFile("resources/graphics/ui/dialog/arrow.png", qualitySetting, 1);
-
-    option = t_options.size()-1;
-}*/
-
 void PataDialogBox::Create(sf::Font font, sf::String text, std::vector<sf::String> options, int qualitySetting)
 {
     SPDLOG_DEBUG("Creating new PataDialogBox");
@@ -35,7 +18,7 @@ void PataDialogBox::Create(sf::Font font, sf::String text, std::vector<sf::Strin
     t_dialogType.createText(font, 16, sf::Color::Red, "Information", qualitySetting, 1);
     t_dialogText.createText(font, 30, sf::Color::Black, text, qualitySetting, 1);
 
-    for (int i = 0; i < options.size(); i++)
+    for (unsigned int i = 0; i < options.size(); i++)
     {
         PText tmp;
         tmp.createText(font, 22, sf::Color::Black, options[i], qualitySetting, 1);
@@ -52,7 +35,7 @@ void PataDialogBox::Readjust()
     width = 0;
     height = 0;
 
-    for (int i = 0; i < t_options.size(); i++)
+    for (unsigned int i = 0; i < t_options.size(); i++)
     {
         if (t_options[i].getLocalBounds().width > width)
             width = t_options[i].getLocalBounds().width;
@@ -93,11 +76,6 @@ void PataDialogBox::Close()
     closed = true;
 }
 
-void PataDialogBox::Draw(sf::RenderWindow& window, float fps, InputController& inputCtrl)
-{
-
-}
-
 void PataDialogBox::Draw()
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
@@ -119,7 +97,7 @@ void PataDialogBox::Draw()
             t_dialogType.update(window);
             t_dialogText.update(window);
 
-            for (int i = 0; i < t_options.size(); i++)
+            for (unsigned int i = 0; i < t_options.size(); i++)
             {
                 t_options[i].update(window);
             }
@@ -165,7 +143,7 @@ void PataDialogBox::Draw()
         arrow.setPosition(x - rr_main.orx + arrow_x, y - rr_main.ory + 64 + t_dialogType.getLocalBounds().height + t_dialogText.getLocalBounds().height + (option * 30));
         arrow.draw(window);
 
-        for (int i = 0; i < t_options.size(); i++)
+        for (unsigned int i = 0; i < t_options.size(); i++)
         {
             t_options[i].setOrigin(t_options[i].getLocalBounds().width / 2, 0);
             t_options[i].setPosition(x, y - rr_main.ory + 46 + t_dialogType.getLocalBounds().height + t_dialogText.getLocalBounds().height + (i * 30));

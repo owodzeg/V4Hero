@@ -8,6 +8,8 @@
 #include <fstream>
 #include <spdlog/spdlog.h>
 
+// TO-DO: REWRITE THIS!!!!!!!!! please
+
 Background::Background()
 {
 }

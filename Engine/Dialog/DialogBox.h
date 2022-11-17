@@ -21,7 +21,7 @@ public:
     std::vector<PText> t_options;
 
     sf::RectangleShape highlight;
-    int option = 0;
+    unsigned int option = 0;
 
     PSprite arrow;
 
@@ -40,7 +40,6 @@ public:
     void MoveUp();
     void MoveDown();
     void Close();
-    void Draw(sf::RenderWindow& window, float fps, InputController& inputCtrl);
     void Draw();
 };
 

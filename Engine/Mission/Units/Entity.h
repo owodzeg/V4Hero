@@ -91,6 +91,7 @@ public:
     virtual void setEntityID(int new_entityID);
     virtual int getEntityID();
     virtual bool willDrop(vector<int> item_id);
+    // TO-DO: THIS IS BAD! Make a way for the entities to reach to the global sound objects instead of passing so many arguments when they are not needed!!!
     virtual void doRhythm(std::string current_song, std::string current_drum, int combo, int realcombo, bool advanced_prefever, float beatBounce, float satisfaction);
     virtual bool doAttack();
     virtual void doMessages(sf::RenderWindow& window, float fps, InputController& inputCtrl); ///manage message clouds
