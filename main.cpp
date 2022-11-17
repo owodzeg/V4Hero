@@ -24,6 +24,20 @@ void setupPlatform() {}
 
 int main(int argc, char *argv[])
 {
+    // fetch cmdline arguments
+    if (argc > 1)
+    {
+        // we store the args in a simple vector
+        std::vector<std::string> cmd_args;
+
+        // read them from argv
+        for(int i=0; i<argc; i++)
+        cmd_args.push_back(argv[i]);
+
+        // process the args further
+        // ???
+    }
+
     // Init spdlog and set base log level
     spdlog::cfg::load_env_levels();
     spdlog::set_level(spdlog::level::trace);
