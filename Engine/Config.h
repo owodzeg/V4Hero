@@ -112,10 +112,10 @@ public:
     bool changedLang = false;
     bool se_christmas = false;
     std::string fontPath = "";
+    
     Config();
-    void LoadConfig(V4Core* core);
+    void LoadConfig();
     void ReloadLanguages();
-    V4Core* thisCore;
 
     StringRepository strRepo;
     ///I wanted to overload these two in a single function, but somehow it just doesnt want to work...

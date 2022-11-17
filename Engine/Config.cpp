@@ -32,7 +32,7 @@ Config::Config()
             conf << "# Take caution! Changing some of the settings below may cause your game to crash or work really unstable! Don't edit this file if you don't know what you're doing! #";
             conf << '\n';
 
-            for (int i = 0; i < configKeys.size(); i++)
+            for (unsigned int i = 0; i < configKeys.size(); i++)
             {
                 ///save all keys and defaults
                 conf << configKeys[i] << ":" << configDefaults[i];
@@ -49,9 +49,8 @@ Config::Config()
     SPDLOG_INFO("Config initialization finished");
 }
 
-void Config::LoadConfig(V4Core* core)
+void Config::LoadConfig()
 {
-    V4Core* thisCore = CoreManager::getInstance().getCore();
     ifstream conf("config.ini");
 
     vector<string> keysCheckList = configKeys;
@@ -77,7 +76,7 @@ void Config::LoadConfig(V4Core* core)
                     configMap[key[0]] = key[1];
                     SPDLOG_DEBUG("Loaded key '{}' with value '{}'", key[0], key[1]);
 
-                    for (int i = 0; i < keysCheckList.size(); i++)
+                    for (unsigned int i = 0; i < keysCheckList.size(); i++)
                     {
                         if (keysCheckList[i] == key[0])
                         {
@@ -104,7 +103,7 @@ void Config::LoadConfig(V4Core* core)
 
     if (conf2.is_open())
     {
-        for (int i = 0; i < keysCheckList.size(); i++)
+        for (unsigned int i = 0; i < keysCheckList.size(); i++)
         {
             if (i == 0)
                 conf2 << '\n';
@@ -131,7 +130,7 @@ void Config::SaveConfig()
 
     if (conf2.is_open())
     {
-        for (int i = 0; i < configMap.size(); i++)
+        for (unsigned int i = 0; i < configMap.size(); i++)
         {
             if (i == 0)
             {

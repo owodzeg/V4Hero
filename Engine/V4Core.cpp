@@ -35,7 +35,7 @@ V4Core::V4Core()
 
     /** Load config from config.cfg **/
     Config* config = CoreManager::getInstance().getConfig();
-    config->LoadConfig(this);
+    config->LoadConfig();
 
     /** Apply logging level from config **/
     switch (config->GetInt("logLevel")) //i can't get int to convert to a spdlog::set_level argument, so i'm making a switch
