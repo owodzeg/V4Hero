@@ -177,8 +177,10 @@ if (OS STREQUAL "Linux")
     target_link_libraries(V4Hero PRIVATE X11::X11)
 endif (OS STREQUAL "Linux")
 
-add_custom_command(
-        TARGET V4Hero POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E create_symlink ${PROJECT_SOURCE_DIR}/resources ${PROJECT_BINARY_DIR}/resources
-        DEPENDS "${PROJECT_BINARY_DIR}/resources"
-)
+if (NOT (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR))
+  add_custom_command(
+          TARGET V4Hero POST_BUILD
+          COMMAND ${CMAKE_COMMAND} -E create_symlink ${PROJECT_SOURCE_DIR}/resources ${PROJECT_BINARY_DIR}/resources
+          DEPENDS "${PROJECT_BINARY_DIR}/resources"
+  )
+endif()
