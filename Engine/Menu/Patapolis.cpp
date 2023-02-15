@@ -28,8 +28,8 @@ PatapolisMenu::PatapolisMenu()
     f_font.loadFromFile(config->fontPath);
 
     t_title.createText(f_font, 38, sf::Color::White, "", quality, 1);
-    t_title.t.setOutlineThickness(2);
-    t_title.t.setOutlineColor(sf::Color::Black);
+    t_title.setOutlineThickness(2);
+    t_title.setOutlineColor(sf::Color::Black);
 
     string vx_params = "0,24,128,238;66,24,128,238;444,184,243,202;591,184,243,202;592,255,255,255;710,171,243,214;720,171,243,214";
 
