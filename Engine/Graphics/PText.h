@@ -2,6 +2,7 @@
 #define PTEXT_H
 
 #include <SFML/Graphics.hpp>
+#include "RichText.hpp"
 
 ///Class for automatic text resizing based on the current window resolution and quality options
 
@@ -9,7 +10,8 @@ class PText
 {
 public:
     sf::Font f;
-    sf::Text t;
+    //sf::Text t; //legacy purposes
+    sfe::RichText t;
 
     sf::String txt;
 
@@ -29,7 +31,9 @@ public:
     bool rendered = false;
 
     PText();
+    std::vector<std::string> split(std::string const & s, char delim);
     void createText(sf::Font& font, float characterSize, sf::Color color, sf::String text_string, int q, int r);
+    void processRichText();
     void setOrigin(float x, float y);
     sf::Vector2f getScale();
     void setScale(float x, float y);
