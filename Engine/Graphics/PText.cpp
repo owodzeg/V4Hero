@@ -66,7 +66,7 @@ void PText::processRichText()
 
     # text behavior
     {speed 10} = sets text speed to 10 letters per sec
-    {wait 0.5} = waits for 0.5 seconds before putting next characters
+    {wait 500} = waits for 500 milliseconds before putting next characters
 
     # animations
     {wave h 4} = sets the text to be wavy, horizontally, with wave power = 4
@@ -90,6 +90,7 @@ void PText::processRichText()
 
     t = sfe::RichText(CoreManager::getInstance().getStrRepo()->font);
     t.setCharacterSize(cS);
+    t << sf::Color(255,255,255,0);
 
     std::vector<sf::String> rt_string;
 
@@ -162,6 +163,7 @@ void PText::processRichText()
     SPDLOG_DEBUG("Result text:");
 
     int currentStyle = 0;
+    int processedChars = 0;
 
     for(auto x : rt_string)
     {
@@ -185,7 +187,7 @@ void PText::processRichText()
                         int g = atoi(args[2].c_str());
                         int b = atoi(args[3].c_str());
 
-                        t << sf::Color(r,g,b,255);
+                        t << sf::Color(r,g,b,0);
                     }
                     else
                     {
@@ -218,6 +220,40 @@ void PText::processRichText()
                     currentStyle = 0;
                     t << sf::Text::Style(currentStyle);
                 }
+                else if(args[0] == "speed")
+                {
+                    if(args.size()-1 == 1)
+                    {
+                        TextSettings setting;
+                        setting.pos = processedChars;
+                        setting.speed = atoi(args[1].c_str());
+                        textSettings.push_back(setting);
+
+                        SPDLOG_DEBUG("Added text setting 'speed', pos: {}, value {}", setting.pos, setting.speed);
+                    }
+                    else
+                    {
+                        SPDLOG_ERROR("Something went wrong while processing the string. Invalid number of arguments for keyword 'speed'");
+                        return;
+                    }
+                }
+                else if(args[0] == "wait")
+                {
+                    if(args.size()-1 == 1)
+                    {
+                        TextSettings setting;
+                        setting.pos = processedChars;
+                        setting.timeout = atoi(args[1].c_str());
+                        textSettings.push_back(setting);
+
+                        SPDLOG_DEBUG("Added text setting 'wait', pos: {}, value {}", setting.pos, setting.timeout);
+                    }
+                    else
+                    {
+                        SPDLOG_ERROR("Something went wrong while processing the string. Invalid number of arguments for keyword 'wait'");
+                        return;
+                    }
+                }
                 else
                 {
                     SPDLOG_ERROR("Something went wrong while processing the string. Unknown keyword found");
@@ -234,6 +270,7 @@ void PText::processRichText()
         {
             //regular text
             t << x;
+            processedChars += x.getSize();
         }
     }
 }
@@ -444,6 +481,8 @@ void PText::draw(sf::RenderWindow& window)
     t.setPosition(lx * resRatioX, ly * resRatioY);
     t.setRotation(angle * (180 / 3.14159265358));
 
+    
+
     if (rendered)
         window.draw(t);
 
@@ -522,6 +561,58 @@ void PText::draw(sf::RenderWindow* window)
     t.setOrigin(orX, orY);
     t.setPosition(lx * resRatioX, ly * resRatioY);
     t.setRotation(angle * (180 / 3.14159265358));
+
+    for(unsigned int i=0; i<textSettings.size(); i++)
+    {
+        if(char_shown == textSettings[i].pos)
+        {
+            SPDLOG_DEBUG("Processing setting pos {} speed {} timeout {}", textSettings[i].pos, textSettings[i].speed, textSettings[i].timeout);
+
+            if(textSettings[i].speed > 0)
+            {
+                char_speed = textSettings[i].speed;
+                char_delay = 1000.f / char_speed;
+            }
+
+            if(textSettings[i].timeout > 0)
+            {
+                char_wait_period = textSettings[i].timeout;
+                char_wait.restart();
+            }
+
+            textSettings.erase(textSettings.begin() + i);
+            break;
+        }
+    }
+
+    if(char_timeout.getElapsedTime().asMilliseconds() >= char_delay && char_wait.getElapsedTime().asMilliseconds() > char_wait_period)
+    {
+        // remove timeout if any
+        char_wait_period = 0;
+
+        int char_buffer = char_shown;
+
+        for(auto i=0; i<t.getLines().size(); i++)
+        {
+            int len = t.getLines()[i].getLength();
+
+            if(char_buffer >= len)
+            {
+                char_buffer -= len;
+                continue;
+            }
+
+            SPDLOG_DEBUG("char shown {} char buffer {} len {}", char_shown, char_buffer, len);
+
+            sf::Color c = t.getCharacterColor(i, char_buffer);
+            c.a = 255;
+            t.setCharacterColor(i, char_buffer, c);
+
+            char_shown += 1;
+        }
+
+        char_timeout.restart();
+    }
 
     if (rendered)
         window->draw(t);

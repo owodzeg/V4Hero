@@ -30,6 +30,22 @@ public:
     bool wide = false;
     bool rendered = false;
 
+    sf::Clock char_timeout;
+    sf::Clock char_wait;
+    int char_shown = 0;
+    float char_speed = 20;
+    float char_delay = 50;
+    float char_wait_period = 0;
+
+    struct TextSettings
+    {
+        int pos = 0;
+        int speed = 0;
+        int timeout = 0;
+    };
+
+    std::vector<TextSettings> textSettings;
+
     PText();
     std::vector<std::string> split(std::string const & s, char delim);
     void createText(sf::Font& font, float characterSize, sf::Color color, sf::String text_string, int q, int r);
