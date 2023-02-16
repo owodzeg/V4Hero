@@ -51,16 +51,16 @@ void MessageCloud::AddDialog(sf::String text, bool nextdialog)
 {
     SPDLOG_DEBUG("MessageCloud::AddDialog()");
 
-    PText a, b;
+    PText a;
 
     a.createText(font, 28, sf::Color(32, 32, 32, 255), text, quality, 1);
-    b.createText(font, 28, sf::Color(32, 32, 32, 255), "", quality, 1);
+    //b.createText(font, 28, sf::Color(32, 32, 32, 255), "", quality, 1);
 
     ptext.push_back(a);
-    showtext.push_back(b);
+    //showtext.push_back(b);
 
     loaded_text.push_back(text);
-    viewed_text.push_back("");
+    //viewed_text.push_back("");
 
     next_dialog.push_back(nextdialog);
 
@@ -205,6 +205,8 @@ void MessageCloud::Draw()
         cloud.setScale(-1.f / scale_x, -1.f / scale_y);
         cloud.draw(window);
 
+        // This is becoming obsolete and will be handled by PText //
+        /*
         if (canwrite)
         {
             if (loaded_text[cur_dialog].getSize() != viewed_text[cur_dialog].getSize())
@@ -233,6 +235,7 @@ void MessageCloud::Draw()
                 }
             }
         }
+        */
 
         float rX = window->getSize().x / float(1280);
         float rY = window->getSize().y / float(720);
@@ -247,11 +250,11 @@ void MessageCloud::Draw()
         if (!done)
         {
 
-            showtext[cur_dialog].setPosition(x - ptext[cur_dialog].getLocalBounds().width / 2, y - 4 - ptext[cur_dialog].getLocalBounds().height / 2);
-            showtext[cur_dialog].setString(viewed_text[cur_dialog]);
-            showtext[cur_dialog].draw(window);
+            //loaded_text[cur_dialog].setPosition(x - ptext[cur_dialog].getLocalBounds().width / 2, y - 4 - ptext[cur_dialog].getLocalBounds().height / 2);
+            //showtext[cur_dialog].setString(viewed_text[cur_dialog]);
+            //loaded_text[cur_dialog].draw(window);
 
-            if (next_dialog[cur_dialog])
+            /*if (next_dialog[cur_dialog])
             {
                 if (loaded_text[cur_dialog].getSize() == viewed_text[cur_dialog].getSize())
                 {
@@ -285,7 +288,7 @@ void MessageCloud::Draw()
                     cross_highlight.draw(window);
                     cross_arrow.draw(window);
                 }
-            }
+            }*/
         }
 
         speedup = false;
