@@ -36,6 +36,9 @@ public:
     float char_speed = 20;
     float char_delay = 50;
     float char_wait_period = 0;
+    int current_line = 0;
+    int char_buffer = 0;
+    bool speech = false;
 
     struct TextSettings
     {

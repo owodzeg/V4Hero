@@ -68,14 +68,14 @@ desc_tender_meat|Patapons love this soft, luscious meat, but they can rarely eat
 desc_titanum_ore|Legend has it that this tough, lightweight ore was granted to the Patapons by none other than Almighty. It can last for ages and is a perfect equipment material for classes that require swift movements.
 desc_wooden_helmet|The traditional wooden helmet of the Patapon tribe. It is the trademark of their hunting parties, and despite it's simple design, it has saved the life of many Patapon warriors.
 desc_wooden_spear|A basic wooden spear, given to every Patapon recruit when they come of age and first join the hunting party. Treasured by many Patapons, even after they moved onto bigger and better weapons.
-firstrun_dialog_1|Welcome to the Patafour Demo!\Press Z to continue.
-firstrun_dialog_2|This is the first time you've ran the Demo,\so here's some basic information.
-firstrun_dialog_3|Patafour is a project that is actively being developed.\This is not a final product and is nowhere near completion.
-firstrun_dialog_4|This demo will show you most of the basic\core mechanics we managed to finish so far.
-firstrun_dialog_5|Patafour Team hopes you'll like\our little project!
-firstrun_dialog_6|Here are basic controls:\Z - Confirm (Cross)\X - Cancel (Circle)\Enter - Start\Space - Select
-firstrun_dialog_7|You can change these settings\in the options menu.
-firstrun_dialog_8|We recommend using a controller\for the best experience.
+firstrun_dialog_1|Welcome to the Patafour Demo!{n}Press Z to continue.
+firstrun_dialog_2|This is the first time you've ran the Demo,{n}so here's some basic information.
+firstrun_dialog_3|Patafour is a project that is actively being developed.{n}This is not a final product and is nowhere near completion.
+firstrun_dialog_4|This demo will show you most of the basic{n}core mechanics we managed to finish so far.
+firstrun_dialog_5|Patafour Team hopes you'll like{n}our little project!
+firstrun_dialog_6|Here are basic controls:{n}Z - Confirm (Cross){n}X - Cancel (Circle){n}Enter - Start{n}Space - Select
+firstrun_dialog_7|You can change these settings{n}in the options menu.
+firstrun_dialog_8|We recommend using a controller{n}for the best experience.
 firstrun_dialog_9|Have fun!
 item_banal_branch|Banal Branch
 item_chaka_drum|Chaka Drum
@@ -115,29 +115,29 @@ item_tender_meat|Tender Meat
 item_titanum_ore|Titanum Ore
 item_wooden_helmet|Wooden Helmet
 item_wooden_spear|Wooden Spear
-kirajin_ambush_1|Surprise attack!\Take position!
-kirajin_ambush_2|Defend the guard tower!\Don't let them pass!
-kirajin_ambush_3|Patapine Grove belongs to the Kirajins!\We will not let you pass!
-kirajin_ambush_4|Surprise attack!\You won't step any further!
-kirajin_ambush_5|Protect the guard tower\at all costs!
-kirajin_ambush_6|This is our chance!\Destroy them!
+kirajin_ambush_1|Surprise attack!{n}Take position!
+kirajin_ambush_2|Defend the guard tower!{n}Don't let them pass!
+kirajin_ambush_3|Patapine Grove belongs to the Kirajins!{n}We will not let you pass!
+kirajin_ambush_4|Surprise attack!{n}You won't step any further!
+kirajin_ambush_5|Protect the guard tower{n}at all costs!
+kirajin_ambush_6|This is our chance!{n}Destroy them!
 kirajin_ambush_7|Attack! They must be freezing!
 kirajin_death_1|Kill... kill...
 kirajin_death_2|Death is inevitable!
 kirajin_death_3|We will come back!
 kirajin_death_4|Kira...jin...
 kirajin_death_5|So... cold...
-kirajin_talk_1|Th... The Patapons\are here!
+kirajin_talk_1|Th... The Patapons{n}are here!
 kirajin_talk_10|We cannot lose!
 kirajin_talk_11|Protect the energy crystals!
-kirajin_talk_12|You'll pay for it!\Curse you, Patapons!
+kirajin_talk_12|You'll pay for it!{n}Curse you, Patapons!
 kirajin_talk_13|You won't get away with this!
-kirajin_talk_14|We will get our revenge\on you, Patapons!!!
+kirajin_talk_14|We will get our revenge{n}on you, Patapons!!!
 kirajin_talk_15|Freeze them to death!
 kirajin_talk_16|Let it snow... let it snow...
-kirajin_talk_2|Hehehe... Stupid Patapons...\So stupid...
-kirajin_talk_3|Ejiji Cliffs won't be\taken away from us!
-kirajin_talk_4|Don't let them get close\to our energy source!
+kirajin_talk_2|Hehehe... Stupid Patapons...{n}So stupid...
+kirajin_talk_3|Ejiji Cliffs won't be{n}taken away from us!
+kirajin_talk_4|Don't let them get close{n}to our energy source!
 kirajin_talk_5|Attack! You're dead now!
 kirajin_talk_6|This is your end!
 kirajin_talk_7|Give up! It's over!
@@ -148,15 +148,15 @@ menu_exit|Exit
 menu_invaliddata|Save data is invalid or corrupted.
 menu_newgame|New game
 menu_nodata|No available save data found.
-menu_nosupportdata|Save datas from older and development\Patafour versions are not supported.
+menu_nosupportdata|Save datas from older and development{n}Patafour versions are not supported.
 menu_options|Options
-menu_pressanykey|{color 255 255 255}{speed 10}Press {italic}{underline}{color 0 255 0}{wait 1000}any {color 0 128 128}key{regular}{color 255 255 255}{wait 1000}{speed 2} to {color 255 128 0}{strike}start
-menu_saveexists|There is an existing save data.\Do you want to overwrite it?
+menu_pressanykey|{color 255 255 255}{speed 10}Press {italic}{underline}{color 0 255 0}{wait 1000}any {color 0 128 128}key{n}{regular}{color 255 255 255}{wait 1000}{speed 2}to {color 255 128 0}{strike}start
+menu_saveexists|There is an existing save data.{n}Do you want to overwrite it?
 menu_languageselect|Select language
 menu_languagetip|Translations are here thanks to our wonderful contributors.
 menu_languagetip2|Want to help? Click here to visit the Patafour website for more information.
 menu_controlleradvice|Controller is recommended for best game experience.
-mission_backtopatapolis|Do you want to go back to Patapolis?\All materials and Ka-ching will be lost.
+mission_backtopatapolis|Do you want to go back to Patapolis?{n}All materials and Ka-ching will be lost.
 mission_complete|MISSION COMPLETE!
 mission_failed|MISSION FAILED!
 nav_agree|Agree
@@ -207,44 +207,44 @@ nav_understood|Understood
 nav_up|Up
 nav_viewmissions|View missions
 nav_yes|Yes
-newgame_intro_1|After finishing the Patapole Bridge, we\finally arrived in new lands, untouched\by the hands of the Almighty Patapon.
-newgame_intro_10|As it began to approach us, we luckily saved ourselves\with the ancient machine we had used once before,\barely escaping the despairing jaws of death.
+newgame_intro_1|After finishing the Patapole Bridge, we{n}finally arrived in new lands, untouched{n}by the hands of the Almighty Patapon.
+newgame_intro_10|As it began to approach us, we luckily saved ourselves{n}with the ancient machine we had used once before,{n}barely escaping the despairing jaws of death.
 newgame_intro_11|...
-newgame_intro_12|Almighty, I pray to you!\Please guide us to Earthend.
-newgame_intro_13|Save our world from evil\and let us finally gaze upon IT!
-newgame_intro_14|Please, take the holy drum\and let us march once more!
-newgame_intro_2|In this unfamiliar place, we discovered\the ruins of an ancient civilization,\seemingly long forgotten.
-newgame_intro_3|Desperate to find IT, we began tinkering\with the ancient mechanisms that\were found buried within the rubble.
-newgame_intro_4|With a single button press, our three Yaripons,\Hero, and myself, were sent to an bizarre\and unfamiliar location filled with nature\and wildlife, seemingly devoid of any civilization.
-newgame_intro_5|Worried about our comrades, we attempted\everything we could to return back home,\and thank the Almighty Patapon that we succeeded!
+newgame_intro_12|Almighty, I pray to you!{n}Please guide us to Earthend.
+newgame_intro_13|Save our world from evil{n}and let us finally gaze upon IT!
+newgame_intro_14|Please, take the holy drum{n}and let us march once more!
+newgame_intro_2|In this unfamiliar place, we discovered{n}the ruins of an ancient civilization,{n}seemingly long forgotten.
+newgame_intro_3|Desperate to find IT, we began tinkering{n}with the ancient mechanisms that{n}were found buried within the rubble.
+newgame_intro_4|With a single button press, our three Yaripons,{n}Hero, and myself, were sent to an bizarre{n}and unfamiliar location filled with nature{n}and wildlife, seemingly devoid of any civilization.
+newgame_intro_5|Worried about our comrades, we attempted{n}everything we could to return back home,{n}and thank the Almighty Patapon that we succeeded!
 newgame_intro_6|However...
-newgame_intro_7|Upon our return, we came back to discover\the bodies of our allies. Judging by\their wounds, their deaths were recent.
-newgame_intro_8|The sky above was dyed bloody red,\and the screams of the very few survivors\could be heard in the distance.
-newgame_intro_9|We looked up to the skies and were met with\a terrifying yet mysterious figure floating\ominously above us. It's singular eye was\filled with resentment and hatred.
-npc_sen_1|Oh Great Kami!\Lead us to Earthend.
-npc_sen_10|The Kirajins built another\fortress at Ejiji Cliffs.
-npc_sen_11|We can't let them win...!\Go and defeat them, Kami!
-npc_sen_12|You did it God! You did it!\It's over for now...
-npc_sen_13|I still can't remember where\I've seen them before...
-npc_sen_2|Oh Mighty Kami!\Lead us to Earthend.
-npc_sen_3|Oh Mighty Patapon!\Lead us to Earthend.
-npc_sen_4|There are many animals\wandering on Shida Valley.
-npc_sen_5|Rumors say countless treasures\were buried in it's grounds.
-npc_sen_6|Something attacked the Patapon\woodcutters at Patapine Grove!
-npc_sen_7|Yaripon scouts report red,\triangular creatures building\a fortress from stolen wood...
-npc_sen_8|"Kirajins"...? Is this\how they were called? 
-npc_sen_9|I think I heard this\name before...
-npc_wakapon_1|I am Wakapon! Guard of\the World Egg for Kami's order!
-npc_wakapon_10|Fantastic job, Kami! You destroyed\their fortress at Ejiji Cliffs.
-npc_wakapon_11|However, evil never rests.\Kirajins gather energy from\strange red crystals. Destroy\them to weaken their army!
-npc_wakapon_2|Welcome, Kami! I am very grateful\to speak with you in person!
-npc_wakapon_3|You can be confident in me,\I'll protect the World Egg\with my life, promise!
-npc_wakapon_4|I can feel something evil\coming to our world...
-npc_wakapon_5|Do you feel it too, Kami?\Will you protect us from\any danger we may face?
-npc_wakapon_6|These triangular creatures...\What are they? What do they\want from us Patapons?
-npc_wakapon_7|Their eyes are filled with hatred...\I'm afraid it's only the beginning.
-npc_wakapon_8|A perilous quest awaits\you and your troops, Kami.
-npc_wakapon_9|Kirajins are in possession of\technology that is not of this\world. You must remain strong.
+newgame_intro_7|Upon our return, we came back to discover{n}the bodies of our allies. Judging by{n}their wounds, their deaths were recent.
+newgame_intro_8|The sky above was dyed bloody red,{n}and the screams of the very few survivors{n}could be heard in the distance.
+newgame_intro_9|We looked up to the skies and were met with{n}a terrifying yet mysterious figure floating{n}ominously above us. It's singular eye was{n}filled with resentment and hatred.
+npc_sen_1|Oh Great Kami!{n}Lead us to Earthend.
+npc_sen_10|The Kirajins built another{n}fortress at Ejiji Cliffs.
+npc_sen_11|We can't let them win...!{n}Go and defeat them, Kami!
+npc_sen_12|You did it God! You did it!{n}It's over for now...
+npc_sen_13|I still can't remember where{n}I've seen them before...
+npc_sen_2|Oh Mighty Kami!{n}Lead us to Earthend.
+npc_sen_3|Oh Mighty Patapon!{n}Lead us to Earthend.
+npc_sen_4|There are many animals{n}wandering on Shida Valley.
+npc_sen_5|Rumors say countless treasures{n}were buried in it's grounds.
+npc_sen_6|Something attacked the Patapon{n}woodcutters at Patapine Grove!
+npc_sen_7|Yaripon scouts report red,{n}triangular creatures building{n}a fortress from stolen wood...
+npc_sen_8|"Kirajins"...? Is this{n}how they were called?
+npc_sen_9|I think I heard this{n}name before...
+npc_wakapon_1|I am Wakapon! Guard of{n}the World Egg for Kami's order!
+npc_wakapon_10|Fantastic job, Kami! You destroyed{n}their fortress at Ejiji Cliffs.
+npc_wakapon_11|However, evil never rests.{n}Kirajins gather energy from{n}strange red crystals. Destroy{n}them to weaken their army!
+npc_wakapon_2|Welcome, Kami! I am very grateful{n}to speak with you in person!
+npc_wakapon_3|You can be confident in me,{n}I'll protect the World Egg{n}with my life, promise!
+npc_wakapon_4|I can feel something evil{n}coming to our world...
+npc_wakapon_5|Do you feel it too, Kami?{n}Will you protect us from{n}any danger we may face?
+npc_wakapon_6|These triangular creatures...{n}What are they? What do they{n}want from us Patapons?
+npc_wakapon_7|Their eyes are filled with hatred...{n}I'm afraid it's only the beginning.
+npc_wakapon_8|A perilous quest awaits{n}you and your troops, Kami.
+npc_wakapon_9|Kirajins are in possession of{n}technology that is not of this{n}world. You must remain strong.
 options_assign_key|Assigned key
 options_audio|Audio settings
 options_audio1|Master volume
@@ -305,9 +305,9 @@ options_quality_ultra|Ultra
 options_restart_button1|Restart game
 options_restart_button2|Revert changes
 options_restart_notice|You need to restart your game to apply changes. Restart now?
-options_tip1|Tip: Hover the assigned key with mouse or select it with arrow keys,\then press the Cross button to change it.\Press the Triangle button to remove the assigned key.\Use the numbers on the top of the menu to switch between keybind presets.
-options_tip2|Tip: Press any key to return to the options menu.\New keybinds will be saved after you exit options menu.
-options_tip3|Tip: Press the Start button on your keyboard to continue.\Press the Circle button to exit controller setup.
+options_tip1|Tip: Hover the assigned key with mouse or select it with arrow keys,{n}then press the Cross button to change it.{n}Press the Triangle button to remove the assigned key.{n}Use the numbers on the top of the menu to switch between keybind presets.
+options_tip2|Tip: Press any key to return to the options menu.{n}New keybinds will be saved after you exit options menu.
+options_tip3|Tip: Press the Start button on your keyboard to continue.{n}Press the Circle button to exit controller setup.
 options_unlimited|(unlimited)
 options_volume|Volume:
 options_volume1|Master volume: 
@@ -333,8 +333,8 @@ patapolis_egg|World Egg
 patapolis_festival|Festival Square
 patapolis_obelisk|Obelisk
 patapolis_paraget|Paraget
-patapolis_returntomain|Do you want to return\to the Title screen?
-patapolis_returntomainsave|Unsaved data will be lost.\Are you sure?
+patapolis_returntomain|Do you want to return{n}to the Title screen?
+patapolis_returntomainsave|Unsaved data will be lost.{n}Are you sure?
 patapolis_save|Do you want to save your game?
 patapolis_saved|Game has been saved.
 patapolis_sen|Sen Ranpurupon
@@ -343,21 +343,21 @@ patapolis_tree|Mater, Tree of Life
 patapolis_wakapon|Wakapon, the Guardian
 rarepon_normal|Normal
 rarepon_normal_desc|A normal warrior from the Patapon tribe. They are renowned for their stoicism and bravery. While these Patapons may be small, with the right mindset, they can do anything!
-tip1_desc|Hunting Kacheeks on Shida Valley\is an ancient Patapon tradition.\\These slow beasts have fed the tribe\for generations, and joining a hunting party\is many a Patapon's first experience of\wielding a spear. \\Though their sense of smell is not as good\as the flighty Mochichis, it is still worth\waiting for a headwind before approaching,\so they can't smell the Patapons coming.
+tip1_desc|Hunting Kacheeks on Shida Valley{n}is an ancient Patapon tradition.{n}{n}These slow beasts have fed the tribe{n}for generations, and joining a hunting party{n}is many a Patapon's first experience of{n}wielding a spear. {n}{n}Though their sense of smell is not as good{n}as the flighty Mochichis, it is still worth{n}waiting for a headwind before approaching,{n}so they can't smell the Patapons coming.
 tip1_title|Hunting Kacheeks
-tip2_desc|Get meat from hunting! \\Hunt prey so the Patapon tribe can eat. \Whatever is going on in the world,\Patapons need to have meat\to fill their bellies!\\If you have led the Patapons well, they might\leave some meat as an offering at the Altar!\\Kacheeks give you Leather Meat.\Mochichis give you Tender Meat.\\After you return from hunting,\make sure to check the Altar!
+tip2_desc|Get meat from hunting! {n}{n}Hunt prey so the Patapon tribe can eat. {n}Whatever is going on in the world,{n}Patapons need to have meat{n}to fill their bellies!{n}{n}If you have led the Patapons well, they might{n}leave some meat as an offering at the Altar!{n}{n}Kacheeks give you Leather Meat.{n}Mochichis give you Tender Meat.{n}{n}After you return from hunting,{n}make sure to check the Altar!
 tip2_title|Rewards from Hunting
-tip3_desc|Patapine Grove is well known for the ability\to easily get lost in there.\\The enormous trees are a perfect material\for strong buildings, due to their \incredible durability.\\Many Patapon woodcutters spend\their entire lives on collecting wood,\and new trees are growing there every day.
+tip3_desc|Patapine Grove is well known for the ability{n}to easily get lost in there.{n}{n}The enormous trees are a perfect material{n}for strong buildings, due to their {n}incredible durability.{n}{n}Many Patapon woodcutters spend{n}their entire lives on collecting wood,{n}and new trees are growing there every day.
 tip3_title|Sturdy Wood of Patapine Grove
-tip4_desc|Getting perfect commands is the key\for the greatest performance.\\Once you hit all 4 drums perfectly,\you will hear a "shwing" sound.\\Many benefits come from perfect commands!\Patapons can walk faster and deal more damage.\\It's a useful skill to learn!
+tip4_desc|Getting perfect commands is the key{n}for the greatest performance.{n}{n}Once you hit all 4 drums perfectly,{n}you will hear a "shwing" sound.{n}{n}Many benefits come from perfect commands!{n}Patapons can walk faster and deal more damage.{n}{n}It's a useful skill to learn!
 tip4_title|Perfect Commands
-tip5_desc|PON PON CHAKA CHAKA charges up your units.\\You can use this command for your advantage!\\Deal more than twice damage\when attacking!\\Greatly reduce taken damage\when defending!\\Some classes have special behavior when charged.
+tip5_desc|PON PON CHAKA CHAKA charges up your units.{n}{n}You can use this command for your advantage!{n}{n}Deal more than twice damage{n}when attacking!{n}{n}Greatly reduce taken damage{n}when defending!{n}{n}Some classes have special behavior when charged.
 tip5_title|Remember to Charge!
-tip6_desc|Wakapon is the guardian of the World Egg \that shines in the center of Patapole Bridge.\\The World Egg brings peace to Patapon's world.\\Legends say that breaking it\would free all evil out of the Underworld.\\The Wakapon promised Kami to protect the World Egg\at all costs, guarding it with his life.
+tip6_desc|Wakapon is the guardian of the World Egg {n}that shines in the center of Patapole Bridge.{n}{n}The World Egg brings peace to Patapon's world.{n}{n}Legends say that breaking it{n}would free all evil out of the Underworld.{n}{n}The Wakapon promised Kami to protect the World Egg{n}at all costs, guarding it with his life.
 tip6_title|Wakapon and the World Egg
-tip7_desc|Sen is a priestess of the Ancient Patapon age.\\She is a direct link between Patapons and Kami,\and lived through many generations of Patapon tribe.\\Ranpurupon is very caring for every Patapon,\raising and teaching Patapon children.\\She will do anything to help the tribe grow.
+tip7_desc|Sen is a priestess of the Ancient Patapon age.{n}{n}She is a direct link between Patapons and Kami,{n}and lived through many generations of Patapon tribe.{n}{n}Ranpurupon is very caring for every Patapon,{n}raising and teaching Patapon children.{n}{n}She will do anything to help the tribe grow.
 tip7_title|Sen Ranpurupon in Ancient Patapolis
-tip8_desc|Did you know that Patapons also celebrate Christmas?\\For the christmas period, Patapons decorate\the Patapolis with many colorful ornaments.\\Little Patapons wait for Santapon,\who gives them what they wished for.\\Usually they get their first weapons to start\fighting for Almighty, to reach the Earthend!
+tip8_desc|Did you know that Patapons also celebrate Christmas?{n}{n}For the christmas period, Patapons decorate{n}the Patapolis with many colorful ornaments.{n}{n}Little Patapons wait for Santapon,{n}who gives them what they wished for.{n}{n}Usually they get their first weapons to start{n}fighting for Almighty, to reach the Earthend!
 tip8_title|Christmas in Patapolis
 tips_anykey|Press any key to continue
 tips_loading|Now loading

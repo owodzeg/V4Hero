@@ -81,6 +81,7 @@ void PText::processRichText()
     {font Name.ttf} = will try to load Name.ttf from game resources/or mod resources and change the font of the text to it
     {fadein} = text will start at opacity 0 and will
     {size 16} = sets text size to 16. single-use due to RichText limitations (possibly will be expanded in future)
+    {speech} = makes the text appear letter by letter, use if you dont want the text to appear instantly.
 
     # notes
     all letters will have their respective clock, aka their timeout
@@ -90,7 +91,7 @@ void PText::processRichText()
 
     t = sfe::RichText(CoreManager::getInstance().getStrRepo()->font);
     t.setCharacterSize(cS);
-    t << sf::Color(255,255,255,0);
+    t << sf::Color(0,0,0,0);
 
     std::vector<sf::String> rt_string;
 
@@ -178,8 +179,16 @@ void PText::processRichText()
             if(args.size() > 0)
             {
                 SPDLOG_DEBUG("Found keyword {}, {} arguments", args[0], args.size()-1);
-
-                if(args[0] == "color")
+                
+                if(args[0] == "n")
+                {
+                    t << "\n";
+                }
+                else if(args[0] == "speech")
+                {
+                    speech = true;
+                }
+                else if(args[0] == "color")
                 {
                     if(args.size()-1 == 3)
                     {
@@ -256,13 +265,13 @@ void PText::processRichText()
                 }
                 else
                 {
-                    SPDLOG_ERROR("Something went wrong while processing the string. Unknown keyword found");
+                    SPDLOG_ERROR("Something went wrong while processing the string. Unknown keyword found: {}", args[0]);
                     return;
                 }
             }
             else
             {
-                SPDLOG_ERROR("Something went wrong while processing the string. Invalid keyword found.");
+                SPDLOG_ERROR("Something went wrong while processing the string. Invalid keyword found: {}", std::string(keyword));
                 return;
             }
         }
@@ -271,6 +280,23 @@ void PText::processRichText()
             //regular text
             t << x;
             processedChars += x.getSize();
+        }
+    }
+
+    if(!speech)
+    {
+        int lines = t.getLines().size();
+
+        for(int x=0; x<lines; x++)
+        {
+            int len = t.getLines()[x].getLength();
+            
+            for(int y=0; y<len; y++)
+            {
+                sf::Color c = t.getCharacterColor(x, y);
+                c.a = 255;
+                t.setCharacterColor(x, y, c);
+            }
         }
     }
 }
@@ -562,56 +588,66 @@ void PText::draw(sf::RenderWindow* window)
     t.setPosition(lx * resRatioX, ly * resRatioY);
     t.setRotation(angle * (180 / 3.14159265358));
 
-    for(unsigned int i=0; i<textSettings.size(); i++)
+    if(speech)
     {
-        if(char_shown == textSettings[i].pos)
+        for(unsigned int i=0; i<textSettings.size(); i++)
         {
-            SPDLOG_DEBUG("Processing setting pos {} speed {} timeout {}", textSettings[i].pos, textSettings[i].speed, textSettings[i].timeout);
-
-            if(textSettings[i].speed > 0)
+            if(char_shown == textSettings[i].pos)
             {
-                char_speed = textSettings[i].speed;
-                char_delay = 1000.f / char_speed;
+                SPDLOG_DEBUG("Processing setting pos {} speed {} timeout {}", textSettings[i].pos, textSettings[i].speed, textSettings[i].timeout);
+
+                if(textSettings[i].speed > 0)
+                {
+                    char_speed = textSettings[i].speed;
+                    char_delay = 1000.f / char_speed;
+                }
+
+                if(textSettings[i].timeout > 0)
+                {
+                    char_wait_period = textSettings[i].timeout;
+                    char_wait.restart();
+                }
+
+                textSettings.erase(textSettings.begin() + i);
+                break;
             }
-
-            if(textSettings[i].timeout > 0)
-            {
-                char_wait_period = textSettings[i].timeout;
-                char_wait.restart();
-            }
-
-            textSettings.erase(textSettings.begin() + i);
-            break;
-        }
-    }
-
-    if(char_timeout.getElapsedTime().asMilliseconds() >= char_delay && char_wait.getElapsedTime().asMilliseconds() > char_wait_period)
-    {
-        // remove timeout if any
-        char_wait_period = 0;
-
-        int char_buffer = char_shown;
-
-        for(auto i=0; i<t.getLines().size(); i++)
-        {
-            int len = t.getLines()[i].getLength();
-
-            if(char_buffer >= len)
-            {
-                char_buffer -= len;
-                continue;
-            }
-
-            SPDLOG_DEBUG("char shown {} char buffer {} len {}", char_shown, char_buffer, len);
-
-            sf::Color c = t.getCharacterColor(i, char_buffer);
-            c.a = 255;
-            t.setCharacterColor(i, char_buffer, c);
-
-            char_shown += 1;
         }
 
-        char_timeout.restart();
+        if(char_timeout.getElapsedTime().asMilliseconds() >= char_delay && char_wait.getElapsedTime().asMilliseconds() > char_wait_period)
+        {
+            // remove timeout if any
+            char_wait_period = 0;
+            int all_lines = t.getLines().size();
+
+            if(current_line != all_lines)
+                SPDLOG_TRACE("current_line: {}, all_lines: {}", current_line, all_lines);
+
+            if(current_line < all_lines)
+            {
+                int len = t.getLines()[current_line].getLength();
+                SPDLOG_TRACE("line length: {}, char_buffer: {}", len, char_buffer);
+
+                if(char_buffer >= len)
+                {
+                    SPDLOG_TRACE("Advance to the next line");
+                    char_buffer -= len;
+                    current_line += 1;
+                }
+                else
+                {
+                    SPDLOG_TRACE("char shown {} char buffer {} len {}", char_shown, char_buffer, len);
+
+                    sf::Color c = t.getCharacterColor(current_line, char_buffer);
+                    c.a = 255;
+                    t.setCharacterColor(current_line, char_buffer, c);
+
+                    char_buffer += 1;
+                    char_shown += 1;
+                }
+            }
+
+            char_timeout.restart();
+        }
     }
 
     if (rendered)
