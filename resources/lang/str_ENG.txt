@@ -150,7 +150,7 @@ menu_newgame|New game
 menu_nodata|No available save data found.
 menu_nosupportdata|Save datas from older and development{n}Patafour versions are not supported.
 menu_options|Options
-menu_pressanykey|{color 255 255 255}{speed 10}Press {italic}{underline}{color 0 255 0}{wait 1000}any {color 0 128 128}key{n}{regular}{color 255 255 255}{wait 1000}{speed 2}to {color 255 128 0}{strike}start
+menu_pressanykey|{color 255 255 255}Press any key to start
 menu_saveexists|There is an existing save data.{n}Do you want to overwrite it?
 menu_languageselect|Select language
 menu_languagetip|Translations are here thanks to our wonderful contributors.

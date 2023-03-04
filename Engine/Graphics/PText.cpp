@@ -56,7 +56,7 @@ void PText::processRichText()
     Patafour's Rich Text implementation for better dialogues:
 
     # text style
-    {outline 2 black} = sets text outline to black, 2 pixel thick
+    {outline 2 0-255 0-255 0-255} = sets text outline to 2 pixel thick, r g b color
     {color 0-255 0-255 0-255} = changes color to r g b values
     {regular} = disables bold/italic/underlined/striked
     {bold} = sets text to be bold
@@ -168,6 +168,8 @@ void PText::processRichText()
 
     for(auto x : rt_string)
     {
+        SPDLOG_DEBUG("RichText buffer: {}", std::string(x));
+
         if(x.find("{") != sf::String::InvalidPos)
         {
             //keyword
@@ -201,6 +203,27 @@ void PText::processRichText()
                     else
                     {
                         SPDLOG_ERROR("Something went wrong while processing the string. Invalid number of arguments for keyword 'color'");
+                        return;
+                    }
+                }
+                else if(args[0] == "outline")
+                {
+                    if(args.size()-1 == 4)
+                    {
+                        int th = atoi(args[1].c_str());
+                        int r = atoi(args[2].c_str());
+                        int g = atoi(args[3].c_str());
+                        int b = atoi(args[4].c_str());
+
+                        sfe::Outline outline;
+                        outline.outline = sf::Color(r,g,b,255);
+                        outline.thickness = th;
+
+                        t << outline;
+                    }
+                    else
+                    {
+                        SPDLOG_ERROR("Something went wrong while processing the string. Invalid number of arguments for keyword 'outline'");
                         return;
                     }
                 }
@@ -280,6 +303,7 @@ void PText::processRichText()
             //regular text
             t << x;
             processedChars += x.getSize();
+            SPDLOG_DEBUG("Added text: {}", std::string(x));
         }
     }
 
