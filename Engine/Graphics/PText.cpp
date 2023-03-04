@@ -269,6 +269,21 @@ void PText::processRichText()
                         return;
                     }
                 }
+                else if(args[0] == "fadein")
+                {
+                    if(args.size()-1 == 1)
+                    {
+                        fadein_length = atoi(args[1].c_str());
+                        fadein = true;
+
+                        SPDLOG_DEBUG("Added text setting 'fadein', length {}ms", fadein_length);
+                    }
+                    else
+                    {
+                        SPDLOG_ERROR("Something went wrong while processing the string. Invalid number of arguments for keyword 'fadein'");
+                        return;
+                    }
+                }
                 else if(args[0] == "wait")
                 {
                     if(args.size()-1 == 1)
@@ -307,7 +322,7 @@ void PText::processRichText()
         }
     }
 
-    if(!speech)
+    if(!speech && !fadein)
     {
         int lines = t.getLines().size();
 
@@ -611,6 +626,36 @@ void PText::draw(sf::RenderWindow* window)
     t.setOrigin(orX, orY);
     t.setPosition(lx * resRatioX, ly * resRatioY);
     t.setRotation(angle * (180 / 3.14159265358));
+
+    if(fadein)
+    {
+        fadein = false;
+        fadein_clock.restart();
+    }
+
+    if(fadein_clock.getElapsedTime().asMilliseconds() < fadein_length)
+    {
+        int lines = t.getLines().size();
+        float alpha = float(fadein_clock.getElapsedTime().asMilliseconds()) / float(fadein_length) * 255.f;
+        
+        if(alpha < 0)
+        alpha = 0;
+
+        if(alpha >= 255)
+        alpha = 255;
+
+        for(int x=0; x<lines; x++)
+        {
+            int len = t.getLines()[x].getLength();
+            
+            for(int y=0; y<len; y++)
+            {
+                sf::Color c = t.getCharacterColor(x, y);
+                c.a = alpha;
+                t.setCharacterColor(x, y, c);
+            }
+        }
+    }
 
     if(speech)
     {

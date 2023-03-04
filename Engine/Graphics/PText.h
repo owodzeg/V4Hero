@@ -39,6 +39,9 @@ public:
     int current_line = 0;
     int char_buffer = 0;
     bool speech = false;
+    bool fadein = false;
+    float fadein_length = 0;
+    sf::Clock fadein_clock;
 
     struct TextSettings
     {
