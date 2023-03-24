@@ -367,11 +367,17 @@ PatapolisMenu::PatapolisMenu()
 
 void PatapolisMenu::updateStoryPoint()
 {
-    SPDLOG_TRACE("Updating story point");
+    //SPDLOG_TRACE("Updating story point");
     SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
 
+    // what the hell happened here?
+    // story_point needs to be updated manually after mission passes,
+    // it is not the amount of unlocked missions, it can be a variable number
+    // that currently points to a specific branch of the story
+    // TO-DO: make up my mind about this /owocek
+
     // While currently just doing
-    //v4Core->saveReader.story_point = *std::max_element(v4Core->saveReader.missions_unlocked.begin(), v4Core->saveReader.missions_unlocked.end());
+    saveReader->story_point = *std::max_element(saveReader->missions_unlocked.begin(), saveReader->missions_unlocked.end());
     // would suffice, we do this in case at some point we want a story point to change without unlocking a mission
     // for example, after a mission you're supposed to fail
     int last_mission = *std::max_element(saveReader->missions_unlocked.begin(), saveReader->missions_unlocked.end());
@@ -652,6 +658,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
                 case 0:
                 default: {
                     // Start of game, shouldn't be accessible
+                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("dialogue_error"))+"story_point is either 0 or above currently regulated bounds", true);
                     break;
                 }
                 case 1: {
@@ -1462,11 +1469,6 @@ void PatapolisMenu::Update()
                         }
                     }
 
-                    if ((messageclouds[i].done) && (floor(messageclouds[i].xsize) == 0) && (floor(messageclouds[i].ysize) == 0))
-                    {
-                        messageclouds[i].Hide();
-                    }
-
                     messageclouds[i].Draw();
 
                     if ((!messageclouds[i].active) && (messageclouds[i].done))
@@ -1476,6 +1478,7 @@ void PatapolisMenu::Update()
 
             for (int i = 0; i < m_rm.size(); i++)
             {
+                SPDLOG_DEBUG("Erasing MessageCloud id {}", m_rm[i]);
                 messageclouds.erase(messageclouds.begin() + m_rm[i] - i);
             }
         }
