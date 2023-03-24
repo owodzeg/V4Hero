@@ -207,44 +207,45 @@ nav_understood|Understood
 nav_up|Up
 nav_viewmissions|View missions
 nav_yes|Yes
-newgame_intro_1|After finishing the Patapole Bridge, we{n}finally arrived in new lands, untouched{n}by the hands of the Almighty Patapon.
-newgame_intro_10|As it began to approach us, we luckily saved ourselves{n}with the ancient machine we had used once before,{n}barely escaping the despairing jaws of death.
-newgame_intro_11|...
-newgame_intro_12|Almighty, I pray to you!{n}Please guide us to Earthend.
-newgame_intro_13|Save our world from evil{n}and let us finally gaze upon IT!
-newgame_intro_14|Please, take the holy drum{n}and let us march once more!
-newgame_intro_2|In this unfamiliar place, we discovered{n}the ruins of an ancient civilization,{n}seemingly long forgotten.
-newgame_intro_3|Desperate to find IT, we began tinkering{n}with the ancient mechanisms that{n}were found buried within the rubble.
-newgame_intro_4|With a single button press, our three Yaripons,{n}Hero, and myself, were sent to an bizarre{n}and unfamiliar location filled with nature{n}and wildlife, seemingly devoid of any civilization.
-newgame_intro_5|Worried about our comrades, we attempted{n}everything we could to return back home,{n}and thank the Almighty Patapon that we succeeded!
-newgame_intro_6|However...
-newgame_intro_7|Upon our return, we came back to discover{n}the bodies of our allies. Judging by{n}their wounds, their deaths were recent.
-newgame_intro_8|The sky above was dyed bloody red,{n}and the screams of the very few survivors{n}could be heard in the distance.
-newgame_intro_9|We looked up to the skies and were met with{n}a terrifying yet mysterious figure floating{n}ominously above us. It's singular eye was{n}filled with resentment and hatred.
+newgame_intro_1|{speech}After finishing the Patapole Bridge, we{n}finally arrived in new lands, untouched{n}by the hands of the Almighty Patapon.
+newgame_intro_10|{speech}As it began to approach us, we luckily saved ourselves{n}with the ancient machine we had used once before,{n}barely escaping the despairing jaws of death.
+newgame_intro_11|{speech}...
+newgame_intro_12|{speech}Almighty, I pray to you!{n}Please guide us to Earthend.
+newgame_intro_13|{speech}Save our world from evil{n}and let us finally gaze upon IT!
+newgame_intro_14|{speech}Please, take the holy drum{n}and let us march once more!
+newgame_intro_2|{speech}In this unfamiliar place, we discovered{n}the ruins of an ancient civilization,{n}seemingly long forgotten.
+newgame_intro_3|{speech}Desperate to find IT, we began tinkering{n}with the ancient mechanisms that{n}were found buried within the rubble.
+newgame_intro_4|{speech}With a single button press, our three Yaripons,{n}Hero, and myself, were sent to an bizarre{n}and unfamiliar location filled with nature{n}and wildlife, seemingly devoid of any civilization.
+newgame_intro_5|{speech}Worried about our comrades, we attempted{n}everything we could to return back home,{n}and thank the Almighty Patapon that we succeeded!
+newgame_intro_6|{speech}However...
+newgame_intro_7|{speech}Upon our return, we came back to discover{n}the bodies of our allies. Judging by{n}their wounds, their deaths were recent.
+newgame_intro_8|{speech}The sky above was dyed bloody red,{n}and the screams of the very few survivors{n}could be heard in the distance.
+newgame_intro_9|{speech}We looked up to the skies and were met with{n}a terrifying yet mysterious figure floating{n}ominously above us. It's singular eye was{n}filled with resentment and hatred.
+dialogue_error|{color 255 0 0}You should not be here!{n}This is a bad, bad, really bad error!{n}Additional information:{n}
 npc_sen_1|Oh Great Kami!{n}Lead us to Earthend.
-npc_sen_10|The Kirajins built another{n}fortress at Ejiji Cliffs.
-npc_sen_11|We can't let them win...!{n}Go and defeat them, Kami!
-npc_sen_12|You did it God! You did it!{n}It's over for now...
-npc_sen_13|I still can't remember where{n}I've seen them before...
+npc_sen_10|{speech}The Kirajins built another{n}fortress at Ejiji Cliffs.
+npc_sen_11|{speech}{goback}We can't let them win...!{n}Go and defeat them, Kami!
+npc_sen_12|{speech}You did it God! You did it!{n}It's over for now...
+npc_sen_13|{speech}{goback}I still can't remember where{n}I've seen them before...
 npc_sen_2|Oh Mighty Kami!{n}Lead us to Earthend.
 npc_sen_3|Oh Mighty Patapon!{n}Lead us to Earthend.
-npc_sen_4|There are many animals{n}wandering on Shida Valley.
-npc_sen_5|Rumors say countless treasures{n}were buried in it's grounds.
-npc_sen_6|Something attacked the Patapon{n}woodcutters at Patapine Grove!
-npc_sen_7|Yaripon scouts report red,{n}triangular creatures building{n}a fortress from stolen wood...
-npc_sen_8|"Kirajins"...? Is this{n}how they were called?
-npc_sen_9|I think I heard this{n}name before...
+npc_sen_4|{speech}There are many animals{n}wandering on Shida Valley.
+npc_sen_5|{speech}{goback}Rumors say countless treasures{n}were buried in it's grounds.
+npc_sen_6|{speech}Something attacked the Patapon{n}woodcutters at Patapine Grove!
+npc_sen_7|{speech}{goback}Yaripon scouts report red,{n}triangular creatures building{n}a fortress from stolen wood...
+npc_sen_8|{speech}"Kirajins"...? Is this{n}how they were called?
+npc_sen_9|{speech}{goback}I think I heard this{n}name before...
 npc_wakapon_1|I am Wakapon! Guard of{n}the World Egg for Kami's order!
-npc_wakapon_10|Fantastic job, Kami! You destroyed{n}their fortress at Ejiji Cliffs.
-npc_wakapon_11|However, evil never rests.{n}Kirajins gather energy from{n}strange red crystals. Destroy{n}them to weaken their army!
-npc_wakapon_2|Welcome, Kami! I am very grateful{n}to speak with you in person!
-npc_wakapon_3|You can be confident in me,{n}I'll protect the World Egg{n}with my life, promise!
-npc_wakapon_4|I can feel something evil{n}coming to our world...
-npc_wakapon_5|Do you feel it too, Kami?{n}Will you protect us from{n}any danger we may face?
-npc_wakapon_6|These triangular creatures...{n}What are they? What do they{n}want from us Patapons?
-npc_wakapon_7|Their eyes are filled with hatred...{n}I'm afraid it's only the beginning.
-npc_wakapon_8|A perilous quest awaits{n}you and your troops, Kami.
-npc_wakapon_9|Kirajins are in possession of{n}technology that is not of this{n}world. You must remain strong.
+npc_wakapon_10|{speech}Fantastic job, Kami! You destroyed{n}their fortress at Ejiji Cliffs.
+npc_wakapon_11|{speech}{goback}However, evil never rests.{n}Kirajins gather energy from{n}strange red crystals. Destroy{n}them to weaken their army!
+npc_wakapon_2|{speech}Welcome, Kami! I am very grateful{n}to speak with you in person!
+npc_wakapon_3|{speech}{goback}You can be confident in me,{n}I'll protect the World Egg{n}with my life, promise!
+npc_wakapon_4|{speech}I can feel something evil{n}coming to our world...
+npc_wakapon_5|{speech}{goback}Do you feel it too, Kami?{n}Will you protect us from{n}any danger we may face?
+npc_wakapon_6|{speech}These triangular creatures...{n}What are they? What do they{n}want from us Patapons?
+npc_wakapon_7|{speech}{goback}Their eyes are filled with hatred...{n}I'm afraid it's only the beginning.
+npc_wakapon_8|{speech}A perilous quest awaits{n}you and your troops, Kami.
+npc_wakapon_9|{speech}{goback}Kirajins are in possession of{n}technology that is not of this{n}world. You must remain strong.
 options_assign_key|Assigned key
 options_audio|Audio settings
 options_audio1|Master volume
