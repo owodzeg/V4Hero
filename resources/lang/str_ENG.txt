@@ -143,13 +143,13 @@ kirajin_talk_6|This is your end!
 kirajin_talk_7|Give up! It's over!
 kirajin_talk_8|We hate Patapons!
 kirajin_talk_9|Now, attack!
-menu_continue|Continue
-menu_exit|Exit
+menu_continue|{color 255 255 255}Continue
+menu_exit|{color 255 255 255}Exit
 menu_invaliddata|Save data is invalid or corrupted.
-menu_newgame|New game
+menu_newgame|{color 255 255 255}New game
 menu_nodata|No available save data found.
 menu_nosupportdata|Save datas from older and development{n}Patafour versions are not supported.
-menu_options|Options
+menu_options|{color 255 255 255}Options
 menu_pressanykey|{fadein 1000}{color 255 255 255}Press any key to start
 menu_saveexists|There is an existing save data.{n}Do you want to overwrite it?
 menu_languageselect|Select language
@@ -322,45 +322,45 @@ outro_cutscene_6|Learn the Ancient Arts from the very first of the Patapon Tribe
 outro_cutscene_7|The other tribes will need you, Almighty...
 outro_cutscene_8|Save the world in the full version of Patafour!
 outro_end|Thank you for playing!
-patapolis|Patapolis
-patapolis_altar|Altar
-patapolis_barracks|Barracks
-patapolis_blacksmith|Blacksmith
+patapolis|{outline 2 0 0 0}{color 255 255 255}Patapolis
+patapolis_altar|{outline 2 0 0 0}{color 255 255 255}Altar
+patapolis_barracks|{outline 2 0 0 0}{color 255 255 255}Barracks
+patapolis_blacksmith|{outline 2 0 0 0}{color 255 255 255}Blacksmith
 patapolis_demofinish|Congratulations, you finished the demo!
 patapolis_demo_pick1|Watch credits
 patapolis_demo_pick2|Cancel
-patapolis_egg|World Egg
-patapolis_festival|Festival Square
-patapolis_obelisk|Obelisk
-patapolis_paraget|Paraget
+patapolis_egg|{outline 2 0 0 0}{color 255 255 255}World Egg
+patapolis_festival|{outline 2 0 0 0}{color 255 255 255}Festival Square
+patapolis_obelisk|{outline 2 0 0 0}{color 255 255 255}Obelisk
+patapolis_paraget|{outline 2 0 0 0}{color 255 255 255}Paraget
 patapolis_returntomain|Do you want to return{n}to the Title screen?
 patapolis_returntomainsave|Unsaved data will be lost.{n}Are you sure?
 patapolis_save|Do you want to save your game?
 patapolis_saved|Game has been saved.
-patapolis_sen|Sen Ranpurupon
-patapolis_trader|Marketplace
-patapolis_tree|Mater, Tree of Life
-patapolis_wakapon|Wakapon, the Guardian
+patapolis_sen|{outline 2 0 0 0}{color 255 255 255}Sen Ranpurupon
+patapolis_trader|{outline 2 0 0 0}{color 255 255 255}Marketplace
+patapolis_tree|{outline 2 0 0 0}{color 255 255 255}Mater, Tree of Life
+patapolis_wakapon|{outline 2 0 0 0}{color 255 255 255}Wakapon, the Guardian
 rarepon_normal|Normal
 rarepon_normal_desc|A normal warrior from the Patapon tribe. They are renowned for their stoicism and bravery. While these Patapons may be small, with the right mindset, they can do anything!
-tip1_desc|Hunting Kacheeks on Shida Valley{n}is an ancient Patapon tradition.{n}{n}These slow beasts have fed the tribe{n}for generations, and joining a hunting party{n}is many a Patapon's first experience of{n}wielding a spear. {n}{n}Though their sense of smell is not as good{n}as the flighty Mochichis, it is still worth{n}waiting for a headwind before approaching,{n}so they can't smell the Patapons coming.
-tip1_title|Hunting Kacheeks
-tip2_desc|Get meat from hunting! {n}{n}Hunt prey so the Patapon tribe can eat. {n}Whatever is going on in the world,{n}Patapons need to have meat{n}to fill their bellies!{n}{n}If you have led the Patapons well, they might{n}leave some meat as an offering at the Altar!{n}{n}Kacheeks give you Leather Meat.{n}Mochichis give you Tender Meat.{n}{n}After you return from hunting,{n}make sure to check the Altar!
-tip2_title|Rewards from Hunting
-tip3_desc|Patapine Grove is well known for the ability{n}to easily get lost in there.{n}{n}The enormous trees are a perfect material{n}for strong buildings, due to their {n}incredible durability.{n}{n}Many Patapon woodcutters spend{n}their entire lives on collecting wood,{n}and new trees are growing there every day.
-tip3_title|Sturdy Wood of Patapine Grove
-tip4_desc|Getting perfect commands is the key{n}for the greatest performance.{n}{n}Once you hit all 4 drums perfectly,{n}you will hear a "shwing" sound.{n}{n}Many benefits come from perfect commands!{n}Patapons can walk faster and deal more damage.{n}{n}It's a useful skill to learn!
-tip4_title|Perfect Commands
-tip5_desc|PON PON CHAKA CHAKA charges up your units.{n}{n}You can use this command for your advantage!{n}{n}Deal more than twice damage{n}when attacking!{n}{n}Greatly reduce taken damage{n}when defending!{n}{n}Some classes have special behavior when charged.
-tip5_title|Remember to Charge!
-tip6_desc|Wakapon is the guardian of the World Egg {n}that shines in the center of Patapole Bridge.{n}{n}The World Egg brings peace to Patapon's world.{n}{n}Legends say that breaking it{n}would free all evil out of the Underworld.{n}{n}The Wakapon promised Kami to protect the World Egg{n}at all costs, guarding it with his life.
-tip6_title|Wakapon and the World Egg
-tip7_desc|Sen is a priestess of the Ancient Patapon age.{n}{n}She is a direct link between Patapons and Kami,{n}and lived through many generations of Patapon tribe.{n}{n}Ranpurupon is very caring for every Patapon,{n}raising and teaching Patapon children.{n}{n}She will do anything to help the tribe grow.
-tip7_title|Sen Ranpurupon in Ancient Patapolis
-tip8_desc|Did you know that Patapons also celebrate Christmas?{n}{n}For the christmas period, Patapons decorate{n}the Patapolis with many colorful ornaments.{n}{n}Little Patapons wait for Santapon,{n}who gives them what they wished for.{n}{n}Usually they get their first weapons to start{n}fighting for Almighty, to reach the Earthend!
-tip8_title|Christmas in Patapolis
-tips_anykey|Press any key to continue
-tips_loading|Now loading
+tip1_desc|{color 255 255 255}Hunting Kacheeks on Shida Valley{n}is an ancient Patapon tradition.{n}{n}These slow beasts have fed the tribe{n}for generations, and joining a hunting party{n}is many a Patapon's first experience of{n}wielding a spear. {n}{n}Though their sense of smell is not as good{n}as the flighty Mochichis, it is still worth{n}waiting for a headwind before approaching,{n}so they can't smell the Patapons coming.
+tip1_title|{outline 2 0 0 0}{color 255 255 255}Hunting Kacheeks
+tip2_desc|{color 255 255 255}Get meat from hunting! {n}{n}Hunt prey so the Patapon tribe can eat. {n}Whatever is going on in the world,{n}Patapons need to have meat{n}to fill their bellies!{n}{n}If you have led the Patapons well, they might{n}leave some meat as an offering at the Altar!{n}{n}Kacheeks give you Leather Meat.{n}Mochichis give you Tender Meat.{n}{n}After you return from hunting,{n}make sure to check the Altar!
+tip2_title|{outline 2 0 0 0}{color 255 255 255}Rewards from Hunting
+tip3_desc|{color 255 255 255}Patapine Grove is well known for the ability{n}to easily get lost in there.{n}{n}The enormous trees are a perfect material{n}for strong buildings, due to their {n}incredible durability.{n}{n}Many Patapon woodcutters spend{n}their entire lives on collecting wood,{n}and new trees are growing there every day.
+tip3_title|{outline 2 0 0 0}{color 255 255 255}Sturdy Wood of Patapine Grove
+tip4_desc|{color 255 255 255}Getting perfect commands is the key{n}for the greatest performance.{n}{n}Once you hit all 4 drums perfectly,{n}you will hear a "shwing" sound.{n}{n}Many benefits come from perfect commands!{n}Patapons can walk faster and deal more damage.{n}{n}It's a useful skill to learn!
+tip4_title|{outline 2 0 0 0}{color 255 255 255}Perfect Commands
+tip5_desc|{color 255 255 255}PON PON CHAKA CHAKA charges up your units.{n}{n}You can use this command for your advantage!{n}{n}Deal more than twice damage{n}when attacking!{n}{n}Greatly reduce taken damage{n}when defending!{n}{n}Some classes have special behavior when charged.
+tip5_title|{outline 2 0 0 0}{color 255 255 255}Remember to Charge!
+tip6_desc|{color 255 255 255}Wakapon is the guardian of the World Egg {n}that shines in the center of Patapole Bridge.{n}{n}The World Egg brings peace to Patapon's world.{n}{n}Legends say that breaking it{n}would free all evil out of the Underworld.{n}{n}The Wakapon promised Kami to protect the World Egg{n}at all costs, guarding it with his life.
+tip6_title|{outline 2 0 0 0}{color 255 255 255}Wakapon and the World Egg
+tip7_desc|{color 255 255 255}Sen is a priestess of the Ancient Patapon age.{n}{n}She is a direct link between Patapons and Kami,{n}and lived through many generations of Patapon tribe.{n}{n}Ranpurupon is very caring for every Patapon,{n}raising and teaching Patapon children.{n}{n}She will do anything to help the tribe grow.
+tip7_title|{outline 2 0 0 0}{color 255 255 255}Sen Ranpurupon in Ancient Patapolis
+tip8_desc|{color 255 255 255}Did you know that Patapons also celebrate Christmas?{n}{n}For the christmas period, Patapons decorate{n}the Patapolis with many colorful ornaments.{n}{n}Little Patapons wait for Santapon,{n}who gives them what they wished for.{n}{n}Usually they get their first weapons to start{n}fighting for Almighty, to reach the Earthend!
+tip8_title|{outline 2 0 0 0}{color 255 255 255}Christmas in Patapolis
+tips_anykey|{color 255 255 255}Press any key to continue
+tips_loading|{color 255 255 255}Now loading
 worldmap_header_1|Patapon World Map
 worldmap_location_1_description|The humid sea air blowing into this valley makes for a perfect habitat for plants of all kinds, allowing the native ferns to grow to tremendous heights! For generations, various tribes have used this fertile area as a place to hunt animals and gather wild vegetables. It's strange landscape of giant plants can be disorienting, and rumours persist of hidden secrets somewhere in the region.
 worldmap_location_1_title|~ Shida Valley ~
