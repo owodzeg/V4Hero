@@ -14,13 +14,12 @@ public:
     PSprite cross, cross_highlight, cross_arrow;
     sf::ConvexShape triangle;
 
-    std::vector<PText> ptext;    ///text used for determining display sizes
-    std::vector<PText> showtext; ///text that is being shown on screen
+    PText dialogue_ptext; ///text that's going to appear on screen
+    PText visual_ptext; ///text that will help calculating dimensions
 
     sf::Font font;
 
-    std::vector<sf::String> loaded_text; ///text used to compare with what's displayed
-    std::vector<sf::String> viewed_text; ///text that is being shown on screen
+    std::vector<sf::String> dialogue_strings;
 
     int cur_char = 0;
     int timeout = 50; ///milliseconds
@@ -51,6 +50,8 @@ public:
     bool canwrite = false;
     bool firstrender = false;
     bool speedable = false;
+    bool goback = false;
+    bool interrupt = false; //when moved away from the dialogbox source, forcefully quit
 
     sf::Vector2f startpos;
 
