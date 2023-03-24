@@ -390,20 +390,35 @@ void PText::setPosition(float x, float y)
 
 void PText::setString(std::string text_string)
 {
-    txt = sf::String(text_string);
-    //t.setString(txt);
+    // check if text is not the same, otherwise we dont have to process it again
+    if(txt != sf::String(text_string))
+    {
+        txt = sf::String(text_string);
+        processRichText();
+        //t.setString(txt);
+    }
 }
 
 void PText::setString(sf::String text_string)
 {
-    txt = text_string;
-    //t.setString(txt);
+    // check if text is not the same, otherwise we dont have to process it again
+    if(txt != text_string)
+    {
+        txt = text_string;
+        processRichText();
+        //t.setString(txt);
+    }
 }
 
 void PText::setString(const char* text_string)
 {
-    txt = sf::String(text_string);
-    //t.setString(txt);
+    // check if text is not the same, otherwise we dont have to process it again
+    if(txt != sf::String(text_string))
+    {
+        txt = sf::String(text_string);
+        processRichText();
+        //t.setString(txt);
+    }
 }
 
 sf::Vector2f PText::getPosition()
