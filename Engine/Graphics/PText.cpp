@@ -77,9 +77,12 @@ void PText::processRichText()
     {global 1} = displays global text with id 1
     {n} = new line
 
+    # dialogue
+    {goback} = lets the message cloud know to revert to the first text in dialogue (for patapolis npc's to return to their greeting)
+
     # single-use at the beginning
     {font Name.ttf} = will try to load Name.ttf from game resources/or mod resources and change the font of the text to it
-    {fadein} = text will start at opacity 0 and will
+    {fadein 1000} = text will start at 0% opacity and fade to 100% opacity during 1000 milliseconds. !!!will collide with {speech}!!!
     {size 16} = sets text size to 16. single-use due to RichText limitations (possibly will be expanded in future)
     {speech} = makes the text appear letter by letter, use if you dont want the text to appear instantly.
 
@@ -94,6 +97,21 @@ void PText::processRichText()
     t << sf::Color(0,0,0,0);
 
     std::vector<sf::String> rt_string;
+
+    textSettings.clear();
+
+    //restart settings
+    char_shown = 0;
+    char_speed = 20;
+    char_delay = 50;
+    char_wait_period = 0;
+    current_line = 0;
+    char_buffer = 0;
+    speech = false;
+    fadein = false;
+    fadein_length = 0;
+    speech_done = false;
+    goback = false;
 
     int i=0;
     int seek = 0;
@@ -188,7 +206,12 @@ void PText::processRichText()
                 }
                 else if(args[0] == "speech")
                 {
+                    if(!force_nonspeech)
                     speech = true;
+                }
+                else if(args[0] == "goback")
+                {
+                    goback = true;
                 }
                 else if(args[0] == "color")
                 {
@@ -337,6 +360,9 @@ void PText::processRichText()
                 t.setCharacterColor(x, y, c);
             }
         }
+
+        //we put it here, in case we want to have some dialogues instantly show up
+        speech_done = true;
     }
 }
 
@@ -697,29 +723,29 @@ void PText::draw(sf::RenderWindow* window)
             }
         }
 
-        if(char_timeout.getElapsedTime().asMilliseconds() >= char_delay && char_wait.getElapsedTime().asMilliseconds() > char_wait_period)
+        if((char_timeout.getElapsedTime().asMilliseconds() >= char_delay && char_wait.getElapsedTime().asMilliseconds() > char_wait_period) || speedup)
         {
             // remove timeout if any
             char_wait_period = 0;
             int all_lines = t.getLines().size();
 
             if(current_line != all_lines)
-                SPDLOG_TRACE("current_line: {}, all_lines: {}", current_line, all_lines);
+                SPDLOG_DEBUG("current_line: {}, all_lines: {}", current_line, all_lines);
 
             if(current_line < all_lines)
             {
                 int len = t.getLines()[current_line].getLength();
-                SPDLOG_TRACE("line length: {}, char_buffer: {}", len, char_buffer);
+                SPDLOG_DEBUG("line length: {}, char_buffer: {}", len, char_buffer);
 
                 if(char_buffer >= len)
                 {
-                    SPDLOG_TRACE("Advance to the next line");
+                    SPDLOG_DEBUG("Advance to the next line");
                     char_buffer -= len;
                     current_line += 1;
                 }
                 else
                 {
-                    SPDLOG_TRACE("char shown {} char buffer {} len {}", char_shown, char_buffer, len);
+                    SPDLOG_DEBUG("char shown {} char buffer {} len {}", char_shown, char_buffer, len);
 
                     sf::Color c = t.getCharacterColor(current_line, char_buffer);
                     c.a = 255;
@@ -728,6 +754,13 @@ void PText::draw(sf::RenderWindow* window)
                     char_buffer += 1;
                     char_shown += 1;
                 }
+            }
+
+            if(current_line == all_lines)
+            {
+                SPDLOG_DEBUG("Text completed");
+                speech = false;
+                speech_done = true;
             }
 
             char_timeout.restart();

@@ -40,6 +40,10 @@ public:
     int char_buffer = 0;
     bool speech = false;
     bool fadein = false;
+    bool speech_done = false;
+    bool force_nonspeech = false; //for pre-rendering text to get dimensions
+    bool speedup = false; //for dialogue speeding up
+    bool goback = false; //var exclusive for dialogues. it lets the MessageCloud class know that it should go back to first dialogue
     float fadein_length = 0;
     sf::Clock fadein_clock;
 
