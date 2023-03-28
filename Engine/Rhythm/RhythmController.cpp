@@ -16,15 +16,15 @@ RhythmController::RhythmController()
         if (i == 0)
             num = "";
 
-        b_pata[i].loadFromFile("resources/sfx/drums/pata" + num + ".ogg");
-        b_pon[i].loadFromFile("resources/sfx/drums/pon" + num + ".ogg");
-        b_don[i].loadFromFile("resources/sfx/drums/don" + num + ".ogg");
-        b_chaka[i].loadFromFile("resources/sfx/drums/chaka" + num + ".ogg");
+        b_drum[Drums::PATA][i].loadFromFile("resources/sfx/drums/pata" + num + ".ogg");
+        b_drum[Drums::PON][i].loadFromFile("resources/sfx/drums/pon" + num + ".ogg");
+        b_drum[Drums::DON][i].loadFromFile("resources/sfx/drums/don" + num + ".ogg");
+        b_drum[Drums::CHAKA][i].loadFromFile("resources/sfx/drums/chaka" + num + ".ogg");
 
-        b_chpata[i].loadFromFile("resources/sfx/drums/ch_pata" + num + ".ogg");
-        b_chpon[i].loadFromFile("resources/sfx/drums/ch_pon" + num + ".ogg");
-        b_chdon[i].loadFromFile("resources/sfx/drums/ch_don" + num + ".ogg");
-        b_chchaka[i].loadFromFile("resources/sfx/drums/ch_chaka" + num + ".ogg");
+        b_drumchant[Drums::PATA][i].loadFromFile("resources/sfx/drums/ch_pata" + num + ".ogg");
+        b_drumchant[Drums::PON][i].loadFromFile("resources/sfx/drums/ch_pon" + num + ".ogg");
+        b_drumchant[Drums::DON][i].loadFromFile("resources/sfx/drums/ch_don" + num + ".ogg");
+        b_drumchant[Drums::CHAKA][i].loadFromFile("resources/sfx/drums/ch_chaka" + num + ".ogg");
     }
 
     b_perfect.loadFromFile("resources/sfx/drums/perfect.ogg");
@@ -58,260 +58,165 @@ bool RhythmController::checkForInput()
         }
     }
 
+
     ///Set initial values for Drum quality check
     int drum_quality = 2;
-    bool add_to_commandtable = false;
 
-    bool pata = inputCtrl->isKeyPressed(InputController::Keys::SQUARE);
-    bool pon = inputCtrl->isKeyPressed(InputController::Keys::CIRCLE);
-    bool don = inputCtrl->isKeyPressed(InputController::Keys::CROSS);
-    bool chaka = inputCtrl->isKeyPressed(InputController::Keys::TRIANGLE);
-
-    ///Determine the quality of given drum input
-    if (pata || pon || don || chaka)
+    // go through the 4 drums
+    for(int i=0; i<4; i++)
     {
-        if (masterTimer < low_range) ///BAD hit
+        bool drumHit = inputCtrl->isKeyPressed(keybinds[i]);
+
+        if(drumHit)
         {
-            ///Apply BAD drum sound effect
-            drum_quality = 2;
-        } else
-        {
-            ///Apply GOOD drum sound effect
-            if (masterTimer >= high_range) ///BEST hit
+            if (masterTimer < low_range) ///BEST hit
             {
-                drum_quality = 0;
-            } else if (masterTimer >= low_range) ///GOOD hit
+                ///Apply BAD drum sound effect
+                drum_quality = 2;
+            } else
             {
-                drum_quality = 1;
+                ///Apply GOOD drum sound effect
+                if (masterTimer >= high_range) ///BEST hit
+                {
+                    drum_quality = 0;
+                } else if (masterTimer >= low_range) ///GOOD hit
+                {
+                    drum_quality = 1;
+                }
             }
 
-            ///Add drum to commandInput table
-            add_to_commandtable = true;
-        }
-    }
+            // calculate volume
+            float drumVolume = float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f);
 
-    ///Keybind for PATA drum
-    if (pata)
-    {
-        ///Add PATA drum sound effect to the buffer
-        drum_nc.setBuffer(b_pata[drum_quality]);
-        drum_c.setBuffer(b_chpata[drum_quality]);
+            // set buffers and volumes
+            drum_nc.setBuffer(b_drum[i][drum_quality]);
+            drum_c.setBuffer(b_drumchant[i][drum_quality]);
 
-        drum_nc.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
-        drum_c.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
+            drum_nc.setVolume(drumVolume);
+            drum_c.setVolume(drumVolume);
 
-        ///Add PATA drum to user input table
-        if (add_to_commandtable)
-            commandInput.push_back("PATA");
+            // add drum to user input table
+            commandInput.push_back(i);
+            drumToLoad = drum_pngs[i];
+            current_drum = drumToLoad;
 
-        drumToLoad = "pata";
-        currentPattern = patterns[drumToLoad];
+            // register the input
+            SPDLOG_DEBUG("{} {} ms", current_drum, masterTimer);
+            SPDLOG_DEBUG("drum quality was {}", drum_quality);
 
-        current_drum = "pata";
-
-        patterns[drumToLoad]++;
-    }
-
-    ///Keybind for PON drum
-    if (pon)
-    {
-        ///Add PON drum sound effect to the buffer
-        drum_nc.setBuffer(b_pon[drum_quality]);
-        drum_c.setBuffer(b_chpon[drum_quality]);
-
-        drum_nc.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
-        drum_c.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
-
-        ///Add PON drum to user input table
-        if (add_to_commandtable)
-            commandInput.push_back("PON");
-
-        drumToLoad = "pon";
-        currentPattern = patterns[drumToLoad];
-
-        current_drum = "pon";
-
-        patterns[drumToLoad]++;
-    }
-
-    ///Keybind for CHAKA drum
-    if (chaka)
-    {
-        ///Add CHAKA drum sound effect to the buffer
-        drum_nc.setBuffer(b_chaka[drum_quality]);
-        drum_c.setBuffer(b_chchaka[drum_quality]);
-
-        drum_nc.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
-        drum_c.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
-
-        ///Add CHAKA drum to user input table
-        if (add_to_commandtable)
-            commandInput.push_back("CHAKA");
-
-        drumToLoad = "chaka";
-        currentPattern = patterns[drumToLoad];
-
-        current_drum = "chaka";
-
-        patterns[drumToLoad]++;
-    }
-
-    ///Keybind for DON drum
-    if (don)
-    {
-        ///Add DON drum sound effect to the buffer
-        drum_nc.setBuffer(b_don[drum_quality]);
-        drum_c.setBuffer(b_chdon[drum_quality]);
-
-        drum_nc.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
-        drum_c.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
-
-        ///Add DON drum to user input table
-        if (add_to_commandtable)
-            commandInput.push_back("DON");
-
-        drumToLoad = "don";
-        currentPattern = patterns[drumToLoad];
-
-        current_drum = "don";
-
-        patterns[drumToLoad]++;
-    }
-
-    ///IF statement that applies to all drum keybinds (to not repeat the same code over and over)
-    if (pata || pon || don || chaka)
-    {
-        //cout<<"Input registered"<<endl;
-        SPDLOG_DEBUG("{} {} ms", current_drum, masterTimer);
-        SPDLOG_DEBUG("drum quality was {}", drum_quality);
-
-        ///If drum was already hit and you hit once again, or you hit BAD, reset user input and break combo
-        if ((hit) || (drum_quality == 2))
-        {
-            command_perfects.clear();
-            perfects.clear();
-            commandInput.clear();
-
-            if (combo >= 2)
-                breakCombo = true;
-            SPDLOG_DEBUG("break combo #1");
-        }
-
-        string check = "";
-
-        for (unsigned int i = 0; i < commandInput.size(); i++)
-        {
-            check += commandInput[i];
-        }
-
-        if (check != "")
-        {
-            SPDLOG_DEBUG("Checking {} if it exists in available commands...", check);
-
-            bool found = false;
-
-            for (unsigned int i = 0; i < av_commands.size(); i++)
+            ///If drum was already hit and you hit once again, or you hit BAD, reset user input and break combo
+            if ((hit) || (drum_quality == 2))
             {
-                if (av_commands[i].find(check) != std::string::npos)
+                command_perfects.clear();
+                perfects.clear();
+                commandInput.clear();
+
+                if (combo >= 2)
+                    breakCombo = true;
+                SPDLOG_DEBUG("break combo #1");
+            }
+
+            // now to decide what command has been inputted, we use a new scheme
+            // the BASE-5 drum system 
+            // we got 4 beats = 8 halfbeats
+            // each drum has 5 variations = PATA(0) + PON(1) + DON(2) + CHAKA(3) + NONE(4) <- its important
+            // so calculate the drums as:
+            // (5^7 * drum[7]) + (5^6 * drum[6]) + (5^5 * drum[5]) + (5^4 * drum[4]) + (5^3 * drum[3]) + (5^2 * drum[2]) + (5^1 * drum[1]) + (5^0 * drum[0])
+            // will give us unique values per each drum combination!
+
+            int command = 0;
+
+            for (unsigned int i = 0; i < commandInput.size(); i++)
+            {
+                command += pow(commandInput[i], 7-i);
+            }
+
+            if(command != 0)
+            {
+                bool found = false;
+
+                if (std::find(base5_commands.begin(), base5_commands.end(), command) != base5_commands.end())
                 {
-                    if (av_commands[i].find(check) == 0)
+                    found = true;
+                }
+
+                if (!found)
+                {
+                    if (combo >= 2)
                     {
-                        found = true;
+                        command_perfects.clear();
+                        perfects.clear();
+                        commandInput.clear();
+
+                        breakCombo = true;
+                        SPDLOG_DEBUG("break combo #2");
                     }
                 }
             }
 
-            if (!found)
+            ///If drum was hit above the minimum range, determine it's quality and mark as being already hit
+            if (drum_quality <= 1)
             {
-                if (combo >= 2)
+                if (drum_quality == 0)
                 {
-                    command_perfects.clear();
-                    perfects.clear();
-                    commandInput.clear();
+                    command_perfects.push_back(true);
+                }
 
-                    breakCombo = true;
-                    SPDLOG_DEBUG("break combo #2");
+                if (drum_quality == 1)
+                {
+                    command_perfects.push_back(false);
+                }
+
+                hit = true;
+            }
+
+            ///Check config if drum sound effect should be played
+            if (CoreManager::getInstance().getConfig()->GetInt("enableDrums"))
+            {
+                ///And play it
+                s_drums.push_back(drum_nc);
+                s_drums[s_drums.size() - 1].play();
+            }
+
+            ///Check config if drum chant sound effect should be played
+            if (CoreManager::getInstance().getConfig()->GetInt("enableDrumChants"))
+            {
+                ///And play it
+                s_drums.push_back(drum_c);
+                s_drums[s_drums.size() - 1].play();
+            }
+
+            ///Remove drums from user input if user has hit more than 4 drums (8 half-beats)
+            if (commandInput.size() > 8)
+                commandInput.erase(commandInput.begin());
+
+            ///Calculate how many perfect beats were in the command
+            if (command_perfects.size() >= 8)
+            {
+                while (command_perfects.size() > 8)
+                    command_perfects.erase(command_perfects.begin());
+
+                perfect = command_perfects[0] + command_perfects[1] + command_perfects[2] + command_perfects[3] + command_perfects[4] + command_perfects[5] + command_perfects[6] + command_perfects[7];
+            }
+            //cout<<"Input registered"<<commandInput.size()<<endl;
+            if (commandInput.size() == 8)
+            {
+                if (std::find(base5_commands.begin(), base5_commands.end(), command) != base5_commands.end()) ///Check if the command exists in available commands
+                {
+                    if (perfect == 8)
+                    {
+                        s_perfect.stop();
+                        s_perfect.setBuffer(b_perfect);
+                        s_perfect.setVolume(drumVolume);
+                        s_perfect.play();
+                    }
                 }
             }
+
+            drum_perfection = drum_quality;
+
+            return true;
         }
-
-        ///If drum was hit above the minimum range, determine it's quality and mark as being already hit
-        if (drum_quality <= 1)
-        {
-            if (drum_quality == 0)
-            {
-                command_perfects.push_back(true);
-            }
-
-            if (drum_quality == 1)
-            {
-                command_perfects.push_back(false);
-            }
-
-            hit = true;
-        }
-
-        ///Check config if drum sound effect should be played
-        if (CoreManager::getInstance().getConfig()->GetInt("enableDrums"))
-        {
-            ///And play it
-            s_drums.push_back(drum_nc);
-            s_drums[s_drums.size() - 1].play();
-        }
-
-        ///Check config if drum chant sound effect should be played
-        if (CoreManager::getInstance().getConfig()->GetInt("enableDrumChants"))
-        {
-            ///And play it
-            s_drums.push_back(drum_c);
-            s_drums[s_drums.size() - 1].play();
-        }
-
-        ///Remove drums from user input if user has hit more than 4 drums
-        if (commandInput.size() > 4)
-            commandInput.erase(commandInput.begin());
-
-        ///Calculate how many perfect beats were in the command
-        if (command_perfects.size() >= 4)
-        {
-            while (command_perfects.size() > 4)
-                command_perfects.erase(command_perfects.begin());
-
-            perfect = command_perfects[0] + command_perfects[1] + command_perfects[2] + command_perfects[3];
-        }
-        //cout<<"Input registered"<<commandInput.size()<<endl;
-        if (commandInput.size() == 4)
-        {
-            string fullcom = commandInput[0] + commandInput[1] + commandInput[2] + commandInput[3]; ///Create a full command using 4 individual hits
-            SPDLOG_DEBUG("fullcom: {}", fullcom);
-
-            if (std::find(av_commands.begin(), av_commands.end(), fullcom) != av_commands.end()) ///Check if the command exists in available commands
-            {
-                if (perfect == 4)
-                {
-                    s_perfect.stop();
-                    s_perfect.setBuffer(b_perfect);
-                    s_perfect.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
-                    s_perfect.play();
-                }
-            }
-        }
-
-        if (patterns["pata"] >= 8)
-            patterns["pata"] = 0;
-
-        if (patterns["pon"] >= 8)
-            patterns["pon"] = 0;
-
-        if (patterns["don"] >= 8)
-            patterns["don"] = 0;
-
-        if (patterns["chaka"] >= 8)
-            patterns["chaka"] = 0;
-
-        drum_perfection = drum_quality;
-
-        return true;
     }
 
     return false;

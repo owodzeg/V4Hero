@@ -28,19 +28,39 @@ public:
 
     int combo = 0;
 
-    ///REPLACE WITH b_drum["pata"][0] and b_drum["ch_pata"][0];
-    sf::SoundBuffer b_pata[3], b_pon[3], b_chaka[3], b_don[3];         ///Drums without chants
-    sf::SoundBuffer b_chpata[3], b_chpon[3], b_chchaka[3], b_chdon[3]; ///Drums with chants
-    std::deque<sf::Sound> s_drums;                                     ///Table for storing all the drums being hit
+    // identifiers for drums
+    enum Drums
+    {
+        PATA = 0,
+        PON = 1,
+        DON = 2,
+        CHAKA = 3,
+        NONE = 4
+    };
 
+    std::vector<std::string> drum_pngs = {"pata", "pon", "don", "chaka"};
+
+    // keybinds for drums
+    std::vector<int> keybinds = {InputController::Keys::SQUARE, 
+                                InputController::Keys::CIRCLE, 
+                                InputController::Keys::CROSS, 
+                                InputController::Keys::TRIANGLE};
+    
+
+    // store soundbuffers for chant and nonchant drum hits
+    std::map<int, std::map<int, sf::SoundBuffer>> b_drum;
+    std::map<int, std::map<int, sf::SoundBuffer>> b_drumchant;
+
+    // Table for storing all the drums being hit
+    std::deque<sf::Sound> s_drums;                                     
+
+    // sound player for given chant
     sf::Sound drum_c;
     sf::Sound drum_nc;
 
+    // buffer and sound player for perfect measure noise
     sf::SoundBuffer b_perfect;
     sf::Sound s_perfect;
-
-    map<int, bool> keyMap;
-    Config* config;
 
     map<string, int> patterns;
     bool drumAlreadyHit = false;
@@ -51,13 +71,14 @@ public:
     int currentPattern = 0;
     bool breakCombo = false;
 
-    std::vector<std::string> commandInput; ///Drum input
+    std::vector<int> commandInput; ///Drum input
     std::string current_drum;
 
     int perfect = 0;                             ///value used for calculating perfect drums in a command
     std::vector<int> command_perfects;           ///vector used for storing perfection of each drum
     std::vector<int> perfects = {4, 4, 4, 4, 4}; ///vector of perfections of inputted commands (with default data)
     std::vector<string> av_commands;
+    std::vector<int> base5_commands;
 
     RhythmController();
     bool checkForInput();
