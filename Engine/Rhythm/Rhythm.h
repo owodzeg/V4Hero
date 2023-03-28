@@ -23,9 +23,10 @@ class Rhythm
 {
 public:
     /// Low and high range for BAD, GOOD and BEST hits (in milliseconds, 0 is the center point) ///
-    float low_range = 40.f;  ///Anything below that range will be treated as BAD hit
-    float high_range = 80.f; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
-    float beat_timer = 250.f; ///Amount of milliseconds for each beat to be made
+    float BPM = 120.f; ///beats per minute
+    float beat_timer = 60.f / (BPM*2) * 1000.f; ///Amount of milliseconds for each halfbeat to be made
+    float low_range = beat_timer / 6.25f;  ///Anything below that range will be treated as BAD hit
+    float high_range = beat_timer / 3.125f; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
     sf::Clock rhythmClock;    ///Main clock for Rhythm purposes
     sf::Clock newRhythmClock;    ///Main clock for Rhythm purposes
 
