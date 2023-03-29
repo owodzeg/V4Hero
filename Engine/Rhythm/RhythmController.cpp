@@ -58,7 +58,6 @@ bool RhythmController::checkForInput()
         }
     }
 
-
     ///Set initial values for Drum quality check
     int drum_quality = 2;
 
@@ -72,16 +71,16 @@ bool RhythmController::checkForInput()
             if (masterTimer < low_range) ///BEST hit
             {
                 ///Apply BAD drum sound effect
-                drum_quality = 2;
+                drum_quality = DrumQuality::BAD;
             } else
             {
                 ///Apply GOOD drum sound effect
                 if (masterTimer >= high_range) ///BEST hit
                 {
-                    drum_quality = 0;
+                    drum_quality = DrumQuality::BEST;
                 } else if (masterTimer >= low_range) ///GOOD hit
                 {
-                    drum_quality = 1;
+                    drum_quality = DrumQuality::GOOD;
                 }
             }
 
@@ -96,16 +95,21 @@ bool RhythmController::checkForInput()
             drum_c.setVolume(drumVolume);
 
             // add drum to user input table
-            commandInput.push_back(i);
+            if(drum_quality != DrumQuality::BAD)
+            {
+                commandInput.push_back(i);
+                canHit = false;
+            }
+
             drumToLoad = drum_pngs[i];
             current_drum = drumToLoad;
 
             // register the input
-            SPDLOG_DEBUG("{} {} ms", current_drum, masterTimer);
-            SPDLOG_DEBUG("drum quality was {}", drum_quality);
+            SPDLOG_DEBUG("drum: {} masterTimer: {}ms masterTimerNoAbs: {}ms", current_drum, masterTimer, masterTimerNoAbs);
+            //SPDLOG_DEBUG("drum quality was {}", drum_quality);
 
             ///If drum was already hit and you hit once again, or you hit BAD, reset user input and break combo
-            if ((hit) || (drum_quality == 2))
+            /*if ((hit) || (drum_quality == 2))
             {
                 command_perfects.clear();
                 perfects.clear();
@@ -113,8 +117,8 @@ bool RhythmController::checkForInput()
 
                 if (combo >= 2)
                     breakCombo = true;
-                SPDLOG_DEBUG("break combo #1");
-            }
+                //SPDLOG_DEBUG("break combo #1");
+            }*/
 
             // now to decide what command has been inputted, we use a new scheme
             // the BASE-5 drum system 
@@ -123,36 +127,6 @@ bool RhythmController::checkForInput()
             // so calculate the drums as:
             // (5^7 * drum[7]) + (5^6 * drum[6]) + (5^5 * drum[5]) + (5^4 * drum[4]) + (5^3 * drum[3]) + (5^2 * drum[2]) + (5^1 * drum[1]) + (5^0 * drum[0])
             // will give us unique values per each drum combination!
-
-            int command = 0;
-
-            for (unsigned int i = 0; i < commandInput.size(); i++)
-            {
-                command += pow(commandInput[i], 7-i);
-            }
-
-            if(command != 0)
-            {
-                bool found = false;
-
-                if (std::find(base5_commands.begin(), base5_commands.end(), command) != base5_commands.end())
-                {
-                    found = true;
-                }
-
-                if (!found)
-                {
-                    if (combo >= 2)
-                    {
-                        command_perfects.clear();
-                        perfects.clear();
-                        commandInput.clear();
-
-                        breakCombo = true;
-                        SPDLOG_DEBUG("break combo #2");
-                    }
-                }
-            }
 
             ///If drum was hit above the minimum range, determine it's quality and mark as being already hit
             if (drum_quality <= 1)
@@ -166,8 +140,6 @@ bool RhythmController::checkForInput()
                 {
                     command_perfects.push_back(false);
                 }
-
-                hit = true;
             }
 
             ///Check config if drum sound effect should be played
@@ -187,8 +159,15 @@ bool RhythmController::checkForInput()
             }
 
             ///Remove drums from user input if user has hit more than 4 drums (8 half-beats)
-            if (commandInput.size() > 8)
+            while (commandInput.size() > 8)
                 commandInput.erase(commandInput.begin());
+
+            int command = 0;
+
+            for (unsigned int c = 0; c < commandInput.size(); c++)
+            {
+                command += commandInput[c] * pow(5, 7-c);
+            }
 
             ///Calculate how many perfect beats were in the command
             if (command_perfects.size() >= 8)
@@ -196,13 +175,24 @@ bool RhythmController::checkForInput()
                 while (command_perfects.size() > 8)
                     command_perfects.erase(command_perfects.begin());
 
-                perfect = command_perfects[0] + command_perfects[1] + command_perfects[2] + command_perfects[3] + command_perfects[4] + command_perfects[5] + command_perfects[6] + command_perfects[7];
+                perfect = 0;
+
+                for (unsigned int c = 0; c < command_perfects.size(); c++)
+                {
+                    perfect += command_perfects[c];
+                }
             }
+            
+            SPDLOG_DEBUG("CommandInput.size() == {}", commandInput.size());
+
             //cout<<"Input registered"<<commandInput.size()<<endl;
             if (commandInput.size() == 8)
             {
+                SPDLOG_DEBUG("Looking for command {}", command);
+
                 if (std::find(base5_commands.begin(), base5_commands.end(), command) != base5_commands.end()) ///Check if the command exists in available commands
                 {
+                    SPDLOG_DEBUG("Command found! Perfects: {}", perfect);
                     if (perfect == 8)
                     {
                         s_perfect.stop();
@@ -211,11 +201,125 @@ bool RhythmController::checkForInput()
                         s_perfect.play();
                     }
                 }
+                else
+                {
+                    // here is a hack to get the "perfect shwing" noise, we don't want to wait for the remaining halfbeat,
+                    // but rather to shwing upon the last drum
+                    // so we kinda artificially add the last halfbeat here
+                    std::vector<int> tmp_command;
+                    tmp_command = commandInput;
+                    tmp_command.erase(tmp_command.begin());
+                    tmp_command.push_back(Drums::NONE);
+
+                    command = 0;
+
+                    for (unsigned int c = 0; c < tmp_command.size(); c++)
+                    {
+                        command += tmp_command[c] * pow(5, 7-c);
+                    }
+
+                    SPDLOG_DEBUG("[Hack] Looking for command {}", command);
+
+                    // ask again
+                    if (std::find(base5_commands.begin(), base5_commands.end(), command) != base5_commands.end()) 
+                    {
+                        SPDLOG_DEBUG("[Hack] Command found! Perfects: {}", perfect);
+                        if (perfect == 8)
+                        {
+                            s_perfect.stop();
+                            s_perfect.setBuffer(b_perfect);
+                            s_perfect.setVolume(drumVolume);
+                            s_perfect.play();
+                        }
+                    }
+                }
             }
 
             drum_perfection = drum_quality;
+        }
+    }
 
-            return true;
+    if(masterTimer < low_range && belowHitRange == false)
+    {
+        belowHitRange = true;
+
+        if(canHit == true)
+        {
+            commandInput.push_back(Drums::NONE);
+            command_perfects.push_back(true);
+        }
+        else
+        {
+            canHit = true;
+        }
+    }
+
+    if(masterTimer >= low_range)
+    {
+        belowHitRange = false;
+    }
+
+     ///Remove drums from user input if user has hit more than 4 drums (8 half-beats)
+    while (commandInput.size() > 8)
+        commandInput.erase(commandInput.begin());
+
+    ///Calculate how many perfect beats were in the command
+    if (command_perfects.size() >= 8)
+    {
+        while (command_perfects.size() > 8)
+            command_perfects.erase(command_perfects.begin());
+
+        perfect = 0;
+
+        for (unsigned int c = 0; c < command_perfects.size(); c++)
+        {
+            perfect += command_perfects[c];
+        }
+    }
+
+    std::string s_command = "";
+    std::string s_perfects = "";
+
+    for (unsigned int c = 0; c < commandInput.size(); c++)
+    {
+        s_command += to_string(commandInput[c]) + " ";
+    }
+
+    for (unsigned int c = 0; c < command_perfects.size(); c++)
+    {
+        s_perfects += to_string(command_perfects[c]) + " ";
+    }
+
+    int command = 0;
+
+    for (unsigned int c = 0; c < commandInput.size(); c++)
+    {
+        command += commandInput[c] * pow(5, 7-c);
+    }
+
+    //SPDLOG_DEBUG("Pending command: {}, int: {}, perfects: {}", s_command, command, s_perfects);
+
+    if(command != 0)
+    {
+        bool found = false;
+
+        if (std::find(base5_commands.begin(), base5_commands.end(), command) != base5_commands.end())
+        {
+            found = true;
+            //SPDLOG_DEBUG("Command found! {}", command);
+        }
+
+        if (!found)
+        {
+            if (combo >= 2)
+            {
+                command_perfects.clear();
+                perfects.clear();
+                commandInput.clear();
+
+                breakCombo = true;
+                SPDLOG_DEBUG("break combo #2");
+            }
         }
     }
 

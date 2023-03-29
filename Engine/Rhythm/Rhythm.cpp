@@ -181,6 +181,7 @@ void Rhythm::checkRhythmController()
     rhythmController.combo = combo;
 
     rhythmController.masterTimer = abs((newRhythmClock.getElapsedTime().asMilliseconds() % int(beat_timer)) - (beat_timer/2));
+    rhythmController.masterTimerNoAbs = newRhythmClock.getElapsedTime().asMilliseconds() % int(beat_timer);
     rhythmController.base5_commands = base5_commands;
 
     rhythmController.low_range = low_range;
@@ -206,8 +207,6 @@ void Rhythm::checkRhythmController()
 
 void Rhythm::doRhythm()
 {
-    checkRhythmController();
-
     metronomeVal = (newRhythmClock.getElapsedTime().asMilliseconds() % int(beat_timer));
     //SPDLOG_DEBUG("metronome: {}", metronomeVal);
 
@@ -226,6 +225,8 @@ void Rhythm::doRhythm()
     }
 
     metronomeOldVal = metronomeVal;
+
+    checkRhythmController();
 
     /*
     if (rhythmClock.getElapsedTime().asMilliseconds() > (beat_timer / float(2)))

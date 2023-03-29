@@ -23,6 +23,9 @@ public:
     int low_range;
     int high_range;
     float masterTimer = 0;
+    float masterTimerNoAbs = 0;
+    bool belowHitRange = false;
+    bool canHit = true;
 
     bool hit = false;
 
@@ -36,6 +39,13 @@ public:
         DON = 2,
         CHAKA = 3,
         NONE = 4
+    };
+
+    enum DrumQuality
+    {
+        BEST = 0,
+        GOOD = 1,
+        BAD = 2
     };
 
     std::vector<std::string> drum_pngs = {"pata", "pon", "don", "chaka"};
