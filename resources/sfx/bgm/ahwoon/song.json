@@ -1,0 +1,39 @@
+ {
+ 	"bpm": 120,
+ 	"song_start": "bgm_start.ogg",
+ 	"song_idle_loop": [
+ 		"bgm_1.ogg"
+ 	],
+ 	"song_prefever_calm_loop": [
+ 		"bgm_2.ogg",
+ 		"bgm_3.ogg",
+ 		"bgm_4.ogg",
+ 		"bgm_5.ogg"
+ 	],
+ 	"song_prefever_intense_start": "bgm_6.ogg",
+	"song_prefever_intense_loop": [
+ 		"bgm_7.ogg",
+ 		"bgm_8.ogg",
+ 		"bgm_9.ogg",
+ 		"bgm_10.ogg"
+ 	],
+ 	"song_fever_start": "bgm_feverstart.ogg",
+ 	"song_fever_loop": [
+ 		"bgm_fever1.ogg",
+ 		"bgm_fever2.ogg",
+ 		"bgm_fever3.ogg",
+ 		"bgm_fever4.ogg",
+ 		"bgm_fever5.ogg",
+ 		"bgm_fever6.ogg",
+ 		"bgm_fever7.ogg",
+ 		"bgm_fever8.ogg",
+ 		"bgm_fever9.ogg",
+ 		"bgm_fever10.ogg",
+ 		"bgm_fever11.ogg",
+ 		"bgm_fever12.ogg",
+ 		"bgm_fever13.ogg",
+ 		"bgm_fever14.ogg",
+ 		"bgm_fever15.ogg",
+ 		"bgm_fever16.ogg"
+ 	]
+ }

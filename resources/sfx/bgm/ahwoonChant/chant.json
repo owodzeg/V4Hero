@@ -1,0 +1,97 @@
+{
+	//pata-pata-pata-pon-
+	"65109": {
+		"prefever_calm": "s_patapata1.ogg",
+		"prefever_intense": "s_patapata2.ogg",
+		"fever_loop": [
+			"s_patapata3.ogg",
+			"s_patapata4.ogg"
+		]
+	},
+
+    //pon-pon-pata-pon-
+    "146359": {
+		"prefever_calm": "s_ponpon1.ogg",
+		"prefever_intense": "s_ponpon2.ogg",
+		"fever_loop": [
+			"s_ponpon3.ogg",
+			"s_ponpon4.ogg"
+		]
+	}, 
+
+    //chaka-chaka-pata-pon-
+    "308859": {
+		"prefever_calm": "s_chakachaka1.ogg",
+		"prefever_intense": "s_chakachaka2.ogg",
+		"fever_loop": [
+			"s_chakachaka3.ogg",
+			"s_chakachaka4.ogg"
+		]
+	}, 
+
+    //pon-pon-chaka-chaka-
+    "146744": {
+		"prefever_calm": "s_ponchaka1.ogg",
+		"prefever_intense": "s_ponchaka2.ogg",
+		"fever_loop": [
+			"s_ponchaka3.ogg"
+		]
+	}, 
+
+    //pata-pon-don-chaka-
+    "68494": {
+		"prefever_calm": "s_donchaka1.ogg",
+		"prefever_intense": "s_donchaka2.ogg",
+		"fever_loop": [
+			"s_donchaka3.ogg"
+		]
+	}, 
+
+    //pon-pata-pon-pata- 
+    "143354": {
+		"prefever_calm": "s_ponpata1.ogg",
+		"prefever_intense": "s_ponpata2.ogg",
+		"fever_loop": [
+			"s_ponpata3.ogg"
+		]
+	}, 
+
+    //don-don-chaka-chaka-
+    "227994": {
+		"prefever_calm": "s_dondon1.ogg",
+		"prefever_intense": "s_dondon2.ogg",
+		"fever_loop": [
+			"s_dondon3.ogg"
+		]
+	}, 
+
+    //chaka-pata-chaka-pata
+    "299854": {
+		"prefever_calm": "s_chakachaka1.ogg",
+		"prefever_intense": "s_chakachaka2.ogg",
+		"fever_loop": [
+			"s_chakachaka3.ogg",
+			"s_chakachaka4.ogg"
+		]
+	}, 
+
+    //pata-pon-pata-pon
+    "68234": {
+		"prefever_calm": "s_chakachaka1.ogg",
+		"prefever_intense": "s_chakachaka2.ogg",
+		"fever_loop": [
+			"s_chakachaka3.ogg",
+			"s_chakachaka4.ogg"
+		]
+	}, 
+
+    //don-dondon-dondon-
+    "226814": {
+		"prefever_calm": "s_chakachaka1.ogg",
+		"prefever_intense": "s_chakachaka2.ogg",
+		"fever_loop": [
+			"s_chakachaka3.ogg",
+			"s_chakachaka4.ogg"
+		]
+	}
+}
