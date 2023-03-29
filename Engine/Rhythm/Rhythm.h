@@ -87,7 +87,8 @@ private:
                                         227994, //don-don-chaka-chaka-
                                         299854, //chaka-pata-chaka-pata
                                         68234, //pata-pon-pata-pon
-                                        226814}; //don-dondon-dondon-
+                                        226814, //don-dondon-dondon-
+                                        66569}; //experimental: pata-ponpon-dondonchaka
                                         
     std::vector<std::string> av_songs = {"patapata",
                                          "ponpon",
