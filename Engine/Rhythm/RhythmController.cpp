@@ -61,10 +61,12 @@ bool RhythmController::checkForInput()
     ///Set initial values for Drum quality check
     int drum_quality = 2;
 
+    bool drumHit = false;
+
     // go through the 4 drums
     for(int i=0; i<4; i++)
     {
-        bool drumHit = inputCtrl->isKeyPressed(keybinds[i]);
+        drumHit = inputCtrl->isKeyPressed(keybinds[i]);
 
         if(drumHit)
         {
@@ -103,6 +105,8 @@ bool RhythmController::checkForInput()
 
             drumToLoad = drum_pngs[i];
             current_drum = drumToLoad;
+            currentPattern = patterns[drumToLoad];
+            patterns[drumToLoad]++;
 
             // register the input
             SPDLOG_DEBUG("drum: {} masterTimer: {}ms masterTimerNoAbs: {}ms", current_drum, masterTimer, masterTimerNoAbs);
@@ -236,6 +240,7 @@ bool RhythmController::checkForInput()
             }
 
             drum_perfection = drum_quality;
+            break;
         }
     }
 
@@ -323,7 +328,12 @@ bool RhythmController::checkForInput()
         }
     }
 
-    return false;
+    for(int i=0; i<4; i++)
+    {
+        patterns[drum_pngs[i]] = patterns[drum_pngs[i]] % 8;
+    }
+
+    return drumHit;
 }
 
 void RhythmController::resetValues()
