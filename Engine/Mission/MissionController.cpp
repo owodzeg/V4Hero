@@ -1174,6 +1174,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 
     army_x = 0;
     camera.camera_x = 480;
+    camera.zoom_point_y = CoreManager::getInstance().getWindow()->getSize().y - 110;
     showTimer = false;
 
     switch (quality)

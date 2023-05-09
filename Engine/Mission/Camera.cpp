@@ -1,3 +1,5 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "Camera.h"
 #include <iostream>
 #include <math.h> /* fabs */
@@ -40,8 +42,29 @@ void Camera::Work()
     manual_x_dest = 0;
 
     /** Debug controls **/
+    if(inputCtrl->isKeyHeld(InputController::Keys::UP))
+    {
+        dest_zoom = 1.2f;
+        SPDLOG_DEBUG("[zoom] {} {} {} {}", dest_zoom, zoom, zoom_point_x, zoom_point_y);
+    }
+    if(inputCtrl->isKeyHeld(InputController::Keys::DOWN))
+    {
+        dest_zoom = 0.8f;
+        SPDLOG_DEBUG("[zoom] {} {} {} {}", dest_zoom, zoom, zoom_point_x, zoom_point_y);
+    }
+    /*if (inputCtrl->isKeyHeld(InputController::Keys::SQUARE))
+    {
+        debug_x_dest -= 10.f / fps;
+    }
 
-    if (!missionEnd)
+    if (inputCtrl->isKeyHeld(InputController::Keys::CIRCLE))
+    {
+        debug_x_dest += 10.f / fps;
+    }*/
+
+    /** Mission controls **/
+
+    if (!missionEnd && !lockMovement)
     {
         if (inputCtrl->isKeyHeld(InputController::Keys::LTRIGGER))
         {
@@ -96,7 +119,10 @@ void Camera::Work()
             zoom = dest_zoom;
     }
 
-    zoomViewAt(sf::Vector2i(250, window->getSize().y - 110), zoom);
+    SPDLOG_DEBUG("[zoom] zoom: {} dest_zoom: {}", zoom, dest_zoom);
+
+    if(zoom != dest_zoom)
+    zoomViewAt(sf::Vector2i(zoom_point_x, zoom_point_y), zoom);
 
     /** Apply camera position **/
 

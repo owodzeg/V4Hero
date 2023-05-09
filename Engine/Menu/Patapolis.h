@@ -192,6 +192,8 @@ class PatapolisMenu : public Menu
 		sf::SoundBuffer sb_city_loop;
 		sf::Sound city_loop;
 
+		sf::View patapolisView;
+
 		bool initialized = false;
 
 		void addL6(std::string variant, float x, float y);

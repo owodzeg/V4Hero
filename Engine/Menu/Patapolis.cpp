@@ -362,6 +362,19 @@ PatapolisMenu::PatapolisMenu()
     SetTitle(location);
     camPos = locations[location];
 
+    // camera settings
+    camera.debug_x_dest = 141;
+    camera.debug_x = 141;
+    camera.followobject_x = 0;
+    camera.lockMovement = true;
+
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+
+    camera.zoom_point_x = window->getSize().x/2;
+    camera.zoom_point_y = window->getSize().y; 
+
+    patapolisView = window->getDefaultView();
+
     initialized = true;
 }
 
@@ -820,7 +833,10 @@ void PatapolisMenu::Update()
     if (true)
     {
         auto lastView = window->getView();
-        window->setView(window->getDefaultView());
+        window->setView(patapolisView);
+
+        camera.zoom_y = 0;
+        camera.Work();
 
         window->draw(v_background);
 
