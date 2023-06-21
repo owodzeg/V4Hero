@@ -20,7 +20,7 @@ set(BUILD_SHARED_LIBS OFF)
 FetchContent_Declare(
  SFML
  GIT_REPOSITORY https://github.com/SFML/SFML.git
- GIT_TAG 2.5.1
+ GIT_TAG 2.6.0
 )
 FetchContent_MakeAvailable(SFML)
 

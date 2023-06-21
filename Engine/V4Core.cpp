@@ -8,8 +8,8 @@
 V4Core::V4Core()
 {
     /** Check possible graphical settings (for debugging purposes) **/
-    const unsigned int maxSize = sf::Texture::getMaximumSize();
-    SPDLOG_DEBUG("Max allowed texture size: {}", maxSize);
+    //const unsigned int maxSize = sf::Texture::getMaximumSize();
+    //SPDLOG_DEBUG("Max allowed texture size: {}", maxSize);
     sf::RenderTexture rtx;
     SPDLOG_DEBUG("Max antialiasing level: {}", rtx.getMaximumAntialiasingLevel());
 
