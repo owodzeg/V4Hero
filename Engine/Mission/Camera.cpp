@@ -119,7 +119,7 @@ void Camera::Work()
             zoom = dest_zoom;
     }
 
-    SPDLOG_DEBUG("[zoom] zoom: {} dest_zoom: {}", zoom, dest_zoom);
+    //SPDLOG_DEBUG("[zoom] zoom: {} dest_zoom: {}", zoom, dest_zoom);
 
     if(zoom != dest_zoom)
     zoomViewAt(sf::Vector2i(zoom_point_x, zoom_point_y), zoom);
