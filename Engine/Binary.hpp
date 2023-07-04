@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <cstdint>
 
 /** Class for helping with binary operations in BND.hpp library **/
 
