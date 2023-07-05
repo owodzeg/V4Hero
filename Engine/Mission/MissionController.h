@@ -231,6 +231,8 @@ public:
 
     bool returnToPatapolis = false;
 
+    std::vector<std::thread> missionThreads;
+
     /** Resolve enums **/
     int layerStr2Enum(string layer);
 

@@ -18,9 +18,12 @@ public:
     float beat_timer = 60.f / BPM * 1000.f;
     sf::Clock beatClock;
 
+    /// Drums in-game ///
+    std::vector<Drum> drums;
+
     void Initialise(Config& config, std::map<int, bool>& keymap);
     void click();
-    void doVisuals(int bgm_cycle, int combo, std::vector<Drum>* drums);
+    void doVisuals(int bgm_cycle, int combo);
     RhythmGUI();
     ~RhythmGUI();
 };

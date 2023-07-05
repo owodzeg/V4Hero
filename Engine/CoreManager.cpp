@@ -37,6 +37,12 @@ void CoreManager::init()
     // Load tips utility so we can have the background and icon filenames ready
     tipsUtil = new TipsUtil;
 
+    // Prepare rhythmGUI for missions
+    rhythmGUI = new RhythmGUI;
+
+    // Prepare rhythm controller for general use (missions + minigames)
+    rhythmController = new RhythmController;
+
     // After we created prerequisities for V4Core, we can safely create it.
     core = new V4Core;
 }
@@ -80,6 +86,16 @@ TipsUtil* CoreManager::getTipsUtil()
 MissionController* CoreManager::getMissionController()
 {
     return missionController;
+}
+
+RhythmGUI* CoreManager::getRhythmGUI()
+{
+    return rhythmGUI;
+}
+
+RhythmController* CoreManager::getRhythmController()
+{
+    return rhythmController;
 }
 
 void CoreManager::reinitMissionController()

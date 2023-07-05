@@ -109,7 +109,7 @@ bool RhythmController::checkForInput()
             patterns[drumToLoad]++;
 
             // register the input
-            SPDLOG_DEBUG("drum: {} masterTimer: {}ms masterTimerNoAbs: {}ms", current_drum, masterTimer, masterTimerNoAbs);
+            SPDLOG_DEBUG("drum: {} masterTimer: {}us masterTimerNoAbs: {}us", current_drum, masterTimer, masterTimerNoAbs);
             //SPDLOG_DEBUG("drum quality was {}", drum_quality);
 
             ///If drum was already hit and you hit once again, or you hit BAD, reset user input and break combo
@@ -336,10 +336,14 @@ bool RhythmController::checkForInput()
     return drumHit;
 }
 
-void RhythmController::resetValues()
+void RhythmController::resetDrums()
 {
     drumToLoad = "";
     drum_perfection = 0;
     currentPattern = 0;
+}
+
+void RhythmController::resetCombo()
+{
     breakCombo = false;
 }

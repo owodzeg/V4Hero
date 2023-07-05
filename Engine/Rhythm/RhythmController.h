@@ -92,7 +92,8 @@ public:
 
     RhythmController();
     bool checkForInput();
-    void resetValues();
+    void resetDrums();
+    void resetCombo();
 private:
     std::shared_ptr<spdlog::logger> logger = spdlog::get("rhythm");
 };

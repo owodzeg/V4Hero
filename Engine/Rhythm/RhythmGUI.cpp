@@ -22,7 +22,7 @@ void RhythmGUI::click()
 
 ///TO-DO: TO BE PORTED TO AN EXTERNAL CLASS
 // another TO-DO: this is old, what i meant by this? ^
-void RhythmGUI::doVisuals(int bgm_cycle, int combo, std::vector<Drum>* drums)
+void RhythmGUI::doVisuals(int bgm_cycle, int combo)
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
     float fps = CoreManager::getInstance().getCore()->getFPS();
@@ -139,13 +139,27 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo, std::vector<Drum>* drums)
     window->draw(r_rhythm);
     window->draw(r_rhythm2);
 
+    RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
+
+    if (rhythmController->checkForInput())
+    {
+        std::string drum_path = "resources/graphics/rhythm/drums/" + rhythmController->drumToLoad + ".png";
+
+        Drum temp;
+        temp.Load(rhythmController->drumToLoad, rhythmController->drum_perfection, drum_path);
+        temp.pattern = rhythmController->currentPattern;
+        drums.push_back(temp);
+    }
+
+    rhythmController->resetDrums();
+
     std::vector<int> drumsToErase;
 
-    for (int i = 0; i < drums->size(); i++)
+    for (int i = 0; i < drums.size(); i++)
     {
-        (*drums)[i].Draw();
+        drums[i].Draw();
 
-        if ((*drums)[i].alpha <= 0)
+        if (drums[i].alpha <= 0)
         {
             drumsToErase.push_back(i);
         }
@@ -154,7 +168,7 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo, std::vector<Drum>* drums)
     for (int i = 0; i < drumsToErase.size(); i++)
     {
         SPDLOG_DEBUG("Erased drum {}", drumsToErase[i] - i);
-        drums->erase(drums->begin() + (drumsToErase[i] - i));
+        drums.erase(drums.begin() + (drumsToErase[i] - i));
     }
 
     window->setView(lastView);

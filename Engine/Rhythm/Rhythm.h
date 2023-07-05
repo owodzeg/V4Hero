@@ -24,7 +24,7 @@ class Rhythm
 public:
     /// Low and high range for BAD, GOOD and BEST hits (in milliseconds, 0 is the center point) ///
     float BPM = 120.f; ///beats per minute
-    float beat_timer = 60.f / (BPM*2) * 1000.f; ///Amount of milliseconds for each halfbeat to be made
+    float beat_timer = 60.f / (BPM*2) * 1000000.f; ///Amount of microseconds for each halfbeat to be made
     float low_range = beat_timer / 6.25f;  ///Anything below that range will be treated as BAD hit
     float high_range = beat_timer / 3.125f; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
     sf::Clock rhythmClock;    ///Main clock for Rhythm purposes
@@ -65,7 +65,6 @@ private:
     /// Initialize Rhythm System values ///
     int combo = 1;     ///Rhythm combo, main navigator through BGM
     int rl_combo = 0;  ///Game combo, directing mechanics and fever
-    float flicker = 0; ///For beat frame flickering
 
     std::vector<std::string> av_commands = {"PATA-PATA-PATA-PON-",
                                             "PON-PON-PATA-PON-",
@@ -88,6 +87,8 @@ private:
                                         299854, //chaka-pata-chaka-pata
                                         68234, //pata-pon-pata-pon
                                         226814, //don-dondon-dondon-
+                                        304525, //experimental: chaka-dondonponponpatapata
+                                        97656, //experimental: ponponponponponponponpon
                                         66569}; //experimental: pata-ponpon-dondonchaka
                                         
     std::vector<std::string> av_songs = {"patapata",
@@ -113,12 +114,7 @@ private:
     float accuracy = 0; ///value for calculating the accuracy
     int acc_count = 3;  ///value for determining on how far back should the accuracy calculation system go in commands
 
-
-    /// Drums in-game ///
-    std::vector<Drum> drums;
-
 public:
-    RhythmGUI r_gui;
     /// Default FPS value ///
     float fps = 60;
 
@@ -128,7 +124,6 @@ public:
     /// Config and Keybindings ///
     Config* config;
     std::map<int, bool> keyMap;
-    RhythmController rhythmController;
     std::string current_song = "";
 
     sf::SoundBuffer s_badrhythm1, s_badrhythm2; ///absolutely terrible! (shoutouts to shockturtle)
@@ -141,6 +136,7 @@ public:
     void Start();
     void BreakCombo();
     int GetCombo();
+    int GetBgmCycle();
     int GetRealCombo();
     float GetSatisfaction();
     void checkRhythmController();
