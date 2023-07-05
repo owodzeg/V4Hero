@@ -70,6 +70,9 @@ void Rhythm::LoadTheme(string theme)
 
     satisfaction_value.clear();
 
+    r_gui.BPM = BPM;
+    r_gui.beat_timer = 60.f / BPM * 1000.f;
+
     ///Stop any current action
     //current_song = "";
 
@@ -221,6 +224,7 @@ void Rhythm::doRhythm()
         if(metronomeState == 0)
         {
             s_metronome.play();
+            r_gui.click();
         }
     }
 
@@ -538,5 +542,5 @@ void Rhythm::doRhythm()
 
 void Rhythm::Draw()
 {
-    r_gui.doVisuals(bgm_cycle, &rhythmClock, combo, &flicker, fps, &drums);
+    r_gui.doVisuals(bgm_cycle, combo, &drums);
 }

@@ -15,11 +15,17 @@ RhythmGUI::RhythmGUI()
     r_rhythm.setFillColor(sf::Color::White);
 }
 
+void RhythmGUI::click()
+{
+    beatClock.restart();
+}
+
 ///TO-DO: TO BE PORTED TO AN EXTERNAL CLASS
 // another TO-DO: this is old, what i meant by this? ^
-void RhythmGUI::doVisuals(int bgm_cycle, sf::Clock* rhythmClock, int combo, float* flicker, float fps, std::vector<Drum>* drums)
+void RhythmGUI::doVisuals(int bgm_cycle, int combo, std::vector<Drum>* drums)
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    float fps = CoreManager::getInstance().getCore()->getFPS();
 
     auto lastView = window->getView();
 
@@ -34,7 +40,11 @@ void RhythmGUI::doVisuals(int bgm_cycle, sf::Clock* rhythmClock, int combo, floa
     int v_cycle_mode = abs(floor((bgm_cycle) / 4) - 1);
     int v_cycle = (bgm_cycle) % 4 + 1;
 
-    int rhythmAlpha = 245 - (rhythmClock->getElapsedTime().asMilliseconds() / 2);
+    float beatClockTime = float(beatClock.getElapsedTime().asMilliseconds()) / float(beat_timer) * 255; 
+    int rhythmAlpha = 255 - beatClockTime;
+    
+    if(rhythmAlpha <= 0)
+    rhythmAlpha = 0;
 
     ///Visuals
     if (true)
@@ -70,20 +80,20 @@ void RhythmGUI::doVisuals(int bgm_cycle, sf::Clock* rhythmClock, int combo, floa
 
             if (v_cycle == 4)
             {
-                if (floor(*flicker) == 0)
+                if (floor(flicker) == 0)
                 {
                     r_rhythm.setOutlineColor(sf::Color(64, 64, 64, rhythmAlpha));
                     r_rhythm2.setOutlineColor(sf::Color(64, 64, 64, rhythmAlpha));
-                } else if (floor(*flicker) == 1)
+                } else if (floor(flicker) == 1)
                 {
                     r_rhythm.setOutlineColor(sf::Color(220, 220, 220, rhythmAlpha));
                     r_rhythm2.setOutlineColor(sf::Color(220, 220, 220, rhythmAlpha));
                 }
 
-                *flicker += float(1) / fps * 30;
+                flicker += float(1) / fps * 30;
 
-                if (*flicker >= 2)
-                    *flicker = 0;
+                if (flicker >= 2)
+                    flicker = 0;
             }
         } else if ((combo >= 11) && (v_cycle_mode == 0))
         {
@@ -95,7 +105,7 @@ void RhythmGUI::doVisuals(int bgm_cycle, sf::Clock* rhythmClock, int combo, floa
 
             r_rhythm2.setOutlineColor(sf::Color(0, 0, 0, 0));
 
-            int flick = floor(*flicker);
+            int flick = floor(flicker);
 
             switch (flick)
             {
@@ -116,10 +126,10 @@ void RhythmGUI::doVisuals(int bgm_cycle, sf::Clock* rhythmClock, int combo, floa
                     break;
             }
 
-            *flicker += float(1) / fps * 30;
+            flicker += float(1) / fps * 30;
 
-            if (*flicker >= 4)
-                *flicker = 0;
+            if (flicker >= 4)
+                flicker = 0;
         }
 
         float sizeMod = rhythmAlpha / float(80);
