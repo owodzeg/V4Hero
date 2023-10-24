@@ -18,6 +18,10 @@ public:
     float pataSpeed = 0;
     bool walk = false;
     bool missionEnd = false;
+    bool lockMovement = false;
+
+    float zoom_point_x = 250;
+    float zoom_point_y = 0;
 
     Camera();
     void zoomViewAt(sf::Vector2i pixel, float zoom);

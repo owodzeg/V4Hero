@@ -42,7 +42,7 @@ void RockSmall::parseAdditionalData(nlohmann::json additional_data)
     }
 }
 
-void RockSmall::Draw(sf::RenderWindow& window)
+void RockSmall::Draw()
 {
     if (dead)
     {

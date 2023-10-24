@@ -39,10 +39,6 @@ void IntroductionMenu::EventFired(sf::Event event)
 
 void IntroductionMenu::Update()
 {
-    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
-    float fps = CoreManager::getInstance().getCore()->getFPS();
-    InputController* inputCtrl = CoreManager::getInstance().getInputController();
-
     if (timeout.getElapsedTime().asSeconds() > 1)
     {
         if (!msgcloud.done)

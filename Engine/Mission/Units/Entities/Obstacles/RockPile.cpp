@@ -43,7 +43,7 @@ void RockPile::parseAdditionalData(nlohmann::json additional_data)
 }
 
 
-void RockPile::Draw(sf::RenderWindow& window)
+void RockPile::Draw()
 {
     if (dead)
     {

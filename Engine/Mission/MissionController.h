@@ -231,6 +231,8 @@ public:
 
     bool returnToPatapolis = false;
 
+    std::vector<std::thread> missionThreads;
+
     /** Resolve enums **/
     int layerStr2Enum(string layer);
 
@@ -261,7 +263,6 @@ public:
     void spawnProjectile(PSprite& sprite, float xPos, float yPos, float speed, float hspeed, float vspeed, float angle, float maxdmg, float mindmg, float crit, bool enemy = false);
 
     /** Load up the mission **/
-    void Initialise(Config& config, std::string backgroundName, V4Core& v4core_);
     void StartMission(std::string missionFile, bool showCutscene = false, int missionID = 0, float mission_multiplier = 1);
 
     /** Stop the mission **/

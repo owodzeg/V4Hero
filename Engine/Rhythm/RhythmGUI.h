@@ -13,9 +13,17 @@ public:
     sf::RectangleShape r_rhythm2;
 
     float beatBounce = 0;
+    float flicker = 0; ///For beat frame flickering
+    float BPM = 120;
+    float beat_timer = 60.f / BPM * 1000.f;
+    sf::Clock beatClock;
+
+    /// Drums in-game ///
+    std::vector<Drum> drums;
 
     void Initialise(Config& config, std::map<int, bool>& keymap);
-    void doVisuals(int bgm_cycle, sf::Clock* rhythmClock, int combo, float* flicker, float fps, std::vector<Drum>* drums);
+    void click();
+    void doVisuals(int bgm_cycle, int combo);
     RhythmGUI();
     ~RhythmGUI();
 };

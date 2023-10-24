@@ -1008,10 +1008,6 @@ void MissionController::addUnitThumb(int unit_class)
     unitThumbs.push_back(tmp);
 }
 
-void MissionController::Initialise(Config& config, std::string backgroundString, V4Core& _v4Core)
-{
-    
-}
 void MissionController::StartMission(std::string missionFile, bool showCutscene, int missionID, float mission_multiplier)
 {
     int q = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
@@ -1178,6 +1174,7 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
 
     army_x = 0;
     camera.camera_x = 480;
+    camera.zoom_point_y = CoreManager::getInstance().getWindow()->getSize().y - 110;
     showTimer = false;
 
     switch (quality)
@@ -1705,6 +1702,8 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     rhythm.LoadTheme(songName);
     missionTimer.restart();
 
+    missionThreads.push_back(std::thread(&MissionController::DoRhythm, this));
+
     isFinishedLoading = true;
     initialized = true;
 
@@ -1759,7 +1758,7 @@ void MissionController::DoKeyboardEvents()
         {
             if (inputCtrl->isKeyPressed(InputController::Keys::SELECT))
             {
-                std::vector<sf::String> a = {"Show hitboxes", "Hide hitboxes", "Heal units", "Kill all player units", "Kill Hatapon", "Enable verbose logging"};
+                std::vector<sf::String> a = {"Show hitboxes", "Hide hitboxes", "Heal units", "Kill all player units", "Kill Hatapon", "Enable verbose logging", "Mission complete"};
 
                 PataDialogBox db;
                 db.Create(f_font, "Debug menu", a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
@@ -2144,47 +2143,51 @@ bool MissionController::isColliding(PlayableUnit* unit, const unique_ptr<Entity>
 
 void MissionController::DoRhythm()
 {
-    /** Call Rhythm functions **/
-    InputController* inputCtrl = CoreManager::getInstance().getInputController();
-
-    if ((rhythm.current_song == "patapata") || (rhythm.current_song == "chakapata"))
+    while(!missionEnd)
     {
-        //cout << "set walk true" << endl;
-        camera.walk = true;
+        /** Call Rhythm functions **/
+        InputController* inputCtrl = CoreManager::getInstance().getInputController();
+        RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
 
-        if (rhythm.current_song == "chakapata")
-            walkBackwards = true;
-        else
-            walkBackwards = false;
-
-        if (!startWalking)
+        if ((rhythm.current_song == "patapata") || (rhythm.current_song == "chakapata"))
         {
-            walkClock.restart();
-            prevTime = 0;
+            //cout << "set walk true" << endl;
+            camera.walk = true;
 
-            startWalking = true;
+            if (rhythm.current_song == "chakapata")
+                walkBackwards = true;
+            else
+                walkBackwards = false;
+
+            if (!startWalking)
+            {
+                walkClock.restart();
+                prevTime = 0;
+
+                startWalking = true;
+            }
+        } else
+        {
+            //cout << "set walk false" << endl;
+            camera.walk = false;
+
+            startWalking = false;
         }
-    } else
-    {
-        //cout << "set walk false" << endl;
-        camera.walk = false;
 
-        startWalking = false;
+        if ((rhythmController->current_drum == "pata") || (rhythmController->current_drum == "pon") || (rhythmController->current_drum == "chaka") || (rhythmController->current_drum == "don"))
+        {
+            rhythmController->current_drum = "";
+            rhythm.current_song = "";
+        }
+
+        /* 
+        TO-DO: rhythm and rhythmcontroller use the coremanager config
+        rhythmController->config = thisConfig;
+        rhythm.config = thisConfig; 
+        */
+
+        rhythm.doRhythm();
     }
-
-    if ((rhythm.rhythmController.current_drum == "pata") || (rhythm.rhythmController.current_drum == "pon") || (rhythm.rhythmController.current_drum == "chaka") || (rhythm.rhythmController.current_drum == "don"))
-    {
-        rhythm.rhythmController.current_drum = "";
-        rhythm.current_song = "";
-    }
-
-    /* 
-    TO-DO: rhythm and rhythmcontroller use the coremanager config
-    rhythm.rhythmController.config = thisConfig;
-    rhythm.config = thisConfig; 
-    */
-
-    rhythm.doRhythm();
 }
 
 void MissionController::ClearMissionMemory()
@@ -3055,7 +3058,10 @@ std::vector<int> MissionController::DrawEntities()
 
         if (entity->getEntityID() == 1)
         {
-            entity->doRhythm(rhythm.current_song, rhythm.rhythmController.current_drum, rhythm.GetCombo(), rhythm.GetRealCombo(), rhythm.advanced_prefever, rhythm.r_gui.beatBounce, rhythm.GetSatisfaction());
+            RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
+            RhythmGUI* rhythmGUI = CoreManager::getInstance().getRhythmGUI();
+
+            entity->doRhythm(rhythm.current_song, rhythmController->current_drum, rhythm.GetCombo(), rhythm.GetRealCombo(), rhythm.advanced_prefever, rhythmGUI->beatBounce, rhythm.GetSatisfaction());
 
             if (!missionEnd)
             {
@@ -3265,8 +3271,10 @@ std::vector<int> MissionController::DrawUnits()
             /** Execute unit features when mission is not over **/
             if (!missionEnd)
             {
-                unit->UpdateRhythm(rhythm.current_song, rhythm.rhythmController.current_drum, rhythm.GetCombo());
-                unit->doRhythm(rhythm.current_song, rhythm.rhythmController.current_drum, rhythm.GetCombo());
+                RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
+
+                unit->UpdateRhythm(rhythm.current_song, rhythmController->current_drum, rhythm.GetCombo());
+                unit->doRhythm(rhythm.current_song, rhythmController->current_drum, rhythm.GetCombo());
 
                 if (unit->getUnitID() != 0) /// Yaripon
                 {
@@ -3671,10 +3679,9 @@ void MissionController::Update()
         //ctrlTips.draw(window);
 
         //cout << "[MissionController] Rhythm" << endl;
-        
-        //TO-DO: do rhythm for new system
-        DoRhythm();
-        rhythm.Draw();
+
+        CoreManager::getInstance().getRhythmGUI()->doVisuals(rhythm.GetBgmCycle(), rhythm.GetCombo());
+        //rhythm.Draw();
     }
 
     /** Execute all mission end related things **/
@@ -3779,6 +3786,21 @@ void MissionController::Update()
                     {
                         SPDLOG_DEBUG("Deprecated: verbose logging");
                         verboseLogs = !verboseLogs;
+                        dialog_boxes[dialog_boxes.size() - 1].Close();
+                    }
+
+                    break;
+                }
+
+                case 6: {
+                    if (dialog_boxes[dialog_boxes.size() - 1].id == 999)
+                    {
+                        SPDLOG_DEBUG("Mission complete");
+
+                        missionEnd = true;
+                        rhythm.Stop();
+                        missionEndTimer.restart();
+
                         dialog_boxes[dialog_boxes.size() - 1].Close();
                     }
 

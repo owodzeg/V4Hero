@@ -19,7 +19,7 @@ public:
 
     EndFlag();
     void LoadConfig();
-    void Draw(sf::RenderWindow& window);
+    void Draw();
     void OnCollide(CollidableObject* otherObject, int collidedWith = -1, vector<string> collisionData = {});
 };
 

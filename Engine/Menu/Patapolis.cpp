@@ -28,8 +28,8 @@ PatapolisMenu::PatapolisMenu()
     f_font.loadFromFile(config->fontPath);
 
     t_title.createText(f_font, 38, sf::Color::White, "", quality, 1);
-    t_title.t.setOutlineThickness(2);
-    t_title.t.setOutlineColor(sf::Color::Black);
+    t_title.setOutlineThickness(2);
+    t_title.setOutlineColor(sf::Color::Black);
 
     string vx_params = "0,24,128,238;66,24,128,238;444,184,243,202;591,184,243,202;592,255,255,255;710,171,243,214;720,171,243,214";
 
@@ -362,16 +362,35 @@ PatapolisMenu::PatapolisMenu()
     SetTitle(location);
     camPos = locations[location];
 
+    // camera settings
+    camera.debug_x_dest = 141;
+    camera.debug_x = 141;
+    camera.followobject_x = 0;
+    camera.lockMovement = true;
+
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+
+    camera.zoom_point_x = window->getSize().x/2;
+    camera.zoom_point_y = window->getSize().y; 
+
+    patapolisView = window->getDefaultView();
+
     initialized = true;
 }
 
 void PatapolisMenu::updateStoryPoint()
 {
-    SPDLOG_TRACE("Updating story point");
+    //SPDLOG_TRACE("Updating story point");
     SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
 
+    // what the hell happened here?
+    // story_point needs to be updated manually after mission passes,
+    // it is not the amount of unlocked missions, it can be a variable number
+    // that currently points to a specific branch of the story
+    // TO-DO: make up my mind about this /owocek
+
     // While currently just doing
-    //v4Core->saveReader.story_point = *std::max_element(v4Core->saveReader.missions_unlocked.begin(), v4Core->saveReader.missions_unlocked.end());
+    saveReader->story_point = *std::max_element(saveReader->missions_unlocked.begin(), saveReader->missions_unlocked.end());
     // would suffice, we do this in case at some point we want a story point to change without unlocking a mission
     // for example, after a mission you're supposed to fail
     int last_mission = *std::max_element(saveReader->missions_unlocked.begin(), saveReader->missions_unlocked.end());
@@ -652,6 +671,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
                 case 0:
                 default: {
                     // Start of game, shouldn't be accessible
+                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("dialogue_error"))+"story_point is either 0 or above currently regulated bounds", true);
                     break;
                 }
                 case 1: {
@@ -813,7 +833,10 @@ void PatapolisMenu::Update()
     if (true)
     {
         auto lastView = window->getView();
-        window->setView(window->getDefaultView());
+        window->setView(patapolisView);
+
+        camera.zoom_y = 0;
+        camera.Work();
 
         window->draw(v_background);
 
@@ -1462,11 +1485,6 @@ void PatapolisMenu::Update()
                         }
                     }
 
-                    if ((messageclouds[i].done) && (floor(messageclouds[i].xsize) == 0) && (floor(messageclouds[i].ysize) == 0))
-                    {
-                        messageclouds[i].Hide();
-                    }
-
                     messageclouds[i].Draw();
 
                     if ((!messageclouds[i].active) && (messageclouds[i].done))
@@ -1476,6 +1494,7 @@ void PatapolisMenu::Update()
 
             for (int i = 0; i < m_rm.size(); i++)
             {
+                SPDLOG_DEBUG("Erasing MessageCloud id {}", m_rm[i]);
                 messageclouds.erase(messageclouds.begin() + m_rm[i] - i);
             }
         }
@@ -1725,8 +1744,7 @@ void PatapolisMenu::Update()
                         } else if (dialogboxes[dialogboxes.size() - 1].id == 2)
                         {
                             SPDLOG_DEBUG("Saving game should happen here. Game not saving yet.");
-                            //TO-DO: change to coremanager savereader
-                            //v4Core->saveReader.Save();
+                            CoreManager::getInstance().getSaveReader()->Save();
                             SPDLOG_INFO("Saved the game.");
 
                             dialogboxes[dialogboxes.size() - 1].Close();
@@ -1754,6 +1772,8 @@ void PatapolisMenu::Update()
                             dialogboxes[dialogboxes.size() - 1].Close();
                             break;
                         }
+
+                        break;
                     }
 
                     case 1: {

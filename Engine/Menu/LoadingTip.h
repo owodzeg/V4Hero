@@ -40,4 +40,4 @@ public:
     void Draw();
 };
 
-#endif LOADINGTIP_H
+#endif

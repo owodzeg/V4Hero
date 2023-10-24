@@ -23,30 +23,8 @@ SaveReader::SaveReader()
     bool exists = check.good();
     check.close();
 
-    ///if config not exists -update: then dont create fresh one :)
-    /*if(!exists)
-    {
-        ofstream conf("resources/data/sv1.p4sv");
-
-        if(conf.is_open())
-        {
-            ///Safety warning
-            conf << "# Take caution! The data below represents your save data! Don't edit it unless you know what you're doing, and if you must, PLEASE back it up somewhere else first <3 #";
-            conf << '\n';
-        }
-
-        conf.close();
-    }*/
-
     isNewSave = !exists;
-
     itemReg.saveReader = this;
-}
-
-//TO-DO: remove the argument version
-void SaveReader::LoadSave(Config& tconfig)
-{
-    //lol config is not even needed here
 }
 
 void SaveReader::LoadSave()
@@ -61,12 +39,12 @@ void SaveReader::LoadSave()
         kami_name = sf::String(to_string(save_data["details"]["name"]));
         story_point = save_data["details"]["story_point"];
         locations_unlocked.clear(); // Clear the default from SaveReader.h
-        for (int i = 0; i < save_data["details"]["locations_unlocked"].size(); i++)
+        for (unsigned int i = 0; i < save_data["details"]["locations_unlocked"].size(); i++)
         {
             locations_unlocked.push_back(save_data["details"]["locations_unlocked"][i]);
         }
 
-        for (int i = 0; i < save_data["items"].size(); i++)
+        for (unsigned int i = 0; i < save_data["items"].size(); i++)
         {
             invData.addItem(itemReg.getItemByName(save_data["items"][i]["name"])->order_id, itemReg, save_data["items"][i]["count"]);
         }
@@ -79,7 +57,7 @@ void SaveReader::LoadSave()
             new_pon.pon_class = save_data["army"][0]["class"];
             new_pon.pon_level = save_data["army"][0]["level"];
             new_pon.pon_exp = save_data["army"][0]["exp"];
-            for (int o = 0; o < save_data["army"][0]["slots"].size(); o++)
+            for (unsigned int o = 0; o < save_data["army"][0]["slots"].size(); o++)
             {
                 if (save_data["army"][0]["slots"][0] != -1) // Is this necessary?
                 {
@@ -95,14 +73,14 @@ void SaveReader::LoadSave()
 
         for (int i = 1; i < comparison; i++)
         {
-            for (int o = 0; o < save_data["army"][i].size(); o++)
+            for (unsigned int o = 0; o < save_data["army"][i].size(); o++)
             {
                 Pon new_pon = Pon(this);
                 new_pon.pon_id = save_data["army"][i][o]["rarepon"];
                 new_pon.pon_class = save_data["army"][i][o]["class"];
                 new_pon.pon_level = save_data["army"][i][o]["level"];
                 new_pon.pon_exp = save_data["army"][i][o]["exp"];
-                for (int p = 0; p < save_data["army"][i][o]["slots"].size(); p++)
+                for (unsigned int p = 0; p < save_data["army"][i][o]["slots"].size(); p++)
                 {
                     if (save_data["army"][i][o]["slots"][p][0] != -1) // Is this necessary?
                     {
@@ -116,16 +94,16 @@ void SaveReader::LoadSave()
             ponReg.army.push_back(save_data["army"][i][0]["class"]);             // The first 3 squads are in army, to change the limit of squads in army change the `i < 4` above and `i = 4` below
         }
 
-        for (int i = 4; i < save_data["army"].size(); i++)
+        for (unsigned int i = 4; i < save_data["army"].size(); i++)
         {
-            for (int o = 0; o < save_data["army"][i].size(); o++)
+            for (unsigned int o = 0; o < save_data["army"][i].size(); o++)
             {
                 Pon new_pon = Pon(this);
                 new_pon.pon_id = save_data["army"][i][o]["rarepon"];
                 new_pon.pon_class = save_data["army"][i][o]["class"];
                 new_pon.pon_level = save_data["army"][i][o]["level"];
                 new_pon.pon_exp = save_data["army"][i][o]["exp"];
-                for (int p = 0; p < save_data["army"][i][o]["slots"].size(); p++)
+                for (unsigned int p = 0; p < save_data["army"][i][o]["slots"].size(); p++)
                 {
                     if (save_data["army"][i][o]["slots"][0] != -1) // Is this necessary?
                     {
@@ -138,7 +116,7 @@ void SaveReader::LoadSave()
             ponReg.squads_available.push_back(save_data["army"][i][0]["class"]); // Save to available squads for choosing in barracks / prep
         }
 
-        for (int i = 0; i < save_data["missions"].size(); i++) // Each mission is stored as a single array so it can be handled elegantly (slightly increases file size, but shouldn't be a problem)
+        for (unsigned int i = 0; i < save_data["missions"].size(); i++) // Each mission is stored as a single array so it can be handled elegantly (slightly increases file size, but shouldn't be a problem)
         {
             if (save_data["missions"][i][2]) // Is unlocked?
             {
@@ -175,7 +153,7 @@ void SaveReader::CreateBlankSave()
     kami_name = "Kamipon";
 
     vector<string> starter_items = {"item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet"};
-    for (int i = 0; i < starter_items.size(); i++)
+    for (unsigned int i = 0; i < starter_items.size(); i++)
     {
         invData.addItem(itemReg.getItemByName(starter_items[i])->order_id, itemReg);
     }
@@ -222,7 +200,7 @@ void SaveReader::Save()
     save_json["save"]["details"]["locations_unlocked"] = locations_unlocked;
     save_json["save"]["details"]["story_point"] = story_point;
 
-    for (int i = 0; i < invData.items.size(); i++)
+    for (unsigned int i = 0; i < invData.items.size(); i++)
     {
         json item;
 
@@ -257,9 +235,9 @@ void SaveReader::Save()
     }
 
     int squad_pos = 0;
-    for (int i = 1; i <= ponReg.squads_available.size(); i++) // Skip hero
+    for (unsigned int i = 1; i <= ponReg.squads_available.size(); i++) // Skip hero
     {
-        for (int o = 0; o < ponReg.pons.size(); o++)
+        for (unsigned int o = 0; o < ponReg.pons.size(); o++)
         {
             if (ponReg.pons[o].pon_class == ponReg.squads_available[i - 1])
             {
@@ -289,7 +267,28 @@ void SaveReader::Save()
     }
 
     std::vector<json> missions; // Doing this like so skips saving an accidental null value in the array
-    map<int, int>::iterator it;
+
+    // previous approach with mission levels wasn't going to cut it because we often sit at level 0 and therefore it is not added to the mission_levels map
+    // this causes missions to become unavailable after saving because game looks for mission_levels which don't exist
+    // thats why we take the furthest unlocked mission and fill in the blanks
+    // it might be more weighty on the savedata but it guarantees that all missions id's are properly initialized after saving and loading back
+    // and we'll keep an incremental order of these missions anyway...
+    // TODO: what to do with potential DLC ids? probably handle separately in some "DLC" savedata clusters (to-be-invented in the future)
+
+    auto it = max_element(std::begin(missions_unlocked), std::end(missions_unlocked));
+    
+    for (int i=1; i<=*it; i++)
+    {
+        json tmp;
+        tmp[0] = i;
+        tmp[1] = mission_levels[i];
+        tmp[2] = isMissionUnlocked(i);
+        missions.push_back(tmp);
+    }
+
+    // old solution
+
+    /*map<int, int>::iterator it;
     for (it = mission_levels.begin(); it != mission_levels.end(); it++)
     {
         json tmp;
@@ -298,6 +297,8 @@ void SaveReader::Save()
         tmp[2] = isMissionUnlocked(it->first);
         missions.push_back(tmp);
     }
+    */
+
     save_json["save"]["missions"] = missions;
 
     /// make sure to prettify the output json because otherwise it's pain in the ass

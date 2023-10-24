@@ -558,6 +558,11 @@ void Barracks::refreshStats()
     //s_unit_hp.setString(std::to_string(currentPon->pon_hp));
     //s_unit_crit.setString(std::to_string(currentPon->pon_crit));
     //s_unit_attack_speed.setString(std::to_string(currentPon->pon_attack_speed));
+    
+    // added to reset text color after the preview -L
+    unit_stat_hp_v.setColor(sf::Color::Black);
+    unit_stat_atkspd_v.setColor(sf::Color::Black);
+    unit_stat_dmg_v.setColor(sf::Color::Black);
 
     unit_stat_level_v.setString(std::to_string(currentPon->pon_level)); /// CHANGE THESE WHEN IMPLEMENTING STATUS EFFECTS ETC.
     unit_stat_exp_v.setString(std::to_string(currentPon->pon_exp) + "/1200");
@@ -585,23 +590,148 @@ void Barracks::refreshStats()
     }*/
 }
 
+//i have no idea if this goes here or in other place. -L
+string Barracks::getPreviewText(int stat, int pon_stat, int pon_base_stat)
+{
+    std::string equip_attr = to_string(stat);
+    int actual_attr = pon_base_stat + stat; //this cause problems for the atkspd stat since it eliminates the decimals -L
+    std::string preview_pon_attr = to_string(actual_attr);
+    std::string preview_attr;
+    if (stat != 0) 
+    {
+        if (pon_stat == actual_attr) 
+        {
+            preview_attr = preview_pon_attr;
+            return preview_attr;
+        } else if (pon_stat < actual_attr) 
+        {
+            preview_attr = preview_pon_attr + "(+" + equip_attr + ")";
+            return preview_attr;
+        } else if (pon_stat > actual_attr) 
+        {
+            preview_attr = preview_pon_attr + "(-" + equip_attr + ")";
+            return preview_attr;
+        } 
+    } else
+    {
+        return std::to_string( pon_stat );
+    }
+}
+
+string Barracks::getPreviewText(int stat, int pon_stat, int pon_base_stat, int stat2, int pon_stat2, int pon_base_stat2)
+{
+    int actual_attr = pon_base_stat + stat;
+    int actual_attr2 = pon_base_stat2 + stat2;
+    std::string preview_pon_attr = to_string(actual_attr);
+    std::string preview_pon_attr2 = to_string(actual_attr2);
+    std::string preview_attr;
+    if (stat != 0 && stat2 != 0)
+    {
+        if (pon_stat == actual_attr && pon_stat2 == actual_attr2)
+        {
+            preview_attr = preview_pon_attr + "-" + preview_pon_attr2;
+            return preview_attr;
+        } else if ((stat2 - stat) < (pon_stat2 - pon_stat))
+        {
+            preview_attr = preview_pon_attr + "-" + preview_pon_attr2 + ("(-)");
+            return preview_attr;
+        } else
+        {
+            preview_attr = preview_pon_attr + "-" + preview_pon_attr2 + ("(+)");
+            return preview_attr;
+        }
+    } else
+    {
+        return to_string(pon_stat) + "-" + to_string(pon_stat2);
+    }
+}
+
+sf::Color Barracks::getPreviewColorText(int stat, int pon_stat, int pon_base_stat,bool invert_color)
+{
+    if (stat != 0)
+    {
+        if (pon_stat == (pon_base_stat + stat))
+        {
+            return sf::Color::Black;
+        } else if (pon_stat < (pon_base_stat + stat))
+        {
+            if (invert_color) {
+                return sf::Color::Red;
+            }
+            else 
+            {
+                return sf::Color::Blue;
+            }
+            
+        } else if (pon_stat > (pon_base_stat + stat))
+        {
+            if (invert_color)
+            {
+                return sf::Color::Blue;
+            }
+            else
+            {
+                return sf::Color::Red;
+            }
+        }
+    } else
+    {
+        return sf::Color::Black;
+    }
+}
+
+sf::Color Barracks::getPreviewColorText(int stat, int pon_stat, int pon_base_stat, int stat2, int pon_stat2, int pon_base_stat2)
+{
+    if (stat != 0 && stat2 != 0)
+    {
+        if (pon_stat == (pon_base_stat + stat) && pon_stat2 == (pon_base_stat2 + stat2))
+        {
+            return sf::Color::Black;
+        } else if ((stat2 - stat) < (pon_stat2 - pon_stat))
+        {
+            return sf::Color::Red;
+        } else
+        {
+            return sf::Color::Blue;
+        }
+    } else
+    {
+        return sf::Color::Black;
+    }
+}
+
 void Barracks::updatePreviewText()
 {
     int invbox_id = ((grid_offset_y + grid_sel_y) * 4) + grid_sel_x;
-
+    Pon* currentPon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(current_selected_pon);
     if (inventory_boxes.size() > 0)
     {
         if (invbox_id < inventory_boxes.size())
         {
             item_title.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(inventory_boxes[invbox_id].data->item_name)));
             item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(CoreManager::getInstance().getStrRepo()->GetString(inventory_boxes[invbox_id].data->item_description), 340, f_font, 22)));
+            //preview stats -L
+            unit_stat_hp_v.setString(getPreviewText(inventory_boxes[invbox_id].data->equip->hp, currentPon->pon_hp, currentPon->pon_base_hp));
+            unit_stat_hp_v.setColor(getPreviewColorText(inventory_boxes[invbox_id].data->equip->hp, currentPon->pon_hp, currentPon->pon_base_hp,false));
+
+            unit_stat_atkspd_v.setString(getPreviewText(inventory_boxes[invbox_id].data->equip->attack_speed, currentPon->pon_attack_speed, currentPon->pon_base_attack_speed)); //the only one that gives problems with the preview. -L
+            unit_stat_atkspd_v.setColor(getPreviewColorText(inventory_boxes[invbox_id].data->equip->attack_speed, currentPon->pon_attack_speed, currentPon->pon_base_attack_speed, true));
+
+            unit_stat_dmg_v.setString(getPreviewText(inventory_boxes[invbox_id].data->equip->min_dmg, currentPon->pon_min_dmg, currentPon->pon_base_min_dmg, inventory_boxes[invbox_id].data->equip->max_dmg, currentPon->pon_max_dmg, currentPon->pon_base_max_dmg));
+            unit_stat_dmg_v.setColor(getPreviewColorText(inventory_boxes[invbox_id].data->equip->min_dmg, currentPon->pon_min_dmg, currentPon->pon_base_min_dmg, inventory_boxes[invbox_id].data->equip->max_dmg, currentPon->pon_max_dmg, currentPon->pon_base_max_dmg));
         } else
         {
+            unit_stat_hp_v.setColor(sf::Color::Black);
+            unit_stat_atkspd_v.setColor(sf::Color::Black);
+            unit_stat_dmg_v.setColor(sf::Color::Black);
             item_title.setString("");
             item_desc.setString("");
         }
     } else
     {
+        unit_stat_hp_v.setColor(sf::Color::Black);
+        unit_stat_atkspd_v.setColor(sf::Color::Black);
+        unit_stat_dmg_v.setColor(sf::Color::Black);
         item_title.setString("");
         item_desc.setString("");
     }

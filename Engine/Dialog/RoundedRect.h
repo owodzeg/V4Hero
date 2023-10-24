@@ -19,7 +19,6 @@ public:
     void Create(float nwidth, float nheight, float nedge_size, float resRatio, sf::Color rectColor = sf::Color(255, 237, 210, 255));
     void setOrigin(sf::Vector2f origin);
     void Draw();
-    void Draw(sf::RenderWindow& window);
 };
 
 #endif // ROUNDEDRECT_H

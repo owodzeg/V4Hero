@@ -5,8 +5,8 @@
 extern "C" {
 #endif
 
-#include <stdint.h>
-#include <string.h>
+#include <cstdint>
+#include <cstring>
 #ifndef __cplusplus
 #include <stdbool.h>
 #endif

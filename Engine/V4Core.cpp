@@ -8,8 +8,8 @@
 V4Core::V4Core()
 {
     /** Check possible graphical settings (for debugging purposes) **/
-    const unsigned int maxSize = sf::Texture::getMaximumSize();
-    SPDLOG_DEBUG("Max allowed texture size: {}", maxSize);
+    //const unsigned int maxSize = sf::Texture::getMaximumSize();
+    //SPDLOG_DEBUG("Max allowed texture size: {}", maxSize);
     sf::RenderTexture rtx;
     SPDLOG_DEBUG("Max antialiasing level: {}", rtx.getMaximumAntialiasingLevel());
 
@@ -35,7 +35,7 @@ V4Core::V4Core()
 
     /** Load config from config.cfg **/
     Config* config = CoreManager::getInstance().getConfig();
-    config->LoadConfig(this);
+    config->LoadConfig();
 
     /** Apply logging level from config **/
     switch (config->GetInt("logLevel")) //i can't get int to convert to a spdlog::set_level argument, so i'm making a switch

@@ -58,7 +58,7 @@ ObeliskMenu::ObeliskMenu()
 
     mission_select.load("resources/graphics/ui/worldmap/mission_select.png");
 
-    int fields = 4; //make it be detected via a file or automatically, later
+    int fields = 6; //make it be detected via a file or automatically, later
     for (int i = 1; i <= fields; i++)
     {
         SpriteWrapper bg;

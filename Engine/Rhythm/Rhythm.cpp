@@ -19,6 +19,9 @@ Rhythm::Rhythm()
     s_badrhythm1.loadFromFile("resources/sfx/level/badrhythm_1.ogg");
     s_badrhythm2.loadFromFile("resources/sfx/level/badrhythm_2.ogg");
 
+    b_metronome.loadFromFile("resources/sfx/drums/metronome.ogg");
+    s_metronome.setBuffer(b_metronome);
+
     //CoreManager::getInstance().getConfig()->LoadConfig(CoreManager::getInstance().getConfig()->thisCore);
 }
 
@@ -38,9 +41,10 @@ void Rhythm::Stop()
 }
 void Rhythm::LoadTheme(string theme)
 {
-    low_range = CoreManager::getInstance().getConfig()->GetInt("lowRange");
-    high_range = CoreManager::getInstance().getConfig()->GetInt("highRange");
-    SPDLOG_INFO("Low Range: {} ms, High Range: {} ms", low_range, high_range);
+    //TO-DO: uncomment this later
+    //low_range = CoreManager::getInstance().getConfig()->GetInt("lowRange");
+    //high_range = CoreManager::getInstance().getConfig()->GetInt("highRange");
+    //SPDLOG_INFO("Low Range: {} ms, High Range: {} ms", low_range, high_range);
     SPDLOG_INFO("Selected theme: {}", theme);
 
     Stop();
@@ -66,6 +70,10 @@ void Rhythm::LoadTheme(string theme)
 
     satisfaction_value.clear();
 
+    // set bpm for rhythm gui
+    CoreManager::getInstance().getRhythmGUI()->BPM = BPM;
+    CoreManager::getInstance().getRhythmGUI()->beat_timer = 60.f / BPM * 1000.f;
+
     ///Stop any current action
     //current_song = "";
 
@@ -88,18 +96,21 @@ void Rhythm::Start()
 
     ///Restart the Rhythm clocks
     rhythmClock.restart();
+    newRhythmClock.restart();
 
     s_theme[0].setBuffer(songController[0].get()->GetSongByNumber(0, 0));
     SPDLOG_INFO("Volume is {} {} {}", float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("bgmVolume")) / 100.f), CoreManager::getInstance().getConfig()->GetInt("masterVolume"), CoreManager::getInstance().getConfig()->GetInt("bgmVolume"));
     s_theme[0].setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("bgmVolume")) / 100.f));
     s_theme[0].play();
 
-    beat_timer = floor(songController[0].get()->GetSongByNumber(0, 0).getDuration().asMilliseconds() / float(8.08));
-    SPDLOG_INFO("Beat timer set to: {}", beat_timer);
+    //beat_timer = floor(songController[0].get()->GetSongByNumber(0, 0).getDuration().asMilliseconds() / float(8.08));
+    //SPDLOG_INFO("Beat timer set to: {}", beat_timer);
 }
 
 void Rhythm::BreakCombo()
 {
+    RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
+
     updateworm = true;
     satisfaction_value.clear();
     rl_combo = 0;
@@ -122,12 +133,12 @@ void Rhythm::BreakCombo()
     combo = 1;
 
     ///Reset Perfects table
-    rhythmController.perfect = 0;
-    rhythmController.perfects.clear();
+    rhythmController->perfect = 0;
+    rhythmController->perfects.clear();
 
     ///Reset command input
-    rhythmController.commandInput.clear();
-    rhythmController.command_perfects.clear();
+    rhythmController->commandInput.clear();
+    rhythmController->command_perfects.clear();
 
     ///Stop the theme
     s_theme[0].stop();
@@ -160,6 +171,11 @@ int Rhythm::GetCombo()
     return combo;
 }
 
+int Rhythm::GetBgmCycle()
+{
+    return bgm_cycle;
+}
+
 int Rhythm::GetRealCombo()
 {
     return rl_combo;
@@ -172,37 +188,59 @@ float Rhythm::GetSatisfaction()
 
 void Rhythm::checkRhythmController()
 {
+    RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
+
     ///RHYTHM CONTROLLER SETUP
-    rhythmController.combo = combo;
+    rhythmController->combo = combo;
 
-    rhythmController.masterTimer = abs(rhythmClock.getElapsedTime().asMilliseconds() - 250);
-    rhythmController.av_commands = av_commands;
+    sf::Int64 rhythmClockValue = newRhythmClock.getElapsedTime().asMicroseconds();
 
-    rhythmController.low_range = low_range;
-    rhythmController.high_range = high_range;
+    rhythmController->masterTimer = abs((rhythmClockValue % int(beat_timer)) - (beat_timer/2));
+    rhythmController->masterTimerNoAbs = rhythmClockValue % int(beat_timer);
+    rhythmController->base5_commands = base5_commands;
 
-    if (rhythmController.checkForInput())
+    rhythmController->low_range = low_range;
+    rhythmController->high_range = high_range;
+
+    if (rhythmController->checkForInput())
     {
-        std::string drum_path = "resources/graphics/rhythm/drums/" + rhythmController.drumToLoad + ".png";
-
-        Drum temp;
-        temp.Load(rhythmController.drumToLoad, rhythmController.drum_perfection, drum_path);
-        temp.pattern = rhythmController.currentPattern;
-        drums.push_back(temp);
-
-        if (rhythmController.breakCombo)
+        if (rhythmController->breakCombo)
         {
             BreakCombo();
         }
     }
 
-    rhythmController.resetValues();
+    rhythmController->resetCombo();
 }
 
 void Rhythm::doRhythm()
 {
+    sf::Int64 rhythmClockValue = newRhythmClock.getElapsedTime().asMicroseconds();
+
+    metronomeVal = (rhythmClockValue % int(beat_timer));
+    //SPDLOG_DEBUG("metronome: {}", metronomeVal);
+
+    if(metronomeVal < metronomeOldVal)
+    {    
+        metronomeState += 1;
+        metronomeState = metronomeState % 2;
+
+        metronomeClick = true;
+        SPDLOG_DEBUG("[metronome] click... {} {} {}", metronomeOldVal, metronomeVal, metronomeState);
+
+        if(metronomeState == 0)
+        {
+            s_metronome.play();
+
+            CoreManager::getInstance().getRhythmGUI()->click();
+        }
+    }
+
+    metronomeOldVal = metronomeVal;
+
     checkRhythmController();
 
+    /*
     if (rhythmClock.getElapsedTime().asMilliseconds() > (beat_timer / float(2)))
     {
         ///cout << "Small: " << (beat_timer/float(2)) << endl;
@@ -221,7 +259,7 @@ void Rhythm::doRhythm()
 
             if (combo >= 2)
             {
-                if (rhythmController.hit)
+                if (rhythmController->hit)
                 {
                     if (cycle_mode == 1)
                     {
@@ -236,14 +274,14 @@ void Rhythm::doRhythm()
                 }
             } else
             {
-                if (!rhythmController.hit)
+                if (!rhythmController->hit)
                 {
                     ///Clear user input
-                    rhythmController.commandInput.clear();
+                    rhythmController->commandInput.clear();
                 }
             }
 
-            rhythmController.hit = false;
+            rhythmController->hit = false;
             count_cycle = true;
         }
     }
@@ -259,27 +297,33 @@ void Rhythm::doRhythm()
 
         if (combo <= 1) ///start anytime function
         {
-            if (rhythmController.hit == false)
+            if (rhythmController->hit == false)
             {
-                if (rhythmController.commandInput.size() == 4) ///If user input is 4 drums
+                if (rhythmController->commandInput.size() == 8) ///If user input is 4 drums (8 halfbeats)
                 {
-                    string fullcom = rhythmController.commandInput[0] + rhythmController.commandInput[1] + rhythmController.commandInput[2] + rhythmController.commandInput[3]; ///Create a full command using 4 individual hits
-                    int index = distance(av_commands.begin(), find(av_commands.begin(), av_commands.end(), fullcom));
+                    int fullcom = 0;
 
-                    if (index < av_commands.size()) ///Check if the command exists in available commands
+                    for (unsigned int i = 0; i < rhythmController->commandInput.size(); i++)
+                    {
+                        fullcom += pow(rhythmController->commandInput[i], 7-i);
+                    }
+
+                    unsigned int index = distance(base5_commands.begin(), find(base5_commands.begin(), base5_commands.end(), fullcom));
+
+                    if (std::find(base5_commands.begin(), base5_commands.end(), fullcom) != base5_commands.end()) ///Check if the command exists in available commands
                     {
                         rl_combo++;
                         SPDLOG_DEBUG("rl_combo: {}", rl_combo);
 
                         ///Clear user input
-                        rhythmController.commandInput.clear();
+                        rhythmController->commandInput.clear();
 
                         ///Push the amount of perfect hits to the table and reset them
-                        rhythmController.perfects.push_back(rhythmController.perfect);
+                        rhythmController->perfects.push_back(rhythmController->perfect);
 
-                        current_perfect = rhythmController.perfect;
-                        rhythmController.perfect = 0;
-                        rhythmController.command_perfects.clear();
+                        current_perfect = rhythmController->perfect;
+                        rhythmController->perfect = 0;
+                        rhythmController->command_perfects.clear();
 
                         float acc = current_perfect;
                         satisfaction_value.push_back(perfects_reward[acc]);
@@ -355,11 +399,16 @@ void Rhythm::doRhythm()
             {
                 SPDLOG_DEBUG("Combo: {}", combo);
 
-                string fullcom = rhythmController.commandInput[0] + rhythmController.commandInput[1] + rhythmController.commandInput[2] + rhythmController.commandInput[3]; ///Create a full command using 4 individual hits
+                int fullcom = 0;
 
-                int index = distance(av_commands.begin(), find(av_commands.begin(), av_commands.end(), fullcom));
+                for (unsigned int i = 0; i < rhythmController->commandInput.size(); i++)
+                {
+                    fullcom += pow(rhythmController->commandInput[i], 7-i);
+                }
+                
+                unsigned int index = distance(base5_commands.begin(), find(base5_commands.begin(), base5_commands.end(), fullcom));
 
-                if (index < av_commands.size()) ///Check if the command exists in available commands
+                if (std::find(base5_commands.begin(), base5_commands.end(), fullcom) != base5_commands.end()) ///Check if the command exists in available commands
                 {
                     updateworm = true;
 
@@ -373,17 +422,17 @@ void Rhythm::doRhythm()
                     current_song = av_songs[index];
 
                     ///Clear user input
-                    rhythmController.commandInput.clear();
+                    rhythmController->commandInput.clear();
 
                     ///Push the amount of perfect hits to the table and reset them
-                    rhythmController.perfects.push_back(rhythmController.perfect);
-                    current_perfect = rhythmController.perfect;
-                    rhythmController.perfect = 0;
+                    rhythmController->perfects.push_back(rhythmController->perfect);
+                    current_perfect = rhythmController->perfect;
+                    rhythmController->perfect = 0;
 
-                    rhythmController.command_perfects.clear();
+                    rhythmController->command_perfects.clear();
 
-                    while (rhythmController.perfects.size() > 4)
-                        rhythmController.perfects.erase(rhythmController.perfects.begin());
+                    while (rhythmController->perfects.size() > 4)
+                        rhythmController->perfects.erase(rhythmController->perfects.begin());
 
                     if (combo < 11)
                     {
@@ -494,9 +543,12 @@ void Rhythm::doRhythm()
             }
         }
     }
+    */
+
+   metronomeClick = false;
 }
 
 void Rhythm::Draw()
 {
-    r_gui.doVisuals(bgm_cycle, &rhythmClock, combo, &flicker, fps, &drums);
+    //r_gui.doVisuals(bgm_cycle, combo);
 }

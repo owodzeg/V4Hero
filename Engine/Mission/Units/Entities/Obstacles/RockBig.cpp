@@ -43,7 +43,7 @@ void RockBig::parseAdditionalData(nlohmann::json additional_data)
 }
 
 
-void RockBig::Draw(sf::RenderWindow& window)
+void RockBig::Draw()
 {
     if (dead)
     {

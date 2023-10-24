@@ -203,6 +203,14 @@ MainMenu::MainMenu()
     SPDLOG_INFO("Loading AnimatedCurveShape");
     shp = new AnimatedCurveShape("resources/data/item_data.json");
     initialized = true;
+    
+    //Checks if there is a save then use "continue" as default totem*/
+    ifstream check("resources/data/sv1.p4sv");
+    bool exists = check.good();
+    check.close();
+    if (exists) {
+        totem_sel = 1;
+    }
 }
 
 void MainMenu::EventFired(sf::Event event)
@@ -580,10 +588,6 @@ void MainMenu::Update()
         //cout << "MouseX: " << (mouseX / window->getSize().x) * 1280 << endl;
 
         mouseInBounds = false;
-        for (int i = 0; i <= 3; i++)
-        {
-            PSprite& totem = ResourceManager::getInstance().getSprite("resources/graphics/ui/menu/totem_" + to_string(i + 1) + ".png");
-        }
 
         for (int i = 0; i < 4; i++)
         {
@@ -748,8 +752,6 @@ void MainMenu::Update()
             temp_anim_t += 1;
             //shp->fps = fps;
             //shp->Draw(); 
-
-            screenFade.draw();
 
 
             if ((inputCtrl->isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl->isKeyPressed(InputController::Keys::RTRIGGER)))

@@ -12,6 +12,8 @@
 #include "StringRepository.h"
 #include "TipsUtil.h"
 #include "Mission/MissionController.h"
+#include "Rhythm/RhythmGUI.h"
+#include "Rhythm/RhythmController.h"
 
 // Class for holding the pointers to commonly used important game contents
 class CoreManager
@@ -26,6 +28,8 @@ public:
     InputController* getInputController();
     TipsUtil* getTipsUtil();
     MissionController* getMissionController();
+    RhythmGUI* getRhythmGUI();
+    RhythmController* getRhythmController();
     void reinitMissionController();
     void deleteMissionController();
     sf::RenderWindow* getWindow();
@@ -54,6 +58,12 @@ private:
 
     // Pointer to MissionController (handled by StateManager)
     MissionController* missionController;
+
+    // Pointer to RhythmGUI
+    RhythmGUI* rhythmGUI;
+
+    // Pointer to RhythmController
+    RhythmController* rhythmController;
 
     // Pointer to current window
     sf::RenderWindow* window;

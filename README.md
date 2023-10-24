@@ -16,13 +16,19 @@ An official client for Patafour.
 ### Required Libraries and Tools
 
  * [CMake](https://cmake.org/download/) >= 3.19
- * [SFML](https://www.sfml-dev.org/download.php) >= 2.5
  * [Git](https://git-scm.com/downloads)
+ * [SFML](https://www.sfml-dev.org/download.php) >= 2.5
  * [Discord Game SDK](https://dl-game-sdk.discordapp.net/2.5.6/discord_game_sdk.zip)
  
 ## Setup
 
-Simply clone the repo and CMake should automatically grab everything for you. Visual Studio 2019+ is recommended.
+Simply clone the repo and CMake should automatically grab everything for you. Visual Studio Code is strongly preferred and has been thoroughly used by the dev team, which implies best compatibility.
+
+For other IDEs, Visual Studio Community 2019+ should work just fine. Code::Blocks and others haven't been tested and probably wont work.
+
+### Compiler
+
+GCC is used to compile Patafour alongside with it's required libraries.
 
 ### Linux installation
 
@@ -32,13 +38,11 @@ Note that we currently only support the proprietary NVidia driver for NVidia GPU
 
 ### Windows installation
 
-You should enable [Developer Mode](https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development) in order to successfully configure the project.
-
-Create an environment variable called `SFML_ROOT` that points to a valid SFML root directory.
-
 After building, an error may appear in relation to a missing OpenAL32.dll. You can simply copy it from SFML/bin folder to V4Hero.exe directory. The same thing applies to a missing discord_game_sdk.dll, which can be copied from the lib folder within Discord Game SDK package.
 
-Make sure that you select proper architecture when building. Downloading 32-bit SFML will only compile x86 builds and 64-bit SFML will only compile x64 builds.
+Make sure that you select proper architecture of the libraries. If you're experiencing a 0xC000007B error, that means the architecture of either OpenAL32.dll or discord_game_sdk.dll does not match the target architecture you're compiling V4Hero at.
+
+[SFML has issues building on UCRT runtime.](https://en.sfml-dev.org/forums/index.php?topic=28265.0) Please make sure that your compiler uses MSVCRT runtime.
 
 
 ## Contributing

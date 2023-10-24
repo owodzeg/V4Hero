@@ -4,17 +4,29 @@ project(V4Hero VERSION 1.2)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
 add_definitions(-DPATAFOUR_VERSION="${CMAKE_PROJECT_VERSION}")
 
 set(SFML_STATIC_LIBRARIES TRUE)
+
 find_package(DiscordSDK 2.5.6 COMPONENTS x86_64 REQUIRED)
-find_package(SFML 2.5.1 COMPONENTS graphics audio REQUIRED)
+
+#find_package(SFML 2.5.1 COMPONENTS graphics audio REQUIRED)
 
 include(FetchContent)
 
+set(BUILD_SHARED_LIBS OFF)
+FetchContent_Declare(
+ SFML
+ GIT_REPOSITORY https://github.com/SFML/SFML.git
+ GIT_TAG 2.6.0
+)
+FetchContent_MakeAvailable(SFML)
+
 FetchContent_Declare(json
   GIT_REPOSITORY https://github.com/ArthurSonzogni/nlohmann_json_cmake_fetchcontent
-  GIT_TAG v3.10.4)
+  GIT_TAG v3.11.2)
 
 FetchContent_GetProperties(json)
 if(NOT json_POPULATED)
@@ -24,7 +36,7 @@ endif()
 
 FetchContent_Declare(spdlog
         GIT_REPOSITORY https://github.com/gabime/spdlog
-        GIT_TAG v1.9.2)
+        GIT_TAG v1.11.0)
 FetchContent_MakeAvailable(spdlog)
 
 set(ENGINE_FILES
@@ -54,6 +66,7 @@ set(ENGINE_FILES
         Engine/Graphics/SpriteWrapper.cpp
         Engine/Graphics/Menu.cpp
         Engine/Graphics/PText.cpp
+        Engine/Graphics/RichText.cpp
         Engine/Graphics/ScreenFade.cpp
         Engine/Math/PVector.cpp
         Engine/SaveReader.cpp
@@ -80,6 +93,7 @@ set(ENGINE_FILES
         Engine/Mission/Weather.cpp
         Engine/Mission/Units/CollidableObject.cpp
         Engine/Mission/Units/AnimatedObject.cpp
+        Engine/Mission/Units/PNGAnimation.cpp
         Engine/Mission/Units/Hitbox.cpp
         Engine/Mission/Units/Object.cpp
         Engine/Mission/Units/Projectile.cpp
@@ -111,6 +125,13 @@ set(ENGINE_FILES
         Engine/Mission/Units/Projectiles/Spear.cpp
         Engine/Mission/Mission.cpp
         Engine/Utils.h
+        Engine/Graphics/CurveShape.cpp 
+        Engine/Graphics/CurveSegment.cpp
+        Engine/Graphics/ConcaveShape.cpp 
+        Engine/Graphics/AnimatedCurveShape.cpp
+        Engine/Graphics/AnimatedCurveShape.h)
+
+set(DISCORD_FILES
         DiscordSDK/achievement_manager.cpp
         DiscordSDK/activity_manager.cpp
         DiscordSDK/application_manager.cpp
@@ -124,13 +145,9 @@ set(ENGINE_FILES
         DiscordSDK/store_manager.cpp
         DiscordSDK/types.cpp
         DiscordSDK/user_manager.cpp
-        DiscordSDK/voice_manager.cpp
-        Engine/Graphics/CurveShape.cpp 
-        Engine/Graphics/CurveSegment.cpp
-        Engine/Graphics/ConcaveShape.cpp "Engine/Graphics/AnimatedCurveShape.cpp" "Engine/Graphics/AnimatedCurveShape.h")
+        DiscordSDK/voice_manager.cpp)
 
-
-add_executable(V4Hero ${ENGINE_FILES} main.cpp)
+add_executable(V4Hero ${ENGINE_FILES} ${DISCORD_FILES} main.cpp)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
     message("Enabling Unity build for Release build")
@@ -161,8 +178,10 @@ if (OS STREQUAL "Linux")
     target_link_libraries(V4Hero PRIVATE X11::X11)
 endif (OS STREQUAL "Linux")
 
-add_custom_command(
-        TARGET V4Hero POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E create_symlink ${PROJECT_SOURCE_DIR}/resources ${PROJECT_BINARY_DIR}/resources
-        DEPENDS "${PROJECT_BINARY_DIR}/resources"
-)
+if (NOT (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR))
+  add_custom_command(
+          TARGET V4Hero POST_BUILD
+          COMMAND ${CMAKE_COMMAND} -E create_symlink ${PROJECT_SOURCE_DIR}/resources ${PROJECT_BINARY_DIR}/resources
+          DEPENDS "${PROJECT_BINARY_DIR}/resources"
+  )
+endif()

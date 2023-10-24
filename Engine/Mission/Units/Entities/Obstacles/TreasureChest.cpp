@@ -42,7 +42,7 @@ void TreasureChest::parseAdditionalData(nlohmann::json additional_data)
     }
 }
 
-void TreasureChest::Draw(sf::RenderWindow& window)
+void TreasureChest::Draw()
 {
     if (dead)
     {

@@ -22,11 +22,18 @@
 class Rhythm
 {
 public:
-    /// Low and high range for BAD, GOOD and BEST hits (in milliseconds, 250 is the center point, 250-range = ms gap) ///
-    float low_range = 135.f;  ///Anything below that range will be treated as BAD hit
-    float high_range = 210.f; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
-    float beat_timer = 500.f; ///Amount of milliseconds for each beat to be made
+    /// Low and high range for BAD, GOOD and BEST hits (in milliseconds, 0 is the center point) ///
+    float BPM = 120.f; ///beats per minute
+    float beat_timer = 60.f / (BPM*2) * 1000000.f; ///Amount of microseconds for each halfbeat to be made
+    float low_range = beat_timer / 6.25f;  ///Anything below that range will be treated as BAD hit
+    float high_range = beat_timer / 3.125f; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
     sf::Clock rhythmClock;    ///Main clock for Rhythm purposes
+    sf::Clock newRhythmClock;    ///Main clock for Rhythm purposes
+
+    int metronomeVal = 0;
+    int metronomeOldVal = 9999;
+    int metronomeState = 1;
+    bool metronomeClick = false;
 
 private:
     std::shared_ptr<spdlog::logger> logger = spdlog::get("rhythm");
@@ -44,11 +51,13 @@ private:
     /// Initialize sounds ///
     sf::SoundBuffer b_fever_fail;
     sf::SoundBuffer b_fever_start;
+    sf::SoundBuffer b_metronome;
 
     sf::Sound s_theme[2];    ///For playing BGM
     sf::Sound s_fever_fail;  ///Dying fever sound
     sf::Sound s_fever_start; ///FEVER!
     sf::Sound s_chant;       ///For playing chants
+    sf::Sound s_metronome; //rhythm helper
 
     /// Initialize clocks ///
     sf::Clock beatCycleClock; ///Clock for proper command inputs and requirements
@@ -56,16 +65,32 @@ private:
     /// Initialize Rhythm System values ///
     int combo = 1;     ///Rhythm combo, main navigator through BGM
     int rl_combo = 0;  ///Game combo, directing mechanics and fever
-    float flicker = 0; ///For beat frame flickering
 
-    std::vector<std::string> av_commands = {"PATAPATAPATAPON",
-                                            "PONPONPATAPON",
-                                            "CHAKACHAKAPATAPON",
-                                            "PONPONCHAKACHAKA",
-                                            "PATAPONDONCHAKA",
-                                            "PONPATAPONPATA",
-                                            "DONDONCHAKACHAKA",
-                                            "CHAKAPATACHAKAPATA"}; ///Available commands
+    std::vector<std::string> av_commands = {"PATA-PATA-PATA-PON-",
+                                            "PON-PON-PATA-PON-",
+                                            "CHAKA-CHAKA-PATA-PON-",
+                                            "PON-PON-CHAKA-CHAKA-",
+                                            "PATA-PON-DON-CHAKA-",
+                                            "PON-PATA-PON-PATA-",
+                                            "DON-DON-CHAKA-CHAKA-",
+                                            "CHAKA-PATA-CHAKA-PATA-",
+                                            "PATA-PON-PATA-PON-",
+                                            "DON-DONDON-DONDON-"}; ///Available commands
+
+    std::vector<int> base5_commands = {65109, //pata-pata-pata-pon-
+                                        146359, //pon-pon-pata-pon-
+                                        308859, //chaka-chaka-pata-pon-
+                                        146744, //pon-pon-chaka-chaka-
+                                        68494, //pata-pon-don-chaka-
+                                        143354, //pon-pata-pon-pata- 
+                                        227994, //don-don-chaka-chaka-
+                                        299854, //chaka-pata-chaka-pata
+                                        68234, //pata-pon-pata-pon
+                                        226814, //don-dondon-dondon-
+                                        304525, //experimental: chaka-dondonponponpatapata
+                                        97656, //experimental: ponponponponponponponpon
+                                        66569}; //experimental: pata-ponpon-dondonchaka
+                                        
     std::vector<std::string> av_songs = {"patapata",
                                          "ponpon",
                                          "chakachaka",
@@ -73,7 +98,9 @@ private:
                                          "donchaka",
                                          "ponpata",
                                          "dondon",
-                                         "chakapata"}; ///Available songs
+                                         "chakapata",
+                                         "pause",
+                                         "summon"}; ///Available songs
     std::vector<float> acc_req = {0, 1, 1, 0.9325, 0.875, 0.8125, 0.75, 0.75, 0.75, 0.6875, 0.625};
 
     std::vector<float> perfects_reward = {0, 50, 150, 250, 300};
@@ -87,12 +114,7 @@ private:
     float accuracy = 0; ///value for calculating the accuracy
     int acc_count = 3;  ///value for determining on how far back should the accuracy calculation system go in commands
 
-
-    /// Drums in-game ///
-    std::vector<Drum> drums;
-
 public:
-    RhythmGUI r_gui;
     /// Default FPS value ///
     float fps = 60;
 
@@ -102,7 +124,6 @@ public:
     /// Config and Keybindings ///
     Config* config;
     std::map<int, bool> keyMap;
-    RhythmController rhythmController;
     std::string current_song = "";
 
     sf::SoundBuffer s_badrhythm1, s_badrhythm2; ///absolutely terrible! (shoutouts to shockturtle)
@@ -115,6 +136,7 @@ public:
     void Start();
     void BreakCombo();
     int GetCombo();
+    int GetBgmCycle();
     int GetRealCombo();
     float GetSatisfaction();
     void checkRhythmController();

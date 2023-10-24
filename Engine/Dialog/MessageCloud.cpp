@@ -25,7 +25,9 @@ void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bo
     timeout = speed;
     regular_timeout = timeout;
     quality = q;
-    speedable = can_speedup;
+    
+    //speedable = can_speedup;
+    speedable = true; //unskippable dialogues are dumb, let the player speed up anything
 
     font.loadFromFile(font_path);
 
@@ -44,24 +46,22 @@ void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bo
 
     startpos = start_pos;
 
+    dialogue_ptext.createText(font, 28, sf::Color(32, 32, 32, 255), "", quality, 1);
+
+    visual_ptext.createText(font, 28, sf::Color(32, 32, 32, 255), "", quality, 1);
+    visual_ptext.force_nonspeech = true;
+
     SPDLOG_DEBUG("MessageCloud::Create(): finished");
 }
 
 void MessageCloud::AddDialog(sf::String text, bool nextdialog)
 {
+    // here i dont think we need to use more than one ptext anymore
+    // just push the new dialogues into a vector of sf::Strings and let PText parse it :)
+
     SPDLOG_DEBUG("MessageCloud::AddDialog()");
 
-    PText a, b;
-
-    a.createText(font, 28, sf::Color(32, 32, 32, 255), text, quality, 1);
-    b.createText(font, 28, sf::Color(32, 32, 32, 255), "", quality, 1);
-
-    ptext.push_back(a);
-    showtext.push_back(b);
-
-    loaded_text.push_back(text);
-    viewed_text.push_back("");
-
+    dialogue_strings.push_back(text);
     next_dialog.push_back(nextdialog);
 
     SPDLOG_DEBUG("MessageCloud::AddDialog(): finished");
@@ -74,15 +74,19 @@ void MessageCloud::Show()
         SPDLOG_DEBUG("MessageCloud::Show()");
 
         active = true;
+        done = false;
 
-        if (ptext.size() <= 0)
+        if (dialogue_strings.size() <= 0)
         {
             SPDLOG_ERROR("No messages found in message cloud.");
             AddDialog(sf::String("no message"), true);
         }
 
-        dest_xsize = ptext[cur_dialog].getLocalBounds().width + 64 + (ptext[cur_dialog].getLocalBounds().width / 10);
-        dest_ysize = ptext[cur_dialog].getLocalBounds().height + 64 + (ptext[cur_dialog].getLocalBounds().height / 1.5);
+        dialogue_ptext.setString(dialogue_strings[cur_dialog]);
+        visual_ptext.setString(dialogue_strings[cur_dialog]);
+
+        dest_xsize = visual_ptext.getLocalBounds().width + 64 + (visual_ptext.getLocalBounds().width / 10);
+        dest_ysize = visual_ptext.getLocalBounds().height + 64 + (visual_ptext.getLocalBounds().height / 1.5);
 
         text_timeout.restart();
 
@@ -101,11 +105,12 @@ void MessageCloud::End()
     dest_ysize = 0;
 
     done = true;
+    interrupt = true;
 }
 
 void MessageCloud::NextDialog()
 {
-    if (cur_dialog < ptext.size() - 1)
+    if (cur_dialog < dialogue_strings.size() - 1)
     {
         ready = false;
 
@@ -116,12 +121,20 @@ void MessageCloud::NextDialog()
         old_xsize = dest_xsize;
         old_ysize = dest_ysize;
 
-        dest_xsize = ptext[cur_dialog].getLocalBounds().width + 64 + (ptext[cur_dialog].getLocalBounds().width / 10);
-        dest_ysize = ptext[cur_dialog].getLocalBounds().height + 64 + (ptext[cur_dialog].getLocalBounds().height / 1.5);
+        dialogue_ptext.setString(dialogue_strings[cur_dialog]);
+        visual_ptext.setString(dialogue_strings[cur_dialog]);
+
+        dest_xsize = visual_ptext.getLocalBounds().width + 64 + (visual_ptext.getLocalBounds().width / 10);
+        dest_ysize = visual_ptext.getLocalBounds().height + 64 + (visual_ptext.getLocalBounds().height / 1.5);
 
         text_timeout.restart();
     } else
     {
+        if(dialogue_ptext.goback)
+        {
+            goback = true;
+        }
+        
         dest_xsize = 0;
         dest_ysize = 0;
 
@@ -132,13 +145,6 @@ void MessageCloud::NextDialog()
 void MessageCloud::SpeedUp()
 {
     speedup = true;
-}
-
-// rework pending; get rid of arguments
-
-void MessageCloud::Draw(sf::RenderWindow& window, float fps, InputController& inputCtrl)
-{
-    //compatibility measure so i dont have to edit the entire code for now
 }
 
 void MessageCloud::Draw()
@@ -152,20 +158,26 @@ void MessageCloud::Draw()
 
     if (speedable)
     {
+        // here we should do something like
+        // ptext timeout = 20ms=50letters/s temporarily
+        // then when key is not held, return to normal speed
+
         if (inputCtrl->isKeyHeld(InputController::Keys::CIRCLE))
             SpeedUp();
     }
 
     if (ready)
     {
+        // advance current text id
+
         if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
         {
             NextDialog();
         }
     }
 
-    for (int i = 0; i < ptext.size(); i++)
-        ptext[i].update(window);
+    //for (unsigned int i = 0; i < dialogue_strings.size(); i++)
+    //    ptext[i].update(window);
 
     if (active)
     {
@@ -180,15 +192,20 @@ void MessageCloud::Draw()
         setSize(xsize + xsize_diff, ysize + ysize_diff);
 
         if (((floor(xsize) <= 1) || (floor(ysize) <= 1)) && (done))
-            active = false;
-
-        if ((abs(xsize - dest_xsize) < 50) && (abs(ysize - dest_ysize) < 50))
         {
-            canwrite = true;
-        } else
-        {
-            canwrite = false;
-            text_timeout.restart();
+            if(goback && !interrupt)
+            {
+                SPDLOG_DEBUG("Go back to first message");
+                cur_dialog = 0;
+                done = false;
+                active = false;
+                ready = false;
+                Show();
+            }
+            else
+            {
+                active = false;
+            }
         }
 
         /// adjusting the size of clouds and drawing them
@@ -212,35 +229,6 @@ void MessageCloud::Draw()
         cloud.setScale(-1.f / scale_x, -1.f / scale_y);
         cloud.draw(window);
 
-        if (canwrite)
-        {
-            if (loaded_text[cur_dialog].getSize() != viewed_text[cur_dialog].getSize())
-            {
-                float ms = text_timeout.getElapsedTime().asMilliseconds();
-
-                if (speedup)
-                    timeout = speed_timeout;
-                else
-                    timeout = regular_timeout;
-
-                int addchar = floor(ms / timeout);
-
-                for (int i = 0; i < addchar; i++)
-                {
-                    ///second check to not add out of bounds characters
-                    if (loaded_text[cur_dialog].getSize() != viewed_text[cur_dialog].getSize())
-                    {
-                        viewed_text[cur_dialog] += loaded_text[cur_dialog][cur_char];
-                        cur_char++;
-
-                        //cout << "adding letter " << cur_char << endl;
-
-                        text_timeout.restart();
-                    }
-                }
-            }
-        }
-
         float rX = window->getSize().x / float(1280);
         float rY = window->getSize().y / float(720);
 
@@ -253,45 +241,45 @@ void MessageCloud::Draw()
 
         if (!done)
         {
+            dialogue_ptext.speedup = speedup;
+            dialogue_ptext.setPosition(x - visual_ptext.getLocalBounds().width / 2, y - 4 - visual_ptext.getLocalBounds().height / 2);
+            dialogue_ptext.draw(window);
 
-            showtext[cur_dialog].setPosition(x - ptext[cur_dialog].getLocalBounds().width / 2, y - 4 - ptext[cur_dialog].getLocalBounds().height / 2);
-            showtext[cur_dialog].setString(viewed_text[cur_dialog]);
-            showtext[cur_dialog].draw(window);
+            //loaded_text[cur_dialog].setPosition(x - ptext[cur_dialog].getLocalBounds().width / 2, y - 4 - ptext[cur_dialog].getLocalBounds().height / 2);
+            //showtext[cur_dialog].setString(viewed_text[cur_dialog]);
+            //loaded_text[cur_dialog].draw(window);
 
-            if (next_dialog[cur_dialog])
+            if (dialogue_ptext.speech_done)
             {
-                if (loaded_text[cur_dialog].getSize() == viewed_text[cur_dialog].getSize())
+                ready = true;
+
+                arrow_y -= 36 / fps;
+
+                if (arrow_y <= -20)
+                    arrow_y = -20;
+
+                if (arrow_timeout.getElapsedTime().asSeconds() >= 0.75)
                 {
-                    ready = true;
-
-                    arrow_y -= 36 / fps;
-
-                    if (arrow_y <= -20)
-                        arrow_y = -20;
-
-                    if (arrow_timeout.getElapsedTime().asSeconds() >= 0.75)
-                    {
-                        arrow_y = 0;
-                        arrow_timeout.restart();
-                    }
-
-                    cross.setOrigin(cross.getLocalBounds().width / 2, cross.getLocalBounds().height / 2);
-                    cross_highlight.setOrigin(cross_highlight.getLocalBounds().width / 2, cross_highlight.getLocalBounds().height / 2);
-                    cross_arrow.setOrigin(cross_highlight.getLocalBounds().width / 2, cross_highlight.getLocalBounds().height);
-
-                    float cross_x = x + xsize / 2 - 8;
-                    float cross_y = y + ysize / 2 - 20;
-
-                    cross.setPosition(cross_x, cross_y);
-                    cross_highlight.setPosition(cross_x, cross_y);
-                    cross_arrow.setPosition(cross_x - 2, cross_y + 20 + arrow_y);
-
-                    cross_highlight.setColor(sf::Color(255, 255, 255, 128 + (arrow_y * 6.4)));
-
-                    cross.draw(window);
-                    cross_highlight.draw(window);
-                    cross_arrow.draw(window);
+                    arrow_y = 0;
+                    arrow_timeout.restart();
                 }
+
+                cross.setOrigin(cross.getLocalBounds().width / 2, cross.getLocalBounds().height / 2);
+                cross_highlight.setOrigin(cross_highlight.getLocalBounds().width / 2, cross_highlight.getLocalBounds().height / 2);
+                cross_arrow.setOrigin(cross_highlight.getLocalBounds().width / 2, cross_highlight.getLocalBounds().height);
+
+                float cross_x = x + xsize / 2 - 8;
+                float cross_y = y + ysize / 2 - 20;
+
+                cross.setPosition(cross_x, cross_y);
+                cross_highlight.setPosition(cross_x, cross_y);
+                cross_arrow.setPosition(cross_x - 2, cross_y + 20 + arrow_y);
+
+                cross_highlight.setColor(sf::Color(255, 255, 255, 128 + (arrow_y * 6.4)));
+
+                cross.draw(window);
+                cross_highlight.draw(window);
+                cross_arrow.draw(window);
             }
         }
 

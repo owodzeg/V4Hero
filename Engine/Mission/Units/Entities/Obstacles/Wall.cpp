@@ -11,7 +11,7 @@ void Wall::LoadConfig()
 {
     AnimatedObject::LoadConfig("resources/graphics/units/kacheek/");
 }
-void Wall::Draw(sf::RenderWindow& window)
+void Wall::Draw()
 {
     AnimatedObject::Draw();
 }

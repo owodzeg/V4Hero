@@ -42,7 +42,7 @@ void KirajinHut::LoadConfig()
     s_broken.loadFromFile("resources/sfx/level/building_small_broken.ogg");
 }
 
-void KirajinHut::Draw(sf::RenderWindow& window)
+void KirajinHut::Draw()
 {
     if (dead)
     {

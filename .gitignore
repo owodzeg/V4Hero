@@ -531,3 +531,9 @@ resources/lang_backup/str_CN.txt
 resources/lang_backup/str_BPT.txt
 resources/lang_backup/lang.txt
 resources/lang/str_ENG_backup.txt
+
+# vs code stuff
+.vscode
+
+# build stuff
+build

@@ -166,6 +166,10 @@ public:
     void setInventoryPosition();
     void applyEquipment();
     void refreshStats();
+    string getPreviewText(int stat, int pon_stat, int pon_base_stat);
+    string getPreviewText(int stat, int pon_stat, int pon_base_stat, int stat2, int pon_stat2, int pon_base_stat2);
+    sf::Color getPreviewColorText(int stat, int pon_stat, int pon_base_stat,bool invert_color);
+    sf::Color getPreviewColorText(int stat, int pon_stat, int pon_base_stat, int stat2, int pon_stat2, int pon_base_stat2);
     void updatePreviewText();
     void updateButtons();
     Barracks();
