@@ -24,9 +24,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SFML)
 
-FetchContent_Declare(json
-  GIT_REPOSITORY https://github.com/ArthurSonzogni/nlohmann_json_cmake_fetchcontent
-  GIT_TAG v3.11.2)
+FetchContent_Declare(json GIT_REPOSITORY https://github.com/nlohmann/json GIT_TAG v3.11.2)
 
 FetchContent_GetProperties(json)
 if(NOT json_POPULATED)
