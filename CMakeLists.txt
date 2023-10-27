@@ -159,7 +159,10 @@ endif()
 if(MSVC)
     target_compile_options(V4Hero PRIVATE /W4)
     target_compile_definitions(V4Hero PRIVATE _USE_MATH_DEFINES=1)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc")
     target_compile_options(V4Hero PRIVATE -Wall -Wextra)
 endif()
 
