@@ -166,6 +166,10 @@ void V4Core::init()
     SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
     saveReader->itemReg.readItemFiles();
 
+    // Load squad registry
+    SPDLOG_DEBUG("Loading squad registry");
+    saveReader->squadReg.Load();
+
     // Get Input controller
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
     inputCtrl->LoadKeybinds();

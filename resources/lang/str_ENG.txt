@@ -398,5 +398,64 @@ worldmap_mission_11_title|
 worldmap_mission_11_description|
 
 worldmap_select|Select a quest
+
+
+class_yaripon|Yaripon
+class_tatepon|Tatepon
+class_yumipon|Yumipon
+class_kibapon|Kibapon
+class_dekapon|Dekapon
+class_megapon|Megapon
+class_toripon|Toripon
+class_robopon|Robopon
+class_mahopon|Mahopon
+
+rarepon_normal_stage_1|Normal
+rarepon_normal_stage_1_description|A normal Patapon. He can get a little stronger by levelling-up.
+rarepon_normal_stage_2|Normal
+rarepon_normal_stage_2_description|A pretty strong Patapon. Change their equipment freely to change their strengths.
+rarepon_normal_stage_3|Normal
+rarepon_normal_stage_3_description|The strongest Patapon. They can get better use than the other Rarepons out of the best equipment.
+rarepon_pyopyo_stage_1|Pyopyo
+rarepon_pyopyo_stage_1_description|Resistant against cold chills but weak against fire. Levelling-up will increase their speed.
+rarepon_pyopyo_stage_2|Pykora
+rarepon_pyopyo_stage_2_description|A Rarepon who quickly gets faster as they level up. They have 20% freeze resistance, but are weak against fire damage.
+rarepon_pyopyo_stage_3|Pyokoran
+rarepon_pyopyo_stage_3_description|A really, really fast Rarepon! They can't be frozen and are weak to fire! They can inflict critical, stagger, and knockback hits.
+rarepon_buhyokko_stage_1|Buhyokko
+rarepon_buhyokko_stage_1_description|These XL-sized Patapons are great against knockback but their size slows their attack speed. Gradually improve their stagger skills by levelling-up.
+rarepon_buhyokko_stage_2|Buhyonku
+rarepon_buhyokko_stage_2_description|These XXL-sized Patapons minimise knockback but their size slows their attack speed. Their chilled mood makes them great for stressful battles!
+rarepon_buhyokko_stage_3|Puuhyonku
+rarepon_buhyokko_stage_3_description|This behemoth-sized Patapon will bulldoze through the enemy ranks. Resistant to all stagger and knockback attacks. Enemies cower like kittens, but they have a heart of gold!
+rarepon_nyontama_stage_1|Nyontama
+rarepon_nyontama_stage_1_description|Resistant against some fire and electrical attacks. They'll gain speed as they level-up; however their stagger won't improve. 
+rarepon_nyontama_stage_2|Gekoroth
+rarepon_nyontama_stage_2_description|So charming, but so strong! Can cause critical hits. Strong against lightning, but easy to stagger.
+rarepon_nyontama_stage_3|Gekoronpa
+rarepon_nyontama_stage_3_description|Aww, they're so amazingly adorable! But very strong, and can cause brutal criticals. Extremely strong against lightning but staggers very easily.
+rarepon_fumya_stage_1|Fumya
+rarepon_fumya_stage_1_description|Proud Rarepons whose critical rate rises gradually as they level-up. At Lv. 5 their attacks become very fast. They're weak against ice damage.
+rarepon_fumya_stage_2|Fumyaaru
+rarepon_fumya_stage_2_description|These desert-dwelling rarepons are quite fast. If you level them up, their critical rate will rise. They're weak against ice damage.
+rarepon_fumya_stage_3|Funmyaga
+rarepon_fumya_stage_3_description|Combining quick attacks and reliable critical hits, this Rarepon can really make some damage! They're weak against ice attacks though.
+rarepon_menyokki_stage_1|Menyokki
+rarepon_menyokki_stage_1_description|This Rarepon is like a seed in the ground. They have excellent stagger, knockback, and hp, but must be levelled-up carefully to reach their potential. Naturally, they're weak against fire.
+rarepon_menyokki_stage_2|Kisuk
+rarepon_menyokki_stage_2_description|This Rarepon is like a young sapling! They have high stagger, knockback, and HP, but they easily catch fire.
+rarepon_menyokki_stage_3|Moriussoo
+rarepon_menyokki_stage_3_description|This Rarepon has grown into a mighty wise oak! They have unrivalled stagger, knockback, and hp, but they burst into flames at the slightest provocation.
+rarepon_wanda_stage_1|Wanda
+rarepon_wanda_stage_1_description|A loyal, hardworking Rarepon whose attack power increases gradually as they level-up. They stagger rate is 20%, but they love to sleep a little too much.
+rarepon_wanda_stage_2|Wandaba
+rarepon_wanda_stage_2_description|A dutiful Rarepon whose attack power increases quickly as they level up. They stagger rate is 30%, but they're incredibly easy to put to sleep.
+rarepon_wanda_stage_3|Wandabata
+rarepon_wanda_stage_3_description|A formidable warrior companion! Each attack is fatal! Their stagger rate is 50%, but he falls asleep easily.
+
+
+
+
+
 // # Translated by: 
 // @owocek
