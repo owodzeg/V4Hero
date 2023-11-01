@@ -5,6 +5,10 @@
 LoadingTip::LoadingTip(int mode)
 {
     tipMode = mode;
+    startAlpha = 128;
+    endAlpha = 255;
+    timer.restart();
+    targetTime = timer.getElapsedTime() + sf::seconds(1.0f);
 
     if (tipMode == 0)
     {
@@ -121,6 +125,34 @@ void LoadingTip::Draw()
         // drawing some text
         if (pressAnyKey)
         {
+            float timeRemaining = targetTime.asSeconds() - timer.getElapsedTime().asSeconds();
+            if (timeRemaining <= 0)
+            {
+                // Reset target time for the next cycle
+                targetTime = sf::seconds(1.0f); // Reset to a fixed duration
+                timer.restart(); // Restart the timer for the new cycle
+                fadein = !fadein; // Toggle the fade direction
+                timeRemaining = targetTime.asSeconds() - timer.getElapsedTime().asSeconds();
+            }
+            float progress = timeRemaining / targetTime.asSeconds();
+            float alpha = startAlpha;
+            if (fadein) {
+                // Quadratic ease-out
+                progress = 1 - progress;
+                alpha = startAlpha + (endAlpha - startAlpha) * progress * progress;
+            } else {
+                // Quadratic ease-in
+                alpha = startAlpha + (endAlpha - startAlpha) * (progress * progress);
+            }
+
+            alpha = std::max(0, std::min(255, static_cast<int>(alpha)));
+
+
+            t_pressAnyKey.setColor(sf::Color(255, 255, 255, alpha));
+
+
+
+
             t_pressAnyKey.setOrigin(t_pressAnyKey.getLocalBounds().width, t_pressAnyKey.getLocalBounds().height / 2);
             t_pressAnyKey.setPosition(722 + 526, 658 + 21);
             t_pressAnyKey.draw(window);
