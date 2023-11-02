@@ -65,6 +65,10 @@ void Camera::Work(float dest_zoom_over)
     /** Manual camera movement (L/R in Patapon) **/
     manual_x += ((manual_x_dest - manual_x) * 5) / fps;
 
+
+    /** Manual camera movement up/down **/
+    manual_y += ((manual_y_dest - manual_y) * 5) / fps;
+
     /** Debug camera movement **/
     debug_x += ((debug_x_dest - debug_x) * 5) / fps;
 
