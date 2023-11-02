@@ -27,7 +27,7 @@ void Camera::zoomViewAt(sf::Vector2i pixel, float zoom)
     zoom_y += offsetCoords.y;
 }
 
-void Camera::Work()
+void Camera::Work(float dest_zoom_over)
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
@@ -38,29 +38,9 @@ void Camera::Work()
 
     camera_y = window->getSize().y / 2;
 
-    dest_zoom = 1;
+    dest_zoom = dest_zoom_over;
     manual_x_dest = 0;
 
-    /** Debug controls **/
-    if(inputCtrl->isKeyHeld(InputController::Keys::UP))
-    {
-        dest_zoom = 1.2f;
-        SPDLOG_DEBUG("[zoom] {} {} {} {}", dest_zoom, zoom, zoom_point_x, zoom_point_y);
-    }
-    if(inputCtrl->isKeyHeld(InputController::Keys::DOWN))
-    {
-        dest_zoom = 0.8f;
-        SPDLOG_DEBUG("[zoom] {} {} {} {}", dest_zoom, zoom, zoom_point_x, zoom_point_y);
-    }
-    /*if (inputCtrl->isKeyHeld(InputController::Keys::SQUARE))
-    {
-        debug_x_dest -= 10.f / fps;
-    }
-
-    if (inputCtrl->isKeyHeld(InputController::Keys::CIRCLE))
-    {
-        debug_x_dest += 10.f / fps;
-    }*/
 
     /** Mission controls **/
 

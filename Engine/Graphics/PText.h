@@ -64,7 +64,6 @@ public:
     sf::Vector2f getScale();
     void setScale(float x, float y);
     void setRotation(float a);
-    void offsetCharacter(int line, int charpos, float offset);
     void setColor(sf::Color color);
     void setOutlineColor(sf::Color color);
     void setOutlineThickness(int thick);

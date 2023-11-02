@@ -387,10 +387,6 @@ void PText::setRotation(float a)
 {
     angle = a;
 }
-void PText::offsetCharacter(int line, int charpos, float offset)
-{
-    t.getLines()[line].getCharacter(charpos).move(offset, 0);
-}
 
 void PText::setColor(sf::Color color)
 {

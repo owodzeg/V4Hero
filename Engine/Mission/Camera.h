@@ -25,7 +25,7 @@ public:
 
     Camera();
     void zoomViewAt(sf::Vector2i pixel, float zoom);
-    void Work();
+    void Work(float = 1.0f);
 };
 
 
