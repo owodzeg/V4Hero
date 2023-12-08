@@ -13,6 +13,8 @@ Drum::Drum()
 
 void Drum::Load(string drum, int perfection, std::string& drum_texture)
 {
+    SPDLOG_DEBUG("Loading drum {}, perfection {}, drum_texture {}", drum, perfection, drum_texture);
+
     s_flash.load("resources/graphics/rhythm/drums/flash.png");
     s_flash.setOrigin(s_flash.getLocalBounds().width / 2, s_flash.getLocalBounds().height / 2);
 
