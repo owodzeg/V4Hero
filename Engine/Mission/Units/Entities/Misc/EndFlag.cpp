@@ -40,7 +40,9 @@ void EndFlag::OnCollide(CollidableObject* otherObject, int collidedWith, vector<
             {
                 AnimatedObject::setAnimationSegment("triggered", true);
                 CoreManager::getInstance().getMissionController()->missionEnd = true;
-                CoreManager::getInstance().getMissionController()->rhythm.Stop();
+
+                Rhythm* rhythm = CoreManager::getInstance().getRhythm(); 
+                rhythm->Stop();
 
                 endMissionClock.restart();
 
