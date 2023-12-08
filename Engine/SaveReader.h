@@ -3,6 +3,7 @@
 #include "Item/InventoryData.h"
 #include "Item/ItemRegistry.h"
 #include "Pon/PonRegistry.h"
+#include "Pon/SquadRegistry.h"
 #include "StringRepository.h"
 #include <SFML/Graphics.hpp>
 #include <map>
@@ -16,6 +17,7 @@ class SaveReader
 {
 public:
     ItemRegistry itemReg;
+    SquadRegistry squadReg;
     PonRegistry ponReg;
     InventoryData invData;
 

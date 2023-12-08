@@ -392,6 +392,17 @@ void PText::setColor(sf::Color color)
 {
     c = color;
     //t.setFillColor(color);
+    
+    std::vector<sfe::RichText::Line> lines = t.getLines();
+    for(int x=0; x<lines.size(); x++)
+    {
+        int len = lines[x].getLength();
+        
+        for(int y=0; y<len; y++)
+        {
+            t.setCharacterColor(x, y, c);
+        }
+    }
 }
 
 void PText::setOutlineColor(sf::Color color)
@@ -658,7 +669,7 @@ void PText::draw(sf::RenderWindow* window)
             break;
         }
     }
-
+    
     t.setFont(CoreManager::getInstance().getStrRepo()->font);
     //t.setFillColor(c);
     t.setCharacterSize(cS);
