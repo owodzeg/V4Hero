@@ -55,8 +55,6 @@ MaterOuterMenu::MaterOuterMenu()
 
     f_font.loadFromFile(config->fontPath);
 
-    ResourceManager::getInstance().loadSprite("path/to/sprite.png");
-
     mater_main.loadFromFile("resources/graphics/ui/mater/mater_outer_bg.png", quality, 1);
     mater_selector.loadFromFile("resources/graphics/ui/mater/materui_squad_select.png", quality, 1);
 
@@ -108,24 +106,17 @@ void MaterOuterMenu::showMater()
 {
     // TODO: check which squads player has unlocked memories for
     squads.clear();
-    for (int i = 0; i < 9; i++)
-    {
-        SquadBox squad = SquadBox();
-        squad.amount = 3;
-        squad.maxSize = 6;
-        squad.y = 165 + 100 * i;
-
-        squads.push_back(squad);
+    int i = 0;
+    for (const Squad& squad : CoreManager::getInstance().getSaveReader()->squadReg.m_squads ){
+        SquadBox squadbox = SquadBox();
+        squadbox.amount = 3;
+        squadbox.maxSize = 6;
+        squadbox.title = squad.getName();
+        squadbox.y = 165 + 100 * i;
+        squadbox.squad_icon = squad.getImage();
+        squads.push_back(squadbox);
+        i++;
     }
-    squads[0].title = "Yaripon";
-    squads[1].title = "Tatepon";
-    squads[2].title = "Yumipon";
-    squads[3].title = "Kibapon";
-    squads[4].title = "Dekapon";
-    squads[5].title = "Megapon";
-    squads[6].title = "Toripon";
-    squads[7].title = "Robopon";
-    squads[8].title = "Mahopon";
 
     
     vector<MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
@@ -171,7 +162,8 @@ void MaterOuterMenu::DrawAsleepSquad(MaterOuterMenu::SquadBox& squad, int squad_
     PSprite& slot = ResourceManager::getInstance().getSprite("resources/graphics/ui/mater/matersquad_slot_asleep.png");
     PSprite& pon = ResourceManager::getInstance().getSprite("resources/graphics/ui/mater/matersquad_member_asleep.png");
 
-    PSprite& icon = ResourceManager::getInstance().getSprite("resources/graphics/ui/mater/yaripon_icon.png");
+    
+    PSprite& icon = ResourceManager::getInstance().getSprite("resources/graphics/"+squad.squad_icon+".png");
 
     bg.setOrigin(bg.getLocalBounds().width / 2, bg.getLocalBounds().height / 2);
     bg.setPosition(990, squad.y);
@@ -301,7 +293,8 @@ void MaterOuterMenu::Update()
         PSprite& bg = ResourceManager::getInstance().getSprite("resources/graphics/ui/mater/matersquad_bg.png");
         PSprite& slot = ResourceManager::getInstance().getSprite("resources/graphics/ui/mater/matersquad_slot_awake.png");
         PSprite& pon = ResourceManager::getInstance().getSprite("resources/graphics/ui/mater/matersquad_member_awake.png");
-        PSprite& icon = ResourceManager::getInstance().getSprite("resources/graphics/ui/mater/yaripon_icon.png");
+        
+        PSprite& icon = ResourceManager::getInstance().getSprite("resources/graphics/"+squad.squad_icon+".png");
 
         bg.setOrigin(bg.getLocalBounds().width / 2, bg.getLocalBounds().height / 2);
         bg.setPosition(990, squad.y);

@@ -6,6 +6,7 @@
 #include "../Dialog/RoundedRect.h"
 #include "../Graphics/Menu.h"
 #include "../Input/InputController.h"
+#include "../Pon/Squad.h"
 #include <SFML/Graphics.hpp>
 
 class V4Core;
@@ -39,6 +40,7 @@ public:
         int y;
 
         sf::String title;
+        string squad_icon;
     };
     vector<SquadBox> squads;
 

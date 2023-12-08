@@ -836,7 +836,7 @@ void PatapolisMenu::Update()
         window->setView(patapolisView);
 
         camera.zoom_y = 0;
-        camera.Work();
+        camera.Work(dest_zoom);
 
         window->draw(v_background);
 
@@ -1456,6 +1456,7 @@ void PatapolisMenu::Update()
 
             if (dialogboxes.size() <= 0)
             {
+                bool messageCloudActive = false;
                 for (int i = 0; i < messageclouds.size(); i++)
                 {
                     if (messageclouds[i].firstrender)
@@ -1463,8 +1464,13 @@ void PatapolisMenu::Update()
 
                     if ((messageclouds[i].msgcloud_ID == 0) || (messageclouds[i].msgcloud_ID == 2))
                         messageclouds[i].startpos = sf::Vector2f(a_sen.getGlobalPosition().x - 5, a_sen.getGlobalPosition().y - 25);
-                    else if (messageclouds[i].msgcloud_ID == 1)
+                    else if (messageclouds[i].msgcloud_ID == 1){
                         messageclouds[i].startpos = sf::Vector2f(a_wakapon.getGlobalPosition().x - 5, a_wakapon.getGlobalPosition().y - 25);
+                    }
+                    if (messageclouds[i].active && !messageclouds[i].done && messageclouds[i].cur_dialog > 0)
+                    {
+                        messageCloudActive = true;
+                    }
 
                     if (messageclouds[i].done)
                     {
@@ -1490,7 +1496,18 @@ void PatapolisMenu::Update()
                     if ((!messageclouds[i].active) && (messageclouds[i].done))
                         m_rm.push_back(i);
                 }
-            }
+                if (messageCloudActive){
+                    dest_zoom = 0.8f; // zoom in when message cloud is active
+                    if (location == 9){ // wakapon 
+                        camera.manual_y_dest = -100; // move camera up a bit when wakapon is zoomed into to adjust for bridge
+                    } else {
+                        camera.manual_y_dest = 0;
+                    }
+                } else {
+                    dest_zoom = 1.0f;
+                    camera.manual_y_dest = 0;
+                }
+            } 
 
             for (int i = 0; i < m_rm.size(); i++)
             {
@@ -1621,6 +1638,7 @@ void PatapolisMenu::Update()
                     if (location > 0)
                     {
                         location--;
+                        SPDLOG_INFO("New Location {}", location);
                         left = true;
 
                         for (int i = 0; i < messageclouds.size(); i++)
@@ -1633,6 +1651,7 @@ void PatapolisMenu::Update()
                     if (location < locations.size() - 1)
                     {
                         location++;
+                        SPDLOG_INFO("New Location {}", location);
                         left = false;
 
                         for (int i = 0; i < messageclouds.size(); i++)

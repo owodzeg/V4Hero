@@ -25,11 +25,19 @@ public:
 
     float angle_1=0, angle_2=0;
 
+    int startAlpha;
+    int endAlpha;
+    bool fadein = false;
+    sf::Time targetTime;
+    sf::Clock timer;
+
     SpriteWrapper tip_logo;
     SpriteWrapper loading_head;
     SpriteWrapper loading_eye1;
     SpriteWrapper loading_eye2;
     SpriteWrapper s_bg, s_icon;
+
+
 
     // loading tip mode
     // 0 - regular loading tip with random splash and text

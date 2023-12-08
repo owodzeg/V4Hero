@@ -1,0 +1,40 @@
+{
+"classes":[
+	{
+		"id":0,
+		"name":"class_yaripon","ui_image": "ui/mater/yaripon_icon"
+	},
+	{
+		"id":1,
+		"name":"class_tatepon","ui_image": "ui/mater/tatepon_icon"
+	},
+	{
+		"id":2,
+		"name":"class_yumipon","ui_image": "ui/mater/yumipon_icon"
+	},
+	{
+		"id":3,
+		"name":"class_kibapon","ui_image": "ui/mater/yaripon_icon"
+	},
+	{
+		"id":4,
+		"name":"class_dekapon","ui_image": "ui/mater/yaripon_icon"
+	},
+	{
+		"id":5,
+		"name":"class_megapon","ui_image": "ui/mater/yaripon_icon"
+	},
+	{
+		"id":6,
+		"name":"class_toripon","ui_image": "ui/mater/yaripon_icon"
+	},
+	{
+		"id":7,
+		"name":"class_robopon","ui_image": "ui/mater/yaripon_icon"
+	},
+	{
+		"id":8,
+		"name":"class_mahopon","ui_image": "ui/mater/yaripon_icon"
+	}
+]
+}

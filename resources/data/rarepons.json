@@ -1,0 +1,60 @@
+{
+"rarepons":[
+	{
+		"id":0,
+		"name":"rarepon_normal_stage_1", 
+		"stage1_name":"rarepon_normal_stage_1", "stage1_description":"rarepon_normal_stage_1_description",
+		"stage1_name":"rarepon_normal_stage_2", "stage1_description":"rarepon_normal_stage_2_description",
+		"stage1_name":"rarepon_normal_stage_3", "stage1_description":"rarepon_normal_stage_3_description",
+		"color":[255,255,255], "ui_image": "rarepon_normal"
+	},
+	{
+		"id":1,
+		"name":"rarepon_pyopyo_stage_1", 
+		"stage1_name":"rarepon_pyopyo_stage_1", "stage1_description":"rarepon_pyopyo_stage_1_description",
+		"stage1_name":"rarepon_pyopyo_stage_2", "stage1_description":"rarepon_pyopyo_stage_2_description",
+		"stage1_name":"rarepon_pyopyo_stage_3", "stage1_description":"rarepon_pyopyo_stage_3_description",
+		"color":[239,110,53], "ui_image": "rarepon_pyopyo"
+	},
+	{
+		"id":2,
+		"name":"rarepon_buhyokko_stage_1", 
+		"stage1_name":"rarepon_buhyokko_stage_1", "stage1_description":"rarepon_buhyokko_stage_1_description",
+		"stage1_name":"rarepon_buhyokko_stage_2", "stage1_description":"rarepon_buhyokko_stage_2_description",
+		"stage1_name":"rarepon_buhyokko_stage_3", "stage1_description":"rarepon_buhyokko_stage_3_description",
+		"color":[235,174,182], "ui_image": "rarepon_buhyokko"
+	},
+	{
+		"id":3,
+		"name":"rarepon_nyontama_stage_1", 
+		"stage1_name":"rarepon_nyontama_stage_1", "stage1_description":"rarepon_nyontama_stage_1_description",
+		"stage1_name":"rarepon_nyontama_stage_2", "stage1_description":"rarepon_nyontama_stage_2_description",
+		"stage1_name":"rarepon_nyontama_stage_3", "stage1_description":"rarepon_nyontama_stage_3_description",
+		"color":[218,228,97], "ui_image": "rarepon_nyontama"
+	},
+	{
+		"id":4,
+		"name":"rarepon_fumya_stage_1", 
+		"stage1_name":"rarepon_fumya_stage_1", "stage1_description":"rarepon_fumya_stage_1_description",
+		"stage1_name":"rarepon_fumya_stage_2", "stage1_description":"rarepon_fumya_stage_2_description",
+		"stage1_name":"rarepon_fumya_stage_3", "stage1_description":"rarepon_fumya_stage_3_description",
+		"color":[246,214,112], "ui_image": "rarepon_fumya"
+	},
+	{
+		"id":5,
+		"name":"rarepon_menyokki_stage_1", 
+		"stage1_name":"rarepon_menyokki_stage_1", "stage1_description":"rarepon_menyokki_stage_1_description",
+		"stage1_name":"rarepon_menyokki_stage_2", "stage1_description":"rarepon_menyokki_stage_2_description",
+		"stage1_name":"rarepon_menyokki_stage_3", "stage1_description":"rarepon_menyokki_stage_3_description",
+		"color":[58,166,55], "ui_image": "rarepon_menyokki"
+	},
+	{
+		"id":6,
+		"name":"rarepon_wanda_stage_1", 
+		"stage1_name":"rarepon_wanda_stage_1", "stage1_description":"rarepon_wanda_stage_1_description",
+		"stage1_name":"rarepon_wanda_stage_2", "stage1_description":"rarepon_wanda_stage_2_description",
+		"stage1_name":"rarepon_wanda_stage_3", "stage1_description":"rarepon_wanda_stage_3_description",
+		"color":[214,116,98], "ui_image": "rarepon_wanda"
+	},
+]
+}

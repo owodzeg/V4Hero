@@ -24,7 +24,9 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SFML)
 
-FetchContent_Declare(json GIT_REPOSITORY https://github.com/nlohmann/json GIT_TAG v3.11.2)
+FetchContent_Declare(json
+  GIT_REPOSITORY https://github.com/nlohmann/json
+  GIT_TAG v3.11.2)
 
 FetchContent_GetProperties(json)
 if(NOT json_POPULATED)
@@ -77,6 +79,8 @@ set(ENGINE_FILES
         Engine/Rhythm/Song.cpp
         Engine/Pon/Pon.cpp
         Engine/Pon/PonRegistry.cpp
+        Engine/Pon/Squad.cpp
+        Engine/Pon/SquadRegistry.cpp
         Engine/StringRepository.cpp
         Engine/Config.cpp
         Engine/TipsUtil.cpp
@@ -157,7 +161,10 @@ endif()
 if(MSVC)
     target_compile_options(V4Hero PRIVATE /W4)
     target_compile_definitions(V4Hero PRIVATE _USE_MATH_DEFINES=1)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
 else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc")
     target_compile_options(V4Hero PRIVATE -Wall -Wextra)
 endif()
 
