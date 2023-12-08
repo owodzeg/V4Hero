@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include <spdlog/logger.h>
 #include <spdlog/spdlog.h>
+#include <chrono>
 
 #include "../Config.h"
 #include "../Func.h"
@@ -29,6 +30,7 @@ public:
     float high_range = beat_timer / 3.125f; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
     sf::Clock rhythmClock;    ///Main clock for Rhythm purposes
     sf::Clock newRhythmClock;    ///Main clock for Rhythm purposes
+    sf::Clock lazyClock;    ///Main clock for Rhythm purposes
 
     int metronomeVal = 0;
     int metronomeOldVal = 9999;
@@ -51,13 +53,19 @@ private:
     /// Initialize sounds ///
     sf::SoundBuffer b_fever_fail;
     sf::SoundBuffer b_fever_start;
+
     sf::SoundBuffer b_metronome;
+    sf::SoundBuffer b_ding;
+    sf::SoundBuffer b_anvil;
 
     sf::Sound s_theme[2];    ///For playing BGM
     sf::Sound s_fever_fail;  ///Dying fever sound
     sf::Sound s_fever_start; ///FEVER!
     sf::Sound s_chant;       ///For playing chants
+    
     sf::Sound s_metronome; //rhythm helper
+    sf::Sound s_ding; //rhythm helper
+    sf::Sound s_anvil; //rhythm helper
 
     /// Initialize clocks ///
     sf::Clock beatCycleClock; ///Clock for proper command inputs and requirements
@@ -109,7 +117,6 @@ private:
 
     float last_satisfaction = 0;
 
-
     /// Perfection calculator ///
     float accuracy = 0; ///value for calculating the accuracy
     int acc_count = 3;  ///value for determining on how far back should the accuracy calculation system go in commands
@@ -121,13 +128,45 @@ public:
     int current_perfect;
     bool advanced_prefever = false; ///When the game is still before fever, but gets more livid
     bool updateworm = false;        ///For fever worm
+
     /// Config and Keybindings ///
-    Config* config;
-    std::map<int, bool> keyMap;
     std::string current_song = "";
 
     sf::SoundBuffer s_badrhythm1, s_badrhythm2; ///absolutely terrible! (shoutouts to shockturtle)
     sf::Sound pata_react;
+
+    // Callback system for rhythm engine
+    enum RhythmAction
+    {
+        DRUM_BEST = 0,
+        DRUM_GOOD = 1,
+        DRUM_BAD = 2,
+        FEVER_ON = 3,
+        FEVER_OFF = 4,
+        COMMAND = 5,
+        COMBO_BREAK = 6,
+        COMBO_INCREASE = 7
+    };
+
+    struct RhythmMessage
+    {
+        RhythmAction action;
+        uint64_t timestamp;
+        std::string message;
+    };
+
+    std::vector<RhythmMessage> messages;
+
+    std::vector<int> command;
+    float perfection = 0;
+
+    int metronomeDelay = 2;
+    int drumTicks = 0;
+    int drumTicksNoInput = 0;
+
+    sf::Clock firstCommandDelayClock; //halfbeat delay for when we use first command without last halfbeat
+    sf::Clock commandWaitClock; //clock for command execution (locks drums for 4 measures)
+    bool firstCommandDelay = false;
 
     Rhythm();
     void Clear();
@@ -139,6 +178,8 @@ public:
     int GetBgmCycle();
     int GetRealCombo();
     float GetSatisfaction();
+    void addRhythmMessage(RhythmAction action_id, std::string message);
+    std::vector<RhythmMessage> fetchRhythmMessages(uint64_t& timestamp);
     void checkRhythmController();
     void doRhythm();
     void Draw();

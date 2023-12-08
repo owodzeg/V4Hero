@@ -3,8 +3,11 @@
 
 #include "../Config.h"
 #include <SFML/Graphics.hpp>
+#include <chrono>
 
 #include "Drum.h"
+
+
 class RhythmGUI
 {
 public:
@@ -17,6 +20,8 @@ public:
     float BPM = 120;
     float beat_timer = 60.f / BPM * 1000.f;
     sf::Clock beatClock;
+
+    uint64_t lastRhythmCheck;
 
     /// Drums in-game ///
     std::vector<Drum> drums;

@@ -7,12 +7,15 @@
 #include "../CoreManager.h"
 
 using namespace std;
+using namespace std::chrono;
 
 RhythmGUI::RhythmGUI()
 {
     //ctor
     r_rhythm.setSize(sf::Vector2f(100, 100));
     r_rhythm.setFillColor(sf::Color::White);
+
+    lastRhythmCheck = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 }
 
 void RhythmGUI::click()
@@ -20,8 +23,6 @@ void RhythmGUI::click()
     beatClock.restart();
 }
 
-///TO-DO: TO BE PORTED TO AN EXTERNAL CLASS
-// another TO-DO: this is old, what i meant by this? ^
 void RhythmGUI::doVisuals(int bgm_cycle, int combo)
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
@@ -139,19 +140,37 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
     window->draw(r_rhythm);
     window->draw(r_rhythm2);
 
-    RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
+    Rhythm* rhythm = CoreManager::getInstance().getRhythm();
 
-    if (rhythmController->checkForInput())
+    std::vector<Rhythm::RhythmMessage> messages = rhythm->fetchRhythmMessages(lastRhythmCheck);
+    
+    if(messages.size() > 0)
     {
-        std::string drum_path = "resources/graphics/rhythm/drums/" + rhythmController->drumToLoad + ".png";
-
-        Drum temp;
-        temp.Load(rhythmController->drumToLoad, rhythmController->drum_perfection, drum_path);
-        temp.pattern = rhythmController->currentPattern;
-        drums.push_back(temp);
+        SPDLOG_DEBUG("Received {} rhythm messages", messages.size());
     }
 
-    rhythmController->resetDrums();
+    for(unsigned int i=0; i<messages.size(); i++)
+    {
+        SPDLOG_DEBUG("message i={}, action: {}, message: {}, timestamp {}", i, messages[i].action, messages[i].message, messages[i].timestamp);
+
+        //messages[i].action directly translates into drums BEST, GOOD and BAD
+        Rhythm::RhythmAction action = messages[i].action;
+
+        if(action == Rhythm::RhythmAction::DRUM_BEST || action == Rhythm::RhythmAction::DRUM_GOOD || action == Rhythm::RhythmAction::DRUM_BAD)
+        {
+            std::vector<std::string> params = Func::Split(messages[i].message, ' ');
+
+            std::string drum_name = params[0];
+            int drum_pattern = atoi(params[1].c_str());
+
+            std::string drum_path = "resources/graphics/rhythm/drums/" + drum_name + ".png";
+
+            Drum temp;
+            temp.Load(drum_name, action, drum_path);
+            temp.pattern = drum_pattern;
+            drums.push_back(temp);
+        }
+    }
 
     std::vector<int> drumsToErase;
 
