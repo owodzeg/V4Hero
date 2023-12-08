@@ -10,6 +10,7 @@
 #include "../CoreManager.h"
 
 using namespace std;
+using namespace std::chrono;
 
 Rhythm::Rhythm()
 {
@@ -21,6 +22,12 @@ Rhythm::Rhythm()
 
     b_metronome.loadFromFile("resources/sfx/drums/metronome.ogg");
     s_metronome.setBuffer(b_metronome);
+
+    b_ding.loadFromFile("resources/sfx/drums/ding.ogg");
+    s_ding.setBuffer(b_ding);
+
+    b_anvil.loadFromFile("resources/sfx/drums/anvil.ogg");
+    s_anvil.setBuffer(b_anvil);
 
     //CoreManager::getInstance().getConfig()->LoadConfig(CoreManager::getInstance().getConfig()->thisCore);
 }
@@ -186,6 +193,34 @@ float Rhythm::GetSatisfaction()
     return last_satisfaction;
 }
 
+void Rhythm::addRhythmMessage(RhythmAction action_id, std::string message)
+{
+    RhythmMessage new_message;
+    new_message.action = action_id;
+    new_message.message = message;
+    new_message.timestamp = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+    SPDLOG_DEBUG("Adding new rhythm message: action {}, message {}, timestamp {}", action_id, message, new_message.timestamp);
+    messages.push_back(new_message);
+}
+
+std::vector<Rhythm::RhythmMessage> Rhythm::fetchRhythmMessages(uint64_t& timestamp)
+{
+    std::vector<Rhythm::RhythmMessage> messages_time;
+
+    for(unsigned int i=0; i<messages.size(); i++)
+    {
+        //SPDLOG_DEBUG("Comparing rhythm message[{}] {} with timestamp {}", i, messages[i].timestamp, timestamp);
+        if(messages[i].timestamp >= timestamp)
+        {
+            messages_time.push_back(messages[i]);
+        }
+    }
+
+    timestamp = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+    return messages_time;
+}
+
 void Rhythm::checkRhythmController()
 {
     RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
@@ -202,15 +237,34 @@ void Rhythm::checkRhythmController()
     rhythmController->low_range = low_range;
     rhythmController->high_range = high_range;
 
-    if (rhythmController->checkForInput())
+    if(rhythmController->checkForInput())
     {
-        if (rhythmController->breakCombo)
+        //if(lazyClock.getElapsedTime().asMilliseconds() > 1000)
+        //{
+        //    drumTicks = 0;
+        //}
+
+        //lazyClock.restart();
+
+        if(rhythmController->commandWithMissingHalfBeat)
         {
-            BreakCombo();
+            firstCommandDelayClock.restart();
+            firstCommandDelay = true;
+
+            rhythmController->commandWithMissingHalfBeat = false;
         }
+        
+        drumTicksNoInput = 0;
+        commandWaitClock.restart();
     }
 
-    rhythmController->resetCombo();
+    if(rhythmController->commandInputProcessed.size() > 0)
+    {
+        command = rhythmController->commandInputProcessed;
+        perfection = rhythmController->perfection;
+
+        rhythmController->commandInputProcessed.clear();
+    }
 }
 
 void Rhythm::doRhythm()
@@ -233,12 +287,100 @@ void Rhythm::doRhythm()
             s_metronome.play();
 
             CoreManager::getInstance().getRhythmGUI()->click();
+            
+            drumTicks += 1;
+            drumTicks = drumTicks % 4;
+
+            drumTicksNoInput += 1;
+
+            SPDLOG_DEBUG("Drum ticks: {}, combo: {}, drumTicksNoInput: {}, commandWaitClock: {}ms", drumTicks, combo, drumTicksNoInput, commandWaitClock.getElapsedTime().asMilliseconds());
+
+            if(command.size() > 0)
+            {
+                // start of rhythm, no commands yet
+                if(combo == 0)
+                {
+                    // check if a command with last blank halfbeat was executed
+                    if(firstCommandDelay)
+                    {
+                        if(firstCommandDelayClock.getElapsedTime().asMilliseconds() > 250)
+                        {
+                            SPDLOG_DEBUG("[CASE 1] Execute a command here!");
+                            command.clear();
+
+                            combo += 1;
+                            drumTicks = 0; //reset drum ticks to keep the beat for next commands
+
+                            firstCommandDelay = false;
+                            drumTicksNoInput = -3;
+
+                            commandWaitClock.restart();
+
+                            s_ding.play();
+                        }
+                    }
+                    else //otherwise, handle the command that contains last halfbeat as drum
+                    {
+                        // commands that should start instantly (ones that would end with a halfnote)
+                        SPDLOG_DEBUG("[CASE 2] Execute a command here!");
+                        command.clear();
+
+                        combo += 1;
+                        drumTicks = 0; //reset drum ticks to keep the beat for next commands
+                        drumTicksNoInput = -3;
+
+                        commandWaitClock.restart();
+
+                        s_ding.play();
+                    }
+                }
+                else // combo system in place, command needs to follow drum tick pattern
+                {
+                    if(drumTicks == 0)
+                    {
+                        SPDLOG_DEBUG("[CASE 3] Execute a command here!");
+                        command.clear();
+
+                        combo += 1;
+                        drumTicksNoInput = -3;
+
+                        commandWaitClock.restart();
+
+                        s_ding.play();
+                    }
+                }
+            }
+            else //everything that happens outside of the command input
+            {
+                if(drumTicksNoInput >= 3 && combo > 0)
+                {
+                    combo = 0;
+                    SPDLOG_DEBUG("Combo break! Reason code: #1");
+                    s_anvil.play();
+                }
+            }
         }
     }
 
     metronomeOldVal = metronomeVal;
 
+    // here goes everything outside of the metronome
+    if(combo > 0 && commandWaitClock.getElapsedTime().asMilliseconds() > 2250)
+    {
+        combo = 0;
+        SPDLOG_DEBUG("Combo break! Reason code: #2");
+        s_anvil.play();
+    }
+
     checkRhythmController();
+
+    // NEW RHYTHM SYSTEM
+    // metronomeState = 0: click
+    // metronomeState = 1: half beat
+    // we have to reach to the metronomeState=0 right after we receive a full command
+
+
+    // OLD RHYTHM SYSTEM
 
     /*
     if (rhythmClock.getElapsedTime().asMilliseconds() > (beat_timer / float(2)))

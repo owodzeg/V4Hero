@@ -90,6 +90,10 @@ public:
     std::vector<string> av_commands;
     std::vector<int> base5_commands;
 
+    float perfection = 0;
+    std::vector<int> commandInputProcessed;
+    bool commandWithMissingHalfBeat = false;
+
     RhythmController();
     bool checkForInput();
     void resetDrums();

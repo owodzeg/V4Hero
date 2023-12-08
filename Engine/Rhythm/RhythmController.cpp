@@ -1,6 +1,7 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
 
 #include "RhythmController.h"
+#include "Rhythm.h"
 #include <iostream>
 #include <spdlog/spdlog.h>
 #include "../CoreManager.h"
@@ -38,6 +39,7 @@ RhythmController::RhythmController()
 bool RhythmController::checkForInput()
 {
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
+    Rhythm* rhythm = CoreManager::getInstance().getRhythm();
 
     if (inputCtrl->lockRhythm)
         return false;
@@ -70,19 +72,28 @@ bool RhythmController::checkForInput()
 
         if(drumHit)
         {
+            drumToLoad = drum_pngs[i];
+            current_drum = drumToLoad;
+            currentPattern = patterns[drumToLoad];
+
+            std::string rhythmMessage = current_drum+" "+to_string(currentPattern);
+
             if (masterTimer < low_range) ///BEST hit
             {
                 ///Apply BAD drum sound effect
                 drum_quality = DrumQuality::BAD;
+                rhythm->addRhythmMessage(Rhythm::RhythmAction::DRUM_BAD, rhythmMessage);
             } else
             {
                 ///Apply GOOD drum sound effect
                 if (masterTimer >= high_range) ///BEST hit
                 {
                     drum_quality = DrumQuality::BEST;
+                    rhythm->addRhythmMessage(Rhythm::RhythmAction::DRUM_BEST, rhythmMessage);
                 } else if (masterTimer >= low_range) ///GOOD hit
                 {
                     drum_quality = DrumQuality::GOOD;
+                    rhythm->addRhythmMessage(Rhythm::RhythmAction::DRUM_GOOD, rhythmMessage);
                 }
             }
 
@@ -103,9 +114,6 @@ bool RhythmController::checkForInput()
                 canHit = false;
             }
 
-            drumToLoad = drum_pngs[i];
-            current_drum = drumToLoad;
-            currentPattern = patterns[drumToLoad];
             patterns[drumToLoad]++;
 
             // register the input
@@ -204,6 +212,17 @@ bool RhythmController::checkForInput()
                         s_perfect.setVolume(drumVolume);
                         s_perfect.play();
                     }
+
+                    // we clear the command input here
+                    // fix for multiple shwings
+                    // we are supposed to save the command input to somewhere else
+                    // so we can make the rhythm system react to whatever command we're currently inputting
+                    // clearing command input also prevents from actually executing the command as of now
+                    perfection = perfect / 8.f;
+                    commandInputProcessed = commandInput;
+                    
+                    commandInput.clear();
+                    command_perfects.clear();
                 }
                 else
                 {
@@ -235,6 +254,26 @@ bool RhythmController::checkForInput()
                             s_perfect.setVolume(drumVolume);
                             s_perfect.play();
                         }
+
+                        // we clear the command input here
+                        // fix for multiple shwings
+                        // we are supposed to save the command input to somewhere else
+                        // so we can make the rhythm system react to whatever command we're currently inputting
+                        // clearing command input also prevents from actually executing the command as of now
+                        perfection = perfect / 8.f;
+                        commandInputProcessed = commandInput;
+
+                        commandInput.clear();
+                        command_perfects.clear();
+
+                        commandWithMissingHalfBeat = true;
+                    }
+                    else
+                    {
+                        //we found nothing with normal and with a hack?
+                        //probably a good idea to break the combo here
+                        //we have to consider that the command buffer is always filled with Nones
+                        //so its probably worth checking whenever we're finished with drumming
                     }
                 }
             }
@@ -304,7 +343,9 @@ bool RhythmController::checkForInput()
 
     //SPDLOG_DEBUG("Pending command: {}, int: {}, perfects: {}", s_command, command, s_perfects);
 
-    if(command != 0)
+    // TO-DO: remove this. probably unnecessary, as the combo logic was moved to Rhythm.cpp
+    // currently uncommented because not sure how important it is
+    /*if(command != 0)
     {
         bool found = false;
 
@@ -326,7 +367,7 @@ bool RhythmController::checkForInput()
                 SPDLOG_DEBUG("break combo #2");
             }
         }
-    }
+    }*/
 
     for(int i=0; i<4; i++)
     {
