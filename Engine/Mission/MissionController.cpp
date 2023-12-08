@@ -1699,7 +1699,10 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     
     SPDLOG_INFO("Loading background {}", bgName);
     mission_bg.Load(bgName);
-    rhythm.LoadTheme(songName);
+
+    Rhythm* rhythm = CoreManager::getInstance().getRhythm();
+    rhythm->LoadTheme(songName);
+
     missionTimer.restart();
 
     missionThreads.push_back(std::thread(&MissionController::DoRhythm, this));
@@ -1708,11 +1711,14 @@ void MissionController::StartMission(std::string missionFile, bool showCutscene,
     initialized = true;
 
     //TO-DO: start rhythm when tips are clicked
-    //rhythm.Start();
+    //rhythm->Start();
 }
+
 void MissionController::StopMission()
 {
-    rhythm.Stop();
+    Rhythm* rhythm = CoreManager::getInstance().getRhythm();
+
+    rhythm->Stop();
     initialized = false;
 }
 void MissionController::DoKeyboardEvents()
@@ -1960,10 +1966,13 @@ void MissionController::DoMovement()
 {
     /** Make Patapon walk (temporary) **/
     float booster = 1.0;
-    if (rhythm.current_perfect == 4)
-    {
-        booster = 1.2;
-    }
+
+    // TO-DO: replace with callback potentially
+    //if (rhythm->current_perfect == 4)
+    //{
+    //    booster = 1.2;
+    //}
+
     if (missionEnd)
     {
         booster = 1.0;
@@ -2148,13 +2157,14 @@ void MissionController::DoRhythm()
         /** Call Rhythm functions **/
         InputController* inputCtrl = CoreManager::getInstance().getInputController();
         RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
+        Rhythm* rhythm = CoreManager::getInstance().getRhythm();
 
-        if ((rhythm.current_song == "patapata") || (rhythm.current_song == "chakapata"))
+        if ((rhythm->current_song == "patapata") || (rhythm->current_song == "chakapata"))
         {
             //cout << "set walk true" << endl;
             camera.walk = true;
 
-            if (rhythm.current_song == "chakapata")
+            if (rhythm->current_song == "chakapata")
                 walkBackwards = true;
             else
                 walkBackwards = false;
@@ -2177,16 +2187,11 @@ void MissionController::DoRhythm()
         if ((rhythmController->current_drum == "pata") || (rhythmController->current_drum == "pon") || (rhythmController->current_drum == "chaka") || (rhythmController->current_drum == "don"))
         {
             rhythmController->current_drum = "";
-            rhythm.current_song = "";
+            rhythm->current_song = "";
         }
 
-        /* 
-        TO-DO: rhythm and rhythmcontroller use the coremanager config
-        rhythmController->config = thisConfig;
-        rhythm.config = thisConfig; 
-        */
-
-        rhythm.doRhythm();
+        rhythm->doRhythm();
+        std::this_thread::sleep_for(1ms);
     }
 }
 
@@ -2195,7 +2200,6 @@ void MissionController::ClearMissionMemory()
     vector<std::unique_ptr<Entity>>().swap(tangibleLevelObjects);
     vector<std::unique_ptr<PlayableUnit>>().swap(units);
     vector<std::unique_ptr<Kirajin_Yari_2>>().swap(kirajins);
-    rhythm.Clear();
 
     levelProjectiles.clear();
 
@@ -3061,7 +3065,8 @@ std::vector<int> MissionController::DrawEntities()
             RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
             RhythmGUI* rhythmGUI = CoreManager::getInstance().getRhythmGUI();
 
-            entity->doRhythm(rhythm.current_song, rhythmController->current_drum, rhythm.GetCombo(), rhythm.GetRealCombo(), rhythm.advanced_prefever, rhythmGUI->beatBounce, rhythm.GetSatisfaction());
+            //TO-DO: replace with rhythm callback system!!!!!!
+            //entity->doRhythm(rhythm->current_song, rhythmController->current_drum, rhythm->GetCombo(), rhythm->GetRealCombo(), rhythm->advanced_prefever, rhythmGUI->beatBounce, rhythm->GetSatisfaction());
 
             if (!missionEnd)
             {
@@ -3152,6 +3157,8 @@ std::vector<int> MissionController::DrawEntities()
 
 std::vector<int> MissionController::DrawUnits()
 {
+    Rhythm* rhythm = CoreManager::getInstance().getRhythm();
+
     vector<int> units_rm;
 
     bool hatapon = false;
@@ -3273,8 +3280,9 @@ std::vector<int> MissionController::DrawUnits()
             {
                 RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
 
-                unit->UpdateRhythm(rhythm.current_song, rhythmController->current_drum, rhythm.GetCombo());
-                unit->doRhythm(rhythm.current_song, rhythmController->current_drum, rhythm.GetCombo());
+                //TO-DO: replace with rhythm callbacks!!!!!
+                //unit->UpdateRhythm(rhythm->current_song, rhythmController->current_drum, rhythm->GetCombo());
+                //unit->doRhythm(rhythm->current_song, rhythmController->current_drum, rhythm->GetCombo());
 
                 if (unit->getUnitID() != 0) /// Yaripon
                 {
@@ -3287,10 +3295,11 @@ std::vector<int> MissionController::DrawUnits()
 
                         float rand_rad = (rand() % 200000000) / float(1000000000);
 
-                        int rhythm_acc = rhythm.current_perfect; ///Check how many perfect measures has been done to improve the spears throwing
+                        //TO-DO: should this even be here?
+                        int rhythm_acc = rhythm->current_perfect; ///Check how many perfect measures has been done to improve the spears throwing
                         float fever_boost = 0.8;
 
-                        if (rhythm.GetCombo() >= 11) ///Check for fever to boost the spears damage
+                        if (rhythm->GetCombo() >= 11) ///Check for fever to boost the spears damage
                             fever_boost = 1.0;
 
                         float mindmg = unit->mindmg * (0.8 + (rhythm_acc * 0.05)) * fever_boost;
@@ -3361,7 +3370,7 @@ std::vector<int> MissionController::DrawUnits()
     {
         missionEnd = true;
         failure = true;
-        rhythm.Stop();
+        rhythm->Stop();
     }
 
     return units_rm;
@@ -3375,6 +3384,8 @@ void MissionController::Update()
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
+    Rhythm* rhythm = CoreManager::getInstance().getRhythm();
+
     float cfps = CoreManager::getInstance().getCore()->getFPS();
 
     SPDLOG_TRACE("Start of MissionController update routine (NEW FRAME)");
@@ -3680,8 +3691,8 @@ void MissionController::Update()
 
         //cout << "[MissionController] Rhythm" << endl;
 
-        CoreManager::getInstance().getRhythmGUI()->doVisuals(rhythm.GetBgmCycle(), rhythm.GetCombo());
-        //rhythm.Draw();
+        CoreManager::getInstance().getRhythmGUI()->doVisuals(rhythm->GetBgmCycle(), rhythm->GetCombo());
+        //rhythm->Draw();
     }
 
     /** Execute all mission end related things **/
@@ -3708,7 +3719,7 @@ void MissionController::Update()
 
                         missionEnd = true;
                         failure = true;
-                        rhythm.Stop();
+                        rhythm->Stop();
                     } else if (dialog_boxes[dialog_boxes.size() - 1].id == 999)
                     {
                         SPDLOG_DEBUG("Enable hitboxes");
@@ -3798,7 +3809,7 @@ void MissionController::Update()
                         SPDLOG_DEBUG("Mission complete");
 
                         missionEnd = true;
-                        rhythm.Stop();
+                        rhythm->Stop();
                         missionEndTimer.restart();
 
                         dialog_boxes[dialog_boxes.size() - 1].Close();
@@ -3897,4 +3908,8 @@ void MissionController::StartCutscene(const std::string& text, bool isBlackScree
 MissionController::~MissionController()
 {
     //dtor
+    for (auto& t : missionThreads)
+    {
+        t.detach();
+    }
 }

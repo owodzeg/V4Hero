@@ -45,7 +45,7 @@ public:
     bool showHitboxes = false;
 
     Background mission_bg;
-    Rhythm rhythm;
+    
     bool initialized = false;
     bool isFinishedLoading = false;
     bool loadingError = false;
