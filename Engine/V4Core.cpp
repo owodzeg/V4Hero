@@ -172,6 +172,28 @@ void V4Core::init()
 
     StateManager::getInstance().setState(StateManager::ENTRY);
 
+    bool rhythmTest = true;
+
+    if(rhythmTest)
+    {
+        ifstream check("resources/data/sv1.p4sv");
+        bool exists = check.good();
+        check.close();
+
+        if (exists)
+        {
+            /** Load save from saveReader **/
+            saveReader->Flush();
+            saveReader->LoadSave();
+        }
+
+        mission_file = "mis1_0.p4m";
+        mission_id = 0;
+        mission_multiplier = 1;
+
+        StateManager::getInstance().setState(StateManager::MISSIONCONTROLLER);
+    }
+
     // Execute the main game loop
     while (window->isOpen())
     {
