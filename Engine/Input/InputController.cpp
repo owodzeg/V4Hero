@@ -4,6 +4,7 @@
 #include "../CoreManager.h"
 #include <iostream>
 #include <spdlog/spdlog.h>
+#include <mutex>
 
 using namespace std;
 
@@ -49,6 +50,7 @@ void InputController::parseEvents(sf::Event& event)
 
         keyRegistered = true;
         currentKey = event.key.code;
+
         keyMap[event.key.code] = true;
         keyMapHeld[event.key.code] = true;
     }
@@ -217,11 +219,15 @@ bool InputController::isKeyPressed(int keyID, int restrictMode)
             }
         }
 
+        mtx.lock();
         if (keyMap[realKey] == true)
         {
             keyMap[realKey] = false;
+            mtx.unlock();
+
             return true;
         }
+        mtx.unlock();
     }
 
     return false;
@@ -260,7 +266,10 @@ bool InputController::isKeyHeld(int keyID, int restrictMode)
 
 void InputController::Flush()
 {
+    mtx.lock();
     keyMap.clear();
+    mtx.unlock();
+
     keyRegistered = false;
     currentKey = -1;
 }

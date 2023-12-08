@@ -3,6 +3,7 @@
 
 #include "../Config.h"
 #include <map>
+#include <mutex>
 
 class InputController
 {
@@ -42,6 +43,8 @@ public:
     int currentKey = -1;        //reads what key has been pressed
 
     bool lockRhythm = false;
+
+    std::mutex mtx; 
 
     InputController();
 
