@@ -12,6 +12,7 @@
 #include "StringRepository.h"
 #include "TipsUtil.h"
 #include "Mission/MissionController.h"
+#include "Rhythm/Rhythm.h"
 #include "Rhythm/RhythmGUI.h"
 #include "Rhythm/RhythmController.h"
 
@@ -28,6 +29,7 @@ public:
     InputController* getInputController();
     TipsUtil* getTipsUtil();
     MissionController* getMissionController();
+    Rhythm* getRhythm();
     RhythmGUI* getRhythmGUI();
     RhythmController* getRhythmController();
     void reinitMissionController();
@@ -58,6 +60,9 @@ private:
 
     // Pointer to MissionController (handled by StateManager)
     MissionController* missionController;
+
+    // Pointer to Rhythm
+    Rhythm* rhythm;
 
     // Pointer to RhythmGUI
     RhythmGUI* rhythmGUI;

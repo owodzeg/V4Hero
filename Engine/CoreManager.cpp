@@ -38,6 +38,9 @@ void CoreManager::init()
     tipsUtil = new TipsUtil;
 
     // Prepare rhythmGUI for missions
+    rhythm = new Rhythm;
+
+    // Prepare rhythmGUI for missions
     rhythmGUI = new RhythmGUI;
 
     // Prepare rhythm controller for general use (missions + minigames)
@@ -86,6 +89,11 @@ TipsUtil* CoreManager::getTipsUtil()
 MissionController* CoreManager::getMissionController()
 {
     return missionController;
+}
+
+Rhythm* CoreManager::getRhythm()
+{
+    return rhythm;
 }
 
 RhythmGUI* CoreManager::getRhythmGUI()

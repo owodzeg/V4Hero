@@ -150,7 +150,7 @@ void StateManager::updateCurrentState()
                                 if (loadingTipPtr->tipFinished)
                                 {
                                     setState(afterTipState);
-                                    missionControllerPtr->rhythm.Start();
+                                    CoreManager::getInstance().getRhythm()->Start();
                                 }
                             }
                         }
@@ -639,6 +639,44 @@ void StateManager::setState(int state)
 
     //go from barracks to missioncontroller
     if (currentGameState == BARRACKS && state == MISSIONCONTROLLER)
+    {
+        if (loadingTipPtr == nullptr)
+        {
+            loadingTipPtr = new LoadingTip;
+        } else
+        {
+            delete loadingTipPtr;
+            loadingTipPtr = new LoadingTip;
+        }
+
+        if (patapolisPtr != nullptr)
+        {
+            delete patapolisPtr;
+            patapolisPtr = nullptr;
+        }
+
+        if (barracksPtr != nullptr)
+        {
+            delete barracksPtr;
+            barracksPtr = nullptr;
+        }
+
+        if (obeliskPtr != nullptr)
+        {
+            delete obeliskPtr;
+            obeliskPtr = nullptr;
+        }
+
+        ResourceManager::getInstance().unloadState(PATAPOLIS);
+
+        state = TIPS;
+        afterTipState = MISSIONCONTROLLER;
+
+        initStateMT(afterTipState);
+    }
+    
+    //[DEBUG] special case: go from introduction directly to mission
+    if (currentGameState == ENTRY && state == MISSIONCONTROLLER)
     {
         if (loadingTipPtr == nullptr)
         {
