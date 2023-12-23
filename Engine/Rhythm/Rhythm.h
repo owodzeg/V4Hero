@@ -74,41 +74,9 @@ private:
     int combo = 1;     ///Rhythm combo, main navigator through BGM
     int rl_combo = 0;  ///Game combo, directing mechanics and fever
 
-    std::vector<std::string> av_commands = {"PATA-PATA-PATA-PON-",
-                                            "PON-PON-PATA-PON-",
-                                            "CHAKA-CHAKA-PATA-PON-",
-                                            "PON-PON-CHAKA-CHAKA-",
-                                            "PATA-PON-DON-CHAKA-",
-                                            "PON-PATA-PON-PATA-",
-                                            "DON-DON-CHAKA-CHAKA-",
-                                            "CHAKA-PATA-CHAKA-PATA-",
-                                            "PATA-PON-PATA-PON-",
-                                            "DON-DONDON-DONDON-"}; ///Available commands
+    std::vector<int> base5_commands; // commands in quinary format (pata=0,pon=1,don=2,chaka=3,none=4)  
+    std::vector<std::string> av_songs; // song names for patapon singing
 
-    std::vector<int> base5_commands = {65109, //pata-pata-pata-pon-
-                                        146359, //pon-pon-pata-pon-
-                                        308859, //chaka-chaka-pata-pon-
-                                        146744, //pon-pon-chaka-chaka-
-                                        68494, //pata-pon-don-chaka-
-                                        143354, //pon-pata-pon-pata- 
-                                        227994, //don-don-chaka-chaka-
-                                        299854, //chaka-pata-chaka-pata
-                                        68234, //pata-pon-pata-pon
-                                        226814, //don-dondon-dondon-
-                                        304525, //experimental: chaka-dondonponponpatapata
-                                        97656, //experimental: ponponponponponponponpon
-                                        66569}; //experimental: pata-ponpon-dondonchaka
-                                        
-    std::vector<std::string> av_songs = {"patapata",
-                                         "ponpon",
-                                         "chakachaka",
-                                         "ponchaka",
-                                         "donchaka",
-                                         "ponpata",
-                                         "dondon",
-                                         "chakapata",
-                                         "pause",
-                                         "summon"}; ///Available songs
     std::vector<float> acc_req = {0, 1, 1, 0.9325, 0.875, 0.8125, 0.75, 0.75, 0.75, 0.6875, 0.625};
 
     std::vector<float> perfects_reward = {0, 50, 150, 250, 300};

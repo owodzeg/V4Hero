@@ -9,8 +9,11 @@
 #include <spdlog/spdlog.h>
 #include "../CoreManager.h"
 
+#include <nlohmann/json.hpp>
+
 using namespace std;
 using namespace std::chrono;
+using json = nlohmann::json;
 
 Rhythm::Rhythm()
 {
@@ -28,6 +31,38 @@ Rhythm::Rhythm()
 
     b_anvil.loadFromFile("resources/sfx/drums/anvil.ogg");
     s_anvil.setBuffer(b_anvil);
+
+    // fetch commands from file
+    ifstream t("resources/data/commands.json", std::ios::in);
+    nlohmann::json command_data;
+    t >> command_data;
+
+    // map of values equivalent to the quinary system from RhythmController.h
+    std::map<std::string, int> drum_values;
+    drum_values["PATA"] = 0;
+    drum_values["PON"] = 1;
+    drum_values["DON"] = 2;
+    drum_values["CHAKA"] = 3;
+    drum_values[""] = 4;
+
+    for(auto command : command_data["commands"])
+    {
+        SPDLOG_DEBUG("Found command, name: {}, song: {}", command["name"], command["song"]);
+        av_songs.push_back(command["song"]);
+
+        nlohmann::json beat_data = command["beat"];
+        int power = 7;
+        int result = 0;
+        
+        for(auto beat : beat_data)
+        {
+            result += drum_values[beat] * pow(5, power);
+            power--;    
+        }
+
+        base5_commands.push_back(result);
+        SPDLOG_DEBUG("Added result quinary value: {}", result);
+    }
 
     //CoreManager::getInstance().getConfig()->LoadConfig(CoreManager::getInstance().getConfig()->thisCore);
 }

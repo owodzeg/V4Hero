@@ -1,0 +1,27 @@
+{
+    "commands": [
+        {
+            "name": "march",
+            "song": "patapata",
+            "beat": [ "PATA", "", "PATA", "", "PATA", "", "PON", "" ]
+        },
+
+        {
+            "name": "attack",
+            "song": "ponpon",
+            "beat": [ "PON", "", "PON", "", "PATA", "", "PON", "" ]
+        },
+
+        {
+            "name": "defense",
+            "song": "chakachaka",
+            "beat": [ "CHAKA", "", "CHAKA", "", "PATA", "", "PON", "" ]
+        },
+
+        {
+            "name": "summon",
+            "song": "",
+            "beat": [ "DON", "", "DON", "DON", "", "DON", "DON", "" ]
+        }
+    ]
+}
