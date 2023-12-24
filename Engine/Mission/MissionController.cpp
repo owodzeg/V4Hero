@@ -1760,9 +1760,9 @@ void MissionController::DoKeyboardEvents()
 
     if (!missionEnd)
     {
-        if ((inputCtrl->isKeyHeld(InputController::Keys::LTRIGGER)) && (inputCtrl->isKeyHeld(InputController::Keys::RTRIGGER)) && (inputCtrl->isKeyHeld(InputController::Keys::SQUARE)))
+        if ((inputCtrl->isKeyHeld(Input::Keys::LTRIGGER)) && (inputCtrl->isKeyHeld(Input::Keys::RTRIGGER)) && (inputCtrl->isKeyHeld(Input::Keys::SQUARE)))
         {
-            if (inputCtrl->isKeyPressed(InputController::Keys::SELECT))
+            if (inputCtrl->isKeyPressed(Input::Keys::SELECT))
             {
                 std::vector<sf::String> a = {"Show hitboxes", "Hide hitboxes", "Heal units", "Kill all player units", "Kill Hatapon", "Enable verbose logging", "Mission complete"};
 
@@ -1771,7 +1771,7 @@ void MissionController::DoKeyboardEvents()
                 db.id = 999;
                 dialog_boxes.push_back(db);
             }
-        } else if (inputCtrl->isKeyPressed(InputController::Keys::START))
+        } else if (inputCtrl->isKeyPressed(Input::Keys::START))
         {
             std::vector<sf::String> a = {Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("nav_yes")), Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("nav_no"))};
 
@@ -3707,7 +3707,7 @@ void MissionController::Update()
     {
         inputCtrl->lockRhythm = true;
 
-        if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
+        if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
         {
             switch (dialog_boxes[dialog_boxes.size() - 1].CheckSelectedOption())
             {

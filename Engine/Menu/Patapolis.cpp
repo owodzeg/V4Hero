@@ -1633,7 +1633,7 @@ void PatapolisMenu::Update()
         {
             if ((StateManager::getInstance().getState() != StateManager::PATAPOLIS_ALTAR) && (StateManager::getInstance().getState() != StateManager::MATER_OUTER) && (!credits.is_active) && (screenFade.checkFinished()))
             {
-                if ((inputCtrl->isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl->isKeyPressed(InputController::Keys::LTRIGGER)))
+                if ((inputCtrl->isKeyPressed(Input::Keys::LEFT)) || (inputCtrl->isKeyPressed(Input::Keys::LTRIGGER)))
                 {
                     if (location > 0)
                     {
@@ -1646,7 +1646,7 @@ void PatapolisMenu::Update()
 
                         SetTitle(location);
                     }
-                } else if ((inputCtrl->isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl->isKeyPressed(InputController::Keys::RTRIGGER)))
+                } else if ((inputCtrl->isKeyPressed(Input::Keys::RIGHT)) || (inputCtrl->isKeyPressed(Input::Keys::RTRIGGER)))
                 {
                     if (location < locations.size() - 1)
                     {
@@ -1659,7 +1659,7 @@ void PatapolisMenu::Update()
 
                         SetTitle(location);
                     }
-                } else if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
+                } else if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
                 {
                     // select the current menu item
                     switch (location)
@@ -1717,7 +1717,7 @@ void PatapolisMenu::Update()
                     }
                 }
 
-                if (inputCtrl->isKeyPressed(InputController::Keys::START))
+                if (inputCtrl->isKeyPressed(Input::Keys::START))
                 {
                     std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_yes")), Func::ConvertToUtf8String(strRepo->GetString("nav_no"))};
 
@@ -1725,7 +1725,7 @@ void PatapolisMenu::Update()
                     db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("patapolis_returntomain")), a, config->GetInt("textureQuality"));
                     db.id = 0;
                     dialogboxes.push_back(db);
-                } else if (inputCtrl->isKeyPressed(InputController::Keys::SELECT))
+                } else if (inputCtrl->isKeyPressed(Input::Keys::SELECT))
                 {
                     std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_yes")), Func::ConvertToUtf8String(strRepo->GetString("nav_no"))};
 
@@ -1737,7 +1737,7 @@ void PatapolisMenu::Update()
             }
         } else
         {
-            if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
+            if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
             {
                 switch (dialogboxes[dialogboxes.size() - 1].CheckSelectedOption())
                 {

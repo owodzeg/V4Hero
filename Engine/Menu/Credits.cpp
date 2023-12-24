@@ -348,7 +348,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
         }
     }
 
-    if (inputCtrl.isKeyPressed(InputController::Keys::START))
+    if (inputCtrl.isKeyPressed(Input::Keys::START))
     {
         s_credits.stop();
         s_outro.stop();

@@ -351,15 +351,15 @@ void MaterOuterMenu::Update()
 
             
         }
-        if (inputCtrl->isKeyPressed(InputController::Keys::LEFT))
+        if (inputCtrl->isKeyPressed(Input::Keys::LEFT))
         {
             this->MoveSquadPos(-1);
         }
-        if (inputCtrl->isKeyPressed(InputController::Keys::RIGHT))
+        if (inputCtrl->isKeyPressed(Input::Keys::RIGHT))
         {
             this->MoveSquadPos(1);
         }
-        if (inputCtrl->isKeyPressed(InputController::Keys::UP))
+        if (inputCtrl->isKeyPressed(Input::Keys::UP))
         {
             cursquad--;
             if (cursquad < 0)
@@ -374,7 +374,7 @@ void MaterOuterMenu::Update()
                 centered_squads[i]->y = 165 + 100 * i; // re-center the squads
             }
         }
-        if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
+        if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
         {
             cursquad++;
             if (cursquad > squads.size()-1)
@@ -389,7 +389,7 @@ void MaterOuterMenu::Update()
                 centered_squads[i]->y = 165 + 100 * i; // re-center the squads
             }
         }
-        if (inputCtrl->isKeyPressed(InputController::Keys::CIRCLE))
+        if (inputCtrl->isKeyPressed(Input::Keys::CIRCLE))
         {
             is_active = false;
             StateManager::getInstance().setState(StateManager::PATAPOLIS);

@@ -591,9 +591,9 @@ void OptionsMenu::Update()
             case 5: {
                 if (madeChanges)
                 {
-                    if (inputCtrl->isKeyPressed(InputController::Keys::UP))
+                    if (inputCtrl->isKeyPressed(Input::Keys::UP))
                         restart_prompt.MoveUp();
-                    if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
+                    if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
                         restart_prompt.MoveDown();
 
                     sel = restart_prompt.CheckSelectedOption();
@@ -827,7 +827,7 @@ void OptionsMenu::Update()
                         break;
                 }
 
-                if (inputCtrl->isKeyPressed(InputController::Keys::LEFT))
+                if (inputCtrl->isKeyPressed(Input::Keys::LEFT))
                 {
                     int newVolume = config->GetInt(key) - 10;
 
@@ -835,7 +835,7 @@ void OptionsMenu::Update()
                         newVolume = 0;
 
                     SetConfigValue(key, to_string(newVolume), false);
-                } else if (inputCtrl->isKeyPressed(InputController::Keys::RIGHT))
+                } else if (inputCtrl->isKeyPressed(Input::Keys::RIGHT))
                 {
                     int newVolume = config->GetInt(key) + 10;
 
@@ -1203,8 +1203,8 @@ void OptionsMenu::Update()
                 float low_range = 0;
                 float high_range = 0;
 
-                int right_pressed = int(inputCtrl->isKeyHeld(inputCtrl->RIGHT));
-                int left_pressed = -int(inputCtrl->isKeyHeld(inputCtrl->LEFT));
+                int right_pressed = int(inputCtrl->isKeyHeld(Input::Keys::RIGHT));
+                int left_pressed = -int(inputCtrl->isKeyHeld(Input::Keys::LEFT));
                 int slide_to = right_pressed + left_pressed;
                 if ((slide_to != 0) && (diff_sel != 0))
                 {
@@ -1643,38 +1643,38 @@ void OptionsMenu::Update()
         {
             if (!changeInput)
             {
-                if (inputCtrl->isKeyPressed(InputController::Keys::UP))
+                if (inputCtrl->isKeyPressed(Input::Keys::UP))
                 {
                     if (currentOption > 0)
                         currentOption--;
                 }
 
-                if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
+                if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
                 {
                     if (currentOption < 11)
                         currentOption++;
                 }
 
-                if (inputCtrl->isKeyPressed(InputController::Keys::LEFT))
+                if (inputCtrl->isKeyPressed(Input::Keys::LEFT))
                 {
                     if (currentPreset > 0)
                         currentPreset--;
                 }
 
-                if (inputCtrl->isKeyPressed(InputController::Keys::RIGHT))
+                if (inputCtrl->isKeyPressed(Input::Keys::RIGHT))
                 {
                     if (currentPreset < 8)
                         currentPreset++;
                 }
 
-                if (inputCtrl->isKeyPressed(InputController::Keys::CIRCLE))
+                if (inputCtrl->isKeyPressed(Input::Keys::CIRCLE))
                 {
                     sel = 9999;
                     SelectMenuOption();
                     GoBackMenuOption();
                 }
 
-                if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
+                if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
                 {
                     changeInput = true;
                 }
@@ -1696,39 +1696,39 @@ void OptionsMenu::Update()
             if (setup_stage == 1)
             {
                 ///Only keyboard inputs here
-                if (inputCtrl->isKeyPressed(InputController::Keys::CIRCLE, InputController::RestrictMode::ONLYKEYBOARD))
+                if (inputCtrl->isKeyPressed(Input::Keys::CIRCLE, InputController::RestrictMode::ONLYKEYBOARD))
                 {
                     sel = 9999;
                     SelectMenuOption();
                     GoBackMenuOption();
                 }
 
-                if (inputCtrl->isKeyPressed(InputController::Keys::START, InputController::RestrictMode::ONLYKEYBOARD))
+                if (inputCtrl->isKeyPressed(Input::Keys::START, InputController::RestrictMode::ONLYKEYBOARD))
                 {
                     setup_stage = 2;
                 }
             }
         } else
         {
-            if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
+            if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
             {
                 SelectMenuOption();
             }
 
-            if (inputCtrl->isKeyPressed(InputController::Keys::CIRCLE))
+            if (inputCtrl->isKeyPressed(Input::Keys::CIRCLE))
             {
                 sel = 9999;
                 SelectMenuOption();
                 GoBackMenuOption();
             }
 
-            if (inputCtrl->isKeyPressed(InputController::Keys::UP))
+            if (inputCtrl->isKeyPressed(Input::Keys::UP))
             {
                 if (sel > 0)
                     sel--;
             }
 
-            if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
+            if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
             {
                 if (sel < maxSel - 1)
                     sel++;

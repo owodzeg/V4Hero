@@ -5,9 +5,9 @@
 #include <map>
 #include <mutex>
 
-class InputController
+class Input
 {
-public:
+    public:
     enum Keys
     {
         SQUARE = 0,
@@ -23,6 +23,18 @@ public:
         START = 10,
         SELECT = 11
     };
+    
+    struct KeyPressMessage
+    {
+        int keyCode;
+        bool state; //true - pressed, false - released
+        uint64_t timestamp;
+    };
+};
+
+class InputController
+{
+    public:
 
     enum RestrictMode
     {
@@ -44,11 +56,20 @@ public:
 
     bool lockRhythm = false;
 
-    std::mutex mtx; 
+    std::mutex mtx;
+
+    std::vector<Input::KeyPressMessage> messages;
 
     InputController();
 
     void LoadKeybinds();
+    
+    void addKeyPressMessage(int keyID, bool state);
+    std::vector<Input::KeyPressMessage> fetchKeyPressMessages();
+    void cleanExpiredMessages();
+    bool processKeyPressMessages(int keyID);
+    void processKeyHolds();
+
     void parseEvents(sf::Event& event);
     int translateKeybind(int keyID);
     bool isAnyKeyPressed();

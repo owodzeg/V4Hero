@@ -84,10 +84,10 @@ void PataDialogBox::Draw()
 
     if (!closed)
     {
-        if (inputCtrl->isKeyPressed(InputController::Keys::UP))
+        if (inputCtrl->isKeyPressed(Input::Keys::UP))
             MoveUp();
 
-        if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
+        if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
             MoveDown();
 
         float resRatio = window->getSize().x / float(1280);

@@ -375,7 +375,7 @@ void ObeliskMenu::Update()
 
         if (screenFade.checkFinished())
         {
-            if (inputCtrl->isKeyPressed(InputController::Keys::CIRCLE))
+            if (inputCtrl->isKeyPressed(Input::Keys::CIRCLE))
             {
                 if (displayMissions)
                 {
@@ -391,7 +391,7 @@ void ObeliskMenu::Update()
 
                     SPDLOG_INFO("Exited Obelisk.");
                 }
-            } else if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
+            } else if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
             {
                 if (!displayMissions)
                 {
@@ -445,7 +445,7 @@ void ObeliskMenu::Update()
 
                     SPDLOG_INFO("Set barracks mission to ID {}, mission file: {}", missions[sel_mission].mis_ID, missions[sel_mission].mission_file);
                 }
-            } else if (inputCtrl->isKeyPressed(InputController::Keys::LTRIGGER))
+            } else if (inputCtrl->isKeyPressed(Input::Keys::LTRIGGER))
             {
                 SPDLOG_DEBUG("Skipping maps to the left (Q key).");
 
@@ -453,7 +453,7 @@ void ObeliskMenu::Update()
 
                 if (mapXdest >= 0)
                     mapXdest = 0;
-            } else if (inputCtrl->isKeyPressed(InputController::Keys::RTRIGGER))
+            } else if (inputCtrl->isKeyPressed(Input::Keys::RTRIGGER))
             {
                 SPDLOG_DEBUG("Skipping maps to the right (E key).");
 
@@ -463,7 +463,7 @@ void ObeliskMenu::Update()
 
                 if (mapXdest <= maxBound)
                     mapXdest = maxBound;
-            } else if (inputCtrl->isKeyPressed(InputController::Keys::LEFT))
+            } else if (inputCtrl->isKeyPressed(Input::Keys::LEFT))
             {
                 if (!displayMissions)
                 {
@@ -518,7 +518,7 @@ void ObeliskMenu::Update()
                         location_desc.setString("");
                     }
                 }
-            } else if (inputCtrl->isKeyPressed(InputController::Keys::RIGHT))
+            } else if (inputCtrl->isKeyPressed(Input::Keys::RIGHT))
             {
                 if (!displayMissions)
                 {
@@ -578,7 +578,7 @@ void ObeliskMenu::Update()
                         location_desc.setString("");
                     }
                 }
-            } else if (inputCtrl->isKeyPressed(InputController::Keys::UP))
+            } else if (inputCtrl->isKeyPressed(Input::Keys::UP))
             {
                 if (displayMissions)
                 {
@@ -598,7 +598,7 @@ void ObeliskMenu::Update()
                     string desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
                     mission_desc.setString(Func::ConvertToUtf8String(desc));
                 }
-            } else if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
+            } else if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
             {
                 if (displayMissions)
                 {

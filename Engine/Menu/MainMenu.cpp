@@ -736,7 +736,7 @@ void MainMenu::Update()
 
         if (dialogboxes.size() <= 0)
         {
-            if ((inputCtrl->isKeyPressed(InputController::Keys::LEFT)) || (inputCtrl->isKeyPressed(InputController::Keys::LTRIGGER)))
+            if ((inputCtrl->isKeyPressed(Input::Keys::LEFT)) || (inputCtrl->isKeyPressed(Input::Keys::LTRIGGER)))
             {
                 UsingMouseSelection = false;
 
@@ -754,7 +754,7 @@ void MainMenu::Update()
             //shp->Draw(); 
 
 
-            if ((inputCtrl->isKeyPressed(InputController::Keys::RIGHT)) || (inputCtrl->isKeyPressed(InputController::Keys::RTRIGGER)))
+            if ((inputCtrl->isKeyPressed(Input::Keys::RIGHT)) || (inputCtrl->isKeyPressed(Input::Keys::RTRIGGER)))
             {
                 UsingMouseSelection = false;
 
@@ -766,7 +766,7 @@ void MainMenu::Update()
                 mouseX = totem_sel_pos[totem_sel];
             }
 
-            if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
+            if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
             {
                 UsingMouseSelection = false;
 
@@ -775,7 +775,7 @@ void MainMenu::Update()
             }
         } else
         {
-            if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
+            if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
             {
                 switch (dialogboxes[dialogboxes.size() - 1].CheckSelectedOption())
                 {

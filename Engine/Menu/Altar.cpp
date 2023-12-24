@@ -354,7 +354,7 @@ void AltarMenu::Update()
         altar_item_category.draw(window);
         altar_item_desc.draw(window);
 
-        if (inputCtrl->isKeyPressed(InputController::Keys::LEFT))
+        if (inputCtrl->isKeyPressed(Input::Keys::LEFT))
         {
             grid_sel_x--;
 
@@ -363,7 +363,7 @@ void AltarMenu::Update()
 
             updateAltarDescriptions();
         }
-        if (inputCtrl->isKeyPressed(InputController::Keys::RIGHT))
+        if (inputCtrl->isKeyPressed(Input::Keys::RIGHT))
         {
             grid_sel_x++;
 
@@ -372,7 +372,7 @@ void AltarMenu::Update()
 
             updateAltarDescriptions();
         }
-        if (inputCtrl->isKeyPressed(InputController::Keys::UP))
+        if (inputCtrl->isKeyPressed(Input::Keys::UP))
         {
             grid_sel_y--;
 
@@ -395,7 +395,7 @@ void AltarMenu::Update()
 
             updateAltarDescriptions();
         }
-        if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
+        if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
         {
             grid_sel_y++;
 
@@ -414,7 +414,7 @@ void AltarMenu::Update()
 
             updateAltarDescriptions();
         }
-        if (inputCtrl->isKeyPressed(InputController::Keys::CIRCLE))
+        if (inputCtrl->isKeyPressed(Input::Keys::CIRCLE))
         {
             StateManager::getInstance().setState(StateManager::PATAPOLIS);
         }

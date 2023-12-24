@@ -51,10 +51,10 @@ public:
     std::vector<std::string> drum_pngs = {"pata", "pon", "don", "chaka"};
 
     // keybinds for drums
-    std::vector<int> keybinds = {InputController::Keys::SQUARE, 
-                                InputController::Keys::CIRCLE, 
-                                InputController::Keys::CROSS, 
-                                InputController::Keys::TRIANGLE};
+    std::vector<int> keybinds = {Input::Keys::SQUARE, 
+                                Input::Keys::CIRCLE, 
+                                Input::Keys::CROSS, 
+                                Input::Keys::TRIANGLE};
     
 
     // store soundbuffers for chant and nonchant drum hits

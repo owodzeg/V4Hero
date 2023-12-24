@@ -46,12 +46,12 @@ void Camera::Work(float dest_zoom_over)
 
     if (!missionEnd && !lockMovement)
     {
-        if (inputCtrl->isKeyHeld(InputController::Keys::LTRIGGER))
+        if (inputCtrl->isKeyHeld(Input::Keys::LTRIGGER))
         {
             manual_x_dest = -500;
         }
 
-        if (inputCtrl->isKeyHeld(InputController::Keys::RTRIGGER))
+        if (inputCtrl->isKeyHeld(Input::Keys::RTRIGGER))
         {
             manual_x_dest = 500;
         }

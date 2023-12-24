@@ -1086,7 +1086,7 @@ void Barracks::Update()
                 enabled_positons.push_back(false); [4]
                 */
 
-                if (inputCtrl->isKeyPressed(InputController::Keys::UP))
+                if (inputCtrl->isKeyPressed(Input::Keys::UP))
                 {
                     /*current_item_position -=1;
                     if (current_item_position<0){
@@ -1123,7 +1123,7 @@ void Barracks::Update()
                     }
                 }
 
-                if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
+                if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
                 {
                     /*if(current_item_position < 4)
                     {
@@ -1177,7 +1177,7 @@ void Barracks::Update()
                     }
                 }
 
-                if (inputCtrl->isKeyPressed(InputController::Keys::LEFT))
+                if (inputCtrl->isKeyPressed(Input::Keys::LEFT))
                 {
                     if (current_selected_pon > 0)
                         current_selected_pon--;
@@ -1185,7 +1185,7 @@ void Barracks::Update()
                     refreshStats();
                 }
 
-                if (inputCtrl->isKeyPressed(InputController::Keys::RIGHT))
+                if (inputCtrl->isKeyPressed(Input::Keys::RIGHT))
                 {
                     if (current_selected_pon < 2)
                         current_selected_pon++;
@@ -1194,7 +1194,7 @@ void Barracks::Update()
                 }
             } else
             {
-                if (inputCtrl->isKeyPressed(InputController::Keys::LEFT))
+                if (inputCtrl->isKeyPressed(Input::Keys::LEFT))
                 {
                     grid_sel_x--;
 
@@ -1203,7 +1203,7 @@ void Barracks::Update()
 
                     updatePreviewText();
                 }
-                if (inputCtrl->isKeyPressed(InputController::Keys::RIGHT))
+                if (inputCtrl->isKeyPressed(Input::Keys::RIGHT))
                 {
                     grid_sel_x++;
 
@@ -1212,7 +1212,7 @@ void Barracks::Update()
 
                     updatePreviewText();
                 }
-                if (inputCtrl->isKeyPressed(InputController::Keys::UP))
+                if (inputCtrl->isKeyPressed(Input::Keys::UP))
                 {
                     grid_sel_y--;
 
@@ -1235,7 +1235,7 @@ void Barracks::Update()
 
                     updatePreviewText();
                 }
-                if (inputCtrl->isKeyPressed(InputController::Keys::DOWN))
+                if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
                 {
                     grid_sel_y++;
 
@@ -1256,7 +1256,7 @@ void Barracks::Update()
                 }
             }
 
-            if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
+            if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
             {
                 if (!menu_mode)
                 {
@@ -1323,7 +1323,7 @@ void Barracks::Update()
                 }
             }
 
-            if (inputCtrl->isKeyPressed(InputController::Keys::CIRCLE))
+            if (inputCtrl->isKeyPressed(Input::Keys::CIRCLE))
             {
                 if (menu_mode)
                 {
@@ -1346,7 +1346,7 @@ void Barracks::Update()
                 }
             }
 
-            if (inputCtrl->isKeyPressed(InputController::Keys::START))
+            if (inputCtrl->isKeyPressed(Input::Keys::START))
             {
                 if (obelisk)
                 {
@@ -1360,7 +1360,7 @@ void Barracks::Update()
             }
         } else
         {
-            if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
+            if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
             {
                 switch (dialog_boxes[dialog_boxes.size() - 1].CheckSelectedOption())
                 {

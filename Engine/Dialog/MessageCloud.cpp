@@ -162,7 +162,7 @@ void MessageCloud::Draw()
         // ptext timeout = 20ms=50letters/s temporarily
         // then when key is not held, return to normal speed
 
-        if (inputCtrl->isKeyHeld(InputController::Keys::CIRCLE))
+        if (inputCtrl->isKeyHeld(Input::Keys::CIRCLE))
             SpeedUp();
     }
 
@@ -170,7 +170,7 @@ void MessageCloud::Draw()
     {
         // advance current text id
 
-        if (inputCtrl->isKeyPressed(InputController::Keys::CROSS))
+        if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
         {
             NextDialog();
         }
