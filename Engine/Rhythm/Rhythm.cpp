@@ -230,16 +230,22 @@ float Rhythm::GetSatisfaction()
 
 void Rhythm::addRhythmMessage(RhythmAction action_id, std::string message)
 {
+    mtx.lock();
+
     RhythmMessage new_message;
     new_message.action = action_id;
     new_message.message = message;
     new_message.timestamp = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     SPDLOG_DEBUG("Adding new rhythm message: action {}, message {}, timestamp {}", action_id, message, new_message.timestamp);
     messages.push_back(new_message);
+
+    mtx.unlock();
 }
 
 std::vector<Rhythm::RhythmMessage> Rhythm::fetchRhythmMessages(uint64_t& timestamp)
 {
+    mtx.lock();
+
     std::vector<Rhythm::RhythmMessage> messages_time;
 
     for(unsigned int i=0; i<messages.size(); i++)
@@ -250,6 +256,8 @@ std::vector<Rhythm::RhythmMessage> Rhythm::fetchRhythmMessages(uint64_t& timesta
             messages_time.push_back(messages[i]);
         }
     }
+
+    mtx.unlock();
 
     timestamp = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 

@@ -44,6 +44,7 @@ void InputController::LoadKeybinds()
 
 void InputController::addKeyPressMessage(int keyID, bool state)
 {
+    mtx.lock();
     Input::KeyPressMessage message;
     message.keyCode = keyID;
     message.state = state;
@@ -52,6 +53,7 @@ void InputController::addKeyPressMessage(int keyID, bool state)
     SPDLOG_DEBUG("Added new KeyPressMessage: key {}, state {}, timestamp {}", message.keyCode, message.state, message.timestamp);
 
     messages.push_back(message);
+    mtx.unlock();
 }
 
 std::vector<Input::KeyPressMessage> InputController::fetchKeyPressMessages()
@@ -61,12 +63,14 @@ std::vector<Input::KeyPressMessage> InputController::fetchKeyPressMessages()
 
 void InputController::cleanExpiredMessages()
 {
+    mtx.lock();
     // cleanup expired messages
     int messageExpirationTime = 33; // milliseconds. set at 30 fps
     uint64_t currentTime = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
     messages.erase(std::remove_if(messages.begin(), messages.end(), 
                        [currentTime, messageExpirationTime](Input::KeyPressMessage m) { return m.timestamp + messageExpirationTime < currentTime; }), messages.end());
+    mtx.unlock();
 }
 
 bool InputController::processKeyPressMessages(int keyID)
@@ -93,20 +97,24 @@ bool InputController::processKeyPressMessages(int keyID)
 
     cleanExpiredMessages();
 
+    mtx.lock();
     for( unsigned int i=0; i<messages.size(); i++ )
     {
         if(messages[i].keyCode == keyID && messages[i].state)
         {
             messages.erase(messages.begin() + i);
+            mtx.unlock();
             return true;
         }
     }
+    mtx.unlock();
 
     return false;
 }
 
 void InputController::processKeyHolds()
 {
+    mtx.lock();
     for( unsigned int i=0; i<messages.size(); i++ )
     {
         if(messages[i].state)
@@ -118,6 +126,7 @@ void InputController::processKeyHolds()
             keyMapHeld[messages[i].keyCode] = false;
         }
     }
+    mtx.unlock();
 }
 
 void InputController::parseEvents(sf::Event& event)

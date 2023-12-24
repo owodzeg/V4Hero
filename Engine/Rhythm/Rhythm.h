@@ -19,6 +19,7 @@
 
 #include "../Input/InputController.h"
 
+#include <mutex>
 
 class Rhythm
 {
@@ -135,6 +136,8 @@ public:
     sf::Clock firstCommandDelayClock; //halfbeat delay for when we use first command without last halfbeat
     sf::Clock commandWaitClock; //clock for command execution (locks drums for 4 measures)
     bool firstCommandDelay = false;
+
+    std::mutex mtx;
 
     Rhythm();
     void Clear();
