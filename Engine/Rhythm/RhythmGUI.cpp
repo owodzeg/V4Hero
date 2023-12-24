@@ -143,6 +143,14 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
     Rhythm* rhythm = CoreManager::getInstance().getRhythm();
 
     std::vector<Rhythm::RhythmMessage> messages = rhythm->fetchRhythmMessages(lastRhythmCheck);
+
+    uint64_t lastDebugTimestamp = 0;
+    if(rhythm->messages.size() > 0)
+    {
+        lastDebugTimestamp = rhythm->messages[rhythm->messages.size()-1].timestamp;
+    }
+
+    SPDLOG_TRACE("Checked rhythm messages. Last check set to {}, size {}, last message timestamp {}", lastRhythmCheck, messages.size(), lastDebugTimestamp);
     
     if(messages.size() > 0)
     {
