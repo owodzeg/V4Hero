@@ -139,6 +139,8 @@ public:
 
     std::mutex mtx;
 
+    uint64_t lastMessageCheck = 0;
+
     Rhythm();
     void Clear();
     void Stop();

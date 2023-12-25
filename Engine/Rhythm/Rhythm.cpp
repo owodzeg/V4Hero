@@ -297,7 +297,15 @@ void Rhythm::checkRhythmController()
             rhythmController->commandWithMissingHalfBeat = false;
         }
         
+        if(drumTicksNoInput < 0 && combo > 0)
+        {
+            combo = 0;
+            s_anvil.play();
+            SPDLOG_DEBUG("Combo break! Reason code: #3");
+        }
+
         drumTicksNoInput = 0;
+
         commandWaitClock.restart();
     }
 
@@ -413,6 +421,21 @@ void Rhythm::doRhythm()
         combo = 0;
         SPDLOG_DEBUG("Combo break! Reason code: #2");
         s_anvil.play();
+    }
+
+    std::vector<RhythmMessage> last_messages = fetchRhythmMessages(lastMessageCheck);
+    
+    for(auto message : last_messages)
+    {
+        if(message.action == RhythmAction::DRUM_BAD)
+        {
+            if(combo > 0)
+            {
+                combo = 0;
+                SPDLOG_DEBUG("Combo break! Reason code: #4");
+                s_anvil.play();
+            }
+        }
     }
 
     checkRhythmController();
