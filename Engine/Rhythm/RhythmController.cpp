@@ -78,7 +78,7 @@ bool RhythmController::checkForInput()
 
             std::string rhythmMessage = current_drum+" "+to_string(currentPattern);
 
-            if (masterTimer < low_range) ///BEST hit
+            if (masterTimer < low_range) ///BAD hit
             {
                 ///Apply BAD drum sound effect
                 drum_quality = DrumQuality::BAD;
