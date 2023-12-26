@@ -304,6 +304,13 @@ void Rhythm::checkRhythmController()
             SPDLOG_DEBUG("Combo break! Reason code: #3");
         }
 
+        if(combo > 0 && afterMeasureClock.getElapsedTime().asMilliseconds() < 1750)
+        {
+            combo = 0;
+            s_anvil.play();
+            SPDLOG_DEBUG("Combo break! Reason code: #5");
+        }
+
         drumTicksNoInput = 0;
 
         commandWaitClock.restart();
@@ -366,6 +373,7 @@ void Rhythm::doRhythm()
                             drumTicksNoInput = -3;
 
                             commandWaitClock.restart();
+                            afterMeasureClock.restart();
 
                             s_ding.play();
                         }
@@ -381,6 +389,7 @@ void Rhythm::doRhythm()
                         drumTicksNoInput = -3;
 
                         commandWaitClock.restart();
+                        afterMeasureClock.restart();
 
                         s_ding.play();
                     }
@@ -396,6 +405,7 @@ void Rhythm::doRhythm()
                         drumTicksNoInput = -3;
 
                         commandWaitClock.restart();
+                        afterMeasureClock.restart();
 
                         s_ding.play();
                     }
@@ -436,6 +446,13 @@ void Rhythm::doRhythm()
                 s_anvil.play();
             }
         }
+    }
+
+    if(combo > 0 && afterMeasureClock.getElapsedTime().asMilliseconds() > 4000) // response + measure
+    {
+        combo = 0;
+        SPDLOG_DEBUG("Combo break! Reason code: #6");
+        s_anvil.play();
     }
 
     checkRhythmController();

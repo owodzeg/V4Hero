@@ -134,7 +134,8 @@ public:
     int drumTicksNoInput = 0;
 
     sf::Clock firstCommandDelayClock; //halfbeat delay for when we use first command without last halfbeat
-    sf::Clock commandWaitClock; //clock for command execution (locks drums for 4 measures)
+    sf::Clock commandWaitClock; //clock for command execution (if no input provided within given frame, break combo)
+    sf::Clock afterMeasureClock; //clock for patapon singing (lock input)
     bool firstCommandDelay = false;
 
     std::mutex mtx;
