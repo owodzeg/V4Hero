@@ -304,7 +304,7 @@ void Rhythm::checkRhythmController()
             SPDLOG_DEBUG("Combo break! Reason code: #3");
         }
 
-        if(combo > 0 && afterMeasureClock.getElapsedTime().asMilliseconds() < 1750)
+        if(combo > 0 && afterMeasureClock.getElapsedTime().asMilliseconds() < measure_ms - halfbeat_ms)
         {
             combo = 0;
             s_anvil.play();
@@ -361,7 +361,7 @@ void Rhythm::doRhythm()
                     // check if a command with last blank halfbeat was executed
                     if(firstCommandDelay)
                     {
-                        if(firstCommandDelayClock.getElapsedTime().asMilliseconds() > 250)
+                        if(firstCommandDelayClock.getElapsedTime().asMilliseconds() > halfbeat_ms)
                         {
                             SPDLOG_DEBUG("[CASE 1] Execute a command here!");
                             command.clear();
@@ -426,7 +426,7 @@ void Rhythm::doRhythm()
     metronomeOldVal = metronomeVal;
 
     // here goes everything outside of the metronome
-    if(combo > 0 && commandWaitClock.getElapsedTime().asMilliseconds() > 2250)
+    if(combo > 0 && commandWaitClock.getElapsedTime().asMilliseconds() > measure_ms + halfbeat_ms)
     {
         combo = 0;
         SPDLOG_DEBUG("Combo break! Reason code: #2");
@@ -448,7 +448,7 @@ void Rhythm::doRhythm()
         }
     }
 
-    if(combo > 0 && afterMeasureClock.getElapsedTime().asMilliseconds() > 4000) // response + measure
+    if(combo > 0 && afterMeasureClock.getElapsedTime().asMilliseconds() > measure_ms*2) // response + measure
     {
         combo = 0;
         SPDLOG_DEBUG("Combo break! Reason code: #6");

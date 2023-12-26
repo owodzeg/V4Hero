@@ -27,6 +27,9 @@ public:
     /// Low and high range for BAD, GOOD and BEST hits (in milliseconds, 0 is the center point) ///
     float BPM = 120.f; ///beats per minute
     float beat_timer = 60.f / (BPM*2) * 1000000.f; ///Amount of microseconds for each halfbeat to be made
+    float beat_ms = 60.f / BPM * 1000.f; ///Amount of milliseconds for each beat
+    float halfbeat_ms = beat_ms / 2.f;
+    float measure_ms = beat_ms * 4.f;
     float low_range = beat_timer / 6.25f;  ///Anything below that range will be treated as BAD hit
     float high_range = beat_timer / 3.125f; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
     sf::Clock rhythmClock;    ///Main clock for Rhythm purposes
