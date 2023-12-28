@@ -145,6 +145,9 @@ void Rhythm::Start()
     s_theme[0].setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("bgmVolume")) / 100.f));
     s_theme[0].play();
 
+    started = true;
+    newRhythmClock.restart();
+
     //beat_timer = floor(songController[0].get()->GetSongByNumber(0, 0).getDuration().asMilliseconds() / float(8.08));
     //SPDLOG_INFO("Beat timer set to: {}", beat_timer);
 }
@@ -311,6 +314,16 @@ void Rhythm::checkRhythmController()
             SPDLOG_DEBUG("Combo break! Reason code: #5");
         }
 
+        if(afterPerfectClock.getElapsedTime().asMilliseconds() < beat_ms)
+        {
+            combo = 0;
+            s_anvil.play();
+            SPDLOG_DEBUG("Combo break! Reason code: #7");
+
+            command.clear();
+            rhythmController->commandInputProcessed.clear();
+        }
+
         drumTicksNoInput = 0;
 
         commandWaitClock.restart();
@@ -327,6 +340,9 @@ void Rhythm::checkRhythmController()
 
 void Rhythm::doRhythm()
 {
+    if(!started)
+    return;
+
     sf::Int64 rhythmClockValue = newRhythmClock.getElapsedTime().asMicroseconds();
 
     metronomeVal = (rhythmClockValue % int(beat_timer));
@@ -446,6 +462,11 @@ void Rhythm::doRhythm()
                 s_anvil.play();
             }
         }
+
+        if(message.action == RhythmAction::FOUND_COMMAND) //we've found a command, we want to lock the immediately-next input
+        {
+            afterPerfectClock.restart();
+        }
     }
 
     if(combo > 0 && afterMeasureClock.getElapsedTime().asMilliseconds() > measure_ms*2) // response + measure
@@ -466,51 +487,6 @@ void Rhythm::doRhythm()
     // OLD RHYTHM SYSTEM
 
     /*
-    if (rhythmClock.getElapsedTime().asMilliseconds() > (beat_timer / float(2)))
-    {
-        ///cout << "Small: " << (beat_timer/float(2)) << endl;
-
-        if (!count_cycle)
-        {
-            int tmp_cycle = floor(beatCycleClock.getElapsedTime().asMilliseconds() / (beat_timer));
-
-            if (tmp_cycle >= 8)
-            {
-                beatCycleClock.restart();
-            }
-
-            cycle_mode = abs(floor((tmp_cycle) / 4) - 1);
-            cycle = (tmp_cycle) % 4 + 1;
-
-            if (combo >= 2)
-            {
-                if (rhythmController->hit)
-                {
-                    if (cycle_mode == 1)
-                    {
-                        BreakCombo();
-                    }
-                } else
-                {
-                    if (cycle_mode == 0)
-                    {
-                        BreakCombo();
-                    }
-                }
-            } else
-            {
-                if (!rhythmController->hit)
-                {
-                    ///Clear user input
-                    rhythmController->commandInput.clear();
-                }
-            }
-
-            rhythmController->hit = false;
-            count_cycle = true;
-        }
-    }
-
     if (rhythmClock.getElapsedTime().asMilliseconds() > beat_timer)
     {
         ///cout << "Big: " << beat_timer << endl;

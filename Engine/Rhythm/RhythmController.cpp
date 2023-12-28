@@ -211,6 +211,8 @@ bool RhythmController::checkForInput()
                         s_perfect.setBuffer(b_perfect);
                         s_perfect.setVolume(drumVolume);
                         s_perfect.play();
+
+                        rhythm->addRhythmMessage(Rhythm::RhythmAction::PERFECT_COMMAND, "");
                     }
 
                     // we clear the command input here
@@ -223,6 +225,8 @@ bool RhythmController::checkForInput()
                     
                     commandInput.clear();
                     command_perfects.clear();
+
+                    rhythm->addRhythmMessage(Rhythm::RhythmAction::FOUND_COMMAND, to_string(command));
                 }
                 else
                 {
@@ -253,6 +257,8 @@ bool RhythmController::checkForInput()
                             s_perfect.setBuffer(b_perfect);
                             s_perfect.setVolume(drumVolume);
                             s_perfect.play();
+
+                            rhythm->addRhythmMessage(Rhythm::RhythmAction::PERFECT_COMMAND, "");
                         }
 
                         // we clear the command input here
@@ -267,6 +273,8 @@ bool RhythmController::checkForInput()
                         command_perfects.clear();
 
                         commandWithMissingHalfBeat = true;
+
+                        rhythm->addRhythmMessage(Rhythm::RhythmAction::FOUND_COMMAND, to_string(command));
                     }
                     else
                     {

@@ -108,16 +108,18 @@ public:
     sf::Sound pata_react;
 
     // Callback system for rhythm engine
-    enum RhythmAction
+    enum RhythmAction // describes rhythm actions that are going to be broadcasted to any entity that wants to use the rhythm engine
     {
-        DRUM_BEST = 0,
-        DRUM_GOOD = 1,
-        DRUM_BAD = 2,
-        FEVER_ON = 3,
-        FEVER_OFF = 4,
-        COMMAND = 5,
-        COMBO_BREAK = 6,
-        COMBO_INCREASE = 7
+        DRUM_BEST = 0, // perfect drum timing
+        DRUM_GOOD = 1, // okay drum timing
+        DRUM_BAD = 2, // terrible drum timing
+        FEVER_ON = 3, // fever has started
+        FEVER_OFF = 4, // fever has been stopped
+        COMMAND = 5, // command was executed
+        COMBO_BREAK = 6, // combo has been broken
+        COMBO_INCREASE = 7, // combo just raised by one
+        PERFECT_COMMAND = 8, // shwing noise called, perfect command detected
+        FOUND_COMMAND = 9 // command has been found, not yet executed
     };
 
     struct RhythmMessage
@@ -139,11 +141,14 @@ public:
     sf::Clock firstCommandDelayClock; //halfbeat delay for when we use first command without last halfbeat
     sf::Clock commandWaitClock; //clock for command execution (if no input provided within given frame, break combo)
     sf::Clock afterMeasureClock; //clock for patapon singing (lock input)
+    sf::Clock afterPerfectClock; //count one beat after a perfect noise was hit (prevents from additional halfbeats after a proper command was done)
     bool firstCommandDelay = false;
 
     std::mutex mtx;
 
     uint64_t lastMessageCheck = 0;
+
+    bool started = false;
 
     Rhythm();
     void Clear();
