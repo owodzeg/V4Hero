@@ -1,24 +1,25 @@
  {
  	"bpm": 120,
- 	"song_start": "bgm_start.ogg",
- 	"song_idle_loop": [
+	"chant_directory": "ahwoonChant",
+ 	"start": "bgm_start.ogg",
+ 	"idle_loop": [
  		"bgm_1.ogg"
  	],
- 	"song_prefever_calm_loop": [
+ 	"prefever_calm_loop": [
  		"bgm_2.ogg",
  		"bgm_3.ogg",
  		"bgm_4.ogg",
  		"bgm_5.ogg"
  	],
- 	"song_prefever_intense_start": "bgm_6.ogg",
-	"song_prefever_intense_loop": [
+ 	"prefever_intense_start": "bgm_6.ogg",
+	"prefever_intense_loop": [
  		"bgm_7.ogg",
  		"bgm_8.ogg",
  		"bgm_9.ogg",
  		"bgm_10.ogg"
  	],
- 	"song_fever_start": "bgm_feverstart.ogg",
- 	"song_fever_loop": [
+ 	"fever_start": "bgm_feverstart.ogg",
+ 	"fever_loop": [
  		"bgm_fever1.ogg",
  		"bgm_fever2.ogg",
  		"bgm_fever3.ogg",
