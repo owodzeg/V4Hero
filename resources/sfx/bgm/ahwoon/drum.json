@@ -1,0 +1,60 @@
+{
+	"drums": {
+		"pata": {
+			"best": {
+				"drum": "pata.ogg",
+				"voice": "ch_pata.ogg"
+			},
+			"good": {
+				"drum": "pata_2.ogg",
+				"voice": "ch_pata_2.ogg"
+			},
+			"bad": {
+				"drum": "pata_3.ogg",
+				"voice": "ch_pata_3.ogg"
+			}
+		},
+		"pon": {
+			"best": {
+				"drum": "pon.ogg",
+				"voice": "ch_pon.ogg"
+			},
+			"good": {
+				"drum": "pon_2.ogg",
+				"voice": "ch_pon_2.ogg"
+			},
+			"bad": {
+				"drum": "pon_3.ogg",
+				"voice": "ch_pon_3.ogg"
+			}
+		},
+		"don": {
+			"best": {
+				"drum": "don.ogg",
+				"voice": "ch_don.ogg"
+			},
+			"good": {
+				"drum": "don_2.ogg",
+				"voice": "ch_don_2.ogg"
+			},
+			"bad": {
+				"drum": "don_3.ogg",
+				"voice": "ch_don_3.ogg"
+			}
+		},
+		"chaka": {
+			"best": {
+				"drum": "chaka.ogg",
+				"voice": "ch_chaka.ogg"
+			},
+			"good": {
+				"drum": "chaka_2.ogg",
+				"voice": "ch_chaka_2.ogg"
+			},
+			"bad": {
+				"drum": "chaka_3.ogg",
+				"voice": "ch_chaka_3.ogg"
+			}
+		}
+	}
+}
