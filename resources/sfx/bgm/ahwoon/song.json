@@ -1,6 +1,5 @@
  {
  	"bpm": 120,
-	"chant_directory": "ahwoonChant",
  	"start": "bgm_start.ogg",
  	"idle_loop": [
  		"bgm_1.ogg"
