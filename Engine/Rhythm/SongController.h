@@ -1,34 +1,45 @@
 #ifndef SONGCONTROLLER_H
 #define SONGCONTROLLER_H
-#include "Song.h"
-#include <SFML/Graphics.hpp>
+
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include <map>
-#include <string>
 #include <vector>
-struct SimpleSong {
-public:
-    std::string themeFilePath;
-    std::string chantsFilePath;
+#include <SFML/Audio.hpp>
+
+class SongControllerException : public std::exception {
+    private:
+    std::string message;
+
+    public:
+    SongControllerException(std::string msg) : message(msg) {}
+    char* what () {
+        return message.data();
+    }
 };
+
 class SongController
 {
-public:
-    std::vector<Song> songs;
-    std::map<std::string, SimpleSong> songListings;
+    public:
     SongController();
+    void LoadTheme(std::string theme);
 
-    void SaveControllerIniSettings();
-    void LoadSongByName(std::string songName);
-    void LoadSongFromPath(std::string songFilePath, std::string chantFilePath);
-    const sf::SoundBuffer& GetSongByNumber(int songIndex, int songNumber);
-    const sf::SoundBuffer& GetChantByNumber(int songIndex, std::string chantName);
-    const sf::SoundBuffer& GetSongByName(std::string songName, int songNumber);
-    const sf::SoundBuffer& GetChantByName(std::string songName, std::string chantName);
+    private:
+    // single-time sounds
+    sf::SoundBuffer sb_start; // start theme
+    sf::SoundBuffer sb_prefever_intense_start; // start the intense part of prefever
+    sf::SoundBuffer sb_fever_start; // start the fever
 
-private:
-    void SaveSongsConfig();
-    void LoadSongsConfig();
-    std::string configPath;
+    // sb_idle_loop[0..x] etc
+    std::vector<sf::SoundBuffer> sb_idle_loop; // bgm loop when idling (no combo)
+    std::vector<sf::SoundBuffer> sb_prefever_calm_loop; // bgm loop when prefever is calm (bad inputs)
+    std::vector<sf::SoundBuffer> sb_prefever_intense_loop; // bgm loop when prefever is intense (good inputs)
+    std::vector<sf::SoundBuffer> sb_fever_loop; // bgm loop during fever
+
+    // sb_chant_fever["march"][0..x] <- for each command from commands.json
+    std::map<std::string, std::vector<sf::SoundBuffer>> sb_chant_prefever_calm; // chants for calm prefever section
+    std::map<std::string, std::vector<sf::SoundBuffer>> sb_chant_prefever_intense; // chants for intense prefever section
+    std::map<std::string, std::vector<sf::SoundBuffer>> sb_chant_fever; // chants for fever section
 };
 
 #endif // SONGCONTROLLER_H

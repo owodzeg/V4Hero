@@ -76,7 +76,6 @@ set(ENGINE_FILES
         Engine/Rhythm/SongController.cpp
         Engine/Rhythm/Drum.cpp
         Engine/Rhythm/Rhythm.cpp
-        Engine/Rhythm/Song.cpp
         Engine/Pon/Pon.cpp
         Engine/Pon/PonRegistry.cpp
         Engine/Pon/Squad.cpp

@@ -1,155 +1,133 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "SongController.h"
-#include "../Func.h"
-#include <SFML/Audio.hpp>
-#include <SFML/Graphics.hpp>
-#include <algorithm>
-#include <cassert>
-#include <cctype>
+#include <nlohmann/json.hpp>
+#include <spdlog/spdlog.h>
+
 #include <fstream>
-#include <iostream>
-#include <sstream>
-#include <string>
-using namespace std;
+
+using json = nlohmann::json;
+
 
 SongController::SongController()
 {
-    configPath = "resources/sfx/bgm/songList.ini";
-    this->SaveControllerIniSettings();
+
 }
-void SongController::SaveSongsConfig()
+
+void SongController::LoadTheme(std::string theme)
 {
+    SPDLOG_DEBUG("Loading theme {}", theme);
 
-    cout << "[!! IMPORTANT !!] Missing ini file. Attempting to recover" << '\n';
-    // They don't have the song controller ini file!
-    // We create a song controller and give it some initial songs
-    SimpleSong song;
-    song.themeFilePath = "donjalalin";
-    song.chantsFilePath = "donjalalinChant";
-    songListings["Donjalin Theme"] = song;
-    ofstream conf(configPath);
+    json song;
+    json chant;
+    json drum;
+    
+    std::string themePath = "resources/sfx/bgm/"+theme+"/";
 
-    if (conf.is_open())
+    if(!std::filesystem::exists(themePath + "song.json"))
+        throw SongControllerException("song.json doesn't exist. Theme cannot be loaded.");
+
+    SPDLOG_DEBUG("Opening song.json file, path: {}song.json", themePath);
+    std::ifstream s(themePath+"song.json");
+    s >> song;
+    s.close();
+
+    SPDLOG_DEBUG("Verifying song.json");
+
+    std::vector<std::string> necessary_keys = {"bpm", "start", "idle_loop", "prefever_calm_loop", "prefever_intense_start", "prefever_intense_loop", "fever_start", "fever_loop"};
+
+    for(auto x : necessary_keys)
     {
-        ///Safety warning
-        conf << "# This file contains listings for all of the background songs used in missions by the game - Modifying this file can cause silence or unexpected sounds to appear if you don't know what you are doing #";
-        conf << '\n';
-        ///File format explainer
-        conf << "# The format for this file is as follows: \"In Game Name|Song file path|Chant File Path\" #";
-        conf << '\n';
-
-        for (auto const& x : songListings)
-        {
-            conf << x.first; // string (key)
-            conf << '|';
-            conf << x.second.themeFilePath;
-            conf << '|';
-            conf << x.second.chantsFilePath; // string's value
-            conf << '\n';
-        }
+        if(song[x].empty())
+            throw SongControllerException("Important key " + x + " missing in song.json. Theme will not be loaded.");
     }
 
-    conf.close();
-}
-void SongController::LoadSongsConfig()
-{
-    cout << "[RHYTHM] Found song config file - loading songs into database" << '\n';
-    ifstream conf(configPath);
-    if (conf.good())
-    {
-        string line;
-        while (getline(conf, line))
-        {
-            if (line.back() == '\r')
-            {
-                line.pop_back();
-            }
+    // ////////////////// //
+    //        Song        //
+    ////////////////////////
 
-            ///ignore comments
-            if (line.find("#") == std::string::npos)
-            {
-                /// we expect 3 values
-                vector<string> key = Func::Split(line, '|');
-                if (key.size() != 3)
-                {
-                    throw "Invalid songs config file - too many segments on line: " + line;
-                } else
-                {
-                    SimpleSong song;
-                    song.themeFilePath = key[1];
-                    song.chantsFilePath = key[2];
-                    songListings[key[0]] = song;
-                }
-            }
-        }
-    }
-    conf.close();
-    for (auto const& x : songListings)
-    {
-        cout << '\t' << x.first; // string (key)
-        cout << '|';
-        cout << x.second.themeFilePath;
-        cout << '|';
-        cout << x.second.chantsFilePath; // string's value
-        cout << '\n';
-        cout << "Finished song listings" << '\n'
-             << '\n';
-    }
-}
-void SongController::SaveControllerIniSettings()
-{
-    /// Load the song controller
-    /// check resources for a song file if it doesn't exist create one.
-    ifstream check(configPath);
-    bool exists = check.good();
-    check.close();
-    ///if config not exists
-    if (!exists)
-    {
-        this->SaveSongsConfig();
-    } else
-    {
-        this->LoadSongsConfig();
-    }
-}
+    std::string songPath = themePath + "song/";
 
-void SongController::LoadSongFromPath(std::string songFilePath, std::string chantFilePath)
-{
-    Song* currentSong = new Song(songFilePath, chantFilePath);
-    songs.push_back(*currentSong);
-}
-void SongController::LoadSongByName(std::string songName)
-{
-    Song* currentSong = new Song(songListings[songName].themeFilePath, songListings[songName].chantsFilePath);
-    songs.push_back(*currentSong);
-}
-const sf::SoundBuffer& SongController::GetSongByNumber(int songIndex, int songNumber)
-{
-    return songs[songIndex].GetThemeByNumber(songNumber);
-}
-const sf::SoundBuffer& SongController::GetChantByNumber(int songIndex, string chantName)
-{
-    return songs[songIndex].GetChantByName(chantName);
-}
+    // load up individual song parts
+    SPDLOG_DEBUG("Loading individual song parts");
+    
+    if(!sb_start.loadFromFile(songPath+std::string(song["start"])))
+        SPDLOG_ERROR("Error loading 'start', file {} not found", songPath+std::string(song["start"]));
 
-const sf::SoundBuffer& SongController::GetSongByName(string songName, int songNumber)
-{
-    for (Song& i : songs)
+    if(!sb_prefever_intense_start.loadFromFile(songPath+std::string(song["prefever_intense_start"])))
+        SPDLOG_ERROR("Error loading 'prefever_intense_start', file {} not found", songPath+std::string(song["prefever_intense_start"]));
+    
+    if(!sb_fever_start.loadFromFile(songPath+std::string(song["fever_start"])))
+        SPDLOG_ERROR("Error loading 'fever_start', file {} not found", songPath+std::string(song["fever_start"]));
+
+    // idle loop
+    SPDLOG_DEBUG("Loading idle loop");
+    for(auto x : song["idle_loop"])
     {
-        if (i.name == songName)
-        {
-            return i.GetThemeByNumber(songNumber);
-        }
+        sb_idle_loop.push_back(sf::SoundBuffer{});
+        if(!sb_idle_loop[sb_idle_loop.size()-1].loadFromFile(songPath+std::string(x)))
+           SPDLOG_ERROR("Error loading 'idle_loop', file {} not found", songPath+std::string(x)); 
     }
-    throw "No song loaded with the name: " + songName;
-}
-const sf::SoundBuffer& SongController::GetChantByName(string songName, string chantName)
-{
-    for (Song& i : songs)
+    SPDLOG_DEBUG("Idle loop loaded. {} files found", sb_idle_loop.size());
+
+    // prefever calm
+    SPDLOG_DEBUG("Loading prefever calm");
+    for(auto x : song["prefever_calm_loop"])
     {
-        if (i.name == chantName)
-        {
-            return i.GetChantByName(chantName);
-        }
+        sb_prefever_calm_loop.push_back(sf::SoundBuffer{});
+        if(!sb_prefever_calm_loop[sb_prefever_calm_loop.size()-1].loadFromFile(songPath+std::string(x)))
+           SPDLOG_ERROR("Error loading 'idle_loop', file {} not found", songPath+std::string(x)); 
     }
-    throw "No chant loaded with the name: " + chantName;
+    SPDLOG_DEBUG("Prefever calm loop loaded. {} files found", sb_prefever_calm_loop.size());
+    
+    // prefever intense
+    SPDLOG_DEBUG("Loading prefever intense");
+    for(auto x : song["prefever_intense_loop"])
+    {
+        sb_prefever_intense_loop.push_back(sf::SoundBuffer{});
+        if(!sb_prefever_intense_loop[sb_prefever_intense_loop.size()-1].loadFromFile(songPath+std::string(x)))
+           SPDLOG_ERROR("Error loading 'idle_loop', file {} not found", songPath+std::string(x)); 
+    }
+    SPDLOG_DEBUG("Prefever intense loop loaded. {} files found", sb_prefever_intense_loop.size());
+
+    // fever
+    SPDLOG_DEBUG("Loading fever");
+    for(auto x : song["fever_loop"])
+    {
+        sb_fever_loop.push_back(sf::SoundBuffer{});
+        if(!sb_fever_loop[sb_fever_loop.size()-1].loadFromFile(songPath+std::string(x)))
+           SPDLOG_ERROR("Error loading 'idle_loop', file {} not found", songPath+std::string(x)); 
+    }
+    SPDLOG_DEBUG("Fever loop loaded. {} files found", sb_fever_loop.size());
+
+    SPDLOG_INFO("Song {} loaded, full path: {}, loading chants", theme, songPath);
+
+    // ////////////////// //
+    //       Chants       //
+    ////////////////////////
+
+    if(!std::filesystem::exists(themePath + "chant.json"))
+    {
+        SPDLOG_WARN("chant.json doesn't exist, theme will have no chants");
+    }
+    else
+    {
+        SPDLOG_DEBUG("Opening chant.json file, path: {}/chant.json", themePath);
+        std::ifstream c(themePath+"chant.json");
+        c >> chant;
+        c.close();
+    }
+
+    // ////////////////// //
+    //       Drums        //
+    ////////////////////////
+
+    if(!std::filesystem::exists(themePath + "drum.json"))
+    {
+        SPDLOG_DEBUG("drums.json doesn't exist, default drums will be loaded.");
+    }
+    else
+    {
+
+    }
 }

@@ -69,8 +69,8 @@ Rhythm::Rhythm()
 
 void Rhythm::Clear()
 {
-    vector<std::unique_ptr<SongController>>().swap(songController);
-    std::map<std::string, sf::SoundBuffer>().swap(b_chant);
+    //vector<std::unique_ptr<SongController>>().swap(songController);
+    //std::map<std::string, sf::SoundBuffer>().swap(b_chant);
 }
 
 void Rhythm::Stop()
@@ -90,11 +90,30 @@ void Rhythm::LoadTheme(string theme)
     SPDLOG_INFO("Selected theme: {}", theme);
 
     Stop();
+    
     ///Load the BGM
-    std::unique_ptr<SongController> s = make_unique<SongController>();
-    songController.push_back(std::move(s));
-    songController[0].get()->LoadSongByName(theme);
-    this->currentThemeName = theme;
+    try
+    {
+        songController.LoadTheme("ahwoon");
+    }
+    catch ( SongControllerException& ex )
+    {
+        SPDLOG_ERROR("Got SongController exception when loading theme: {}", ex.what());
+    }
+    catch ( std::exception& ex )
+    {
+        SPDLOG_ERROR("Got an exception when loading theme: {}", ex.what());
+    }
+    catch ( ... )
+    {
+        SPDLOG_ERROR("Got unknown exception when loading theme.");
+    }
+
+    //std::unique_ptr<SongController> s = make_unique<SongController>();
+    //songController.push_back(std::move(s));
+    //songController[0].get()->LoadSongByName(theme);
+    //this->currentThemeName = theme;
+
 
     cycle = 0;
     cycle_mode = 0;
@@ -140,10 +159,10 @@ void Rhythm::Start()
     rhythmClock.restart();
     newRhythmClock.restart();
 
-    s_theme[0].setBuffer(songController[0].get()->GetSongByNumber(0, 0));
+    //s_theme[0].setBuffer(songController[0].get()->GetSongByNumber(0, 0));
     SPDLOG_INFO("Volume is {} {} {}", float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("bgmVolume")) / 100.f), CoreManager::getInstance().getConfig()->GetInt("masterVolume"), CoreManager::getInstance().getConfig()->GetInt("bgmVolume"));
-    s_theme[0].setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("bgmVolume")) / 100.f));
-    s_theme[0].play();
+    //s_theme[0].setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("bgmVolume")) / 100.f));
+    //s_theme[0].play();
 
     started = true;
     newRhythmClock.restart();
@@ -190,9 +209,10 @@ void Rhythm::BreakCombo()
     s_theme[1].stop();
 
     ///Play the idle loop
-    s_theme[0].setBuffer(songController[0].get()->GetSongByNumber(0, 1));
-    s_theme[0].setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("bgmVolume")) / 100.f));
-    s_theme[0].play();
+    
+    //s_theme[0].setBuffer(songController[0].get()->GetSongByNumber(0, 1));
+    //s_theme[0].setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("bgmVolume")) / 100.f));
+    //s_theme[0].play();
 
     ///Stop any current action
     current_song = "";
