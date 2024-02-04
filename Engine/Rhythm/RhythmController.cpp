@@ -85,8 +85,8 @@ bool RhythmController::checkForInput()
             // set buffers and volumes
             SongController* songController = CoreManager::getInstance().getSongController();
 
-            drum_nc.setBuffer(songController->getSound(songController->drumToEnum(drum_pngs[i]), drum_quality, SongController::DrumType::DRUM));
-            drum_c.setBuffer(songController->getSound(songController->drumToEnum(drum_pngs[i]), drum_quality, SongController::DrumType::VOICE));
+            drum_nc.setBuffer(songController->getDrum(songController->drumToEnum(drum_pngs[i]), drum_quality, SongController::DrumType::DRUM));
+            drum_c.setBuffer(songController->getDrum(songController->drumToEnum(drum_pngs[i]), drum_quality, SongController::DrumType::VOICE));
 
             drum_nc.setVolume(drumVolume);
             drum_c.setVolume(drumVolume);
