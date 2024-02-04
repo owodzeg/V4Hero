@@ -19,6 +19,48 @@
         },
 
         {
+            "name": "charge",
+            "song": "ponchaka",
+            "beat": [ "PON", "", "PON", "", "CHAKA", "", "CHAKA", "" ]
+        },
+
+        {
+            "name": "party",
+            "song": "donchaka",
+            "beat": [ "PATA", "", "PON", "", "DON", "", "CHAKA", "" ]
+        },
+
+        {
+            "name": "party-crazy",
+            "song": "donchaka",
+            "beat": [ "PATA", "PON", "DON", "CHAKA", "PATA", "PON", "DON", "CHAKA" ]
+        },
+
+        {
+            "name": "retreat",
+            "song": "ponpata",
+            "beat": [ "PON", "", "PATA", "", "PON", "", "PATA", "" ]
+        },
+
+        {
+            "name": "jump",
+            "song": "dondon",
+            "beat": [ "DON", "", "DON", "", "CHAKA", "", "CHAKA", "" ]
+        },
+
+        {
+            "name": "stepback",
+            "song": "chakapata",
+            "beat": [ "CHAKA", "", "PATA", "", "CHAKA", "", "PATA", "" ]
+        },
+
+        {
+            "name": "pause",
+            "song": "patapon",
+            "beat": [ "PATA", "", "PON", "", "PATA", "", "PON", "" ]
+        },
+
+        {
             "name": "summon",
             "song": "",
             "beat": [ "DON", "", "DON", "DON", "", "DON", "DON", "" ]
