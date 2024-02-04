@@ -44,9 +44,18 @@ class SongController
         VOICE = 1
     };
 
+    enum SongType
+    {
+        IDLE = 0,
+        PREFEVER_CALM = 1,
+        PREFEVER_INTENSE = 2,
+        FEVER = 3
+    };
+
     SongController();
     void LoadTheme(std::string theme);
-    sf::SoundBuffer& getSound(Drums, DrumQuality, DrumType);
+    sf::SoundBuffer& getDrum(Drums, DrumQuality, DrumType);
+    sf::SoundBuffer& getSong(SongType);
     float getBPM();
 
     Drums drumToEnum(std::string drum);

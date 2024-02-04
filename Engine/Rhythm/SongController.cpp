@@ -264,9 +264,39 @@ void SongController::LoadTheme(std::string theme)
     }
 }
 
-sf::SoundBuffer& SongController::getSound(Drums drum, DrumQuality drumQuality, DrumType drumType)
+sf::SoundBuffer& SongController::getDrum(Drums drum, DrumQuality drumQuality, DrumType drumType)
 {
     return sb_drum[drum][drumQuality][drumType];
+}
+
+sf::SoundBuffer& SongController::getSong(SongType songType)
+{
+    switch(songType)
+    {
+        case SongType::IDLE:
+            if(sc_idle_loop.current == sc_idle_loop.max)
+                sc_idle_loop.current = 0;
+            return sb_idle_loop[sc_idle_loop.current++];
+        break;
+
+        case SongType::PREFEVER_CALM:
+            if(sc_prefever_calm_loop.current == sc_prefever_calm_loop.max)
+                sc_prefever_calm_loop.current = 0;
+            return sb_prefever_calm_loop[sc_prefever_calm_loop.current++];
+        break;
+        
+        case SongType::PREFEVER_INTENSE:
+            if(sc_prefever_intense_loop.current == sc_prefever_intense_loop.max)
+                sc_prefever_intense_loop.current = 0;
+            return sb_prefever_intense_loop[sc_prefever_intense_loop.current++];
+        break;
+        
+        case SongType::FEVER:
+            if(sc_fever_loop.current == sc_fever_loop.max)
+                sc_fever_loop.current = 0;
+            return sb_fever_loop[sc_fever_loop.current++];
+        break;
+    }
 }
 
 float SongController::getBPM()
