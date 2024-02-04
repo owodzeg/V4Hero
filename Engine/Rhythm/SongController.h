@@ -25,6 +25,29 @@ class SongController
     void LoadTheme(std::string theme);
 
     private:
+
+    // identifiers for drums
+    enum Drums
+    {
+        PATA = 0,
+        PON = 1,
+        DON = 2,
+        CHAKA = 3
+    };
+
+    enum DrumQuality
+    {
+        BEST = 0,
+        GOOD = 1,
+        BAD = 2
+    };
+
+    enum DrumType
+    {
+        DRUM = 0,
+        VOICE = 1
+    };
+
     // single-time sounds
     sf::SoundBuffer sb_start; // start theme
     sf::SoundBuffer sb_prefever_intense_start; // start the intense part of prefever
@@ -40,6 +63,11 @@ class SongController
     std::map<std::string, std::vector<sf::SoundBuffer>> sb_chant_prefever_calm; // chants for calm prefever section
     std::map<std::string, std::vector<sf::SoundBuffer>> sb_chant_prefever_intense; // chants for intense prefever section
     std::map<std::string, std::vector<sf::SoundBuffer>> sb_chant_fever; // chants for fever section
+
+    //         PATA     BEST       VOICE
+    // sb_drum[drum][drumQuality][DrumType] = sf::SoundBuffer
+    // these drums can be supplied from drums.json file or defaults will be loaded
+    std::map<Drums, std::map<DrumQuality, std::map<DrumType, sf::SoundBuffer>>> sb_drum;
 };
 
 #endif // SONGCONTROLLER_H
