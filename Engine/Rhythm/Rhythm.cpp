@@ -483,7 +483,7 @@ void Rhythm::doRhythm()
             }
         }
 
-        if(message.action == RhythmAction::FOUND_COMMAND) //we've found a command, we want to lock the immediately-next input
+        if(message.action == RhythmAction::FOUND_COMMAND || message.action == RhythmAction::PERFECT_COMMAND) //we've found a command, we want to lock the immediately-next input
         {
             afterPerfectClock.restart();
         }
