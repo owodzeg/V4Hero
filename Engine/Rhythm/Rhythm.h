@@ -92,6 +92,8 @@ private:
     float accuracy = 0; ///value for calculating the accuracy
     int acc_count = 3;  ///value for determining on how far back should the accuracy calculation system go in commands
 
+    int debug_song_type = 0;
+
 public:
     /// Default FPS value ///
     float fps = 60;

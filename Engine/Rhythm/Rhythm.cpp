@@ -509,6 +509,21 @@ void Rhythm::doRhythm()
 
     checkRhythmController();
 
+    InputController* inputCtrl = CoreManager::getInstance().getInputController();
+    SongController* songController = CoreManager::getInstance().getSongController();
+
+    if(inputCtrl->isKeyPressed(Input::Keys::LTRIGGER))
+    {
+        s_theme[0].stop();
+        s_theme[0].setBuffer(songController->getSong(static_cast<SongController::SongType>(debug_song_type)));
+        s_theme[0].play();
+    }
+    
+    if(inputCtrl->isKeyPressed(Input::Keys::RTRIGGER))
+    {
+        debug_song_type = (debug_song_type + 1) % 4;
+    }
+
     // NEW RHYTHM SYSTEM
     // metronomeState = 0: click
     // metronomeState = 1: half beat
