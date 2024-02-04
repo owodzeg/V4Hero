@@ -247,8 +247,8 @@ void V4Core::init()
         window->setView(window->getDefaultView());
 
         // Draw version number
-        t_version.setPosition(4, 4);
-        window->draw(t_version);
+        //t_version.setPosition(4, 4);
+        //window->draw(t_version);
 
         // If FPS counter is enabled, draw it
         if (config->GetInt("showFPS"))
