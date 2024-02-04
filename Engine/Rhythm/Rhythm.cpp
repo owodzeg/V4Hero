@@ -161,6 +161,18 @@ void Rhythm::LoadTheme(string theme)
     //cout << "Beat timer set to: " << beat_timer << endl;
 }
 
+void Rhythm::PlaySong(SongController::SongType songType)
+{
+    song_channel = (song_channel + 1) % 2;
+
+    SongController* songController = CoreManager::getInstance().getSongController();
+    
+    s_theme[song_channel].stop();
+    s_theme[song_channel].setBuffer(songController->getSong(songType));
+    s_theme[song_channel].setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("bgmVolume")) / 100.f));
+    s_theme[song_channel].play();
+}
+
 void Rhythm::Start()
 {
     ///Stop any current action
@@ -170,16 +182,11 @@ void Rhythm::Start()
     rhythmClock.restart();
     newRhythmClock.restart();
 
-    //s_theme[0].setBuffer(songController[0].get()->GetSongByNumber(0, 0));
-    SPDLOG_INFO("Volume is {} {} {}", float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("bgmVolume")) / 100.f), CoreManager::getInstance().getConfig()->GetInt("masterVolume"), CoreManager::getInstance().getConfig()->GetInt("bgmVolume"));
-    //s_theme[0].setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("bgmVolume")) / 100.f));
-    //s_theme[0].play();
-
+    //Start the rhythm
     started = true;
-    newRhythmClock.restart();
 
-    //beat_timer = floor(songController[0].get()->GetSongByNumber(0, 0).getDuration().asMilliseconds() / float(8.08));
-    //SPDLOG_INFO("Beat timer set to: {}", beat_timer);
+    //Play the theme start song
+    PlaySong(SongController::SongType::START);
 }
 
 void Rhythm::BreakCombo()
@@ -422,6 +429,8 @@ void Rhythm::doRhythm()
                             commandWaitClock.restart();
                             afterMeasureClock.restart();
 
+                            PlaySong(currentSongType);
+
                             s_ding.play();
                         }
                     }
@@ -437,6 +446,8 @@ void Rhythm::doRhythm()
 
                         commandWaitClock.restart();
                         afterMeasureClock.restart();
+                            
+                        PlaySong(currentSongType);
 
                         s_ding.play();
                     }
@@ -453,6 +464,8 @@ void Rhythm::doRhythm()
 
                         commandWaitClock.restart();
                         afterMeasureClock.restart();
+
+                        PlaySong(currentSongType);
 
                         s_ding.play();
                     }
@@ -510,25 +523,22 @@ void Rhythm::doRhythm()
     checkRhythmController();
 
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
-    SongController* songController = CoreManager::getInstance().getSongController();
 
     if(inputCtrl->isKeyPressed(Input::Keys::LTRIGGER))
     {
-        s_theme[0].stop();
-        s_theme[0].setBuffer(songController->getSong(static_cast<SongController::SongType>(debug_song_type)));
-        s_theme[0].play();
+        PlaySong(currentSongType);
     }
     
     if(inputCtrl->isKeyPressed(Input::Keys::RTRIGGER))
     {
-        debug_song_type = (debug_song_type + 1) % 4;
+        debug_song_type = (debug_song_type + 1) % 7;
+        currentSongType = static_cast<SongController::SongType>(debug_song_type);
     }
 
     // NEW RHYTHM SYSTEM
     // metronomeState = 0: click
     // metronomeState = 1: half beat
     // we have to reach to the metronomeState=0 right after we receive a full command
-
 
     // OLD RHYTHM SYSTEM
 

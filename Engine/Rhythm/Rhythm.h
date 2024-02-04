@@ -151,11 +151,15 @@ public:
 
     bool started = false;
 
+    int song_channel = 0;
+    SongController::SongType currentSongType = SongController::SongType::PREFEVER_CALM;
+
     Rhythm();
     void Clear();
     void Stop();
     void LoadTheme(std::string theme);
     void Start();
+    void PlaySong(SongController::SongType songType);
     void BreakCombo();
     int GetCombo();
     int GetBgmCycle();
