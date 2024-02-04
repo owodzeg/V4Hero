@@ -296,6 +296,22 @@ sf::SoundBuffer& SongController::getSong(SongType songType)
                 sc_fever_loop.current = 0;
             return sb_fever_loop[sc_fever_loop.current++];
         break;
+        
+        case SongType::START:
+            return sb_start;
+        break;
+        
+        case SongType::PREFEVER_INTENSE_START:
+            return sb_prefever_intense_start;
+        break;
+        
+        case SongType::FEVER_START:
+            return sb_fever_start;
+        break;
+
+        default:
+            SPDLOG_ERROR("Unknown song tried to play.");
+        break;
     }
 }
 

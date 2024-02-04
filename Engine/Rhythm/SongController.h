@@ -49,7 +49,10 @@ class SongController
         IDLE = 0,
         PREFEVER_CALM = 1,
         PREFEVER_INTENSE = 2,
-        FEVER = 3
+        FEVER = 3,
+        START = 4,
+        PREFEVER_INTENSE_START = 5,
+        FEVER_START = 6
     };
 
     SongController();
