@@ -46,6 +46,9 @@ void CoreManager::init()
     // Prepare rhythm controller for general use (missions + minigames)
     rhythmController = new RhythmController;
 
+    // Create song controller for managing themes
+    songController = new SongController;
+
     // After we created prerequisities for V4Core, we can safely create it.
     core = new V4Core;
 }
@@ -106,6 +109,11 @@ RhythmController* CoreManager::getRhythmController()
     return rhythmController;
 }
 
+SongController* CoreManager::getSongController()
+{
+    return songController;
+}
+
 void CoreManager::reinitMissionController()
 {
     missionController = new MissionController;
@@ -117,6 +125,19 @@ void CoreManager::deleteMissionController()
         delete missionController;
 
     missionController = nullptr;
+}
+
+void CoreManager::reinitSongController()
+{
+    songController = new SongController;
+}
+
+void CoreManager::deleteSongController()
+{
+    if (songController != nullptr)
+        delete songController;
+
+    songController = nullptr;
 }
 
 // Returns a pointer to the window game uses.

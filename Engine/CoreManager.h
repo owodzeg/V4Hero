@@ -15,6 +15,7 @@
 #include "Rhythm/Rhythm.h"
 #include "Rhythm/RhythmGUI.h"
 #include "Rhythm/RhythmController.h"
+#include "Rhythm/SongController.h"
 
 // Class for holding the pointers to commonly used important game contents
 class CoreManager
@@ -32,8 +33,11 @@ public:
     Rhythm* getRhythm();
     RhythmGUI* getRhythmGUI();
     RhythmController* getRhythmController();
+    SongController* getSongController();
     void reinitMissionController();
     void deleteMissionController();
+    void reinitSongController();
+    void deleteSongController();
     sf::RenderWindow* getWindow();
 
 private:
@@ -69,6 +73,9 @@ private:
 
     // Pointer to RhythmController
     RhythmController* rhythmController;
+
+    // Pointer to SongController
+    SongController* songController;
 
     // Pointer to current window
     sf::RenderWindow* window;
