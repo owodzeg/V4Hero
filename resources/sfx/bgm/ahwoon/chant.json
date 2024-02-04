@@ -6,7 +6,7 @@
 		"prefever_intense": [
 			"s_patapata2.ogg"
 		],
-		"fever_loop": [
+		"fever": [
 			"s_patapata3.ogg",
 			"s_patapata4.ogg"
 		]
@@ -19,7 +19,7 @@
 		"prefever_intense": [
 			"s_ponpon2.ogg"
 		],
-		"fever_loop": [
+		"fever": [
 			"s_ponpon3.ogg",
 			"s_ponpon4.ogg"
 		]
@@ -32,7 +32,7 @@
 		"prefever_intense": [
 			"s_chakachaka2.ogg"
 		],
-		"fever_loop": [
+		"fever": [
 			"s_chakachaka3.ogg",
 			"s_chakachaka4.ogg"
 		]
@@ -45,7 +45,7 @@
 		"prefever_intense": [
 			"s_ponchaka2.ogg"
 		],
-		"fever_loop": [
+		"fever": [
 			"s_ponchaka3.ogg"
 		]
 	}, 
@@ -57,7 +57,7 @@
 		"prefever_intense": [
 			"s_donchaka2.ogg"
 		],
-		"fever_loop": [
+		"fever": [
 			"s_donchaka3.ogg"
 		]
 	}, 
@@ -69,7 +69,7 @@
 		"prefever_intense": [
 			"s_ponpata2.ogg"
 		],
-		"fever_loop": [
+		"fever": [
 			"s_ponpata3.ogg"
 		]
 	}, 
@@ -81,7 +81,7 @@
 		"prefever_intense": [
 			"s_dondon2.ogg"
 		],
-		"fever_loop": [
+		"fever": [
 			"s_dondon3.ogg"
 		]
 	}, 
@@ -93,7 +93,7 @@
 		"prefever_intense": [
 			"s_chakachaka2.ogg"
 		],
-		"fever_loop": [
+		"fever": [
 			"s_chakachaka3.ogg",
 			"s_chakachaka4.ogg"
 		]
@@ -106,7 +106,7 @@
 		"prefever_intense": [
 			"s_chakachaka2.ogg"
 		],
-		"fever_loop": [
+		"fever": [
 			"s_chakachaka3.ogg",
 			"s_chakachaka4.ogg"
 		]
@@ -119,7 +119,7 @@
 		"prefever_intense": [
 			"s_chakachaka2.ogg"
 		],
-		"fever_loop": [
+		"fever": [
 			"s_chakachaka3.ogg",
 			"s_chakachaka4.ogg"
 		]
