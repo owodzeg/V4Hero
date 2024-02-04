@@ -6,6 +6,9 @@
 
 #include <fstream>
 
+#include "./CoreManager.h"
+#include "Rhythm.h"
+
 using json = nlohmann::json;
 
 
@@ -41,6 +44,8 @@ void SongController::LoadTheme(std::string theme)
     {
         if(song[x].empty())
             throw SongControllerException("Important key " + x + " missing in song.json. Theme will not be loaded.");
+
+        BPM = song["bpm"];
     }
 
     // ////////////////// //
@@ -70,6 +75,7 @@ void SongController::LoadTheme(std::string theme)
            SPDLOG_ERROR("Error loading 'idle_loop', file {} not found", songPath+std::string(name)); 
     }
     SPDLOG_DEBUG("Idle loop loaded. {} files found", sb_idle_loop.size());
+    sc_idle_loop.max = sb_idle_loop.size();
 
     // prefever calm
     SPDLOG_DEBUG("Loading prefever calm");
@@ -80,6 +86,7 @@ void SongController::LoadTheme(std::string theme)
            SPDLOG_ERROR("Error loading 'idle_loop', file {} not found", songPath+std::string(name)); 
     }
     SPDLOG_DEBUG("Prefever calm loop loaded. {} files found", sb_prefever_calm_loop.size());
+    sc_prefever_calm_loop.max = sb_prefever_calm_loop.size();
     
     // prefever intense
     SPDLOG_DEBUG("Loading prefever intense");
@@ -90,6 +97,7 @@ void SongController::LoadTheme(std::string theme)
            SPDLOG_ERROR("Error loading 'idle_loop', file {} not found", songPath+std::string(name)); 
     }
     SPDLOG_DEBUG("Prefever intense loop loaded. {} files found", sb_prefever_intense_loop.size());
+    sc_prefever_intense_loop.max = sb_prefever_intense_loop.size();
 
     // fever
     SPDLOG_DEBUG("Loading fever");
@@ -100,6 +108,7 @@ void SongController::LoadTheme(std::string theme)
            SPDLOG_ERROR("Error loading 'idle_loop', file {} not found", songPath+std::string(name)); 
     }
     SPDLOG_DEBUG("Fever loop loaded. {} files found", sb_fever_loop.size());
+    sc_fever_loop.max = sb_fever_loop.size();
 
     SPDLOG_INFO("Song {} loaded, full path: {}, loading chants", theme, songPath);
 
@@ -143,6 +152,7 @@ void SongController::LoadTheme(std::string theme)
             }
 
             SPDLOG_DEBUG("Found {} prefever_calm files for song type: {}", sb_chant_prefever_calm[songName].size(), songName);
+            sc_chant_prefever_calm[songName].max = sb_chant_prefever_calm[songName].size();
 
             for (auto name : songType["prefever_intense"])
             {
@@ -152,6 +162,7 @@ void SongController::LoadTheme(std::string theme)
             }
 
             SPDLOG_DEBUG("Found {} prefever_intense files for song type: {}", sb_chant_prefever_intense[songName].size(), songName);
+            sc_chant_prefever_intense[songName].max = sb_chant_prefever_intense[songName].size();
 
             for (auto name : songType["fever"])
             {
@@ -161,6 +172,7 @@ void SongController::LoadTheme(std::string theme)
             }
 
             SPDLOG_DEBUG("Found {} fever files for song type: {}", sb_chant_fever[songName].size(), songName);
+            sc_chant_fever[songName].max = sb_chant_fever[songName].size();
         }
 
         SPDLOG_DEBUG("All chants successfully loaded");
@@ -178,25 +190,13 @@ void SongController::LoadTheme(std::string theme)
     dd >> drum_defaults;
     dd.close();
 
-    std::map<std::string, Drums> drumToEnum = {{"pata",  Drums::PATA}, 
-                                                {"pon",   Drums::PON}, 
-                                                {"chaka", Drums::CHAKA}, 
-                                                {"don",   Drums::DON}};
-
-    std::map<std::string, DrumQuality> drumQualityToEnum = {{"best", DrumQuality::BEST}, 
-                                                            {"good", DrumQuality::GOOD}, 
-                                                            {"bad",  DrumQuality::BAD}};
-
-    std::map<std::string, DrumType> drumTypeToEnum = {{"drum",  DrumType::DRUM}, 
-                                                        {"voice", DrumType::VOICE}};
-
     std::string drumPath = themePath + "drum/";
     
-    for (auto x : drumToEnum)
+    for (auto x : drumTable)
     {
-        for (auto y : drumQualityToEnum)
+        for (auto y : drumQualityTable)
         {
-            for (auto z : drumTypeToEnum)
+            for (auto z : drumTypeTable)
             {
                 DrumType drumType = z.second;
                 std::map<DrumType, sf::SoundBuffer> zz;
@@ -236,21 +236,21 @@ void SongController::LoadTheme(std::string theme)
         for (auto it = drum.begin(); it != drum.end(); it++)
         {
             std::string drumName = it.key();
-            Drums key_drum = drumToEnum[drumName];
+            Drums key_drum = drumToEnum(drumName);
 
             json drumQuality = it.value();
 
             for (auto it2 = drumQuality.begin(); it2 != drumQuality.end(); it2++)
             {
                 std::string qualityName = it2.key();
-                DrumQuality key_quality = drumQualityToEnum[qualityName];
+                DrumQuality key_quality = drumQualityToEnum(qualityName);
 
                 json drumType = it2.value();
 
                 for (auto it3 = drumType.begin(); it3 != drumType.end(); it3++)
                 {
                     std::string drumTypeName = it3.key();
-                    DrumType key_type = drumTypeToEnum[drumTypeName];
+                    DrumType key_type = drumTypeToEnum(drumTypeName);
 
                     std::string drumTypeFile = it3.value();
 
@@ -262,4 +262,32 @@ void SongController::LoadTheme(std::string theme)
             }
         }
     }
+}
+
+sf::SoundBuffer& SongController::getSound(Drums drum, DrumQuality drumQuality, DrumType drumType)
+{
+    return sb_drum[drum][drumQuality][drumType];
+}
+
+float SongController::getBPM()
+{
+    return BPM;
+}
+
+SongController::Drums SongController::drumToEnum(std::string drum)
+{
+
+    return drumTable.at(drum);
+}
+
+SongController::DrumQuality SongController::drumQualityToEnum(std::string drumQuality)
+{
+    
+    return drumQualityTable.at(drumQuality);
+}
+
+SongController::DrumType SongController::drumTypeToEnum(std::string drumType)
+{
+
+    return drumTypeTable.at(drumType);
 }

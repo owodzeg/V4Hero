@@ -10,24 +10,6 @@ using namespace std;
 
 RhythmController::RhythmController()
 {
-    for (int i = 0; i <= 2; i++)
-    {
-        string num = "_" + to_string(i + 1);
-
-        if (i == 0)
-            num = "";
-
-        b_drum[Drums::PATA][i].loadFromFile("resources/sfx/drums/pata" + num + ".ogg");
-        b_drum[Drums::PON][i].loadFromFile("resources/sfx/drums/pon" + num + ".ogg");
-        b_drum[Drums::DON][i].loadFromFile("resources/sfx/drums/don" + num + ".ogg");
-        b_drum[Drums::CHAKA][i].loadFromFile("resources/sfx/drums/chaka" + num + ".ogg");
-
-        b_drumchant[Drums::PATA][i].loadFromFile("resources/sfx/drums/ch_pata" + num + ".ogg");
-        b_drumchant[Drums::PON][i].loadFromFile("resources/sfx/drums/ch_pon" + num + ".ogg");
-        b_drumchant[Drums::DON][i].loadFromFile("resources/sfx/drums/ch_don" + num + ".ogg");
-        b_drumchant[Drums::CHAKA][i].loadFromFile("resources/sfx/drums/ch_chaka" + num + ".ogg");
-    }
-
     b_perfect.loadFromFile("resources/sfx/drums/perfect.ogg");
 
     patterns["pata"] = 0;
@@ -61,7 +43,7 @@ bool RhythmController::checkForInput()
     }
 
     ///Set initial values for Drum quality check
-    int drum_quality = 2;
+    SongController::DrumQuality drum_quality = SongController::DrumQuality::BAD;
 
     bool drumHit = false;
 
@@ -81,18 +63,18 @@ bool RhythmController::checkForInput()
             if (masterTimer < low_range) ///BAD hit
             {
                 ///Apply BAD drum sound effect
-                drum_quality = DrumQuality::BAD;
+                drum_quality = SongController::DrumQuality::BAD;
                 rhythm->addRhythmMessage(Rhythm::RhythmAction::DRUM_BAD, rhythmMessage);
             } else
             {
                 ///Apply GOOD drum sound effect
                 if (masterTimer >= high_range) ///BEST hit
                 {
-                    drum_quality = DrumQuality::BEST;
+                    drum_quality = SongController::DrumQuality::BEST;
                     rhythm->addRhythmMessage(Rhythm::RhythmAction::DRUM_BEST, rhythmMessage);
                 } else if (masterTimer >= low_range) ///GOOD hit
                 {
-                    drum_quality = DrumQuality::GOOD;
+                    drum_quality = SongController::DrumQuality::GOOD;
                     rhythm->addRhythmMessage(Rhythm::RhythmAction::DRUM_GOOD, rhythmMessage);
                 }
             }
@@ -101,14 +83,16 @@ bool RhythmController::checkForInput()
             float drumVolume = float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f);
 
             // set buffers and volumes
-            drum_nc.setBuffer(b_drum[i][drum_quality]);
-            drum_c.setBuffer(b_drumchant[i][drum_quality]);
+            SongController* songController = CoreManager::getInstance().getSongController();
+
+            drum_nc.setBuffer(songController->getSound(songController->drumToEnum(drum_pngs[i]), drum_quality, SongController::DrumType::DRUM));
+            drum_c.setBuffer(songController->getSound(songController->drumToEnum(drum_pngs[i]), drum_quality, SongController::DrumType::VOICE));
 
             drum_nc.setVolume(drumVolume);
             drum_c.setVolume(drumVolume);
 
             // add drum to user input table
-            if(drum_quality != DrumQuality::BAD)
+            if(drum_quality != SongController::DrumQuality::BAD)
             {
                 commandInput.push_back(i);
                 canHit = false;

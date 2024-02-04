@@ -10,6 +10,7 @@
 
 #include "../Config.h"
 #include "../Input/InputController.h"
+#include "SongController.h"
 
 #include <SFML/Audio.hpp>
 #include <spdlog/logger.h>

@@ -21,18 +21,14 @@ class SongControllerException : public std::exception {
 class SongController
 {
     public:
-    SongController();
-    void LoadTheme(std::string theme);
-
-    private:
-
     // identifiers for drums
     enum Drums
     {
         PATA = 0,
         PON = 1,
         DON = 2,
-        CHAKA = 3
+        CHAKA = 3,
+        NONE = 4
     };
 
     enum DrumQuality
@@ -48,6 +44,36 @@ class SongController
         VOICE = 1
     };
 
+    SongController();
+    void LoadTheme(std::string theme);
+    sf::SoundBuffer& getSound(Drums, DrumQuality, DrumType);
+    float getBPM();
+
+    Drums drumToEnum(std::string drum);
+    DrumQuality drumQualityToEnum(std::string drumQuality);
+    DrumType drumTypeToEnum(std::string drumType);
+
+    private:
+    float BPM = 120.f;
+
+    struct SongCounter
+    {
+        int current = 0;
+        int max = 1;
+    };
+
+    std::map<std::string, Drums> drumTable = {{"pata",  Drums::PATA}, 
+                                              {"pon",   Drums::PON}, 
+                                              {"chaka", Drums::CHAKA}, 
+                                              {"don",   Drums::DON}};
+
+    std::map<std::string, DrumQuality> drumQualityTable = {{"best", DrumQuality::BEST}, 
+                                                           {"good", DrumQuality::GOOD}, 
+                                                           {"bad",  DrumQuality::BAD}};
+
+    std::map<std::string, DrumType> drumTypeTable = {{"drum",  DrumType::DRUM}, 
+                                                    {"voice", DrumType::VOICE}};
+
     // single-time sounds
     sf::SoundBuffer sb_start; // start theme
     sf::SoundBuffer sb_prefever_intense_start; // start the intense part of prefever
@@ -59,10 +85,19 @@ class SongController
     std::vector<sf::SoundBuffer> sb_prefever_intense_loop; // bgm loop when prefever is intense (good inputs)
     std::vector<sf::SoundBuffer> sb_fever_loop; // bgm loop during fever
 
+    SongCounter sc_idle_loop;
+    SongCounter sc_prefever_calm_loop;
+    SongCounter sc_prefever_intense_loop;
+    SongCounter sc_fever_loop;
+
     // sb_chant_fever["march"][0..x] <- for each command from commands.json
     std::map<std::string, std::vector<sf::SoundBuffer>> sb_chant_prefever_calm; // chants for calm prefever section
     std::map<std::string, std::vector<sf::SoundBuffer>> sb_chant_prefever_intense; // chants for intense prefever section
     std::map<std::string, std::vector<sf::SoundBuffer>> sb_chant_fever; // chants for fever section
+
+    std::map<std::string, SongCounter> sc_chant_prefever_calm;
+    std::map<std::string, SongCounter> sc_chant_prefever_intense;
+    std::map<std::string, SongCounter> sc_chant_fever;
 
     //         PATA     BEST       VOICE
     // sb_drum[drum][drumQuality][DrumType] = sf::SoundBuffer
