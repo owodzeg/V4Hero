@@ -45,7 +45,6 @@ private:
     std::shared_ptr<spdlog::logger> logger = spdlog::get("rhythm");
     /// Theme and chant buffers ///
     std::map<std::string, sf::SoundBuffer> b_chant; ///Sound buffer for Patapon chants
-    SongController songController;
     std::string currentThemeName;
     /// Check if it's possible to replace cycles with one (max 2) values based on a clock, would make things more reliable
     int cycle = 0;
