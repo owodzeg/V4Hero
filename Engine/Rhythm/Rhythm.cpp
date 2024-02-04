@@ -94,11 +94,26 @@ void Rhythm::LoadTheme(string theme)
     ///Load the BGM
     try
     {
-        songController.LoadTheme("ahwoon");
+        SongController* songController = CoreManager::getInstance().getSongController();
+        songController->LoadTheme("ahwoon");
+
+        // after loading SongController, get BPM and re-do the calculations
+        BPM = songController->getBPM(); ///beats per minute
+        beat_timer = 60.f / (BPM*2) * 1000000.f; ///Amount of microseconds for each halfbeat to be made
+        beat_ms = 60.f / BPM * 1000.f; ///Amount of milliseconds for each beat
+        halfbeat_ms = beat_ms / 2.f;
+        measure_ms = beat_ms * 4.f;
+        low_range = beat_timer / 6.25f;  ///Anything below that range will be treated as BAD hit
+        high_range = beat_timer / 3.125f; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.   
+
+        // set bpm for rhythm gui
+        CoreManager::getInstance().getRhythmGUI()->BPM = BPM;
+        CoreManager::getInstance().getRhythmGUI()->beat_timer = 60.f / BPM * 1000.f;
     }
     catch ( SongControllerException& ex )
     {
         SPDLOG_ERROR("Got SongController exception when loading theme: {}", ex.what());
+        // TODO: in future, throw an exception to be caught by MissionController and stop mission loading
     }
     catch ( std::exception& ex )
     {
@@ -130,10 +145,6 @@ void Rhythm::LoadTheme(string theme)
     last_satisfaction = 0;
 
     satisfaction_value.clear();
-
-    // set bpm for rhythm gui
-    CoreManager::getInstance().getRhythmGUI()->BPM = BPM;
-    CoreManager::getInstance().getRhythmGUI()->beat_timer = 60.f / BPM * 1000.f;
 
     ///Stop any current action
     //current_song = "";
