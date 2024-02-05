@@ -320,6 +320,14 @@ float SongController::getBPM()
     return BPM;
 }
 
+void SongController::flushOrder()
+{
+    sc_idle_loop.current = 0;
+    sc_prefever_calm_loop.current = 0;
+    sc_prefever_intense_loop.current = 0;
+    sc_fever_loop.current = 0;
+}
+
 SongController::Drums SongController::drumToEnum(std::string drum)
 {
 

@@ -60,6 +60,7 @@ class SongController
     sf::SoundBuffer& getDrum(Drums, DrumQuality, DrumType);
     sf::SoundBuffer& getSong(SongType);
     float getBPM();
+    void flushOrder();
 
     Drums drumToEnum(std::string drum);
     DrumQuality drumQualityToEnum(std::string drumQuality);

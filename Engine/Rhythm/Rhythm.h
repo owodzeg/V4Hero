@@ -82,7 +82,7 @@ private:
 
     std::vector<float> acc_req = {0, 1, 1, 0.9325, 0.875, 0.8125, 0.75, 0.75, 0.75, 0.6875, 0.625};
 
-    std::vector<float> perfects_reward = {0, 50, 150, 250, 300};
+    std::vector<float> perfects_reward = {0, 25, 50, 100, 150, 200, 250, 275, 300};
     std::vector<float> satisfaction_requirement = {0, 0, 285, 285, 275, 265, 250, 250, 185, 185, 0};
     std::vector<float> satisfaction_value;
 
@@ -98,7 +98,7 @@ public:
     /// Default FPS value ///
     float fps = 60;
 
-    int current_perfect;
+    int current_perfect = 0;
     bool advanced_prefever = false; ///When the game is still before fever, but gets more livid
     bool updateworm = false;        ///For fever worm
 
@@ -133,11 +133,11 @@ public:
     std::vector<RhythmMessage> messages;
 
     std::vector<int> command;
-    float perfection = 0;
 
     int metronomeDelay = 2;
-    int drumTicks = 0;
+    int drumTicks = -1;
     int drumTicksNoInput = 0;
+    int measureCycle = -2;
 
     sf::Clock firstCommandDelayClock; //halfbeat delay for when we use first command without last halfbeat
     sf::Clock commandWaitClock; //clock for command execution (if no input provided within given frame, break combo)
@@ -160,11 +160,12 @@ public:
     void LoadTheme(std::string theme);
     void Start();
     void PlaySong(SongController::SongType songType);
-    void BreakCombo();
+    void BreakCombo(int reason);
     int GetCombo();
     int GetBgmCycle();
     int GetRealCombo();
     float GetSatisfaction();
+    void decideSongType();
     void addRhythmMessage(RhythmAction action_id, std::string message);
     std::vector<RhythmMessage> fetchRhythmMessages(uint64_t& timestamp);
     void checkRhythmController();

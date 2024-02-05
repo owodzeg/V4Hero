@@ -189,10 +189,11 @@ void Rhythm::Start()
     PlaySong(SongController::SongType::START);
 }
 
-void Rhythm::BreakCombo()
+void Rhythm::BreakCombo(int reason)
 {
     RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
 
+    /*
     updateworm = true;
     satisfaction_value.clear();
     rl_combo = 0;
@@ -246,7 +247,39 @@ void Rhythm::BreakCombo()
 
     pata_react.setBuffer(s_badrhythm2);
 
-    pata_react.play();
+    pata_react.play();*/
+
+    combo = 0;
+    s_anvil.play();
+
+    newRhythmClock.restart();
+    
+    metronomeVal = 0;
+    metronomeOldVal = 9999;
+    metronomeState = 1;
+    metronomeClick = false;
+
+    s_theme[0].stop();
+    s_theme[1].stop();
+
+    drumTicks = -1;
+    measureCycle = 0;
+    satisfaction_value.clear();
+    advanced_prefever = false;
+
+    SongController* songController = CoreManager::getInstance().getSongController();
+    songController->flushOrder();
+
+    // additional handling for certain combo breaks
+    switch(reason)
+    {
+        case 7:
+            command.clear();
+            rhythmController->commandInputProcessed.clear();
+        break;
+    }
+
+    SPDLOG_DEBUG("Combo break! Reason code: #{}", reason);
 }
 
 int Rhythm::GetCombo()
@@ -267,6 +300,103 @@ int Rhythm::GetRealCombo()
 float Rhythm::GetSatisfaction()
 {
     return last_satisfaction;
+}
+
+void Rhythm::decideSongType()
+{
+    if(combo == 0)
+    {
+        currentSongType = SongController::SongType::IDLE;
+        return;
+    }
+
+    if(currentSongType == SongController::SongType::PREFEVER_INTENSE_START)
+    {
+        currentSongType = SongController::SongType::PREFEVER_INTENSE;
+        return;
+    }
+
+    if(combo > 0)
+    {
+        RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
+
+        ///Push the amount of perfect hits to the table and reset them
+        float perfection = rhythmController->perfection;
+        int perfectBeats = perfection * 8.f;
+
+        if(perfection == 1)
+            current_perfect += 1;
+        else
+            current_perfect = 0;
+
+        if (combo < 11)
+        {
+            satisfaction_value.push_back(perfects_reward[perfectBeats]);
+
+            SPDLOG_DEBUG("acc: {} reward: {}", perfection, perfects_reward[perfectBeats]);
+
+            if (satisfaction_value.size() > 3)
+                satisfaction_value.erase(satisfaction_value.begin());
+
+            float satisfaction = 0;
+
+            if (satisfaction_value.size() == 3)
+                satisfaction = satisfaction_value[2] * 0.8 + satisfaction_value[1] * 0.15 + satisfaction_value[0] * 0.05;
+            if (satisfaction_value.size() == 2)
+                satisfaction = satisfaction_value[1] * 0.15 + satisfaction_value[0] * 0.05;
+            if (satisfaction_value.size() == 1)
+                satisfaction = satisfaction_value[0] * 0.05;
+
+            SPDLOG_DEBUG("Satisfaction: {}, requirement: {}, adv_pre: {}, theme_combo: {}", satisfaction, satisfaction_requirement[combo], advanced_prefever, combo);
+            SPDLOG_DEBUG("Accuracy: {}%", perfection * 100);
+
+            if ((combo >= 2) && (combo < 6))
+            {
+                if ((current_perfect >= 2) && ((satisfaction >= 150) || ((satisfaction_value.size() == 2) && (satisfaction >= 60))))
+                {
+                    if (!advanced_prefever)
+                    {
+                        advanced_prefever = true;
+                        currentSongType = SongController::SongType::PREFEVER_INTENSE_START;
+                        combo = 6;
+                        return;
+                    }
+                }
+            }
+
+            if (combo >= 6)
+            {
+                if ((current_perfect <= 1) || (satisfaction < 150))
+                {
+                    advanced_prefever = false;
+                    currentSongType = SongController::SongType::PREFEVER_CALM;
+                    combo = 2;
+                    return;
+                }
+            }
+
+            if (satisfaction > satisfaction_requirement[combo])
+            {
+                if (advanced_prefever)
+                {
+                    combo = 10;
+                }
+            }
+        }
+
+    }
+
+    if(combo == 10)
+    {
+        currentSongType = SongController::SongType::FEVER_START;
+        return;
+    }
+
+    if(combo > 10)
+    {
+        currentSongType = SongController::SongType::FEVER;
+        return;
+    }
 }
 
 void Rhythm::addRhythmMessage(RhythmAction action_id, std::string message)
@@ -340,26 +470,17 @@ void Rhythm::checkRhythmController()
         
         if(drumTicksNoInput < 0 && combo > 0)
         {
-            combo = 0;
-            s_anvil.play();
-            SPDLOG_DEBUG("Combo break! Reason code: #3");
+            BreakCombo(3);
         }
 
         if(combo > 0 && afterMeasureClock.getElapsedTime().asMilliseconds() < measure_ms - halfbeat_ms)
         {
-            combo = 0;
-            s_anvil.play();
-            SPDLOG_DEBUG("Combo break! Reason code: #5");
+            BreakCombo(5);
         }
 
         if(afterPerfectClock.getElapsedTime().asMilliseconds() < beat_ms)
         {
-            combo = 0;
-            s_anvil.play();
-            SPDLOG_DEBUG("Combo break! Reason code: #7");
-
-            command.clear();
-            rhythmController->commandInputProcessed.clear();
+            BreakCombo(7);
         }
 
         drumTicksNoInput = 0;
@@ -370,8 +491,6 @@ void Rhythm::checkRhythmController()
     if(rhythmController->commandInputProcessed.size() > 0)
     {
         command = rhythmController->commandInputProcessed;
-        perfection = rhythmController->perfection;
-
         rhythmController->commandInputProcessed.clear();
     }
 }
@@ -429,6 +548,7 @@ void Rhythm::doRhythm()
                             commandWaitClock.restart();
                             afterMeasureClock.restart();
 
+                            decideSongType();
                             PlaySong(currentSongType);
 
                             s_ding.play();
@@ -447,6 +567,7 @@ void Rhythm::doRhythm()
                         commandWaitClock.restart();
                         afterMeasureClock.restart();
                             
+                        decideSongType();
                         PlaySong(currentSongType);
 
                         s_ding.play();
@@ -465,6 +586,7 @@ void Rhythm::doRhythm()
                         commandWaitClock.restart();
                         afterMeasureClock.restart();
 
+                        decideSongType();
                         PlaySong(currentSongType);
 
                         s_ding.play();
@@ -475,9 +597,18 @@ void Rhythm::doRhythm()
             {
                 if(drumTicksNoInput >= 3 && combo > 0)
                 {
-                    combo = 0;
-                    SPDLOG_DEBUG("Combo break! Reason code: #1");
-                    s_anvil.play();
+                    BreakCombo(1);
+                }
+
+                if(drumTicks == 0 && combo == 0 && drumTicksNoInput >= 1)
+                {
+                    if(measureCycle == 0)
+                        PlaySong(SongController::SongType::IDLE);
+
+                    measureCycle += 1;
+
+                    if(measureCycle == 2)
+                    measureCycle = 0;
                 }
             }
         }
@@ -488,9 +619,7 @@ void Rhythm::doRhythm()
     // here goes everything outside of the metronome
     if(combo > 0 && commandWaitClock.getElapsedTime().asMilliseconds() > measure_ms + halfbeat_ms)
     {
-        combo = 0;
-        SPDLOG_DEBUG("Combo break! Reason code: #2");
-        s_anvil.play();
+        BreakCombo(2);
     }
 
     std::vector<RhythmMessage> last_messages = fetchRhythmMessages(lastMessageCheck);
@@ -501,9 +630,7 @@ void Rhythm::doRhythm()
         {
             if(combo > 0)
             {
-                combo = 0;
-                SPDLOG_DEBUG("Combo break! Reason code: #4");
-                s_anvil.play();
+                BreakCombo(4);
             }
         }
 
@@ -515,9 +642,7 @@ void Rhythm::doRhythm()
 
     if(combo > 0 && afterMeasureClock.getElapsedTime().asMilliseconds() > measure_ms*2) // response + measure
     {
-        combo = 0;
-        SPDLOG_DEBUG("Combo break! Reason code: #6");
-        s_anvil.play();
+        BreakCombo(6);
     }
 
     checkRhythmController();
