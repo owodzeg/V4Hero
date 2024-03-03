@@ -164,6 +164,7 @@ void Rhythm::LoadTheme(string theme)
 void Rhythm::PlaySong(SongController::SongType songType)
 {
     song_channel = (song_channel + 1) % 2;
+    SPDLOG_DEBUG("Playing songType: {}, song_channel: {}", static_cast<int>(songType), song_channel);
 
     SongController* songController = CoreManager::getInstance().getSongController();
     
@@ -307,12 +308,14 @@ void Rhythm::decideSongType()
     if(combo == 0)
     {
         currentSongType = SongController::SongType::IDLE;
+        SPDLOG_DEBUG("I am deciding: IDLE");
         return;
     }
 
-    if(currentSongType == SongController::SongType::PREFEVER_INTENSE_START)
+    if(combo == 6 && currentSongType == SongController::SongType::PREFEVER_INTENSE_START)
     {
         currentSongType = SongController::SongType::PREFEVER_INTENSE;
+        SPDLOG_DEBUG("I am deciding: PREFEVER_INTENSE");
         return;
     }
 
@@ -359,6 +362,7 @@ void Rhythm::decideSongType()
                         advanced_prefever = true;
                         currentSongType = SongController::SongType::PREFEVER_INTENSE_START;
                         combo = 6;
+                        SPDLOG_DEBUG("I am deciding: doing great! PREFEVER_INTENSE_START");
                         return;
                     }
                 }
@@ -371,6 +375,7 @@ void Rhythm::decideSongType()
                     advanced_prefever = false;
                     currentSongType = SongController::SongType::PREFEVER_CALM;
                     combo = 2;
+                    SPDLOG_DEBUG("I am deciding: you goofed. PREFEVER_CALM");
                     return;
                 }
             }
@@ -379,6 +384,7 @@ void Rhythm::decideSongType()
             {
                 if (advanced_prefever)
                 {
+                    SPDLOG_DEBUG("Skip to combo 10 = FEVER!");
                     combo = 10;
                 }
             }
@@ -389,14 +395,19 @@ void Rhythm::decideSongType()
     if(combo == 10)
     {
         currentSongType = SongController::SongType::FEVER_START;
+        SPDLOG_DEBUG("I am deciding: FEVER_START");
         return;
     }
 
     if(combo > 10)
     {
         currentSongType = SongController::SongType::FEVER;
+        SPDLOG_DEBUG("I am deciding: FEVER! :D");
         return;
     }
+
+    SPDLOG_DEBUG("No decision made. PREFEVER_CALM");
+    currentSongType = SongController::SongType::PREFEVER_CALM;
 }
 
 void Rhythm::addRhythmMessage(RhythmAction action_id, std::string message)
