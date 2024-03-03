@@ -130,11 +130,13 @@ bool RhythmController::checkForInput()
                 if (drum_quality == 0)
                 {
                     command_perfects.push_back(true);
+                    rl_input_perfects.push_back(true);
                 }
 
                 if (drum_quality == 1)
                 {
                     command_perfects.push_back(false);
+                    rl_input_perfects.push_back(false);
                 }
             }
 
@@ -178,8 +180,16 @@ bool RhythmController::checkForInput()
                     perfect += command_perfects[c];
                 }
             }
-            
+
+            rl_input_perfect = 0;
+
+            for (unsigned int c = 0; c < rl_input_perfects.size(); c++)
+            {
+                rl_input_perfect += rl_input_perfects[c];
+            }
+
             SPDLOG_DEBUG("CommandInput.size() == {}", commandInput.size());
+            SPDLOG_DEBUG("rl_input_perfects.size() == {}", rl_input_perfects.size());
 
             //cout<<"Input registered"<<commandInput.size()<<endl;
             if (commandInput.size() == 8)
@@ -205,10 +215,20 @@ bool RhythmController::checkForInput()
                     // so we can make the rhythm system react to whatever command we're currently inputting
                     // clearing command input also prevents from actually executing the command as of now
                     perfection = perfect / 8.f;
+
+                    unsigned int index = std::distance(base5_commands.begin(), std::find(base5_commands.begin(), base5_commands.end(), command));
+
+                    while (rl_input_perfects.size() > rl_input_commands[index])
+                        rl_input_perfects.erase(rl_input_perfects.begin());
+
+                    rl_input_perfection = float(rl_input_perfect) / rl_input_perfects.size();
+                    SPDLOG_DEBUG("rl_input_perfection: {}, rl_input_perfect: {}, rl_input_perfects.size(): {}", rl_input_perfection, rl_input_perfect, rl_input_perfects.size());
+                    
                     commandInputProcessed = commandInput;
                     
                     commandInput.clear();
                     command_perfects.clear();
+                    rl_input_perfects.clear();
 
                     rhythm->addRhythmMessage(Rhythm::RhythmAction::FOUND_COMMAND, to_string(command));
                 }
@@ -251,10 +271,20 @@ bool RhythmController::checkForInput()
                         // so we can make the rhythm system react to whatever command we're currently inputting
                         // clearing command input also prevents from actually executing the command as of now
                         perfection = perfect / 8.f;
+
+                        unsigned int index = std::distance(base5_commands.begin(), std::find(base5_commands.begin(), base5_commands.end(), command));
+
+                        while (rl_input_perfects.size() > rl_input_commands[index])
+                            rl_input_perfects.erase(rl_input_perfects.begin());
+
+                        rl_input_perfection = float(rl_input_perfect) / rl_input_perfects.size();
+                        SPDLOG_DEBUG("rl_input_perfection: {}, rl_input_perfect: {}, rl_input_perfects.size(): {}", rl_input_perfection, rl_input_perfect, rl_input_perfects.size());
+
                         commandInputProcessed = commandInput;
 
                         commandInput.clear();
                         command_perfects.clear();
+                        rl_input_perfects.clear();
 
                         commandWithMissingHalfBeat = true;
 

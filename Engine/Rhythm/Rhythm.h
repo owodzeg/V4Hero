@@ -64,10 +64,11 @@ private:
     int combo = 1;     ///Rhythm combo, main navigator through BGM
 
     std::vector<int> base5_commands; // commands in quinary format (pata=0,pon=1,don=2,chaka=3,none=4)  
+    std::vector<int> rl_input_commands; // amount of real inputs in a command
     std::vector<std::string> av_songs; // song names for patapon singing
 
     // accuracy required to advance into prefever intense and into fever 
-    std::vector<float> acc_req = {0, 1, 1, 0.9325, 0.875, 0.8125, 0.75, 0.75, 0.75, 0.6875, 0};
+    std::vector<float> acc_req = {0, 1, 1, 0.9325, 0.875, 0.8125, 0.75, 0.75, 0.75, 0.6875, 0, 0, 0, 0, 0, 0};
     std::vector<float> satisfaction_value;
 
     int debug_song_type = 0;

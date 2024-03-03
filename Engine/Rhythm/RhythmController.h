@@ -90,6 +90,11 @@ public:
     std::vector<int> perfects = {4, 4, 4, 4, 4}; ///vector of perfections of inputted commands (with default data)
     std::vector<string> av_commands;
     std::vector<int> base5_commands;
+    std::vector<int> rl_input_commands; // amount of real inputs in a command
+
+    std::vector<int> rl_input_perfects;
+    int rl_input_perfect = 0;
+    float rl_input_perfection = 0;
 
     float perfection = 0;
     std::vector<int> commandInputProcessed;

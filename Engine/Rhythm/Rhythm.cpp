@@ -53,14 +53,17 @@ Rhythm::Rhythm()
         nlohmann::json beat_data = command["beat"];
         int power = 7;
         int result = 0;
-        
+        int rl_inputs = 0;
+
         for(auto beat : beat_data)
         {
             result += drum_values[beat] * pow(5, power);
-            power--;    
+            power--;
+            rl_inputs += (drum_values[beat] <= 3);
         }
 
         base5_commands.push_back(result);
+        rl_input_commands.push_back(rl_inputs);
         SPDLOG_DEBUG("Added result quinary value: {}", result);
     }
 
@@ -88,7 +91,7 @@ void Rhythm::LoadTheme(string theme)
     try
     {
         SongController* songController = CoreManager::getInstance().getSongController();
-        songController->LoadTheme("ahwoon");
+        songController->LoadTheme("Blue_Zenith");
 
         // after loading SongController, get BPM and re-do the calculations
         BPM = songController->getBPM(); ///beats per minute
@@ -203,8 +206,7 @@ void Rhythm::decideSongType()
     RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
     SongController* songController = CoreManager::getInstance().getSongController();
 
-    float perfection = rhythmController->perfection; // Accuracy, float between 0 and 1
-    int perfectBeats = perfection * 8.f; // Amount of perfect beats from 0 to 8 (including halfbeats)
+    float perfection = rhythmController->rl_input_perfection; // Accuracy, float between 0 and 1
 
     if(perfection == 1)
         current_perfect += 1; // current_perfect = amount of consecutive perfect commands
@@ -247,7 +249,7 @@ void Rhythm::decideSongType()
     SPDLOG_DEBUG("Current song type: {}, advanced_prefever: {}", currentSongType, advanced_prefever);
     if((currentSongType != SongController::SongType::FEVER) && (currentSongType != SongController::SongType::FEVER_START)) {
         if(advanced_prefever) {
-            if(satisfaction <= 0.85) {
+            if(satisfaction <= acc_req[combo] * 0.75) {
                 advanced_prefever = false;
                 currentSongType = SongController::SongType::PREFEVER_CALM;
                 songController->flushOrder();
@@ -350,6 +352,7 @@ void Rhythm::checkRhythmController()
     rhythmController->masterTimer = abs((rhythmClockValue % int(beat_timer)) - (beat_timer/2));
     rhythmController->masterTimerNoAbs = rhythmClockValue % int(beat_timer);
     rhythmController->base5_commands = base5_commands;
+    rhythmController->rl_input_commands = rl_input_commands;
 
     rhythmController->low_range = low_range;
     rhythmController->high_range = high_range;
