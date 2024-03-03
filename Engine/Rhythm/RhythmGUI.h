@@ -23,12 +23,18 @@ public:
 
     uint64_t lastRhythmCheck;
 
+    bool debugToggle = false;
+
     /// Drums in-game ///
     std::vector<Drum> drums;
+
+    /// Debug UI ///
+    sf::Text d_text;
 
     void Initialise(Config& config, std::map<int, bool>& keymap);
     void click();
     void doVisuals(int bgm_cycle, int combo);
+    void toggleDebugUI();
     RhythmGUI();
     ~RhythmGUI();
 };

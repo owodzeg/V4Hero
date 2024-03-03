@@ -16,6 +16,10 @@ RhythmGUI::RhythmGUI()
     r_rhythm.setFillColor(sf::Color::White);
 
     lastRhythmCheck = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+
+    d_text.setFont(CoreManager::getInstance().getStrRepo()->font);
+    d_text.setFillColor(sf::Color::Black);
+    d_text.setCharacterSize(20);
 }
 
 void RhythmGUI::click()
@@ -32,12 +36,6 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
 
     window->setView(window->getDefaultView());
 
-    /**
-    clock250 - full white
-    clock400 - faded white
-    clock
-    */
-
     int v_cycle_mode = abs(floor((bgm_cycle) / 4) - 1);
     int v_cycle = (bgm_cycle) % 4 + 1;
 
@@ -48,94 +46,91 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
     rhythmAlpha = 0;
 
     ///Visuals
-    if (true)
+    ///Calculate the ratio for other window sizes (default is 1280x720)
+    float ratio_X = window->getSize().x / float(1280);
+    float ratio_Y = window->getSize().y / float(720);
+    float ratio_universal = (window->getSize().x * window->getSize().y) / (float(1280) * float(720));
+
+    /// Beat frame
+    if ((combo <= 1) || ((combo > 1) && (combo < 11) && (v_cycle_mode == 0)))
     {
-        ///Calculate the ratio for other window sizes (default is 1280x720)
-        float ratio_X = window->getSize().x / float(1280);
-        float ratio_Y = window->getSize().y / float(720);
-        float ratio_universal = (window->getSize().x * window->getSize().y) / (float(1280) * float(720));
+        r_rhythm.setFillColor(sf::Color(0, 0, 0, 0));
+        r_rhythm.setOutlineThickness(-ceil(3 * ratio_universal));
+        r_rhythm.setOutlineColor(sf::Color(255, 255, 255, rhythmAlpha));
+        r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (24 * ratio_X), (720 * ratio_Y) - (24 * ratio_Y)));
+        r_rhythm.setPosition(12 * ratio_X, 12 * ratio_Y);
 
-        /// Beat frame
-        if ((combo <= 1) || ((combo > 1) && (combo < 11) && (v_cycle_mode == 0)))
+        r_rhythm2.setOutlineColor(sf::Color(0, 0, 0, 0));
+    } else if ((combo > 1) && (v_cycle_mode == 1))
+    {
+        r_rhythm.setFillColor(sf::Color(0, 0, 0, 0));
+        r_rhythm.setOutlineThickness(-ceil(2 * ratio_universal));
+        r_rhythm.setOutlineColor(sf::Color(64, 64, 64, rhythmAlpha));
+        r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (20 * ratio_X), (720 * ratio_Y) - (20 * ratio_Y)));
+        r_rhythm.setPosition(10 * ratio_X, 10 * ratio_Y);
+
+        r_rhythm2.setFillColor(sf::Color(0, 0, 0, 0));
+        r_rhythm2.setOutlineThickness(-ceil(2 * ratio_universal));
+        r_rhythm2.setOutlineColor(sf::Color(64, 64, 64, rhythmAlpha));
+        r_rhythm2.setSize(sf::Vector2f((1280 * ratio_X) - (30 * ratio_X), (720 * ratio_Y) - (30 * ratio_Y)));
+        r_rhythm2.setPosition(15 * ratio_X, 15 * ratio_Y);
+
+        if (v_cycle == 4)
         {
-            r_rhythm.setFillColor(sf::Color(0, 0, 0, 0));
-            r_rhythm.setOutlineThickness(-ceil(3 * ratio_universal));
-            r_rhythm.setOutlineColor(sf::Color(255, 255, 255, rhythmAlpha));
-            r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (24 * ratio_X), (720 * ratio_Y) - (24 * ratio_Y)));
-            r_rhythm.setPosition(12 * ratio_X, 12 * ratio_Y);
-
-            r_rhythm2.setOutlineColor(sf::Color(0, 0, 0, 0));
-        } else if ((combo > 1) && (v_cycle_mode == 1))
-        {
-            r_rhythm.setFillColor(sf::Color(0, 0, 0, 0));
-            r_rhythm.setOutlineThickness(-ceil(2 * ratio_universal));
-            r_rhythm.setOutlineColor(sf::Color(64, 64, 64, rhythmAlpha));
-            r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (20 * ratio_X), (720 * ratio_Y) - (20 * ratio_Y)));
-            r_rhythm.setPosition(10 * ratio_X, 10 * ratio_Y);
-
-            r_rhythm2.setFillColor(sf::Color(0, 0, 0, 0));
-            r_rhythm2.setOutlineThickness(-ceil(2 * ratio_universal));
-            r_rhythm2.setOutlineColor(sf::Color(64, 64, 64, rhythmAlpha));
-            r_rhythm2.setSize(sf::Vector2f((1280 * ratio_X) - (30 * ratio_X), (720 * ratio_Y) - (30 * ratio_Y)));
-            r_rhythm2.setPosition(15 * ratio_X, 15 * ratio_Y);
-
-            if (v_cycle == 4)
+            if (floor(flicker) == 0)
             {
-                if (floor(flicker) == 0)
-                {
-                    r_rhythm.setOutlineColor(sf::Color(64, 64, 64, rhythmAlpha));
-                    r_rhythm2.setOutlineColor(sf::Color(64, 64, 64, rhythmAlpha));
-                } else if (floor(flicker) == 1)
-                {
-                    r_rhythm.setOutlineColor(sf::Color(220, 220, 220, rhythmAlpha));
-                    r_rhythm2.setOutlineColor(sf::Color(220, 220, 220, rhythmAlpha));
-                }
-
-                flicker += float(1) / fps * 30;
-
-                if (flicker >= 2)
-                    flicker = 0;
-            }
-        } else if ((combo >= 11) && (v_cycle_mode == 0))
-        {
-            r_rhythm.setFillColor(sf::Color(0, 0, 0, 0));
-            r_rhythm.setOutlineThickness(-ceil(7 * ratio_universal));
-
-            r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (20 * ratio_X), (720 * ratio_Y) - (20 * ratio_Y)));
-            r_rhythm.setPosition(10 * ratio_X, 10 * ratio_Y);
-
-            r_rhythm2.setOutlineColor(sf::Color(0, 0, 0, 0));
-
-            int flick = floor(flicker);
-
-            switch (flick)
+                r_rhythm.setOutlineColor(sf::Color(64, 64, 64, rhythmAlpha));
+                r_rhythm2.setOutlineColor(sf::Color(64, 64, 64, rhythmAlpha));
+            } else if (floor(flicker) == 1)
             {
-                case 0:
-                    r_rhythm.setOutlineColor(sf::Color(255, 255, 0, rhythmAlpha));
-                    break;
-
-                case 1:
-                    r_rhythm.setOutlineColor(sf::Color(255, 255, 255, rhythmAlpha));
-                    break;
-
-                case 2:
-                    r_rhythm.setOutlineColor(sf::Color(0, 255, 255, rhythmAlpha));
-                    break;
-
-                case 3:
-                    r_rhythm.setOutlineColor(sf::Color(0, 255, 0, rhythmAlpha));
-                    break;
+                r_rhythm.setOutlineColor(sf::Color(220, 220, 220, rhythmAlpha));
+                r_rhythm2.setOutlineColor(sf::Color(220, 220, 220, rhythmAlpha));
             }
 
             flicker += float(1) / fps * 30;
 
-            if (flicker >= 4)
+            if (flicker >= 2)
                 flicker = 0;
         }
+    } else if ((combo >= 11) && (v_cycle_mode == 0))
+    {
+        r_rhythm.setFillColor(sf::Color(0, 0, 0, 0));
+        r_rhythm.setOutlineThickness(-ceil(7 * ratio_universal));
 
-        float sizeMod = rhythmAlpha / float(80);
-        beatBounce = sizeMod / 30;
+        r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (20 * ratio_X), (720 * ratio_Y) - (20 * ratio_Y)));
+        r_rhythm.setPosition(10 * ratio_X, 10 * ratio_Y);
+
+        r_rhythm2.setOutlineColor(sf::Color(0, 0, 0, 0));
+
+        int flick = floor(flicker);
+
+        switch (flick)
+        {
+            case 0:
+                r_rhythm.setOutlineColor(sf::Color(255, 255, 0, rhythmAlpha));
+                break;
+
+            case 1:
+                r_rhythm.setOutlineColor(sf::Color(255, 255, 255, rhythmAlpha));
+                break;
+
+            case 2:
+                r_rhythm.setOutlineColor(sf::Color(0, 255, 255, rhythmAlpha));
+                break;
+
+            case 3:
+                r_rhythm.setOutlineColor(sf::Color(0, 255, 0, rhythmAlpha));
+                break;
+        }
+
+        flicker += float(1) / fps * 30;
+
+        if (flicker >= 4)
+            flicker = 0;
     }
+
+    float sizeMod = rhythmAlpha / float(80);
+    beatBounce = sizeMod / 30;
 
     window->draw(r_rhythm);
     window->draw(r_rhythm2);
@@ -180,6 +175,47 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
         }
     }
 
+    if(debugToggle) {
+        /*
+        BPM: {}, beat_timer: {}, beat_ms: {}, halfbeat_ms: {}, measure_ms: {}
+        low_range: {}, high_range: {}
+        combo: {}
+        accuracy: {}%, satisfaction: {}, requirement: {}, current_perfect: {}
+        currentSongType: {}, song_channel: {}, advanced_prefever: {}
+        drumTicks: {}, drumTicksNoInput: {}, measureCycle: {}
+        commandWaitClock: {}ms, firstCommandDelayClock: {}ms, afterMeasureClock: {}ms, newRhythmClock: {}us
+        metronomeVal: {}, metronomeOldVal, metronomeState: {}
+        rhythmMessages:
+        ...
+        ...
+        ...
+        */
+
+        Rhythm* rhythm = CoreManager::getInstance().getRhythm();
+        RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
+
+        std::vector<std::string> songTypes = {"IDLE", "PREFEVER_CALM", "PREFEVER_INTENSE", "FEVER", "START", "PREFEVER_INTENSE_START", "FEVER_START"};
+
+        std::string debug_text = "";
+        debug_text += std::format("BPM: {}, beat_timer: {}us, beat_ms: {}ms, halfbeat_ms: {}ms, measure_ms: {}ms\n", rhythm->BPM, rhythm->beat_timer, rhythm->beat_ms, rhythm->halfbeat_ms, rhythm->measure_ms);
+        debug_text += std::format("low_range: {}us, high_range: {}us\n", rhythm->low_range, rhythm->high_range);
+        debug_text += std::format("combo: {}\n", rhythm->GetCombo());
+        debug_text += std::format("accuracy: {}%, satisfaction: {}, requirement: {}, current_perfect: {}\n", rhythmController->rl_input_perfection*100.f, rhythm->satisfaction, rhythm->getAccRequirement(rhythm->combo), rhythm->current_perfect);
+        debug_text += std::format("currentSongType: {}, song_channel: {}, advanced_prefever: {}\n", songTypes[static_cast<int>(rhythm->currentSongType)], rhythm->song_channel, rhythm->advanced_prefever);
+        debug_text += std::format("drumTicks: {}, drumTicksNoInput: {}, measureCycle: {}\n", rhythm->drumTicks, rhythm->drumTicksNoInput, rhythm->measureCycle);
+        debug_text += std::format("commandWaitClock: {}ms, firstCommandDelayClock: {}ms\nafterMeasureClock: {}ms, afterPerfectClock: {}ms, newRhythmClock: {}us\n", rhythm->commandWaitClock.getElapsedTime().asMilliseconds(), rhythm->firstCommandDelayClock.getElapsedTime().asMilliseconds(), rhythm->afterMeasureClock.getElapsedTime().asMilliseconds(), rhythm->afterPerfectClock.getElapsedTime().asMilliseconds(), rhythm->newRhythmClock.getElapsedTime().asMicroseconds()); 
+        debug_text += std::format("metronomeVal: {}, metronomeOldVal: {}, metronomeState: {}\n", rhythm->metronomeVal, rhythm->metronomeOldVal, rhythm->metronomeState);
+        debug_text += std::format("masterTimer: {}, masterTimerNoAbs: {}\n", rhythmController->masterTimer, rhythmController->masterTimerNoAbs);
+
+        auto &view = window->getView();
+        window->setView(window->getDefaultView());
+        
+        d_text.setString(debug_text);
+        window->draw(d_text);
+
+        window->setView(view);
+    }
+
     std::vector<int> drumsToErase;
 
     for (int i = 0; i < drums.size(); i++)
@@ -199,6 +235,10 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
     }
 
     window->setView(lastView);
+}
+
+void RhythmGUI::toggleDebugUI() {
+    debugToggle = !debugToggle;
 }
 
 //void RhythmGUI::Update(sf::RenderWindow &window, float fps){
