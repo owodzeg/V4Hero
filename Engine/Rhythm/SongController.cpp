@@ -190,7 +190,7 @@ void SongController::LoadTheme(std::string theme)
     dd >> drum_defaults;
     dd.close();
 
-    std::string drumPath = themePath + "drum/";
+    std::string drumPath = "resources/sfx/drums/";
     
     for (auto x : drumTable)
     {
