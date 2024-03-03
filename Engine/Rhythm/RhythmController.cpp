@@ -222,6 +222,10 @@ bool RhythmController::checkForInput()
                         rl_input_perfects.erase(rl_input_perfects.begin());
 
                     rl_input_perfection = float(rl_input_perfect) / rl_input_perfects.size();
+
+                    if(rl_input_perfection > 1)
+                        rl_input_perfection = 1;
+
                     SPDLOG_DEBUG("rl_input_perfection: {}, rl_input_perfect: {}, rl_input_perfects.size(): {}", rl_input_perfection, rl_input_perfect, rl_input_perfects.size());
                     
                     commandInputProcessed = commandInput;
@@ -278,6 +282,10 @@ bool RhythmController::checkForInput()
                             rl_input_perfects.erase(rl_input_perfects.begin());
 
                         rl_input_perfection = float(rl_input_perfect) / rl_input_perfects.size();
+
+                        if(rl_input_perfection > 1)
+                            rl_input_perfection = 1;
+
                         SPDLOG_DEBUG("rl_input_perfection: {}, rl_input_perfect: {}, rl_input_perfects.size(): {}", rl_input_perfection, rl_input_perfect, rl_input_perfects.size());
 
                         commandInputProcessed = commandInput;
