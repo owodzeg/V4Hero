@@ -91,7 +91,7 @@ void Rhythm::LoadTheme(string theme)
     try
     {
         SongController* songController = CoreManager::getInstance().getSongController();
-        songController->LoadTheme("Blue_Zenith");
+        songController->LoadTheme("ahwoon");
 
         // after loading SongController, get BPM and re-do the calculations
         BPM = songController->getBPM(); ///beats per minute
@@ -201,6 +201,14 @@ int Rhythm::GetCombo()
     return combo;
 }
 
+float Rhythm::getAccRequirement(int combo) {
+    if(combo <= 10) {
+        return acc_req[combo];
+    }
+
+    return 0;
+}
+
 void Rhythm::decideSongType()
 {
     RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
@@ -218,7 +226,7 @@ void Rhythm::decideSongType()
     if (satisfaction_value.size() > 3)
         satisfaction_value.erase(satisfaction_value.begin());
 
-    float satisfaction = 0;
+    satisfaction = 0;
 
     if (satisfaction_value.size() == 3)
         satisfaction = (satisfaction_value[2] * 0.8 + satisfaction_value[1] * 0.15 + satisfaction_value[0] * 0.05);
@@ -227,7 +235,7 @@ void Rhythm::decideSongType()
     if (satisfaction_value.size() == 1)
         satisfaction = satisfaction_value[0];
 
-    SPDLOG_DEBUG("Satisfaction: {}, requirement: {}, current_perfect: {}, theme_combo: {}", satisfaction, acc_req[combo], current_perfect, combo);
+    SPDLOG_DEBUG("Satisfaction: {}, requirement: {}, current_perfect: {}, theme_combo: {}", satisfaction, getAccRequirement(combo), current_perfect, combo);
     SPDLOG_DEBUG("Accuracy: {}%", perfection * 100);
 
     // If combo == 0, we are in idle loop. No commands made
@@ -249,7 +257,7 @@ void Rhythm::decideSongType()
     SPDLOG_DEBUG("Current song type: {}, advanced_prefever: {}", currentSongType, advanced_prefever);
     if((currentSongType != SongController::SongType::FEVER) && (currentSongType != SongController::SongType::FEVER_START)) {
         if(advanced_prefever) {
-            if(satisfaction <= acc_req[combo] * 0.75) {
+            if(satisfaction <= getAccRequirement(combo) * 0.75) {
                 advanced_prefever = false;
                 currentSongType = SongController::SongType::PREFEVER_CALM;
                 songController->flushOrder();
@@ -260,7 +268,7 @@ void Rhythm::decideSongType()
         }
 
         if(combo >= 2) {
-            if(satisfaction >= acc_req[combo]) {
+            if(satisfaction >= getAccRequirement(combo)) {
                 if(!advanced_prefever) {
                     advanced_prefever = true;
                     currentSongType = SongController::SongType::PREFEVER_INTENSE_START;
@@ -350,7 +358,7 @@ void Rhythm::checkRhythmController()
     sf::Int64 rhythmClockValue = newRhythmClock.getElapsedTime().asMicroseconds();
 
     rhythmController->masterTimer = abs((rhythmClockValue % int(beat_timer)) - (beat_timer/2));
-    rhythmController->masterTimerNoAbs = rhythmClockValue % int(beat_timer);
+    rhythmController->masterTimerNoAbs = rhythmClockValue % int(beat_timer) - (beat_timer/2);
     rhythmController->base5_commands = base5_commands;
     rhythmController->rl_input_commands = rl_input_commands;
 
@@ -546,18 +554,24 @@ void Rhythm::doRhythm()
 
     checkRhythmController();
 
-    InputController* inputCtrl = CoreManager::getInstance().getInputController();
+    if(debug_controls) {
+        InputController* inputCtrl = CoreManager::getInstance().getInputController();
 
-    if(inputCtrl->isKeyPressed(Input::Keys::LTRIGGER))
-    {
-        PlaySong(currentSongType);
-    }
-    
-    if(inputCtrl->isKeyPressed(Input::Keys::RTRIGGER))
-    {
-        debug_song_type = (debug_song_type + 1) % 7;
-        currentSongType = static_cast<SongController::SongType>(debug_song_type);
+        if(inputCtrl->isKeyPressed(Input::Keys::LTRIGGER))
+        {
+            PlaySong(currentSongType);
+        }
+        
+        if(inputCtrl->isKeyPressed(Input::Keys::RTRIGGER))
+        {
+            debug_song_type = (debug_song_type + 1) % 7;
+            currentSongType = static_cast<SongController::SongType>(debug_song_type);
+        }
     }
 
-   metronomeClick = false;
+    metronomeClick = false;
+}
+
+void Rhythm::toggleDebug() {
+    debug_controls = !debug_controls;
 }

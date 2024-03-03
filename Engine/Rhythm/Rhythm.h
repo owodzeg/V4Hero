@@ -41,7 +41,6 @@ public:
     int metronomeState = 1;
     bool metronomeClick = false;
 
-private:
     std::shared_ptr<spdlog::logger> logger = spdlog::get("rhythm");
 
     /// Initialize sounds ///
@@ -72,8 +71,8 @@ private:
     std::vector<float> satisfaction_value;
 
     int debug_song_type = 0;
+    bool debug_controls = false;
 
-public:
     int current_perfect = 0;
     bool advanced_prefever = false; ///When the game is still before fever, but gets more livid
     bool updateworm = false;        ///For fever worm
@@ -129,6 +128,7 @@ public:
     bool started = false;
 
     int song_channel = 0;
+    float satisfaction = 0;
     SongController::SongType currentSongType = SongController::SongType::PREFEVER_CALM;
 
     Rhythm();
@@ -138,11 +138,13 @@ public:
     void PlaySong(SongController::SongType songType);
     void BreakCombo(int reason);
     int GetCombo();
+    float getAccRequirement(int combo);
     void decideSongType();
     void addRhythmMessage(RhythmAction action_id, std::string message);
     std::vector<RhythmMessage> fetchRhythmMessages(uint64_t& timestamp);
     void checkRhythmController();
     void doRhythm();
+    void toggleDebug();
 };
 
 #endif // RHYTHM_H
