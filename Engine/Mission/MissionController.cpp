@@ -1764,7 +1764,7 @@ void MissionController::DoKeyboardEvents()
         {
             if (inputCtrl->isKeyPressed(Input::Keys::SELECT))
             {
-                std::vector<sf::String> a = {"Show hitboxes", "Hide hitboxes", "Heal units", "Kill all player units", "Kill Hatapon", "Enable verbose logging", "Mission complete"};
+                std::vector<sf::String> a = {"Show hitboxes", "Hide hitboxes", "Heal units", "Kill all player units", "Kill Hatapon", "Enable verbose logging", "Mission complete", "Toggle rhythm debug UI", "Toggle song debug"};
 
                 PataDialogBox db;
                 db.Create(f_font, "Debug menu", a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
@@ -3812,6 +3812,32 @@ void MissionController::Update()
                         rhythm->Stop();
                         missionEndTimer.restart();
 
+                        dialog_boxes[dialog_boxes.size() - 1].Close();
+                    }
+
+                    break;
+                }
+
+                case 7: {
+                    if (dialog_boxes[dialog_boxes.size() - 1].id == 999)
+                    {
+                        SPDLOG_DEBUG("Toggle rhythm debug");
+
+                        CoreManager::getInstance().getRhythmGUI()->toggleDebugUI();
+                        
+                        dialog_boxes[dialog_boxes.size() - 1].Close();
+                    }
+
+                    break;
+                }
+
+                case 8: {
+                    if (dialog_boxes[dialog_boxes.size() - 1].id == 999)
+                    {
+                        SPDLOG_DEBUG("Toggle song debug");
+
+                        CoreManager::getInstance().getRhythm()->toggleDebug();
+                        
                         dialog_boxes[dialog_boxes.size() - 1].Close();
                     }
 
