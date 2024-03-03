@@ -233,12 +233,14 @@ void Rhythm::decideSongType()
     {
         currentSongType = SongController::SongType::IDLE;
         SPDLOG_DEBUG("I am deciding: IDLE");
+        addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
         return;
     }
 
     if(combo == 1) {
         currentSongType = SongController::SongType::PREFEVER_CALM;
         SPDLOG_DEBUG("I am deciding: PREFEVER_CALM");
+        addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
         return;
     }
 
@@ -250,6 +252,7 @@ void Rhythm::decideSongType()
                 currentSongType = SongController::SongType::PREFEVER_CALM;
                 songController->flushOrder();
                 SPDLOG_DEBUG("Poor timing! Go back to PREFEVER_CALM");
+                addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
                 return;
             }
         }
@@ -260,10 +263,12 @@ void Rhythm::decideSongType()
                     advanced_prefever = true;
                     currentSongType = SongController::SongType::PREFEVER_INTENSE_START;
                     SPDLOG_DEBUG("Great! Go to PREFEVER_INTENSE_START");
+                    addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
                     return;
                 } else {
                     currentSongType = SongController::SongType::FEVER_START;
                     SPDLOG_DEBUG("Awesome! Go to FEVER_START");
+                    addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
                     return;
                 }
             }
@@ -272,22 +277,27 @@ void Rhythm::decideSongType()
         if(currentSongType == SongController::SongType::PREFEVER_INTENSE_START) {
             currentSongType = SongController::SongType::PREFEVER_INTENSE;
             SPDLOG_DEBUG("PREFEVER_INTENSE_START -> PREFEVER_INTENSE");
+            addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
             return;
         }
 
         if(!advanced_prefever) {
             currentSongType = SongController::SongType::PREFEVER_CALM;
             SPDLOG_DEBUG("No choice made, also no advanced prefever. Choosing PREFEVER_CALM"); 
+            addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
             return;
         } else {
             currentSongType = SongController::SongType::PREFEVER_INTENSE;
-            SPDLOG_DEBUG("No choice made, advanced prefever set. Chooding PREFEVER_INTENSE"); 
+            SPDLOG_DEBUG("No choice made, advanced prefever set. Chooding PREFEVER_INTENSE");
+            addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType)); 
             return;
         }
     }
 
     if(currentSongType == SongController::SongType::FEVER_START) {
         currentSongType = SongController::SongType::FEVER;
+        SPDLOG_DEBUG("FEVER_START -> FEVER");
+        addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
         return;
     }
 }

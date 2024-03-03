@@ -95,7 +95,8 @@ public:
         COMBO_BREAK = 6, // combo has been broken
         COMBO_INCREASE = 7, // combo just raised by one
         PERFECT_COMMAND = 8, // shwing noise called, perfect command detected
-        FOUND_COMMAND = 9 // command has been found, not yet executed
+        FOUND_COMMAND = 9, // command has been found, not yet executed
+        SONG_TYPE_CHANGED = 10 // songtype change, for example PREFEVER_CALM -> PREFEVER_INTENSE_START
     };
 
     struct RhythmMessage
