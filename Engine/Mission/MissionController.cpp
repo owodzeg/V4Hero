@@ -3691,7 +3691,7 @@ void MissionController::Update()
 
         //cout << "[MissionController] Rhythm" << endl;
 
-        CoreManager::getInstance().getRhythmGUI()->doVisuals(rhythm->GetBgmCycle(), rhythm->GetCombo());
+        CoreManager::getInstance().getRhythmGUI()->doVisuals(0, rhythm->GetCombo());
         //rhythm->Draw();
     }
 

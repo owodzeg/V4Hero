@@ -43,15 +43,6 @@ public:
 
 private:
     std::shared_ptr<spdlog::logger> logger = spdlog::get("rhythm");
-    /// Theme and chant buffers ///
-    std::map<std::string, sf::SoundBuffer> b_chant; ///Sound buffer for Patapon chants
-    std::string currentThemeName;
-    /// Check if it's possible to replace cycles with one (max 2) values based on a clock, would make things more reliable
-    int cycle = 0;
-    int cycle_mode = 0;
-    int bgm_cycle = 0;
-    bool combobreak = false;
-    bool count_cycle = false;
 
     /// Initialize sounds ///
     sf::SoundBuffer b_fever_fail;
@@ -64,40 +55,24 @@ private:
     sf::Sound s_theme[2];    ///For playing BGM
     sf::Sound s_fever_fail;  ///Dying fever sound
     sf::Sound s_fever_start; ///FEVER!
-    sf::Sound s_chant;       ///For playing chants
     
     sf::Sound s_metronome; //rhythm helper
     sf::Sound s_ding; //rhythm helper
     sf::Sound s_anvil; //rhythm helper
 
-    /// Initialize clocks ///
-    sf::Clock beatCycleClock; ///Clock for proper command inputs and requirements
-
     /// Initialize Rhythm System values ///
     int combo = 1;     ///Rhythm combo, main navigator through BGM
-    int rl_combo = 0;  ///Game combo, directing mechanics and fever
 
     std::vector<int> base5_commands; // commands in quinary format (pata=0,pon=1,don=2,chaka=3,none=4)  
     std::vector<std::string> av_songs; // song names for patapon singing
 
-    std::vector<float> acc_req = {0, 1, 1, 0.9325, 0.875, 0.8125, 0.75, 0.75, 0.75, 0.6875, 0.625};
-
-    std::vector<float> perfects_reward = {0, 25, 50, 100, 150, 200, 250, 275, 300};
-    std::vector<float> satisfaction_requirement = {0, 0, 285, 285, 275, 265, 250, 250, 185, 185, 0};
+    // accuracy required to advance into prefever intense and into fever 
+    std::vector<float> acc_req = {0, 1, 1, 0.9325, 0.875, 0.8125, 0.75, 0.75, 0.75, 0.6875, 0};
     std::vector<float> satisfaction_value;
-
-    float last_satisfaction = 0;
-
-    /// Perfection calculator ///
-    float accuracy = 0; ///value for calculating the accuracy
-    int acc_count = 3;  ///value for determining on how far back should the accuracy calculation system go in commands
 
     int debug_song_type = 0;
 
 public:
-    /// Default FPS value ///
-    float fps = 60;
-
     int current_perfect = 0;
     bool advanced_prefever = false; ///When the game is still before fever, but gets more livid
     bool updateworm = false;        ///For fever worm
@@ -155,22 +130,17 @@ public:
     SongController::SongType currentSongType = SongController::SongType::PREFEVER_CALM;
 
     Rhythm();
-    void Clear();
     void Stop();
     void LoadTheme(std::string theme);
     void Start();
     void PlaySong(SongController::SongType songType);
     void BreakCombo(int reason);
     int GetCombo();
-    int GetBgmCycle();
-    int GetRealCombo();
-    float GetSatisfaction();
     void decideSongType();
     void addRhythmMessage(RhythmAction action_id, std::string message);
     std::vector<RhythmMessage> fetchRhythmMessages(uint64_t& timestamp);
     void checkRhythmController();
     void doRhythm();
-    void Draw();
 };
 
 #endif // RHYTHM_H
