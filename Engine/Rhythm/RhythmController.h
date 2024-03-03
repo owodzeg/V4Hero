@@ -100,6 +100,8 @@ public:
     std::vector<int> commandInputProcessed;
     bool commandWithMissingHalfBeat = false;
 
+    std::vector<float> drum_hits;
+
     RhythmController();
     bool checkForInput();
     void resetDrums();

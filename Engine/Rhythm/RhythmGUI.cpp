@@ -213,6 +213,49 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
         d_text.setString(debug_text);
         window->draw(d_text);
 
+        d_green.setSize(sf::Vector2f(250, 40));
+        d_green.setFillColor(sf::Color::Green);
+        d_orange.setFillColor(sf::Color(255, 128, 0, 255));
+        d_red.setFillColor(sf::Color::Red);
+
+        float o_width = ((rhythm->high_range-rhythm->low_range) / rhythm->beat_timer) * 250;
+        float r_width = (rhythm->low_range / rhythm->beat_timer) * 250;
+
+        d_marker.setSize(sf::Vector2f(2, 60));
+        d_marker.setFillColor(sf::Color(0, 64, 255, 255));
+
+        d_orange.setSize(sf::Vector2f(o_width, 40));
+        d_red.setSize(sf::Vector2f(r_width, 40));
+
+        d_green.setPosition(window->getSize().x/2-125, window->getSize().y-80);
+        window->draw(d_green);
+
+        d_red.setPosition(window->getSize().x/2-125, window->getSize().y-80);
+        window->draw(d_red);
+        d_red.setPosition(window->getSize().x/2+125-r_width, window->getSize().y-80);
+        window->draw(d_red);
+
+        d_orange.setPosition(window->getSize().x/2-125+r_width, window->getSize().y-80);
+        window->draw(d_orange);
+        d_orange.setPosition(window->getSize().x/2+125-r_width-o_width, window->getSize().y-80);
+        window->draw(d_orange);
+
+        int marker_alpha = 25;
+        for(auto x : rhythmController->drum_hits) {
+            float marker_pos = x;
+            if(marker_pos < 0)
+                marker_pos += rhythm->beat_timer / 2;
+            else
+                marker_pos -= rhythm->beat_timer / 2;
+            
+            marker_pos = (marker_pos / rhythm->beat_timer) * 250;
+
+            d_marker.setPosition((window->getSize().x/2-1) + marker_pos, window->getSize().y-90);
+            d_marker.setFillColor(sf::Color(0, 64, 255, marker_alpha));
+            window->draw(d_marker);
+            marker_alpha += 22;
+        }
+
         window->setView(view);
     }
 

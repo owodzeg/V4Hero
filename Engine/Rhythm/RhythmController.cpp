@@ -54,6 +54,11 @@ bool RhythmController::checkForInput()
 
         if(drumHit)
         {
+            drum_hits.push_back(masterTimerNoAbs);
+
+            while(drum_hits.size() > 10)
+                drum_hits.erase(drum_hits.begin());
+
             drumToLoad = drum_pngs[i];
             current_drum = drumToLoad;
             currentPattern = patterns[drumToLoad];
