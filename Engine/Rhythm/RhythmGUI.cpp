@@ -206,6 +206,12 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
         debug_text += std::format("commandWaitClock: {}ms, firstCommandDelayClock: {}ms\nafterMeasureClock: {}ms, afterPerfectClock: {}ms, newRhythmClock: {}us\n", rhythm->commandWaitClock.getElapsedTime().asMilliseconds(), rhythm->firstCommandDelayClock.getElapsedTime().asMilliseconds(), rhythm->afterMeasureClock.getElapsedTime().asMilliseconds(), rhythm->afterPerfectClock.getElapsedTime().asMilliseconds(), rhythm->newRhythmClock.getElapsedTime().asMicroseconds()); 
         debug_text += std::format("metronomeVal: {}, metronomeOldVal: {}, metronomeState: {}\n", rhythm->metronomeVal, rhythm->metronomeOldVal, rhythm->metronomeState);
         debug_text += std::format("masterTimer: {}, masterTimerNoAbs: {}\n", rhythmController->masterTimer, rhythmController->masterTimerNoAbs);
+        debug_text += "command input: ";
+        for(auto c : rhythmController->commandInput)
+        {
+            debug_text += to_string(c);
+        }
+        debug_text += "\n";
 
         auto &view = window->getView();
         window->setView(window->getDefaultView());
