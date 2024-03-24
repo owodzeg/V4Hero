@@ -12,7 +12,6 @@
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
 
-using namespace std;
 using json = nlohmann::json; // Convenience recommended by the library
 
 ItemRegistry::ItemRegistry()
@@ -23,7 +22,7 @@ void ItemRegistry::readItemFiles()
 {
     items.clear();
 
-    ifstream t("resources/data/item_data.json", std::ios::in);
+    std::ifstream t("resources/data/item_data.json", std::ios::in);
     t >> item_data;
     for (int i = 0; i < item_data["items"].size(); i++)
     {
@@ -339,6 +338,8 @@ Item* ItemRegistry::getItemByID(std::vector<int> id)
     {
         SPDLOG_ERROR("Item registry failed to found item of id {} {}", id[0], id[1]);
     }
+
+    throw std::exception();
 }
 
 int ItemRegistry::getCategoryIDByString(std::string item_category)

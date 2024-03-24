@@ -31,8 +31,6 @@
 
 #include <nlohmann/json.hpp>
 
-
-class V4Core;
 class MissionController
 {
 public:

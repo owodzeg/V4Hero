@@ -52,7 +52,7 @@ void SaveReader::LoadSave()
         if (save_data["army"][0]["rarepon"] != -1) // Is hero unlocked?
         {
             hero_unlocked = true;
-            Pon new_pon = Pon(this);
+            Pon new_pon;
             new_pon.pon_id = save_data["army"][0]["rarepon"];
             new_pon.pon_class = save_data["army"][0]["class"];
             new_pon.pon_level = save_data["army"][0]["level"];
@@ -75,7 +75,7 @@ void SaveReader::LoadSave()
         {
             for (unsigned int o = 0; o < save_data["army"][i].size(); o++)
             {
-                Pon new_pon = Pon(this);
+                Pon new_pon;
                 new_pon.pon_id = save_data["army"][i][o]["rarepon"];
                 new_pon.pon_class = save_data["army"][i][o]["class"];
                 new_pon.pon_level = save_data["army"][i][o]["level"];
@@ -98,7 +98,7 @@ void SaveReader::LoadSave()
         {
             for (unsigned int o = 0; o < save_data["army"][i].size(); o++)
             {
-                Pon new_pon = Pon(this);
+                Pon new_pon;
                 new_pon.pon_id = save_data["army"][i][o]["rarepon"];
                 new_pon.pon_class = save_data["army"][i][o]["class"];
                 new_pon.pon_level = save_data["army"][i][o]["level"];
@@ -162,7 +162,7 @@ void SaveReader::CreateBlankSave()
 
     for (int i = 0; i < 3; i++)
     {
-        Pon newPon = Pon(this);
+        Pon newPon;
 
         newPon.pon_id = i;
         newPon.pon_class = 0;

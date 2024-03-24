@@ -1,22 +1,17 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "Pon.h"
-#include "../SaveReader.h"
+#include "../CoreManager.h"
 #include <spdlog/spdlog.h>
-
-using namespace std;
 
 Pon::Pon()
 {
 }
 
-Pon::Pon(SaveReader* core)
-{
-    saveReader = core;
-}
-
 void Pon::recalculateStats()
 {
+    SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
+
     switch (pon_id)
     {
         case 0: {
@@ -52,6 +47,7 @@ void Pon::recalculateStats()
 
 void Pon::giveItem(int inv_item_id, int where)
 {
+    SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
 
     SPDLOG_DEBUG("Pon::GiveItem({}, {})", inv_item_id, where);
     if (canEquip(saveReader->invData.items[inv_item_id].item->order_id, where))
@@ -105,9 +101,12 @@ int Pon::getSlotCount()
             return 2;
         }
     }
+
+    SPDLOG_ERROR("Unknown pon_class found");
+    return -1;
 }
 
-bool Pon::canEquip(vector<int> eq_id, int where)
+bool Pon::canEquip(std::vector<int> eq_id, int where)
 {
     if (eq_id.size() < 2 || eq_id[0] == 0)
     {

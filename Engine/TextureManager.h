@@ -9,6 +9,17 @@
 // Class for holding the texture pointers so we can make sure textures are not being copied around (as this causes all sorts of issues)
 // Thanks to https://codereview.stackexchange.com/questions/191793/resource-manager-with-sfml for the code reference
 
+class TextureManagerException : public std::exception {
+private:
+    std::string message;
+
+public:
+    TextureManagerException(std::string msg) : message(msg) {}
+    char* what () {
+        return message.data();
+    }
+};
+
 class TextureManager
 {
 public:

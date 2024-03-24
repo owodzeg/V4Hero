@@ -1,10 +1,8 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "PonRegistry.h"
-#include "../Func.h"
 #include "Pon.h"
-#include <fstream>
-#include <iostream>
-using namespace std;
+#include <spdlog/spdlog.h>
 
 PonRegistry::PonRegistry()
 {
@@ -20,13 +18,9 @@ PonRegistry::~PonRegistry()
 
 Pon* PonRegistry::GetPonByID(int id)
 {
-    for (int i = 0; i < pons.size(); i++)
-    {
-        if (i == id)
-        {
-            return &pons[i];
-        }
-    }
+    if(id < pons.size())
+        return &pons[id];
 
-    cout << "PonRegistry could not find the appropriate Pon" << endl;
+    SPDLOG_ERROR("PonRegistry could not find the appropriate Pon");
+    throw std::exception(); //TODO: a custom exception class perhaps?
 }

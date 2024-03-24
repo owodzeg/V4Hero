@@ -16,8 +16,6 @@
 
 using json = nlohmann::json;
 
-using namespace std;
-
 ///move to Func::numDigits later
 template<class T>
 int numDigits(T number) //stolen from stackoverflow
@@ -53,7 +51,7 @@ float MissionController::Clamp(float x, float lowerlimit, float upperlimit)
     return x;
 }
 
-int MissionController::layerStr2Enum(string layer)
+int MissionController::layerStr2Enum(std::string layer)
 {
     transform(layer.begin(), layer.end(), layer.begin(), [](unsigned char c) { return std::tolower(c); }); // https://stackoverflow.com/questions/313970
     if (layer == "buildings")
@@ -69,6 +67,9 @@ int MissionController::layerStr2Enum(string layer)
     {
         return UI;
     }
+
+    SPDLOG_ERROR("Unknown layer found.");
+    return 0;
 }
 
 void MissionController::addDmgCounter(int type, int damage, float baseX, float baseY, int q, int r)

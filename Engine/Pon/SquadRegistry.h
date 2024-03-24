@@ -9,7 +9,6 @@ public:
     SquadRegistry();
 
     nlohmann::json squad_data;
-    SaveReader* saveReader;
 
     // Returns the number of squads in the registry
     int GetNumSquads() const;

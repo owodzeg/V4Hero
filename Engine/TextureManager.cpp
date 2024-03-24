@@ -169,6 +169,9 @@ sf::Texture& TextureManager::scaleTexture(const std::string& path, int ratio)
         SPDLOG_DEBUG("Providing downscaled texture with path {}", path);
         return loadedTextures[path];
     }
+
+    SPDLOG_ERROR("Could not find appropriate texture to scale.");
+    throw TextureManagerException("Could not find appropriate texture to scale.");
 }
 
 bool TextureManager::checkImageExists(const std::string& key)
@@ -224,16 +227,15 @@ void TextureManager::loadImageFromMemory(const std::string& key, sf::Image image
 
 sf::Image& TextureManager::getImage(const std::string& key)
 {
-    if (loadedImages.find(key) != loadedImages.end())
+    auto it = loadedImages.find(key);
+    if(it != loadedImages.end())
     {
         SPDLOG_TRACE("Providing image with key {}", key);
-        return loadedImages[key];
-    } else
-    {
-        SPDLOG_ERROR("Couldn't load image {}: image doesn't exist", key);
-        sf::Image image; //create empty image to prevent crashes
-        return image;
+        return it->second;
     }
+
+    SPDLOG_ERROR("Couldn't load image {}: image doesn't exist", key);
+    throw TextureManagerException(std::format("Couldn't load image {}: image doesn't exist", key));
 }
 
 void TextureManager::loadTextureFromImage(const std::string& img_key)

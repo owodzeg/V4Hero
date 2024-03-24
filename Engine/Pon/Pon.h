@@ -1,7 +1,7 @@
 #ifndef PON_H
 #define PON_H
 #include <SFML/Graphics.hpp>
-class SaveReader;
+
 class Pon
 {
 public:
@@ -18,8 +18,6 @@ public:
     int slot_4_invItem_id = -1;
     int slot_5_invItem_id = -1;
     std::vector<int> slots = {slot_1_invItem_id, slot_2_invItem_id, slot_3_invItem_id, slot_4_invItem_id, slot_5_invItem_id};
-    SaveReader* saveReader;
-
 
     int pon_base_hp = 100;
     int pon_hp = 100;
@@ -38,7 +36,6 @@ public:
     void removeItem(int where = 0);
     int getSlotCount();                             // add an int pon_class argument to make static
     bool canEquip(std::vector<int>, int where = 0); // add an int pon_class argument to make static
-    Pon(SaveReader* core);
     Pon();
 };
 

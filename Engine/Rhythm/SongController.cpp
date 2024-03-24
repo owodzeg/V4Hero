@@ -311,6 +311,7 @@ sf::SoundBuffer& SongController::getSong(SongType songType)
 
         default:
             SPDLOG_ERROR("Unknown song tried to play.");
+            throw SongControllerException("Unknown song tried to play.");
         break;
     }
 }
