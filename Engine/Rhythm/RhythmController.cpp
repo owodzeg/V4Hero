@@ -109,18 +109,6 @@ bool RhythmController::checkForInput()
             SPDLOG_DEBUG("drum: {} masterTimer: {}us masterTimerNoAbs: {}us", current_drum, masterTimer, masterTimerNoAbs);
             //SPDLOG_DEBUG("drum quality was {}", drum_quality);
 
-            ///If drum was already hit and you hit once again, or you hit BAD, reset user input and break combo
-            /*if ((hit) || (drum_quality == 2))
-            {
-                command_perfects.clear();
-                perfects.clear();
-                commandInput.clear();
-
-                if (combo >= 2)
-                    breakCombo = true;
-                //SPDLOG_DEBUG("break combo #1");
-            }*/
-
             // now to decide what command has been inputted, we use a new scheme
             // the BASE-5 drum system 
             // we got 4 beats = 8 halfbeats

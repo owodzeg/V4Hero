@@ -78,7 +78,7 @@ public:
     bool updateworm = false;        ///For fever worm
 
     /// Config and Keybindings ///
-    std::string current_song = "";
+    std::string current_song;
 
     sf::SoundBuffer s_badrhythm1, s_badrhythm2; ///absolutely terrible! (shoutouts to shockturtle)
     sf::Sound pata_react;
@@ -114,11 +114,13 @@ public:
     int drumTicks = -1;
     int drumTicksNoInput = 0;
     int measureCycle = -2;
+    int hitAllowed = true;
 
     sf::Clock firstCommandDelayClock; //halfbeat delay for when we use first command without last halfbeat
     sf::Clock commandWaitClock; //clock for command execution (if no input provided within given frame, break combo)
     sf::Clock afterMeasureClock; //clock for patapon singing (lock input)
     sf::Clock afterPerfectClock; //count one beat after a perfect noise was hit (prevents from additional halfbeats after a proper command was done)
+    sf::Clock afterPressClock; //clock for preventing double inputs within the same halfbeat timeframe
     bool firstCommandDelay = false;
 
     std::mutex mtx;

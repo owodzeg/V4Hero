@@ -212,6 +212,7 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
             debug_text += to_string(c);
         }
         debug_text += "\n";
+        debug_text += std::format("can hit?: {}", rhythm->hitAllowed);
 
         auto &view = window->getView();
         window->setView(window->getDefaultView());

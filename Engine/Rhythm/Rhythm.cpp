@@ -180,6 +180,7 @@ void Rhythm::BreakCombo(int reason)
     measureCycle = 0;
     satisfaction_value.clear();
     advanced_prefever = false;
+    hitAllowed = true;
 
     SongController* songController = CoreManager::getInstance().getSongController();
     songController->flushOrder();
@@ -190,7 +191,14 @@ void Rhythm::BreakCombo(int reason)
         case 7:
             command.clear();
             rhythmController->commandInputProcessed.clear();
-        break;
+            break;
+        case 8:
+            command.clear();
+            rhythmController->commandInput.clear();
+            rhythmController->commandInputProcessed.clear();
+            break;
+        default:
+            break;
     }
 
     SPDLOG_DEBUG("Combo break! Reason code: #{}", reason);
@@ -390,6 +398,16 @@ void Rhythm::checkRhythmController()
             BreakCombo(7);
         }
 
+        if(!hitAllowed)
+        {
+            BreakCombo(8);
+        }
+        else
+        {
+            hitAllowed = false;
+            afterPressClock.restart();
+        }
+
         drumTicksNoInput = 0;
 
         commandWaitClock.restart();
@@ -405,7 +423,7 @@ void Rhythm::checkRhythmController()
 void Rhythm::doRhythm()
 {
     if(!started)
-    return;
+        return;
 
     sf::Int64 rhythmClockValue = newRhythmClock.getElapsedTime().asMicroseconds();
 
@@ -413,7 +431,7 @@ void Rhythm::doRhythm()
     //SPDLOG_DEBUG("metronome: {}", metronomeVal);
 
     if(metronomeVal < metronomeOldVal)
-    {    
+    {
         metronomeState += 1;
         metronomeState = metronomeState % 2;
 
@@ -433,7 +451,7 @@ void Rhythm::doRhythm()
 
             SPDLOG_DEBUG("Drum ticks: {}, combo: {}, drumTicksNoInput: {}, commandWaitClock: {}ms", drumTicks, combo, drumTicksNoInput, commandWaitClock.getElapsedTime().asMilliseconds());
 
-            if(command.size() > 0)
+            if(!command.empty())
             {
                 // start of rhythm, no commands yet
                 if(combo == 0)
@@ -527,6 +545,14 @@ void Rhythm::doRhythm()
     if(combo > 0 && commandWaitClock.getElapsedTime().asMilliseconds() > measure_ms + halfbeat_ms)
     {
         BreakCombo(2);
+    }
+
+    // allow hit after minimal timeout
+    // we don't want to block presses that were made in the last allowed microsecond on GOOD range
+    // so we wait the amount of time in the BAD hit timeframe (times two for both sides, remember: metronome tick starts at 0ms, - is early, + is late)
+    if(afterPressClock.getElapsedTime().asMicroseconds() >= low_range*2)
+    {
+        hitAllowed = true;
     }
 
     std::vector<RhythmMessage> last_messages = fetchRhythmMessages(lastMessageCheck);
