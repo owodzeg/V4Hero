@@ -1,12 +1,9 @@
 #ifndef KACHEEK_H
 #define KACHEEK_H
 
-#include "../../../../Config.h"
 #include "../../Entity.h"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
-
-using namespace std;
 
 class Kacheek : public Entity
 {

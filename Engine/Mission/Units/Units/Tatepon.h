@@ -1,11 +1,8 @@
 #ifndef TATEPON_H
 #define TATEPON_H
 
-#include "../../../Config.h"
 #include "../PlayableUnit.h"
 #include <SFML/Graphics.hpp>
-
-using namespace std;
 
 class Tatepon : public PlayableUnit
 {

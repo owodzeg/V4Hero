@@ -1,11 +1,8 @@
 #ifndef KIRAJINPOWEREDTOWERSMALL_H
 #define KIRAJINPOWEREDTOWERSMALL_H
 
-#include "../../../../Config.h"
 #include "../../Entity.h"
 #include <SFML/Graphics.hpp>
-
-using namespace std;
 
 class KirajinPoweredTowerSmall : public Entity
 {

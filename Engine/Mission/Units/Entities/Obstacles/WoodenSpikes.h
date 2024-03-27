@@ -1,11 +1,8 @@
 #ifndef WOODENSPIKES_H
 #define WOODENSPIKES_H
 
-#include "../../../../Config.h"
 #include "../../Entity.h"
 #include <SFML/Graphics.hpp>
-
-using namespace std;
 
 class WoodenSpikes : public Entity
 {

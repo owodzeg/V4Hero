@@ -1,11 +1,8 @@
 #ifndef YARIPON_H
 #define YARIPON_H
 
-#include "../../../Config.h"
 #include "../PlayableUnit.h"
 #include <SFML/Graphics.hpp>
-
-using namespace std;
 
 class Yaripon : public PlayableUnit
 {

@@ -1,10 +1,5 @@
 #include "EndFlag.h"
-#include "../../../../Func.h"
-#include "../../../../V4Core.h"
-#include "math.h"
-#include <fstream>
 #include <iostream>
-#include <sstream>
 #include "../../../../CoreManager.h"
 
 EndFlag::EndFlag()

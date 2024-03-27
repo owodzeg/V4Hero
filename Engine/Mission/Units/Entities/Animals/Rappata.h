@@ -1,12 +1,9 @@
 #ifndef RAPPATA_H
 #define RAPPATA_H
 
-#include "../../../../Config.h"
 #include "../../Entity.h"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
-
-using namespace std;
 
 class Rappata : public Entity
 {

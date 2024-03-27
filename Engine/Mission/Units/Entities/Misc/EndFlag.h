@@ -1,12 +1,9 @@
 #ifndef ENDFLAG_H
 #define ENDFLAG_H
 
-#include "../../../../Config.h"
 #include "../../Entity.h"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
-
-using namespace std;
 
 class EndFlag : public Entity
 {

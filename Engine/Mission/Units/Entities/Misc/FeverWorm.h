@@ -1,12 +1,9 @@
 #ifndef FEVERWORM_H
 #define FEVERWORM_H
 
-#include "../../../../Config.h"
 #include "../../../../Graphics/PSprite.h"
 #include "../../Entity.h"
 #include <SFML/Graphics.hpp>
-
-using namespace std;
 
 class FeverWorm : public Entity
 {

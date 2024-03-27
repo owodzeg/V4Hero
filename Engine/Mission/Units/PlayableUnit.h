@@ -1,7 +1,6 @@
 #ifndef PLAYABLEUNIT_H
 #define PLAYABLEUNIT_H
 
-#include "../../Config.h"
 #include "CollidableObject.h"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>

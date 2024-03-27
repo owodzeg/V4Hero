@@ -1,5 +1,4 @@
 #include "DroppedItem.h"
-#include "../../../../V4Core.h"
 #include "../../../../CoreManager.h"
 
 DroppedItem::DroppedItem()

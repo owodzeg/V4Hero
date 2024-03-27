@@ -1,11 +1,8 @@
 #ifndef KIRAJIN_YARI_1_H
 #define KIRAJIN_YARI_1_H
 
-#include "../../../../Config.h"
 #include "../../Entity.h"
 #include <SFML/Graphics.hpp>
-
-using namespace std;
 
 class Kirajin_Yari_1 : public Entity
 {

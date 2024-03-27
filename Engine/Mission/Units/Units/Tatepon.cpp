@@ -1,10 +1,7 @@
 #include "Tatepon.h"
-#include "../../../Func.h"
 #include "../../../CoreManager.h"
-#include "math.h"
-#include <fstream>
 #include <iostream>
-#include <sstream>
+
 Tatepon::Tatepon()
 {
 }

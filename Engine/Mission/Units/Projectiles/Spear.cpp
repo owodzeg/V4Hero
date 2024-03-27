@@ -1,11 +1,4 @@
 #include "Spear.h"
-#include "../../../Graphics/PSprite.h"
-#include "../../../Item/Equipment.h"
-#include "../../../Item/Item.h"
-#include "../Projectile.h"
-
-
-using namespace std;
 
 Spear* Spear::FromItem(Item* item, PSprite sprite)
 {

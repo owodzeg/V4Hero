@@ -36,6 +36,8 @@ public:
     sf::Clock newRhythmClock;    ///Main clock for Rhythm purposes
     sf::Clock lazyClock;    ///Main clock for Rhythm purposes
 
+    int test = 10;
+
     int metronomeVal = 0;
     int metronomeOldVal = 9999;
     int metronomeState = 1;

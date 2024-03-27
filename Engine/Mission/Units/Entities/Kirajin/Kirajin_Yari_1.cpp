@@ -1,11 +1,7 @@
 #include "Kirajin_Yari_1.h"
-#include "../../../../Func.h"
-#include "../../../../V4Core.h"
 #include "../../../../CoreManager.h"
 #include "math.h"
-#include <fstream>
 #include <iostream>
-#include <sstream>
 
 Kirajin_Yari_1::Kirajin_Yari_1()
 {

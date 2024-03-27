@@ -1,7 +1,8 @@
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "Hitbox.h"
 #include <iostream>
-
-using namespace std;
+#include <spdlog/spdlog.h>
 
 Hitbox::Hitbox()
 {
@@ -14,7 +15,7 @@ void Hitbox::SetFrame(float time)
     tmp.g_x = g_x;
     tmp.g_y = g_y;
     tmp.clearVertices();
-    vector<sf::Vector2f>* oldverticies = hitboxObject.getBaseVerticiesDontUseThisUnlessYouKnowWhy();
+    std::vector<sf::Vector2f>* oldverticies = hitboxObject.getBaseVerticiesDontUseThisUnlessYouKnowWhy();
     for (int i = 0; i < oldverticies->size(); i++)
     {
         tmp.addVertex(oldverticies->at(i).x, oldverticies->at(i).y);
@@ -52,8 +53,7 @@ void Hitbox::SetPos(float time)
 
     for (int i = 0; i < frames.size(); i++)
     {
-        if (debug)
-            cout << "[OBJ] Check frame " << i << ", ftime " << frames[i].time << " vs " << time << " sz: " << frames.size() - 1 << " >= " << i + 1 << endl;
+        SPDLOG_TRACE("[OBJ] Check frame {}, ftime {} vs {} sz: {} >= {}", i, frames[i].time, time, frames.size()-1, i+1);
 
         if (frames[i].time < time)
         {
@@ -63,8 +63,7 @@ void Hitbox::SetPos(float time)
 
                 if (frames[i + 1].time > time)
                 {
-                    if (debug)
-                        cout << "[OBJ] HANDLER 1: another frame, calc inbetween" << endl;
+                    SPDLOG_TRACE("[OBJ] HANDLER 1: another frame, calc inbetween");
 
                     ///Calculate in-between positions
                     float time_diff = frames[i + 1].time - frames[i].time;
@@ -86,8 +85,8 @@ void Hitbox::SetPos(float time)
                     tmp.time = time;
                     tmp.g_x = g_x;
                     tmp.g_y = g_y;
-                    vector<sf::Vector2f>* oldverticies = frames[i].getBaseVerticiesDontUseThisUnlessYouKnowWhy();
-                    vector<sf::Vector2f>* newvertices = frames[i + 1].getBaseVerticiesDontUseThisUnlessYouKnowWhy();
+                    std::vector<sf::Vector2f>* oldverticies = frames[i].getBaseVerticiesDontUseThisUnlessYouKnowWhy();
+                    std::vector<sf::Vector2f>* newvertices = frames[i + 1].getBaseVerticiesDontUseThisUnlessYouKnowWhy();
                     tmp.clearVertices();
                     for (int i = 0; i < oldverticies->size(); i++)
                     {
@@ -103,8 +102,7 @@ void Hitbox::SetPos(float time)
                     break;
                 } else
                 {
-                    if (debug)
-                        cout << "[OBJ] HANDLER 4: skip or get last pos" << endl;
+                    SPDLOG_TRACE("[OBJ] HANDLER 4: skip or get last pos");
 
                     g_x = frames[frames.size() - 1].g_x;
                     g_y = frames[frames.size() - 1].g_y;
@@ -114,7 +112,7 @@ void Hitbox::SetPos(float time)
                     tmp.g_x = g_x;
                     tmp.g_y = g_y;
                     tmp.clearVertices();
-                    vector<sf::Vector2f>* oldverticies = frames[frames.size() - 1].getBaseVerticiesDontUseThisUnlessYouKnowWhy();
+                    std::vector<sf::Vector2f>* oldverticies = frames[frames.size() - 1].getBaseVerticiesDontUseThisUnlessYouKnowWhy();
                     for (int i = 0; i < oldverticies->size(); i++)
                     {
                         tmp.addVertex(oldverticies->at(i).x, oldverticies->at(i).y);
@@ -126,8 +124,7 @@ void Hitbox::SetPos(float time)
                 }
             } else
             {
-                if (debug)
-                    cout << "[OBJ] HANDLER 2: last frame, get last pos" << endl;
+                SPDLOG_TRACE("[OBJ] HANDLER 2: last frame, get last pos");
 
                 frames[i].calcMaxWidth();
                 hitboxObject = frames[i];
@@ -136,8 +133,7 @@ void Hitbox::SetPos(float time)
             }
         } else
         {
-            if (debug)
-                cout << "[OBJ] HANDLER 3: first frame/before first frame, get first pos" << endl;
+            SPDLOG_TRACE("[OBJ] HANDLER 3: first frame/before first frame, get first pos");
 
             hitboxObject = frames[i];
 

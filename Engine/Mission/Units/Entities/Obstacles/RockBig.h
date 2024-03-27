@@ -1,11 +1,8 @@
 #ifndef ROCKBIG_H
 #define ROCKBIG_H
 
-#include "../../../../Config.h"
 #include "../../Entity.h"
 #include <SFML/Graphics.hpp>
-
-using namespace std;
 
 class RockBig : public Entity
 {

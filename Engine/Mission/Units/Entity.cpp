@@ -1,6 +1,4 @@
 #include "Entity.h"
-#include "../../V4Core.h"
-#include <algorithm>
 
 #include "../../CoreManager.h"
 

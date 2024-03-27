@@ -1,8 +1,6 @@
 #include "HitboxFrame.h"
 #include "../../Math/PVector.h"
 #include <cmath>
-#include <iostream>
-using namespace std;
 
 HitboxFrame::HitboxFrame()
 {
@@ -15,7 +13,7 @@ HitboxFrame::~HitboxFrame()
 float HitboxFrame::minProjection(float axisAngle, float object_x, float object_y)
 {
     float projectionLength = 99999999;
-    vector<sf::Vector2f> currentVertices = getCurrentVertices();
+    std::vector<sf::Vector2f> currentVertices = getCurrentVertices();
 
     //cout<<" - SEARCHING FOR MIN PROJECTION"<<endl;
     /// go through each vertex (corner) and find the shortest projection from the origin to that vertex along the axis aligned with axisAngle
@@ -40,7 +38,7 @@ float HitboxFrame::maxProjection(float axisAngle, float object_x, float object_y
 {
     float projectionLength = 0;
 
-    vector<sf::Vector2f> currentVertices = getCurrentVertices();
+    std::vector<sf::Vector2f> currentVertices = getCurrentVertices();
     float angled = 3.14159265358 / 2;
     if (axisAngle == angled)
     {
@@ -68,7 +66,7 @@ float HitboxFrame::maxProjection(float axisAngle, float object_x, float object_y
     //cout<<"Max projection hitbox: "<<projectionLength<<endl;
     return projectionLength;
 }
-vector<sf::Vector2f>* HitboxFrame::getBaseVerticiesDontUseThisUnlessYouKnowWhy()
+std::vector<sf::Vector2f>* HitboxFrame::getBaseVerticiesDontUseThisUnlessYouKnowWhy()
 {
     return &vertices;
 }
@@ -123,7 +121,7 @@ void HitboxFrame::calcMaxWidth(float maxWidth, bool forceRecalc)
 
     return;
 }
-vector<sf::Vector2f> HitboxFrame::getCurrentVertices()
+std::vector<sf::Vector2f> HitboxFrame::getCurrentVertices()
 {
     /// oh man.... we need to apply the transformation matrix to this bad boy;
     /// transformation matrix is 4x4 so we need a 4x1 vector for each point

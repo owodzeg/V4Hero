@@ -1,7 +1,5 @@
 #include "Object.h"
-#include "../../TextureManager.h"
 #include "../../ResourceManager.h"
-#include <iostream>
 
 using namespace std;
 
@@ -170,8 +168,7 @@ void Object::SetPos(float time)
 
     for (int i = 0; i < frames.size(); i++)
     {
-        if (debug)
-            cout << "[OBJ] Check frame " << i << ", ftime " << frames[i].time << " vs " << time << " sz: " << frames.size() - 1 << " >= " << i + 1 << endl;
+        SPDLOG_TRACE("[OBJ] Check frame {}, ftime {} vs {} sz: {} >= {}", i, frames[i].time, time, frames.size()-1, i+1);
 
         if (frames[i].time < time)
         {
@@ -181,8 +178,7 @@ void Object::SetPos(float time)
 
                 if (frames[i + 1].time > time)
                 {
-                    if (debug)
-                        cout << "[OBJ] HANDLER 1: another frame, calc inbetween" << endl;
+                    SPDLOG_TRACE("[OBJ] HANDLER 1: another frame, calc inbetween");
 
                     old_x = x;
                     old_y = y;
@@ -209,8 +205,7 @@ void Object::SetPos(float time)
                     break;
                 } else
                 {
-                    if (debug)
-                        cout << "[OBJ] HANDLER 4: skip or get last pos" << endl;
+                    SPDLOG_TRACE("[OBJ] HANDLER 4: skip or get last pos");
 
                     old_x = x;
                     old_y = y;
@@ -233,8 +228,7 @@ void Object::SetPos(float time)
                 }
             } else
             {
-                if (debug)
-                    cout << "[OBJ] HANDLER 2: last frame, get last pos" << endl;
+                SPDLOG_TRACE("[OBJ] HANDLER 2: last frame, get last pos");
 
                 old_x = x;
                 old_y = y;
@@ -257,8 +251,7 @@ void Object::SetPos(float time)
             }
         } else
         {
-            if (debug)
-                cout << "[OBJ] HANDLER 3: first frame/before first frame, get first pos" << endl;
+            SPDLOG_TRACE("[OBJ] HANDLER 3: first frame/before first frame, get first pos");
 
             old_x = x;
             old_y = y;
@@ -317,8 +310,7 @@ void Object::SetPosFrame(float time, int frame)
 
     for (int i = frame; i <= sz; i++)
     {
-        if (debug)
-            cout << "[OBJ] Check frame " << i << ", ftime " << frames[i].time << " vs " << time << " sz: " << frames.size() - 1 << " >= " << i + 1 << endl;
+        SPDLOG_TRACE("[OBJ] Check frame {}, ftime {} vs {} sz: {} >= {}", i, frames[i].time, time, frames.size()-1, i+1);
 
         if (frames[i].time < time)
         {
@@ -328,8 +320,7 @@ void Object::SetPosFrame(float time, int frame)
 
                 if (frames[i + 1].time > time)
                 {
-                    if (debug)
-                        cout << "[OBJ] HANDLER 1: another frame, calc inbetween" << endl;
+                    SPDLOG_TRACE("[OBJ] HANDLER 1: another frame, calc inbetween");
 
                     old_x = x;
                     old_y = y;
@@ -357,8 +348,7 @@ void Object::SetPosFrame(float time, int frame)
                 }
             } else
             {
-                if (debug)
-                    cout << "[OBJ] HANDLER 2: last frame, get last pos" << endl;
+                SPDLOG_TRACE("[OBJ] HANDLER 2: last frame, get last pos");
 
                 old_x = x;
                 old_y = y;
@@ -381,8 +371,7 @@ void Object::SetPosFrame(float time, int frame)
             }
         } else
         {
-            if (debug)
-                cout << "[OBJ] HANDLER 3: first frame/before first frame, get first pos" << endl;
+            SPDLOG_TRACE("[OBJ] HANDLER 3: first frame/before first frame, get first pos");
 
             old_x = x;
             old_y = y;

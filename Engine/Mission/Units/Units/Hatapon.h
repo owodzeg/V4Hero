@@ -1,7 +1,6 @@
 #ifndef HATAPON_H
 #define HATAPON_H
 
-#include "../../../Config.h"
 #include "../PlayableUnit.h"
 #include <SFML/Graphics.hpp>
 

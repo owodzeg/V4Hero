@@ -4,8 +4,6 @@
 #include "../../Graphics/PSprite.h"
 #include <SFML/Graphics.hpp>
 
-using namespace std;
-
 class Object
 {
 private:
@@ -45,7 +43,7 @@ public:
         float scale_y;  ///y scale
     };
 
-    vector<Frame> frames; ///frames
+    std::vector<Frame> frames; ///frames
 
     struct Pixel {
         uint16_t x;
@@ -65,11 +63,11 @@ public:
 
     Object();
     Object(std::string mem, int xpos, int ypos, int l, int p);
-    void Load(string filename, int xpos, int ypos);
+    void Load(std::string filename, int xpos, int ypos);
     void Load(sf::Texture& texture, int xpos, int ypos);
-    void LoadFromMemory(string filename, int xpos, int ypos);
+    void LoadFromMemory(std::string filename, int xpos, int ypos);
     void swapTexture(sf::Image& img);
-    void swapTexture(sf::Image first, vector<Pixel> px);
+    void swapTexture(sf::Image first, std::vector<Pixel> px);
     void swapTexture(std::string img_key);
     void SetFrame(float time);
     void SetCustomFrame(float in_time, float in_pos_x, float in_pos_y, float in_or_x, float in_or_y, float in_rotation, float in_scale_x, float in_scale_y);

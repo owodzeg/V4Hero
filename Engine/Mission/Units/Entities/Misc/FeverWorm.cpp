@@ -1,9 +1,5 @@
 #include "FeverWorm.h"
-#include "../../../../Func.h"
-#include "math.h"
-#include <fstream>
 #include <iostream>
-#include <sstream>
 
 #include "../../../../CoreManager.h"
 

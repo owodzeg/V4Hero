@@ -1,11 +1,8 @@
 #ifndef ROCKPILE_H
 #define ROCKPILE_H
 
-#include "../../../../Config.h"
 #include "../../Entity.h"
 #include <SFML/Graphics.hpp>
-
-using namespace std;
 
 class RockPile : public Entity
 {

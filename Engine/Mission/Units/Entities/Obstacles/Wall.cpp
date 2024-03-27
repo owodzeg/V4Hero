@@ -1,9 +1,5 @@
 #include "Wall.h"
-#include "../../../../Func.h"
-#include "math.h"
-#include <fstream>
-#include <iostream>
-#include <sstream>
+
 Wall::Wall()
 {
 }

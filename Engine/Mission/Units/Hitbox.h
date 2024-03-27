@@ -7,9 +7,6 @@
 
 class Hitbox
 {
-private:
-    bool debug = false;
-
 public:
     float g_x; ///global x pos
     float g_y; ///global y pos

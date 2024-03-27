@@ -1,7 +1,6 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include "../../Config.h"
 #include "../../Dialog/MessageCloud.h"
 #include "../../Input/InputController.h"
 #include "CollidableObject.h"

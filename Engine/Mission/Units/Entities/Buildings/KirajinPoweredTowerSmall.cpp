@@ -1,11 +1,7 @@
 #include "KirajinPoweredTowerSmall.h"
-#include "../../../../Func.h"
-#include "../../../../V4Core.h"
 #include "../../../../CoreManager.h"
 #include "math.h"
-#include <fstream>
 #include <iostream>
-#include <sstream>
 
 KirajinPoweredTowerSmall::KirajinPoweredTowerSmall()
 {

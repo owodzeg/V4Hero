@@ -1,11 +1,8 @@
 #ifndef TREASURECHEST_H
 #define TREASURECHEST_H
 
-#include "../../../../Config.h"
 #include "../../Entity.h"
 #include <SFML/Graphics.hpp>
-
-using namespace std;
 
 class TreasureChest : public Entity
 {

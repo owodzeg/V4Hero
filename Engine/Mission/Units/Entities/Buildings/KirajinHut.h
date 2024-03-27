@@ -1,11 +1,8 @@
 #ifndef KIRAJINHUT_H
 #define KIRAJINHUT_H
 
-#include "../../../../Config.h"
 #include "../../Entity.h"
 #include <SFML/Graphics.hpp>
-
-using namespace std;
 
 class KirajinHut : public Entity
 {

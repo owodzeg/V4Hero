@@ -1,11 +1,8 @@
 #ifndef ROCKSMALL_H
 #define ROCKSMALL_H
 
-#include "../../../../Config.h"
 #include "../../Entity.h"
 #include <SFML/Graphics.hpp>
-
-using namespace std;
 
 class RockSmall : public Entity
 {

@@ -1,11 +1,8 @@
 #ifndef KIRAJINGUARDTOWER_H
 #define KIRAJINGUARDTOWER_H
 
-#include "../../../../Config.h"
 #include "../../Entity.h"
 #include <SFML/Graphics.hpp>
-
-using namespace std;
 
 class KirajinGuardTower : public Entity
 {

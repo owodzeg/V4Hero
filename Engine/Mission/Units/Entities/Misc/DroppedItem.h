@@ -1,11 +1,8 @@
 #ifndef DROPPEDITEM_H
 #define DROPPEDITEM_H
 
-#include "../../../../Config.h"
 #include "../../Entity.h"
 #include <SFML/Graphics.hpp>
-
-using namespace std;
 
 class DroppedItem : public Entity
 {
