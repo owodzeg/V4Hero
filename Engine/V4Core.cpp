@@ -189,6 +189,10 @@ void V4Core::init()
             /** Load save from saveReader **/
             saveReader->Flush();
             saveReader->LoadSave();
+        } else {
+            /** No save found. Create a blank one for test purposes **/
+            saveReader->Flush();
+            saveReader->CreateBlankSave();
         }
 
         mission_file = "mis1_0.p4m";
