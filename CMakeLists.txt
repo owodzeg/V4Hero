@@ -130,7 +130,9 @@ set(ENGINE_FILES
         Engine/Graphics/CurveSegment.cpp
         Engine/Graphics/ConcaveShape.cpp 
         Engine/Graphics/AnimatedCurveShape.cpp
-        Engine/Graphics/AnimatedCurveShape.h)
+        Engine/Graphics/AnimatedCurveShape.h
+        Engine/Menu/TestChamber.cpp
+        Engine/Menu/TestChamber.h)
 
 set(DISCORD_FILES
         DiscordSDK/achievement_manager.cpp

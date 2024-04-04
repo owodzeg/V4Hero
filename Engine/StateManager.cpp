@@ -247,6 +247,17 @@ void StateManager::updateCurrentState()
 
             break;
         }
+
+        case TEST_CHAMBER: {
+
+            if (testChamberPtr == nullptr)
+            {
+                testChamberPtr = new TestChamber;
+            }
+
+            testChamberPtr->Update();
+            break;
+        }
     }
 }
 
@@ -350,6 +361,13 @@ void StateManager::initState(int state)
             }
 
             break;
+        }
+
+        case TEST_CHAMBER: {
+            if(testChamberPtr == nullptr)
+            {
+                testChamberPtr = new TestChamber;
+            }
         }
     }
 }

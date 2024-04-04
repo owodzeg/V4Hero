@@ -177,8 +177,13 @@ void V4Core::init()
     StateManager::getInstance().setState(StateManager::ENTRY);
 
     bool rhythmTest = true;
+    bool testChamber = true;
 
-    if(rhythmTest)
+    if(testChamber)
+    {
+        StateManager::getInstance().setState(StateManager::TEST_CHAMBER);
+    }
+    else if(rhythmTest)
     {
         ifstream check("resources/data/sv1.p4sv");
         bool exists = check.good();
