@@ -138,7 +138,7 @@ void PNGAnimation::Load(const std::string& path)
         }
 
         //Step 2: Compose frames into a spritesheet for each animation
-        unsigned int maxSize = 1024;//sf::Texture::getMaximumSize();
+        unsigned int maxSize = sf::Texture::getMaximumSize();
         SPDLOG_DEBUG("maximum texture size: {}", maxSize);
 
         for (Animation &x : animations)
