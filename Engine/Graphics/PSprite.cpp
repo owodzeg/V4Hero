@@ -12,7 +12,7 @@ PSprite::PSprite()
 {
 }
 
-void PSprite::loadFromFile(std::string file, int q)
+void PSprite::loadFromFile(std::string file, int q, bool downscale)
 {
     if (qualitySetting != q && qualitySetting != -1)
     {
@@ -66,10 +66,13 @@ void PSprite::loadFromFile(std::string file, int q)
     SPDLOG_INFO("Loading PSprite: {}", file);
     texturePath = file;
 
-    s.setTexture(TextureManager::getInstance().getTexture(file, q), true);
+    if(downscale)
+        s.setTexture(TextureManager::getInstance().getTexture(file, q), true);
+    else
+        s.setTexture(TextureManager::getInstance().getTexture(file, q, false), true);
 }
 
-void PSprite::loadFromFile(std::string file, int q, int r = 1)
+void PSprite::loadFromFile(std::string file, int q, int r = 1, bool downscale)
 {
     qualitySetting = q;
     resSetting = r;

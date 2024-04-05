@@ -28,10 +28,11 @@ public:
     static TextureManager& getInstance();
     void loadTexture(const std::string& path, int quality);
     sf::Texture& getTexture(const std::string& path);
-    sf::Texture& getTexture(const std::string& path, int quality);
-    sf::Texture& scaleTexture(const std::string& path, int ratio);
+    sf::Texture& getTexture(const std::string& path, int quality, bool downscale = true);
+    sf::Texture& scaleTexture(const std::string& path, int ratio, bool unload = true);
     bool checkImageExists(const std::string& key);
     void loadImageFromFile(const std::string& path);
+    void loadImageFromFileWithScale(const std::string& path, int quality);
     void loadImageFromMemory(const std::string& key, sf::Image image, bool asTexture = false);
     sf::Image& getImage(const std::string& key);
     void loadTextureFromImage(const std::string& img_key);

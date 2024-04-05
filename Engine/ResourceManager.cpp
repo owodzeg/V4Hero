@@ -31,10 +31,10 @@ int ResourceManager::getCurrentQuality()
     return quality;
 }
 
-void ResourceManager::loadSprite(std::string path)
+void ResourceManager::loadSprite(std::string path, bool downscale)
 {
     std::lock_guard<std::recursive_mutex> guard(access_mutex);
-    loadedSprites[path].loadFromFile(path, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
+    loadedSprites[path].loadFromFile(path, CoreManager::getInstance().getConfig()->GetInt("textureQuality"), downscale);
     loadedSources[path] = StateManager::getInstance().getState();
 
     loadedPaths[StateManager::getInstance().getState()].push_back(path);

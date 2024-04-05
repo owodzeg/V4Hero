@@ -22,8 +22,8 @@ public:
     float angle = 0;
     bool exported = false;
     PSprite();
-    void loadFromFile(std::string file, int q);
-    void loadFromFile(std::string file, int q, int r);
+    void loadFromFile(std::string file, int q, bool downscale = true);
+    void loadFromFile(std::string file, int q, int r, bool downscale = true);
     void setRepeated(bool r);
     void setTextureRect(sf::IntRect rect);
     sf::IntRect getTextureRect();

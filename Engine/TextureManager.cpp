@@ -64,7 +64,7 @@ sf::Texture& TextureManager::getTexture(const std::string& path)
     return loadedTextures[path];
 }
 
-sf::Texture& TextureManager::getTexture(const std::string& path, int quality)
+sf::Texture& TextureManager::getTexture(const std::string& path, int quality, bool downscale)
 {
     if (loadedTextures.find(path) != loadedTextures.end() && !forceLoad)
     {
@@ -72,43 +72,52 @@ sf::Texture& TextureManager::getTexture(const std::string& path, int quality)
         return loadedTextures[path];
     } else
     {
-        if (quality < 3)
+        if(downscale)
         {
-            SPDLOG_TRACE("Quality is {}, texture needs to be downscaled", quality);
-            loadImageFromFile(path);
-
-            int ratio = 1;
-
-            switch (quality)
+            if (quality < 3)
             {
-                case 0: {
-                    ratio = 6;
-                    break;
+                SPDLOG_TRACE("Quality is {}, texture needs to be downscaled", quality);
+                loadImageFromFile(path);
+
+                int ratio = 1;
+
+                switch (quality)
+                {
+                    case 0: {
+                        ratio = 6;
+                        break;
+                    }
+
+                    case 1: {
+                        ratio = 3;
+                        break;
+                    }
+
+                    case 2: {
+                        ratio = 2;
+                        break;
+                    }
                 }
 
-                case 1: {
-                    ratio = 3;
-                    break;
-                }
-
-                case 2: {
-                    ratio = 2;
-                    break;
-                }
+                SPDLOG_INFO("Loading downscaled texture with path {} and ratio {}", path, ratio);
+                return scaleTexture(path, ratio);
+            } else
+            {
+                SPDLOG_INFO("Loading texture with path {}", path);
+                loadTexture(path, 3);
+                return loadedTextures[path];
             }
-
-            SPDLOG_INFO("Loading downscaled texture with path {} and ratio {}", path, ratio);
-            return scaleTexture(path, ratio);
-        } else
+        }
+        else
         {
-            SPDLOG_INFO("Loading texture with path {}", path);
+            SPDLOG_INFO("Loading texture (no downscale) with path {}", path);
             loadTexture(path, 3);
             return loadedTextures[path];
         }
     }
 }
 
-sf::Texture& TextureManager::scaleTexture(const std::string& path, int ratio)
+sf::Texture& TextureManager::scaleTexture(const std::string& path, int ratio, bool unload)
 {
     if (loadedImages.find(path) != loadedImages.end())
     {
@@ -164,7 +173,8 @@ sf::Texture& TextureManager::scaleTexture(const std::string& path, int ratio)
         loadTextureFromImage(path);
 
         //after loading downscaled image to texture, we no longer need to keep it in memory, so we clean it
-        unloadImage(path);
+        if(unload)
+            unloadImage(path);
 
         SPDLOG_DEBUG("Providing downscaled texture with path {}", path);
         return loadedTextures[path];
@@ -193,6 +203,48 @@ void TextureManager::loadImageFromFile(const std::string& path)
     {
         SPDLOG_INFO("Loading image from file {}", path);
         loadedImages[path].loadFromFile(path);
+    } else
+    {
+        //SPDLOG_ERROR("Couldn't load image {}: image already loaded", key);
+        //in theory this shouldnt be an error
+    }
+}
+
+void TextureManager::loadImageFromFileWithScale(const std::string& path, int quality)
+{
+    std::lock_guard<std::mutex> guard(resource_mutex);
+
+    if (loadedImages.find(path) == loadedImages.end() || forceLoad)
+    {
+        SPDLOG_INFO("Loading image from file {}", path);
+        loadedImages[path].loadFromFile(path);
+
+        if (quality < 3)
+        {
+            SPDLOG_TRACE("Quality is {}, texture needs to be downscaled", quality);
+
+            int ratio = 1;
+
+            switch (quality)
+            {
+                case 0: {
+                    ratio = 6;
+                    break;
+                }
+
+                case 1: {
+                    ratio = 3;
+                    break;
+                }
+
+                case 2: {
+                    ratio = 2;
+                    break;
+                }
+            }
+
+            scaleTexture(path, ratio);
+        }
     } else
     {
         //SPDLOG_ERROR("Couldn't load image {}: image already loaded", key);
