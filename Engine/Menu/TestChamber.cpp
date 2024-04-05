@@ -40,6 +40,8 @@ void TestChamber::Update()
 
     bg.setSize(sf::Vector2f(window->getSize().x,window->getSize().y));
     window->draw(bg);
+
+    pngTest_1.Draw();
 }
 
 TestChamber::~TestChamber()
