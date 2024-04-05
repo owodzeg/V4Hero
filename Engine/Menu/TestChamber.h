@@ -10,7 +10,7 @@ public:
     bool initialized = false;
     sf::RectangleShape bg;
 
-    PNGAnimation pngTest;
+    PNGAnimation pngTest_1, pngTest_2, pngTest_3;
 
     void Initialize();
     void Update();

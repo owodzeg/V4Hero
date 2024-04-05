@@ -13,7 +13,22 @@ void TestChamber::Initialize()
 {
     bg.setFillColor(sf::Color::White);
 
-    pngTest.Load("resources/units/unit/yaripon");
+    sf::Clock loadSpeed;
+    sf::Int64 cur=0, old=0;
+    cur = loadSpeed.getElapsedTime().asMicroseconds();
+    SPDLOG_INFO("Load timer: {}us", cur-old);
+    old = cur;
+    pngTest_1.Load("resources/units/unit/yaripon");
+    cur = loadSpeed.getElapsedTime().asMicroseconds();
+    SPDLOG_INFO("Loaded yaripon 1, timer: {}us", cur-old);
+    old = cur;
+    pngTest_2.Load("resources/units/unit/yaripon");
+    cur = loadSpeed.getElapsedTime().asMicroseconds();
+    SPDLOG_INFO("Loaded yaripon 2, timer: {}us", cur-old);
+    old = cur;
+    pngTest_3.Load("resources/units/unit/yaripon");
+    cur = loadSpeed.getElapsedTime().asMicroseconds();
+    SPDLOG_INFO("Loaded yaripon 3, timer: {}us", cur-old);
 
     initialized = true;
     SPDLOG_DEBUG("Welcome to the Test Chamber");
