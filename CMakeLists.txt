@@ -39,6 +39,11 @@ FetchContent_Declare(spdlog
         GIT_TAG v1.13.0)
 FetchContent_MakeAvailable(spdlog)
 
+FetchContent_Declare(libzippp
+        GIT_REPOSITORY https://github.com/ctabin/libzippp
+        GIT_TAG libzippp-v7.1-1.10.1)
+FetchContent_MakeAvailable(libzippp)
+
 set(ENGINE_FILES
         Engine/Func.cpp
         Engine/V4Core.cpp
@@ -177,7 +182,8 @@ target_link_libraries(V4Hero PRIVATE
         sfml-audio
         DiscordSDK
         nlohmann_json::nlohmann_json
-        spdlog::spdlog)
+        spdlog::spdlog
+        libzippp)
 
 if (OS STREQUAL "Linux")
     find_package(X11 REQUIRED)
