@@ -1,6 +1,7 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
 
 #include "TextureManager.h"
+#include "CoreManager.h"
 
 TextureManager::TextureManager()
 {
@@ -255,6 +256,7 @@ void TextureManager::loadImageFromFileWithScale(const std::string& path, int qua
 void TextureManager::loadImageFromMemory(const std::string& key, sf::Image image, bool asTexture)
 {
     std::lock_guard<std::mutex> guard(resource_mutex);
+    SPDLOG_DEBUG("load image {} from memory. asTexture: {}", key, asTexture);
 
     if (!asTexture)
     {
@@ -264,7 +266,7 @@ void TextureManager::loadImageFromMemory(const std::string& key, sf::Image image
             loadedImages[key] = image;
         } else
         {
-            //SPDLOG_ERROR("Couldn't load image {}: image already loaded", key);
+            SPDLOG_ERROR("Couldn't load image {}: image already loaded", key);
             //in theory this shouldnt be an error
         }
     } else
@@ -273,6 +275,10 @@ void TextureManager::loadImageFromMemory(const std::string& key, sf::Image image
         {
             SPDLOG_INFO("Loading image from memory into texture with key {}", key);
             loadedTextures[key].loadFromImage(image);
+        } else
+        {
+            SPDLOG_ERROR("Couldn't load image {}: image already loaded", key);
+            //in theory this shouldnt be an error
         }
     }
 }
@@ -328,4 +334,30 @@ void TextureManager::reloadTextures(int quality)
         std::string path = texture.first;
         loadTexture(path, quality);
     }
+}
+
+int TextureManager::getRatio()
+{
+    int quality = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
+    int ratio = 1;
+
+    switch (quality)
+    {
+        case 0: {
+            ratio = 6;
+            break;
+        }
+
+        case 1: {
+            ratio = 3;
+            break;
+        }
+
+        case 2: {
+            ratio = 2;
+            break;
+        }
+    }
+
+    return ratio;
 }

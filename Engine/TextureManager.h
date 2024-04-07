@@ -40,6 +40,7 @@ public:
     void unloadImage(const std::string& key);
     void applyForceLoad(bool force);
     void reloadTextures(int quality);
+    int getRatio();
 
 private:
     TextureManager();
