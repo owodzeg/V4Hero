@@ -15,20 +15,25 @@ void TestChamber::Initialize()
 
     sf::Clock loadSpeed;
     sf::Int64 cur=0, old=0;
+    sf::Int64 bench1,bench2,bench3;
     cur = loadSpeed.getElapsedTime().asMicroseconds();
     SPDLOG_INFO("Load timer: {}us", cur-old);
     old = cur;
-    pngTest_1.Load("resources/units/unit/yaripon");
+    pngTest_1.Load("resources/units/unit/yaripon.zip");
     cur = loadSpeed.getElapsedTime().asMicroseconds();
-    SPDLOG_INFO("Loaded yaripon 1, timer: {}us", cur-old);
+    bench1 = cur-old;
     old = cur;
-    pngTest_2.Load("resources/units/unit/yaripon");
+    pngTest_2.Load("resources/units/unit/yaripon.zip");
     cur = loadSpeed.getElapsedTime().asMicroseconds();
-    SPDLOG_INFO("Loaded yaripon 2, timer: {}us", cur-old);
+    bench2 = cur-old;
     old = cur;
-    pngTest_3.Load("resources/units/unit/yaripon");
+    pngTest_3.Load("resources/units/unit/yaripon.zip");
     cur = loadSpeed.getElapsedTime().asMicroseconds();
-    SPDLOG_INFO("Loaded yaripon 3, timer: {}us", cur-old);
+    bench3 = cur-old;
+    SPDLOG_INFO("Loading benchmark:");
+    SPDLOG_INFO("Yaripon 1: {}s ({}us)", bench1 / 1000000.f, bench1);
+    SPDLOG_INFO("Yaripon 2: {}s ({}us)", bench2 / 1000000.f, bench2);
+    SPDLOG_INFO("Yaripon 3: {}s ({}us)", bench3 / 1000000.f, bench3);
 
     initialized = true;
     SPDLOG_DEBUG("Welcome to the Test Chamber");
