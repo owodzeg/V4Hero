@@ -17,6 +17,7 @@ class PNGAnimation
             unsigned int maxCols = 0;
             unsigned int maxRows = 0;
             bool cached = false;
+            bool zip = false;
             std::vector<std::string> frame_paths;
             std::vector<std::string> spritesheet_paths;
         };
