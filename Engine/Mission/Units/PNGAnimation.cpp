@@ -17,7 +17,212 @@ namespace fs = std::filesystem;
 
 PNGAnimation::PNGAnimation()
 {
+    maxSize = sf::Texture::getMaximumSize();
+}
 
+sf::Image PNGAnimation::getAnimationImage(const std::string& anim_path, const std::string& image_path, bool zipped)
+{
+    if(zipped)
+    {
+        SPDLOG_DEBUG("Providing animation file for {}, img: {}, zipped?: {}", anim_path, image_path, zipped);
+
+        ZipArchive zf(anim_path);
+        zf.open(ZipArchive::ReadOnly);
+
+        char* data = (char*) zf.readEntry(image_path, true);
+        ZipEntry thumb_entry = zf.getEntry(image_path);
+
+        sf::Image img;
+        img.loadFromMemory(data, thumb_entry.getSize());
+
+        zf.close();
+
+        TextureManager::getInstance().loadImageFromMemory(image_path, img, false);
+        TextureManager::getInstance().scaleTexture(image_path, TextureManager::getInstance().getRatio(), false);
+        img = TextureManager::getInstance().getImage(image_path);
+
+        return img;
+    }
+    else
+    {
+        TextureManager::getInstance().loadImageFromFile(image_path);
+        TextureManager::getInstance().scaleTexture(image_path, TextureManager::getInstance().getRatio(), false);
+        sf::Image img = TextureManager::getInstance().getImage(image_path);
+
+        return img;
+    }
+}
+
+void PNGAnimation::loadCacheFile(Animation& anim)
+{
+    // load animation data
+    std::string anim_data;
+    std::stringstream ss_anim_data;
+    std::string anim_data_path = std::format("resources/graphics/.tex_cache/{}.anim", anim.shortName);
+    std::ifstream anim_data_file(anim_data_path);
+    ss_anim_data << anim_data_file.rdbuf();
+    anim_data = ss_anim_data.str();
+    std::vector<std::string> args = Func::Split(anim_data, ' ');
+    if(args.size() == 5)
+    {
+        anim.img_x = atoi(args[0].c_str());
+        anim.img_y = atoi(args[1].c_str());
+        anim.frames = atoi(args[2].c_str());
+        anim.maxCols = atoi(args[3].c_str());
+        anim.maxRows = atoi(args[4].c_str());
+    }
+    else
+    {
+        SPDLOG_ERROR("Invalid data in animation data file! file={}. expected 5 args, got {}", anim_data_path, args.size());
+        throw std::exception();
+    }
+}
+
+
+void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_path)
+{
+    std::sort(anim.frame_paths.begin(), anim.frame_paths.end());
+    sf::Image thumb = getAnimationImage(anim_path, anim.frame_paths[0], anim.zip);
+
+    int img_x = thumb.getSize().x;
+    int img_y = thumb.getSize().y;
+
+    TextureManager::getInstance().unloadImage(anim.frame_paths[0]);
+
+    if(!anim.zip)
+        TextureManager::getInstance().unloadTexture(anim.frame_paths[0]);
+
+    int frames = anim.frame_paths.size();
+
+    int x_size = img_x * frames;
+    int rows = ceil(float(x_size) / float(maxSize));
+
+    int maxCols = floor(float(maxSize) / float(img_x));
+    int maxRows = floor(float(maxSize) / float(img_y));
+    int sheetsNeeded = ceil(float(rows) / float(maxRows));
+
+    int maxFramesPerSheet = maxCols * maxRows;
+
+    SPDLOG_INFO("Animation info dump: name {} img_x {} img_y {} frames {} x_size {} rows {} maxCols {} maxRows {} sheetsNeeded {} maxFramesPerSheet {}", anim.name, img_x, img_y, frames, x_size, rows, maxCols, maxRows, sheetsNeeded, maxFramesPerSheet);
+    // push all the important info to the animation
+    anim.img_x = img_x;
+    anim.img_y = img_y;
+    anim.frames = frames;
+    anim.maxCols = maxCols;
+    anim.maxRows = maxRows;
+
+    // save the data to a file in cache so the information can be fetched later without having to go over the frames
+    std::string anim_data = std::format("{} {} {} {} {}", img_x, img_y, frames, maxCols, maxRows);
+    std::string anim_data_path = std::format("resources/graphics/.tex_cache/{}.anim", anim.shortName);
+
+    SPDLOG_DEBUG("Writing animation data into {}", anim_data_path);
+
+    std::ofstream anim_data_file(anim_data_path, std::ios::trunc);
+    anim_data_file << anim_data;
+
+    SPDLOG_DEBUG("Wrote: {}", anim_data);
+
+    anim_data_file.close();
+
+    // when we're extracting the frames out of a spritesheet,
+    // keep in mind that max frames in sheet are maxCols*maxRows
+    // then decrement this amount of frames as you go through the sheets
+    // to figure out how many frames are on the last sheet.
+
+    sf::Image spritesheet_buffer;
+    int spritesheetXsize = maxCols * img_x;
+    int spritesheetYsize = maxRows * img_y;
+
+    if (rows < maxRows)
+        spritesheetYsize = rows * img_y;
+
+    if (rows == 1)
+        spritesheetXsize = frames * img_x;
+
+    spritesheet_buffer.create(spritesheetXsize, spritesheetYsize, sf::Color(255, 255, 255, 0));
+
+    std::vector<sf::Image> readySheets;
+
+    int framesLeft = maxFramesPerSheet;
+    int frameBuffer = 0;
+    int framesTotal = frames;
+
+    if (framesLeft > frames)
+        framesLeft = frames;
+
+    for (const auto& fr : anim.frame_paths)
+    {
+        sf::Image f_img = getAnimationImage(anim_path, fr, anim.zip);
+
+        int curCol = frameBuffer % maxCols;
+        int curRow = floor(float(frameBuffer) / float(maxCols));
+        spritesheet_buffer.copy(f_img, curCol * img_x, curRow * img_y);
+
+        --framesLeft;
+        --framesTotal;
+        ++frameBuffer;
+
+        if (framesLeft <= 0)
+        {
+            framesLeft = maxFramesPerSheet;
+            frameBuffer = 0;
+
+            if (framesLeft > framesTotal)
+                framesLeft = framesTotal;
+
+            readySheets.push_back(spritesheet_buffer);
+            spritesheet_buffer.create(spritesheetXsize, spritesheetYsize, sf::Color(255, 255, 255, 0));
+        }
+
+        TextureManager::getInstance().unloadImage(fr);
+
+        if(!anim.zip)
+            TextureManager::getInstance().unloadTexture(fr);
+    }
+
+    int sheetID = 1;
+    for (const auto& s : readySheets)
+    {
+        std::string spr_name = std::format("resources/graphics/.tex_cache/{}_spr_{}.png", anim.shortName, sheetID);
+        s.saveToFile(spr_name);
+        SPDLOG_DEBUG("Saved spritesheet to {}", spr_name);
+        anim.spritesheet_paths.push_back(spr_name);
+        sheetID += 1;
+    }
+
+    std::sort(anim.spritesheet_paths.begin(), anim.spritesheet_paths.end());
+}
+
+bool PNGAnimation::getAnimationCache(Animation& anim)
+{
+    // check if animation is already in cache - it was loaded earlier
+    auto cache_path = fs::path("resources/graphics/.tex_cache");
+    bool cache_found = false;
+
+    // cache folder does not exist - create it
+    if(!std::filesystem::exists(cache_path))
+    {
+        std::filesystem::create_directory(cache_path);
+    }
+
+    // go through cache to find already generated spritesheets
+    for (const auto& cache_entry : fs::directory_iterator(cache_path))
+    {
+        std::string cache_entry_name = cache_entry.path().string();
+        std::regex cache_regex(anim.shortName+"_spr_(\\d*)\\.png");
+        std::smatch matches;
+
+        if (std::regex_search(cache_entry_name, matches, cache_regex))
+        {
+            // cached sheet found
+            SPDLOG_INFO("Animation {} found in .tex_cache: sheet file {}. No need to regenerate spritesheets.", anim.shortName, cache_entry_name);
+            anim.cached = true;
+            anim.spritesheet_paths.push_back(cache_entry_name);
+            cache_found = true;
+        }
+    }
+
+    return cache_found;
 }
 
 void PNGAnimation::Load(const std::string& path)
@@ -26,24 +231,21 @@ void PNGAnimation::Load(const std::string& path)
 
     auto f = fs::path(path);
 
-    //TODO: apply DRY rules, code below can be optimized by moving repeating portions of the code into class functions
-    // the only thing that changes here is the way images are loaded (drive vs memory)
+    std::vector<std::string> animation_names;
+    std::vector<std::string> frame_names;
+    bool zip = false;
 
+    // Step 1 - get all paths. Process varies between .zip and folder animations
     if (f.extension() == ".zip")
     {
         SPDLOG_INFO(".zip was provided, we need to extract the file");
+        zip = true;
+
         ZipArchive zf(f.string());
         zf.open(ZipArchive::ReadOnly);
         std::vector<ZipEntry> entries = zf.getEntries();
 
-        SPDLOG_DEBUG("zip entries: {}", entries.size());
-
-        //Step 0: Check config for downscaling information
-        int ratio = TextureManager::getInstance().getRatio();
-
-        // Step 1: Get all names from zip
-        std::vector<std::string> animation_names;
-        std::vector<std::string> frame_names;
+        SPDLOG_DEBUG("Zip entries: {}", entries.size());
 
         // first detect all the names
         for(auto entry : entries)
@@ -63,459 +265,90 @@ void PNGAnimation::Load(const std::string& path)
             }
         }
 
-        // then find assign frames to animations
-        for(auto anim_name : animation_names)
-        {
-            Animation tmp;
-
-            tmp.name = anim_name;
-            tmp.shortName = tmp.name.substr(0, tmp.name.find_last_of('\\/'));
-            tmp.zip = true;
-            SPDLOG_DEBUG("ZIP Animation found: {} {}", tmp.name, tmp.shortName);
-
-            // check if animation is already in cache - it was loaded earlier
-            auto cache_path = fs::path("resources/graphics/.tex_cache");
-            bool cache_found = false;
-
-            // cache folder does not exist - create it
-            if(!std::filesystem::exists(cache_path))
-            {
-                std::filesystem::create_directory(cache_path);
-            }
-
-            // go through cache to find already generated spritesheets
-            for (const auto& cache_entry : fs::directory_iterator(cache_path))
-            {
-                std::string cache_entry_name = cache_entry.path().string();
-                std::regex cache_regex(tmp.shortName+"_spr_(\\d*)\\.png");
-                std::smatch matches;
-
-                if (std::regex_search(cache_entry_name, matches, cache_regex))
-                {
-                    // cached sheet found
-                    SPDLOG_INFO("Animation {} found in .tex_cache: sheet file {}. No need to regenerate spritesheets.", tmp.shortName, cache_entry_name);
-                    tmp.cached = true;
-                    tmp.spritesheet_paths.push_back(cache_entry_name);
-                    cache_found = true;
-                }
-            }
-
-            // we found cache, so we can pack it up and quit here
-            if(cache_found)
-            {
-                // sort sheets in proper order
-                std::sort(tmp.spritesheet_paths.begin(), tmp.spritesheet_paths.end());
-
-                // load animation data
-                std::string anim_data;
-                std::stringstream ss_anim_data;
-                std::string anim_data_path = std::format("resources/graphics/.tex_cache/{}.anim", tmp.shortName);
-                std::ifstream anim_data_file(anim_data_path);
-                ss_anim_data << anim_data_file.rdbuf();
-                anim_data = ss_anim_data.str();
-                std::vector<std::string> args = Func::Split(anim_data, ' ');
-                if(args.size() == 5)
-                {
-                    tmp.img_x = atoi(args[0].c_str());
-                    tmp.img_y = atoi(args[1].c_str());
-                    tmp.frames = atoi(args[2].c_str());
-                    tmp.maxCols = atoi(args[3].c_str());
-                    tmp.maxRows = atoi(args[4].c_str());
-                }
-                else
-                {
-                    SPDLOG_ERROR("Invalid data in animation data file! file={}. expected 5 args, got {}", anim_data_path, args.size());
-                    throw std::exception();
-                }
-
-                animations.push_back(tmp);
-                animationIDtoName[tmp.shortName] = animations.size()-1;
-                continue; // no need to seek for frames if we got the spritesheet ready.
-            }
-
-            for(auto& frame_name : frame_names)
-            {
-                if (frame_name.find(anim_name) != std::string::npos)
-                {
-                    SPDLOG_DEBUG("Animation frame found: {}", frame_name);
-                    tmp.frame_paths.push_back(frame_name);
-                }
-            }
-
-            animations.push_back(tmp);
-            animationIDtoName[tmp.shortName] = animations.size()-1;
-        }
-
-        // Step 2: load the frames and compose a spritesheet
-        unsigned int maxSize = sf::Texture::getMaximumSize();
-        SPDLOG_DEBUG("maximum texture size: {}", maxSize);
-
-        for(auto& x : animations)
-        {
-            if(!x.cached) // skip spritesheet generation if animation cache found
-            {
-                std::sort(x.frame_paths.begin(), x.frame_paths.end());
-
-                char* data = (char*) zf.readEntry(x.frame_paths[0], true);
-                ZipEntry thumb_entry = zf.getEntry(x.frame_paths[0]);
-
-                sf::Image pre_thumb;
-                pre_thumb.loadFromMemory(data, thumb_entry.getSize());
-
-                // load a sample image for spritesheet calculation
-                TextureManager::getInstance().loadImageFromMemory(x.frame_paths[0], pre_thumb, false);
-                TextureManager::getInstance().scaleTexture(x.frame_paths[0], ratio, false);
-                sf::Image thumb = TextureManager::getInstance().getImage(x.frame_paths[0]);
-                //thumb.loadFromFile(x.frame_paths[0]);
-
-                int img_x = thumb.getSize().x;
-                int img_y = thumb.getSize().y;
-
-                SPDLOG_DEBUG("thumb from zip: {} {}", img_x, img_y);
-
-                TextureManager::getInstance().unloadImage(x.frame_paths[0]);
-
-                int frames = x.frame_paths.size();
-
-                int x_size = img_x * frames;
-                int rows = ceil(float(x_size) / float(maxSize));
-
-                int maxCols = floor(float(maxSize) / float(img_x));
-                int maxRows = floor(float(maxSize) / float(img_y));
-                int sheetsNeeded = ceil(float(rows) / float(maxRows));
-
-                int maxFramesPerSheet = maxCols * maxRows;
-
-                SPDLOG_INFO("Animation info dump: name {} img_x {} img_y {} frames {} x_size {} rows {} maxCols {} maxRows {} sheetsNeeded {} maxFramesPerSheet {}", x.name, img_x, img_y, frames, x_size, rows, maxCols, maxRows, sheetsNeeded, maxFramesPerSheet);
-                // push all the important info to the animation
-                x.img_x = img_x;
-                x.img_y = img_y;
-                x.frames = frames;
-                x.maxCols = maxCols;
-                x.maxRows = maxRows;
-
-                // save the data to a file in cache so the information can be fetched later without having to go over the frames
-                std::string anim_data = std::format("{} {} {} {} {}", img_x, img_y, frames, maxCols, maxRows);
-                std::string anim_data_path = std::format("resources/graphics/.tex_cache/{}.anim", x.shortName);
-
-                SPDLOG_DEBUG("Writing animation data into {}", anim_data_path);
-
-                std::ofstream anim_data_file(anim_data_path, std::ios::trunc);
-                anim_data_file << anim_data;
-
-                SPDLOG_DEBUG("Wrote: {}", anim_data);
-
-                anim_data_file.close();
-
-                // when we're extracting the frames out of a spritesheet,
-                // keep in mind that max frames in sheet are maxCols*maxRows
-                // then decrement this amount of frames as you go through the sheets
-                // to figure out how many frames are on the last sheet.
-
-                sf::Image spritesheet_buffer;
-                int spritesheetXsize = maxCols * img_x;
-                int spritesheetYsize = maxRows * img_y;
-
-                if (rows < maxRows)
-                    spritesheetYsize = rows * img_y;
-
-                if (rows == 1)
-                    spritesheetXsize = frames * img_x;
-
-                spritesheet_buffer.create(spritesheetXsize, spritesheetYsize, sf::Color(255, 255, 255, 0));
-
-                std::vector<sf::Image> readySheets;
-
-                int framesLeft = maxFramesPerSheet;
-                int frameBuffer = 0;
-                int framesTotal = frames;
-
-                if (framesLeft > frames)
-                    framesLeft = frames;
-
-                for (const auto& fr : x.frame_paths)
-                {
-                    char* data = (char*) zf.readEntry(fr, true);
-                    ZipEntry frame_entry = zf.getEntry(fr);
-
-                    sf::Image pre_frame;
-                    pre_frame.loadFromMemory(data, frame_entry.getSize());
-
-                    // load a sample image for spritesheet calculation
-                    TextureManager::getInstance().loadImageFromMemory(fr, pre_frame, false);
-                    TextureManager::getInstance().scaleTexture(fr, ratio, false);
-                    sf::Image f_img = TextureManager::getInstance().getImage(fr);
-
-                    int curCol = frameBuffer % maxCols;
-                    int curRow = floor(float(frameBuffer) / float(maxCols));
-                    spritesheet_buffer.copy(f_img, curCol * img_x, curRow * img_y);
-
-                    --framesLeft;
-                    --framesTotal;
-                    ++frameBuffer;
-
-                    if (framesLeft <= 0)
-                    {
-                        framesLeft = maxFramesPerSheet;
-                        frameBuffer = 0;
-
-                        if (framesLeft > framesTotal)
-                            framesLeft = framesTotal;
-
-                        readySheets.push_back(spritesheet_buffer);
-                        spritesheet_buffer.create(spritesheetXsize, spritesheetYsize, sf::Color(255, 255, 255, 0));
-                    }
-
-                    TextureManager::getInstance().unloadImage(fr);
-                }
-
-                int sheetID = 1;
-                for (const auto& s : readySheets)
-                {
-                    std::string spr_name = std::format("resources/graphics/.tex_cache/{}_spr_{}.png", x.shortName, sheetID);
-                    s.saveToFile(spr_name);
-                    SPDLOG_DEBUG("Saved spritesheet to {}", spr_name);
-                    x.spritesheet_paths.push_back(spr_name);
-                    sheetID += 1;
-                }
-
-                std::sort(x.spritesheet_paths.begin(), x.spritesheet_paths.end());
-            }
-        }
-
         zf.close();
-
-        //Step 3: Load spritesheets to ResourceManager
-        SPDLOG_DEBUG("Load animations");
-        for (Animation &x : animations)
-        {
-            for (const auto& spr : x.spritesheet_paths)
-            {
-                ResourceManager::getInstance().loadSprite(spr, false);
-            }
-        }
     } else if (fs::is_directory(path))
     {
-        SPDLOG_INFO("directory was provided, no need to extract the file");
+        SPDLOG_INFO("Directory was provided, no need to extract the file");
 
-        //Step 0: Check config for downscaling information
-        int ratio = TextureManager::getInstance().getRatio();
-
-        //Step 1: Load animation names and frame paths
         for (const auto& entry : fs::directory_iterator(path))
         {
             // make sure we are reading only directories, we don't want to catch config files as animations :)
             if (fs::is_directory(entry))
             {
-                Animation tmp;
-
                 SPDLOG_DEBUG("Animation found: {}", entry.path().string());
-                tmp.name = entry.path().string();
-                tmp.shortName = tmp.name.substr(tmp.name.find_last_of("\\/")+1);
+                animation_names.push_back(entry.path().string());
 
-                // check if animation is already in cache - it was loaded earlier
-                auto cache_path = fs::path("resources/graphics/.tex_cache");
-                bool cache_found = false;
-
-                // cache folder does not exist - create it
-                if(!std::filesystem::exists(cache_path))
-                {
-                    std::filesystem::create_directory(cache_path);
-                }
-
-                // go through cache to find already generated spritesheets
-                for (const auto& cache_entry : fs::directory_iterator(cache_path))
-                {
-                    std::string cache_entry_name = cache_entry.path().string();
-                    std::regex cache_regex(tmp.shortName+"_spr_(\\d*)\\.png");
-                    std::smatch matches;
-
-                    if (std::regex_search(cache_entry_name, matches, cache_regex))
-                    {
-                        // cached sheet found
-                        SPDLOG_INFO("Animation {} found in .tex_cache: sheet file {}. No need to regenerate spritesheets.", tmp.shortName, cache_entry_name);
-                        tmp.cached = true;
-                        tmp.spritesheet_paths.push_back(cache_entry_name);
-                        cache_found = true;
-                    }
-                }
-
-                // we found cache, so we can pack it up and quit here
-                if(cache_found)
-                {
-                    // sort sheets in proper order
-                    std::sort(tmp.spritesheet_paths.begin(), tmp.spritesheet_paths.end());
-
-                    // load animation data
-                    std::string anim_data;
-                    std::stringstream ss_anim_data;
-                    std::string anim_data_path = std::format("resources/graphics/.tex_cache/{}.anim", tmp.shortName);
-                    std::ifstream anim_data_file(anim_data_path);
-                    ss_anim_data << anim_data_file.rdbuf();
-                    anim_data = ss_anim_data.str();
-                    std::vector<std::string> args = Func::Split(anim_data, ' ');
-                    if(args.size() == 5)
-                    {
-                        tmp.img_x = atoi(args[0].c_str());
-                        tmp.img_y = atoi(args[1].c_str());
-                        tmp.frames = atoi(args[2].c_str());
-                        tmp.maxCols = atoi(args[3].c_str());
-                        tmp.maxRows = atoi(args[4].c_str());
-                    }
-                    else
-                    {
-                        SPDLOG_ERROR("Invalid data in animation data file! file={}. expected 5 args, got {}", anim_data_path, args.size());
-                        throw std::exception();
-                    }
-
-                    animations.push_back(tmp);
-                    animationIDtoName[tmp.shortName] = animations.size()-1;
-                    continue; // no need to seek for frames if we got the spritesheet ready.
-                }
-
-                // animation not found in cache - load frames
                 for (const auto& frame : fs::directory_iterator(entry.path()))
                 {
                     SPDLOG_DEBUG("Animation frame found: {}", frame.path().string());
-                    tmp.frame_paths.push_back(frame.path().string());
+                    frame_names.push_back(frame.path().string());
                 }
+            }
+        }
+    }
 
-                std::sort(tmp.frame_paths.begin(), tmp.frame_paths.end());
+    // Step 2 - create animations, then assign frames to animations
+    for(auto anim_name : animation_names)
+    {
+        Animation tmp;
 
-                animations.push_back(tmp);
+        tmp.name = anim_name;
+
+        if(!zip)
+            tmp.shortName = tmp.name.substr(tmp.name.find_last_of("\\/")+1); //folder-based name
+        else
+            tmp.shortName = tmp.name.substr(0, tmp.name.find_last_of('\\/')); //zip-based name
+
+        tmp.zip = zip;
+        SPDLOG_DEBUG("Animation found: {} {}, zip: {}", tmp.name, tmp.shortName, tmp.zip);
+
+        // check if animation is already in cache - it was loaded earlier
+        bool cache_found = getAnimationCache(tmp);
+
+        // we found cache, so we can pack it up and quit here
+        if(cache_found)
+        {
+            // sort sheets in proper order
+            std::sort(tmp.spritesheet_paths.begin(), tmp.spritesheet_paths.end());
+
+            loadCacheFile(tmp);
+
+            animations.push_back(tmp);
+            animationIDtoName[tmp.shortName] = animations.size()-1;
+            continue; // no need to seek for frames if we got the spritesheet ready.
+        }
+
+        for(auto& frame_name : frame_names)
+        {
+            if (frame_name.find(anim_name) != std::string::npos)
+            {
+                SPDLOG_DEBUG("Animation frame found: {}", frame_name);
+                tmp.frame_paths.push_back(frame_name);
             }
         }
 
-        //Step 2: Compose frames into a spritesheet for each animation
-        unsigned int maxSize = sf::Texture::getMaximumSize();
-        SPDLOG_DEBUG("maximum texture size: {}", maxSize);
+        animations.push_back(tmp);
+        animationIDtoName[tmp.shortName] = animations.size()-1;
+    }
 
-        for (Animation &x : animations)
+    // Step 3 - Compose the spritesheets
+    SPDLOG_DEBUG("Maximum texture size: {}", maxSize);
+
+    for(auto& x : animations)
+    {
+        if(!x.cached) // skip spritesheet generation if animation cache found
         {
-            if(!x.cached) // skip spritesheet generation if animation cache found
-            {
-                // load a sample image for spritesheet calculation
-                TextureManager::getInstance().loadImageFromFile(x.frame_paths[0]);
-                TextureManager::getInstance().scaleTexture(x.frame_paths[0], ratio, false);
-                sf::Image thumb = TextureManager::getInstance().getImage(x.frame_paths[0]);
-                //thumb.loadFromFile(x.frame_paths[0]);
-
-                int img_x = thumb.getSize().x;
-                int img_y = thumb.getSize().y;
-
-                TextureManager::getInstance().unloadImage(x.frame_paths[0]);
-                TextureManager::getInstance().unloadTexture(x.frame_paths[0]);
-
-                int frames = x.frame_paths.size();
-
-                int x_size = img_x * frames;
-                int rows = ceil(float(x_size) / float(maxSize));
-
-                int maxCols = floor(float(maxSize) / float(img_x));
-                int maxRows = floor(float(maxSize) / float(img_y));
-                int sheetsNeeded = ceil(float(rows) / float(maxRows));
-
-                int maxFramesPerSheet = maxCols * maxRows;
-
-                SPDLOG_INFO("Animation info dump: name {} img_x {} img_y {} frames {} x_size {} rows {} maxCols {} maxRows {} sheetsNeeded {} maxFramesPerSheet {}", x.name, img_x, img_y, frames, x_size, rows, maxCols, maxRows, sheetsNeeded, maxFramesPerSheet);
-                // push all the important info to the animation
-                x.img_x = img_x;
-                x.img_y = img_y;
-                x.frames = frames;
-                x.maxCols = maxCols;
-                x.maxRows = maxRows;
-
-                // save the data to a file in cache so the information can be fetched later without having to go over the frames
-                std::string anim_data = std::format("{} {} {} {} {}", img_x, img_y, frames, maxCols, maxRows);
-                std::string anim_data_path = std::format("resources/graphics/.tex_cache/{}.anim", x.shortName);
-
-                SPDLOG_DEBUG("Writing animation data into {}", anim_data_path);
-
-                std::ofstream anim_data_file(anim_data_path, std::ios::trunc);
-                anim_data_file << anim_data;
-
-                SPDLOG_DEBUG("Wrote: {}", anim_data);
-
-                anim_data_file.close();
-
-                // when we're extracting the frames out of a spritesheet,
-                // keep in mind that max frames in sheet are maxCols*maxRows
-                // then decrement this amount of frames as you go through the sheets
-                // to figure out how many frames are on the last sheet.
-
-                sf::Image spritesheet_buffer;
-                int spritesheetXsize = maxCols * img_x;
-                int spritesheetYsize = maxRows * img_y;
-
-                if (rows < maxRows)
-                    spritesheetYsize = rows * img_y;
-
-                if (rows == 1)
-                    spritesheetXsize = frames * img_x;
-
-                spritesheet_buffer.create(spritesheetXsize, spritesheetYsize, sf::Color(255, 255, 255, 0));
-
-                std::vector<sf::Image> readySheets;
-
-                int framesLeft = maxFramesPerSheet;
-                int frameBuffer = 0;
-                int framesTotal = frames;
-
-                if (framesLeft > frames)
-                    framesLeft = frames;
-
-                for (const auto& fr : x.frame_paths)
-                {
-                    TextureManager::getInstance().loadImageFromFile(fr);
-                    TextureManager::getInstance().scaleTexture(fr, ratio, false);
-                    sf::Image f_img = TextureManager::getInstance().getImage(fr);
-
-                    int curCol = frameBuffer % maxCols;
-                    int curRow = floor(float(frameBuffer) / float(maxCols));
-                    spritesheet_buffer.copy(f_img, curCol * img_x, curRow * img_y);
-
-                    --framesLeft;
-                    --framesTotal;
-                    ++frameBuffer;
-
-                    if (framesLeft <= 0)
-                    {
-                        framesLeft = maxFramesPerSheet;
-                        frameBuffer = 0;
-
-                        if (framesLeft > framesTotal)
-                            framesLeft = framesTotal;
-
-                        readySheets.push_back(spritesheet_buffer);
-                        spritesheet_buffer.create(spritesheetXsize, spritesheetYsize, sf::Color(255, 255, 255, 0));
-                    }
-
-                    TextureManager::getInstance().unloadImage(fr);
-                    TextureManager::getInstance().unloadTexture(fr);
-                }
-
-                int sheetID = 1;
-                for (const auto& s : readySheets)
-                {
-                    std::string spr_name = std::format("resources/graphics/.tex_cache/{}_spr_{}.png", x.shortName, sheetID);
-                    s.saveToFile(spr_name);
-                    SPDLOG_DEBUG("Saved spritesheet to {}", spr_name);
-                    x.spritesheet_paths.push_back(spr_name);
-                    sheetID += 1;
-                }
-
-                std::sort(x.spritesheet_paths.begin(), x.spritesheet_paths.end());
-            }
+            generateSpritesheet(x, path);
         }
+    }
 
-        //Step 3: Load spritesheets to ResourceManager
-        SPDLOG_DEBUG("Load animations");
-        for (Animation &x : animations)
+    //Step 4 - Load spritesheets to ResourceManager
+    SPDLOG_DEBUG("Loading spritesheets...");
+    for (Animation &x : animations)
+    {
+        for (const auto& spr : x.spritesheet_paths)
         {
-            for (const auto& spr : x.spritesheet_paths)
-            {
-                ResourceManager::getInstance().loadSprite(spr, false);
-            }
+            ResourceManager::getInstance().loadSprite(spr, false);
         }
     }
 }

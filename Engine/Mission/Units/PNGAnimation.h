@@ -30,7 +30,14 @@ class PNGAnimation
         float animationSpeed = 30; // frames per second - to be configured by animation param file
         unsigned int currentAnimation = 0;
 
+        // static stuff
+        unsigned int maxSize = 512;
+
         PNGAnimation();
+        virtual sf::Image getAnimationImage(const std::string& anim_path, const std::string& image_path, bool zipped = false);
+        virtual void loadCacheFile(Animation& anim);
+        virtual void generateSpritesheet(Animation& anim, const std::string& anim_path);
+        virtual bool getAnimationCache(Animation& anim);
         virtual void Load(const std::string& path);
         virtual int getIDfromShortName(const std::string& shortName);
         virtual void Draw();
