@@ -22,19 +22,27 @@ An official client for Patafour.
  
 ## Setup
 
-Simply clone the repo and CMake should automatically grab everything for you. Visual Studio Code is strongly preferred and has been thoroughly used by the dev team, which implies best compatibility.
+Simply clone the repo and CMake should automatically grab everything for you, if your IDE supports it.
 
-For other IDEs, Visual Studio Community 2019+ should work just fine. Code::Blocks and others haven't been tested and probably wont work.
+Visual Studio Community 2019+, Visual Studio Code and CLion generally should work just fine. 
+
+Code::Blocks and others haven't been tested and probably won't work.
 
 ### Compiler
 
-GCC is used to compile Patafour alongside with it's required libraries.
+GCC is used to compile Patafour alongside with it's required libraries. C++20 support is required.
+
+MSVCRT runtime should work. [UCRT runtime won't work.](https://en.sfml-dev.org/forums/index.php?topic=28265.0)
 
 ### Linux installation
 
-On Linux you also need to install the X11 library. On Ubuntu you can install it with `sudo apt install libx11-dev`.
+You need to have all the libraries necessary to compile SFML in order to compile Patafour. It all depends on the flavor of Linux you're using.
 
-Note that we currently only support the proprietary NVidia driver for NVidia GPUs.
+For Ubuntu-based systems (which the project is developed on) these libraries should satisfy all the build requirements:
+
+```sudo apt install build-essential libx11-dev libxrandr-dev libxcursor-dev libgl1-mesa-dev libudev-dev libopenal-dev libvorbis-dev libflac-dev libfreetype-dev libfreetype6 libfreetype6-dev zlib1g-dev libzip-dev liblzma-dev libbz2-dev```
+
+Builds are known to work on NVIDIA systems without issues. AMD probably works as well, further tests are needed. Intel GPU support is unknown.
 
 ### Windows installation
 
@@ -53,6 +61,14 @@ The developer team and the wider community around Patafour hangs out on [Discord
 and we use that to coordinate the efforts around development. 
 
 Please contact the developer team on Discord if you intend to make wide changes to the game code, otherwise feel free to open issues or send PRs!
+
+
+## 3rd-party credits
+
+  * [SFML](https://github.com/SFML/SFML) - multimedia library holding the project together
+  * [nlohmann/json](https://github.com/nlohmann/json) - wonderful and simple json support
+  * [gabime/spdlog](https://github.com/gabime/spdlog) - much better and more detailed logs
+  * [ctabin/libzippp](https://github.com/ctabin/libzippp) - .zip file support
 
 
 ## License
