@@ -82,12 +82,21 @@ void PNGAnimation::loadCacheFile(Animation& anim)
 void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_path)
 {
     std::sort(anim.frame_paths.begin(), anim.frame_paths.end());
-    sf::Image thumb = getAnimationImage(anim_path, anim.frame_paths[0], anim.zip);
 
-    int img_x = thumb.getSize().x;
-    int img_y = thumb.getSize().y;
+    // we need to take the largest image out of the whole animation, in case the animation has different frame dimensions...
+    int img_x = 0, img_y = 0;
 
-    TextureManager::getInstance().unloadImage(anim.frame_paths[0]);
+    for (const auto& thumb_path : anim.frame_paths)
+    {
+        sf::Image thumb = getAnimationImage(anim_path, thumb_path, anim.zip);
+
+        if(thumb.getSize().x > img_x)
+            img_x = thumb.getSize().x;
+        if(thumb.getSize().y > img_y)
+            img_y = thumb.getSize().y;
+
+        TextureManager::getInstance().unloadImage(thumb_path);
+    }
 
     if(!anim.zip)
         TextureManager::getInstance().unloadTexture(anim.frame_paths[0]);
@@ -418,6 +427,15 @@ void PNGAnimation::Draw()
     //rect.setFillColor(sf::Color(255,0,0,100));
     //rect.setPosition(x_start, y_start);
 
+    texture.setPosition(position.x, position.y);
+    texture.setScale(scale.x, scale.y);
+    texture.setRotation(rotation);
+
     texture.draw();
     //window->draw(rect);
+}
+
+void PNGAnimation::setAnimation(const std::string& animShortName)
+{
+
 }
