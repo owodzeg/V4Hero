@@ -30,6 +30,11 @@ class PNGAnimation
         float animationSpeed = 30; // frames per second - to be configured by animation param file
         unsigned int currentAnimation = 0;
 
+        // Object controls
+        sf::Vector2f position = {0, 0};
+        sf::Vector2f scale = {1, 1};
+        float rotation = 0;
+
         // static stuff
         unsigned int maxSize = 512;
 
@@ -40,6 +45,8 @@ class PNGAnimation
         virtual bool getAnimationCache(Animation& anim);
         virtual void Load(const std::string& path);
         virtual int getIDfromShortName(const std::string& shortName);
+        virtual void setAnimation(const std::string& animShortName);
+
         virtual void Draw();
 };
 
