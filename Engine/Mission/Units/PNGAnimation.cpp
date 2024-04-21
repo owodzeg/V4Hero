@@ -78,7 +78,6 @@ void PNGAnimation::loadCacheFile(Animation& anim)
     }
 }
 
-
 void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_path)
 {
     std::sort(anim.frame_paths.begin(), anim.frame_paths.end());
@@ -192,7 +191,7 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
     int sheetID = 1;
     for (const auto& s : readySheets)
     {
-        std::string spr_name = std::format("resources/graphics/.tex_cache/{}_spr_{}.png", anim.shortName, sheetID);
+        std::string spr_name = std::format("resources/graphics/.tex_cache/{}@{}_spr_{}.png", model_name, anim.shortName, sheetID);
         s.saveToFile(spr_name);
         SPDLOG_DEBUG("Saved spritesheet to {}", spr_name);
         anim.spritesheet_paths.push_back(spr_name);
@@ -218,7 +217,7 @@ bool PNGAnimation::getAnimationCache(Animation& anim)
     for (const auto& cache_entry : fs::directory_iterator(cache_path))
     {
         std::string cache_entry_name = cache_entry.path().string();
-        std::regex cache_regex(anim.shortName+"_spr_(\\d*)\\.png");
+        std::regex cache_regex(std::format("{}@{}_spr_(\\d*)\\.png", model_name, anim.shortName));
         std::smatch matches;
 
         if (std::regex_search(cache_entry_name, matches, cache_regex))
@@ -239,6 +238,7 @@ void PNGAnimation::Load(const std::string& path)
     SPDLOG_INFO("Loading PNGAnimation model from {}", path);
 
     auto f = fs::path(path);
+    model_name = f.stem().string();
 
     std::vector<std::string> animation_names;
     std::vector<std::string> frame_names;
@@ -375,6 +375,18 @@ int PNGAnimation::getIDfromShortName(const std::string& shortName)
     }
 }
 
+std::string PNGAnimation::getShortNameFromID(int ID)
+{
+    for(auto& x : animationIDtoName)
+    {
+        if(x.second == ID)
+            return x.first;
+    }
+
+    SPDLOG_ERROR("Invalid animation ID found!");
+    throw std::exception(); // TODO: replace with a proper exception.
+}
+
 void PNGAnimation::Draw()
 {
     InputController* inputController = CoreManager::getInstance().getInputController();
@@ -398,10 +410,20 @@ void PNGAnimation::Draw()
 
     Animation& curAnim = animations[currentAnimation];
 
-    currentFrame += animationSpeed / CoreManager::getInstance().getCore()->getFPS();
+    if(isPlaying)
+        currentFrame += animationSpeed / CoreManager::getInstance().getCore()->getFPS();
 
     if(currentFrame >= curAnim.frames)
-        currentFrame = 0;
+    {
+        if(isLooping)
+        {
+            currentFrame = 0;
+        }
+        else
+        {
+            currentFrame = curAnim.frames - 1;
+        }
+    }
 
     auto currentFrameInt = static_cast<unsigned int>(floor(currentFrame));
     unsigned int maxFramesPerSheet = curAnim.maxCols * curAnim.maxRows;
@@ -437,5 +459,10 @@ void PNGAnimation::Draw()
 
 void PNGAnimation::setAnimation(const std::string& animShortName)
 {
+    currentAnimation = getIDfromShortName(animShortName);
+}
 
+std::string PNGAnimation::getAnimation()
+{
+    return getShortNameFromID(currentAnimation);
 }

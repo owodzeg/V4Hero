@@ -8,6 +8,8 @@
 class PNGAnimation
 {
     public:
+        std::string model_name;
+
         struct Animation {
             std::string name;
             std::string shortName;
@@ -29,6 +31,8 @@ class PNGAnimation
         float currentFrame = 0;
         float animationSpeed = 30; // frames per second - to be configured by animation param file
         unsigned int currentAnimation = 0;
+        bool isPlaying = true;
+        bool isLooping = true;
 
         // Object controls
         sf::Vector2f position = {0, 0};
@@ -45,7 +49,9 @@ class PNGAnimation
         virtual bool getAnimationCache(Animation& anim);
         virtual void Load(const std::string& path);
         virtual int getIDfromShortName(const std::string& shortName);
+        virtual std::string getShortNameFromID(int ID);
         virtual void setAnimation(const std::string& animShortName);
+        virtual std::string getAnimation();
 
         virtual void Draw();
 };
