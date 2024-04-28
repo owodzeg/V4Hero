@@ -29,7 +29,7 @@ public:
     // PSprite handle, aura1, aura2, l_fire1, l_fire2, l_fire3, r_fire1, r_fire2, r_fire3;
 
     float mouseX = 0, mouseY = 0;
-    vector<int> prevStates;
+    std::vector<int> prevStates;
     int state = 0;
     int diff_sel = 0;
     int sel = -1;
@@ -41,8 +41,8 @@ public:
     };
 
     struct ConfigValue {
-        string index;
-        string value;
+        std::string index;
+        std::string value;
     };
 
     PText options_header;
@@ -80,8 +80,8 @@ public:
     int currentOption = 0;
     bool changeInput = false;
 
-    vector<string> ingame_buttons = {"Square", "Circle", "Cross", "Triangle", "LTrigger", "RTrigger", "Left", "Right", "Up", "Down", "Start", "Select"};
-    vector<string> assigned_names = {"Unknown", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Num0", "Num1", "Num2", "Num3", "Num4", "Num5", "Num6", "Num7", "Num8", "Num9", "Escape", "LControl", "LShift", "LAlt", "LSystem", "RControl", "RShift", "RAlt", "RSystem", "Menu", "LBracket", "RBracket", "Semicolon", "Comma", "Period", "Quote", "Slash", "Backslash", "Tilde", "Equal", "Hyphen", "Space", "Enter", "Backspace", "Tab", "PageUp", "PageDown", "End", "Home", "Insert", "Delete", "Add", "Subtract", "Multiply", "Divide", "Left", "Right", "Up", "Down", "Numpad0", "Numpad1", "Numpad2", "Numpad3", "Numpad4", "Numpad5", "Numpad6", "Numpad7", "Numpad8", "Numpad9", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "F13", "F14", "F15", "Pause"};
+    std::vector<std::string> ingame_buttons = {"Square", "Circle", "Cross", "Triangle", "LTrigger", "RTrigger", "Left", "Right", "Up", "Down", "Start", "Select"};
+    std::vector<std::string> assigned_names = {"Unknown", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Num0", "Num1", "Num2", "Num3", "Num4", "Num5", "Num6", "Num7", "Num8", "Num9", "Escape", "LControl", "LShift", "LAlt", "LSystem", "RControl", "RShift", "RAlt", "RSystem", "Menu", "LBracket", "RBracket", "Semicolon", "Comma", "Period", "Quote", "Slash", "Backslash", "Tilde", "Equal", "Hyphen", "Space", "Enter", "Backspace", "Tab", "PageUp", "PageDown", "End", "Home", "Insert", "Delete", "Add", "Subtract", "Multiply", "Divide", "Left", "Right", "Up", "Down", "Numpad0", "Numpad1", "Numpad2", "Numpad3", "Numpad4", "Numpad5", "Numpad6", "Numpad7", "Numpad8", "Numpad9", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "F13", "F14", "F15", "Pause"};
 
     ///Controller setup
     PText t_cs_title, t_cs_desc, t_cs_bigbutton, t_cs_tip;
@@ -91,7 +91,7 @@ public:
     ///Languages
     int lang_pages = 0;
     int lang_current = 0;
-    vector<int> langIDs;
+    std::vector<int> langIDs;
 
     bool initialized = false;
 

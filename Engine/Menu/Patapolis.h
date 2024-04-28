@@ -8,6 +8,9 @@
 #include "../Graphics/ScreenFade.h"
 #include "../Input/InputController.h"
 #include "../Mission/MissionController.h"
+#include "../Mission/Units/AnimatedObject.h"
+#include "../Mission/Camera.h"
+#include "../Dialog/MessageCloud.h"
 #include "Altar.h"
 #include "Barracks.h"
 #include "Credits.h"
@@ -48,7 +51,7 @@ class PatapolisMenu : public Menu
         float floor_x = 0;
 
         std::string back_layer[4];
-        vector<float> back_pos = {0, 3900, 7400, 9560};
+        std::vector<float> back_pos = {0, 3900, 7400, 9560};
 
         struct Sparkle ///for rainbow
         {
@@ -114,7 +117,7 @@ class PatapolisMenu : public Menu
             float x = 0, y = 0;
         };
 
-        vector<RayStart> coords;
+        std::vector<RayStart> coords;
         float rayXbase = 12215;
         float rayX = 12215;
 
@@ -164,15 +167,15 @@ class PatapolisMenu : public Menu
         int currentMenuPosition;
         std::vector<float> possibleMenuPositions;
 
-        vector<PataDialogBox> dialogboxes;
-        vector<MessageCloud> messageclouds;
+        std::vector<PataDialogBox> dialogboxes;
+        std::vector<MessageCloud> messageclouds;
 
         //int goto_id = -1; ///Go-to ID where should Patapolis go after ScreenFade finishes
 
         Credits credits;
 
         /// Stores the currently visible objects to the camera, so only them can be drawn (more efficient)
-        vector<int> draw_ID = {};
+        std::vector<int> draw_ID = {};
 
         enum Buildings
         {

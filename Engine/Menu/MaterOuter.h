@@ -40,9 +40,9 @@ public:
         int y;
 
         sf::String title;
-        string squad_icon;
+        std::string squad_icon;
     };
-    vector<SquadBox> squads;
+    std::vector<SquadBox> squads;
 
     float highlight_x = 0;
 
@@ -58,7 +58,7 @@ public:
     void Update();
     void eventFired(sf::Event event);
     void DrawAsleepSquad(MaterOuterMenu::SquadBox& squad, int squad_alpha, sf::RenderWindow* window);
-    vector<MaterOuterMenu::SquadBox*> GetSquadsCentered();
+    std::vector<MaterOuterMenu::SquadBox*> GetSquadsCentered();
     void showCategory();
     void onExit();
     void showMater();

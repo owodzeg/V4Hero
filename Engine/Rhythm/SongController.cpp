@@ -6,9 +6,6 @@
 
 #include <fstream>
 
-#include "./CoreManager.h"
-#include "Rhythm.h"
-
 using json = nlohmann::json;
 
 
