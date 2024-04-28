@@ -104,31 +104,8 @@ set(ENGINE_FILES
         Engine/Mission/Units/Object.cpp
         Engine/Mission/Units/Projectile.cpp
         Engine/Mission/Units/Entity.cpp
-        Engine/Mission/Units/Entities/Kirajin/Kirajin_Yari_2.cpp
-        Engine/Mission/Units/Entities/Kirajin/Kirajin_Yari_1.cpp
-        Engine/Mission/Units/Entities/Animals/Rappata.cpp
-        Engine/Mission/Units/Entities/Animals/Kacheek.cpp
-        Engine/Mission/Units/Entities/Misc/DroppedItem.cpp
-        Engine/Mission/Units/Entities/Misc/EndFlag.cpp
-        Engine/Mission/Units/Entities/Misc/FeverWorm.cpp
-        Engine/Mission/Units/Entities/Obstacles/WoodenSpikes.cpp
-        Engine/Mission/Units/Entities/Obstacles/RockBig.cpp
-        Engine/Mission/Units/Entities/Obstacles/RockPile.cpp
-        Engine/Mission/Units/Entities/Obstacles/TreasureChest.cpp
-        Engine/Mission/Units/Entities/Obstacles/Wall.cpp
-        Engine/Mission/Units/Entities/Obstacles/RockSmall.cpp
-        Engine/Mission/Units/Entities/Buildings/KirajinPoweredTowerSmall.cpp
-        Engine/Mission/Units/Entities/Buildings/KirajinPoweredTowerBig.cpp
-        Engine/Mission/Units/Entities/Buildings/KirajinHut.cpp
-        Engine/Mission/Units/Entities/Buildings/KirajinGuardTower.cpp
-        Engine/Mission/Units/Entities/Nature/Grass2.cpp
-        Engine/Mission/Units/Entities/Nature/Grass1.cpp
         Engine/Mission/Units/PlayableUnit.cpp
         Engine/Mission/Units/HitboxFrame.cpp
-        Engine/Mission/Units/Units/Tatepon.cpp
-        Engine/Mission/Units/Units/Hatapon.cpp
-        Engine/Mission/Units/Units/Yaripon.cpp
-        Engine/Mission/Units/Projectiles/Spear.cpp
         Engine/Mission/Mission.cpp
         Engine/Utils.h
         Engine/Graphics/CurveShape.cpp 

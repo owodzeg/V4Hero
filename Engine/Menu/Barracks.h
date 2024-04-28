@@ -8,6 +8,8 @@
 #include "../Graphics/PText.h"
 #include "../Input/InputController.h"
 #include "../Mission/MissionController.h"
+#include "../Mission/Camera.h"
+#include "../Item/Item.h"
 #include <SFML/Graphics.hpp>
 
 class V4Core;
@@ -20,7 +22,6 @@ private:
     sf::RectangleShape mm_bigBox;
     sf::RectangleShape mm_titleBox;
     sf::RectangleShape mm_selected_item_line;
-    std::vector<std::unique_ptr<PlayableUnit>> units;
 
     sf::Texture t_background;
     PSprite s_background;
@@ -166,8 +167,8 @@ public:
     void setInventoryPosition();
     void applyEquipment();
     void refreshStats();
-    string getPreviewText(int stat, int pon_stat, int pon_base_stat);
-    string getPreviewText(int stat, int pon_stat, int pon_base_stat, int stat2, int pon_stat2, int pon_base_stat2);
+    std::string getPreviewText(int stat, int pon_stat, int pon_base_stat);
+    std::string getPreviewText(int stat, int pon_stat, int pon_base_stat, int stat2, int pon_stat2, int pon_base_stat2);
     sf::Color getPreviewColorText(int stat, int pon_stat, int pon_base_stat,bool invert_color);
     sf::Color getPreviewColorText(int stat, int pon_stat, int pon_base_stat, int stat2, int pon_stat2, int pon_base_stat2);
     void updatePreviewText();

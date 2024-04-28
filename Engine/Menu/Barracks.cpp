@@ -22,80 +22,6 @@ Barracks::Barracks()
 
     f_font.loadFromFile(CoreManager::getInstance().getConfig()->fontPath);
 
-    int army_size = CoreManager::getInstance().getSaveReader()->ponReg.pons.size();
-
-    SPDLOG_DEBUG("Barracks army size: {}", army_size);
-
-    for (int i = 0; i < army_size; i++)
-    {
-        SPDLOG_DEBUG("Checking Pon {}", i);
-
-        Pon* current_pon = new Pon;
-        current_pon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i);
-
-        SPDLOG_DEBUG("Pon class: {}", current_pon->pon_class);
-
-        switch (current_pon->pon_class)
-        {
-            case 0: {
-                unique_ptr<Yaripon> wip_pon = make_unique<Yaripon>();
-                wip_pon.get()->setUnitID(current_pon->pon_class);
-                wip_pon.get()->entityID = -1001; ///lets say entity IDs for units will be -1000 and below, so -1001 is yaripon, -1002 will be tatepon etc
-
-                SPDLOG_DEBUG("Loading Pon");
-                wip_pon.get()->LoadConfig();
-
-                //TO-DO: is caching needed anymore?
-                // if (!CoreManager::getInstance().getCore()->isCached[wip_pon.get()->entityID])
-                //{
-                    //CoreManager::getInstance().getCore()->cacheEntity(wip_pon.get()->entityID, wip_pon.get()->all_swaps_img, wip_pon.get()->animation_spritesheet, wip_pon.get()->objects);
-                //}
-
-                wip_pon.get()->setAnimationSegment("idle_armed");
-
-                SPDLOG_DEBUG("Assigning equipment to Pon ({} slots)", CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i)->slots.size());
-
-                for (int o = 0; o < CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i)->slots.size(); o++)
-                {
-                    SPDLOG_DEBUG("Slot {}: {}", o, CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i)->slots[o]);
-
-                    if (CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i)->slots[o] != -1)
-                    {
-                        SPDLOG_DEBUG("Applying equipment");
-                        
-                        //TO-DO: This will not work until AnimatedObject is converted to new system.
-                        //wip_pon.get()->applyEquipment(CoreManager::getInstance().getSaveReader()->invData.items[CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i)->slots[o]].item->order_id, o);
-                    }
-                }
-
-                units.push_back(std::move(wip_pon));
-                break;
-            }
-                /*case 1:
-            {
-                unique_ptr<Tatepon> wip_pon = make_unique<Tatepon>();
-                wip_pon.get()->setUnitID(current_pon->pon_class);
-
-                wip_pon.get()->LoadConfig(thisConfig);
-                wip_pon.get()->setAnimationSegment("idle_armed");
-
-                wip_pon.get()->applyEquipment(parent->saveReader.invData.items[parent->saveReader.ponReg.GetPonByID(i)->slot_1_invItem_id].item->order_id, 0);
-                if(parent->saveReader.invData.items[parent->saveReader.ponReg.GetPonByID(i)->slot_2_invItem_id].item->item_category == "weapon")
-                {
-                    wip_pon.get()->applyEquipment(parent->saveReader.invData.items[parent->saveReader.ponReg.GetPonByID(i)->slot_2_invItem_id].item->order_id, 1, true);
-                }
-                else
-                {
-                    wip_pon.get()->applyEquipment(parent->saveReader.invData.items[parent->saveReader.ponReg.GetPonByID(i)->slot_2_invItem_id].item->order_id, 1);
-                }
-                wip_pon.get()->applyEquipment(parent->saveReader.invData.items[parent->saveReader.ponReg.GetPonByID(i)->slot_3_invItem_id].item->order_id, 2);
-
-                units.push_back(std::move(wip_pon));
-                break;
-            }*/
-        }
-    }
-
     int quality = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
     q = quality;
 
@@ -502,17 +428,7 @@ void Barracks::setInventoryPosition()
 
 void Barracks::applyEquipment()
 {
-    for (int i = 0; i < units.size(); i++)
-    {
-        for (int o = 0; o < CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i)->slots.size(); o++)
-        {
-            if (CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i)->slots[o] != -1)
-            {
-                //TO-DO: will not work until AnimatedObject refactor
-                //units[i].get()->applyEquipment(CoreManager::getInstance().getSaveReader()->invData.items[CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i)->slots[o]].item->order_id, o);
-            }
-        }
-    }
+
 }
 
 void Barracks::refreshStats()
@@ -761,13 +677,6 @@ void Barracks::Update()
 
         highlighted_pon.setPosition((468 + (75 * (current_selected_pon))), 530);
         highlighted_pon.draw(window);
-
-        for (int i = 0; i < units.size(); i++)
-        {
-            units[i].get()->setGlobalPosition(sf::Vector2f(500 + (75 * (i)), patapon_y));
-            units[i].get()->fps = fps;
-            units[i].get()->Draw();
-        }
 
         s_pon_highlight.setPosition(highlight_width * 2, 675);
         s_pon_highlight.draw(window);
