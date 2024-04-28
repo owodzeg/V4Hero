@@ -2,7 +2,7 @@
 #define TESTCHAMBER_H
 
 #include <SFML/Graphics.hpp>
-#include "../Mission/Units/PNGAnimation.h"
+#include "../Mission/Units/AnimatedObject.h"
 
 class TestChamber
 {
@@ -10,7 +10,10 @@ public:
     bool initialized = false;
     sf::RectangleShape bg;
 
-    PNGAnimation pngTest_1, pngTest_2, pngTest_3;
+    AnimatedObject yaripon;
+    AnimatedObject hatapon;
+    AnimatedObject dropped_item;
+    float fun = 0;
 
     void Initialize();
     void Update();

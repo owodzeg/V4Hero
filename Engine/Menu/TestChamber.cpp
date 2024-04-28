@@ -19,15 +19,15 @@ void TestChamber::Initialize()
     cur = loadSpeed.getElapsedTime().asMicroseconds();
     SPDLOG_INFO("Load timer: {}us", cur-old);
     old = cur;
-    pngTest_1.Load("resources/units/unit/yaripon.zip");
+    yaripon.LoadConfig("resources/units/unit/yaripon.zip");
     cur = loadSpeed.getElapsedTime().asMicroseconds();
     bench1 = cur-old;
     old = cur;
-    pngTest_2.Load("resources/units/unit/yaripon.zip");
+    hatapon.LoadConfig("resources/units/unit/hatapon.zip");
     cur = loadSpeed.getElapsedTime().asMicroseconds();
     bench2 = cur-old;
     old = cur;
-    pngTest_3.Load("resources/units/unit/yaripon.zip");
+    dropped_item.LoadConfig("resources/units/unit/dropped_item.zip");
     cur = loadSpeed.getElapsedTime().asMicroseconds();
     bench3 = cur-old;
     SPDLOG_INFO("Loading benchmark:");
@@ -46,7 +46,14 @@ void TestChamber::Update()
     bg.setSize(sf::Vector2f(window->getSize().x,window->getSize().y));
     window->draw(bg);
 
-    pngTest_1.Draw();
+    yaripon.pos_global = sf::Vector2f(400, 200);
+    yaripon.Draw();
+
+    hatapon.pos_global = sf::Vector2f(100, 200);
+    hatapon.Draw();
+
+    dropped_item.pos_global = sf::Vector2f(100, 500);
+    dropped_item.Draw();
 }
 
 TestChamber::~TestChamber()
