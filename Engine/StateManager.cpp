@@ -350,7 +350,7 @@ void StateManager::initState(int state)
 
                 if (CoreManager::getInstance().getCore()->mission_id >= 0)
                 {
-                    missionControllerPtr->StartMission(CoreManager::getInstance().getCore()->mission_file, false, CoreManager::getInstance().getCore()->mission_id, CoreManager::getInstance().getCore()->mission_multiplier);
+                    //missionControllerPtr->StartMission(CoreManager::getInstance().getCore()->mission_file, false, CoreManager::getInstance().getCore()->mission_id, CoreManager::getInstance().getCore()->mission_multiplier);
                 } else
                 {
                     SPDLOG_ERROR("No load mission specified, returning to Patapolis");
