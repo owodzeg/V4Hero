@@ -230,6 +230,8 @@ void SongController::LoadTheme(std::string theme)
         d >> drum;
         d.close();
 
+        drumPath = themePath + "drum/";
+
         for (auto it = drum.begin(); it != drum.end(); it++)
         {
             std::string drumName = it.key();
