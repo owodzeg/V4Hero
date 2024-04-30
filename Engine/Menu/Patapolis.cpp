@@ -20,10 +20,10 @@ PatapolisMenu::PatapolisMenu()
     Config* config = CoreManager::getInstance().getConfig();
     updateStoryPoint(); // Update story_point before anything else
 
-    quality = config->GetInt("textureQuality");
+    quality = config->Get<int>("textureQuality");
 
-    float resRatioX = config->GetInt("resX") / float(1280);
-    float resRatioY = config->GetInt("resY") / float(720);
+    float resRatioX = config->Get<int>("resX") / float(1280);
+    float resRatioY = config->Get<int>("resY") / float(720);
 
     f_font.loadFromFile(config->fontPath);
 
@@ -350,7 +350,7 @@ PatapolisMenu::PatapolisMenu()
     */
     screenFade.Create(ScreenFade::FADEIN, 1024);
 
-    float volume = (float(config->GetInt("masterVolume")) * (float(config->GetInt("bgmVolume")) / 100.f));
+    float volume = (float(config->Get<int>("masterVolume")) * (float(config->Get<int>("bgmVolume")) / 100.f));
 
     sb_city_loop.loadFromFile("resources/sfx/bgm/patapolis.ogg");
     city_loop.setBuffer(sb_city_loop);
@@ -569,7 +569,7 @@ void PatapolisMenu::addCloud(std::string type, float x, float y, float xsize, fl
         clouds_A.push_back(cloud);
     } else if (type == "B")
     {
-        float resRatio = float(CoreManager::getInstance().getConfig()->GetInt("resX")) / float(1280);
+        float resRatio = float(CoreManager::getInstance().getConfig()->Get<int>("resX")) / float(1280);
 
         CloudB cloud;
         cloud.cloud.setFillColor(sf::Color::White);
@@ -661,7 +661,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
             messageclouds.clear();
 
             MessageCloud tmp;
-            tmp.Create(20, sf::Vector2f(a_sen.getGlobalPosition().x - 5, a_sen.getGlobalPosition().y - 25), sf::Color(170, 182, 250, 255), false, config->GetInt("textureQuality"), config->fontPath);
+            tmp.Create(20, sf::Vector2f(a_sen.getGlobalPosition().x - 5, a_sen.getGlobalPosition().y - 25), sf::Color(170, 182, 250, 255), false, config->Get<int>("textureQuality"), config->fontPath);
             tmp.msgcloud_ID = 0;
 
             vector<int> missions = saveReader->missions_unlocked;
@@ -742,7 +742,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
             messageclouds.clear();
 
             MessageCloud tmp;
-            tmp.Create(20, sf::Vector2f(a_wakapon.getGlobalPosition().x - 5, a_wakapon.getGlobalPosition().y - 25), sf::Color(255, 255, 255, 255), false, config->GetInt("textureQuality"), config->fontPath);
+            tmp.Create(20, sf::Vector2f(a_wakapon.getGlobalPosition().x - 5, a_wakapon.getGlobalPosition().y - 25), sf::Color(255, 255, 255, 255), false, config->Get<int>("textureQuality"), config->fontPath);
 
             vector<int> missions = saveReader->missions_unlocked;
 
@@ -1482,7 +1482,7 @@ void PatapolisMenu::Update()
                                 std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("patapolis_demo_pick1")), Func::ConvertToUtf8String(strRepo->GetString("patapolis_demo_pick2"))};
 
                                 PataDialogBox db;
-                                db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("patapolis_demofinish")), a, config->GetInt("textureQuality"));
+                                db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("patapolis_demofinish")), a, config->Get<int>("textureQuality"));
                                 db.id = 4;
                                 dialogboxes.push_back(db);
 
@@ -1722,7 +1722,7 @@ void PatapolisMenu::Update()
                     std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_yes")), Func::ConvertToUtf8String(strRepo->GetString("nav_no"))};
 
                     PataDialogBox db;
-                    db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("patapolis_returntomain")), a, config->GetInt("textureQuality"));
+                    db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("patapolis_returntomain")), a, config->Get<int>("textureQuality"));
                     db.id = 0;
                     dialogboxes.push_back(db);
                 } else if (inputCtrl->isKeyPressed(Input::Keys::SELECT))
@@ -1730,7 +1730,7 @@ void PatapolisMenu::Update()
                     std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_yes")), Func::ConvertToUtf8String(strRepo->GetString("nav_no"))};
 
                     PataDialogBox db;
-                    db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("patapolis_save")), a, config->GetInt("textureQuality"));
+                    db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("patapolis_save")), a, config->Get<int>("textureQuality"));
                     db.id = 2;
                     dialogboxes.push_back(db);
                 }
@@ -1750,7 +1750,7 @@ void PatapolisMenu::Update()
                             std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_yes")), Func::ConvertToUtf8String(strRepo->GetString("nav_no"))};
 
                             PataDialogBox db;
-                            db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("patapolis_returntomainsave")), a, config->GetInt("textureQuality"));
+                            db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("patapolis_returntomainsave")), a, config->Get<int>("textureQuality"));
                             db.id = 1;
                             dialogboxes.push_back(db);
 
@@ -1771,7 +1771,7 @@ void PatapolisMenu::Update()
                             std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_understood"))};
 
                             PataDialogBox db;
-                            db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("patapolis_saved")), a, config->GetInt("textureQuality"));
+                            db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("patapolis_saved")), a, config->Get<int>("textureQuality"));
                             db.id = 3;
                             dialogboxes.push_back(db);
 

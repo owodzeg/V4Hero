@@ -45,7 +45,7 @@ CurveShape::CurveShape(std::vector<CurveSegment*> c_curves, sf::Color c_fillcolo
 void CurveShape::Draw()
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
-    if (CoreManager::getInstance().getConfig()->GetInt("strictAnim")) {
+    if (CoreManager::getInstance().getConfig()->Get<int>("strictAnim")) {
 
         sfml::ConcaveShape polygon = sfml::ConcaveShape(points, fillcolor);
         window->draw(polygon);

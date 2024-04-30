@@ -22,42 +22,42 @@ Barracks::Barracks()
 
     f_font.loadFromFile(CoreManager::getInstance().getConfig()->fontPath);
 
-    int quality = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
+    int quality = CoreManager::getInstance().getConfig()->Get<int>("textureQuality");
     q = quality;
 
     switch (quality)
     {
         case 0: ///low
         {
-            ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / float(640);
-            ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / float(360);
+            ratio_x = CoreManager::getInstance().getConfig()->Get<int>("resX") / float(640);
+            ratio_y = CoreManager::getInstance().getConfig()->Get<int>("resY") / float(360);
             break;
         }
 
         case 1: ///med
         {
-            ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
-            ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
+            ratio_x = CoreManager::getInstance().getConfig()->Get<int>("resX") / float(1280);
+            ratio_y = CoreManager::getInstance().getConfig()->Get<int>("resY") / float(720);
             break;
         }
 
         case 2: ///high
         {
-            ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1920);
-            ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / float(1080);
+            ratio_x = CoreManager::getInstance().getConfig()->Get<int>("resX") / float(1920);
+            ratio_y = CoreManager::getInstance().getConfig()->Get<int>("resY") / float(1080);
             break;
         }
 
         case 3: ///ultra
         {
-            ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / float(3840);
-            ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / float(2160);
+            ratio_x = CoreManager::getInstance().getConfig()->Get<int>("resX") / float(3840);
+            ratio_y = CoreManager::getInstance().getConfig()->Get<int>("resY") / float(2160);
             break;
         }
     }
 
-    res_ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
-    res_ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
+    res_ratio_x = CoreManager::getInstance().getConfig()->Get<int>("resX") / float(1280);
+    res_ratio_y = CoreManager::getInstance().getConfig()->Get<int>("resY") / float(720);
 
     patapon_y = 607;
     floor_y = 980;
@@ -157,32 +157,32 @@ Barracks::Barracks()
     //TO-DO: replace old pointers with new CoreManager pointers
     //applyEquipment();
 
-    rr_main_sh.Create(1100 + 2, 220 + 2, 20, CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280), sf::Color(0, 0, 0, 96));
+    rr_main_sh.Create(1100 + 2, 220 + 2, 20, CoreManager::getInstance().getConfig()->Get<int>("resX") / float(1280), sf::Color(0, 0, 0, 96));
     rr_main_sh.x = 670 - 1;
     rr_main_sh.y = 190 - 1;
     rr_main_sh.setOrigin(sf::Vector2f((1100 + 40) / 2, (220 + 40) / 2));
 
-    rr_uniticon_sh.Create(176 + 2, 8 + 2, 34, CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280), sf::Color(0, 0, 0, 96));
+    rr_uniticon_sh.Create(176 + 2, 8 + 2, 34, CoreManager::getInstance().getConfig()->Get<int>("resX") / float(1280), sf::Color(0, 0, 0, 96));
     rr_uniticon_sh.x = 188 - 1;
     rr_uniticon_sh.y = 98 - 1;
     rr_uniticon_sh.setOrigin(sf::Vector2f((176 + 68) / 2, (8 + 68) / 2));
 
-    rr_unitstatus_sh.Create(175 + 2, 20 + 2, 25, CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280), sf::Color(0, 0, 0, 96));
+    rr_unitstatus_sh.Create(175 + 2, 20 + 2, 25, CoreManager::getInstance().getConfig()->Get<int>("resX") / float(1280), sf::Color(0, 0, 0, 96));
     rr_unitstatus_sh.x = 1127 - 1;
     rr_unitstatus_sh.y = 64 - 1;
     rr_unitstatus_sh.setOrigin(sf::Vector2f((175 + 50) / 2, (12 + 50) / 2));
 
-    rr_main.Create(1100, 220, 20, CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280));
+    rr_main.Create(1100, 220, 20, CoreManager::getInstance().getConfig()->Get<int>("resX") / float(1280));
     rr_main.x = 670;
     rr_main.y = 190;
     rr_main.setOrigin(sf::Vector2f((1100 + 40) / 2, (220 + 40) / 2));
 
-    rr_uniticon.Create(176, 8, 34, CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280));
+    rr_uniticon.Create(176, 8, 34, CoreManager::getInstance().getConfig()->Get<int>("resX") / float(1280));
     rr_uniticon.x = 188;
     rr_uniticon.y = 98;
     rr_uniticon.setOrigin(sf::Vector2f((176 + 68) / 2, (8 + 68) / 2));
 
-    rr_uniticon.Create(175, 20, 25, CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280));
+    rr_uniticon.Create(175, 20, 25, CoreManager::getInstance().getConfig()->Get<int>("resX") / float(1280));
     rr_uniticon.x = 1127;
     rr_uniticon.y = 64;
     rr_uniticon.setOrigin(sf::Vector2f((175 + 50) / 2, (12 + 50) / 2));
@@ -1262,7 +1262,7 @@ void Barracks::Update()
                     std::vector<sf::String> a = {Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("nav_yes")), Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("nav_no"))};
 
                     PataDialogBox db;
-                    db.Create(f_font, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_depart")), a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
+                    db.Create(f_font, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("barracks_depart")), a, CoreManager::getInstance().getConfig()->Get<int>("textureQuality"));
                     db.id = 0;
                     dialog_boxes.push_back(db);
                 }

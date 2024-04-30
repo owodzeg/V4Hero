@@ -35,7 +35,7 @@ void InputController::LoadKeybinds()
 
             if (config->keyExists(confkey))
             {
-                keybinds[k].push_back(config->GetInt(confkey));
+                keybinds[k].push_back(config->Get<int>(confkey));
                 SPDLOG_DEBUG("Loading keybind {} with key id {}", k, confkey);
             }
         }

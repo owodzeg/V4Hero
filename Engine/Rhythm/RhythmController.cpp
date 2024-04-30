@@ -85,7 +85,7 @@ bool RhythmController::checkForInput()
             }
 
             // calculate volume
-            float drumVolume = float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f);
+            float drumVolume = float(CoreManager::getInstance().getConfig()->Get<int>("masterVolume")) * (float(CoreManager::getInstance().getConfig()->Get<int>("sfxVolume")) / 100.f);
 
             // set buffers and volumes
             SongController* songController = CoreManager::getInstance().getSongController();
@@ -134,7 +134,7 @@ bool RhythmController::checkForInput()
             }
 
             ///Check config if drum sound effect should be played
-            if (CoreManager::getInstance().getConfig()->GetInt("enableDrums"))
+            if (CoreManager::getInstance().getConfig()->Get<int>("enableDrums"))
             {
                 ///And play it
                 s_drums.push_back(drum_nc);
@@ -142,7 +142,7 @@ bool RhythmController::checkForInput()
             }
 
             ///Check config if drum chant sound effect should be played
-            if (CoreManager::getInstance().getConfig()->GetInt("enableDrumChants"))
+            if (CoreManager::getInstance().getConfig()->Get<int>("enableDrumChants"))
             {
                 ///And play it
                 s_drums.push_back(drum_c);

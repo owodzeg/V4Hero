@@ -338,7 +338,7 @@ void TextureManager::reloadTextures(int quality)
 
 int TextureManager::getRatio()
 {
-    int quality = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
+    int quality = CoreManager::getInstance().getConfig()->Get<int>("textureQuality");
     int ratio = 1;
 
     switch (quality)

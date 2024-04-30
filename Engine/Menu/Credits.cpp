@@ -28,29 +28,29 @@ void Credits::addRegularText(sf::String text, int font)
 void Credits::Initialise(Config* thisConfig, V4Core* parent)
 {
     config = thisConfig;
-    quality = thisConfig->GetInt("textureQuality");
+    quality = thisConfig->Get<int>("textureQuality");
 
-    r_black.setSize(sf::Vector2f(thisConfig->GetInt("resX"), thisConfig->GetInt("resY")));
+    r_black.setSize(sf::Vector2f(thisConfig->Get<int>("resX"), thisConfig->Get<int>("resY")));
     r_black.setFillColor(sf::Color::Black);
 
     sb_outro.loadFromFile("resources/sfx/fun/outro.ogg");
     sb_credits.loadFromFile("resources/sfx/fun/patafour4.ogg");
 
-    s_outro.setVolume(float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("bgmVolume")) / 100.f));
-    s_credits.setVolume(float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("bgmVolume")) / 100.f));
+    s_outro.setVolume(float(thisConfig->Get<int>("masterVolume")) * (float(thisConfig->Get<int>("bgmVolume")) / 100.f));
+    s_credits.setVolume(float(thisConfig->Get<int>("masterVolume")) * (float(thisConfig->Get<int>("bgmVolume")) / 100.f));
 
     f_font.loadFromFile(thisConfig->fontPath);
     cn_font.loadFromFile("resources/fonts/dfpop2w9.ttf");
-    outro_text.createText(f_font, 36, sf::Color::White, "", thisConfig->GetInt("textureQuality"), 1);
+    outro_text.createText(f_font, 36, sf::Color::White, "", thisConfig->Get<int>("textureQuality"), 1);
     outro_text.setOutlineThickness(2);
     outro_text.setOutlineColor(sf::Color::Black);
     outro_text.setColor(sf::Color::White);
 
-    anykey.createText(f_font, 36, sf::Color::White, "", thisConfig->GetInt("textureQuality"), 1);
+    anykey.createText(f_font, 36, sf::Color::White, "", thisConfig->Get<int>("textureQuality"), 1);
 
-    teaser_1.loadFromFile("resources/graphics/ui/credits/teaser_1.png", thisConfig->GetInt("textureQuality"), 1);
-    teaser_2.loadFromFile("resources/graphics/ui/credits/teaser_2.png", thisConfig->GetInt("textureQuality"), 1);
-    teaser_3.loadFromFile("resources/graphics/ui/credits/teaser_3.png", thisConfig->GetInt("textureQuality"), 1);
+    teaser_1.loadFromFile("resources/graphics/ui/credits/teaser_1.png", thisConfig->Get<int>("textureQuality"), 1);
+    teaser_2.loadFromFile("resources/graphics/ui/credits/teaser_2.png", thisConfig->Get<int>("textureQuality"), 1);
+    teaser_3.loadFromFile("resources/graphics/ui/credits/teaser_3.png", thisConfig->Get<int>("textureQuality"), 1);
 
     addHeaderText(Func::ConvertToUtf8String(config->strRepo.GetString("credits_creator")));
     addRegularText("Owocek");

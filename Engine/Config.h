@@ -118,10 +118,10 @@ public:
     void ReloadLanguages();
 
     StringRepository strRepo;
-    ///I wanted to overload these two in a single function, but somehow it just doesnt want to work...
-    ///Will change it into one someday
-    int GetInt(std::string key);
-    std::string GetString(std::string key);
+
+    template <typename T>
+    T Get(const string& key) const;
+
     void SetString(std::string key, std::string val);
     std::string GetLanguageName();
     void SaveConfig();

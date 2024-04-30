@@ -38,7 +38,7 @@ V4Core::V4Core()
     config->LoadConfig();
 
     /** Apply logging level from config **/
-    switch (config->GetInt("logLevel")) //i can't get int to convert to a spdlog::set_level argument, so i'm making a switch
+    switch (config->Get<int>("logLevel")) //i can't get int to convert to a spdlog::set_level argument, so i'm making a switch
     {
         case 0: {
             spdlog::set_level(spdlog::level::trace);
@@ -115,15 +115,15 @@ void V4Core::init()
     // Gather the Config pointer so we can get values from there
     Config* config = CoreManager::getInstance().getConfig();
 
-    if (config->GetInt("enableFullscreen")) // open in fullscreen
-        window->create(sf::VideoMode(config->GetInt("resX"), config->GetInt("resY")), "Patafour", sf::Style::Fullscreen, settings);
-    else if (config->GetInt("enableBorderlessWindow")) // open as borderless window
-        window->create(sf::VideoMode(config->GetInt("resX"), config->GetInt("resY")), "Patafour", sf::Style::None, settings);
+    if (config->Get<int>("enableFullscreen")) // open in fullscreen
+        window->create(sf::VideoMode(config->Get<int>("resX"), config->Get<int>("resY")), "Patafour", sf::Style::Fullscreen, settings);
+    else if (config->Get<int>("enableBorderlessWindow")) // open as borderless window
+        window->create(sf::VideoMode(config->Get<int>("resX"), config->Get<int>("resY")), "Patafour", sf::Style::None, settings);
     else // open as a regular window
-        window->create(sf::VideoMode(config->GetInt("resX"), config->GetInt("resY")), "Patafour", sf::Style::Titlebar | sf::Style::Close, settings);
+        window->create(sf::VideoMode(config->Get<int>("resX"), config->Get<int>("resY")), "Patafour", sf::Style::Titlebar | sf::Style::Close, settings);
 
     // Get current framerate limit
-    framerate_limit = config->GetInt("framerateLimit");
+    framerate_limit = config->Get<int>("framerateLimit");
     
     // Despite having an "Unlimited" framerate option, we limit it to 500.
     if (framerate_limit == 0)
@@ -135,14 +135,14 @@ void V4Core::init()
     SPDLOG_INFO("Applying window settings");
     window->setFramerateLimit(framerate_limit);
     window->setKeyRepeatEnabled(false);
-    window->setVerticalSyncEnabled(config->GetInt("verticalSync"));
+    window->setVerticalSyncEnabled(config->Get<int>("verticalSync"));
 
     // Load language data and appropriate font
     SPDLOG_DEBUG("Loading language data");
     StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
-    strRepo->LoadLanguageFiles(config->GetInt("lang"));
+    strRepo->LoadLanguageFiles(config->Get<int>("lang"));
 
-    config->fontPath = "resources/fonts/" + strRepo->langFonts[config->GetInt("lang") - 1];
+    config->fontPath = "resources/fonts/" + strRepo->langFonts[config->Get<int>("lang") - 1];
     SPDLOG_DEBUG("Font path is {}", config->fontPath);
 
     /** Version and fps text **/
@@ -176,11 +176,11 @@ void V4Core::init()
 
     StateManager::getInstance().setState(StateManager::ENTRY);
 
-    if(CoreManager::getInstance().getConfig()->GetInt("test") == 1)
+    if(CoreManager::getInstance().getConfig()->Get<int>("test") == 1)
     {
         StateManager::getInstance().setState(StateManager::TEST_CHAMBER);
     }
-    else if(CoreManager::getInstance().getConfig()->GetInt("test") == 2)
+    else if(CoreManager::getInstance().getConfig()->Get<int>("test") == 2)
     {
         ifstream check("resources/data/sv1.p4sv");
         bool exists = check.good();
@@ -257,7 +257,7 @@ void V4Core::init()
         //window->draw(t_version);
 
         // If FPS counter is enabled, draw it
-        if (config->GetInt("showFPS"))
+        if (config->Get<int>("showFPS"))
         {
             t_fps.setString("FPS: " + to_string(int(ceil(rawFps))));
             t_fps.setOrigin(t_fps.getLocalBounds().width, 0);

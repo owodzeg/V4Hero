@@ -50,7 +50,7 @@ OptionsMenu::OptionsMenu()
 
     m_font.loadFromFile(config->fontPath);
 
-    int q = config->GetInt("textureQuality");
+    int q = config->Get<int>("textureQuality");
     SPDLOG_TRACE("Quality: {}", q);
 
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/options/options.png");
@@ -339,7 +339,7 @@ void OptionsMenu::SetConfigValue(std::string key, std::string value, bool select
 {
     Config* config = CoreManager::getInstance().getConfig();
 
-    if (config->GetString(key) != value)
+    if (config->Get<const string&>(key) != value)
     {
         SPDLOG_DEBUG("Changing key {} to {}", key, value);
 
@@ -358,7 +358,7 @@ void OptionsMenu::SetConfigValue(std::string key, std::string value, bool select
 
             ConfigValue tmp;
             tmp.index = key;
-            tmp.value = config->GetString(key);
+            tmp.value = config->Get<const string&>(key);
             original_config.push_back(tmp);
         }
 
@@ -564,7 +564,7 @@ void OptionsMenu::Update()
                     langs[lang_current][i].setPosition(810, 520 + 40 * i);
                     langs[lang_current][i].setColor(sf::Color::White);
 
-                    if (lang_current * 5 + i + 1 == config->GetInt("lang"))
+                    if (lang_current * 5 + i + 1 == config->Get<int>("lang"))
                     {
                         if (i < 5)
                             langs[lang_current][i].setColor(sf::Color(0, 192, 0, 255));
@@ -632,7 +632,7 @@ void OptionsMenu::Update()
 
                     if (i < float_resolutions.size())
                     {
-                        if ((float_resolutions[i].width == config->GetInt("resX")) && (float_resolutions[i].height == config->GetInt("resY")))
+                        if ((float_resolutions[i].width == config->Get<int>("resX")) && (float_resolutions[i].height == config->Get<int>("resY")))
                             resolutions[i].setColor(sf::Color(0, 192, 0, 255));
                     }
 
@@ -668,7 +668,7 @@ void OptionsMenu::Update()
                     qualities[i].setPosition(810, 520 + 40 * i);
                     qualities[i].setColor(sf::Color::White);
 
-                    if (config->GetInt("textureQuality") == i)
+                    if (config->Get<int>("textureQuality") == i)
                         qualities[i].setColor(sf::Color(0, 192, 0, 255));
 
                     if (mouseY / window->getSize().y * 1080 >= (qualities[i].getPosition().y - qualities[i].getGlobalBoundsScaled().height / 2 + 8))
@@ -705,7 +705,7 @@ void OptionsMenu::Update()
 
                     if (i < float_framerates.size())
                     {
-                        if ((config->GetInt("framerateLimit") == float_framerates[i]) && (i != 4))
+                        if ((config->Get<int>("framerateLimit") == float_framerates[i]) && (i != 4))
                             framerates[i].setColor(sf::Color(0, 192, 0, 255));
                     }
 
@@ -741,7 +741,7 @@ void OptionsMenu::Update()
                     switches[i].setPosition(810, 520 + 40 * i);
                     switches[i].setColor(sf::Color::White);
 
-                    if ((config->GetInt("enableFullscreen") == !i) && (i != 2))
+                    if ((config->Get<int>("enableFullscreen") == !i) && (i != 2))
                         switches[i].setColor(sf::Color(0, 192, 0, 255));
 
                     if (mouseY / window->getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
@@ -776,7 +776,7 @@ void OptionsMenu::Update()
                     switches[i].setPosition(810, 520 + 40 * i);
                     switches[i].setColor(sf::Color::White);
 
-                    if ((config->GetInt("enableBorderlessWindow") == !i) && (i != 2))
+                    if ((config->Get<int>("enableBorderlessWindow") == !i) && (i != 2))
                         switches[i].setColor(sf::Color(0, 192, 0, 255));
 
                     if (mouseY / window->getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
@@ -829,7 +829,7 @@ void OptionsMenu::Update()
 
                 if (inputCtrl->isKeyPressed(Input::Keys::LEFT))
                 {
-                    int newVolume = config->GetInt(key) - 10;
+                    int newVolume = config->Get<int>(key) - 10;
 
                     if (newVolume <= 0)
                         newVolume = 0;
@@ -837,7 +837,7 @@ void OptionsMenu::Update()
                     SetConfigValue(key, to_string(newVolume), false);
                 } else if (inputCtrl->isKeyPressed(Input::Keys::RIGHT))
                 {
-                    int newVolume = config->GetInt(key) + 10;
+                    int newVolume = config->Get<int>(key) + 10;
 
                     if (newVolume >= 100)
                         newVolume = 100;
@@ -869,7 +869,7 @@ void OptionsMenu::Update()
                     }
 
                     if (i <= 2)
-                        ms_volume[i].setString(str + to_string(config->GetInt(key)) + "%");
+                        ms_volume[i].setString(str + to_string(config->Get<int>(key)) + "%");
                     ms_volume[i].setOrigin(0, ms_volume[i].getGlobalBoundsScaled().height / 2);
                     ms_volume[i].setPosition(810, 520 + 40 * i);
                     ms_volume[i].setColor(sf::Color::White);
@@ -906,7 +906,7 @@ void OptionsMenu::Update()
                     switches[i].setPosition(810, 520 + 40 * i);
                     switches[i].setColor(sf::Color::White);
 
-                    if ((config->GetInt("enableDrums") == !i) && (i != 2))
+                    if ((config->Get<int>("enableDrums") == !i) && (i != 2))
                         switches[i].setColor(sf::Color(0, 192, 0, 255));
 
                     if (mouseY / window->getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
@@ -941,7 +941,7 @@ void OptionsMenu::Update()
                     switches[i].setPosition(810, 520 + 40 * i);
                     switches[i].setColor(sf::Color::White);
 
-                    if ((config->GetInt("enableDrumChants") == !i) && (i != 2))
+                    if ((config->Get<int>("enableDrumChants") == !i) && (i != 2))
                         switches[i].setColor(sf::Color(0, 192, 0, 255));
 
                     if (mouseY / window->getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
@@ -976,7 +976,7 @@ void OptionsMenu::Update()
                     switches[i].setPosition(810, 520 + 40 * i);
                     switches[i].setColor(sf::Color::White);
 
-                    if ((config->GetInt("enablePataponChants") == !i) && (i != 2))
+                    if ((config->Get<int>("enablePataponChants") == !i) && (i != 2))
                         switches[i].setColor(sf::Color(0, 192, 0, 255));
 
                     if (mouseY / window->getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
@@ -1039,7 +1039,7 @@ void OptionsMenu::Update()
 
                     if (config->keyExists(key))
                     {
-                        int keyID = (config->GetInt(key) + 1);
+                        int keyID = (config->Get<int>(key) + 1);
 
                         if (keyID >= 1000)
                         {

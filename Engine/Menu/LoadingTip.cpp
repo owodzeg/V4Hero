@@ -59,10 +59,10 @@ LoadingTip::LoadingTip(int mode)
 
         sf::String str_tipText = Func::ConvertToUtf8String(strRepo->GetString(wdesc_key));
 
-        t_tipTitle.createText(f_font, 48, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(strRepo->GetString(wtitle_key)), config->GetInt("textureQuality"), 1);
-        t_tipText.createText(f_font, 32, sf::Color(255, 255, 255, 255), str_tipText, config->GetInt("textureQuality"), 1);
-        t_pressAnyKey.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(strRepo->GetString("tips_anykey")), config->GetInt("textureQuality"), 1);
-        t_nowLoading.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(strRepo->GetString("tips_loading")), config->GetInt("textureQuality"), 1);
+        t_tipTitle.createText(f_font, 48, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(strRepo->GetString(wtitle_key)), config->Get<int>("textureQuality"), 1);
+        t_tipText.createText(f_font, 32, sf::Color(255, 255, 255, 255), str_tipText, config->Get<int>("textureQuality"), 1);
+        t_pressAnyKey.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(strRepo->GetString("tips_anykey")), config->Get<int>("textureQuality"), 1);
+        t_nowLoading.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(strRepo->GetString("tips_loading")), config->Get<int>("textureQuality"), 1);
     } else if (tipMode == 1)
     {
         sf::RenderWindow* window = CoreManager::getInstance().getWindow();
@@ -90,7 +90,7 @@ LoadingTip::LoadingTip(int mode)
 
         f_font.loadFromFile(config->fontPath);
 
-        t_nowLoading.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(strRepo->GetString("tips_loading")), config->GetInt("textureQuality"), 1);
+        t_nowLoading.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(strRepo->GetString("tips_loading")), config->Get<int>("textureQuality"), 1);
     }
 }
 

@@ -17,7 +17,7 @@ ObeliskMenu::ObeliskMenu()
 
     font.loadFromFile(CoreManager::getInstance().getConfig()->fontPath);
 
-    quality = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
+    quality = CoreManager::getInstance().getConfig()->Get<int>("textureQuality");
 
     SpriteWrapper i_hunt, i_fortress;
     i_hunt.load("resources/graphics/ui/worldmap/hunting_icon.png");

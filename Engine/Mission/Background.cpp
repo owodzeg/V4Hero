@@ -23,8 +23,8 @@ void Background::Load(std::string bg_name)
 {
     SPDLOG_DEBUG("Loading background: {}", bg_name);
 
-    float resRatioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
-    float resRatioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
+    float resRatioX = CoreManager::getInstance().getConfig()->Get<int>("resX") / float(1280);
+    float resRatioY = CoreManager::getInstance().getConfig()->Get<int>("resY") / float(720);
 
     v_background.clear();
     vx_pos.clear();

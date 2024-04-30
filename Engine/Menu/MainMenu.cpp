@@ -22,17 +22,17 @@ MainMenu::MainMenu()
     SPDLOG_DEBUG("Initializing main menu...");
 
     f_font.loadFromFile(config->fontPath);
-    int q = config->GetInt("textureQuality");
+    int q = config->Get<int>("textureQuality");
     int r = 1;
 
     quality = q;
 
-    float resRatioX = config->GetInt("resX") / float(1280);
-    float resRatioY = config->GetInt("resY") / float(720);
+    float resRatioX = config->Get<int>("resX") / float(1280);
+    float resRatioY = config->Get<int>("resY") / float(720);
 
-    rs_cover.setSize(sf::Vector2f(config->GetInt("resX"), config->GetInt("resY")));
+    rs_cover.setSize(sf::Vector2f(config->Get<int>("resX"), config->Get<int>("resY")));
     rs_cover.setFillColor(sf::Color(0, 0, 0, 255));
-    rs_cover2.setSize(sf::Vector2f(config->GetInt("resX"), config->GetInt("resY")));
+    rs_cover2.setSize(sf::Vector2f(config->Get<int>("resX"), config->Get<int>("resY")));
     rs_cover2.setFillColor(sf::Color(0, 0, 0, 0));
 
     logow_bg.load("resources/graphics/ui/menu/logowbg.png");
@@ -47,7 +47,7 @@ MainMenu::MainMenu()
 
     sb_smash.loadFromFile("resources/sfx/menu/smash.ogg");
     s_smash.setBuffer(sb_smash);
-    s_smash.setVolume(float(config->GetInt("masterVolume")) * (float(config->GetInt("sfxVolume")) / 100.f));
+    s_smash.setVolume(float(config->Get<int>("masterVolume")) * (float(config->Get<int>("sfxVolume")) / 100.f));
 
     for (int g = 0; g < 4; g++)
     {
@@ -146,7 +146,7 @@ MainMenu::MainMenu()
     g_x[2] = 0;
     g_x[3] = 0;
 
-    float volume = (float(config->GetInt("masterVolume")) * (float(config->GetInt("bgmVolume")) / 100.f));
+    float volume = (float(config->Get<int>("masterVolume")) * (float(config->Get<int>("bgmVolume")) / 100.f));
 
     sb_title_loop.loadFromFile("resources/sfx/menu/menuloop.ogg");
     title_loop.setBuffer(sb_title_loop);
@@ -164,7 +164,7 @@ MainMenu::MainMenu()
         firstrun = true;
     }
 
-    msgcloud.Create(45, sf::Vector2f(640, 480), sf::Color::White, true, config->GetInt("textureQuality"), config->fontPath);
+    msgcloud.Create(45, sf::Vector2f(640, 480), sf::Color::White, true, config->Get<int>("textureQuality"), config->fontPath);
     msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_1")), true);
     msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_2")), true);
     msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_3")), true);
@@ -289,7 +289,7 @@ void MainMenu::SelectMenuOption()
                 std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_yes")), Func::ConvertToUtf8String(strRepo->GetString("nav_no"))};
 
                 PataDialogBox db;
-                db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("menu_saveexists")), a, config->GetInt("textureQuality"));
+                db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("menu_saveexists")), a, config->Get<int>("textureQuality"));
                 db.id = 0;
                 dialogboxes.push_back(db);
             }
@@ -315,7 +315,7 @@ void MainMenu::SelectMenuOption()
                     std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_understood"))};
 
                     PataDialogBox db;
-                    db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("menu_nosupportdata")), a, config->GetInt("textureQuality"));
+                    db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("menu_nosupportdata")), a, config->Get<int>("textureQuality"));
                     db.id = 2;
                     dialogboxes.push_back(db);
                 } else
@@ -330,7 +330,7 @@ void MainMenu::SelectMenuOption()
                 std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_understood"))};
 
                 PataDialogBox db;
-                db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("menu_nodata")), a, config->GetInt("textureQuality"));
+                db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("menu_nodata")), a, config->Get<int>("textureQuality"));
                 db.id = 1;
                 dialogboxes.push_back(db);
             }

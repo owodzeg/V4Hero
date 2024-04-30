@@ -14,44 +14,44 @@ MaterOuterMenu::MaterOuterMenu()
     SPDLOG_INFO("Initializing Altar...");
     Config* config = CoreManager::getInstance().getConfig();
 
-    int quality = config->GetInt("textureQuality");
+    int quality = config->Get<int>("textureQuality");
     q = quality;
 
     switch (quality)
     {
         case 0: ///low
         {
-            ratio_x = config->GetInt("resX") / float(640);
-            ratio_y = config->GetInt("resY") / float(360);
+            ratio_x = config->Get<int>("resX") / float(640);
+            ratio_y = config->Get<int>("resY") / float(360);
             break;
         }
 
         case 1: ///med
         {
-            ratio_x = config->GetInt("resX") / float(1280);
-            ratio_y = config->GetInt("resY") / float(720);
+            ratio_x = config->Get<int>("resX") / float(1280);
+            ratio_y = config->Get<int>("resY") / float(720);
             break;
         }
 
         case 2: ///high
         {
-            ratio_x = config->GetInt("resX") / float(1920);
-            ratio_y = config->GetInt("resY") / float(1080);
+            ratio_x = config->Get<int>("resX") / float(1920);
+            ratio_y = config->Get<int>("resY") / float(1080);
             break;
         }
 
         case 3: ///ultra
         default:
         {
-            ratio_x = config->GetInt("resX") / float(3840);
-            ratio_y = config->GetInt("resY") / float(2160);
+            ratio_x = config->Get<int>("resX") / float(3840);
+            ratio_y = config->Get<int>("resY") / float(2160);
             break;
         }
         
     }
 
-    res_ratio_x = config->GetInt("resX") / float(1280);
-    res_ratio_y = config->GetInt("resY") / float(720);
+    res_ratio_x = config->Get<int>("resX") / float(1280);
+    res_ratio_y = config->Get<int>("resY") / float(720);
 
     f_font.loadFromFile(config->fontPath);
 

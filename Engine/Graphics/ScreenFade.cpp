@@ -14,7 +14,7 @@ void ScreenFade::Create(int mode, float speed)
 
     Config* config = CoreManager::getInstance().getConfig();
 
-    r_rect.setSize(sf::Vector2f(config->GetInt("resX"), config->GetInt("resY")));
+    r_rect.setSize(sf::Vector2f(config->Get<int>("resX"), config->Get<int>("resY")));
     //r_rect.setFillColor(sf::Color::Black);
 
     switch (cur_mode)

@@ -80,8 +80,8 @@ void Rhythm::Stop()
 void Rhythm::LoadTheme(string theme)
 {
     //TO-DO: uncomment this later
-    //low_range = CoreManager::getInstance().getConfig()->GetInt("lowRange");
-    //high_range = CoreManager::getInstance().getConfig()->GetInt("highRange");
+    //low_range = CoreManager::getInstance().getConfig()->Get<int>("lowRange");
+    //high_range = CoreManager::getInstance().getConfig()->Get<int>("highRange");
     //SPDLOG_INFO("Low Range: {} ms, High Range: {} ms", low_range, high_range);
     SPDLOG_INFO("Selected theme: {}", theme);
 
@@ -139,7 +139,7 @@ void Rhythm::PlaySong(SongController::SongType songType)
     
     s_theme[song_channel].stop();
     s_theme[song_channel].setBuffer(songController->getSong(songType));
-    s_theme[song_channel].setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("bgmVolume")) / 100.f));
+    s_theme[song_channel].setVolume(float(CoreManager::getInstance().getConfig()->Get<int>("masterVolume")) * (float(CoreManager::getInstance().getConfig()->Get<int>("bgmVolume")) / 100.f));
     s_theme[song_channel].play();
 }
 

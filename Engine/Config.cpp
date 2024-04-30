@@ -155,25 +155,29 @@ void Config::ReloadLanguages()
     /** Load lang from resources/lang/str_ENG.cfg **/
     if (changedLang)
     {
-        strRepo.LoadLanguageFiles(GetInt("lang"));
+        strRepo.LoadLanguageFiles(Get<int>("lang"));
         SPDLOG_DEBUG("Language changed to {}", strRepo.GetString("language_file_loaded"));
         changedLang = false;
     }
 }
-int Config::GetInt(std::string key)
+
+template <>
+int Config::Get(const string& key) const
 {
-    int num = atoi(configMap[key].c_str());
-    return num;
+    return std::stoi(configMap.at(key));
 }
 
-std::string Config::GetString(std::string key)
+template <>
+const string& Config::Get(const string& key) const
 {
-    return configMap[key];
+    return configMap.at(key);
 }
+
 void Config::SetString(std::string key, std::string val)
 {
     configMap[key] = val;
 }
+
 std::string Config::GetLanguageName()
 {
     std::string s = strRepo.langNames[atoi(configMap["lang"].c_str()) - 1];

@@ -23,7 +23,7 @@ ResourceManager& ResourceManager::getInstance()
 
 void ResourceManager::getQuality()
 {
-    quality = static_cast<Quality>(CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
+    quality = static_cast<Quality>(CoreManager::getInstance().getConfig()->Get<int>("textureQuality"));
 }
 
 int ResourceManager::getCurrentQuality()
@@ -34,7 +34,7 @@ int ResourceManager::getCurrentQuality()
 void ResourceManager::loadSprite(std::string path, bool downscale)
 {
     std::lock_guard<std::recursive_mutex> guard(access_mutex);
-    loadedSprites[path].loadFromFile(path, CoreManager::getInstance().getConfig()->GetInt("textureQuality"), downscale);
+    loadedSprites[path].loadFromFile(path, CoreManager::getInstance().getConfig()->Get<int>("textureQuality"), downscale);
     loadedSources[path] = StateManager::getInstance().getState();
 
     loadedPaths[StateManager::getInstance().getState()].push_back(path);
@@ -48,7 +48,7 @@ void ResourceManager::loadImageAsSprite(std::string path, sf::Image image)
 {
     std::lock_guard<std::recursive_mutex> guard(access_mutex);
     TextureManager::getInstance().loadImageFromMemory(path, image, true);
-    loadedSprites[path].loadFromFile(path, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
+    loadedSprites[path].loadFromFile(path, CoreManager::getInstance().getConfig()->Get<int>("textureQuality"));
     loadedSources[path] = StateManager::getInstance().getState();
 
     loadedPaths[StateManager::getInstance().getState()].push_back(path);
