@@ -10,6 +10,8 @@ MissionController::MissionController()
 {
     CoreManager::getInstance().reinitSongController();
     CoreManager::getInstance().getSongController()->LoadTheme("ahwoon");
+
+    bg.Load("shidavalley");
     
     initialized = true;
 }
@@ -19,6 +21,10 @@ void MissionController::Update()
     Rhythm* rhythm = CoreManager::getInstance().getRhythm();
 
     rhythm->doRhythm();
+
+    cam.Work();
+    bg.Draw(cam);
+
     CoreManager::getInstance().getRhythmGUI()->doVisuals(0, rhythm->GetCombo());
 }
 
