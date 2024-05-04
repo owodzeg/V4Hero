@@ -14,11 +14,6 @@ Background::Background()
 {
 }
 
-void Background::setCamera(Camera newCamera)
-{
-    camera = newCamera;
-}
-
 void Background::Load(std::string bg_name)
 {
     SPDLOG_DEBUG("Loading background: {}", bg_name);
@@ -29,8 +24,6 @@ void Background::Load(std::string bg_name)
     v_background.clear();
     vx_pos.clear();
     vx_color.clear();
-
-    temp_camerax = 0;
 
     std::ifstream param_file("resources/graphics/bg/" + bg_name + "/param.dat");
 
@@ -101,7 +94,7 @@ void Background::Load(std::string bg_name)
     param_file.close();
 }
 
-void Background::Draw()
+void Background::Draw(Camera& camera)
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
 

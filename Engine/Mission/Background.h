@@ -25,14 +25,12 @@ public:
     std::vector<sf::Color> vx_color;
     sf::RectangleShape r_ground;
 
-    float temp_camerax = 0;
     float floor_height = 0;
     int quality = 0;
 
     Background();
-    void setCamera(Camera camera);
     void Load(std::string bg_name);
-    void Draw();
+    void Draw(Camera& camera);
 };
 
 #endif // BACKGROUND_H
