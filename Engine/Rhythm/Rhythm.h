@@ -139,6 +139,7 @@ public:
     void Stop();
     void LoadTheme(std::string theme);
     void Start();
+    void ClearSong();
     void PlaySong(SongController::SongType songType);
     void BreakCombo(int reason);
     int GetCombo();

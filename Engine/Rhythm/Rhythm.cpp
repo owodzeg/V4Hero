@@ -130,6 +130,12 @@ void Rhythm::LoadTheme(string theme)
     satisfaction_value.clear();
 }
 
+void Rhythm::ClearSong()
+{
+    s_theme[0].stop();
+    s_theme[1].stop();
+}
+
 void Rhythm::PlaySong(SongController::SongType songType)
 {
     song_channel = (song_channel + 1) % 2;
@@ -474,6 +480,7 @@ void Rhythm::doRhythm()
                             afterMeasureClock.restart();
 
                             decideSongType();
+                            ClearSong();
                             PlaySong(currentSongType);
 
                             s_ding.play();
@@ -493,6 +500,7 @@ void Rhythm::doRhythm()
                         afterMeasureClock.restart();
                             
                         decideSongType();
+                        ClearSong();
                         PlaySong(currentSongType);
 
                         s_ding.play();
