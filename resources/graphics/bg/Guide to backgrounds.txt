@@ -1,0 +1,302 @@
+Guide for Patafour Background Format v2.0.0
+
+Background format is fairly simple yet introduces ways to build complex structures.
+Each background is a folder, which contains texture files and background.json.
+
+Texture files are regular PNG images. For animated background elements, you have to put all frames in PNG separately.
+To create your own backgrounds properly, make a 3840x2160 canvas, these are the base dimensions for Patafour assets. Of course the dimensions can be wider/higher, it'll just be off-screen like most of background parts are.
+
+
+
+background.json is a JSON file format specifying how the background should be constructed.
+
+First parameter is background's name, it is for cosmetic purposes only. It's the text that would display on the top right of the screen when first time entering the mission/displaying the background on a further mission section.
+Example:
+    "name": "Shida Valley"
+
+Next parameters will specify background construction for a specific weather. Currently available weathers are:
+sunny, rainy, snowy
+Example:
+    "sunny": [ ... ],
+    "rainy": [ ... ]
+The example has no snowy variant; when a weather variant is missing, sunny variant will be used by default during that weather.
+
+
+
+Background parameters:
+Now we are inside the [] brackets of a specific weather scenario. Here is where we specify how are we going to build the background.
+The background usually will consist of multiple different objects. We define each object with a new set of {} brackets.
+First parameter is "type", it will specify what object are we providing. Each type comes with its unique settings. Available types:
+- skybox
+    This is the gradient that will be seen behind all other objects.
+- image
+    This is a simple image file. Will be infinitely repeated, so make sure left and right ends of the texture are seamless, when put next to each other. Can be animated.
+- group
+    This is a more complex format. It allows to specify a bunch of smaller images, animated or static, and their x and y positions on the background. For example, we can add 3x tree.png objects, place them on x=100, x=400, x=700. Now we have a group of three trees, which we can repeat throughout the entire background. Can be a single instance, so it's useful for placing objects that are meant to appear only once in the background.
+Example:
+    {
+        type: "skybox",
+        ...
+    }
+
+IMPORTANT! All x and y positions have to be set for 3840x2160 canvas. For lower game dimensions, the game will scale everything accordingly. So if you are using a 1280x720 game window to test your background, make sure that background.json dimensions are going to be 3x bigger. (x=100 for 1280x720 means x=300 for 3840x2160, so in background.json we put x=300)
+
+
+
+Type: skybox
+Skybox object has special setting to set gradient points for the very farthest background. Lack of skybox will make the farthest background black. May be unnecessary if your other background objects consist of images that fill up the entire screen.
+Parameter "color_points" holds all the gradient points, which consist of pairs "y_pos" and "color".
+Basically what it means that we can set up what color we want to have at specific y position, and the game will make a neat gradient between two distinct points.
+
+Example:
+{
+    "type": "skybox",
+    "color_points": [
+        {
+            "y_pos": 0,
+            "color": [0, 0, 0]
+        },
+        {
+            "y_pos": 2160,
+            "color": [255, 255, 255]
+        }
+    ]
+}
+
+This example skybox will make two points, one at the very top of the screen (color: black), one at the very bottom of the screen (color: white). This will make a nice white -> black gradient in between these points.
+
+Another example:
+{
+    "type": "skybox",
+    "color_points": [
+        {
+            "y_pos": 0,
+            "color": [0, 0, 0]
+        },
+        {
+            "y_pos": 1080,
+            "color": [255, 255, 255]
+        },
+        {
+            "y_pos": 2160,
+            "color": [0, 0, 0]
+        }
+    ]
+}
+
+This example skybox will make three points, one at the very top of the screen (color: black), one at the middle of the screen (color: white), and one at the very bottom of the screen (color: black). This will make a black -> white -> black gradient from top to bottom.
+
+
+
+Type: image
+Image object is a static or animated single piece of background that's intended to be repeated throughout the entire map. For single placements refer to the group type. Image type is the most common type and the simplest one to implement. You have to make sure that your image loops seamlessly. How to verify that? Try putting two copies of your entire image next to each other. Is there a seamless transition from one's end to second's start? If yes, then you're good to go. If not, either fix it, or be ready for some nasty background cuts.
+Image type has a few parameters for itself, such as:
+- "texture"
+    Is used to define the texture file for the image. Can be multiple files.
+    Example 1:
+        "texture": "img1.png"
+    Example 2:
+        "texture": ["frame1.png", "frame2.png", frame3.png"]
+- "fps"
+    Only for image type objects that have multiple files defined in the "texture" parameter.
+    Essentially useless on single texture file. Defines the amount of animation frames to be viewed per second.
+    Example:
+        "fps": 4
+        This means that this specific object will cycle through 4 texture files every second.
+- "y_pos"
+    Y position for image placement. Regular bounds are 0 (top of the screen) to 2160 (bottom of the screen). Center for the y positioning is set at the bottom of the image. (if y_pos=0, the first pixel of the image, starting from the bottom, will be drawn at the top of the screen, which will make the image not visible)
+    Example:
+        "y_pos": 1080
+        This means that the bottom of the texture will be placed in the middle of the screen.
+- "x_speed"
+    Percentage of Patapon walking speed. Used to create a parallax effect.
+    x_speed equal to 1 means that the image will be moved with the exactly same speed as Patapons moving.
+    Setting it to a value higher than 1 will make it move faster than Patapon movement.
+    Setting it to a value lower than 1 will make the image go slightly slower than Patapons.
+    Setting it to 0 will make a static not moving segment.
+    Setting it to a negative value will cause it to move the other way.
+    Example:
+        {
+            type: "image",
+            texture: "front_layer.png",
+            ...
+            x_speed: 1.0
+        },
+        {
+            type: "image",
+            texture: "back_layer.png",
+            ...
+            x_speed: 0.5
+        }
+    This example will create a two layered background, where the "front_layer.png" texture will move with the same speed as Patapons, making it look like it's close to the player, while the "back_layer.png" will move half as slower, making it look like it's farther from the player, creating a desired parallax effect.
+- "color"
+    RGB values to colorize the image. Makes sense only for pure white textures, where the white color can be easily replaced to anything we apply in this parameter. Useful for simple background parts without many details. Default color for all images is [255, 255, 255] (white) which means no color change applied.
+    Example:
+        {
+            type: "image",
+            texture: "full_white_tree.png",
+            ...
+            color: [0, 200, 0]
+        },
+    In this example, we colorized a fully white tree texture into color green.
+- "layer"
+    Decides the order of which the images should be drawn. It's a global value that applies to "group" object type as well.
+    Higher layer value means the image will be pushed to the front. Lower layer number means the image will be pushed to the back.
+    Example:
+        {
+            type: "image",
+            texture: "front_layer.png",
+            ...
+            layer: 1000
+        },
+        {
+            type: "image",
+            texture: "back_layer.png",
+            ...
+            layer: 0
+        }
+
+
+
+Type: group
+Group object refers to a bunch of smaller objects put together manually. This option is especially useful in situations where we have just a few distinct objects with large spacing between each other. Instead of making a giant image object with a lot of empty space in between, we create a group that will load small textures and place them with a large gap in between.
+You can notice the syntax is similar to the "texture" type, but here we bundle several texture objects together. The objects have to be contained in "objects" group.
+Usage example:
+{
+    "type": "group",
+    "objects": [
+        {
+            "texture": "castle_entrance.png",
+            "y_pos": 1500,
+            "x_pos": [0]
+        },
+        {
+            "texture": "castle_ceiling.png",
+            "y_pos": 1500,
+            "x_pos": [600]
+        },
+        {
+            "texture": "castle_end.png",
+            "y_pos": 1500,
+            "x_pos": [1800]
+        },
+        {
+            "texture": ["torch_1.png", "torch_2.png", "torch_3.png"],
+            "fps": 3,
+            "y_pos": 1500,
+            "x_pos": [200, 700, 900]
+        },
+        {
+            "texture": funny_creature.png,
+            "y_pos": 1500,
+            "x_pos": [0, 1500, 2000],
+            "color": [255, 0, 0]
+        }
+    ],
+    "x_start": 0,
+    "x_speed": -0.10,
+    "repeat": 1200,
+    "layer": 1
+}
+- "objects"
+    Defines the group. Within this group, we can use a similar object type to "image", although it is stripped of couple parameters.
+    There is no "layer" parameter, objects will be layered in the order they are added in the file.
+    We can only define textures, their x and y positions and color. If we specify more than one texture, it will be treated like an animation, and we can supply the fps value. Just like in image type.
+- "x_start"
+    At which point should the texture group start? Useful for offsetting a background element further.
+- "x_speed"
+    Mentioned in "image" type, follows the same rules
+- "repeat"
+    After how many pixels should the group repeat? Not setting this parameter will make the background element appear only once.
+    Important: The game will not try to guess how big your background element is (or how big you want it to be), so if you decide to make a 1500 pixels wide element, setting anything lower than 1500 in this parameter will make the next repeated iteration of this background element clip into the previous one.
+
+
+This sums up all the parameters.
+Example background.json file with all features utilized:
+
+{
+    "name": "Sample Background",
+    "sunny": [
+        {
+            "type": "skybox",
+            "color_points": [
+                {
+                    "y_pos": 0,
+                    "color": [143, 224, 184]
+                },
+                {
+                    "y_pos": 180,
+                    "color": [143, 224, 184]
+                },
+                {
+                    "y_pos": 2160,
+                    "color": [219, 255, 255]
+                }
+            ]
+        },
+        {
+            "type": "group",
+            "objects": [
+                {
+                    "texture": ["tree1_f1.png",  "tree1_f2.png", "tree1_f3.png"],
+                    "fps": 3,
+                    "y_pos": 1500,
+                    "x_pos": [0, 400, 1000]
+                },
+                {
+                    "texture": ["tree2_f1.png",  "tree2_f2.png", "tree2_f3.png", "tree2_f4.png"],
+                    "fps": 3,
+                    "y_pos": 1500,
+                    "x_pos": [200, 700, 900]
+                }
+            ],
+            "x_start": 0,
+            "x_speed": -0.10,
+            "repeat": 1200,
+            "layer": 1
+        },
+        {
+            "type": "image",
+            "texture": ["1_1.png",  "1_2.png", "1_3.png"],
+            "fps": 3,
+            "y_pos": 1878,
+            "x_speed": 0.10,
+            "color": [255, 255, 255],
+            "layer": 0
+        },
+        {
+            "type": "image",
+            "texture": "2.png",
+            "y_pos": 2010,
+            "x_speed": 0.30,
+            "color": [255, 255, 255],
+            "layer": 2
+        },
+        {
+            "type": "image",
+            "texture": "3.png",
+            "y_pos": 2070,
+            "x_speed": 0.50,
+            "color": [255, 255, 255]
+            "layer": 3
+        },
+        {
+            "type": "image",
+            "texture": "4.png",
+            "y_pos": 1860,
+            "x_speed": 0.75,
+            "color": [255, 255, 255]
+            "layer": 4
+        },
+        {
+            "type": "image",
+            "texture": "5.png",
+            "y_pos": 1851,
+            "x_speed": 1.00,
+            "color": [255, 255, 255]
+            "layer": 5
+        }
+    ]
+}
+
+
