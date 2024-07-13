@@ -2,77 +2,56 @@
     "name": "Shida Valley",
     "sunny": [
         {
-            "texture": "skybox",
+            "type": "skybox",
             "color_points": [
                 {
                     "y_pos": 0,
                     "color": [143, 224, 184]
                 },
                 {
-                    "y_pos": 60,
+                    "y_pos": 180,
                     "color": [143, 224, 184]
                 },
                 {
-                    "y_pos": -1,
+                    "y_pos": 2160,
                     "color": [219, 255, 255]
                 }
             ]
         },
         {
-            "type": "group",
-            "objects": [
-                {
-                    "texture": ["tree1_f1.png",  "tree1_f2.png", "tree1_f3.png"],
-                    "fps": 3,
-                    "y_pos": 500,
-                    "x_pos": [0, 400, 1000]
-                },
-                {
-                    "texture": ["tree2_f1.png",  "tree2_f2.png", "tree2_f3.png", "tree2_f4.png"],
-                    "fps": 3,
-                    "y_pos": 500,
-                    "x_pos": [200, 700, 900]
-                }
-            ],
-            "x_start": 0,
-            "x_speed": -0.10,
-            "repeat": 1200
-        },
-        {
             "type": "image",
-            "texture": ["1_1.png",  "1_2.png", "1_3.png"],
-            "fps": 3,
-            "y_pos": 626,
-            "x_speed": -0.10,
-            "color": [255, 255, 255]
+            "texture": "1.png",
+            "y_pos": 1878,
+            "x_speed": 0.10,
+            "layer": 1
         },
         {
             "type": "image",
             "texture": "2.png",
-            "y_pos": 670,
-            "x_speed": -0.30,
-            "color": [255, 255, 255]
+            "y_pos": 2010,
+            "x_speed": 0.30,
+            "layer": 2
         },
         {
             "type": "image",
             "texture": "3.png",
-            "y_pos": 690,
-            "x_speed": -0.50,
-            "color": [255, 255, 255]
+            "y_pos": 2070,
+            "x_speed": 0.50,
+            "layer": 3
         },
         {
             "type": "image",
             "texture": "4.png",
-            "y_pos": 620,
-            "x_speed": -0.75,
-            "color": [255, 255, 255]
+            "y_pos": 1860,
+            "x_speed": 0.75,
+            "layer": 4
         },
         {
             "type": "image",
             "texture": "5.png",
-            "y_pos": 617,
-            "x_speed": -1.00,
-            "color": [255, 255, 255]
+            "y_pos": 1851,
+            "x_speed": 1.00,
+            "layer": 5
         }
     ]
 }
