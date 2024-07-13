@@ -537,3 +537,7 @@ resources/lang/str_ENG_backup.txt
 
 # build stuff
 build
+
+# some cmake stuff, where did it come from?
+CPackConfig.cmake
+CPackSourceConfig.cmake
