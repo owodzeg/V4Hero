@@ -39,6 +39,12 @@ FetchContent_Declare(spdlog
         GIT_TAG v1.13.0)
 FetchContent_MakeAvailable(spdlog)
 
+FetchContent_Declare(libzip
+        GIT_REPOSITORY https://github.com/nih-at/libzip
+        GIT_TAG v1.10.1
+        OVERRIDE_FIND_PACKAGE)
+FetchContent_MakeAvailable(libzip)
+
 FetchContent_Declare(libzippp
         GIT_REPOSITORY https://github.com/ctabin/libzippp
         GIT_TAG libzippp-v7.1-1.10.1)
