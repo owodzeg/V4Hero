@@ -9,6 +9,17 @@
 #include "Object.h"
 #include <memory>
 
+class AnimatedObjectException : public std::exception {
+private:
+    std::string message;
+
+public:
+    AnimatedObjectException(std::string msg) : message(msg) {}
+    char* what () {
+        return message.data();
+    }
+};
+
 class AnimatedObject
 {
 public:

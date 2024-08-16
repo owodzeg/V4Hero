@@ -219,13 +219,27 @@ PatapolisMenu::PatapolisMenu()
     addSparkle(11620 + 937, 401);
     addSparkle(11620 + 860, 244);
 
-    a_wakapon.LoadConfig("resources/units/unit/wakapon.p4a");
-    a_wakapon.setAnimationSegment("idle");
-    a_wakapon.global_y = 395;
+    try
+    {
+        a_wakapon.LoadConfig("resources/units/unit/wakapon.p4a");
+        a_wakapon.setAnimationSegment("idle");
+        a_wakapon.global_y = 395;
+    }
+    catch(AnimatedObjectException& exception)
+    {
+        throw PatapolisException(exception.what());
+    }
 
-    a_sen.LoadConfig("resources/units/unit/ranpurupon.p4a");
-    a_sen.setAnimationSegment("idle");
-    a_sen.global_y = 629;
+    try
+    {
+        a_sen.LoadConfig("resources/units/unit/ranpurupon.p4a");
+        a_sen.setAnimationSegment("idle");
+        a_sen.global_y = 629;
+    }
+    catch(AnimatedObjectException& exception)
+    {
+        throw PatapolisException(exception.what());
+    }
 
     ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/egg.png");
     ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/light.png");

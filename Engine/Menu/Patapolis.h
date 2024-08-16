@@ -19,6 +19,18 @@
 #include <SFML/Graphics.hpp>
 #include <Menu/MaterOuter.h>
 
+class PatapolisException : public std::exception {
+private:
+    std::string message;
+
+public:
+    PatapolisException(std::string msg) : message(msg) {}
+    char* what () {
+        return message.data();
+    }
+};
+
+
 class V4Core;
 class PatapolisMenu : public Menu
 {

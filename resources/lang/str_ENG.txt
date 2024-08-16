@@ -68,6 +68,13 @@ desc_tender_meat|Patapons love this soft, luscious meat, but they can rarely eat
 desc_titanum_ore|Legend has it that this tough, lightweight ore was granted to the Patapons by none other than Almighty. It can last for ages and is a perfect equipment material for classes that require swift movements.
 desc_wooden_helmet|The traditional wooden helmet of the Patapon tribe. It is the trademark of their hunting parties, and despite it's simple design, it has saved the life of many Patapon warriors.
 desc_wooden_spear|A basic wooden spear, given to every Patapon recruit when they come of age and first join the hunting party. Treasured by many Patapons, even after they moved onto bigger and better weapons.
+dialog_category1|{color 255 0 0}Information
+dialog_category2|{color 255 0 0}Error
+error_tryagain|Try loading the state again
+error_tryprevious|Try to recover to previous state
+error_mainmenu|Go back to main menu
+error_exit|Exit the game
+error_message|Oh great Almighty! We've ran into an error!{n}Something happened that caused an unrecoverable{n}chain of events, leading you to this place.{n}Details about this error should be present{n}in the recent log files.{n}{n}You can still try the following options:
 firstrun_dialog_1|Welcome to the Patafour Demo!{n}Press Z to continue.
 firstrun_dialog_2|This is the first time you've ran the Demo,{n}so here's some basic information.
 firstrun_dialog_3|Patafour is a project that is actively being developed.{n}This is not a final product and is nowhere near completion.

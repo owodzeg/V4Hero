@@ -114,7 +114,9 @@ set(ENGINE_FILES
         Engine/Graphics/AnimatedCurveShape.cpp
         Engine/Graphics/AnimatedCurveShape.h
         Engine/Menu/TestChamber.cpp
-        Engine/Menu/TestChamber.h)
+        Engine/Menu/TestChamber.h
+        Engine/Menu/ErrorChamber.cpp
+        Engine/Menu/ErrorChamber.h)
 
 set(DISCORD_FILES
         DiscordSDK/achievement_manager.cpp

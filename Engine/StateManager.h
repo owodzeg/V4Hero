@@ -15,6 +15,7 @@
 #include "Menu/Barracks.h"
 #include "Menu/IntroductionMenu.h"
 #include "Menu/TestChamber.h"
+#include "Menu/ErrorChamber.h"
 #include "Mission/MissionController.h"
 
 // Class for holding the pointers to commonly used important game contents
@@ -35,7 +36,8 @@ public:
         OBELISK = 9,
         MISSIONCONTROLLER = 10,
         MATER_OUTER = 11,
-        TEST_CHAMBER = 12
+        TEST_CHAMBER = 12,
+        ERROR = 13
     };
 
     static StateManager& getInstance();
@@ -65,6 +67,7 @@ private:
     ObeliskMenu* obeliskPtr;
     IntroductionMenu* introductionPtr;
     TestChamber* testChamberPtr;
+    ErrorChamber* errorChamberPtr;
 
     std::vector<std::thread> loadingThreads;
 };

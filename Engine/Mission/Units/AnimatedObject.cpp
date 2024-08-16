@@ -2,6 +2,7 @@
 
 #include "AnimatedObject.h"
 #include <cmath>
+#include <spdlog/spdlog.h>
 
 AnimatedObject::AnimatedObject()
 {
@@ -128,6 +129,13 @@ bool AnimatedObject::getAnimationLoop()
 
 void AnimatedObject::LoadConfig(const std::string& anim_path)
 {
+    if(anim_path.find(".p4a") != std::string::npos)
+    {
+        SPDLOG_ERROR("Legacy P4A format found. These animations are unsupported.");
+        SPDLOG_ERROR("Aborting while trying to read {}", anim_path);
+
+        throw AnimatedObjectException("Invalid file loaded.");
+    }
     animation.Load(anim_path);
 }
 

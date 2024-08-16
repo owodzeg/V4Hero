@@ -258,6 +258,18 @@ void StateManager::updateCurrentState()
             testChamberPtr->Update();
             break;
         }
+
+        case ERROR: {
+            if (errorChamberPtr == nullptr)
+            {
+                SPDLOG_ERROR("Error handler is not initialized? Well... If we are here, something must have initialized it! This is stupid!");
+                SPDLOG_ERROR("Resetting the game...");
+
+                setState(ENTRY);
+            }
+
+            errorChamberPtr->Update();
+        }
     }
 }
 
@@ -307,7 +319,17 @@ void StateManager::initState(int state)
         
             if (patapolisPtr == nullptr)
             {
-                patapolisPtr = new PatapolisMenu;
+                try
+                {
+                    patapolisPtr = new PatapolisMenu;
+                }
+                catch ( ... )
+                {
+                    SPDLOG_ERROR("Could not load Patapolis.");
+                    setState(ERROR);
+
+                    break;
+                }
             }
 
             if (altarPtr == nullptr)
@@ -404,6 +426,16 @@ void StateManager::parseCurrentStateEvents(sf::Event& event)
 void StateManager::setState(int state)
 {
     // Here is a good place to put specific events that always happen when changing states
+    if(state == ERROR)
+    {
+        if (errorChamberPtr != nullptr)
+        {
+            delete errorChamberPtr;
+        }
+
+        errorChamberPtr = new ErrorChamber;
+        errorChamberPtr->badState = currentGameState;
+    }
     
     //return from options to main
     if (currentGameState == OPTIONSMENU && state == MAINMENU) 
