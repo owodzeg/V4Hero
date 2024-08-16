@@ -89,11 +89,11 @@ void Object::swapTexture(sf::Image& img)
     //cout << "[Object] Object::swapTexture(): " << texture_path << endl;
 
 
-    s_obj.t.loadFromImage(img);
+    //s_obj.t.loadFromImage(img);
     //cout << c.getElapsedTime().asMicroseconds() << "us ";
-    s_obj.t.setSmooth(true);
+    //s_obj.t.setSmooth(true);
     //cout << c.getElapsedTime().asMicroseconds() << "us ";
-    s_obj.applyTexture();
+    //s_obj.applyTexture();
     //cout << c.getElapsedTime().asMicroseconds() << "us" << endl;;
     //cout << "[AnimatedObject::swapTexture A] swapping done" << endl;
 }
@@ -112,11 +112,11 @@ void Object::swapTexture(sf::Image first, vector<Pixel> px)
         nw.setPixel(px[i].x, px[i].y, px[i].color);
     }
     //cout << c.getElapsedTime().asMicroseconds() << "us ";
-    s_obj.t.loadFromImage(nw);
+    //s_obj.t.loadFromImage(nw);
     //cout << c.getElapsedTime().asMicroseconds() << "us ";
-    s_obj.t.setSmooth(true);
+    //s_obj.t.setSmooth(true);
     //cout << c.getElapsedTime().asMicroseconds() << "us ";
-    s_obj.applyTexture();
+    //s_obj.applyTexture();
     //cout << c.getElapsedTime().asMicroseconds() << "us" << endl;;
     //cout << "[AnimatedObject::swapTexture B] swapping done" << endl;
 }
@@ -424,7 +424,7 @@ void Object::Draw(int orx, int ory)
             if (!exported)
             {
                 sf::Image img;
-                img = s_obj.t.copyToImage();
+                //img = s_obj.t.copyToImage();
                 int rrr = rand() % 100000000;
                 img.saveToFile("texDump/obj_" + std::to_string(rrr) + ".png");
 
@@ -456,7 +456,7 @@ void Object::Draw(int x1, int y1, int x2, int y2, int orx, int ory)
             if (!exported)
             {
                 sf::Image img;
-                img = s_obj.t.copyToImage();
+                //img = s_obj.t.copyToImage();
                 int rrr = rand() % 100000000;
                 img.saveToFile("texDump/obj_" + std::to_string(rrr) + ".png");
 
