@@ -136,7 +136,26 @@ void AnimatedObject::LoadConfig(const std::string& anim_path)
 
         throw AnimatedObjectException("Invalid file loaded.");
     }
-    animation.Load(anim_path);
+
+    try
+    {
+        animation.Load(anim_path);
+    }
+    catch(PNGAnimationException& exception)
+    {
+        SPDLOG_ERROR("An exception occured when trying to load PNGAnimation: {}", exception.what());
+        throw AnimatedObjectException(exception.what());
+    }
+    catch(std::exception& exception)
+    {
+        SPDLOG_ERROR("A generic exception occured when trying to load PNGAnimation: {}", exception.what());
+        throw AnimatedObjectException(exception.what());
+    }
+    catch(PNGAnimationException& exception)
+    {
+        SPDLOG_ERROR("An unknown exception occurred.");
+        throw AnimatedObjectException("An unknown exception occurred.");
+    }
 }
 
 void AnimatedObject::Draw()

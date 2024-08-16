@@ -287,19 +287,49 @@ void StateManager::initState(int state)
             // For initializing MainMenu, we want to initialize OptionsMenu as well, so the transition is seamless
             if (mainMenuPtr == nullptr)
             {
-                mainMenuPtr = new MainMenu;
+                try
+                {
+                    mainMenuPtr = new MainMenu;
+                }
+                catch( ... )
+                {
+                    SPDLOG_ERROR("Could not load Main Menu.");
+                    setState(ERROR);
+
+                    break;
+                }
             }
 
             if (optionsMenuPtr == nullptr)
             {
-                optionsMenuPtr = new OptionsMenu;
+                try
+                {
+                    optionsMenuPtr = new OptionsMenu;
+                }
+                catch( ... )
+                {
+                    SPDLOG_ERROR("Could not load Options Menu.");
+                    setState(ERROR);
+
+                    break;
+                }
             }
             
             if (introductionPtr == nullptr)
             {
-                introductionPtr = new IntroductionMenu;
-                introductionPtr->Initialize();
-                introductionPtr->timeout.restart();
+                try
+                {
+                    introductionPtr = new IntroductionMenu;
+                    introductionPtr->Initialize();
+                    introductionPtr->timeout.restart();
+                }
+                catch( ... )
+                {
+                    SPDLOG_ERROR("Could not load Introduction Menu.");
+                    setState(ERROR);
+
+                    break;
+                }
             }
 
             break;
@@ -309,14 +339,23 @@ void StateManager::initState(int state)
 
             if (loadingTipPtr == nullptr)
             {
-                loadingTipPtr = new LoadingTip;
+                try
+                {
+                    loadingTipPtr = new LoadingTip;
+                }
+                catch( ... )
+                {
+                    SPDLOG_ERROR("Could not load tips.");
+                    setState(ERROR);
+
+                    break;
+                }
             }
 
             break;
         }
 
         case PATAPOLIS: {
-        
             if (patapolisPtr == nullptr)
             {
                 try
@@ -334,28 +373,69 @@ void StateManager::initState(int state)
 
             if (altarPtr == nullptr)
             {
-                altarPtr = new AltarMenu;
-                altarPtr->save_loaded = patapolisPtr->save_loaded;
-                altarPtr->reloadInventory();
-                altarPtr->initialized = true;
+                try
+                {
+                    altarPtr = new AltarMenu;
+                    altarPtr->save_loaded = patapolisPtr->save_loaded;
+                    altarPtr->reloadInventory();
+                    altarPtr->initialized = true;
+                }
+                catch ( ... )
+                {
+                    SPDLOG_ERROR("Could not load Altar.");
+                    setState(ERROR);
+
+                    break;
+                }
             }
 
             if (barracksPtr == nullptr)
             {
-                barracksPtr = new Barracks;
+                try
+                {
+                    barracksPtr = new Barracks;
+                }
+                catch ( ... )
+                {
+                    SPDLOG_ERROR("Could not load Barracks.");
+                    setState(ERROR);
+
+                    break;
+                }
             }
 
             if (obeliskPtr == nullptr)
             {
-                obeliskPtr = new ObeliskMenu;
-                obeliskPtr->Reload();
-                obeliskPtr->initialized = true;
+                try
+                {
+                    obeliskPtr = new ObeliskMenu;
+                    obeliskPtr->Reload();
+                    obeliskPtr->initialized = true;
+                }
+                catch ( ... )
+                {
+                    SPDLOG_ERROR("Could not load Obelisk.");
+                    setState(ERROR);
+
+                    break;
+                }
             }
+
             if (materPtr == nullptr)
             {
-                materPtr = new MaterOuterMenu;
-                materPtr->save_loaded = patapolisPtr->save_loaded;
-                materPtr->showMater();
+                try
+                {
+                    materPtr = new MaterOuterMenu;
+                    materPtr->save_loaded = patapolisPtr->save_loaded;
+                    materPtr->showMater();
+                }
+                catch ( ... )
+                {
+                    SPDLOG_ERROR("Could not load Mater.");
+                    setState(ERROR);
+
+                    break;
+                }
             }
 
             break;
@@ -365,19 +445,29 @@ void StateManager::initState(int state)
 
             if (missionControllerPtr == nullptr)
             {
-                //Since MissionController is handled separately, tell CoreManager to reinitialize it
-                CoreManager::getInstance().reinitMissionController();
-
-                missionControllerPtr = CoreManager::getInstance().getMissionController();
-
-                if (CoreManager::getInstance().getCore()->mission_id >= 0)
+                try
                 {
-                    //missionControllerPtr->StartMission(CoreManager::getInstance().getCore()->mission_file, false, CoreManager::getInstance().getCore()->mission_id, CoreManager::getInstance().getCore()->mission_multiplier);
-                } else
+                    //Since MissionController is handled separately, tell CoreManager to reinitialize it
+                    CoreManager::getInstance().reinitMissionController();
+
+                    missionControllerPtr = CoreManager::getInstance().getMissionController();
+
+                    if (CoreManager::getInstance().getCore()->mission_id >= 0)
+                    {
+                        //missionControllerPtr->StartMission(CoreManager::getInstance().getCore()->mission_file, false, CoreManager::getInstance().getCore()->mission_id, CoreManager::getInstance().getCore()->mission_multiplier);
+                    } else
+                    {
+                        SPDLOG_ERROR("No load mission specified, returning to Patapolis");
+                        missionControllerPtr->loadingError = true;
+                        setState(PATAPOLIS);
+                        break;
+                    }
+                }
+                catch ( ... )
                 {
-                    SPDLOG_ERROR("No load mission specified, returning to Patapolis");
-                    missionControllerPtr->loadingError = true;
-                    setState(PATAPOLIS);
+                    SPDLOG_ERROR("Could not load Mission.");
+                    setState(ERROR);
+
                     break;
                 }
             }

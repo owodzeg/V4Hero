@@ -294,6 +294,9 @@ void PNGAnimation::Load(const std::string& path)
                 }
             }
         }
+    } else
+    {
+        throw PNGAnimationException("Invalid file detected. PNGAnimation supports only .png and .zip.");
     }
 
     // Step 2 - create animations, then assign frames to animations

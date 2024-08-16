@@ -5,6 +5,17 @@
 #include <vector>
 #include <unordered_map>
 
+class PNGAnimationException : public std::exception {
+private:
+    std::string message;
+
+public:
+    PNGAnimationException(std::string msg) : message(msg) {}
+    char* what () {
+        return message.data();
+    }
+};
+
 class PNGAnimation
 {
     public:
