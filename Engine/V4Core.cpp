@@ -176,32 +176,50 @@ void V4Core::init()
 
     StateManager::getInstance().setState(StateManager::ENTRY);
 
-    if(CoreManager::getInstance().getConfig()->GetInt("test") == 1)
+    switch(CoreManager::getInstance().getConfig()->GetInt("test"))
     {
-        StateManager::getInstance().setState(StateManager::TEST_CHAMBER);
-    }
-    else if(CoreManager::getInstance().getConfig()->GetInt("test") == 2)
-    {
-        ifstream check("resources/data/sv1.p4sv");
-        bool exists = check.good();
-        check.close();
+        case 1: {
+            SPDLOG_INFO("Test initialized. Moving to TEST CHAMBER.");
+            StateManager::getInstance().setState(StateManager::TEST_CHAMBER);
+            break;
+        }
+        case 2: {
+            SPDLOG_INFO("Test initialized. Moving to MISSION CONTROLLER, mission_file = mis1_0.p4m.");
+            ifstream check("resources/data/sv1.p4sv");
+            bool exists = check.good();
+            check.close();
 
-        if (exists)
-        {
-            /** Load save from saveReader **/
-            saveReader->Flush();
-            saveReader->LoadSave();
-        } else {
-            /** No save found. Create a blank one for test purposes **/
+            if (exists)
+            {
+                /** Load save from saveReader **/
+                saveReader->Flush();
+                saveReader->LoadSave();
+            } else {
+                /** No save found. Create a blank one for test purposes **/
+                saveReader->Flush();
+                saveReader->CreateBlankSave();
+            }
+
+            mission_file = "mis1_0.p4m";
+            mission_id = 0;
+            mission_multiplier = 1;
+
+            StateManager::getInstance().setState(StateManager::MISSIONCONTROLLER);
+            break;
+        }
+        case 3: {
+            SPDLOG_INFO("Test initialized. CREATING BLANK SAVE.");
+
             saveReader->Flush();
             saveReader->CreateBlankSave();
+            saveReader->Save();
+            saveReader->Flush();
+
+            break;
         }
-
-        mission_file = "mis1_0.p4m";
-        mission_id = 0;
-        mission_multiplier = 1;
-
-        StateManager::getInstance().setState(StateManager::MISSIONCONTROLLER);
+        default: {
+            break;
+        }
     }
 
     // Execute the main game loop
