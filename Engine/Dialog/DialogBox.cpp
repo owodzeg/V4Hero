@@ -11,11 +11,23 @@ PataDialogBox::PataDialogBox()
 {
 }
 
-void PataDialogBox::Create(sf::Font font, sf::String text, std::vector<sf::String> options, int qualitySetting)
+void PataDialogBox::Create(sf::Font font, sf::String text, std::vector<sf::String> options, int qualitySetting, int type)
 {
     SPDLOG_DEBUG("Creating new PataDialogBox");
 
-    t_dialogType.createText(font, 16, sf::Color::Red, "Information", qualitySetting, 1);
+    StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
+
+    switch(type)
+    {
+        case 1: {
+            t_dialogType.createText(font, 16, sf::Color::Red, Func::ConvertToUtf8String(strRepo->GetString("dialog_category1")), qualitySetting, 1);
+            break;
+        }
+        case 2: {
+            t_dialogType.createText(font, 16, sf::Color::Red, Func::ConvertToUtf8String(strRepo->GetString("dialog_category2")), qualitySetting, 1);
+            break;
+        }
+    }
     t_dialogText.createText(font, 30, sf::Color::Black, text, qualitySetting, 1);
 
     for (unsigned int i = 0; i < options.size(); i++)
@@ -40,7 +52,7 @@ void PataDialogBox::Readjust()
         if (t_options[i].getLocalBounds().width > width)
             width = t_options[i].getLocalBounds().width;
 
-        height += 30;
+        height += 90;
     }
 
     if (t_dialogText.rendered)
@@ -51,7 +63,7 @@ void PataDialogBox::Readjust()
         height += t_dialogText.getLocalBounds().height;
     }
 
-    height += 40; ///gap for options
+    height += 120; ///gap for options
 }
 
 int PataDialogBox::CheckSelectedOption()
@@ -90,7 +102,7 @@ void PataDialogBox::Draw()
         if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
             MoveDown();
 
-        float resRatio = window->getSize().x / float(1280);
+        float resRatio = window->getSize().x / float(3840);
 
         if (!rendered)
         {
@@ -107,19 +119,19 @@ void PataDialogBox::Draw()
 
         Readjust();
 
-        rr_shadow.Create(width + 2, height + 2, 20, window->getSize().x / float(1280), sf::Color(0, 0, 0, 96));
+        rr_shadow.Create(width + 2, height + 2, 60, window->getSize().x / float(3840), sf::Color(0, 0, 0, 96));
         rr_shadow.x = x - 1;
         rr_shadow.y = y - 1;
-        rr_shadow.setOrigin(sf::Vector2f((width + 40) / 2, (height + 40) / 2));
+        rr_shadow.setOrigin(sf::Vector2f((width + 120) / 2, (height + 120) / 2));
         rr_shadow.Draw();
 
-        rr_main.Create(width, height, 20, window->getSize().x / float(1280));
+        rr_main.Create(width, height, 60, window->getSize().x / float(3840));
         rr_main.x = x;
         rr_main.y = y;
-        rr_main.setOrigin(sf::Vector2f((width + 40) / 2, (height + 40) / 2));
+        rr_main.setOrigin(sf::Vector2f((width + 120) / 2, (height + 120) / 2));
         rr_main.Draw();
 
-        t_dialogType.setPosition(x - rr_main.orx + 10, y - rr_main.ory);
+        t_dialogType.setPosition(x - rr_main.orx + 30, y - rr_main.ory);
         t_dialogType.draw(window);
 
         t_dialogText.setOrigin(t_dialogText.getLocalBounds().width / 2, 0);
@@ -128,10 +140,10 @@ void PataDialogBox::Draw()
 
         //cout << "stuff: " << rr_main.orx << " " << rr_main.ory << endl;
 
-        highlight.setSize(sf::Vector2f((width + 40) * resRatio, 30 * resRatio));
+        highlight.setSize(sf::Vector2f((width + 120) * resRatio, 90 * resRatio));
         highlight.setFillColor(sf::Color(0, 200, 0, 255));
         highlight.setOrigin(highlight.getLocalBounds().width / 2, 0);
-        highlight.setPosition((x) *resRatio, (y - rr_main.ory + 46 + t_dialogType.getLocalBounds().height + t_dialogText.getLocalBounds().height + (option * 30)) * resRatio);
+        highlight.setPosition((x) *resRatio, (y - rr_main.ory + 138 + t_dialogType.getLocalBounds().height + t_dialogText.getLocalBounds().height + (option * 90)) * resRatio);
         window->draw(highlight);
 
         arrow_x -= 3 / fps;
@@ -140,13 +152,13 @@ void PataDialogBox::Draw()
             arrow_x = 0;
 
         arrow.setOrigin(arrow.getLocalBounds().width / 2, arrow.getLocalBounds().height / 2);
-        arrow.setPosition(x - rr_main.orx + arrow_x, y - rr_main.ory + 64 + t_dialogType.getLocalBounds().height + t_dialogText.getLocalBounds().height + (option * 30));
+        arrow.setPosition(x - rr_main.orx + arrow_x, y - rr_main.ory + 192 + t_dialogType.getLocalBounds().height + t_dialogText.getLocalBounds().height + (option * 90));
         arrow.draw(window);
 
         for (unsigned int i = 0; i < t_options.size(); i++)
         {
             t_options[i].setOrigin(t_options[i].getLocalBounds().width / 2, 0);
-            t_options[i].setPosition(x, y - rr_main.ory + 46 + t_dialogType.getLocalBounds().height + t_dialogText.getLocalBounds().height + (i * 30));
+            t_options[i].setPosition(x, y - rr_main.ory + 138 + t_dialogType.getLocalBounds().height + t_dialogText.getLocalBounds().height + (i * 90));
             t_options[i].draw(window);
         }
     }

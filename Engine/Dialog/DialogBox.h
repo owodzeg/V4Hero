@@ -34,7 +34,7 @@ public:
 
     PataDialogBox();
     //void Create(sf::Font font, std::string text, std::vector<std::string> options, int qualitySetting);
-    void Create(sf::Font font, sf::String text, std::vector<sf::String> options, int qualitySetting);
+    void Create(sf::Font font, sf::String text, std::vector<sf::String> options, int qualitySetting, int type = 1);
     void Readjust();
     int CheckSelectedOption();
     void MoveUp();
