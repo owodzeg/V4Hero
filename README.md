@@ -53,7 +53,7 @@ When the compilation is done, you can just run `./V4Hero` and the game will laun
 
 ### Fedora / Red Hat
 
-```sudo dnf install make automake gcc gcc-c++ libstdc++-static kernel-devel SFML-devel systemd-devel libzip-devel libXcursor-devel libXrandr-devel```
+```sudo dnf install make automake gcc gcc-c++ libstdc++-static kernel-devel SFML-devel systemd-devel libzip-devel libXcursor-devel libXrandr-devel mesa-libGL-devel```
 
 ### GPU support
 
