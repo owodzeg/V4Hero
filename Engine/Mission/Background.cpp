@@ -14,16 +14,86 @@ Background::Background()
 {
 }
 
-void Background::Load(std::string bg_name)
+void Background::Load(const std::string& bg_name)
 {
     SPDLOG_DEBUG("Loading background: {}", bg_name);
 
-    float resRatioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
-    float resRatioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
+    float resRatioX = CoreManager::getInstance().getConfig()->GetInt("resX") / float(2160);
+    float resRatioY = CoreManager::getInstance().getConfig()->GetInt("resY") / float(2160);
 
-    v_background.clear();
-    vx_pos.clear();
-    vx_color.clear();
+    std::ifstream bg(std::format("resources/graphics/bg/{}/background.json", bg_name));
+    SPDLOG_INFO("Attempting to read a background from resources/graphics/bg/{}", bg_name);
+    
+    json bg_json;
+    bg >> bg_json;
+
+    bg.close();
+
+    try
+    {
+        std::string bg_real_name = bg_json["name"];
+
+        if(!bg_json.contains("sunny"))
+        {
+            SPDLOG_ERROR("no default sunny weather parameters.");
+            throw std::exception();
+        }
+        else
+        {
+            json sunny = bg_json["sunny"];
+            for(auto object : sunny)
+            {
+                SPDLOG_INFO("Object found: {}", object["type"]);
+                if(object["type"] == "skybox")
+                {
+                    json color_points = object["color_points"];
+                    for(auto color_point : color_points)
+                    {
+                        int y_pos = color_point["y_pos"];
+                        sf::Color color = sf::Color(color_point["color"][0], color_point["color"][1], color_point["color"][2], 255);
+
+                        vx_pos.push_back(sf::Vector2f(0, y_pos * resRatioY));
+                        vx_pos.push_back(sf::Vector2f(2160 * resRatioX, y_pos * resRatioY));
+
+                        vx_color.push_back(color);
+                        vx_color.push_back(color);
+                    }
+
+                    sf::VertexArray tmp(sf::TrianglesStrip, vx_pos.size());
+                    v_background = tmp;
+                }
+                else if(object["type"] == "image")
+                {
+                    std::string tex_name = object["texture"];
+                    int y_pos = object["y_pos"];
+                    float x_speed = object["x_speed"];
+                    int layer = object["layer"];
+
+                    BGObject tmp;
+
+                    tmp.color = sf::Color::White;
+                    if(object.contains("color"))
+                    {
+                        sf::Color color = sf::Color(object["color"][0], object["color"][1], object["color"][2], 255);
+                        tmp.color = color;
+                    }
+
+                    tmp.texture.load(std::format("resources/graphics/bg/{}/{}", bg_name, tex_name));
+                    tmp.position = sf::Vector2f(4000, y_pos);
+                    tmp.x_speed = x_speed;
+
+                    bg_objects.push_back(tmp);
+                }
+            }
+        }
+
+        SPDLOG_INFO("Real name: {}", bg_real_name);
+    } catch (const exception& e)
+    {
+        SPDLOG_ERROR("[ERROR] An error occured while loading mission: resources/graphics/bg/{}. Error: {}", bg_name, e.what());
+        return;
+    }
+
 
     std::ifstream param_file("resources/graphics/bg/" + bg_name + "/param.dat");
 
@@ -32,60 +102,10 @@ void Background::Load(std::string bg_name)
     {
         if (buff.find("@back:") != std::string::npos)
         {
-            std::string vx_params = buff.substr(buff.find_first_of(":") + 1);
-            std::vector<std::string> v_vxparams = Func::Split(vx_params, ';');
 
-            for (int i = 0; i < v_vxparams.size(); i++)
-            {
-                std::vector<std::string> tmp = Func::Split(v_vxparams[i], ',');
-
-                sf::Vector2f tmp_vector;
-                sf::Color tmp_color;
-
-                tmp_vector.x = 0;
-                tmp_vector.y = atof(tmp[0].c_str()) * resRatioY;
-
-                if (tmp[0] == "-1")
-                {
-                    tmp_vector.y = float(610) * resRatioY;
-                }
-
-                tmp_color.r = atoi(tmp[1].c_str());
-                tmp_color.g = atoi(tmp[2].c_str());
-                tmp_color.b = atoi(tmp[3].c_str());
-
-                sf::Vector2f tmp_vector2;
-
-                tmp_vector2.x = float(1280) * resRatioX;
-                tmp_vector2.y = atof(tmp[0].c_str()) * resRatioY;
-
-                if (tmp[0] == "-1")
-                {
-                    tmp_vector2.y = float(610) * resRatioY;
-                }
-
-                vx_pos.push_back(tmp_vector);
-                vx_color.push_back(tmp_color);
-
-                vx_pos.push_back(tmp_vector2);
-                vx_color.push_back(tmp_color);
-            }
-
-            sf::VertexArray tmp(sf::TrianglesStrip, vx_pos.size());
-            v_background = tmp;
         } else
         {
-            std::vector<std::string> v_params = Func::Split(buff, ',');
 
-            SPDLOG_DEBUG("Loading texture: {}/{}", bg_name, v_params[0]);
-            std::string t_name = "resources/graphics/bg/" + bg_name + "/" + v_params[0];
-
-            BGObject tmp;
-            tmp.texture.load(t_name);
-            tmp.color = sf::Color(atoi(v_params[3].c_str()), atoi(v_params[4].c_str()), atoi(v_params[5].c_str()), 255);
-            tmp.position = sf::Vector2f(-1000, atoi(v_params[1].c_str()));
-            tmp.x_speed = atof(v_params[2].c_str());
-            bg_objects.push_back(tmp);
         }
     }
 
@@ -112,14 +132,16 @@ void Background::Draw(Camera& camera)
 
     window->setView(lastView);
 
-    for (int i=0; i<bg_objects.size(); i++)
+    //for (int i=0; i<bg_objects.size(); i++)
+    for (auto bg_object : bg_objects)
     {
-        bg_objects[i].texture.setTextureRect(sf::IntRect(0, 0, 500000, bg_objects[i].texture.getGlobalBounds().height));
-        bg_objects[i].texture.setRepeated(true);
-        bg_objects[i].texture.setOrigin(0, bg_objects[i].texture.getGlobalBounds().height);
-        bg_objects[i].texture.setColor(bg_objects[i].color);
-        bg_objects[i].texture.setPosition((-(bg_objects[i].x_speed * camera.camera_x) - (bg_objects[i].x_speed * camera.manual_x) - (bg_objects[i].x_speed * camera.debug_x) - 1000), bg_objects[i].position.y);
-        bg_objects[i].texture.draw();
+        bg_object.texture.setTextureRect(sf::IntRect(0, 0, 500000, bg_object.texture.getGlobalBounds().height));
+        bg_object.texture.setRepeated(true);
+        bg_object.texture.setOrigin(0, bg_object.texture.getGlobalBounds().height);
+        bg_object.texture.setColor(bg_object.color);
+        //bg_objects[i].texture.setPosition((-(bg_objects[i].x_speed * camera.camera_x) - (bg_objects[i].x_speed * camera.manual_x) - (bg_objects[i].x_speed * camera.debug_x) - 1000), bg_objects[i].position.y);
+        bg_object.texture.setPosition(-(-(camera.camera_x - camera.manual_x - camera.debug_x) + (bg_object.position.x + camera.manual_x)) * bg_object.x_speed - 1000, bg_object.position.y);
+        bg_object.texture.draw();
     }
 
     auto lastView2 = window->getView();

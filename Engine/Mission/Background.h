@@ -29,7 +29,7 @@ public:
     int quality = 0;
 
     Background();
-    void Load(std::string bg_name);
+    void Load(const std::string& bg_name);
     void Draw(Camera& camera);
 };
 
