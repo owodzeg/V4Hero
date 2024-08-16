@@ -541,3 +541,5 @@ build
 # some cmake stuff, where did it come from?
 CPackConfig.cmake
 CPackSourceConfig.cmake
+
+resources/graphics/.tex_cache
