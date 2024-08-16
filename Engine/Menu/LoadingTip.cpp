@@ -17,11 +17,11 @@ LoadingTip::LoadingTip(int mode)
         StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
         Config* config = CoreManager::getInstance().getConfig();
 
-        float resRatioX = window->getSize().x / float(1280);
-        float resRatioY = window->getSize().y / float(720);
+        float resRatioX = window->getSize().x / float(3840);
+        float resRatioY = window->getSize().y / float(2160);
 
-        box_1.setSize(sf::Vector2f(1280 * resRatioX, 80 * resRatioY));
-        box_2.setSize(sf::Vector2f(1280 * resRatioX, 514 * resRatioY));
+        box_1.setSize(sf::Vector2f(3840 * resRatioX, 240 * resRatioY));
+        box_2.setSize(sf::Vector2f(3840 * resRatioX, 1542 * resRatioY));
 
         tip_logo.load("resources/graphics/ui/tips/tip-logo.png");
 
@@ -32,8 +32,8 @@ LoadingTip::LoadingTip(int mode)
         loading_eye1.setOrigin(loading_eye1.getGlobalBounds().width * 0.85, loading_eye1.getGlobalBounds().height * 0.85);
         loading_eye2.setOrigin(loading_eye2.getGlobalBounds().width * 0.85, loading_eye2.getGlobalBounds().height * 0.85);
 
-        box_1.setPosition(0, 20 * resRatioY);
-        box_2.setPosition(0, 120 * resRatioY);
+        box_1.setPosition(0, 60 * resRatioY);
+        box_2.setPosition(0, 360 * resRatioY);
 
         box_1.setFillColor(sf::Color(0, 0, 0, 192));
         box_2.setFillColor(sf::Color(0, 0, 0, 192));
@@ -69,11 +69,11 @@ LoadingTip::LoadingTip(int mode)
         StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
         Config* config = CoreManager::getInstance().getConfig();
 
-        float resRatioX = window->getSize().x / float(1280);
-        float resRatioY = window->getSize().y / float(720);
+        float resRatioX = window->getSize().x / float(3840);
+        float resRatioY = window->getSize().y / float(2160);
 
-        box_1.setSize(sf::Vector2f(1280 * resRatioX, 80 * resRatioY));
-        box_2.setSize(sf::Vector2f(1280 * resRatioX, 514 * resRatioY));
+        box_1.setSize(sf::Vector2f(3840 * resRatioX, 240 * resRatioY));
+        box_2.setSize(sf::Vector2f(2160 * resRatioX, 1542 * resRatioY));
 
         loading_head.load("resources/graphics/ui/tips/loading_head.png");
         loading_eye1.load("resources/graphics/ui/tips/loading_eye.png");
@@ -82,8 +82,8 @@ LoadingTip::LoadingTip(int mode)
         loading_eye1.setOrigin(loading_eye1.getGlobalBounds().width * 0.85, loading_eye1.getGlobalBounds().height * 0.85);
         loading_eye2.setOrigin(loading_eye1.getGlobalBounds().width * 0.85, loading_eye1.getGlobalBounds().height * 0.85);
 
-        box_1.setPosition(0, 20 * resRatioY);
-        box_2.setPosition(0, 120 * resRatioY);
+        box_1.setPosition(0, 60 * resRatioY);
+        box_2.setPosition(0, 360 * resRatioY);
 
         box_1.setFillColor(sf::Color(0, 0, 0, 192));
         box_2.setFillColor(sf::Color(0, 0, 0, 192));
@@ -110,16 +110,16 @@ void LoadingTip::Draw()
         window->draw(box_1);
         window->draw(box_2);
 
-        tip_logo.setPosition(1060, 20);
+        tip_logo.setPosition(3180, 60);
         tip_logo.draw();
 
-        s_icon.setPosition(1040, 380);
+        s_icon.setPosition(3120, 1140);
         s_icon.draw();
 
-        t_tipTitle.setPosition(24, 32);
+        t_tipTitle.setPosition(72, 96);
         t_tipTitle.draw(window);
 
-        t_tipText.setPosition(24, 130);
+        t_tipText.setPosition(72, 390);
         t_tipText.draw(window);
 
         // drawing some text
@@ -154,7 +154,7 @@ void LoadingTip::Draw()
 
 
             t_pressAnyKey.setOrigin(t_pressAnyKey.getLocalBounds().width, t_pressAnyKey.getLocalBounds().height / 2);
-            t_pressAnyKey.setPosition(722 + 526, 658 + 21);
+            t_pressAnyKey.setPosition(3744, 2037);
             t_pressAnyKey.draw(window);
 
             if (inputCtrl->isAnyKeyPressed())
@@ -164,17 +164,17 @@ void LoadingTip::Draw()
         } else
         {
             t_nowLoading.setOrigin(t_nowLoading.getLocalBounds().width, t_nowLoading.getLocalBounds().height / 2);
-            t_nowLoading.setPosition(722 + 230 + 256, 658 + 26);
+            t_nowLoading.setPosition(3624, 2052);
             t_nowLoading.draw(window);
 
-            loading_head.setPosition(t_nowLoading.getPosition().x - t_nowLoading.getLocalBounds().width - 46, t_nowLoading.getPosition().y - 28);
-            loading_eye1.setPosition(t_nowLoading.getPosition().x - t_nowLoading.getLocalBounds().width + 19 - 46, t_nowLoading.getPosition().y + 43 - 28);
+            loading_head.setPosition(t_nowLoading.getPosition().x - t_nowLoading.getLocalBounds().width - 138, t_nowLoading.getPosition().y - 84);
+            loading_eye1.setPosition(t_nowLoading.getPosition().x - t_nowLoading.getLocalBounds().width - 81, t_nowLoading.getPosition().y + 45);
             loading_eye1.setRotation(angle_1);
             loading_head.draw();
             loading_eye1.draw();
 
-            loading_head.setPosition(t_nowLoading.getPosition().x + 12, t_nowLoading.getPosition().y - 28);
-            loading_eye2.setPosition(t_nowLoading.getPosition().x + 19 + 12, t_nowLoading.getPosition().y + 43 - 28);
+            loading_head.setPosition(t_nowLoading.getPosition().x + 36, t_nowLoading.getPosition().y - 74);
+            loading_eye2.setPosition(t_nowLoading.getPosition().x + 93, t_nowLoading.getPosition().y + 45);
             loading_eye2.setRotation(angle_2);
             loading_head.draw();
             loading_eye2.draw();
@@ -190,8 +190,8 @@ void LoadingTip::Draw()
             tipFinished = true;
         } else
         {
-            loading_head.setPosition(1220, 650);
-            loading_eye2.setPosition(1239, 693);
+            loading_head.setPosition(3660, 1950);
+            loading_eye2.setPosition(3717, 2079);
             loading_eye2.setRotation(angle_2);
             loading_head.draw();
             loading_eye2.draw();

@@ -8,11 +8,10 @@
 class PSprite
 {
 public:
-    sf::Texture t; //deprecated
     sf::Sprite s;
     std::string texturePath;
     int qualitySetting = -1, oldQualitySetting = -999;
-    int resSetting = 1, oldResSetting = -999;
+    int resSetting = 3, oldResSetting = -999;
     float ratioX = 1, ratioY = 1;
     float resRatioX = 1, resRatioY = 1;
     float scaleX = 1, scaleY = 1;

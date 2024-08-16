@@ -28,11 +28,12 @@ std::vector<std::string> PText::split(std::string const & s, char delim)
 
 void PText::createText(sf::Font& font, float characterSize, sf::Color color, sf::String text_string, int q, int r)
 {
+    // TODO: deprecate r = resSetting not needed, everything is planned for 3840x2160
     std::string log_str = text_string.toAnsiString();
     log_str = std::regex_replace(log_str, std::regex("\n"), "\\n");
-    SPDLOG_DEBUG("Creating a new PText object: size: {} text: {} q: {} r: {}", characterSize, log_str, q, r);
+    SPDLOG_DEBUG("Creating a new PText object: size: {} text: {} q: {} r: {}", characterSize, log_str, q, 3);
 
-    cS = characterSize;
+    cS = characterSize*3;
     c = color;
     txt = text_string;
 
@@ -47,7 +48,7 @@ void PText::createText(sf::Font& font, float characterSize, sf::Color color, sf:
     processRichText();
 
     qualitySetting = q;
-    resSetting = r;
+    resSetting = 3;
 }
 
 void PText::processRichText()
@@ -240,7 +241,7 @@ void PText::processRichText()
 
                         sfe::Outline outline;
                         outline.outline = sf::Color(r,g,b,255);
-                        outline.thickness = th;
+                        outline.thickness = th*3;
 
                         t << outline;
                     }
@@ -497,7 +498,7 @@ sf::FloatRect PText::getTransformedBounds()
     std::vector<float> x = {640, 1280, 1920, 3840};
     std::vector<float> y = {360, 720, 1080, 2160};
 
-    sf::Vector2f resRatio(windowSize.x / float(1280), windowSize.y / float(720));
+    sf::Vector2f resRatio(windowSize.x / float(3840), windowSize.y / float(2160));
 
     int quality = ResourceManager::getInstance().getCurrentQuality();
 
@@ -597,8 +598,6 @@ void PText::draw(sf::RenderWindow& window)
     t.setOrigin(orX, orY);
     t.setPosition(lx * resRatioX, ly * resRatioY);
     t.setRotation(angle * (180 / 3.14159265358));
-
-    
 
     if (rendered)
         window.draw(t);

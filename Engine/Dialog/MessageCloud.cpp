@@ -37,9 +37,9 @@ void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bo
 
     cur_color = color;
 
-    cross.loadFromFile("resources/graphics/ui/dialog/cross.png", q, 1);
-    cross_highlight.loadFromFile("resources/graphics/ui/dialog/crosshighlight.png", q, 1);
-    cross_arrow.loadFromFile("resources/graphics/ui/dialog/crossarrow.png", q, 1);
+    cross.loadFromFile("resources/graphics/ui/dialog/cross.png", q);
+    cross_highlight.loadFromFile("resources/graphics/ui/dialog/crosshighlight.png", q);
+    cross_arrow.loadFromFile("resources/graphics/ui/dialog/crossarrow.png", q);
 
     triangle.setPointCount(3);
     triangle.setFillColor(cur_color);
@@ -85,8 +85,8 @@ void MessageCloud::Show()
         dialogue_ptext.setString(dialogue_strings[cur_dialog]);
         visual_ptext.setString(dialogue_strings[cur_dialog]);
 
-        dest_xsize = visual_ptext.getLocalBounds().width + 64 + (visual_ptext.getLocalBounds().width / 10);
-        dest_ysize = visual_ptext.getLocalBounds().height + 64 + (visual_ptext.getLocalBounds().height / 1.5);
+        dest_xsize = visual_ptext.getLocalBounds().width + 210 + (visual_ptext.getLocalBounds().width / 30);
+        dest_ysize = visual_ptext.getLocalBounds().height + 210 + (visual_ptext.getLocalBounds().height / 4.5);
 
         text_timeout.restart();
 
@@ -124,8 +124,8 @@ void MessageCloud::NextDialog()
         dialogue_ptext.setString(dialogue_strings[cur_dialog]);
         visual_ptext.setString(dialogue_strings[cur_dialog]);
 
-        dest_xsize = visual_ptext.getLocalBounds().width + 64 + (visual_ptext.getLocalBounds().width / 10);
-        dest_ysize = visual_ptext.getLocalBounds().height + 64 + (visual_ptext.getLocalBounds().height / 1.5);
+        dest_xsize = visual_ptext.getLocalBounds().width + 210 + (visual_ptext.getLocalBounds().width / 30);
+        dest_ysize = visual_ptext.getLocalBounds().height + 210 + (visual_ptext.getLocalBounds().height / 4.5);
 
         text_timeout.restart();
     } else
@@ -211,8 +211,8 @@ void MessageCloud::Draw()
         /// adjusting the size of clouds and drawing them
         /// they are no longer an array, instead we just transform the single texture 
 
-        float scale_x = 1080.f / xsize;
-        float scale_y = 250.f / ysize;
+        float scale_x = 3240.f / xsize;
+        float scale_y = 750.f / ysize;
 
         cloud.setColor(cur_color);
         cloud.setPosition(x, y);
@@ -229,8 +229,8 @@ void MessageCloud::Draw()
         cloud.setScale(-1.f / scale_x, -1.f / scale_y);
         cloud.draw(window);
 
-        float rX = window->getSize().x / float(1280);
-        float rY = window->getSize().y / float(720);
+        float rX = window->getSize().x / float(3840);
+        float rY = window->getSize().y / float(2160);
 
         triangle.setPoint(0, sf::Vector2f(startpos.x * rX, startpos.y * rY));
         triangle.setPoint(1, sf::Vector2f((x - (xsize / 25)) * rX, y * rY));
@@ -242,7 +242,7 @@ void MessageCloud::Draw()
         if (!done)
         {
             dialogue_ptext.speedup = speedup;
-            dialogue_ptext.setPosition(x - visual_ptext.getLocalBounds().width / 2, y - 4 - visual_ptext.getLocalBounds().height / 2);
+            dialogue_ptext.setPosition(x - visual_ptext.getLocalBounds().width / 2, y - 12 - visual_ptext.getLocalBounds().height / 2);
             dialogue_ptext.draw(window);
 
             //loaded_text[cur_dialog].setPosition(x - ptext[cur_dialog].getLocalBounds().width / 2, y - 4 - ptext[cur_dialog].getLocalBounds().height / 2);
@@ -255,8 +255,8 @@ void MessageCloud::Draw()
 
                 arrow_y -= 36 / fps;
 
-                if (arrow_y <= -20)
-                    arrow_y = -20;
+                if (arrow_y <= -60)
+                    arrow_y = -60;
 
                 if (arrow_timeout.getElapsedTime().asSeconds() >= 0.75)
                 {
@@ -268,14 +268,14 @@ void MessageCloud::Draw()
                 cross_highlight.setOrigin(cross_highlight.getLocalBounds().width / 2, cross_highlight.getLocalBounds().height / 2);
                 cross_arrow.setOrigin(cross_highlight.getLocalBounds().width / 2, cross_highlight.getLocalBounds().height);
 
-                float cross_x = x + xsize / 2 - 8;
-                float cross_y = y + ysize / 2 - 20;
+                float cross_x = x + xsize / 2 - 24;
+                float cross_y = y + ysize / 2 - 60;
 
                 cross.setPosition(cross_x, cross_y);
                 cross_highlight.setPosition(cross_x, cross_y);
-                cross_arrow.setPosition(cross_x - 2, cross_y + 20 + arrow_y);
+                cross_arrow.setPosition(cross_x - 6, cross_y + 60 + arrow_y);
 
-                cross_highlight.setColor(sf::Color(255, 255, 255, 128 + (arrow_y * 6.4)));
+                cross_highlight.setColor(sf::Color(255, 255, 255, 240 + (arrow_y * 8)));
 
                 cross.draw(window);
                 cross_highlight.draw(window);

@@ -15,7 +15,7 @@ public:
 
     sf::String txt;
 
-    int qualitySetting, resSetting;
+    int qualitySetting, resSetting=3;
     float cS = 1;
     sf::Color c;
 

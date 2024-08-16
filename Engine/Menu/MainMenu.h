@@ -38,7 +38,7 @@ public:
     float fire_count = 0;
     bool UsingMouseSelection = true;
     float g_x[4], g_dest[4];
-    float g_y[4] = {630, 696, 724, 724};
+    float g_y[4] = {1890, 2088, 2172, 2172};
 
     ///Pre-menu screen
     sf::RectangleShape rs_cover;
@@ -59,8 +59,8 @@ public:
 
     float ui_alpha = 0;
 
-    float cur_y = 300;
-    float dest_y = 300;
+    float cur_y = 900;
+    float dest_y = 900;
 
     float temp_anim_t = 0;
     AnimatedCurveShape* shp;
@@ -73,7 +73,7 @@ public:
     bool mouseInBounds = false;
     bool initialized = false;
 
-    std::vector<int> totem_sel_pos = {205, 490, 780, 1080};
+    std::vector<int> totem_sel_pos = {615, 1470, 2340, 3240};
 
     std::vector<PataDialogBox> dialogboxes;
 

@@ -423,7 +423,7 @@ void OptionsMenu::Update()
 
                 options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_options")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
-                options_header.setPosition(930, 460);
+                options_header.setPosition(2790, 1380);
                 options_header.draw(window);
 
                 maxSel = options.size();
@@ -433,12 +433,12 @@ void OptionsMenu::Update()
                     //cout << "Options menu " << i << " " << options[i].getGlobalBounds().width/2 << " " << options[i].getGlobalBounds().height/2 << " " << options[i].getGlobalBoundsScaled().width/2 << " " << options[i].getGlobalBoundsScaled().height/2 << " " << options[i].orX << " " << options[i].orY << " " << options[i].lx << " " << options[i].ly << endl;
 
                     options[i].setOrigin(0, options[i].getGlobalBoundsScaled().height / 2);
-                    options[i].setPosition(810, 520 + 40 * i);
+                    options[i].setPosition(2430, 1560 + 120 * i);
                     options[i].setColor(sf::Color::White);
 
-                    if (mouseY / window->getSize().y * 1080 >= (options[i].getPosition().y - options[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 3240 >= (options[i].getPosition().y - options[i].getGlobalBoundsScaled().height / 2 + 24))
                     {
-                        if (mouseY / window->getSize().y * 1080 <= (options[i].getPosition().y + options[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 3240 <= (options[i].getPosition().y + options[i].getGlobalBoundsScaled().height / 2 + 24))
                         {
                             options[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -457,7 +457,7 @@ void OptionsMenu::Update()
             case 1: {
                 options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_graphics")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
-                options_header.setPosition(930, 460);
+                options_header.setPosition(2790, 1380);
                 options_header.draw(window);
 
                 maxSel = g_options.size();
@@ -465,12 +465,12 @@ void OptionsMenu::Update()
                 for (int i = 0; i < g_options.size(); i++)
                 {
                     g_options[i].setOrigin(0, g_options[i].getGlobalBoundsScaled().height / 2);
-                    g_options[i].setPosition(810, 520 + 40 * i);
+                    g_options[i].setPosition(2430, 1560 + 120 * i);
                     g_options[i].setColor(sf::Color::White);
 
-                    if (mouseY / window->getSize().y * 1080 >= (g_options[i].getPosition().y - g_options[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 3240 >= (g_options[i].getPosition().y - g_options[i].getGlobalBoundsScaled().height / 2 + 24))
                     {
-                        if (mouseY / window->getSize().y * 1080 <= (g_options[i].getPosition().y + g_options[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 3240 <= (g_options[i].getPosition().y + g_options[i].getGlobalBoundsScaled().height / 2 + 24))
                         {
                             g_options[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -489,7 +489,7 @@ void OptionsMenu::Update()
             case 2: {
                 options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_audio")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
-                options_header.setPosition(930, 460);
+                options_header.setPosition(2790, 1380);
                 options_header.draw(window);
 
                 maxSel = a_options.size();
@@ -497,12 +497,12 @@ void OptionsMenu::Update()
                 for (int i = 0; i < a_options.size(); i++)
                 {
                     a_options[i].setOrigin(0, a_options[i].getGlobalBoundsScaled().height / 2);
-                    a_options[i].setPosition(810, 520 + 40 * i);
+                    a_options[i].setPosition(2430, 1560 + 120 * i);
                     a_options[i].setColor(sf::Color::White);
 
-                    if (mouseY / window->getSize().y * 1080 >= (a_options[i].getPosition().y - a_options[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 3240 >= (a_options[i].getPosition().y - a_options[i].getGlobalBoundsScaled().height / 2 + 24))
                     {
-                        if (mouseY / window->getSize().y * 1080 <= (a_options[i].getPosition().y + a_options[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 3240 <= (a_options[i].getPosition().y + a_options[i].getGlobalBoundsScaled().height / 2 + 24))
                         {
                             a_options[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -521,7 +521,7 @@ void OptionsMenu::Update()
             case 3: {
                 options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_input")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
-                options_header.setPosition(930, 460);
+                options_header.setPosition(2790, 1380);
                 options_header.draw(window);
 
                 maxSel = inputs.size();
@@ -529,12 +529,12 @@ void OptionsMenu::Update()
                 for (int i = 0; i < inputs.size(); i++)
                 {
                     inputs[i].setOrigin(0, inputs[i].getGlobalBoundsScaled().height / 2);
-                    inputs[i].setPosition(810, 520 + 40 * i);
+                    inputs[i].setPosition(2430, 1560 + 120 * i);
                     inputs[i].setColor(sf::Color::White);
 
-                    if (mouseY / window->getSize().y * 1080 >= (inputs[i].getPosition().y - inputs[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 3240 >= (inputs[i].getPosition().y - inputs[i].getGlobalBoundsScaled().height / 2 + 24))
                     {
-                        if (mouseY / window->getSize().y * 1080 <= (inputs[i].getPosition().y + inputs[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 3240 <= (inputs[i].getPosition().y + inputs[i].getGlobalBoundsScaled().height / 2 + 24))
                         {
                             inputs[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -553,7 +553,7 @@ void OptionsMenu::Update()
             case 4: {
                 options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_language")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
-                options_header.setPosition(930, 460);
+                options_header.setPosition(2790, 1380);
                 options_header.draw(window);
 
                 maxSel = langs[lang_current].size();
@@ -561,7 +561,7 @@ void OptionsMenu::Update()
                 for (int i = 0; i < langs[lang_current].size(); i++)
                 {
                     langs[lang_current][i].setOrigin(0, langs[lang_current][i].getGlobalBoundsScaled().height / 2);
-                    langs[lang_current][i].setPosition(810, 520 + 40 * i);
+                    langs[lang_current][i].setPosition(2430, 1560 + 120 * i);
                     langs[lang_current][i].setColor(sf::Color::White);
 
                     if (lang_current * 5 + i + 1 == config->GetInt("lang"))
@@ -570,9 +570,9 @@ void OptionsMenu::Update()
                             langs[lang_current][i].setColor(sf::Color(0, 192, 0, 255));
                     }
 
-                    if (mouseY / window->getSize().y * 1080 >= (langs[lang_current][i].getPosition().y - langs[lang_current][i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 3240 >= (langs[lang_current][i].getPosition().y - langs[lang_current][i].getGlobalBoundsScaled().height / 2 + 24))
                     {
-                        if (mouseY / window->getSize().y * 1080 <= (langs[lang_current][i].getPosition().y + langs[lang_current][i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 3240 <= (langs[lang_current][i].getPosition().y + langs[lang_current][i].getGlobalBoundsScaled().height / 2 + 24))
                         {
                             langs[lang_current][i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -619,7 +619,7 @@ void OptionsMenu::Update()
             case 11: {
                 options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_graphics1")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
-                options_header.setPosition(930, 460);
+                options_header.setPosition(2790, 1380);
                 options_header.draw(window);
 
                 maxSel = resolutions.size();
@@ -627,7 +627,7 @@ void OptionsMenu::Update()
                 for (int i = 0; i < resolutions.size(); i++)
                 {
                     resolutions[i].setOrigin(0, resolutions[i].getGlobalBoundsScaled().height / 2);
-                    resolutions[i].setPosition(810, 520 + 40 * i);
+                    resolutions[i].setPosition(2430, 1560 + 120 * i);
                     resolutions[i].setColor(sf::Color::White);
 
                     if (i < float_resolutions.size())
@@ -636,9 +636,9 @@ void OptionsMenu::Update()
                             resolutions[i].setColor(sf::Color(0, 192, 0, 255));
                     }
 
-                    if (mouseY / window->getSize().y * 1080 >= (resolutions[i].getPosition().y - resolutions[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 3240 >= (resolutions[i].getPosition().y - resolutions[i].getGlobalBoundsScaled().height / 2 + 24))
                     {
-                        if (mouseY / window->getSize().y * 1080 <= (resolutions[i].getPosition().y + resolutions[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 3240 <= (resolutions[i].getPosition().y + resolutions[i].getGlobalBoundsScaled().height / 2 + 24))
                         {
                             resolutions[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -657,7 +657,7 @@ void OptionsMenu::Update()
             case 12: {
                 options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_graphics2")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
-                options_header.setPosition(930, 460);
+                options_header.setPosition(2790, 1380);
                 options_header.draw(window);
 
                 maxSel = qualities.size();
@@ -665,15 +665,15 @@ void OptionsMenu::Update()
                 for (int i = 0; i < qualities.size(); i++)
                 {
                     qualities[i].setOrigin(0, qualities[i].getGlobalBoundsScaled().height / 2);
-                    qualities[i].setPosition(810, 520 + 40 * i);
+                    qualities[i].setPosition(2430, 1560 + 120 * i);
                     qualities[i].setColor(sf::Color::White);
 
                     if (config->GetInt("textureQuality") == i)
                         qualities[i].setColor(sf::Color(0, 192, 0, 255));
 
-                    if (mouseY / window->getSize().y * 1080 >= (qualities[i].getPosition().y - qualities[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 3240 >= (qualities[i].getPosition().y - qualities[i].getGlobalBoundsScaled().height / 2 + 24))
                     {
-                        if (mouseY / window->getSize().y * 1080 <= (qualities[i].getPosition().y + qualities[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 3240 <= (qualities[i].getPosition().y + qualities[i].getGlobalBoundsScaled().height / 2 + 24))
                         {
                             qualities[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -692,7 +692,7 @@ void OptionsMenu::Update()
             case 13: {
                 options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_graphics4")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
-                options_header.setPosition(930, 460);
+                options_header.setPosition(2790, 1380);
                 options_header.draw(window);
 
                 maxSel = framerates.size();
@@ -700,7 +700,7 @@ void OptionsMenu::Update()
                 for (int i = 0; i < framerates.size(); i++)
                 {
                     framerates[i].setOrigin(0, framerates[i].getGlobalBoundsScaled().height / 2);
-                    framerates[i].setPosition(810, 520 + 40 * i);
+                    framerates[i].setPosition(2430, 1560 + 120 * i);
                     framerates[i].setColor(sf::Color::White);
 
                     if (i < float_framerates.size())
@@ -709,9 +709,9 @@ void OptionsMenu::Update()
                             framerates[i].setColor(sf::Color(0, 192, 0, 255));
                     }
 
-                    if (mouseY / window->getSize().y * 1080 >= (framerates[i].getPosition().y - framerates[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 3240 >= (framerates[i].getPosition().y - framerates[i].getGlobalBoundsScaled().height / 2 + 24))
                     {
-                        if (mouseY / window->getSize().y * 1080 <= (framerates[i].getPosition().y + framerates[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 3240 <= (framerates[i].getPosition().y + framerates[i].getGlobalBoundsScaled().height / 2 + 24))
                         {
                             framerates[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -730,7 +730,7 @@ void OptionsMenu::Update()
             case 14: {
                 options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_graphics5")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
-                options_header.setPosition(930, 460);
+                options_header.setPosition(2790, 1380);
                 options_header.draw(window);
 
                 maxSel = switches.size();
@@ -738,15 +738,15 @@ void OptionsMenu::Update()
                 for (int i = 0; i < switches.size(); i++)
                 {
                     switches[i].setOrigin(0, switches[i].getGlobalBoundsScaled().height / 2);
-                    switches[i].setPosition(810, 520 + 40 * i);
+                    switches[i].setPosition(2430, 1560 + 120 * i);
                     switches[i].setColor(sf::Color::White);
 
                     if ((config->GetInt("enableFullscreen") == !i) && (i != 2))
                         switches[i].setColor(sf::Color(0, 192, 0, 255));
 
-                    if (mouseY / window->getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 3240 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 24))
                     {
-                        if (mouseY / window->getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 3240 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 24))
                         {
                             switches[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -765,7 +765,7 @@ void OptionsMenu::Update()
             case 15: {
                 options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_graphics6")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
-                options_header.setPosition(930, 460);
+                options_header.setPosition(2790, 1380);
                 options_header.draw(window);
 
                 maxSel = switches.size();
@@ -773,15 +773,15 @@ void OptionsMenu::Update()
                 for (int i = 0; i < switches.size(); i++)
                 {
                     switches[i].setOrigin(0, switches[i].getGlobalBoundsScaled().height / 2);
-                    switches[i].setPosition(810, 520 + 40 * i);
+                    switches[i].setPosition(2430, 1560 + 120 * i);
                     switches[i].setColor(sf::Color::White);
 
                     if ((config->GetInt("enableBorderlessWindow") == !i) && (i != 2))
                         switches[i].setColor(sf::Color(0, 192, 0, 255));
 
-                    if (mouseY / window->getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 3240 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 24))
                     {
-                        if (mouseY / window->getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 3240 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 24))
                         {
                             switches[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -805,7 +805,7 @@ void OptionsMenu::Update()
             case 21: {
                 options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_audio1")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
-                options_header.setPosition(930, 460);
+                options_header.setPosition(2790, 1380);
                 options_header.draw(window);
 
                 maxSel = ms_volume.size();
@@ -871,12 +871,12 @@ void OptionsMenu::Update()
                     if (i <= 2)
                         ms_volume[i].setString(str + to_string(config->GetInt(key)) + "%");
                     ms_volume[i].setOrigin(0, ms_volume[i].getGlobalBoundsScaled().height / 2);
-                    ms_volume[i].setPosition(810, 520 + 40 * i);
+                    ms_volume[i].setPosition(2430, 1560 + 120 * i);
                     ms_volume[i].setColor(sf::Color::White);
 
-                    if (mouseY / window->getSize().y * 1080 >= (ms_volume[i].getPosition().y - ms_volume[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 3240 >= (ms_volume[i].getPosition().y - ms_volume[i].getGlobalBoundsScaled().height / 2 + 24))
                     {
-                        if (mouseY / window->getSize().y * 1080 <= (ms_volume[i].getPosition().y + ms_volume[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 3240 <= (ms_volume[i].getPosition().y + ms_volume[i].getGlobalBoundsScaled().height / 2 + 24))
                         {
                             ms_volume[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -895,7 +895,7 @@ void OptionsMenu::Update()
             case 22: {
                 options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_audio2")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
-                options_header.setPosition(930, 460);
+                options_header.setPosition(2790, 1380);
                 options_header.draw(window);
 
                 maxSel = switches.size();
@@ -903,15 +903,15 @@ void OptionsMenu::Update()
                 for (int i = 0; i < switches.size(); i++)
                 {
                     switches[i].setOrigin(0, switches[i].getGlobalBoundsScaled().height / 2);
-                    switches[i].setPosition(810, 520 + 40 * i);
+                    switches[i].setPosition(2430, 1560 + 120 * i);
                     switches[i].setColor(sf::Color::White);
 
                     if ((config->GetInt("enableDrums") == !i) && (i != 2))
                         switches[i].setColor(sf::Color(0, 192, 0, 255));
 
-                    if (mouseY / window->getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 3240 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 24))
                     {
-                        if (mouseY / window->getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 3240 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 24))
                         {
                             switches[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -930,7 +930,7 @@ void OptionsMenu::Update()
             case 23: {
                 options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_audio3")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
-                options_header.setPosition(930, 460);
+                options_header.setPosition(2790, 1380);
                 options_header.draw(window);
 
                 maxSel = switches.size();
@@ -938,15 +938,15 @@ void OptionsMenu::Update()
                 for (int i = 0; i < switches.size(); i++)
                 {
                     switches[i].setOrigin(0, switches[i].getGlobalBoundsScaled().height / 2);
-                    switches[i].setPosition(810, 520 + 40 * i);
+                    switches[i].setPosition(2430, 1560 + 120 * i);
                     switches[i].setColor(sf::Color::White);
 
                     if ((config->GetInt("enableDrumChants") == !i) && (i != 2))
                         switches[i].setColor(sf::Color(0, 192, 0, 255));
 
-                    if (mouseY / window->getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 3240 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 24))
                     {
-                        if (mouseY / window->getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 3240 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 24))
                         {
                             switches[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -965,7 +965,7 @@ void OptionsMenu::Update()
             case 24: {
                 options_header.setString(Func::ConvertToUtf8String(strRepo->GetString("options_audio4")));
                 options_header.setOrigin(options_header.getGlobalBoundsScaled().width / 2, options_header.getGlobalBoundsScaled().height / 2);
-                options_header.setPosition(930, 460);
+                options_header.setPosition(2790, 1380);
                 options_header.draw(window);
 
                 maxSel = switches.size();
@@ -973,15 +973,15 @@ void OptionsMenu::Update()
                 for (int i = 0; i < switches.size(); i++)
                 {
                     switches[i].setOrigin(0, switches[i].getGlobalBoundsScaled().height / 2);
-                    switches[i].setPosition(810, 520 + 40 * i);
+                    switches[i].setPosition(2430, 1560 + 120 * i);
                     switches[i].setColor(sf::Color::White);
 
                     if ((config->GetInt("enablePataponChants") == !i) && (i != 2))
                         switches[i].setColor(sf::Color(0, 192, 0, 255));
 
-                    if (mouseY / window->getSize().y * 1080 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                    if (mouseY / window->getSize().y * 3240 >= (switches[i].getPosition().y - switches[i].getGlobalBoundsScaled().height / 2 + 24))
                     {
-                        if (mouseY / window->getSize().y * 1080 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 8))
+                        if (mouseY / window->getSize().y * 3240 <= (switches[i].getPosition().y + switches[i].getGlobalBoundsScaled().height / 2 + 24))
                         {
                             switches[i].setColor(sf::Color(255, 255, 255, 192));
 
@@ -1005,7 +1005,7 @@ void OptionsMenu::Update()
             case 31: {
                 ///Input manager (change keybinds)
                 input_manager.setOrigin(input_manager.getLocalBounds().width / 2, input_manager.getLocalBounds().height / 2);
-                input_manager.setPosition(640, 360);
+                input_manager.setPosition(1920, 1080);
                 input_manager.draw(window); ///sprite
 
                 for (int i = 0; i < 9; i++)
@@ -1014,13 +1014,13 @@ void OptionsMenu::Update()
                     t_presets[currentPreset].setColor(sf::Color(0, 192, 0, 255));
 
                     t_presets[i].setOrigin(t_presets[i].getLocalBounds().width / 2, t_presets[i].getLocalBounds().height / 2);
-                    t_presets[i].setPosition(input_manager.getPosition().x - 158 + (39 * i), input_manager.getPosition().y - 248);
+                    t_presets[i].setPosition(input_manager.getPosition().x - 474 + (117 * i), input_manager.getPosition().y - 744);
                     t_presets[i].draw(window);
                 }
 
-                t_igbutton.setPosition(input_manager.getPosition().x - 168, input_manager.getPosition().y - 217);
+                t_igbutton.setPosition(input_manager.getPosition().x - 504, input_manager.getPosition().y - 651);
                 t_igbutton.draw(window);
-                t_assigned.setPosition(input_manager.getPosition().x + 18, input_manager.getPosition().y - 217);
+                t_assigned.setPosition(input_manager.getPosition().x + 54, input_manager.getPosition().y - 651);
                 t_assigned.draw(window);
 
                 for (int i = 0; i < 12; i++)
@@ -1140,7 +1140,7 @@ void OptionsMenu::Update()
                     string key = "options_input_setup" + to_string(setup_stage);
                     t_cs_desc.setString(Func::ConvertToUtf8String(strRepo->GetString(key)));
                     t_cs_desc.setOrigin(t_cs_desc.getLocalBounds().width / 2, t_cs_desc.getLocalBounds().height / 2);
-                    t_cs_desc.setPosition(640, 360);
+                    t_cs_desc.setPosition(1920, 1080);
                     t_cs_desc.draw(window);
 
                     int checkKey = inputCtrl->whatKeyPressed(InputController::RestrictMode::ONLYJOYSTICK);
@@ -1176,7 +1176,7 @@ void OptionsMenu::Update()
                     string key = "options_input_setup" + to_string(setup_stage);
                     t_cs_desc.setString(Func::ConvertToUtf8String(strRepo->GetString(key)));
                     t_cs_desc.setOrigin(t_cs_desc.getLocalBounds().width / 2, t_cs_desc.getLocalBounds().height / 2);
-                    t_cs_desc.setPosition(640, 360);
+                    t_cs_desc.setPosition(1920, 1080);
                     t_cs_desc.draw(window);
 
                     t_cs_tip.setString(Func::ConvertToUtf8String(strRepo->GetString("options_tip2")));

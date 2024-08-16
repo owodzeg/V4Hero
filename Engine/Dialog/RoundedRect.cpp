@@ -37,7 +37,7 @@ void RoundedRect::Draw()
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
 
-    float resRatio = window->getSize().x / float(1280);
+    float resRatio = window->getSize().x / float(3840);
 
     edges[0].setPosition((x - orx) * resRatio, (y - ory) * resRatio);
     edges[1].setPosition((x - orx + width) * resRatio, (y - ory) * resRatio);

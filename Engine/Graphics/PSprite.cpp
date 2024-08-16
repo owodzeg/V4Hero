@@ -61,7 +61,7 @@ void PSprite::loadFromFile(std::string file, int q, bool downscale)
     }
 
     qualitySetting = q;
-    resSetting = 1;
+    resSetting = 3;
 
     SPDLOG_INFO("Loading PSprite: {}", file);
     texturePath = file;
@@ -294,7 +294,7 @@ void PSprite::draw(sf::RenderWindow& window)
         }
     }
 
-    //s.setTexture(t);
+    s.setTexture(TextureManager::getInstance().getTexture(texturePath));
     s.setScale(ratioX * scaleX, ratioY * scaleY);
     s.setOrigin(orX, orY);
     s.setPosition(lx * resRatioX, ly * resRatioY);
@@ -345,6 +345,7 @@ void PSprite::draw(sf::RenderWindow* window)
         resRatioY = ratio.y;
     }
 
+    s.setTexture(TextureManager::getInstance().getTexture(texturePath));
     s.setScale(ratioX * scaleX, ratioY * scaleY);
     s.setOrigin(orX, orY);
     s.setPosition(lx * resRatioX, ly * resRatioY);
@@ -386,6 +387,7 @@ void PSprite::drawShader(sf::RenderWindow* window, sf::Shader& shader)
         resRatioY = ratio.y;
     }
 
+    s.setTexture(TextureManager::getInstance().getTexture(texturePath));
     s.setScale(ratioX * scaleX, ratioY * scaleY);
     s.setOrigin(orX, orY);
     s.setPosition(lx * resRatioX, ly * resRatioY);
@@ -429,6 +431,7 @@ void PSprite::draw()
         resRatioY = ratio.y;
     }
 
+    s.setTexture(TextureManager::getInstance().getTexture(texturePath));
     s.setScale(ratioX * scaleX, ratioY * scaleY);
     s.setOrigin(orX, orY);
     s.setPosition(lx * resRatioX, ly * resRatioY);
@@ -505,7 +508,7 @@ void PSprite::update(sf::RenderWindow& window)
         }
     }
 
-    //s.setTexture(t);
+    s.setTexture(TextureManager::getInstance().getTexture(texturePath));
     s.setScale(ratioX * scaleX, ratioY * scaleY);
     s.setOrigin(orX, orY);
     s.setPosition(lx * resRatioX, ly * resRatioY);

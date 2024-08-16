@@ -27,8 +27,8 @@ MainMenu::MainMenu()
 
     quality = q;
 
-    float resRatioX = config->GetInt("resX") / float(1280);
-    float resRatioY = config->GetInt("resY") / float(720);
+    float resRatioX = config->GetInt("resX") / float(3840);
+    float resRatioY = config->GetInt("resY") / float(2160);
 
     rs_cover.setSize(sf::Vector2f(config->GetInt("resX"), config->GetInt("resY")));
     rs_cover.setFillColor(sf::Color(0, 0, 0, 255));
@@ -88,7 +88,7 @@ MainMenu::MainMenu()
         t_option[i].createText(f_font, 24, sf::Color::White, "", q, r);
     }
 
-    string vx_params = "0,135,38,23;80,135,38,23;680,205,107,132;-1,205,107,132";
+    string vx_params = "0,135,38,23;240,135,38,23;2040,205,107,132;-1,205,107,132";
 
     vector<string> v_vxparams = Func::Split(vx_params, ';');
     std::vector<sf::Vector2f> vx_pos;
@@ -106,7 +106,7 @@ MainMenu::MainMenu()
 
         if (tmp[0] == "-1")
         {
-            tmp_vector.y = 720 * resRatioY;
+            tmp_vector.y = 2160 * resRatioY;
         }
 
         tmp_color.r = atoi(tmp[1].c_str());
@@ -115,12 +115,12 @@ MainMenu::MainMenu()
 
         sf::Vector2f tmp_vector2;
 
-        tmp_vector2.x = 1280 * resRatioX;
+        tmp_vector2.x = 3840 * resRatioX;
         tmp_vector2.y = atof(tmp[0].c_str()) * resRatioY;
 
         if (tmp[0] == "-1")
         {
-            tmp_vector2.y = 720 * resRatioY;
+            tmp_vector2.y = 2160 * resRatioY;
         }
 
         vx_pos.push_back(tmp_vector);
@@ -164,7 +164,7 @@ MainMenu::MainMenu()
         firstrun = true;
     }
 
-    msgcloud.Create(45, sf::Vector2f(640, 480), sf::Color::White, true, config->GetInt("textureQuality"), config->fontPath);
+    msgcloud.Create(45, sf::Vector2f(1920, 1440), sf::Color::White, true, config->GetInt("textureQuality"), config->fontPath);
     msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_1")), true);
     msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_2")), true);
     msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_3")), true);
@@ -429,7 +429,7 @@ void MainMenu::Update()
                     ui_alpha = 255;
                     logow_scale = 1.2;
                     logow_shscale = 1.2;
-                    dest_y = 360;
+                    dest_y = 1080;
                     keypressed = true;
                     menuClock.restart();
                 }
@@ -448,8 +448,8 @@ void MainMenu::Update()
                 cur_y -= abs(dest_y - cur_y) * 2 / fps;
             }
 
-            logow_bg.setPosition(640, cur_y);
-            logow_text.setPosition(logow_bg.getPosition().x + 1, logow_bg.getPosition().y - 3);
+            logow_bg.setPosition(1920, cur_y);
+            logow_text.setPosition(logow_bg.getPosition().x + 3, logow_bg.getPosition().y - 9);
             logow_shadow.setPosition(logow_bg.getPosition().x, logow_bg.getPosition().y);
 
             if (logow_scale > 1)
@@ -494,7 +494,7 @@ void MainMenu::Update()
             }
 
             t_pressanykey.setOrigin(t_pressanykey.getLocalBounds().width / 2, t_pressanykey.getLocalBounds().height / 2);
-            t_pressanykey.setPosition(640, 440);
+            t_pressanykey.setPosition(1920, 1320);
             t_pressanykey.setColor(sf::Color(255, 255, 255, t_alpha));
             t_pressanykey.draw(window);
 
@@ -526,10 +526,10 @@ void MainMenu::Update()
         float scale = 1 + ((alpha - 220) / 500);
         float aurascale = 1 + ((alpha - 220)) / 250;
 
-        g_dest[0] = (mouseX / 320.f - 2.f) * (-1);
-        g_dest[1] = (mouseX / 106.f - 6.f) * (-1);
-        g_dest[2] = (mouseX / 45.f - 14.f) * (-1);
-        g_dest[3] = (mouseX / 21.f - 30.f) * (-1);
+        g_dest[0] = (mouseX / 960.f - 6.f) * (-1);
+        g_dest[1] = (mouseX / 318.f - 18.f) * (-1);
+        g_dest[2] = (mouseX / 135.f - 42.f) * (-1);
+        g_dest[3] = (mouseX / 63.f - 90.f) * (-1);
 
         for (int i = 0; i <= 3; i++)
         {
@@ -541,32 +541,32 @@ void MainMenu::Update()
 
 
         ///dont make it go off bounds
-        if (g_x[0] > 2)
-            g_x[0] = 2;
+        if (g_x[0] > 6)
+            g_x[0] = 6;
 
-        if (g_x[0] < -2)
-            g_x[0] = -2;
-
-
-        if (g_x[1] > 6)
-            g_x[1] = 6;
-
-        if (g_x[1] < -6)
-            g_x[1] = -6;
+        if (g_x[0] < -6)
+            g_x[0] = -6;
 
 
-        if (g_x[2] > 14)
-            g_x[2] = 14;
+        if (g_x[1] > 18)
+            g_x[1] = 18;
 
-        if (g_x[2] < -14)
-            g_x[2] = -14;
+        if (g_x[1] < -18)
+            g_x[1] = -18;
 
 
-        if (g_x[3] > 30)
-            g_x[3] = 30;
+        if (g_x[2] > 42)
+            g_x[2] = 42;
 
-        if (g_x[3] < -30)
-            g_x[3] = -30;
+        if (g_x[2] < -42)
+            g_x[2] = -42;
+
+
+        if (g_x[3] > 90)
+            g_x[3] = 90;
+
+        if (g_x[3] < -90)
+            g_x[3] = -90;
 
         for (int g=0; g<3; g++)
         {
@@ -574,8 +574,8 @@ void MainMenu::Update()
             grass[g].draw();
         }
 
-        logo_shadow.setPosition(640, 140);
-        logo.setPosition(640, 140);
+        logo_shadow.setPosition(1920, 420);
+        logo.setPosition(1920, 420);
 
         logo_shadow.setColor(sf::Color(255, 255, 255, alpha));
         logo_shadow.setScale(scale);
@@ -591,15 +591,15 @@ void MainMenu::Update()
 
         for (int i = 0; i < 4; i++)
         {
-            totem[i].setPosition((float(120) + float(306) * (i)) + g_x[3] / 1.4, 720);
+            totem[i].setPosition((float(360) + float(918) * (i)) + g_x[3] / 1.4, 2160);
 
             if (UsingMouseSelection)
             {
-                if ((mouseX / window->getSize().x) * 1280 > totem[i].getPosition().x)
+                if ((mouseX / window->getSize().x) * 3840 > totem[i].getPosition().x)
                 {
-                    if ((mouseX / window->getSize().x) * 1280 < (totem[i].getPosition().x + totem[i].getLocalBounds().width))
+                    if ((mouseX / window->getSize().x) * 3840 < (totem[i].getPosition().x + totem[i].getLocalBounds().width))
                     {
-                        if ((mouseY / window->getSize().y) * 720 > totem[i].getPosition().y - totem[i].getLocalBounds().height)
+                        if ((mouseY / window->getSize().y) * 2160 > totem[i].getPosition().y - totem[i].getLocalBounds().height)
                         {
                             totem_sel = i;
                             mouseInBounds = true;
@@ -614,27 +614,27 @@ void MainMenu::Update()
         switch (totem_sel)
         {
             case 0: {
-                fire_shift = float(34);
-                fire_x = float(72.333);
-                fire_y = float(320);
+                fire_shift = float(102);
+                fire_x = float(217);
+                fire_y = float(960);
                 break;
             }
             case 1: {
-                fire_shift = float(40);
-                fire_x = float(59.5);
-                fire_y = float(371);
+                fire_shift = float(120);
+                fire_x = float(179);
+                fire_y = float(1113);
                 break;
             }
             case 2: {
-                fire_shift = float(6);
-                fire_x = float(55);
-                fire_y = float(451.667);
+                fire_shift = float(18);
+                fire_x = float(165);
+                fire_y = float(1355);
                 break;
             }
             case 3: {
-                fire_shift = float(10);
-                fire_x = float(59.3333);
-                fire_y = float(498.667);
+                fire_shift = float(30);
+                fire_x = float(179);
+                fire_y = float(1496);
                 break;
             }
         }
@@ -681,11 +681,11 @@ void MainMenu::Update()
             t_option[i].setString(Func::ConvertToUtf8String(temp_menu[i]));
             t_option[i].setOrigin(t_option[i].getLocalBounds().width / 2, t_option[i].getLocalBounds().height / 2);
 
-            t_option[i].setPosition(totem[i].getPosition().x + totem[i].getTransformedBounds().width / 2.f, 720 - totem[i].getTransformedBounds().height - 28);
+            t_option[i].setPosition(totem[i].getPosition().x + totem[i].getTransformedBounds().width / 2.f, 2160 - totem[i].getTransformedBounds().height - 84);
             
             if (i == totem_sel)
             {
-                t_option[i].setPosition(totem[i].getPosition().x + totem[i].getTransformedBounds().width / 2.f, 720 - totem[i].getTransformedBounds().height - 70);
+                t_option[i].setPosition(totem[i].getPosition().x + totem[i].getTransformedBounds().width / 2.f, 2160 - totem[i].getTransformedBounds().height - 210);
             }
 
             t_option[i].setColor(sf::Color(255, 255, 255, 96));
@@ -695,11 +695,11 @@ void MainMenu::Update()
         }
 
         sword[0].setScale(1, 1);
-        sword[0].setPosition(t_option[totem_sel].getPosition().x - t_option[totem_sel].getLocalBounds().width / 2 - sword[0].getTransformedBounds().width / 2 - 5, t_option[totem_sel].getPosition().y + 21);
+        sword[0].setPosition(t_option[totem_sel].getPosition().x - t_option[totem_sel].getLocalBounds().width / 2 - sword[0].getTransformedBounds().width / 2 - 15, t_option[totem_sel].getPosition().y + 63);
         sword[0].draw();
 
         sword[1].setScale(-1, 1);
-        sword[1].setPosition(t_option[totem_sel].getPosition().x + t_option[totem_sel].getLocalBounds().width / 2 + sword[0].getTransformedBounds().width / 2 + 5, t_option[totem_sel].getPosition().y + 21);
+        sword[1].setPosition(t_option[totem_sel].getPosition().x + t_option[totem_sel].getLocalBounds().width / 2 + sword[0].getTransformedBounds().width / 2 + 15, t_option[totem_sel].getPosition().y + 63);
         sword[1].draw();
 
         old_sel = totem_sel;
@@ -721,8 +721,8 @@ void MainMenu::Update()
 
         for (int i = 0; i < dialogboxes.size(); i++)
         {
-            dialogboxes[i].x = 640;
-            dialogboxes[i].y = 360;
+            dialogboxes[i].x = 1920;
+            dialogboxes[i].y = 1080;
             dialogboxes[i].Draw();
 
             if (dialogboxes[i].closed)

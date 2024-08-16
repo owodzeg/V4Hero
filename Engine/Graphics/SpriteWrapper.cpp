@@ -115,7 +115,7 @@ sf::FloatRect SpriteWrapper::getTransformedBounds()
     std::vector<float> x = {640, 1280, 1920, 3840};
     std::vector<float> y = {360, 720, 1080, 2160};
 
-    sf::Vector2f resRatio(windowSize.x / float(1280), windowSize.y / float(720));
+    sf::Vector2f resRatio(windowSize.x / float(3840), windowSize.y / float(2160));
 
     int quality = ResourceManager::getInstance().getCurrentQuality();
 
