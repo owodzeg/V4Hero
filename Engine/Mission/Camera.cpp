@@ -9,7 +9,7 @@ using namespace std;
 
 Camera::Camera()
 {
-    camera_x = 480;
+    camera_x = 1440;
 }
 
 void Camera::zoomViewAt(sf::Vector2i pixel, float zoom)
@@ -33,7 +33,7 @@ void Camera::Work(float dest_zoom_over)
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
     float fps = CoreManager::getInstance().getCore()->getFPS();
 
-    float resRatioX = window->getSize().x / float(1280);
+    float resRatioX = window->getSize().x / float(3840);
     float resRatioY = window->getSize().y / float(720);
 
     camera_y = window->getSize().y / 2;
@@ -48,19 +48,19 @@ void Camera::Work(float dest_zoom_over)
     {
         if (inputCtrl->isKeyHeld(Input::Keys::LTRIGGER))
         {
-            manual_x_dest = -500;
+            manual_x_dest = -1500;
         }
 
         if (inputCtrl->isKeyHeld(Input::Keys::RTRIGGER))
         {
-            manual_x_dest = 500;
+            manual_x_dest = 1500;
         }
     }
 
     /** Move camera **/
 
     //camera_x += camera_xspeed / fps;
-    camera_x = followobject_x + (600 * resRatioX);
+    camera_x = followobject_x + (1800 * resRatioX);
 
     /** Manual camera movement (L/R in Patapon) **/
     manual_x += ((manual_x_dest - manual_x) * 5) / fps;
@@ -111,6 +111,6 @@ void Camera::Work(float dest_zoom_over)
     /** Apply camera position **/
 
     sf::View view{window->getView()};
-    view.setCenter(camera_x + zoom_x + manual_x + debug_x - 100, camera_y + zoom_y + manual_y);
+    view.setCenter(camera_x + zoom_x + manual_x + debug_x - 300, camera_y + zoom_y + manual_y);
     window->setView(view);
 }

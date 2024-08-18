@@ -366,8 +366,8 @@ PatapolisMenu::PatapolisMenu()
         camPos = locations[location];
 
         // camera settings
-        camera.debug_x_dest = 141*3;
-        camera.debug_x = 141*3;
+        camera.debug_x_dest = 340;
+        camera.debug_x = 340;
         camera.followobject_x = 0;
         camera.lockMovement = true;
 
