@@ -23,253 +23,266 @@ StateManager& StateManager::getInstance()
 
 void StateManager::updateCurrentState()
 {
-    switch (currentGameState)
+    try
     {
-        case ENTRY: {
+        switch (currentGameState)
+        {
+            case ENTRY: {
 
-            if (loadingTipPtr == nullptr)
-            {
-                loadingTipPtr = new LoadingTip(1);
-            } else
-            {
-                delete loadingTipPtr;
-                loadingTipPtr = new LoadingTip(1);
-            }
-
-            setState(TIPS);
-            afterTipState = MAINMENU;
-
-            initStateMT(MAINMENU);
-
-            /* if (mainMenuPtr != nullptr && optionsMenuPtr != nullptr)
-            {
-                if (mainMenuPtr->initialized && optionsMenuPtr->initialized)
+                if (loadingTipPtr == nullptr)
                 {
-                    setState(MAINMENU);
+                    loadingTipPtr = new LoadingTip(1);
+                } else
+                {
+                    delete loadingTipPtr;
+                    loadingTipPtr = new LoadingTip(1);
                 }
-            } */
 
-            break;
-        }
+                setState(TIPS);
+                afterTipState = MAINMENU;
 
-        case NEWGAMEMENU: {
-            //newGameMenuPtr->Update();
-            break;
-        }
+                initStateMT(MAINMENU);
 
-        case MAINMENU: {
-            if (mainMenuPtr == nullptr)
-            {
-                mainMenuPtr = new MainMenu;
-            }
-
-            mainMenuPtr->Update();
-            break;
-        }
-
-        case OPTIONSMENU: {
-            if (optionsMenuPtr == nullptr)
-            {
-                optionsMenuPtr = new OptionsMenu;
-            }
-
-            optionsMenuPtr->Update();
-            break;
-        }
-
-        case INTRODUCTION: {
-            if (introductionPtr == nullptr)
-            {
-                introductionPtr = new IntroductionMenu;
-            }
-
-            introductionPtr->Update();
-            break;
-        }
-
-        case TIPS: {
-
-            if (loadingTipPtr == nullptr)
-            {
-                loadingTipPtr = new LoadingTip;
-            }
-
-            switch (afterTipState)
-            {
-                case MAINMENU: {
-                    if (mainMenuPtr != nullptr && optionsMenuPtr != nullptr && introductionPtr != nullptr)
+                /* if (mainMenuPtr != nullptr && optionsMenuPtr != nullptr)
+                {
+                    if (mainMenuPtr->initialized && optionsMenuPtr->initialized)
                     {
-                        if (mainMenuPtr->initialized && optionsMenuPtr->initialized && introductionPtr->initialized)
-                        {
-                            if (loadingTipPtr != nullptr)
-                            {
-                                loadingTipPtr->pressAnyKey = true;
+                        setState(MAINMENU);
+                    }
+                } */
 
-                                if (loadingTipPtr->tipFinished)
+                break;
+            }
+
+            case NEWGAMEMENU: {
+                //newGameMenuPtr->Update();
+                break;
+            }
+
+            case MAINMENU: {
+                if (mainMenuPtr == nullptr)
+                {
+                    mainMenuPtr = new MainMenu;
+                }
+
+                mainMenuPtr->Update();
+                break;
+            }
+
+            case OPTIONSMENU: {
+                if (optionsMenuPtr == nullptr)
+                {
+                    optionsMenuPtr = new OptionsMenu;
+                }
+
+                optionsMenuPtr->Update();
+                break;
+            }
+
+            case INTRODUCTION: {
+                if (introductionPtr == nullptr)
+                {
+                    introductionPtr = new IntroductionMenu;
+                }
+
+                introductionPtr->Update();
+                break;
+            }
+
+            case TIPS: {
+
+                if (loadingTipPtr == nullptr)
+                {
+                    loadingTipPtr = new LoadingTip;
+                }
+
+                switch (afterTipState)
+                {
+                    case MAINMENU: {
+                        if (mainMenuPtr != nullptr && optionsMenuPtr != nullptr && introductionPtr != nullptr)
+                        {
+                            if (mainMenuPtr->initialized && optionsMenuPtr->initialized && introductionPtr->initialized)
+                            {
+                                if (loadingTipPtr != nullptr)
                                 {
-                                    setState(afterTipState);
+                                    loadingTipPtr->pressAnyKey = true;
+
+                                    if (loadingTipPtr->tipFinished)
+                                    {
+                                        setState(afterTipState);
+                                    }
                                 }
                             }
                         }
+
+                        break;
                     }
 
-                    break;
-                }
+                    case PATAPOLIS: {
 
-                case PATAPOLIS: {
-
-                    if (patapolisPtr != nullptr && altarPtr != nullptr && barracksPtr != nullptr && obeliskPtr != nullptr)
-                    {
-                        if (patapolisPtr->initialized && altarPtr->initialized && barracksPtr->initialized && obeliskPtr->initialized)
+                        if (patapolisPtr != nullptr && altarPtr != nullptr && barracksPtr != nullptr && obeliskPtr != nullptr)
                         {
-                            if (loadingTipPtr != nullptr)
+                            if (patapolisPtr->initialized && altarPtr->initialized && barracksPtr->initialized && obeliskPtr->initialized)
                             {
-                                loadingTipPtr->pressAnyKey = true;
-
-                                if (loadingTipPtr->tipFinished)
+                                if (loadingTipPtr != nullptr)
                                 {
-                                    setState(afterTipState);
+                                    loadingTipPtr->pressAnyKey = true;
+
+                                    if (loadingTipPtr->tipFinished)
+                                    {
+                                        setState(afterTipState);
+                                    }
                                 }
                             }
                         }
+
+                        break;
                     }
 
-                    break;
-                }
+                    case MISSIONCONTROLLER: {
 
-                case MISSIONCONTROLLER: {
-
-                    if (missionControllerPtr != nullptr)
-                    {
-                        if (missionControllerPtr->initialized)
+                        if (missionControllerPtr != nullptr)
                         {
-                            if (loadingTipPtr != nullptr)
+                            if (missionControllerPtr->initialized)
                             {
-                                loadingTipPtr->pressAnyKey = true;
-
-                                if (loadingTipPtr->tipFinished)
+                                if (loadingTipPtr != nullptr)
                                 {
-                                    setState(afterTipState);
-                                    CoreManager::getInstance().getRhythm()->Start();
+                                    loadingTipPtr->pressAnyKey = true;
+
+                                    if (loadingTipPtr->tipFinished)
+                                    {
+                                        setState(afterTipState);
+                                        CoreManager::getInstance().getRhythm()->Start();
+                                    }
                                 }
                             }
                         }
+
+                        break;
                     }
-
-                    break;
                 }
+
+                loadingTipPtr->Draw();
+
+                break;
             }
 
-            loadingTipPtr->Draw();
+            case PATAPOLIS: {
 
-            break;
+                if (patapolisPtr == nullptr)
+                {
+                    patapolisPtr = new PatapolisMenu;
+                }
+
+                patapolisPtr->Update();
+
+                break;
+            }
+
+            case PATAPOLIS_ALTAR: {
+
+                if (patapolisPtr == nullptr)
+                {
+                    patapolisPtr = new PatapolisMenu;
+                }
+
+                if (altarPtr == nullptr)
+                {
+                    altarPtr = new AltarMenu;
+                }
+
+                patapolisPtr->Update();
+                altarPtr->Update();
+
+                break;
+            }
+
+            case BARRACKS: {
+
+                if (barracksPtr == nullptr)
+                {
+                    barracksPtr = new Barracks;
+                }
+
+                barracksPtr->Update();
+
+                break;
+            }
+
+            case OBELISK: {
+
+                if (obeliskPtr == nullptr)
+                {
+                    obeliskPtr = new ObeliskMenu;
+                }
+
+                obeliskPtr->Update();
+
+                break;
+            }
+
+            case MISSIONCONTROLLER: {
+
+                if (missionControllerPtr == nullptr)
+                {
+                    missionControllerPtr = new MissionController;
+                }
+
+                missionControllerPtr->Update();
+                break;
+            }
+
+            case MATER_OUTER: {
+
+                if (patapolisPtr == nullptr)
+                {
+                    patapolisPtr = new PatapolisMenu;
+                }
+
+                if (materPtr == nullptr)
+                {
+                    materPtr = new MaterOuterMenu;
+                }
+
+                patapolisPtr->Update();
+                materPtr->Update();
+
+                break;
+            }
+
+            case TEST_CHAMBER: {
+
+                if (testChamberPtr == nullptr)
+                {
+                    testChamberPtr = new TestChamber;
+                }
+
+                testChamberPtr->Update();
+                break;
+            }
+
+            case ERROR: {
+                if (errorChamberPtr == nullptr)
+                {
+                    SPDLOG_ERROR("Error handler is not initialized? Well... If we are here, something must have initialized it! This is stupid!");
+                    SPDLOG_ERROR("Resetting the game...");
+
+                    setState(ENTRY);
+                }
+
+                errorChamberPtr->Update();
+            }
         }
-
-        case PATAPOLIS: {
-
-            if (patapolisPtr == nullptr)
-            {
-                patapolisPtr = new PatapolisMenu;
-            }
-
-            patapolisPtr->Update();
-
-            break;
-        }
-
-        case PATAPOLIS_ALTAR: {
-
-            if (patapolisPtr == nullptr)
-            {
-                patapolisPtr = new PatapolisMenu;
-            }
-
-            if (altarPtr == nullptr)
-            {
-                altarPtr = new AltarMenu;
-            }
-
-            patapolisPtr->Update();
-            altarPtr->Update();
-
-            break;
-        }
-
-        case BARRACKS: {
-        
-            if (barracksPtr == nullptr)
-            {
-                barracksPtr = new Barracks;
-            }
-
-            barracksPtr->Update();
-
-            break;
-        }
-
-        case OBELISK: {
-        
-            if (obeliskPtr == nullptr)
-            {
-                obeliskPtr = new ObeliskMenu;
-            }
-
-            obeliskPtr->Update();
-
-            break;
-        }
-
-        case MISSIONCONTROLLER: {
-
-            if (missionControllerPtr == nullptr)
-            {
-                missionControllerPtr = new MissionController;
-            }
-
-            missionControllerPtr->Update();
-            break;
-        }
-
-        case MATER_OUTER: {
-
-            if (patapolisPtr == nullptr)
-            {
-                patapolisPtr = new PatapolisMenu;
-            }
-
-            if (materPtr == nullptr)
-            {
-                materPtr = new MaterOuterMenu;
-            }
-
-            patapolisPtr->Update();
-            materPtr->Update();
-
-            break;
-        }
-
-        case TEST_CHAMBER: {
-
-            if (testChamberPtr == nullptr)
-            {
-                testChamberPtr = new TestChamber;
-            }
-
-            testChamberPtr->Update();
-            break;
-        }
-
-        case ERROR: {
-            if (errorChamberPtr == nullptr)
-            {
-                SPDLOG_ERROR("Error handler is not initialized? Well... If we are here, something must have initialized it! This is stupid!");
-                SPDLOG_ERROR("Resetting the game...");
-
-                setState(ENTRY);
-            }
-
-            errorChamberPtr->Update();
-        }
+    }
+    catch( std::exception& exception )
+    {
+        SPDLOG_ERROR("Exception occurred: {}", exception.what());
+        setState(ERROR);
+    }
+    catch( ... )
+    {
+        SPDLOG_ERROR("Unknown exception occurred.");
+        setState(ERROR);
     }
 }
 
