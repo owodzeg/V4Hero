@@ -217,6 +217,28 @@ void V4Core::init()
 
             break;
         }
+        case 4: {
+            SPDLOG_INFO("Test initialized. LOAD PATAPOLIS.");
+
+            ifstream check("resources/data/sv1.p4sv");
+            bool exists = check.good();
+            check.close();
+
+            if (exists)
+            {
+                /** Load save from saveReader **/
+                saveReader->Flush();
+                saveReader->LoadSave();
+            } else {
+                /** No save found. Create a blank one for test purposes **/
+                saveReader->Flush();
+                saveReader->CreateBlankSave();
+            }
+
+            StateManager::getInstance().setState(StateManager::PATAPOLIS);
+
+            break;
+        }
         default: {
             break;
         }
