@@ -113,7 +113,7 @@ const std::vector<sf::Text> &RichText::Line::getTexts() const
 ////////////////////////////////////////////////////////////////////////////////
 void RichText::Line::appendText(sf::Text text)
 {
-    //updateTextAndGeometry(text);
+    updateTextAndGeometry(text,text);
     m_texts.push_back(std::move(text));
 }
 
@@ -202,8 +202,6 @@ void RichText::Line::updateGeometry() const
 ////////////////////////////////////////////////////////////////////////////////
 void RichText::Line::updateTextAndGeometry(sf::Text& prevText, sf::Text& text) const
 {
-    if(text.getString() == "")
-        return;
 
     // Set text offset
     auto font = text.getFont();
@@ -220,7 +218,8 @@ void RichText::Line::updateTextAndGeometry(sf::Text& prevText, sf::Text& text) c
     m_bounds.height = std::max(m_bounds.height, lineSpacing);
 
     //std::cout << text.getString().toAnsiString() << " " << text.getString().toUtf32()[0] << std::endl;
-    m_bounds.width += font->getGlyph(text.getString().toUtf32()[0], text.getCharacterSize(), false).advance;
+    if(text.getString() != "")
+        m_bounds.width += font->getGlyph(text.getString().toUtf32()[0], text.getCharacterSize(), false).advance;
 }
 
 
