@@ -3,6 +3,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include <cassert>
 #include <cmath>
+#include <iostream>
 
 #include "RichText.hpp"
 
@@ -112,7 +113,7 @@ const std::vector<sf::Text> &RichText::Line::getTexts() const
 ////////////////////////////////////////////////////////////////////////////////
 void RichText::Line::appendText(sf::Text text)
 {
-    updateTextAndGeometry(text);
+    //updateTextAndGeometry(text);
     m_texts.push_back(std::move(text));
 }
 
@@ -187,22 +188,39 @@ void RichText::Line::isolateCharacter(std::size_t pos)
 void RichText::Line::updateGeometry() const
 {
     m_bounds = sf::FloatRect();
+    sf::Text prevText;
+    prevText.setString("");
 
     for (sf::Text& text : m_texts)
-        updateTextAndGeometry(text);
+    {
+        updateTextAndGeometry(prevText, text);
+        prevText = text;
+    }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-void RichText::Line::updateTextAndGeometry(sf::Text& text) const
+void RichText::Line::updateTextAndGeometry(sf::Text& prevText, sf::Text& text) const
 {
+    if(text.getString() == "")
+        return;
+
     // Set text offset
+    auto font = text.getFont();
     text.setPosition(m_bounds.width, 0.f);
+
+    if(m_bounds.width != 0)
+    {
+        auto kerning = font->getKerning(prevText.getString().toUtf32()[0], text.getString().toUtf32()[0], text.getCharacterSize());
+        text.setPosition(m_bounds.width + kerning, 0.f);
+    }
 
     // Update bounds
     float lineSpacing = std::floor(text.getFont()->getLineSpacing(text.getCharacterSize()));
     m_bounds.height = std::max(m_bounds.height, lineSpacing);
-    m_bounds.width += text.getGlobalBounds().width;
+
+    //std::cout << text.getString().toAnsiString() << " " << text.getString().toUtf32()[0] << std::endl;
+    m_bounds.width += font->getGlyph(text.getString().toUtf32()[0], text.getCharacterSize(), false).advance;
 }
 
 
