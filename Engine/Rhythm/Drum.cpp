@@ -122,7 +122,7 @@ void Drum::Load(string drum, int perfection, std::string& drum_texture)
 
         int distance = (rand() % 200) + 50;
 
-        particles.push_back(Particle(temp, false, 0, 0, angle, radius, distance, 0, 600));
+        particles.push_back(Particle(temp, false, 0, 0, angle, radius, distance, 0, 1800));
     }
 
     drumClock.restart();
@@ -135,8 +135,8 @@ void Drum::Draw()
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
     float fps = CoreManager::getInstance().getCore()->getFPS();
 
-    float ratio_X = window->getSize().x / float(1280);
-    float ratio_Y = window->getSize().y / float(720);
+    float ratio_X = window->getSize().x / float(3840);
+    float ratio_Y = window->getSize().y / float(2160);
     float ratio_universal = (window->getSize().x * window->getSize().y) / (float(1280) * float(720));
 
     if (isDon)
@@ -210,7 +210,7 @@ void Drum::Draw()
     s_drum.setScale(x_scale, y_scale);
     s_drum.setColor(sf::Color(255, 255, 255, alpha));
     s_drum.setRotation((rotation + drumPatterns[pattern].angle) * 3.1415928 / 180.f);
-    s_drum.setPosition(x + drumPatterns[pattern].x, y + drumPatterns[pattern].y);
+    s_drum.setPosition(x + drumPatterns[pattern].x*3, y + drumPatterns[pattern].y*3);
 
     if (drumClock.getElapsedTime().asMilliseconds() < 200)
     {
@@ -227,7 +227,7 @@ void Drum::Draw()
 
     s_flash.setColor(sf::Color(255, 255, 255, flashalpha));
     s_flash.setScale(x_flashscale, y_flashscale);
-    s_flash.setPosition(x + drumPatterns[pattern].x, y + drumPatterns[pattern].y);
+    s_flash.setPosition(x + drumPatterns[pattern].x*3, y + drumPatterns[pattern].y*3);
 
     if (shockwaveAlpha <= 0)
     {
@@ -252,12 +252,12 @@ void Drum::Draw()
         c_shockwave.setRadius(shockwaveSize);
         c_shockwave.setFillColor(sf::Color(255, 255, 255, shockwaveAlpha));
         c_shockwave.setOrigin(c_shockwave.getLocalBounds().width / 2, c_shockwave.getLocalBounds().height / 2);
-        c_shockwave.setPosition(x + drumPatterns[pattern].x * ratio_X, y + drumPatterns[pattern].y * ratio_Y);
+        c_shockwave.setPosition(x + drumPatterns[pattern].x*3 * ratio_X, y + drumPatterns[pattern].y*3 * ratio_Y);
 
         c_shockwave2.setRadius(shockwave2Size);
         c_shockwave2.setFillColor(sf::Color(255, 255, 255, shockwave2Alpha));
         c_shockwave2.setOrigin(c_shockwave2.getLocalBounds().width / 2, c_shockwave2.getLocalBounds().height / 2);
-        c_shockwave2.setPosition(x + drumPatterns[pattern].x * ratio_X, y + drumPatterns[pattern].y * ratio_Y);
+        c_shockwave2.setPosition(x + drumPatterns[pattern].x*3 * ratio_X, y + drumPatterns[pattern].y*3 * ratio_Y);
     }
 
     s_drum.draw();
@@ -270,8 +270,8 @@ void Drum::Draw()
         ///Initialize first position
         if (particles[i].didStart == false)
         {
-            particles[i].x = x + drumPatterns[pattern].x * ratio_X;
-            particles[i].y = y + drumPatterns[pattern].y * ratio_Y;
+            particles[i].x = x + drumPatterns[pattern].x*3 * ratio_X;
+            particles[i].y = y + drumPatterns[pattern].y*3 * ratio_Y;
             particles[i].didStart = true;
         }
 
@@ -284,7 +284,7 @@ void Drum::Draw()
 
         if (particles[i].curDistance > particles[i].maxDistance)
         {
-            particles[i].speed -= float(3000) / fps;
+            particles[i].speed -= float(9000) / fps;
 
             if (particles[i].speed <= 0)
                 particles[i].speed = 0;
