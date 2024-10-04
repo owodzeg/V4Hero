@@ -1,38 +1,51 @@
 cmake_minimum_required(VERSION 3.19)
+set(VCPKG_TARGET_TRIPLET "x64-windows-static" CACHE STRING "Vcpkg target triplet")
+
 project(V4Hero VERSION 1.2)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
+
+if(!MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
+endif()
+
+# make sure everything is handled statically on msvc
+if(MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+
 add_definitions(-DPATAFOUR_VERSION="${CMAKE_PROJECT_VERSION}")
 
 set(SFML_STATIC_LIBRARIES TRUE)
 
 find_package(DiscordSDK 2.5.6 COMPONENTS x86_64 REQUIRED)
 
-#find_package(SFML 2.5.1 COMPONENTS graphics audio REQUIRED)
-
 include(FetchContent)
 
-set(BUILD_SHARED_LIBS OFF)
-FetchContent_Declare(
- SFML
- GIT_REPOSITORY https://github.com/SFML/SFML.git
- GIT_TAG 2.6.1
-)
-FetchContent_MakeAvailable(SFML)
+if(MSVC)
+    find_package(SFML REQUIRED COMPONENTS graphics audio)
+    find_package(nlohmann_json REQUIRED)
+else()
+    FetchContent_Declare(
+            SFML
+            GIT_REPOSITORY https://github.com/SFML/SFML.git
+            GIT_TAG 2.6.1)
+    FetchContent_MakeAvailable(SFML)
 
-FetchContent_Declare(json
-  GIT_REPOSITORY https://github.com/nlohmann/json
-  GIT_TAG v3.11.3)
+    FetchContent_Declare(json
+            GIT_REPOSITORY https://github.com/nlohmann/json
+            GIT_TAG v3.11.3)
+    FetchContent_GetProperties(json)
 
-FetchContent_GetProperties(json)
-if(NOT json_POPULATED)
-  FetchContent_Populate(json)
-  add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
+    if(NOT json_POPULATED)
+        FetchContent_Populate(json)
+        add_subdirectory(${json_SOURCE_DIR} ${json_BINARY_DIR} EXCLUDE_FROM_ALL)
+    endif()
 endif()
+
 
 FetchContent_Declare(spdlog
         GIT_REPOSITORY https://github.com/gabime/spdlog
@@ -109,9 +122,9 @@ set(ENGINE_FILES
         Engine/Mission/Units/HitboxFrame.cpp
         Engine/Mission/Mission.cpp
         Engine/Utils.h
-        Engine/Graphics/CurveShape.cpp 
+        Engine/Graphics/CurveShape.cpp
         Engine/Graphics/CurveSegment.cpp
-        Engine/Graphics/ConcaveShape.cpp 
+        Engine/Graphics/ConcaveShape.cpp
         Engine/Graphics/AnimatedCurveShape.cpp
         Engine/Graphics/PNGAnimation.cpp
         Engine/Menu/TestChamber.cpp
@@ -144,9 +157,10 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
 endif()
 
 if(MSVC)
-    target_compile_options(V4Hero PRIVATE /W4)
+    add_definitions(-DLEAN_AND_MEAN)
+    add_definitions(-DNOMINMAX)
+    target_compile_options(V4Hero PRIVATE /W4 /std:c++20)
     target_compile_definitions(V4Hero PRIVATE _USE_MATH_DEFINES=1)
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc")
@@ -170,9 +184,9 @@ if (OS STREQUAL "Linux")
 endif (OS STREQUAL "Linux")
 
 if (NOT (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR))
-  add_custom_command(
-          TARGET V4Hero POST_BUILD
-          COMMAND ${CMAKE_COMMAND} -E create_symlink ${PROJECT_SOURCE_DIR}/resources ${PROJECT_BINARY_DIR}/resources
-          DEPENDS "${PROJECT_BINARY_DIR}/resources"
-  )
+    add_custom_command(
+            TARGET V4Hero POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E create_symlink ${PROJECT_SOURCE_DIR}/resources ${PROJECT_BINARY_DIR}/resources
+            DEPENDS "${PROJECT_BINARY_DIR}/resources"
+    )
 endif()
