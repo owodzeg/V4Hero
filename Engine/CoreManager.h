@@ -16,6 +16,9 @@
 #include "Rhythm/RhythmGUI.h"
 #include "Rhythm/RhythmController.h"
 #include "Rhythm/SongController.h"
+#include "Input/TextInputController.h"
+#include "Input/MouseController.h"
+#include "Mechanics/Globals.h"
 
 // Class for holding the pointers to commonly used important game contents
 class CoreManager
@@ -28,12 +31,15 @@ public:
     StringRepository* getStrRepo();
     SaveReader* getSaveReader();
     InputController* getInputController();
+    TextInputController* getTextInputController();
+    MouseController* getMouseController();
     TipsUtil* getTipsUtil();
     MissionController* getMissionController();
     Rhythm* getRhythm();
     RhythmGUI* getRhythmGUI();
     RhythmController* getRhythmController();
     SongController* getSongController();
+    Globals* getGlobals();
     void reinitMissionController();
     void deleteMissionController();
     void reinitSongController();
@@ -58,6 +64,15 @@ private:
 
     // Pointer to Input controller
     InputController* inputCtrl;
+
+    // Pointer to Text input controller
+    TextInputController* textCtrl;
+
+    // Pointer to Mouse controller
+    MouseController* mouseCtrl;
+
+    // Pointer to Globals
+    Globals* globals;
 
     // Pointer to Tips utility
     TipsUtil* tipsUtil;

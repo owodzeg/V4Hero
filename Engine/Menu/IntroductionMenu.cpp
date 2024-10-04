@@ -13,21 +13,21 @@ void IntroductionMenu::Initialize()
 {
     SPDLOG_DEBUG("Initialize Introduction menu");
 
-    msgcloud.Create(45, sf::Vector2f(1920, 1440), sf::Color::White, true, CoreManager::getInstance().getConfig()->GetInt("textureQuality"), CoreManager::getInstance().getConfig()->fontPath);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("newgame_intro_1")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("newgame_intro_2")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("newgame_intro_3")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("newgame_intro_4")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("newgame_intro_5")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("newgame_intro_6")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("newgame_intro_7")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("newgame_intro_8")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("newgame_intro_9")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("newgame_intro_10")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("newgame_intro_11")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("newgame_intro_12")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("newgame_intro_13")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("newgame_intro_14")), true);
+    msgcloud.Create(45, sf::Vector2f(1920, 1440), sf::Color::White, true, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
+    msgcloud.AddDialog("newgame_intro_1", true);
+    msgcloud.AddDialog("newgame_intro_2", true);
+    msgcloud.AddDialog("newgame_intro_3", true);
+    msgcloud.AddDialog("newgame_intro_4", true);
+    msgcloud.AddDialog("newgame_intro_5", true);
+    msgcloud.AddDialog("newgame_intro_6", true);
+    msgcloud.AddDialog("newgame_intro_7", true);
+    msgcloud.AddDialog("newgame_intro_8", true);
+    msgcloud.AddDialog("newgame_intro_9", true);
+    msgcloud.AddDialog("newgame_intro_10", true);
+    msgcloud.AddDialog("newgame_intro_11", true);
+    msgcloud.AddDialog("newgame_intro_12", true);
+    msgcloud.AddDialog("newgame_intro_13", true);
+    msgcloud.AddDialog("newgame_intro_14", true);
 
     SPDLOG_DEBUG("Introduction menu initialized.");
     initialized = true;

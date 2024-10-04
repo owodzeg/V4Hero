@@ -3,21 +3,19 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../Graphics/PSprite.h"
+#include "../Graphics/SpriteWrapper.h"
 #include "../Graphics/PText.h"
 #include "../Input/InputController.h"
 
 class MessageCloud
 {
 public:
-    PSprite cloud;
+    SpriteWrapper cloud;
     PSprite cross, cross_highlight, cross_arrow;
     sf::ConvexShape triangle;
 
     PText dialogue_ptext; ///text that's going to appear on screen
     PText visual_ptext; ///text that will help calculating dimensions
-
-    sf::Font font;
 
     std::vector<sf::String> dialogue_strings;
 
@@ -44,6 +42,9 @@ public:
     float arrow_y = 0;
 
     int quality = 0;
+    int fontSize = 26;
+
+    std::string cur_lang = "us";
 
     bool ready = false;
     bool done = false;
@@ -59,9 +60,13 @@ public:
 
     int msgcloud_ID = 0;
 
+    std::unordered_map<int, std::vector<sf::String>> additional;
+
     MessageCloud();
     void setSize(float new_x, float new_y);
-    void Create(int speed, sf::Vector2f start_pos, sf::Color color, bool can_speedup, int q, std::string font_path);
+    void Create(int speed, sf::Vector2f start_pos, sf::Color color, bool can_speedup, int q);
+    void AdditionalData(sf::String add_data);
+    void setFontSize(int newFontSize);
     void AddDialog(sf::String text, bool nextdialog);
     void NextDialog();
     void SpeedUp();

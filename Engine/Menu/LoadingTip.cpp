@@ -10,12 +10,13 @@ LoadingTip::LoadingTip(int mode)
     timer.restart();
     targetTime = timer.getElapsedTime() + sf::seconds(1.0f);
 
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
+    std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
+
     if (tipMode == 0)
     {
         TipsUtil* tipsUtil = CoreManager::getInstance().getTipsUtil();
-        sf::RenderWindow* window = CoreManager::getInstance().getWindow();
-        StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
-        Config* config = CoreManager::getInstance().getConfig();
 
         float resRatioX = window->getSize().x / float(3840);
         float resRatioY = window->getSize().y / float(2160);
@@ -55,20 +56,30 @@ LoadingTip::LoadingTip(int mode)
         s_icon.load(icon_key);
         s_icon.setOrigin(s_icon.getGlobalBounds().width / 2, s_icon.getGlobalBounds().height / 2);
 
-        f_font.loadFromFile(config->fontPath);
-
         sf::String str_tipText = Func::ConvertToUtf8String(strRepo->GetString(wdesc_key));
 
-        t_tipTitle.createText(f_font, 48, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(strRepo->GetString(wtitle_key)), config->GetInt("textureQuality"), 1);
-        t_tipText.createText(f_font, 32, sf::Color(255, 255, 255, 255), str_tipText, config->GetInt("textureQuality"), 1);
-        t_pressAnyKey.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(strRepo->GetString("tips_anykey")), config->GetInt("textureQuality"), 1);
-        t_nowLoading.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(strRepo->GetString("tips_loading")), config->GetInt("textureQuality"), 1);
+
+        t_tipTitle.setFont(font);
+        t_tipTitle.setCharacterSize(48);
+        t_tipTitle.setColor(sf::Color::White);
+        t_tipTitle.setStringKey(title_key);
+
+        t_tipText.setFont(font);
+        t_tipText.setCharacterSize(32);
+        t_tipText.setColor(sf::Color::White);
+        t_tipText.setStringKey(desc_key);
+
+        t_pressAnyKey.setFont(font);
+        t_pressAnyKey.setCharacterSize(48);
+        t_pressAnyKey.setColor(sf::Color::White);
+        t_pressAnyKey.setStringKey("tips_anykey");
+
+        t_nowLoading.setFont(font);
+        t_nowLoading.setCharacterSize(48);
+        t_nowLoading.setColor(sf::Color::White);
+        t_nowLoading.setStringKey("tips_loading");
     } else if (tipMode == 1)
     {
-        sf::RenderWindow* window = CoreManager::getInstance().getWindow();
-        StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
-        Config* config = CoreManager::getInstance().getConfig();
-
         float resRatioX = window->getSize().x / float(3840);
         float resRatioY = window->getSize().y / float(2160);
 
@@ -88,9 +99,10 @@ LoadingTip::LoadingTip(int mode)
         box_1.setFillColor(sf::Color(0, 0, 0, 192));
         box_2.setFillColor(sf::Color(0, 0, 0, 192));
 
-        f_font.loadFromFile(config->fontPath);
-
-        t_nowLoading.createText(f_font, 46, sf::Color(255, 255, 255, 255), Func::ConvertToUtf8String(strRepo->GetString("tips_loading")), config->GetInt("textureQuality"), 1);
+        t_nowLoading.setFont(font);
+        t_nowLoading.setCharacterSize(48);
+        t_nowLoading.setColor(sf::Color::White);
+        t_nowLoading.setStringKey("tips_loading");
     }
 }
 
@@ -117,10 +129,10 @@ void LoadingTip::Draw()
         s_icon.draw();
 
         t_tipTitle.setPosition(72, 96);
-        t_tipTitle.draw(window);
+        t_tipTitle.draw();
 
         t_tipText.setPosition(72, 390);
-        t_tipText.draw(window);
+        t_tipText.draw();
 
         // drawing some text
         if (pressAnyKey)
@@ -155,7 +167,7 @@ void LoadingTip::Draw()
 
             t_pressAnyKey.setOrigin(t_pressAnyKey.getLocalBounds().width, t_pressAnyKey.getLocalBounds().height / 2);
             t_pressAnyKey.setPosition(3744, 2037);
-            t_pressAnyKey.draw(window);
+            t_pressAnyKey.draw();
 
             if (inputCtrl->isAnyKeyPressed())
             {
@@ -165,7 +177,7 @@ void LoadingTip::Draw()
         {
             t_nowLoading.setOrigin(t_nowLoading.getLocalBounds().width, t_nowLoading.getLocalBounds().height / 2);
             t_nowLoading.setPosition(3624, 2052);
-            t_nowLoading.draw(window);
+            t_nowLoading.draw();
 
             loading_head.setPosition(t_nowLoading.getPosition().x - t_nowLoading.getLocalBounds().width - 138, t_nowLoading.getPosition().y - 84);
             loading_eye1.setPosition(t_nowLoading.getPosition().x - t_nowLoading.getLocalBounds().width - 81, t_nowLoading.getPosition().y + 45);

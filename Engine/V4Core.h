@@ -10,7 +10,7 @@ class V4Core
 {
 private:
     // Static GUI always on screen
-    sf::Font f_font;
+
     sf::Text t_version;
     sf::Text t_fps;
 

@@ -36,7 +36,7 @@ private:
 
     int quality_setting = 0;
 
-    sf::Font f_font;
+
     PText t_title;
     int current_item_position = 0;
     std::vector<bool> enabled_positons;

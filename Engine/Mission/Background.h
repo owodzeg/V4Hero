@@ -21,12 +21,15 @@ public:
     std::vector<BGObject> bg_objects;
 
     sf::VertexArray v_background;
+    sf::VertexArray v_dark_highlight;
     std::vector<sf::Vector2f> vx_pos;
     std::vector<sf::Color> vx_color;
     sf::RectangleShape r_ground;
 
     float floor_height = 0;
     int quality = 0;
+
+    sf::View bgView;
 
     Background();
     void Load(const std::string& bg_name);

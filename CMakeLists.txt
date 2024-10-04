@@ -76,6 +76,8 @@ set(ENGINE_FILES
         Engine/Math/PVector.cpp
         Engine/SaveReader.cpp
         Engine/Input/InputController.cpp
+        Engine/Input/TextInputController.cpp
+        Engine/Input/MouseController.cpp
         Engine/Rhythm/RhythmGUI.cpp
         Engine/Rhythm/RhythmController.cpp
         Engine/Rhythm/SongController.cpp
@@ -99,7 +101,6 @@ set(ENGINE_FILES
         Engine/Mission/Weather.cpp
         Engine/Mission/Units/CollidableObject.cpp
         Engine/Mission/Units/AnimatedObject.cpp
-        Engine/Mission/Units/PNGAnimation.cpp
         Engine/Mission/Units/Hitbox.cpp
         Engine/Mission/Units/Object.cpp
         Engine/Mission/Units/Projectile.cpp
@@ -112,11 +113,10 @@ set(ENGINE_FILES
         Engine/Graphics/CurveSegment.cpp
         Engine/Graphics/ConcaveShape.cpp 
         Engine/Graphics/AnimatedCurveShape.cpp
-        Engine/Graphics/AnimatedCurveShape.h
+        Engine/Graphics/PNGAnimation.cpp
         Engine/Menu/TestChamber.cpp
-        Engine/Menu/TestChamber.h
         Engine/Menu/ErrorChamber.cpp
-        Engine/Menu/ErrorChamber.h)
+        Engine/Mechanics/Globals.cpp)
 
 set(DISCORD_FILES
         DiscordSDK/achievement_manager.cpp

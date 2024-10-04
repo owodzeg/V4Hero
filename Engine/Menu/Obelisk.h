@@ -13,7 +13,6 @@ class PatapolisMenu;
 class ObeliskMenu : public Menu
 {
 public:
-    sf::Font font;
     int quality = 1;
 
     ControlTips ctrlTips;

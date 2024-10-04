@@ -22,7 +22,9 @@ void MissionController::Update()
 
     rhythm->doRhythm();
 
-    cam.Work();
+    auto view = CoreManager::getInstance().getWindow()->getView();
+
+    cam.Work(view);
     bg.Draw(cam);
 
     CoreManager::getInstance().getRhythmGUI()->doVisuals(0, rhythm->GetCombo());

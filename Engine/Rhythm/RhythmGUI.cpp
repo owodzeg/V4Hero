@@ -17,8 +17,10 @@ RhythmGUI::RhythmGUI()
 
     lastRhythmCheck = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
-    d_text.setFont(CoreManager::getInstance().getStrRepo()->font);
-    d_text.setFillColor(sf::Color::Black);
+    auto strRepo = CoreManager::getInstance().getStrRepo();
+
+    d_text.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
+    d_text.setColor(sf::Color::Black);
     d_text.setCharacterSize(20);
 }
 
@@ -218,7 +220,7 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
         window->setView(window->getDefaultView());
         
         d_text.setString(debug_text);
-        window->draw(d_text);
+        d_text.draw();
 
         d_green.setSize(sf::Vector2f(250, 40));
         d_green.setFillColor(sf::Color::Green);

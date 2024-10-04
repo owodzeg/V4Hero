@@ -2,11 +2,7 @@
 #define ANIMATEDOBJECT_H
 
 #include <SFML/Graphics.hpp>
-#include "PNGAnimation.h"
-
-// compatibility
-#include "Hitbox.h"
-#include "Object.h"
+#include "../../Graphics/PNGAnimation.h"
 #include <memory>
 
 class AnimatedObjectException : public std::exception {
@@ -54,7 +50,7 @@ public:
     void playAnimation();
     void stopAnimation();
 
-    void setAnimation(std::string& shortAnimName);
+    void setAnimation(const std::string& shortAnimName);
     void setAnimationSpeed(float newFPS);
     void setAnimationFrame(int newFrame);
 
@@ -70,37 +66,6 @@ public:
     virtual void LoadConfig(const std::string& anim_path);
     virtual void Draw();
     virtual void Update();
-
-    // fallback compatibility stuff
-    int entityID = 0;
-    float fps = 60;
-    std::vector<Hitbox> hitboxes;
-    bool offbounds = false;
-    sf::Rect<float> hitBox;
-    int qualitySetting;
-    std::string custom_img_key;
-    float cur_pos,anim_end;
-    bool ready_to_erase;
-    bool worm_fever;
-    float scaleX, scaleY;
-    std::string current_animation;
-    std::shared_ptr<std::vector<Object>> objects;
-    bool force_origin_null = false;
-    std::map<int, std::map<int, sf::Vector2f>> animation_origins;
-    std::map<int, std::map<int, sf::IntRect>> animation_bounds;
-    float curFrame = 0, current_frame = 0;
-    float global_x, global_y;
-    float local_x, local_y;
-    int index;
-    float framerate;
-    void setAnimationSegment(std::string new_segment_name);
-    void setAnimationSegment(std::string new_segment_name, bool force_start);
-    std::string getAnimationSegment();
-    float getAnimationPos();
-    void setColor(sf::Color c);
-    sf::Color getColor();
-    void applyEquipment(std::vector<int> item_id, int slot, bool offhand = false);
-    void setLoop(bool a);
 };
 
 #endif // ANIMATEDOBJECT_H

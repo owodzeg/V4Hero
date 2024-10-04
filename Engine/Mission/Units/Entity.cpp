@@ -10,7 +10,7 @@ Entity::Entity()
 void Entity::setEntityID(int new_entityID)
 {
     entityID = new_entityID;
-    AnimatedObject::entityID = new_entityID;
+    //AnimatedObject::entityID = new_entityID;
 }
 
 int Entity::getEntityID()
@@ -32,7 +32,7 @@ bool Entity::willDrop(vector<int> item_id)
 
 void Entity::doRhythm(std::string current_song, std::string current_drum, int combo, int realcombo, bool advanced_prefever, float beatBounce, float satisfaction)
 {
-    cout << "Entity::doRhythm() was not overriden by child class" << endl;
+    SPDLOG_WARN("Entity::doRhythm() was not overriden by child class");
 }
 
 bool Entity::doAttack()
@@ -54,12 +54,12 @@ void Entity::die()
 
 void Entity::LoadConfig(std::string unitParamPath)
 {
-    cout << "Entity::LoadConfig() was not overriden by child class" << endl;
+    SPDLOG_WARN("Entity::LoadConfig() was not overriden by child class");
 }
 
 void Entity::parseAdditionalData(nlohmann::json additional_data)
 {
-    cout << "Entity::parseAdditionalData() was not overriden by child class" << endl;
+    SPDLOG_WARN("Entity::parseAdditionalData() was not overriden by child class");
 }
 
 void Entity::dropItem()

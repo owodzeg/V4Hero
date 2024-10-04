@@ -6,10 +6,9 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
+#include <fstream>
 #include <spdlog/spdlog.h>
 #include "CoreManager.h"
-
-using namespace std;
 
 Config::Config()
 {
@@ -17,14 +16,14 @@ Config::Config()
 
     configDebugID = 0;
     ///check if config file already exists
-    ifstream check("config.ini");
+    std::ifstream check("config.ini");
     bool exists = check.good();
     check.close();
 
     ///if config not exists
     if (!exists)
     {
-        ofstream conf("config.ini");
+        std::ofstream conf("config.ini");
 
         if (conf.is_open())
         {
@@ -51,7 +50,7 @@ Config::Config()
 
 void Config::LoadConfig()
 {
-    ifstream conf("config.ini");
+    std::ifstream conf("config.ini");
 
     vector<string> keysCheckList = configKeys;
     vector<string> keysCheckDefaults = configDefaults;
@@ -99,7 +98,7 @@ void Config::LoadConfig()
 
     conf.close();
 
-    ofstream conf2("config.ini", ios::app);
+    std::ofstream conf2("config.ini", ios::app);
 
     if (conf2.is_open())
     {
@@ -125,7 +124,7 @@ void Config::LoadConfig()
 
 void Config::SaveConfig()
 {
-    ofstream conf2("config.ini", ios::trunc);
+    std::ofstream conf2("config.ini", ios::trunc);
     SPDLOG_DEBUG("Config Size: {}, Config Keys: {}", configMap.size(), configKeys.size());
 
     if (conf2.is_open())
@@ -150,16 +149,7 @@ void Config::SaveConfig()
 
     conf2.close();
 }
-void Config::ReloadLanguages()
-{
-    /** Load lang from resources/lang/str_ENG.cfg **/
-    if (changedLang)
-    {
-        strRepo.LoadLanguageFiles(GetInt("lang"));
-        SPDLOG_DEBUG("Language changed to {}", strRepo.GetString("language_file_loaded"));
-        changedLang = false;
-    }
-}
+
 int Config::GetInt(std::string key)
 {
     int num = atoi(configMap[key].c_str());
@@ -173,13 +163,6 @@ std::string Config::GetString(std::string key)
 void Config::SetString(std::string key, std::string val)
 {
     configMap[key] = val;
-}
-std::string Config::GetLanguageName()
-{
-    std::string s = strRepo.langNames[atoi(configMap["lang"].c_str()) - 1];
-    std::string resws;
-    resws.assign(s.begin(), s.end());
-    return resws;
 }
 
 bool Config::keyExists(std::string key)

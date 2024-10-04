@@ -8,9 +8,12 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <filesystem>
 #include <spdlog/spdlog.h>
 
-using namespace std;
+#include "CoreManager.h"
+
+namespace fs = std::filesystem;
 
 std::vector<std::string> Func::Split(const std::string& s, char delim)
 {
@@ -42,17 +45,17 @@ std::string Func::trim(const std::string& str, const std::string& whitespace = "
     return str.substr(strBegin, strRange);
 }
 
-std::string Func::wrap_text(std::string input, int box_width, sf::Font& font, int character_size)
+std::string Func::wrap_text(std::string input, int box_width, std::string font, int character_size)
 {
     //cout << "wrap_text(" << input << ", " << box_width << ")" << endl;
 
     if (input.size() <= 0)
         return "";
 
-    string temp = "";
-    vector<string> words;
+    std::string temp = "";
+    std::vector<std::string> words;
 
-    for (int i = 0; i < input.size(); i++)
+    for (unsigned long i = 0; i < input.size(); i++)
     {
         if ((input[i] == ' ') || (input[i] == '\n') || (i == input.size() - 1))
         {
@@ -71,23 +74,24 @@ std::string Func::wrap_text(std::string input, int box_width, sf::Font& font, in
         }
     }
 
-    string full = "";
+    std::string full = "";
 
-    string prevtemp = "";
+    std::string prevtemp = "";
     int wordcount = 0;
     temp = "";
 
-    for (int i = 0; i < words.size(); i++)
+    for (unsigned long i = 0; i < words.size(); i++)
     {
         prevtemp = temp;
 
         if (words[i].find("\n") != std::string::npos)
         {
             //cout << "String found to contain a new line character" << endl;
-            string prefull = prevtemp + " " + words[i];
+            std::string prefull = prevtemp + " " + words[i];
 
+            //TODO: check if it wraps text correctly
             sf::Text t_temp;
-            t_temp.setFont(font);
+            t_temp.setFont(CoreManager::getInstance().getStrRepo()->GetFontFromName(font));
             t_temp.setCharacterSize(character_size);
             t_temp.setString(prefull);
 
@@ -114,7 +118,7 @@ std::string Func::wrap_text(std::string input, int box_width, sf::Font& font, in
         wordcount++;
 
         sf::Text t_temp;
-        t_temp.setFont(font);
+        t_temp.setFont(CoreManager::getInstance().getStrRepo()->GetFontFromName(font));
         t_temp.setCharacterSize(character_size);
         t_temp.setString(temp);
 
@@ -135,16 +139,16 @@ std::string Func::wrap_text(std::string input, int box_width, sf::Font& font, in
                 wordcount = 0;
             } else
             {
-                string ltemp = "";
+                std::string ltemp = "";
 
                 ///if its just a long ass word
                 ///need to optimize this because it doesnt work correctly for chinese
-                for (int e = 0; e < temp.size(); e++)
+                for (unsigned long e = 0; e < temp.size(); e++)
                 {
                     ltemp += temp[e];
 
                     sf::Text t_ltemp;
-                    t_ltemp.setFont(font);
+                    t_ltemp.setFont(CoreManager::getInstance().getStrRepo()->GetFontFromName(font));
                     t_ltemp.setCharacterSize(character_size);
                     t_ltemp.setString(ltemp);
 
@@ -174,7 +178,7 @@ std::string Func::wrap_text(std::string input, int box_width, sf::Font& font, in
 template<typename T>
 std::string Func::to_str(const T& t)
 {
-    ostringstream ss;
+    std::ostringstream ss;
     ss << t;
     return ss.str();
 }
@@ -185,4 +189,65 @@ std::string Func::num_padding(int num, int padding) ///stolen from cplusplus.com
     ss << std::setw(padding) << std::setfill('0') << num;
 
     return ss.str();
+}
+
+std::string Func::getCurrentWorkingDir()
+{
+    std::filesystem::path cwd = std::filesystem::current_path();
+    return cwd.string();
+}
+
+void Func::create_directory(const std::string& path) {
+    std::filesystem::path dir(path);
+
+    try {
+        if (std::filesystem::create_directories(dir)) {
+            SPDLOG_INFO("Directory created: {}", dir.string());
+        } else {
+            SPDLOG_WARN("Directory already exists: {}", dir.string());
+        }
+    } catch (const std::filesystem::filesystem_error& e) {
+        SPDLOG_ERROR("Error creating directory", std::string(e.what()));
+    }
+}
+
+std::string Func::getTempDirectory() {
+#ifdef _WIN32
+    // For Windows
+    char tempPath[MAX_PATH];
+    if (GetTempPathA(MAX_PATH, tempPath)) {
+        return std::string(tempPath);
+    }
+#elif defined(__linux__) || defined(__APPLE__)
+    // For Linux and macOS
+    const char* tempPath = std::getenv("TMPDIR");
+    if (tempPath) {
+        return std::string(tempPath);
+    }
+    return "/tmp"; // Default for Linux
+#endif
+    return ""; // Fallback if no temp directory found
+}
+
+bool Func::replace(std::string& str, const std::string& from, const std::string& to) {
+    size_t start_pos = str.find(from);
+    if(start_pos == std::string::npos)
+        return false;
+    str.replace(start_pos, from.length(), to);
+    return true;
+}
+
+void Func::smoothTransition(float& current, float& destination, float& delta)
+{
+    if(fabs(current - destination) > 0)
+    {
+        if(current > destination)
+        {
+            current -= fabs(current - destination) * delta;
+        }
+        else
+        {
+            current += fabs(current - destination) * delta;
+        }
+    }
 }

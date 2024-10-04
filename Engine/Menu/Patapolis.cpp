@@ -20,18 +20,16 @@ PatapolisMenu::PatapolisMenu()
     try
     {
         Config* config = CoreManager::getInstance().getConfig();
+        StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
+
+        std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
+
         updateStoryPoint(); // Update story_point before anything else
 
         quality = config->GetInt("textureQuality");
 
         float resRatioX = config->GetInt("resX") / float(3840);
         float resRatioY = config->GetInt("resY") / float(2160);
-
-        f_font.loadFromFile(config->fontPath);
-
-        t_title.createText(f_font, 38, sf::Color::White, "", quality, 1);
-        t_title.setOutlineThickness(2);
-        t_title.setOutlineColor(sf::Color::Black);
 
         string vx_params = "0,24,128,238;198,24,128,238;1332,184,243,202;1773,184,243,202;1774,255,255,255;2130,171,243,214;2160,171,243,214";
 
@@ -223,12 +221,12 @@ PatapolisMenu::PatapolisMenu()
 
         //TODO: to be replaced with respective .zip models
         a_wakapon.LoadConfig("resources/units/unit/hatapon.zip");
-        a_wakapon.setAnimationSegment("idle");
-        a_wakapon.global_y = 395*3;
+        a_wakapon.setAnimation("idle");
+        a_wakapon.setGlobalPosition(sf::Vector2f(a_wakapon.getGlobalPosition().x, 395*3));
 
         a_sen.LoadConfig("resources/units/unit/hatapon.zip");
-        a_sen.setAnimationSegment("idle");
-        a_sen.global_y = 629*3;
+        a_sen.setAnimation("idle");
+        a_sen.setGlobalPosition(sf::Vector2f(a_sen.getGlobalPosition().x, 629*3));
 
 
         ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/egg.png");
@@ -344,7 +342,7 @@ PatapolisMenu::PatapolisMenu()
         ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/paraget_sparkle_2.png");
         ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/paraget_sparkle_3.png");
 
-        ctrlTips.create(54, f_font, 20, sf::String("L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
+        ctrlTips.create(54, font, 20, sf::String("L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
 
         //TO-DO: these things are not yet supported by new system. add compatibility
         /*
@@ -641,6 +639,8 @@ void PatapolisMenu::SetTitle(int menuPosition)
     Config* config = CoreManager::getInstance().getConfig();
     SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
 
+    std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
+
     sf::String a = "L/R: Move      ";
 
     if (draw_ID.size() <= 1)
@@ -662,27 +662,27 @@ void PatapolisMenu::SetTitle(int menuPosition)
     switch (menuPosition)
     {
         case Buildings::MARKET:
-            t_title.setString(Func::ConvertToUtf8String(strRepo->GetString("patapolis_trader")));
+            t_title.setStringKey("patapolis_trader");
             break;
         case Buildings::FORGE:
-            t_title.setString(Func::ConvertToUtf8String(strRepo->GetString("patapolis_blacksmith")));
+            t_title.setStringKey("patapolis_blacksmith");
             break;
         case Buildings::BARRACKS:
-            t_title.setString(Func::ConvertToUtf8String(strRepo->GetString("patapolis_barracks")));
+            t_title.setStringKey("patapolis_barracks");
             a += "X: Interact      ";
             break;
         case Buildings::FESTIVAL:
-            t_title.setString(Func::ConvertToUtf8String(strRepo->GetString("patapolis_festival")));
+            t_title.setStringKey("patapolis_festival");
             break;
         case Buildings::SEN: {
-            t_title.setString(Func::ConvertToUtf8String(strRepo->GetString("patapolis_sen")));
+            t_title.setStringKey("patapolis_sen");
             a += "X: Interact      ";
 
             ///activate her dialogue
             messageclouds.clear();
 
             MessageCloud tmp;
-            tmp.Create(20, sf::Vector2f(a_sen.getGlobalPosition().x - 15, a_sen.getGlobalPosition().y - 75), sf::Color(170, 182, 250, 255), false, config->GetInt("textureQuality"), config->fontPath);
+            tmp.Create(20, sf::Vector2f(a_sen.getGlobalPosition().x - 15, a_sen.getGlobalPosition().y - 75), sf::Color(170, 182, 250, 255), false, config->GetInt("textureQuality"));
             tmp.msgcloud_ID = 0;
 
             vector<int> missions = saveReader->missions_unlocked;
@@ -692,42 +692,43 @@ void PatapolisMenu::SetTitle(int menuPosition)
                 case 0:
                 default: {
                     // Start of game, shouldn't be accessible
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("dialogue_error"))+"story_point is either 0 or above currently regulated bounds", true);
+                    tmp.AddDialog("dialogue_error", true);
+                    tmp.AdditionalData("story_point is either 0 or above currently regulated bounds");
                     break;
                 }
                 case 1: {
                     // Shida Valley
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_sen_1")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_sen_4")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_sen_5")), true);
+                    tmp.AddDialog("npc_sen_1", true);
+                    tmp.AddDialog("npc_sen_4", true);
+                    tmp.AddDialog("npc_sen_5", true);
                     break;
                 }
                 case 2: {
                     // Patapine Grove Unlocked
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_sen_3")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_sen_6")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_sen_7")), true);
+                    tmp.AddDialog("npc_sen_3", true);
+                    tmp.AddDialog("npc_sen_6", true);
+                    tmp.AddDialog("npc_sen_7", true);
                     break;
                 }
                 case 3: {
                     // Patapine Grove Beaten
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_sen_2")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_sen_8")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_sen_9")), true);
+                    tmp.AddDialog("npc_sen_2", true);
+                    tmp.AddDialog("npc_sen_8", true);
+                    tmp.AddDialog("npc_sen_9", true);
                     break;
                 }
                 case 4: {
                     // Ejiji Cliffs Unlocked
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_sen_3")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_sen_10")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_sen_11")), true);
+                    tmp.AddDialog("npc_sen_3", true);
+                    tmp.AddDialog("npc_sen_10", true);
+                    tmp.AddDialog("npc_sen_11", true);
                     break;
                 }
                 case 5: {
                     // Ejiji Cliffs Beaten
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_sen_1")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_sen_12")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_sen_13")), true);
+                    tmp.AddDialog("npc_sen_1", true);
+                    tmp.AddDialog("npc_sen_12", true);
+                    tmp.AddDialog("npc_sen_13", true);
 
                     tmp.msgcloud_ID = 2;
                     break;
@@ -741,21 +742,21 @@ void PatapolisMenu::SetTitle(int menuPosition)
             break;
         }
         case Buildings::ALTAR:
-            t_title.setString(Func::ConvertToUtf8String(strRepo->GetString("patapolis_altar")));
+            t_title.setStringKey("patapolis_altar");
             a += "X: Interact      ";
             break;
         case Buildings::OBELISK:
-            t_title.setString(Func::ConvertToUtf8String(strRepo->GetString("patapolis_obelisk")));
+            t_title.setStringKey("patapolis_obelisk");
             a += "X: Interact      ";
             break;
         case Buildings::MATER:
-            t_title.setString(Func::ConvertToUtf8String(strRepo->GetString("patapolis_tree")));
+            t_title.setStringKey("patapolis_tree");
             break;
         case Buildings::PARAGET:
-            t_title.setString(Func::ConvertToUtf8String(strRepo->GetString("patapolis_paraget")));
+            t_title.setStringKey("patapolis_paraget");
             break;
         case Buildings::WAKAPON: {
-            t_title.setString(Func::ConvertToUtf8String(strRepo->GetString("patapolis_wakapon")));
+            t_title.setStringKey("patapolis_wakapon");
 
             a += "X: Interact      ";
 
@@ -763,7 +764,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
             messageclouds.clear();
 
             MessageCloud tmp;
-            tmp.Create(20, sf::Vector2f(a_wakapon.getGlobalPosition().x - 15, a_wakapon.getGlobalPosition().y - 75), sf::Color(255, 255, 255, 255), false, config->GetInt("textureQuality"), config->fontPath);
+            tmp.Create(20, sf::Vector2f(a_wakapon.getGlobalPosition().x - 15, a_wakapon.getGlobalPosition().y - 75), sf::Color(255, 255, 255, 255), false, config->GetInt("textureQuality"));
 
             vector<int> missions = saveReader->missions_unlocked;
 
@@ -774,38 +775,38 @@ void PatapolisMenu::SetTitle(int menuPosition)
                 if (missions.size() == 1) ///if it's the only mission
                 {
                     ///shida valley dialogue
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_wakapon_1")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_wakapon_2")), true);
-                    tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_wakapon_3")), true);
+                    tmp.AddDialog("npc_wakapon_1", true);
+                    tmp.AddDialog("npc_wakapon_2", true);
+                    tmp.AddDialog("npc_wakapon_3", true);
                 } else
                 {
                     if (std::find(missions.begin(), missions.end(), 2) != missions.end()) ///patapine fortress STORY mission (non-repeatable)
                     {
                         ///patapine unlocked dialogue
-                        tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_wakapon_1")), true);
-                        tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_wakapon_4")), true);
-                        tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_wakapon_5")), true);
+                        tmp.AddDialog("npc_wakapon_1", true);
+                        tmp.AddDialog("npc_wakapon_4", true);
+                        tmp.AddDialog("npc_wakapon_5", true);
                     } else if (std::find(missions.begin(), missions.end(), 3) != missions.end()) ///patapine fortress REPEATABLE mission
                     {
                         if (missions.size() == 2) ///ejiji cliffs not unlocked yet (only shida and patapine)
                         {
                             ///ejiji locked dialogue
-                            tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_wakapon_1")), true);
-                            tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_wakapon_6")), true);
-                            tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_wakapon_7")), true);
+                            tmp.AddDialog("npc_wakapon_1", true);
+                            tmp.AddDialog("npc_wakapon_6", true);
+                            tmp.AddDialog("npc_wakapon_7", true);
                         } else
                         {
                             if (std::find(missions.begin(), missions.end(), 4) != missions.end()) ///ejiji cliff STORY mission
                             {
                                 ///ejiji unlocked dialogue
-                                tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_wakapon_1")), true);
-                                tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_wakapon_8")), true);
-                                tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_wakapon_9")), true);
+                                tmp.AddDialog("npc_wakapon_1", true);
+                                tmp.AddDialog("npc_wakapon_8", true);
+                                tmp.AddDialog("npc_wakapon_9", true);
                             } else ///ejiji cliff REPEATABLE mission
                             {
-                                tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_wakapon_1")), true);
-                                tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_wakapon_10")), true);
-                                tmp.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("npc_wakapon_11")), true);
+                                tmp.AddDialog("npc_wakapon_1", true);
+                                tmp.AddDialog("npc_wakapon_10", true);
+                                tmp.AddDialog("npc_wakapon_11", true);
                             }
                         }
                     }
@@ -820,16 +821,16 @@ void PatapolisMenu::SetTitle(int menuPosition)
             break;
         }
         case Buildings::EGG:
-            t_title.setString(Func::ConvertToUtf8String(strRepo->GetString("patapolis_egg")));
+            t_title.setStringKey("patapolis_egg");
             break;
         default:
-            t_title.setString(Func::ConvertToUtf8String(strRepo->GetString("patapolis")));
+            t_title.setStringKey("patapolis");
             break;
     }
 
     a += "Select: Save      Start: Title screen";
 
-    ctrlTips.create(54, f_font, 20, a, quality);
+    ctrlTips.create(54, font, 20, a, quality);
 }
 float EaseIn(float time, float startValue, float change, float duration)
 {
@@ -850,6 +851,8 @@ void PatapolisMenu::Update()
     StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
     float fps = CoreManager::getInstance().getCore()->getFPS();
 
+    std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
+
     //if (is_active) TO-DO: is this still needed?
     if (true)
     {
@@ -857,7 +860,7 @@ void PatapolisMenu::Update()
         window->setView(patapolisView);
 
         camera.zoom_y = 0;
-        camera.Work(dest_zoom);
+        camera.Work(patapolisView, dest_zoom);
 
         window->draw(v_background);
 
@@ -940,8 +943,8 @@ void PatapolisMenu::Update()
         L5.lx = L5.baseX - (camPos / 1.1111111111111111111);
         L4.lx = L4.baseX - (camPos / 1.0526315789473684210526315789474);
 
-        a_wakapon.global_x = 11920.0*3 - camPos;
-        a_sen.global_x = 6450.0*3 - camPos;
+        a_wakapon.setGlobalPosition(sf::Vector2f(11920.0*3 - camPos, a_wakapon.getGlobalPosition().y));
+        a_sen.setGlobalPosition(sf::Vector2f(6450.0*3 - camPos, a_sen.getGlobalPosition().y));
 
         rayX = rayXbase - camPos;
 
@@ -1422,11 +1425,9 @@ void PatapolisMenu::Update()
         bridge.draw(window);
 
         /// Wakapon
-        a_wakapon.fps = fps;
         a_wakapon.Draw();
 
         /// Sen
-        a_sen.fps = fps;
         a_sen.Draw();
 
         PSprite& world_egg = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/egg.png");
@@ -1469,9 +1470,13 @@ void PatapolisMenu::Update()
                 city_loop.play();
             }
 
+            t_title.setFont(font);
+            t_title.setCharacterSize(38);
+            t_title.setOutlineThickness(2);
+            t_title.setOutlineColor(sf::Color::Black);
             t_title.setOrigin(t_title.getLocalBounds().width / 2, t_title.getLocalBounds().height / 2);
             t_title.setPosition(640*3, 80*3);
-            t_title.draw(window);
+            t_title.draw();
 
             vector<int> m_rm;
 
@@ -1500,10 +1505,10 @@ void PatapolisMenu::Update()
                             if (messageclouds[i].msgcloud_ID == 2)
                             {
                                 ///Create ending dialogbox here
-                                std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("patapolis_demo_pick1")), Func::ConvertToUtf8String(strRepo->GetString("patapolis_demo_pick2"))};
+                                std::vector<sf::String> a = {"patapolis_demo_pick1", "patapolis_demo_pick2"};
 
                                 PataDialogBox db;
-                                db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("patapolis_demofinish")), a, config->GetInt("textureQuality"));
+                                db.Create(font, "patapolis_demofinish", a, config->GetInt("textureQuality"));
                                 db.id = 4;
                                 dialogboxes.push_back(db);
 
@@ -1740,18 +1745,18 @@ void PatapolisMenu::Update()
 
                 if (inputCtrl->isKeyPressed(Input::Keys::START))
                 {
-                    std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_yes")), Func::ConvertToUtf8String(strRepo->GetString("nav_no"))};
+                    std::vector<sf::String> a = {"nav_yes", "nav_no"};
 
                     PataDialogBox db;
-                    db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("patapolis_returntomain")), a, config->GetInt("textureQuality"));
+                    db.Create(font, "patapolis_returntomain", a, config->GetInt("textureQuality"));
                     db.id = 0;
                     dialogboxes.push_back(db);
                 } else if (inputCtrl->isKeyPressed(Input::Keys::SELECT))
                 {
-                    std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_yes")), Func::ConvertToUtf8String(strRepo->GetString("nav_no"))};
+                    std::vector<sf::String> a = {"nav_yes", "nav_no"};
 
                     PataDialogBox db;
-                    db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("patapolis_save")), a, config->GetInt("textureQuality"));
+                    db.Create(font, "patapolis_save", a, config->GetInt("textureQuality"));
                     db.id = 2;
                     dialogboxes.push_back(db);
                 }
@@ -1768,10 +1773,10 @@ void PatapolisMenu::Update()
                             SPDLOG_DEBUG("Open second dialogbox");
                             dialogboxes[dialogboxes.size() - 1].Close();
 
-                            std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_yes")), Func::ConvertToUtf8String(strRepo->GetString("nav_no"))};
+                            std::vector<sf::String> a = {"nav_yes", "nav_no"};
 
                             PataDialogBox db;
-                            db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("patapolis_returntomainsave")), a, config->GetInt("textureQuality"));
+                            db.Create(font, "patapolis_returntomainsave", a, config->GetInt("textureQuality"));
                             db.id = 1;
                             dialogboxes.push_back(db);
 
@@ -1789,10 +1794,10 @@ void PatapolisMenu::Update()
 
                             dialogboxes[dialogboxes.size() - 1].Close();
 
-                            std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_understood"))};
+                            std::vector<sf::String> a = {"nav_understood"};
 
                             PataDialogBox db;
-                            db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("patapolis_saved")), a, config->GetInt("textureQuality"));
+                            db.Create(font, "patapolis_saved", a, config->GetInt("textureQuality"));
                             db.id = 3;
                             dialogboxes.push_back(db);
 

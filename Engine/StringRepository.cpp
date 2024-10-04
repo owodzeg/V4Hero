@@ -1,158 +1,150 @@
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
-
 #include "StringRepository.h"
 #include "Func.h"
-#include <codecvt>
-#include <iostream>
-#include <string>
-#include <vector>
 #include <spdlog/spdlog.h>
+#include <sstream>
+#include <fstream>
 
-using namespace std;
-
-StringRepository::StringRepository()
+StringRepository::StringRepository() : currentLanguageCode("us")
 {
-    configDebugID = 0; 
-    ///check if config file already exists
-    ifstream check("config.ini");
-    bool exists = check.good();
-    check.close();
+    // Set English (us) as the default language
 }
-void StringRepository::LoadLanguageFile(ifstream* conf)
+
+// Parse language data from input stream (file or stringstream)
+void StringRepository::ParseLanguageData(std::istream& inputStream, std::unordered_map<std::string, std::string>& langMap)
 {
-    vector<string> keysCheckList;
-    std::locale old_locale;
-    std::locale utf8_locale(old_locale, new std::codecvt_utf8<wchar_t>);
-    conf->imbue(utf8_locale);
-
-    if (conf->good())
+    std::string line;
+    while (std::getline(inputStream, line))
     {
-        std::string line;
-        while (getline(*conf, line))
+        // Ignore empty lines and comments
+        if (line.empty() || line.find("//") != std::string::npos) continue;
+
+        // Split by the delimiter `|` (key|value)
+        auto keyValue = Func::Split(line, '|');
+        if (keyValue.size() == 2)
         {
-            if (!line.empty())
-            {
-                ///ignore comments
-                if (line.find("//") == std::string::npos)
-                {
-                    ///Split the Key and Value
-                    ///wcout<<line<<endl;
-
-                    if (line.back() == '\r')
-                    {
-                        line.pop_back();
-                    }
-                    vector<string> key = Func::Split(line, '|');
-
-                    if (key.size() == 2)
-                    {
-                        std::string s(key[0].begin(), key[0].end());
-
-                        for (int k = 0; k < key[1].size(); k++)
-                        {
-                            if (key[1][k] == '\\')
-                                key[1][k] = '\n';
-                        }
-
-                        stringMap[s] = key[1];
-                    }
-                }
-            }
+            langMap[keyValue[0]] = keyValue[1];
         }
-    } else
+    }
+}
+
+// Load language file from disk
+void StringRepository::LoadLanguageFile(const std::string& countryCode, const std::string& countryNativeName, const std::string& filename)
+{
+    std::ifstream file(filename);
+    if (!file)
     {
-        SPDLOG_ERROR("Could not load lang file.");
+        SPDLOG_ERROR("Failed to open language file: {}", filename);
+        return;
     }
 
-    conf->close();
+    std::unordered_map<std::string, std::string>& langMap = languages[countryCode];
+    languageNativeNames[countryCode] = countryNativeName;
+    ParseLanguageData(file, langMap);
 }
 
-void StringRepository::LoadLanguageFiles(int langNum)
+// Load language data from a string
+void StringRepository::LoadLanguageFromString(const std::string& countryCode, const std::string& countryNativeName, const std::string& langContent)
 {
-    ifstream conf("resources/lang/lang.txt");
+    std::istringstream stream(langContent);
+    std::unordered_map<std::string, std::string>& langMap = languages[countryCode];
+    languageNativeNames[countryCode] = countryNativeName;
+    ParseLanguageData(stream, langMap);
+}
 
-    if (conf.good())
+// Set the current language to be used for translations
+void StringRepository::SetCurrentLanguage(const std::string& countryCode)
+{
+    if (languages.find(countryCode) != languages.end())
     {
-        std::string line;
-        while (getline(conf, line))
-        {
-            ///ignore comments
-            if (line.find("//") == std::string::npos)
-            {
-                if (line.back() == '\r')
-                {
-                    line.pop_back();
-                }
-                vector<string> key = Func::Split(line, '|');
-
-                if (key.size() == 4)
-                {
-                    SPDLOG_DEBUG("Loaded language id {}, file {}, value {}", key[0], key[1], key[2]);
-                    langIDs.push_back(atof(key[0].c_str()));
-                    langFiles.push_back("" + key[2]);
-                    langNames.push_back(key[1]);
-                    langFonts.push_back(key[3]);
-                }
-            }
-        }
-
-        int selID = 1;
-
-        for (int i=0; i<langIDs.size(); i++)
-        {
-            if (langNum == langIDs[i])
-                selID = i;
-        }
-
-        ifstream conf2("resources/lang/" + langFiles[selID] + ".txt");
-        SPDLOG_INFO("Loading language file: {} {}", langNames[selID], langFiles[selID]);
-        LoadLanguageFile(&conf2);
-    } else
-    {
-        ifstream conf2("resources/lang/str_ENG.txt");
-        LoadLanguageFile(&conf2);
+        currentLanguageCode = countryCode;
+        refreshStrings = true;
+        SPDLOG_INFO("Current language set to: {}", countryCode);
     }
-    conf.close();
-
-    /*switch (langNum){
-        case 1:
-            {
-                wifstream conf("resources/lang/str_ENG.txt");
-                LoadLanguageFile(&conf);
-                break;
-            }
-
-        case 2:{
-            wifstream conf("resources/lang/str_FRA.txt");
-            LoadLanguageFile(&conf);
-            break;}
-        case 3:{
-            wifstream conf("resources/lang/str_SPA.txt");
-                LoadLanguageFile(&conf);
-            break;}
-        case 4:{
-            wifstream conf("resources/lang/str_DAN.txt");
-            LoadLanguageFile(&conf);
-            break;}
-        case 5:{
-            wifstream conf("resources/lang/str_POL.txt");
-            LoadLanguageFile(&conf);
-            break;}
-        case 6:{
-            wifstream conf("resources/lang/str_EMJ.txt");
-            LoadLanguageFile(&conf);
-            break;}
-        default:{
-            wifstream conf("resources/lang/str_ENG.txt");
-            LoadLanguageFile(&conf);
-            break;}
-
-    }*/
+    else
+    {
+        SPDLOG_WARN("Language with code {} not loaded.", countryCode);
+    }
 }
 
-
-std::string StringRepository::GetString(std::string key)
+std::string StringRepository::GetCurrentLanguage() const
 {
-    return stringMap[key];
+    return currentLanguageCode;
 }
 
+// Get a string for the current language using a key
+std::string StringRepository::GetString(const std::string& key) const
+{
+    auto langIt = languages.find(currentLanguageCode);
+    if (langIt != languages.end())
+    {
+        const auto& langMap = langIt->second;
+        auto it = langMap.find(key);
+        if (it != langMap.end())
+        {
+            return it->second;
+        }
+    }
+    SPDLOG_WARN("Key '{}' not found for language '{}'", key, currentLanguageCode);
+    return "language "+currentLanguageCode+"{n}key "+key+"{n}missing translation";
+}
+
+// Get a list of available languages and their native names
+std::vector<std::pair<std::string, std::string>> StringRepository::GetAvailableLanguages() const
+{
+    std::vector<std::pair<std::string, std::string>> langs;
+    for (const auto& lang : languages)
+    {
+        langs.emplace_back(lang.first, languageNativeNames.at(lang.first));
+    }
+    std::sort(langs.begin(), langs.end());
+    return langs;
+}
+
+// Load font from memory (string data)
+void StringRepository::LoadFontFromString(const std::string& fontName, const std::vector<char>& fontData)
+{
+    sf::Font font;
+    if (!font.loadFromMemory(fontData.data(), fontData.size())) {
+        SPDLOG_ERROR("Could not load font '{}'", fontName);
+        return;
+    }
+
+    // Insert font into the map using emplace or insert
+    fontStore.emplace(fontName, std::move(font));  // Move the font to avoid copying
+    SPDLOG_INFO("Font '{}' loaded successfully", fontName);
+}
+// Load font from memory (string data)
+void StringRepository::LoadFontFromFile(const std::string& fontPath, const std::string& fontName)
+{
+    sf::Font font;
+    if (!font.loadFromFile(fontPath)) {
+        SPDLOG_ERROR("Could not load font '{}'", fontPath);
+        return;
+    }
+
+    // Insert font into the map using emplace or insert
+    fontStore.emplace(fontName, std::move(font));  // Move the font to avoid copying
+    SPDLOG_INFO("Font '{}' loaded successfully", fontName);
+}
+
+std::string StringRepository::GetFontNameForLanguage(const std::string& countryCode)
+{
+    auto it = langToFontMapping.find(countryCode);
+    if (it != langToFontMapping.end())
+    {
+        return it->second;
+    }
+    SPDLOG_WARN("No font found for language '{}'", countryCode);
+    assert(0);
+}
+
+sf::Font& StringRepository::GetFontFromName(const std::string& fontName)
+{
+    auto fontIt = fontStore.find(fontName);
+    if (fontIt != fontStore.end())
+    {
+        return fontIt->second;
+    }
+    SPDLOG_WARN("Font '{}' not found", fontName);
+    assert(0);
+}

@@ -15,12 +15,12 @@ void ErrorChamber::Initialize()
     StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
     Config* config = CoreManager::getInstance().getConfig();
 
-    f_font.loadFromFile(config->fontPath);
+    std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
     std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("error_tryagain")), Func::ConvertToUtf8String(strRepo->GetString("error_tryprevious")), Func::ConvertToUtf8String(strRepo->GetString("error_mainmenu")), Func::ConvertToUtf8String(strRepo->GetString("error_exit"))};
 
     PataDialogBox db;
-    db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("error_message")), a, config->GetInt("textureQuality"), 2);
+    db.Create(font, Func::ConvertToUtf8String(strRepo->GetString("error_message")), a, config->GetInt("textureQuality"), 2);
     db.id = 0;
     dialogboxes.push_back(db);
 

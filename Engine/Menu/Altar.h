@@ -14,7 +14,7 @@ public:
     float res_ratio_x, res_ratio_y;
     int q = 1;
 
-    sf::Font f_font;
+
     ControlTips ctrlTips;
 
     PSprite altar_main;

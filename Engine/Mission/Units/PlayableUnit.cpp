@@ -1,4 +1,5 @@
 #include "PlayableUnit.h"
+#include <spdlog/spdlog.h>
 
 PlayableUnit::PlayableUnit()
 {
@@ -31,20 +32,21 @@ void PlayableUnit::setUnitHP(float hp)
 
 bool PlayableUnit::doAttack()
 {
-    cout << "PlayableUnit::doAttack() was not overriden by child class" << endl;
+    SPDLOG_WARN("PlayableUnit::doAttack() was not overriden by child class");
     return false;
 }
 
 void PlayableUnit::doRhythm(std::string current_song, std::string current_drum, int combo)
 {
-    cout << "PlayableUnit::doRhythm() was not overriden by child class" << endl;
+    SPDLOG_WARN("PlayableUnit::doRhythm() was not overriden by child class");
 }
 
 void PlayableUnit::doMissionEnd()
 {
-    cout << "PlayableUnit::doMissionEnd() was not overriden by child class" << endl;
+    SPDLOG_WARN("PlayableUnit::doAttack() was not overriden by child class");
 }
 
 void PlayableUnit::UpdateRhythm(std::string current_song, std::string current_drum, int combo)
 {
+    SPDLOG_WARN("PlayableUnit::UpdateRhythm() was not overriden by child class");
 }

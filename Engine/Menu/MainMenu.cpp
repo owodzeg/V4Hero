@@ -5,7 +5,8 @@
 #include "../StateManager.h"
 
 #include "../V4Core.h"
-#include "iostream"
+#include <iostream>
+#include <fstream>
 #include <Graphics/ConcaveShape.h>
 #include <Graphics/CurveSegment.h>
 #include <Graphics/CurveShape.h>
@@ -21,7 +22,6 @@ MainMenu::MainMenu()
 
     SPDLOG_DEBUG("Initializing main menu...");
 
-    f_font.loadFromFile(config->fontPath);
     int q = config->GetInt("textureQuality");
     int r = 1;
 
@@ -43,7 +43,13 @@ MainMenu::MainMenu()
     logow_shadow.setColor(sf::Color(64, 64, 64, ui_alpha));
     logow_text.setColor(sf::Color(255, 255, 255, ui_alpha));
 
-    t_pressanykey.createText(f_font, 26, sf::Color(255, 255, 255, t_alpha), Func::ConvertToUtf8String(strRepo->GetString("menu_pressanykey")), q, r);
+    std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
+
+    t_pressanykey.setFont(font);
+    t_pressanykey.setCharacterSize(26);
+    t_pressanykey.setColor(sf::Color(255, 255, 255, t_alpha));
+    t_pressanykey.setStringKey("menu_pressanykey");
+
 
     sb_smash.loadFromFile("resources/sfx/menu/smash.ogg");
     s_smash.setBuffer(sb_smash);
@@ -85,7 +91,10 @@ MainMenu::MainMenu()
 
     for (int i = 0; i <= 3; i++)
     {
-        t_option[i].createText(f_font, 24, sf::Color::White, "", q, r);
+        t_option[i].setFont(font);
+        t_option[i].setCharacterSize(24);
+        t_option[i].setColor(sf::Color(255, 255, 255));
+        t_option[i].setString("");
     }
 
     string vx_params = "0,135,38,23;240,135,38,23;2040,205,107,132;-1,205,107,132";
@@ -164,21 +173,21 @@ MainMenu::MainMenu()
         firstrun = true;
     }
 
-    msgcloud.Create(45, sf::Vector2f(1920, 1440), sf::Color::White, true, config->GetInt("textureQuality"), config->fontPath);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_1")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_2")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_3")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_4")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_5")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_6")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_7")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_8")), true);
-    msgcloud.AddDialog(Func::ConvertToUtf8String(strRepo->GetString("firstrun_dialog_9")), true);
+    msgcloud.Create(45, sf::Vector2f(1920, 1440), sf::Color::White, true, config->GetInt("textureQuality"));
+    msgcloud.AddDialog("firstrun_dialog_1", true);
+    msgcloud.AddDialog("firstrun_dialog_2", true);
+    msgcloud.AddDialog("firstrun_dialog_3", true);
+    msgcloud.AddDialog("firstrun_dialog_4", true);
+    msgcloud.AddDialog("firstrun_dialog_5", true);
+    msgcloud.AddDialog("firstrun_dialog_6", true);
+    msgcloud.AddDialog("firstrun_dialog_7", true);
+    msgcloud.AddDialog("firstrun_dialog_8", true);
+    msgcloud.AddDialog("firstrun_dialog_9", true);
 
-    temp_menu.push_back(strRepo->GetString("menu_newgame"));
-    temp_menu.push_back(strRepo->GetString("menu_continue"));
-    temp_menu.push_back(strRepo->GetString("menu_options"));
-    temp_menu.push_back(strRepo->GetString("menu_exit"));
+    temp_menu.push_back("menu_newgame");
+    temp_menu.push_back("menu_continue");
+    temp_menu.push_back("menu_options");
+    temp_menu.push_back("menu_exit");
 
     SPDLOG_DEBUG("Main menu initialized.");
     //title_loop.play();
@@ -268,6 +277,8 @@ void MainMenu::SelectMenuOption()
     SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
     V4Core* core = CoreManager::getInstance().getCore();
 
+    std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
+
     switch (totem_sel)
     {
         case 0: // load the start game cutscenes and menu
@@ -286,10 +297,10 @@ void MainMenu::SelectMenuOption()
             {
                 SPDLOG_INFO("There is an existing save data. Ask if overwrite");
 
-                std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_yes")), Func::ConvertToUtf8String(strRepo->GetString("nav_no"))};
+                std::vector<sf::String> a = {"nav_yes", "nav_no"};
 
                 PataDialogBox db;
-                db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("menu_saveexists")), a, config->GetInt("textureQuality"));
+                db.Create(font, "menu_saveexists", a, config->GetInt("textureQuality"));
                 db.id = 0;
                 dialogboxes.push_back(db);
             }
@@ -312,10 +323,10 @@ void MainMenu::SelectMenuOption()
                 {
                     SPDLOG_WARN("Outdated save data!");
 
-                    std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_understood"))};
+                    std::vector<sf::String> a = {"nav_understood"};
 
                     PataDialogBox db;
-                    db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("menu_nosupportdata")), a, config->GetInt("textureQuality"));
+                    db.Create(font, "menu_nosupportdata", a, config->GetInt("textureQuality"));
                     db.id = 2;
                     dialogboxes.push_back(db);
                 } else
@@ -327,10 +338,10 @@ void MainMenu::SelectMenuOption()
             {
                 SPDLOG_WARN("There is no savedata.");
 
-                std::vector<sf::String> a = {Func::ConvertToUtf8String(strRepo->GetString("nav_understood"))};
+                std::vector<sf::String> a = {"nav_understood"};
 
                 PataDialogBox db;
-                db.Create(f_font, Func::ConvertToUtf8String(strRepo->GetString("menu_nodata")), a, config->GetInt("textureQuality"));
+                db.Create(font, "menu_nodata", a, config->GetInt("textureQuality"));
                 db.id = 1;
                 dialogboxes.push_back(db);
             }
@@ -383,7 +394,7 @@ void MainMenu::Update()
             {
                 firstrun = false;
 
-                ofstream fr("resources/firstrun", ios::trunc);
+                std::ofstream fr("resources/firstrun", ios::trunc);
                 fr.close();
             }
         }
@@ -496,7 +507,7 @@ void MainMenu::Update()
             t_pressanykey.setOrigin(t_pressanykey.getLocalBounds().width / 2, t_pressanykey.getLocalBounds().height / 2);
             t_pressanykey.setPosition(1920, 1320);
             t_pressanykey.setColor(sf::Color(255, 255, 255, t_alpha));
-            t_pressanykey.draw(window);
+            t_pressanykey.draw();
 
             rs_cover2.setFillColor(sf::Color(0, 0, 0, cv_alpha));
             window->draw(rs_cover2);
@@ -691,7 +702,7 @@ void MainMenu::Update()
             t_option[i].setColor(sf::Color(255, 255, 255, 96));
             t_option[totem_sel].setColor(sf::Color::White);
 
-            t_option[i].draw(window);
+            t_option[i].draw();
         }
 
         sword[0].setScale(1, 1);

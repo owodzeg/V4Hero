@@ -18,40 +18,57 @@ void MessageCloud::setSize(float new_x, float new_y)
     ysize = new_y;
 }
 
-void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bool can_speedup, int q, std::string font_path)
+void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bool can_speedup, int q)
 {
     SPDLOG_DEBUG("MessageCloud::Create()");
 
     timeout = speed;
     regular_timeout = timeout;
     quality = q;
-    
+
     //speedable = can_speedup;
     speedable = true; //unskippable dialogues are dumb, let the player speed up anything
 
-    font.loadFromFile(font_path);
-
-    cloud.loadFromFile("resources/graphics/ui/dialog/message.png", q);
+    cloud.load("resources/graphics/ui/message.png");
     cloud.setOrigin(cloud.getLocalBounds().width, cloud.getLocalBounds().height);
     cloud.setColor(color);
 
     cur_color = color;
 
-    cross.loadFromFile("resources/graphics/ui/dialog/cross.png", q);
-    cross_highlight.loadFromFile("resources/graphics/ui/dialog/crosshighlight.png", q);
-    cross_arrow.loadFromFile("resources/graphics/ui/dialog/crossarrow.png", q);
+    cross.loadFromFile("resources/graphics/ui/cross.png", q);
+    cross_highlight.loadFromFile("resources/graphics/ui/crosshighlight.png", q);
+    cross_arrow.loadFromFile("resources/graphics/ui/crossarrow.png", q);
 
     triangle.setPointCount(3);
     triangle.setFillColor(cur_color);
 
     startpos = start_pos;
 
-    dialogue_ptext.createText(font, 28, sf::Color(32, 32, 32, 255), "", quality, 1);
+    StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
 
-    visual_ptext.createText(font, 28, sf::Color(32, 32, 32, 255), "", quality, 1);
+    dialogue_ptext.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
+    dialogue_ptext.setTextQuality(q);
+    dialogue_ptext.setCharacterSize(fontSize);
+    dialogue_ptext.setString("");
+
+    visual_ptext.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
+    visual_ptext.setTextQuality(q);
+    visual_ptext.setCharacterSize(fontSize);
+    visual_ptext.setString("");
+
     visual_ptext.force_nonspeech = true;
 
     SPDLOG_DEBUG("MessageCloud::Create(): finished");
+}
+
+void MessageCloud::AdditionalData(sf::String add_data)
+{
+    additional[dialogue_strings.size()-1].push_back(add_data);
+}
+
+void MessageCloud::setFontSize(int newFontSize)
+{
+    fontSize = newFontSize;
 }
 
 void MessageCloud::AddDialog(sf::String text, bool nextdialog)
@@ -82,11 +99,20 @@ void MessageCloud::Show()
             AddDialog(sf::String("no message"), true);
         }
 
-        dialogue_ptext.setString(dialogue_strings[cur_dialog]);
-        visual_ptext.setString(dialogue_strings[cur_dialog]);
+        dialogue_ptext.setStringKey(dialogue_strings[cur_dialog]);
+        visual_ptext.setStringKey(dialogue_strings[cur_dialog]);
 
-        dest_xsize = visual_ptext.getLocalBounds().width + 210 + (visual_ptext.getLocalBounds().width / 30);
-        dest_ysize = visual_ptext.getLocalBounds().height + 210 + (visual_ptext.getLocalBounds().height / 4.5);
+        for(auto x:additional[cur_dialog])
+        {
+            dialogue_ptext.addText(x);
+            visual_ptext.addText(x);
+        }
+
+        dialogue_ptext.draw();
+        visual_ptext.draw();
+
+        dest_xsize = visual_ptext.getLocalBounds().width + 120 + (visual_ptext.getLocalBounds().width / 30);
+        dest_ysize = visual_ptext.getLocalBounds().height + 150 + (visual_ptext.getLocalBounds().height / 4.5);
 
         text_timeout.restart();
 
@@ -121,11 +147,14 @@ void MessageCloud::NextDialog()
         old_xsize = dest_xsize;
         old_ysize = dest_ysize;
 
-        dialogue_ptext.setString(dialogue_strings[cur_dialog]);
-        visual_ptext.setString(dialogue_strings[cur_dialog]);
+        dialogue_ptext.setStringKey(dialogue_strings[cur_dialog]);
+        visual_ptext.setStringKey(dialogue_strings[cur_dialog]);
 
-        dest_xsize = visual_ptext.getLocalBounds().width + 210 + (visual_ptext.getLocalBounds().width / 30);
-        dest_ysize = visual_ptext.getLocalBounds().height + 210 + (visual_ptext.getLocalBounds().height / 4.5);
+        dialogue_ptext.draw();
+        visual_ptext.draw();
+
+        dest_xsize = visual_ptext.getLocalBounds().width + 120 + (visual_ptext.getLocalBounds().width / 30);
+        dest_ysize = visual_ptext.getLocalBounds().height + 150 + (visual_ptext.getLocalBounds().height / 4.5);
 
         text_timeout.restart();
     } else
@@ -134,7 +163,7 @@ void MessageCloud::NextDialog()
         {
             goback = true;
         }
-        
+
         dest_xsize = 0;
         dest_ysize = 0;
 
@@ -151,33 +180,24 @@ void MessageCloud::Draw()
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
+    StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
     float fps = CoreManager::getInstance().getCore()->getFPS();
+
+    if(cur_lang != strRepo->GetCurrentLanguage())
+    {
+        active = false;
+        firstrender = false;
+
+        cur_lang = strRepo->GetCurrentLanguage();
+        dialogue_ptext.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
+        visual_ptext.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
+
+        Show();
+
+    }
 
     if (!firstrender)
         firstrender = true;
-
-    if (speedable)
-    {
-        // here we should do something like
-        // ptext timeout = 20ms=50letters/s temporarily
-        // then when key is not held, return to normal speed
-
-        if (inputCtrl->isKeyHeld(Input::Keys::CIRCLE))
-            SpeedUp();
-    }
-
-    if (ready)
-    {
-        // advance current text id
-
-        if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
-        {
-            NextDialog();
-        }
-    }
-
-    //for (unsigned int i = 0; i < dialogue_strings.size(); i++)
-    //    ptext[i].update(window);
 
     if (active)
     {
@@ -188,6 +208,7 @@ void MessageCloud::Draw()
         float ysize_diff = (dest_ysize - ysize) * 10 / fps;
 
         //cout << "diff: " << xsize << " " << ysize << " " << dest_xsize << " " << dest_ysize << " " << xsize_diff << " " << ysize_diff << endl;
+        //SPDLOG_INFO("startposx {} startposy {} xsize {} ysize {} dest_xsize {} dest_ysize {} xsize_diff {} ysize_diff {}", startpos.x, startpos.y, xsize, ysize, dest_xsize, dest_ysize, xsize_diff, ysize_diff);
 
         setSize(xsize + xsize_diff, ysize + ysize_diff);
 
@@ -209,7 +230,7 @@ void MessageCloud::Draw()
         }
 
         /// adjusting the size of clouds and drawing them
-        /// they are no longer an array, instead we just transform the single texture 
+        /// they are no longer an array, instead we just transform the single texture
 
         float scale_x = 3240.f / xsize;
         float scale_y = 750.f / ysize;
@@ -218,21 +239,21 @@ void MessageCloud::Draw()
         cloud.setPosition(x, y);
 
         cloud.setScale(1.f / scale_x, 1.f / scale_y);
-        cloud.draw(window);
+        cloud.draw();
 
         cloud.setScale(-1.f / scale_x, 1.f / scale_y);
-        cloud.draw(window);
+        cloud.draw();
 
         cloud.setScale(1.f / scale_x, -1.f / scale_y);
-        cloud.draw(window);
+        cloud.draw();
 
         cloud.setScale(-1.f / scale_x, -1.f / scale_y);
-        cloud.draw(window);
+        cloud.draw();
 
         float rX = window->getSize().x / float(3840);
         float rY = window->getSize().y / float(2160);
 
-        triangle.setPoint(0, sf::Vector2f(startpos.x * rX, startpos.y * rY));
+        triangle.setPoint(0, sf::Vector2f(startpos.x * rX - (xsize / 25), startpos.y * rY));
         triangle.setPoint(1, sf::Vector2f((x - (xsize / 25)) * rX, y * rY));
         triangle.setPoint(2, sf::Vector2f((x + (xsize / 25)) * rX, y * rY));
 
@@ -243,7 +264,7 @@ void MessageCloud::Draw()
         {
             dialogue_ptext.speedup = speedup;
             dialogue_ptext.setPosition(x - visual_ptext.getLocalBounds().width / 2, y - 12 - visual_ptext.getLocalBounds().height / 2);
-            dialogue_ptext.draw(window);
+            dialogue_ptext.draw();
 
             //loaded_text[cur_dialog].setPosition(x - ptext[cur_dialog].getLocalBounds().width / 2, y - 4 - ptext[cur_dialog].getLocalBounds().height / 2);
             //showtext[cur_dialog].setString(viewed_text[cur_dialog]);
@@ -252,34 +273,6 @@ void MessageCloud::Draw()
             if (dialogue_ptext.speech_done)
             {
                 ready = true;
-
-                arrow_y -= 36 / fps;
-
-                if (arrow_y <= -60)
-                    arrow_y = -60;
-
-                if (arrow_timeout.getElapsedTime().asSeconds() >= 0.75)
-                {
-                    arrow_y = 0;
-                    arrow_timeout.restart();
-                }
-
-                cross.setOrigin(cross.getLocalBounds().width / 2, cross.getLocalBounds().height / 2);
-                cross_highlight.setOrigin(cross_highlight.getLocalBounds().width / 2, cross_highlight.getLocalBounds().height / 2);
-                cross_arrow.setOrigin(cross_highlight.getLocalBounds().width / 2, cross_highlight.getLocalBounds().height);
-
-                float cross_x = x + xsize / 2 - 24;
-                float cross_y = y + ysize / 2 - 60;
-
-                cross.setPosition(cross_x, cross_y);
-                cross_highlight.setPosition(cross_x, cross_y);
-                cross_arrow.setPosition(cross_x - 6, cross_y + 60 + arrow_y);
-
-                cross_highlight.setColor(sf::Color(255, 255, 255, 240 + (arrow_y * 8)));
-
-                cross.draw(window);
-                cross_highlight.draw(window);
-                cross_arrow.draw(window);
             }
         }
 

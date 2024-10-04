@@ -17,8 +17,6 @@ public:
     sf::RectangleShape mm_smallerBox;
     sf::RectangleShape mm_titleBox;
 
-    sf::Font f_font;
-    sf::Font m_font;
     sf::Text t_title;
 
     sf::Text t_disclaimer;

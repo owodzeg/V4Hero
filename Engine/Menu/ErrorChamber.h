@@ -12,7 +12,7 @@ public:
     bool initialized = false;
     int badState = -1;
 
-    sf::Font f_font;
+
 
     sf::SoundBuffer b_anvil;
     sf::Sound s_anvil;

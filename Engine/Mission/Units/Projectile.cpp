@@ -30,7 +30,7 @@ void Projectile::SetNewSpeedVector(float xSpeed, float ySpeed)
 void Projectile::OnCollide(CollidableObject* otherObject)
 {
     // this space intentionally left blank
-    cout << "[COLLISION_SYSTEM]: Class derived from Projectile has not overridden OnCollide() method" << endl;
+    SPDLOG_INFO("[COLLISION_SYSTEM]: Class derived from Projectile has not overridden OnCollide() method");
 }
 void Projectile::Update()
 {

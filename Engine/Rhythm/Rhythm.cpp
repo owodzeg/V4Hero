@@ -6,6 +6,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <fstream>
 #include <spdlog/spdlog.h>
 #include "../CoreManager.h"
 
@@ -33,7 +34,7 @@ Rhythm::Rhythm()
     s_anvil.setBuffer(b_anvil);
 
     // fetch commands from file
-    ifstream t("resources/data/commands.json", std::ios::in);
+    std::ifstream t("resources/data/commands.json", std::ios::in);
     nlohmann::json command_data;
     t >> command_data;
 

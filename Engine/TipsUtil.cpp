@@ -3,6 +3,7 @@
 #include "Func.h"
 #include <algorithm>
 #include <iostream>
+#include <fstream>
 #include <string>
 
 TipsUtil::TipsUtil()

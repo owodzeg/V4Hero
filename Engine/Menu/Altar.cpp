@@ -50,18 +50,38 @@ AltarMenu::AltarMenu()
     res_ratio_x = config->GetInt("resX") / float(1280);
     res_ratio_y = config->GetInt("resY") / float(720);
 
-    f_font.loadFromFile(config->fontPath);
+
 
     altar_main.loadFromFile("resources/graphics/ui/altar/altar_main.png", quality, 1);
 
-    altar_title.createText(f_font, 40, sf::Color(111, 71, 51, 255), Func::ConvertToUtf8String(strRepo->GetString("altar_title")), q, 1);
-    altar_kaching.createText(f_font, 30, sf::Color(111, 71, 51, 255), "0 Ka-ching", q, 1);
+    std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
-    altar_item_title.createText(f_font, 24, sf::Color(111, 71, 51, 255), "", q, 1);
-    altar_item_category.createText(f_font, 20, sf::Color(111, 71, 51, 255), "", q, 1);
-    altar_item_desc.createText(f_font, 26, sf::Color(111, 71, 51, 255), "", q, 1);
+    altar_title.setFont(font);
+    altar_title.setCharacterSize(40);
+    altar_title.setColor(sf::Color(111,71,51,255));
+    altar_title.setStringKey("altar_title");
 
-    ctrlTips.create(54, f_font, 20, sf::String("Left/Right/Up/Down: Navigate      O: Exit to Patapolis"), quality);
+    altar_kaching.setFont(font);
+    altar_kaching.setCharacterSize(30);
+    altar_kaching.setColor(sf::Color(111,71,51,255));
+    altar_kaching.setStringKey("altar_title");
+
+    altar_item_title.setFont(font);
+    altar_item_title.setCharacterSize(24);
+    altar_item_title.setColor(sf::Color(111,71,51,255));
+    altar_item_title.setString("");
+
+    altar_item_category.setFont(font);
+    altar_item_category.setCharacterSize(20);
+    altar_item_category.setColor(sf::Color(111,71,51,255));
+    altar_item_category.setString("");
+
+    altar_item_desc.setFont(font);
+    altar_item_desc.setCharacterSize(26);
+    altar_item_desc.setColor(sf::Color(111,71,51,255));
+    altar_item_desc.setString("");
+
+    ctrlTips.create(54, font, 20, sf::String("Left/Right/Up/Down: Navigate      O: Exit to Patapolis"), quality);
 
     SPDLOG_INFO("Initializing Altar finished.");
 }
@@ -69,6 +89,7 @@ AltarMenu::AltarMenu()
 void AltarMenu::updateAltarDescriptions()
 {
     StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
+    std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
     int selItem = (grid_sel_y + grid_offset_y) * 4 + grid_sel_x;
 
@@ -76,7 +97,7 @@ void AltarMenu::updateAltarDescriptions()
     {
         altar_item_title.setString(Func::ConvertToUtf8String(strRepo->GetString(inventory_boxes[selItem].data->item_name)));
         altar_item_category.setString(Func::ConvertToUtf8String(strRepo->GetString("altar_category_" + inventory_boxes[selItem].data->item_category)));
-        altar_item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(strRepo->GetString(inventory_boxes[selItem].data->item_description), 420, f_font, 26)));
+        altar_item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(strRepo->GetString(inventory_boxes[selItem].data->item_description), 420, font, 26)));
     } else
     {
         altar_item_title.setString("");
@@ -162,8 +183,18 @@ void AltarMenu::reloadInventory()
                 }
             }
 
-            tmp.num.createText(f_font, 30, sf::Color::White, Func::num_padding(tmp.amount, 3), q, 1);
-            tmp.num_shadow.createText(f_font, 30, sf::Color(136, 136, 136, 255), Func::num_padding(tmp.amount, 3), q, 1);
+            auto strRepo = CoreManager::getInstance().getStrRepo();
+            std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
+
+            tmp.num.setFont(font);
+            tmp.num.setCharacterSize(30);
+            tmp.num.setColor(sf::Color::White);
+            tmp.num.setString(Func::num_padding(tmp.amount, 3));
+
+            tmp.num_shadow.setFont(font);
+            tmp.num_shadow.setCharacterSize(30);
+            tmp.num_shadow.setColor(sf::Color(136, 136, 136, 255));
+            tmp.num_shadow.setString(Func::num_padding(tmp.amount, 3));
 
             inventory_boxes.push_back(tmp);
         }
@@ -267,8 +298,8 @@ void AltarMenu::Update()
                 inventory_boxes[curItem].num.setPosition(40 + xpos + 51 - 1, 39 + ypos + 45 - 2);
                 inventory_boxes[curItem].num_shadow.setPosition(40 + xpos + 51, 39 + ypos + 45);
 
-                inventory_boxes[curItem].num_shadow.draw(window);
-                inventory_boxes[curItem].num.draw(window);
+                inventory_boxes[curItem].num_shadow.draw();
+                inventory_boxes[curItem].num.draw();
 
                 if (inventory_boxes[curItem].highlight)
                 {
@@ -343,16 +374,16 @@ void AltarMenu::Update()
         altar_item_category.setPosition(933, 280);
         altar_item_desc.setPosition(725, 330);
 
-        altar_title.draw(window);
-        altar_kaching.draw(window);
+        altar_title.draw();
+        altar_kaching.draw();
 
         altar_item_title.setOrigin(altar_item_title.getLocalBounds().width / 2, altar_item_title.getLocalBounds().height / 2);
         altar_item_category.setOrigin(altar_item_category.getLocalBounds().width / 2, altar_item_category.getLocalBounds().height / 2);
         altar_item_desc.setOrigin(0, 0);
 
-        altar_item_title.draw(window);
-        altar_item_category.draw(window);
-        altar_item_desc.draw(window);
+        altar_item_title.draw();
+        altar_item_category.draw();
+        altar_item_desc.draw();
 
         if (inputCtrl->isKeyPressed(Input::Keys::LEFT))
         {

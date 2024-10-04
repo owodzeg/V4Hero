@@ -5,6 +5,7 @@
 #include <nlohmann/json.hpp>
 #include <sstream>
 #include <string>
+#include <fstream>
 #include <spdlog/spdlog.h>
 #include "../CoreManager.h"
 #include "../StateManager.h"
@@ -14,8 +15,6 @@ using json = nlohmann::json;
 ObeliskMenu::ObeliskMenu()
 {
     SPDLOG_INFO("Initializing Obelisk...");
-
-    font.loadFromFile(CoreManager::getInstance().getConfig()->fontPath);
 
     quality = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
 
@@ -43,14 +42,35 @@ ObeliskMenu::ObeliskMenu()
     missionbox.setOrigin(missionbox.getLocalBounds().width / 2, missionbox.getLocalBounds().height / 2);
     missionbox.setPosition(290, 542);
 
-    worldmap_title.createText(font, 34, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("worldmap_header_1")), quality, 1);
-    location_title.createText(font, 27, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("worldmap_location_1_title")), quality, 1);
-    string desc = Func::wrap_text(CoreManager::getInstance().getStrRepo()->GetString("worldmap_location_1_description"), 800, font, 18);
+    auto strRepo = CoreManager::getInstance().getStrRepo();
+    std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
-    location_desc.createText(font, 19, sf::Color::Black, Func::ConvertToUtf8String(desc), quality, 1);
-    select_quest.createText(font, 18, sf::Color::Black, Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString("worldmap_select")), quality, 1);
-    mission_title.createText(font, 18, sf::Color::Black, "Hunting Kacheek", quality, 1);
-    mission_desc.createText(font, 18, sf::Color::Black, "(no translation needed)", quality, 1);
+    worldmap_title.setFont(font);
+    worldmap_title.setCharacterSize(34);
+    worldmap_title.setColor(sf::Color::Black);
+    worldmap_title.setStringKey("worldmap_header_1");
+    location_title.setFont(font);
+    location_title.setCharacterSize(27);
+    location_title.setColor(sf::Color::Black);
+    worldmap_title.setStringKey("worldmap_location_1_title");
+    string desc = Func::wrap_text("worldmap_location_1_description", 800, font, 18);
+
+    location_desc.setFont(font);
+    location_desc.setCharacterSize(19);
+    location_desc.setColor(sf::Color::Black);
+    location_desc.setString(desc);
+    select_quest.setFont(font);
+    select_quest.setCharacterSize(18);
+    select_quest.setColor(sf::Color::Black);
+    select_quest.setStringKey("worldmap_select");
+    mission_title.setFont(font);
+    mission_title.setCharacterSize(18);
+    mission_title.setColor(sf::Color::Black);
+    mission_title.setString("Hunting Kacheek");
+    mission_desc.setFont(font);
+    mission_desc.setCharacterSize(18);
+    mission_desc.setColor(sf::Color::Black);
+    mission_desc.setString("(no translation needed)");
 
     unavailable.load("resources/graphics/ui/worldmap/unavailable.png");
     location_highlight.load("resources/graphics/ui/worldmap/location_highlight.png");
@@ -96,7 +116,7 @@ void ObeliskMenu::addMission(json missiondata)
     try
     {
         std::string title_key = missiondata["mission_title"];
-        tmp.title = CoreManager::getInstance().getStrRepo()->GetString(title_key);
+        tmp.title = title_key;
     } catch (const std::exception& e)
     {
         std::string title = "No Data";
@@ -105,7 +125,7 @@ void ObeliskMenu::addMission(json missiondata)
     try
     {
         std::string desc_key = missiondata["mission_description"];
-        tmp.desc = CoreManager::getInstance().getStrRepo()->GetString(desc_key);
+        tmp.desc = desc_key;
     } catch (const std::exception& e)
     {
         std::string desc = "No Data";
@@ -127,13 +147,19 @@ void ObeliskMenu::addMission(json missiondata)
         level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[tmp.mis_ID]);
     }
 
+    auto strRepo = CoreManager::getInstance().getStrRepo();
+    std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
+
     PText tm;
-    tm.createText(font, 18, sf::Color::Black, "", quality, 1);
-    tm.setString(Func::ConvertToUtf8String(tmp.title) + level);
+    tm.setFont(font);
+    tm.setCharacterSize(18);
+    tm.setColor(sf::Color::Black);
+    tm.setString("");
+    tm.setString(tmp.title + level);
     tm.setOrigin(tm.getLocalBounds().width / 2, tm.getLocalBounds().height / 2);
     tmp.p_mis = tm;
 
-    SPDLOG_DEBUG("[WorldMap] Making text {}", Func::ConvertToUtf8String(tmp.title).toAnsiString());
+    SPDLOG_DEBUG("[WorldMap] Making text {}", tmp.title);
 
     missions.push_back(tmp);
 }
@@ -278,15 +304,15 @@ void ObeliskMenu::Update()
 
         worldmap_title.setOrigin(worldmap_title.getLocalBounds().width / 2, worldmap_title.getLocalBounds().height / 2);
         worldmap_title.setPosition(mainbox.getPosition().x - 303, mainbox.getPosition().y - 174);
-        worldmap_title.draw(window);
+        worldmap_title.draw();
 
         location_title.setOrigin(location_title.getLocalBounds().width / 2, location_title.getLocalBounds().height / 2);
         location_title.setPosition(mainbox.getPosition().x, mainbox.getPosition().y + 72);
-        location_title.draw(window);
+        location_title.draw();
 
         location_desc.setOrigin(location_desc.getLocalBounds().width / 2, location_desc.getLocalBounds().height / 2);
         location_desc.setPosition(mainbox.getPosition().x, mainbox.getPosition().y + 142);
-        location_desc.draw(window);
+        location_desc.draw();
 
         if (round(mapX) != mapXdest)
         {
@@ -344,15 +370,15 @@ void ObeliskMenu::Update()
 
             select_quest.setOrigin(0, select_quest.getLocalBounds().height / 2);
             select_quest.setPosition(missionbox.getPosition().x - 141, missionbox.getPosition().y - 74);
-            select_quest.draw(window);
+            select_quest.draw();
 
             mission_title.setOrigin(0, mission_title.getLocalBounds().height / 2);
             mission_title.setPosition(descbox.getPosition().x - 315, descbox.getPosition().y - 74);
-            mission_title.draw(window);
+            mission_title.draw();
 
             mission_desc.setOrigin(0, 0);
             mission_desc.setPosition(descbox.getPosition().x - 315, descbox.getPosition().y - 55);
-            mission_desc.draw(window);
+            mission_desc.draw();
 
             mission_select.setPosition(135, missionbox.getPosition().y - 56 + (sel_mission * 24));
             mission_select.draw();
@@ -367,11 +393,14 @@ void ObeliskMenu::Update()
             {
                 missions[i].p_mis.setOrigin(0, 0);
                 missions[i].p_mis.setPosition(1280, -720 + (i * 24));
-                missions[i].p_mis.draw(window);
+                missions[i].p_mis.draw();
             }
 
             window->setView(window->getDefaultView());
         }
+
+        auto strRepo = CoreManager::getInstance().getStrRepo();
+        std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
         if (screenFade.checkFinished())
         {
@@ -402,7 +431,7 @@ void ObeliskMenu::Update()
 
                     missions.clear();
 
-                    ifstream wmap("resources/missions/worldmap.dat", std::ios::in);
+                    std::ifstream wmap("resources/missions/worldmap.dat", std::ios::in);
                     json wmap_data;
 
                     if (wmap.good())
@@ -433,9 +462,9 @@ void ObeliskMenu::Update()
                             level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
                         }
 
-                        mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title) + level);
+                        mission_title.setString(missions[sel_mission].title + level);
                         string desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
-                        mission_desc.setString(Func::ConvertToUtf8String(desc));
+                        mission_desc.setString(desc);
                     }
                 } else
                 {
@@ -505,16 +534,16 @@ void ObeliskMenu::Update()
                         string wL1 = string(L1.begin(), L1.end());
                         string wL2 = string(L2.begin(), L2.end());
 
-                        string desc = Func::wrap_text(CoreManager::getInstance().getStrRepo()->GetString(wL2), 800, font, 18);
+                        string desc = Func::wrap_text(wL2, 800, font, 18);
 
-                        location_title.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(wL1)));
-                        location_desc.setString(Func::ConvertToUtf8String(desc));
+                        location_title.setString(wL1);
+                        location_desc.setString(desc);
                     } else
                     {
                         string L1 = "worldmap_location_locked";
                         string wL1 = string(L1.begin(), L1.end());
 
-                        location_title.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(wL1)));
+                        location_title.setString(wL1);
                         location_desc.setString("");
                     }
                 }
@@ -565,16 +594,16 @@ void ObeliskMenu::Update()
                         string wL1 = string(L1.begin(), L1.end());
                         string wL2 = string(L2.begin(), L2.end());
 
-                        string desc = Func::wrap_text(CoreManager::getInstance().getStrRepo()->GetString(wL2), 800, font, 18);
+                        string desc = Func::wrap_text(wL2, 800, font, 18);
 
-                        location_title.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(wL1)));
-                        location_desc.setString(Func::ConvertToUtf8String(desc));
+                        location_title.setString(wL1);
+                        location_desc.setString(desc);
                     } else
                     {
                         string L1 = "worldmap_location_locked";
                         string wL1 = string(L1.begin(), L1.end());
 
-                        location_title.setString(Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(wL1)));
+                        location_title.setString(wL1);
                         location_desc.setString("");
                     }
                 }
@@ -594,9 +623,9 @@ void ObeliskMenu::Update()
                         level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
                     }
 
-                    mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title) + level);
+                    mission_title.setString(missions[sel_mission].title + level);
                     string desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
-                    mission_desc.setString(Func::ConvertToUtf8String(desc));
+                    mission_desc.setString(desc);
                 }
             } else if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
             {
@@ -614,9 +643,9 @@ void ObeliskMenu::Update()
                         level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
                     }
 
-                    mission_title.setString(Func::ConvertToUtf8String(missions[sel_mission].title) + level);
+                    mission_title.setString(missions[sel_mission].title + level);
                     string desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
-                    mission_desc.setString(Func::ConvertToUtf8String(desc));
+                    mission_desc.setString(desc);
                 }
             }
         }

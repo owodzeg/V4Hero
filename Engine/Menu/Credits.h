@@ -25,8 +25,6 @@ public:
 
     bool playOutro = false;
 
-    sf::Font f_font;
-    sf::Font cn_font;
     PText outro_text;
     PSprite teaser_1, teaser_2, teaser_3;
 

@@ -4,6 +4,7 @@
 #include "CoreManager.h"
 #include "StateManager.h"
 #include <chrono>
+#include <fstream>
 
 V4Core::V4Core()
 {
@@ -139,17 +140,46 @@ void V4Core::init()
 
     // Load language data and appropriate font
     SPDLOG_DEBUG("Loading language data");
+    // LOAD LANGUAGES
     StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
-    strRepo->LoadLanguageFiles(config->GetInt("lang"));
 
-    config->fontPath = "resources/fonts/" + strRepo->langFonts[config->GetInt("lang") - 1];
-    SPDLOG_DEBUG("Font path is {}", config->fontPath);
+    // get fonts
+    std::ifstream fontFile("resources/lang/fonts.txt");
+    std::string line;
 
-    /** Version and fps text **/
-    SPDLOG_DEBUG("Creating text for version and FPS");
-    strRepo->font.loadFromFile(config->fontPath);
+    while(std::getline(fontFile, line))
+    {
+        std::vector<std::string> param = Func::Split(line, ',');
+        std::string name = param[0];
+        std::string fontf = param[1];
 
-    t_version.setFont(strRepo->font);
+        strRepo->LoadFontFromFile("resources/font/"+fontf, name);
+    }
+
+    // get langs
+    std::ifstream langFile("resources/lang/languages.txt");
+
+    while(std::getline(langFile, line))
+    {
+        std::vector<std::string> param = Func::Split(line, ',');
+        std::string code = param[0];
+        std::string name = param[1];
+        std::string font = param[2];
+
+        strRepo->LoadLanguageFile(code, name, "resources/lang/"+code+"/"+code+".txt");
+        strRepo->langToFontMapping[code] = font;
+
+        SPDLOG_INFO("Loaded language {} {}, font file: {}", code, name, font);
+    }
+
+    // TODO: check if we launched the game via launcher, then read the launcher's lang.txt or get the lang through cmdline args
+    /*std::ifstream langConfig("resources/lang.txt");
+    std::string buffer;
+    std::getline(langConfig, buffer);
+    strRepo->SetCurrentLanguage(buffer);*/
+
+    // TODO: new PText system
+    /*t_version.setFont(strRepo->font);
     t_version.setCharacterSize(24);
     t_version.setFillColor(sf::Color(255, 255, 255, 32));
     t_version.setString("V4Hero Client " + hero_version);
@@ -159,7 +189,7 @@ void V4Core::init()
     t_fps.setFillColor(sf::Color(255, 255, 255, 96));
     t_fps.setOutlineColor(sf::Color(0, 0, 0, 96));
     t_fps.setOutlineThickness(1);
-    t_fps.setString("FPS: ");
+    t_fps.setString("FPS: ");*/
 
     // Load item registry
     SPDLOG_DEBUG("Loading item registry");

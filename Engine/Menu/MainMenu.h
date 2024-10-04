@@ -16,7 +16,7 @@ class MainMenu : public Menu
 public:
     int quality = 0;
 
-    sf::Font f_font;
+
 
     sf::SoundBuffer sb_title_loop;
     sf::Sound title_loop;

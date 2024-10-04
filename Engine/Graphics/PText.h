@@ -3,21 +3,26 @@
 
 #include <SFML/Graphics.hpp>
 #include "RichText.hpp"
+#include <memory>
 
 ///Class for automatic text resizing based on the current window resolution and quality options
+// TODO: add text wrap functionality
 
 class PText
 {
 public:
-    sf::Font f;
-    //sf::Text t; //legacy purposes
-    sfe::RichText t;
+    std::string font = "fallback"; // font name to fetch from strRepo
+    int characterSize = 28*3;
 
+    sfe::RichText t;
     sf::String txt;
 
+    std::string txt_color = "";
+
+    bool forceColor = false;
+    sf::Color color, oldColor;
+
     int qualitySetting, resSetting=3;
-    float cS = 1;
-    sf::Color c;
 
     float ratioX, ratioY;
     float resRatioX, resRatioY;
@@ -29,6 +34,11 @@ public:
 
     bool wide = false;
     bool rendered = false;
+
+    sf::String oldtxt = "";
+
+    std::string currentKey;
+    std::string oldKey;
 
     sf::Clock char_timeout;
     sf::Clock char_wait;
@@ -58,8 +68,13 @@ public:
 
     PText();
     std::vector<std::string> split(std::string const & s, char delim);
-    void createText(sf::Font& font, float characterSize, sf::Color color, sf::String text_string, int q, int r);
+    void setFont(const std::string& dst_font);
+    void setCharacterSize(int newCS);
+    void setTextQuality(int quality);
     void processRichText();
+    void addText(sf::String add_text);
+
+
     void setOrigin(float x, float y);
     sf::Vector2f getScale();
     void setScale(float x, float y);
@@ -68,6 +83,7 @@ public:
     void setOutlineColor(sf::Color color);
     void setOutlineThickness(int thick);
     void setPosition(float x, float y);
+    void setStringKey(std::string text_key);
     void setString(std::string text_string);
     void setString(sf::String text_string);
     void setString(const char* text_string);
@@ -78,11 +94,8 @@ public:
     sf::FloatRect getGlobalBoundsScaled();
     sf::FloatRect getTransformedBounds();
     void setScale(float s);
-    void draw(sf::RenderWindow& window);
-    void draw(sf::RenderWindow* window);
-    //rework pending; for removal
-    void update(sf::RenderWindow& window);
-    void update(sf::RenderWindow* window);
+
+    void draw();
     sf::Text getText();
 };
 

@@ -2,31 +2,41 @@
 #define STRINGREPOSITORY_H
 
 #include <SFML/Graphics.hpp>
-#include <fstream>
-#include <iostream>
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <vector>
+#include <memory>  // For smart pointers
 
 class StringRepository
 {
 public:
-    std::vector<int> langIDs;
-    std::vector<std::string> langNames;
-    std::vector<std::string> langFonts;
-    
-    // globally used font, might upgrade later to some font repository so we can use different ones in different places
-    sf::Font font;
-
-    int configDebugID = 0;
     StringRepository();
-    void LoadLanguageFiles(int langNum);
-    std::string GetString(std::string key);
-private:
-    std::map<std::string, std::string> stringMap;
-    std::vector<std::string> langFiles;
+    bool refreshStrings = false;
 
-    void LoadLanguageFile(std::ifstream* conf);
+    void LoadLanguageFile(const std::string& countryCode, const std::string& countryNativeName, const std::string& filename);
+    void LoadLanguageFromString(const std::string& countryCode, const std::string& countryNativeName, const std::string& langContent);
+
+    void SetCurrentLanguage(const std::string& countryCode);
+    std::string GetCurrentLanguage() const;
+    std::string GetString(const std::string& key) const;
+
+    std::vector<std::pair<std::string, std::string>> GetAvailableLanguages() const;
+
+    // Font loading and retrieval
+    void LoadFontFromString(const std::string& fontName, const std::vector<char>& fontData);
+    void LoadFontFromFile(const std::string& fontPath, const std::string& fontName);
+    std::string GetFontNameForLanguage(const std::string& countryCode);
+    sf::Font& GetFontFromName(const std::string& fontName);
+
+    std::unordered_map<std::string, std::string> langToFontMapping; // Maps language to font name
+    std::unordered_map<std::string, sf::Font> fontStore;  // Use shared_ptr for automatic memory management
+
+private:
+    std::unordered_map<std::string, std::unordered_map<std::string, std::string>> languages;
+    std::unordered_map<std::string, std::string> languageNativeNames;
+    std::string currentLanguageCode;
+
+    void ParseLanguageData(std::istream& inputStream, std::unordered_map<std::string, std::string>& langMap);
 };
 
 #endif // STRINGREPOSITORY_H

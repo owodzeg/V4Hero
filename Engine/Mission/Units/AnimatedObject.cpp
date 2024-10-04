@@ -87,7 +87,7 @@ void AnimatedObject::stopAnimation()
     animation.isPlaying = false;
 }
 
-void AnimatedObject::setAnimation(std::string& shortAnimName)
+void AnimatedObject::setAnimation(const std::string& shortAnimName)
 {
     animation.setAnimation(shortAnimName);
 }
@@ -151,7 +151,7 @@ void AnimatedObject::LoadConfig(const std::string& anim_path)
         SPDLOG_ERROR("A generic exception occured when trying to load PNGAnimation: {}", exception.what());
         throw AnimatedObjectException(exception.what());
     }
-    catch(PNGAnimationException& exception)
+    catch(...)
     {
         SPDLOG_ERROR("An unknown exception occurred.");
         throw AnimatedObjectException("An unknown exception occurred.");
@@ -170,13 +170,3 @@ void AnimatedObject::Update()
 {
 
 }
-
-// fallback compatibility stuff
-void AnimatedObject::setAnimationSegment(std::string new_segment_name) {}
-void AnimatedObject::setAnimationSegment(std::string new_segment_name, bool force_start) {}
-std::string AnimatedObject::getAnimationSegment() {}
-float AnimatedObject::getAnimationPos() {}
-void AnimatedObject::setColor(sf::Color c) {}
-sf::Color AnimatedObject::getColor() {}
-void AnimatedObject::applyEquipment(std::vector<int> item_id, int slot, bool offhand) {}
-void AnimatedObject::setLoop(bool a) {}

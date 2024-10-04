@@ -42,7 +42,7 @@ class PatapolisMenu : public Menu
 
         int quality = 0;
 
-        sf::Font f_font;
+
         PText t_title;
 
         sf::VertexArray v_background;

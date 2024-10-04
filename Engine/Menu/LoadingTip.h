@@ -11,7 +11,7 @@ public:
     bool pressAnyKey = false;
     bool tipFinished = false;
 
-    sf::Font f_font;
+
 
     PText t_tipTitle;
     PText t_tipText;

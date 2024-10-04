@@ -115,7 +115,6 @@ public:
     
     Config();
     void LoadConfig();
-    void ReloadLanguages();
 
     StringRepository strRepo;
     ///I wanted to overload these two in a single function, but somehow it just doesnt want to work...
@@ -123,7 +122,6 @@ public:
     int GetInt(std::string key);
     std::string GetString(std::string key);
     void SetString(std::string key, std::string val);
-    std::string GetLanguageName();
     void SaveConfig();
     bool keyExists(std::string key);
 };

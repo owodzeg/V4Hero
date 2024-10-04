@@ -9,7 +9,7 @@ using namespace std;
 
 Camera::Camera()
 {
-    camera_x = 1440;
+    camera_x = 0;
 }
 
 void Camera::zoomViewAt(sf::Vector2i pixel, float zoom)
@@ -27,7 +27,7 @@ void Camera::zoomViewAt(sf::Vector2i pixel, float zoom)
     zoom_y += offsetCoords.y;
 }
 
-void Camera::Work(float dest_zoom_over)
+void Camera::Work(sf::View view, float dest_zoom_over)
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
@@ -40,22 +40,6 @@ void Camera::Work(float dest_zoom_over)
 
     dest_zoom = dest_zoom_over;
     manual_x_dest = 0;
-
-
-    /** Mission controls **/
-
-    if (!missionEnd && !lockMovement)
-    {
-        if (inputCtrl->isKeyHeld(Input::Keys::LTRIGGER))
-        {
-            manual_x_dest = -1500;
-        }
-
-        if (inputCtrl->isKeyHeld(Input::Keys::RTRIGGER))
-        {
-            manual_x_dest = 1500;
-        }
-    }
 
     /** Move camera **/
 
@@ -110,7 +94,7 @@ void Camera::Work(float dest_zoom_over)
 
     /** Apply camera position **/
 
-    sf::View view{window->getView()};
+    //sf::View view{window->getView()};
     view.setCenter(camera_x + zoom_x + manual_x + debug_x - 300, camera_y + zoom_y + manual_y);
     window->setView(view);
 }

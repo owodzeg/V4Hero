@@ -4,6 +4,8 @@
 #include <iostream>
 #include <spdlog/spdlog.h>
 #include "../CoreManager.h"
+#include "../Func.h"
+#include "../Input/InputController.h"
 
 using namespace std;
 
@@ -11,33 +13,85 @@ PataDialogBox::PataDialogBox()
 {
 }
 
-void PataDialogBox::Create(sf::Font font, sf::String text, std::vector<sf::String> options, int qualitySetting, int type)
+void PataDialogBox::Create(std::string font, sf::String text, std::vector<sf::String> options, int qualitySetting, int type)
 {
     SPDLOG_DEBUG("Creating new PataDialogBox");
-
-    StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
 
     switch(type)
     {
         case 1: {
-            t_dialogType.createText(font, 16, sf::Color::Red, Func::ConvertToUtf8String(strRepo->GetString("dialog_category1")), qualitySetting, 1);
+            t_dialogType.setFont(font);
+            t_dialogType.setCharacterSize(16);
+            t_dialogType.setTextQuality(qualitySetting);
+            t_dialogType.setStringKey("dialog_category1");
             break;
         }
         case 2: {
-            t_dialogType.createText(font, 16, sf::Color::Red, Func::ConvertToUtf8String(strRepo->GetString("dialog_category2")), qualitySetting, 1);
+            t_dialogType.setFont(font);
+            t_dialogType.setCharacterSize(16);
+            t_dialogType.setTextQuality(qualitySetting);
+            t_dialogType.setStringKey("dialog_category2");
             break;
         }
     }
-    t_dialogText.createText(font, 30, sf::Color::Black, text, qualitySetting, 1);
+    t_dialogText.setFont(font);
+    t_dialogText.setCharacterSize(30);
+    t_dialogText.setTextQuality(qualitySetting);
+    t_dialogText.setStringKey(text);
 
     for (unsigned int i = 0; i < options.size(); i++)
     {
         PText tmp;
-        tmp.createText(font, 22, sf::Color::Black, options[i], qualitySetting, 1);
+        tmp.setFont(font);
+        tmp.setCharacterSize(22);
+        tmp.setTextQuality(qualitySetting);
+        tmp.setStringKey(options[i]);
         t_options.push_back(tmp);
     }
 
-    arrow.loadFromFile("resources/graphics/ui/dialog/arrow.png", qualitySetting, 1);
+    arrow.loadFromFile("resources/graphics/ui/arrow.png", qualitySetting, 3);
+
+    option = t_options.size() - 1;
+}
+
+void PataDialogBox::CreateCustom(std::string font, sf::String text, std::vector<sf::String> options, int qualitySetting, int type)
+{
+    SPDLOG_DEBUG("Creating new PataDialogBox");
+
+    switch(type)
+    {
+        case 1: {
+            t_dialogType.setFont(font);
+            t_dialogType.setCharacterSize(16);
+            t_dialogType.setTextQuality(qualitySetting);
+            t_dialogType.setStringKey("dialog_category1");
+            break;
+        }
+        case 2: {
+            t_dialogType.setFont(font);
+            t_dialogType.setCharacterSize(16);
+            t_dialogType.setTextQuality(qualitySetting);
+            t_dialogType.setStringKey("dialog_category2");
+            break;
+        }
+    }
+    t_dialogText.setFont(font);
+    t_dialogText.setCharacterSize(30);
+    t_dialogText.setTextQuality(qualitySetting);
+    t_dialogText.setStringKey(text);
+
+    for (unsigned int i = 0; i < options.size(); i++)
+    {
+        PText tmp;
+        tmp.setFont(font);
+        tmp.setCharacterSize(22);
+        tmp.setTextQuality(qualitySetting);
+        tmp.setString(options[i]);
+        t_options.push_back(tmp);
+        options_saved.push_back(options[i]);
+    }
+
+    arrow.loadFromFile("resources/graphics/ui/arrow.png", qualitySetting, 3);
 
     option = t_options.size() - 1;
 }
@@ -106,12 +160,12 @@ void PataDialogBox::Draw()
 
         if (!rendered)
         {
-            t_dialogType.update(window);
-            t_dialogText.update(window);
+            t_dialogType.draw();
+            t_dialogText.draw();
 
             for (unsigned int i = 0; i < t_options.size(); i++)
             {
-                t_options[i].update(window);
+                t_options[i].draw();
             }
 
             rendered = true;
@@ -132,11 +186,11 @@ void PataDialogBox::Draw()
         rr_main.Draw();
 
         t_dialogType.setPosition(x - rr_main.orx + 30, y - rr_main.ory);
-        t_dialogType.draw(window);
+        t_dialogType.draw();
 
         t_dialogText.setOrigin(t_dialogText.getLocalBounds().width / 2, 0);
         t_dialogText.setPosition(x, y - rr_main.ory + t_dialogType.getLocalBounds().height);
-        t_dialogText.draw(window);
+        t_dialogText.draw();
 
         //cout << "stuff: " << rr_main.orx << " " << rr_main.ory << endl;
 
@@ -146,9 +200,9 @@ void PataDialogBox::Draw()
         highlight.setPosition((x) *resRatio, (y - rr_main.ory + 138 + t_dialogType.getLocalBounds().height + t_dialogText.getLocalBounds().height + (option * 90)) * resRatio);
         window->draw(highlight);
 
-        arrow_x -= 3 / fps;
+        arrow_x -= 9 / fps;
 
-        if (arrow_x <= -3)
+        if (arrow_x <= -9)
             arrow_x = 0;
 
         arrow.setOrigin(arrow.getLocalBounds().width / 2, arrow.getLocalBounds().height / 2);
@@ -159,7 +213,7 @@ void PataDialogBox::Draw()
         {
             t_options[i].setOrigin(t_options[i].getLocalBounds().width / 2, 0);
             t_options[i].setPosition(x, y - rr_main.ory + 138 + t_dialogType.getLocalBounds().height + t_dialogText.getLocalBounds().height + (i * 90));
-            t_options[i].draw(window);
+            t_options[i].draw();
         }
     }
 }

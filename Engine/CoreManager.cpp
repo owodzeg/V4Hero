@@ -30,6 +30,8 @@ void CoreManager::init()
 
     // Create InputController before window, because we take events from it
     inputCtrl = new InputController;
+    textCtrl = new TextInputController;
+    mouseCtrl = new MouseController;
 
     // Window must be created beforehand so V4Core can use it.
     window = new sf::RenderWindow;
@@ -48,6 +50,9 @@ void CoreManager::init()
 
     // Create song controller for managing themes
     songController = new SongController;
+
+    // Create new globals table
+    globals = new Globals;
 
     // After we created prerequisities for V4Core, we can safely create it.
     core = new V4Core;
@@ -81,6 +86,24 @@ SaveReader* CoreManager::getSaveReader()
 InputController* CoreManager::getInputController()
 {
     return inputCtrl;
+}
+
+// Returns a pointer to TextInputController.
+TextInputController* CoreManager::getTextInputController()
+{
+    return textCtrl;
+}
+
+// Returns a pointer to MouseController.
+MouseController* CoreManager::getMouseController()
+{
+    return mouseCtrl;
+}
+
+// Returns a pointer to Globals table.
+Globals* CoreManager::getGlobals()
+{
+    return globals;
 }
 
 // Returns a pointer to Tips utility.
