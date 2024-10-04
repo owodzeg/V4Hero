@@ -1,0 +1,11 @@
+us,English (US),kaku-uni
+pl,Polski,kaku-uni
+ru,Русский,kaku-uni
+es,Español,kaku-uni
+br,Português (Brasil),kaku-uni
+ua,Українська,kaku-uni
+id,Bahasa Indonesia,kaku-uni
+vn,Tiếng Việt,kaku-uni
+de,Deutsch,kaku-uni
+jp,日本語,kaku-uni
+cn,简体中文,kaku-cn

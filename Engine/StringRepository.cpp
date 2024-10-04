@@ -6,7 +6,36 @@
 
 StringRepository::StringRepository() : currentLanguageCode("us")
 {
-    // Set English (us) as the default language
+    // get fonts
+    std::ifstream fontFile("resources/lang/fonts.txt");
+    std::string line;
+
+    while(std::getline(fontFile, line))
+    {
+        std::vector<std::string> param = Func::Split(line, ',');
+        std::string name = param[0];
+        std::string fontf = param[1];
+
+        LoadFontFromFile("resources/font/"+fontf, name);
+
+        SPDLOG_INFO("Loaded font file {} for language {}", fontf, name);
+    }
+
+    // get langs
+    std::ifstream langFile("resources/lang/languages.txt");
+
+    while(std::getline(langFile, line))
+    {
+        std::vector<std::string> param = Func::Split(line, ',');
+        std::string code = param[0];
+        std::string name = param[1];
+        std::string font = param[2];
+
+        LoadLanguageFile(code, name, "resources/lang/"+code+"/"+code+".txt");
+        langToFontMapping[code] = font;
+
+        SPDLOG_INFO("Loaded language {} {}, font file: {}", code, name, font);
+    }
 }
 
 // Parse language data from input stream (file or stringstream)

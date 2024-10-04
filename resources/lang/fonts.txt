@@ -1,0 +1,3 @@
+kaku-uni,P4KakuPop-UNI.ttf
+kaku-cn,dfpop2w9.ttf
+fallback,GoNotoKurrent-Regular.ttf
