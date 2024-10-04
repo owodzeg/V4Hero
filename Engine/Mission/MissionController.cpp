@@ -19,6 +19,8 @@ MissionController::MissionController()
 void MissionController::Update()
 {
     Rhythm* rhythm = CoreManager::getInstance().getRhythm();
+    RhythmGUI* rhythmGUI = CoreManager::getInstance().getRhythmGUI();
+    InputController* inputCtrl = CoreManager::getInstance().getInputController();
 
     rhythm->doRhythm();
 
@@ -27,7 +29,10 @@ void MissionController::Update()
     cam.Work(view);
     bg.Draw(cam);
 
-    CoreManager::getInstance().getRhythmGUI()->doVisuals(0, rhythm->GetCombo());
+    if(inputCtrl->isKeyPressed(Input::Keys::UP))
+        rhythmGUI->toggleDebugUI();
+
+    rhythmGUI->doVisuals(0, rhythm->GetCombo());
 }
 
 MissionController::~MissionController()
