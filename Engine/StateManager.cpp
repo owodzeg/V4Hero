@@ -214,6 +214,7 @@ void StateManager::updateCurrentState()
                 if (obeliskPtr == nullptr)
                 {
                     obeliskPtr = new ObeliskMenu;
+                    obeliskPtr->Reload();
                 }
 
                 obeliskPtr->Update();

@@ -57,13 +57,13 @@ Barracks::Barracks()
         }
     }
 
-    res_ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
-    res_ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
+    res_ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / float(3840);
+    res_ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / float(2160);
 
-    patapon_y = 607;
-    floor_y = 980;
+    patapon_y = 607*3;
+    floor_y = 980*3;
 
-    mm_selected_item_line.setSize(sf::Vector2f(135 * res_ratio_x, 3 * res_ratio_y));
+    mm_selected_item_line.setSize(sf::Vector2f(135*3 * res_ratio_x, 3*3 * res_ratio_y));
     mm_selected_item_line.setFillColor(sf::Color::Red);
 
     t_title.setFont(font);
@@ -75,19 +75,19 @@ Barracks::Barracks()
     t_item_title.setColor(sf::Color::Black);
 
     ///             ####   BARRACKS MENU BACKGROUND
-    s_background.loadFromFile("resources/graphics/bg/barracks/barracks.png", quality, 2);
+    s_background.loadFromFile("resources/graphics/bg/barracks/barracks.png", quality);
 
     ///         highlighted unit
-    s_pon_highlight.loadFromFile("resources/graphics/ui/highlight.png", quality, 2);
+    s_pon_highlight.loadFromFile("resources/graphics/ui/highlight.png", quality);
 
     ///             ####   UNIT CLASS ICON
-    class_icon.loadFromFile("resources/graphics/ui/yari_icon.png", quality, 1);
+    class_icon.loadFromFile("resources/graphics/ui/yari_icon.png", quality);
     class_icon.setOrigin(class_icon.getLocalBounds().width / 2, class_icon.getLocalBounds().height / 2);
-    class_icon.setPosition(102, 98);
+    class_icon.setPosition(102*3, 98*3);
 
     ///             ####   UNIT ITEM ICON
-    s_unit_icon.loadFromFile("resources/graphics/ui/unit_icon.png", quality, 1);
-    s_unit_icon.setPosition(946, 82);
+    s_unit_icon.loadFromFile("resources/graphics/ui/unit_icon.png", quality);
+    s_unit_icon.setPosition(946*3, 82*3);
 
     Pon* cur_pon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(current_selected_pon);
 
@@ -184,30 +184,30 @@ Barracks::Barracks()
     unit_stat_icec_v.setCharacterSize(27);
     unit_stat_icec_v.setColor(sf::Color::Black);
 
-    int equip_height = 50;
+    int equip_height = 50*3;
 
     ///             ####   WEAPON ITEM ICON
-    s_weapon_icon.loadFromFile("resources/graphics/ui/sword_weapon_icon.png", quality, 1);
-    s_weapon_icon.setPosition(946, s_unit_icon.getPosition().y + equip_height);
+    s_weapon_icon.loadFromFile("resources/graphics/ui/sword_weapon_icon.png", quality);
+    s_weapon_icon.setPosition(946*3, s_unit_icon.getPosition().y*3 + equip_height);
 
     ///             ####   WEAPON 2 (OTHER HAND) ITEM ICON
-    s_weapon2_icon.loadFromFile("resources/graphics/ui/sword_weapon_icon.png", quality, 1);
-    s_weapon2_icon.setPosition(946, s_weapon_icon.getPosition().y + equip_height);
+    s_weapon2_icon.loadFromFile("resources/graphics/ui/sword_weapon_icon.png", quality);
+    s_weapon2_icon.setPosition(946*3, s_weapon_icon.getPosition().y*3 + equip_height);
 
     ///             ####   ARMOUR ITEM ICON
-    s_armour_icon.loadFromFile("resources/graphics/ui/helm_icon.png", quality, 1);
-    s_armour_icon.setPosition(946, s_weapon2_icon.getPosition().y + equip_height);
+    s_armour_icon.loadFromFile("resources/graphics/ui/helm_icon.png", quality);
+    s_armour_icon.setPosition(946*3, s_weapon2_icon.getPosition().y*3 + equip_height);
 
     ///             ####   MASK ITEM ICON
-    s_mask_icon.loadFromFile("resources/graphics/ui/mask_icon.png", quality, 1);
-    s_mask_icon.setPosition(946, s_armour_icon.getPosition().y + equip_height);
+    s_mask_icon.loadFromFile("resources/graphics/ui/mask_icon.png", quality);
+    s_mask_icon.setPosition(946*3, s_armour_icon.getPosition().y*3 + equip_height);
 
     /// unit + item name text
 
     t_unit_rarepon_name.setFont(font);
     t_unit_rarepon_name.setCharacterSize(24);
     t_unit_rarepon_name.setColor(sf::Color::Black);
-    t_unit_rarepon_name.setStringKey("wooden_spear");
+    t_unit_rarepon_name.setStringKey("item_wooden_spear");
     t_unit_rarepon_name.setOrigin(0, t_unit_rarepon_name.getLocalBounds().height / 2);
 
     for (int i = 0; i < t_eq_names.size(); i++)
@@ -215,11 +215,11 @@ Barracks::Barracks()
         t_eq_names[i].setFont(font);
         t_eq_names[i].setCharacterSize(24);
         t_eq_names[i].setColor(sf::Color::Black);
-        t_eq_names[i].setStringKey("wooden_spear");
+        t_eq_names[i].setStringKey("item_wooden_spear");
         t_eq_names[i].setOrigin(0, t_eq_names[i].getLocalBounds().height / 2);
     }
 
-    inv_box.loadFromFile("resources/graphics/ui/mini_inventory.png", quality, 1);
+    inv_box.loadFromFile("resources/graphics/ui/mini_inventory.png", quality);
 
     item_title.setFont(font);
     item_title.setCharacterSize(34);
@@ -242,35 +242,35 @@ Barracks::Barracks()
     //TO-DO: replace old pointers with new CoreManager pointers
     //applyEquipment();
 
-    rr_main_sh.Create(1100 + 2, 220 + 2, 20, CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280), sf::Color(0, 0, 0, 96));
-    rr_main_sh.x = 670 - 1;
-    rr_main_sh.y = 190 - 1;
-    rr_main_sh.setOrigin(sf::Vector2f((1100 + 40) / 2, (220 + 40) / 2));
+    rr_main_sh.Create(1102*3, 222*3, 20*3, CoreManager::getInstance().getConfig()->GetInt("resX") / float(3840), sf::Color(0, 0, 0, 96));
+    rr_main_sh.x = 669*3;
+    rr_main_sh.y = 189*3;
+    rr_main_sh.setOrigin(sf::Vector2f((1100 + 40)*3 / 2, (220 + 40)*3 / 2));
 
-    rr_uniticon_sh.Create(176 + 2, 8 + 2, 34, CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280), sf::Color(0, 0, 0, 96));
-    rr_uniticon_sh.x = 188 - 1;
-    rr_uniticon_sh.y = 98 - 1;
-    rr_uniticon_sh.setOrigin(sf::Vector2f((176 + 68) / 2, (8 + 68) / 2));
+    rr_uniticon_sh.Create(178*3, 10*3, 34*3, CoreManager::getInstance().getConfig()->GetInt("resX") / float(3840), sf::Color(0, 0, 0, 96));
+    rr_uniticon_sh.x = 187*3;
+    rr_uniticon_sh.y = 97*3;
+    rr_uniticon_sh.setOrigin(sf::Vector2f((176 + 68)*3 / 2, (8 + 68)*3 / 2));
 
-    rr_unitstatus_sh.Create(175 + 2, 20 + 2, 25, CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280), sf::Color(0, 0, 0, 96));
-    rr_unitstatus_sh.x = 1127 - 1;
-    rr_unitstatus_sh.y = 64 - 1;
-    rr_unitstatus_sh.setOrigin(sf::Vector2f((175 + 50) / 2, (12 + 50) / 2));
+    rr_unitstatus_sh.Create(177*3, 22*3, 25*3, CoreManager::getInstance().getConfig()->GetInt("resX") / float(3840), sf::Color(0, 0, 0, 96));
+    rr_unitstatus_sh.x = 1126*3;
+    rr_unitstatus_sh.y = 63*3;
+    rr_unitstatus_sh.setOrigin(sf::Vector2f((175 + 50)*3 / 2, (12 + 50)*3 / 2));
 
-    rr_main.Create(1100, 220, 20, CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280));
-    rr_main.x = 670;
-    rr_main.y = 190;
-    rr_main.setOrigin(sf::Vector2f((1100 + 40) / 2, (220 + 40) / 2));
+    rr_main.Create(1100*3, 220*3, 20*3, CoreManager::getInstance().getConfig()->GetInt("resX") / float(3840));
+    rr_main.x = 670*3;
+    rr_main.y = 190*3;
+    rr_main.setOrigin(sf::Vector2f((1100 + 40)*3 / 2, (220 + 40)*3 / 2));
 
-    rr_uniticon.Create(176, 8, 34, CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280));
-    rr_uniticon.x = 188;
-    rr_uniticon.y = 98;
-    rr_uniticon.setOrigin(sf::Vector2f((176 + 68) / 2, (8 + 68) / 2));
+    rr_uniticon.Create(176*3, 8*3, 34*3, CoreManager::getInstance().getConfig()->GetInt("resX") / float(3840));
+    rr_uniticon.x = 188*3;
+    rr_uniticon.y = 98*3;
+    rr_uniticon.setOrigin(sf::Vector2f((176 + 68)*3 / 2, (8 + 68)*3 / 2));
 
-    rr_uniticon.Create(175, 20, 25, CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280));
-    rr_uniticon.x = 1127;
-    rr_uniticon.y = 64;
-    rr_uniticon.setOrigin(sf::Vector2f((175 + 50) / 2, (12 + 50) / 2));
+    rr_uniticon.Create(175*3, 20*3, 25*3, CoreManager::getInstance().getConfig()->GetInt("resX") / float(3840));
+    rr_uniticon.x = 1127*3;
+    rr_uniticon.y = 64*3;
+    rr_uniticon.setOrigin(sf::Vector2f((175 + 50)*3 / 2, (12 + 50)*3 / 2));
 
     //mm_inventory_background.setSize(sf::Vector2f(mm_inventory_background.getSize().x+(40*resRatioX),mm_inventory_background.getSize().y+(40*resRatioX)));
 
@@ -372,10 +372,10 @@ void Barracks::loadInventory()
             cur_box.highlight = false;
         }
 
-        cur_box.r_outer.setSize(sf::Vector2f(70.0 * res_ratio_x, 51.0 * res_ratio_y));
+        cur_box.r_outer.setSize(sf::Vector2f(70.0*3 * res_ratio_x, 51.0*3 * res_ratio_y));
         cur_box.r_outer.setFillColor(sf::Color(102, 102, 102, 255));
 
-        cur_box.r_inner.setSize(sf::Vector2f(46.0 * res_ratio_x, 46.0 * res_ratio_y));
+        cur_box.r_inner.setSize(sf::Vector2f(46.0*3 * res_ratio_x, 46.0*3 * res_ratio_y));
         cur_box.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
         switch (cur_item->order_id[0]) // Is there a better way than nested switches here? (look: weapons -> spears or swords will be necessary)
@@ -549,8 +549,12 @@ void Barracks::refreshStats()
         }
     }
 
-    //TODO: do whatever needs to be here
-    //t_unit_rarepon_name.setString("rarepon_normal" + " " + "barracks_lvl" + " " + std::to_string(currentPon->pon_level));
+    t_unit_rarepon_name.setString("");
+    t_unit_rarepon_name.addText("key~rarepon_normal");
+    t_unit_rarepon_name.addText(" ");
+    t_unit_rarepon_name.addText("key~barracks_lvl");
+    t_unit_rarepon_name.addText(" ");
+    t_unit_rarepon_name.addText(std::to_string(currentPon->pon_level));
 
     for (int i = 0; i < currentPon->slots.size(); i++)
     {
@@ -725,7 +729,7 @@ void Barracks::updatePreviewText()
         if (invbox_id < inventory_boxes.size())
         {
             item_title.setString(inventory_boxes[invbox_id].data->item_name);
-            item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(CoreManager::getInstance().getStrRepo()->GetString(inventory_boxes[invbox_id].data->item_description), 340, font, 22)));
+            item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(CoreManager::getInstance().getStrRepo()->GetString(inventory_boxes[invbox_id].data->item_description), 340*3, font, 22)));
             //preview stats -L
             unit_stat_hp_v.setString(getPreviewText(inventory_boxes[invbox_id].data->equip->hp, currentPon->pon_hp, currentPon->pon_base_hp));
             unit_stat_hp_v.setColor(getPreviewColorText(inventory_boxes[invbox_id].data->equip->hp, currentPon->pon_hp, currentPon->pon_base_hp,false));
@@ -765,7 +769,7 @@ void Barracks::Update()
     auto lastView = window->getView();
     window->setView(window->getDefaultView());
 
-    rs_cover.setSize(sf::Vector2f(1280 * res_ratio_x, 720 * res_ratio_y));
+    rs_cover.setSize(sf::Vector2f(1280*3 * res_ratio_x, 720*3 * res_ratio_y));
     rs_cover.setFillColor(sf::Color::Black);
     rs_cover.setPosition(0, 0);
     window->draw(rs_cover);
@@ -773,13 +777,13 @@ void Barracks::Update()
     s_background.setPosition(0, 0);
     s_background.draw();
 
-    int highlight_width = 225;
-    int pon_width = 75;
+    int highlight_width = 225*3;
+    int pon_width = 75*3;
 
-    highlighted_pon.setPosition((468 + (75 * (current_selected_pon))), 530);
+    highlighted_pon.setPosition((468*3 + (75*3 * (current_selected_pon))), 530*3);
     highlighted_pon.draw();
 
-    s_pon_highlight.setPosition(highlight_width * 2, 675);
+    s_pon_highlight.setPosition(highlight_width * 2*3, 675*3);
     s_pon_highlight.draw();
 
 
@@ -794,7 +798,7 @@ void Barracks::Update()
 
     unit_status.setStringKey("barracks_unit_status");
     unit_status.addText(" " + to_string(current_selected_pon + 1) + "/3");
-    unit_status.setPosition(1048, 38);
+    unit_status.setPosition(1048*3, 38*3);
 
     Pon* currentPon = new Pon;
     currentPon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(current_selected_pon);
@@ -809,7 +813,7 @@ void Barracks::Update()
             break;
         }
     }
-    class_name.setPosition(136, 74);
+    class_name.setPosition(136*3, 74*3);
 
     unit_status.draw();
     class_name.draw();
@@ -837,27 +841,27 @@ void Barracks::Update()
     unit_stat_firec_v.setOrigin(unit_stat_firec_v.getLocalBounds().width, unit_stat_firec_v.getLocalBounds().height / 2);
     unit_stat_icec_v.setOrigin(unit_stat_icec_v.getLocalBounds().width, unit_stat_icec_v.getLocalBounds().height / 2);
 
-    unit_stat_level_t.setPosition(136, 146);
-    unit_stat_level_v.setPosition(136 + 370, 146);
-    unit_stat_exp_t.setPosition(136, 180);
-    unit_stat_exp_v.setPosition(136 + 370, 180);
-    unit_stat_hp_t.setPosition(136, 214);
-    unit_stat_hp_v.setPosition(136 + 370, 214);
-    unit_stat_dmg_t.setPosition(136, 248);
-    unit_stat_dmg_v.setPosition(136 + 370, 248);
-    unit_stat_atkspd_t.setPosition(136, 282);
-    unit_stat_atkspd_v.setPosition(136 + 370, 282);
+    unit_stat_level_t.setPosition(136*3, 146*3);
+    unit_stat_level_v.setPosition(136*3 + 370*3, 146*3);
+    unit_stat_exp_t.setPosition(136*3, 180*3);
+    unit_stat_exp_v.setPosition(136*3 + 370*3, 180*3);
+    unit_stat_hp_t.setPosition(136*3, 214*3);
+    unit_stat_hp_v.setPosition(136*3 + 370*3, 214*3);
+    unit_stat_dmg_t.setPosition(136*3, 248*3);
+    unit_stat_dmg_v.setPosition(136*3 + 370*3, 248*3);
+    unit_stat_atkspd_t.setPosition(136*3, 282*3);
+    unit_stat_atkspd_v.setPosition(136*3 + 370*3, 282*3);
 
-    unit_stat_critc_t.setPosition(540, 146);
-    unit_stat_critc_v.setPosition(540 + 370, 146);
-    unit_stat_kbc_t.setPosition(540, 180);
-    unit_stat_kbc_v.setPosition(540 + 370, 180);
-    unit_stat_stgc_t.setPosition(540, 214);
-    unit_stat_stgc_v.setPosition(540 + 370, 214);
-    unit_stat_firec_t.setPosition(540, 248);
-    unit_stat_firec_v.setPosition(540 + 370, 248);
-    unit_stat_icec_t.setPosition(540, 282);
-    unit_stat_icec_v.setPosition(540 + 370, 282);
+    unit_stat_critc_t.setPosition(540*3, 146*3);
+    unit_stat_critc_v.setPosition(540*3 + 370*3, 146*3);
+    unit_stat_kbc_t.setPosition(540*3, 180*3);
+    unit_stat_kbc_v.setPosition(540*3 + 370*3, 180*3);
+    unit_stat_stgc_t.setPosition(540*3, 214*3);
+    unit_stat_stgc_v.setPosition(540*3 + 370*3, 214*3);
+    unit_stat_firec_t.setPosition(540*3, 248*3);
+    unit_stat_firec_v.setPosition(540*3 + 370*3, 248*3);
+    unit_stat_icec_t.setPosition(540*3, 282*3);
+    unit_stat_icec_v.setPosition(540*3 + 370*3, 282*3);
 
     unit_stat_level_t.draw();
     unit_stat_level_v.draw();
@@ -883,30 +887,30 @@ void Barracks::Update()
 
 
     /// equipped item + unit name text
-    int equip_height = 53;
+    int equip_height = 53*3;
 
     if (enabled_positons[0]) /// Rarepon
     {
         t_unit_rarepon_name.setOrigin(0, 0);
-        t_unit_rarepon_name.setPosition(s_unit_icon.getPosition().x + equip_height, s_unit_icon.getPosition().y + 8);
+        t_unit_rarepon_name.setPosition(s_unit_icon.getPosition().x + equip_height, s_unit_icon.getPosition().y + 8*3);
         s_unit_icon.setPosition(s_unit_icon.getPosition().x, s_unit_icon.getPosition().y);
         s_unit_icon.draw();
         t_unit_rarepon_name.draw();
     }
     if (enabled_positons[1]) /// wep1
     {
-        t_slot_1_name.setPosition(s_unit_icon.getPosition().x + equip_height, s_weapon_icon.getPosition().y + 8);
+        t_slot_1_name.setPosition(s_unit_icon.getPosition().x + equip_height, s_weapon_icon.getPosition().y + 8*3);
         s_weapon_icon.setPosition(s_unit_icon.getPosition().x, s_weapon_icon.getPosition().y);
         s_weapon_icon.draw();
         t_slot_1_name.draw();
 
-        t_eq_names[0].setPosition(s_unit_icon.getPosition().x + equip_height, s_weapon_icon.getPosition().y + 8);
+        t_eq_names[0].setPosition(s_unit_icon.getPosition().x + equip_height, s_weapon_icon.getPosition().y + 8*3);
         t_eq_names[0].draw();
     }
 
     if (enabled_positons[2]) /// wep2
     {
-        t_slot_2_name.setPosition(s_unit_icon.getPosition().x + equip_height, s_weapon2_icon.getPosition().y + 8);
+        t_slot_2_name.setPosition(s_unit_icon.getPosition().x + equip_height, s_weapon2_icon.getPosition().y + 8*3);
         s_weapon2_icon.setPosition(s_unit_icon.getPosition().x, s_weapon2_icon.getPosition().y);
         s_weapon2_icon.draw();
         t_slot_2_name.draw();
@@ -917,7 +921,7 @@ void Barracks::Update()
 
     if (enabled_positons[3]) /// armour
     {
-        t_slot_3_name.setPosition(s_unit_icon.getPosition().x + equip_height, s_armour_icon.getPosition().y + 8);
+        t_slot_3_name.setPosition(s_unit_icon.getPosition().x + equip_height, s_armour_icon.getPosition().y + 8*3);
         s_armour_icon.setPosition(s_unit_icon.getPosition().x, s_armour_icon.getPosition().y);
         s_armour_icon.draw();
         t_slot_3_name.draw();
@@ -928,36 +932,36 @@ void Barracks::Update()
         /// slot[1] in ponregistry is armor
         /// armor is slot 2 (third) in equipment, not second
         /// //////////////////// ///
-        t_eq_names[1].setPosition(s_unit_icon.getPosition().x + equip_height, s_armour_icon.getPosition().y + 8);
+        t_eq_names[1].setPosition(s_unit_icon.getPosition().x + equip_height, s_armour_icon.getPosition().y + 8*3);
         t_eq_names[1].draw();
     }
 
     if (enabled_positons[4]) /// mask
     {
-        t_slot_4_name.setPosition(s_unit_icon.getPosition().x + equip_height, s_armour_icon.getPosition().y + 8);
+        t_slot_4_name.setPosition(s_unit_icon.getPosition().x + equip_height, s_armour_icon.getPosition().y + 8*3);
         s_armour_icon.setPosition(s_unit_icon.getPosition().x, s_armour_icon.getPosition().y);
         s_armour_icon.draw();
         t_slot_4_name.draw();
 
-        t_eq_names[3].setPosition(s_unit_icon.getPosition().x + equip_height, s_armour_icon.getPosition().y + 8);
+        t_eq_names[3].setPosition(s_unit_icon.getPosition().x + equip_height, s_armour_icon.getPosition().y + 8*3);
         t_eq_names[3].draw();
     }
 
     item_line_flash += 8.0 / fps;
 
-    int bar_size = 266;
-    int bar_offset = 78;
-    mm_selected_item_line.setSize(sf::Vector2f(bar_size * res_ratio_x, 3 * res_ratio_y));
+    int bar_size = 266*3;
+    int bar_offset = 78*3;
+    mm_selected_item_line.setSize(sf::Vector2f(bar_size*3 * res_ratio_x, 9 * res_ratio_y));
     mm_selected_item_line.setFillColor(sf::Color(239, 88, 98, 128 + (sin(item_line_flash) * 128)));
-    mm_selected_item_line.setPosition((s_unit_icon.getPosition().x) * res_ratio_x, ((s_unit_icon.getPosition().y + current_item_position * 50) + 47) * res_ratio_y);
+    mm_selected_item_line.setPosition((s_unit_icon.getPosition().x) * res_ratio_x, ((s_unit_icon.getPosition().y + current_item_position * 50*3) + 47*3) * res_ratio_y);
 
     ctrlTips.x = 0;
-    ctrlTips.y = (720 - ctrlTips.ySize);
+    ctrlTips.y = (2160 - ctrlTips.ySize);
     ctrlTips.draw();
 
     if (menu_mode)
     {
-        inv_box.setPosition(40, 366);
+        inv_box.setPosition(40*3, 366*3);
         inv_box.draw();
 
         for (int i = 0; i < 16; i++)
@@ -971,11 +975,11 @@ void Barracks::Update()
                     int grid_x = i % 4;
                     int grid_y = floor(i / 4);
 
-                    float xpos = 46 + (grid_x * 77);
-                    float ypos = 37 + (grid_y * 54);
+                    float xpos = 46*3 + (grid_x * 77*3);
+                    float ypos = 37*3 + (grid_y * 54*3);
 
-                    inventory_boxes[cur_item].r_outer.setPosition((40 + xpos) * res_ratio_x, (366 + ypos) * res_ratio_y);
-                    inventory_boxes[cur_item].r_inner.setPosition((40 + xpos + 2.5) * res_ratio_x, (366 + ypos + 2.5) * res_ratio_y);
+                    inventory_boxes[cur_item].r_outer.setPosition((40 + xpos) * res_ratio_x*3, (366 + ypos) * res_ratio_y*3);
+                    inventory_boxes[cur_item].r_inner.setPosition((40 + xpos + 2.5) * res_ratio_x*3, (366 + ypos + 2.5) * res_ratio_y*3);
                     window->draw(inventory_boxes[cur_item].r_outer);
                     window->draw(inventory_boxes[cur_item].r_inner);
 
@@ -987,19 +991,19 @@ void Barracks::Update()
                     if ((inventory_boxes[cur_item].data->item_category == "key_items") || (inventory_boxes[cur_item].data->item_category == "consumables")) ///Bound to break
                         inventory_boxes[cur_item].icon.setScale(0.41, 0.41);
 
-                    inventory_boxes[cur_item].icon.setPosition(40 + xpos + 23 + 1.5, 366 + ypos + 23 + 1.5);
+                    inventory_boxes[cur_item].icon.setPosition(40*3 + xpos + 23*3 + 1.5*3, 366*3 + ypos + 23*3 + 1.5*3);
                     inventory_boxes[cur_item].icon.draw();
 
-                    inventory_boxes[cur_item].num.setPosition(40 + xpos + 36 - 1, 366 + ypos + 29 - 2);
-                    inventory_boxes[cur_item].num_shadow.setPosition(40 + xpos + 36, 366 + ypos + 29);
+                    inventory_boxes[cur_item].num.setPosition(40*3 + xpos + 36*3 - 1*3, 366*3 + ypos + 29*3 - 2*3);
+                    inventory_boxes[cur_item].num_shadow.setPosition(40*3 + xpos + 36*3, 366*3 + ypos + 29*3);
 
                     inventory_boxes[cur_item].num_shadow.draw();
                     inventory_boxes[cur_item].num.draw();
 
                     if (inventory_boxes[cur_item].highlight)
                     {
-                        inventory_boxes[cur_item].r_highlight.setSize(sf::Vector2f(70.0 * res_ratio_x, 51.0 * res_ratio_y));
-                        inventory_boxes[cur_item].r_highlight.setPosition((40 + xpos) * res_ratio_x, (366 + ypos) * res_ratio_y);
+                        inventory_boxes[cur_item].r_highlight.setSize(sf::Vector2f(70.0*3 * res_ratio_x, 51.0*3 * res_ratio_y));
+                        inventory_boxes[cur_item].r_highlight.setPosition((40*3 + xpos) * res_ratio_x, (366*3 + ypos) * res_ratio_y);
                         inventory_boxes[cur_item].r_highlight.setFillColor(sf::Color(0, 0, 0, 192));
                         window->draw(inventory_boxes[cur_item].r_highlight);
                     }
@@ -1011,52 +1015,52 @@ void Barracks::Update()
                 int grid_x = i % 4;
                 int grid_y = floor(i / 4);
 
-                float xpos = 46 + (grid_x * 77);
-                float ypos = 37 + (grid_y * 54);
+                float xpos = 46*3 + (grid_x * 77*3);
+                float ypos = 37*3 + (grid_y * 54*3);
 
-                tmp_inv.r_outer.setSize(sf::Vector2f(70.0 * res_ratio_x, 51.0 * res_ratio_y));
+                tmp_inv.r_outer.setSize(sf::Vector2f(70.0*3 * res_ratio_x, 51.0*3 * res_ratio_y));
                 tmp_inv.r_outer.setFillColor(sf::Color(102, 102, 102, 255));
 
-                tmp_inv.r_inner.setSize(sf::Vector2f(46.0 * res_ratio_x, 46.0 * res_ratio_y));
+                tmp_inv.r_inner.setSize(sf::Vector2f(46.0*3 * res_ratio_x, 46.0*3 * res_ratio_y));
                 tmp_inv.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
-                tmp_inv.r_outer.setPosition((40 + xpos) * res_ratio_x, (366 + ypos) * res_ratio_y);
-                tmp_inv.r_inner.setPosition((40 + xpos + 2.5) * res_ratio_x, (366 + ypos + 2.5) * res_ratio_y);
+                tmp_inv.r_outer.setPosition((40*3 + xpos) * res_ratio_x, (366*3 + ypos) * res_ratio_y);
+                tmp_inv.r_inner.setPosition((40*3 + xpos + 2.5*3) * res_ratio_x, (366*3 + ypos + 2.5*3) * res_ratio_y);
                 window->draw(tmp_inv.r_outer);
                 window->draw(tmp_inv.r_inner);
 
-                tmp_inv.r_highlight.setSize(sf::Vector2f(70.0 * res_ratio_x, 51.0 * res_ratio_y));
-                tmp_inv.r_highlight.setPosition((40 + xpos) * res_ratio_x, (366 + ypos) * res_ratio_y);
+                tmp_inv.r_highlight.setSize(sf::Vector2f(70.0*3 * res_ratio_x, 51.0*3 * res_ratio_y));
+                tmp_inv.r_highlight.setPosition((40*3 + xpos) * res_ratio_x, (366*3 + ypos) * res_ratio_y);
                 tmp_inv.r_highlight.setFillColor(sf::Color(0, 0, 0, 192));
                 window->draw(tmp_inv.r_highlight);
             }
         }
 
-        r_sel.setSize(sf::Vector2f(70.0 * res_ratio_x, 51.0 * res_ratio_y));
+        r_sel.setSize(sf::Vector2f(70.0*3 * res_ratio_x, 51.0*3 * res_ratio_y));
         r_sel.setFillColor(sf::Color::Transparent);
         r_sel.setOutlineThickness(2);
         r_sel.setOutlineColor(sf::Color(255, 0, 32, 255));
-        r_sel.setPosition((40 + 46 + (grid_sel_x * 77)) * res_ratio_x, (366 + 37 + (grid_sel_y * 54)) * res_ratio_y);
+        r_sel.setPosition((40*3 + 46*3 + (grid_sel_x * 77*3)) * res_ratio_x, (366*3 + 37*3 + (grid_sel_y * 54*3)) * res_ratio_y);
 
         window->draw(r_sel);
 
-        rr_itempreview_sh.Create(360 + 2, 260 + 2, 20, window->getSize().x / float(1280), sf::Color(0, 0, 0, 96));
-        rr_itempreview_sh.x = 650 - 1;
-        rr_itempreview_sh.y = 490 - 1;
-        rr_itempreview_sh.setOrigin(sf::Vector2f((360 + 40) / 2, (220 + 40) / 2));
+        rr_itempreview_sh.Create(362*3, 262*3, 20*3, window->getSize().x / float(3840), sf::Color(0, 0, 0, 96));
+        rr_itempreview_sh.x = 649*3;
+        rr_itempreview_sh.y = 489*3;
+        rr_itempreview_sh.setOrigin(sf::Vector2f((360 + 40)*3 / 2, (220 + 40)*3 / 2));
         rr_itempreview_sh.Draw();
 
-        rr_itempreview.Create(360, 260, 20, window->getSize().x / float(1280));
-        rr_itempreview.x = 650;
-        rr_itempreview.y = 490;
-        rr_itempreview.setOrigin(sf::Vector2f((360 + 40) / 2, (220 + 40) / 2));
+        rr_itempreview.Create(360*3, 260*3, 20*3, window->getSize().x / float(3840));
+        rr_itempreview.x = 650*3;
+        rr_itempreview.y = 490*3;
+        rr_itempreview.setOrigin(sf::Vector2f((360 + 40)*3 / 2, (220 + 40)*3 / 2));
         rr_itempreview.Draw();
 
         item_title.setOrigin(item_title.getLocalBounds().width / 2, item_title.getLocalBounds().height / 2);
-        item_title.setPosition(650, 390);
+        item_title.setPosition(650*3, 390*3);
         item_title.draw();
 
-        item_desc.setPosition(480, 440);
+        item_desc.setPosition(480*3, 440*3);
         item_desc.draw();
     }
 

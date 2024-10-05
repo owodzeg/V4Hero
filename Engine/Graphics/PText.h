@@ -65,6 +65,7 @@ public:
     };
 
     std::vector<TextSettings> textSettings;
+    std::vector<sf::String> additional;
 
     PText();
     std::vector<std::string> split(std::string const & s, char delim);

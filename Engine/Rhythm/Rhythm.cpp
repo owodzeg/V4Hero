@@ -96,6 +96,7 @@ void Rhythm::LoadTheme(string theme)
 
         // after loading SongController, get BPM and re-do the calculations
         BPM = songController->getBPM(); ///beats per minute
+        SPDLOG_INFO("Set BPM to {}", BPM);
         beat_timer = 60.f / (BPM*2) * 1000000.f; ///Amount of microseconds for each halfbeat to be made
         beat_ms = 60.f / BPM * 1000.f; ///Amount of milliseconds for each beat
         halfbeat_ms = beat_ms / 2.f;

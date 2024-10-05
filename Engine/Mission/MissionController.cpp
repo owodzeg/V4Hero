@@ -10,6 +10,7 @@ MissionController::MissionController()
 {
     CoreManager::getInstance().reinitSongController();
     CoreManager::getInstance().getSongController()->LoadTheme("ahwoon");
+    CoreManager::getInstance().getRhythm()->LoadTheme("ahwoon");
 
     bg.Load("shidavalley");
     

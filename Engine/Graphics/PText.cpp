@@ -129,6 +129,19 @@ void PText::processRichText()
 
     sf::String buffer;
 
+    sf::String newtxt = txt;
+
+    for(auto a:additional)
+    {
+        if(a.find("key~") != std::string::npos)
+        {
+            newtxt += Func::ConvertToUtf8String(strRepo->GetString(a.substring(a.find("~")+1)));
+        } else
+        {
+            newtxt += a;
+        }
+    }
+
     for(auto x : txt)
     {
         if(seek == 0)
@@ -755,5 +768,5 @@ sf::Text PText::getText()
 
 void PText::addText(sf::String add_text)
 {
-    t << add_text;
+    additional.push_back(add_text);
 }

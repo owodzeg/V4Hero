@@ -136,6 +136,7 @@ void SaveReader::Flush() ///Empties the save data.
     missions_unlocked.clear();
     mission_levels.clear();
     locations_unlocked = {1};
+    missions_unlocked = {1};
 
     //invdata.items.clear();
 

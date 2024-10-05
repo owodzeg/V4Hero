@@ -30,17 +30,17 @@ ObeliskMenu::ObeliskMenu()
     ///boxes
     mainbox.load("resources/graphics/ui/worldmap/main_box.png");
     mainbox.setOrigin(mainbox.getLocalBounds().width / 2, mainbox.getLocalBounds().height / 2);
-    mainbox.setPosition(640, 320);
+    mainbox.setPosition(640*3, 320*3);
 
     descbox.load("resources/graphics/ui/worldmap/description_box.png");
     descbox.setOrigin(descbox.getLocalBounds().width / 2, descbox.getLocalBounds().height / 2);
-    descbox.setPosition(820, 542);
+    descbox.setPosition(820*3, 542*3);
 
     iconbox.load("resources/graphics/ui/worldmap/icon_box.png");
 
     missionbox.load("resources/graphics/ui/worldmap/mission_box.png");
     missionbox.setOrigin(missionbox.getLocalBounds().width / 2, missionbox.getLocalBounds().height / 2);
-    missionbox.setPosition(290, 542);
+    missionbox.setPosition(290*3, 542*3);
 
     auto strRepo = CoreManager::getInstance().getStrRepo();
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
@@ -53,7 +53,7 @@ ObeliskMenu::ObeliskMenu()
     location_title.setCharacterSize(27);
     location_title.setColor(sf::Color::Black);
     worldmap_title.setStringKey("worldmap_location_1_title");
-    string desc = Func::wrap_text("worldmap_location_1_description", 800, font, 18);
+    string desc = Func::wrap_text("worldmap_location_1_description", 800*3, font, 18);
 
     location_desc.setFont(font);
     location_desc.setCharacterSize(19);
@@ -90,7 +90,7 @@ ObeliskMenu::ObeliskMenu()
         preloaded_worldmap_icons.push_back(loc);
     }
 
-    ctrlTips.create(66, font, 20, sf::String("Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
+    ctrlTips.create(66*3, font, 20, sf::String("Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
 
     SPDLOG_INFO("Initializing Obelisk finished.");
 }
@@ -236,17 +236,17 @@ void ObeliskMenu::Update()
 
         window->setView(window->getDefaultView());
 
-        float resRatioX = window->getSize().x / float(1280);
-        float resRatioY = window->getSize().y / float(720);
+        float resRatioX = window->getSize().x / float(3840);
+        float resRatioY = window->getSize().y / float(2160);
 
         if (!displayMissions)
         {
-            mainbox_destX = 640;
-            mainbox_destY = 320;
+            mainbox_destX = 640*3;
+            mainbox_destY = 320*3;
         } else
         {
-            mainbox_destX = 640;
-            mainbox_destY = 230;
+            mainbox_destX = 640*3;
+            mainbox_destY = 230*3;
         }
 
         if (round(mainbox.getPosition().x) != mainbox_destX)
@@ -303,15 +303,15 @@ void ObeliskMenu::Update()
         mainbox.draw();
 
         worldmap_title.setOrigin(worldmap_title.getLocalBounds().width / 2, worldmap_title.getLocalBounds().height / 2);
-        worldmap_title.setPosition(mainbox.getPosition().x - 303, mainbox.getPosition().y - 174);
+        worldmap_title.setPosition(mainbox.getPosition().x - 303*3, mainbox.getPosition().y - 174*3);
         worldmap_title.draw();
 
         location_title.setOrigin(location_title.getLocalBounds().width / 2, location_title.getLocalBounds().height / 2);
-        location_title.setPosition(mainbox.getPosition().x, mainbox.getPosition().y + 72);
+        location_title.setPosition(mainbox.getPosition().x, mainbox.getPosition().y + 72*3);
         location_title.draw();
 
         location_desc.setOrigin(location_desc.getLocalBounds().width / 2, location_desc.getLocalBounds().height / 2);
-        location_desc.setPosition(mainbox.getPosition().x, mainbox.getPosition().y + 142);
+        location_desc.setPosition(mainbox.getPosition().x, mainbox.getPosition().y + 142*3);
         location_desc.draw();
 
         if (round(mapX) != mapXdest)
@@ -327,36 +327,36 @@ void ObeliskMenu::Update()
         if (mapX >= 0)
             mapX = 0;
 
-        int maxBound = (worldmap_fields.size() * 123 - 1012) * (-1);
+        int maxBound = (worldmap_fields.size() * 123*3 - 1012*3) * (-1);
 
         if (mapX <= maxBound)
             mapX = maxBound;
 
-        v_render_map.setSize(1012 * resRatioX, 720 * resRatioY);
-        v_render_map.setCenter((506) * resRatioX, -360 * resRatioY);
-        v_render_map.setViewport(sf::FloatRect(134.0 / 1280.0, (mainbox.getPosition().y - 115) / 720.0, 1012.0 / 1280.0, 1.f));
+        v_render_map.setSize(1012*3 * resRatioX, 720*3 * resRatioY);
+        v_render_map.setCenter((506*3) * resRatioX, -360*3 * resRatioY);
+        v_render_map.setViewport(sf::FloatRect(134.0*3 / 3840.0, (mainbox.getPosition().y - 115*3) / 2160.0, 1012.0*3 / 3840.0, 1.f));
 
         window->setView(v_render_map);
 
         for (int i = 0; i < worldmap_fields.size(); i++)
         {
-            worldmap_fields[i].setPosition(i * 123 + mapX, 0 - 720);
+            worldmap_fields[i].setPosition(i * 123*3 + mapX, 0 - 720*3);
             worldmap_fields[i].draw();
         }
 
         location_highlight.setOrigin(location_highlight.getLocalBounds().width / 2, location_highlight.getLocalBounds().height / 2);
-        location_highlight.setPosition(sel_location * 123 + mapX - 62, 78 - 720);
+        location_highlight.setPosition(sel_location * 123*3 + mapX - 62*3, 78*3 - 720*3);
         location_highlight.draw();
 
         for (int i = 0; i < worldmap_fields.size(); i++)
         {
             worldmap_icons[i].setOrigin(worldmap_icons[i].getLocalBounds().width / 2, worldmap_icons[i].getLocalBounds().height);
-            worldmap_icons[i].setPosition(i * 123 + mapX + 61, 155 - 720);
+            worldmap_icons[i].setPosition(i * 123*3 + mapX + 61*3, 155*3 - 720*3);
             worldmap_icons[i].draw();
 
             if (std::find(unlocked.begin(), unlocked.end(), i) == unlocked.end())
             {
-                unavailable.setPosition(i * 123 + mapX - 1, 0 - 720);
+                unavailable.setPosition(i * 123*3 + mapX - 1*3, 0 - 720*3);
                 unavailable.draw();
             }
         }
@@ -369,30 +369,30 @@ void ObeliskMenu::Update()
             descbox.draw();
 
             select_quest.setOrigin(0, select_quest.getLocalBounds().height / 2);
-            select_quest.setPosition(missionbox.getPosition().x - 141, missionbox.getPosition().y - 74);
+            select_quest.setPosition(missionbox.getPosition().x - 141*3, missionbox.getPosition().y - 74*3);
             select_quest.draw();
 
             mission_title.setOrigin(0, mission_title.getLocalBounds().height / 2);
-            mission_title.setPosition(descbox.getPosition().x - 315, descbox.getPosition().y - 74);
+            mission_title.setPosition(descbox.getPosition().x - 315*3, descbox.getPosition().y - 74*3);
             mission_title.draw();
 
             mission_desc.setOrigin(0, 0);
-            mission_desc.setPosition(descbox.getPosition().x - 315, descbox.getPosition().y - 55);
+            mission_desc.setPosition(descbox.getPosition().x - 315*3, descbox.getPosition().y - 55*3);
             mission_desc.draw();
 
-            mission_select.setPosition(135, missionbox.getPosition().y - 56 + (sel_mission * 24));
+            mission_select.setPosition(135*3, missionbox.getPosition().y - 56*3 + (sel_mission * 24*3));
             mission_select.draw();
 
-            v_render_missions_map.setSize(298 * resRatioX, 120 * resRatioY);
-            v_render_missions_map.setCenter((1280 + 149) * resRatioX, (-720 + 60) * resRatioY);
-            v_render_missions_map.setViewport(sf::FloatRect(143.0 / 1280.0, (missionbox.getPosition().y - 53) / 720.0, 298.0 / 1280.0, 120.0 / 720.0));
+            v_render_missions_map.setSize(298*3 * resRatioX, 120*3 * resRatioY);
+            v_render_missions_map.setCenter((1280*3 + 149*3) * resRatioX, (-720*3 + 60*3) * resRatioY);
+            v_render_missions_map.setViewport(sf::FloatRect(143.0*3 / 3840, (missionbox.getPosition().y - 53*3) / 2160.0, 298.0*3 / 3840.0, 120.0*3 / 2160.0));
 
             window->setView(v_render_missions_map);
 
             for (int i = 0; i < missions.size(); i++)
             {
                 missions[i].p_mis.setOrigin(0, 0);
-                missions[i].p_mis.setPosition(1280, -720 + (i * 24));
+                missions[i].p_mis.setPosition(1280*3, -720*3 + (i * 24*3));
                 missions[i].p_mis.draw();
             }
 
@@ -408,7 +408,7 @@ void ObeliskMenu::Update()
             {
                 if (displayMissions)
                 {
-                    ctrlTips.create(66, font, 20, sf::String("Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
+                    ctrlTips.create(66*3, font, 20, sf::String("Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
 
                     displayMissions = false;
                     SPDLOG_DEBUG("Exited mission selection.");
@@ -451,7 +451,7 @@ void ObeliskMenu::Update()
 
                     if (missions.size() > 0)
                     {
-                        ctrlTips.create(66, font, 20, sf::String("Up/Down: Select mission      X: Enter mission      O: Return to field select"), quality);
+                        ctrlTips.create(66*3, font, 20, sf::String("Up/Down: Select mission      X: Enter mission      O: Return to field select"), quality);
 
                         displayMissions = true;
 
@@ -488,7 +488,7 @@ void ObeliskMenu::Update()
 
                 mapXdest -= float(123) * 6;
 
-                int maxBound = (worldmap_fields.size() * 123 - 1012) * (-1);
+                int maxBound = (worldmap_fields.size() * 123*3 - 1012*3) * (-1);
 
                 if (mapXdest <= maxBound)
                     mapXdest = maxBound;
@@ -512,7 +512,7 @@ void ObeliskMenu::Update()
 
                     //if((sel_location*123 + mapX - 62) < 0)
                     //{
-                    mapXdest = (sel_location * 123 - 615) * (-1);
+                    mapXdest = (sel_location * 123*3 - 615*3) * (-1);
 
                     if (mapXdest >= 0)
                         mapXdest = 0;
@@ -570,9 +570,9 @@ void ObeliskMenu::Update()
                     //if((sel_location*123 + mapX - 62 + 176 + 246) > 1012)
                     //{
                     //mapXdest -= float(123);
-                    mapXdest = (sel_location * 123 - 615) * (-1);
+                    mapXdest = (sel_location * 123*3 - 615*3) * (-1);
 
-                    int maxBound = (worldmap_fields.size() * 123 - 1012) * (-1);
+                    int maxBound = (worldmap_fields.size() * 123*3 - 1012*3) * (-1);
 
                     if (mapXdest <= maxBound)
                         mapXdest = maxBound;
@@ -594,7 +594,7 @@ void ObeliskMenu::Update()
                         string wL1 = string(L1.begin(), L1.end());
                         string wL2 = string(L2.begin(), L2.end());
 
-                        string desc = Func::wrap_text(wL2, 800, font, 18);
+                        string desc = Func::wrap_text(wL2, 800*3, font, 18);
 
                         location_title.setString(wL1);
                         location_desc.setString(desc);
@@ -624,7 +624,7 @@ void ObeliskMenu::Update()
                     }
 
                     mission_title.setString(missions[sel_mission].title + level);
-                    string desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
+                    string desc = Func::wrap_text(missions[sel_mission].desc, 633*3, font, 18);
                     mission_desc.setString(desc);
                 }
             } else if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
@@ -644,14 +644,14 @@ void ObeliskMenu::Update()
                     }
 
                     mission_title.setString(missions[sel_mission].title + level);
-                    string desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
+                    string desc = Func::wrap_text(missions[sel_mission].desc, 633*3, font, 18);
                     mission_desc.setString(desc);
                 }
             }
         }
 
         ctrlTips.x = 0;
-        ctrlTips.y = (720 - ctrlTips.ySize);
+        ctrlTips.y = (2160 - ctrlTips.ySize);
         ctrlTips.draw();
 
         screenFade.draw();

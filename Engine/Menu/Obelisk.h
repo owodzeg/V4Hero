@@ -41,7 +41,7 @@ public:
     PText mission_desc;
 
     int cur_location = 0;
-    float mainbox_destX = 640, mainbox_destY = 360;
+    float mainbox_destX = 640*3, mainbox_destY = 360*3;
     float alphaA = 0;
     float alphaB = 255;
     float location_bg_a_destAlpha = 0;
