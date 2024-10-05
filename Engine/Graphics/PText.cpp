@@ -583,7 +583,12 @@ void PText::draw()
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
 
     if(currentKey != "")
-        setString(Func::ConvertToUtf8String(strRepo->GetString(currentKey)));
+    {
+        if(currentKey == "no message")
+            setString("no message");
+        else
+            setString(Func::ConvertToUtf8String(strRepo->GetString(currentKey)));
+    }
 
     if(oldtxt != txt || oldKey != currentKey || oldColor != color)
     {

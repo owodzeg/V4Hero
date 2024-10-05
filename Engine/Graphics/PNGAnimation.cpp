@@ -58,7 +58,7 @@ void PNGAnimation::loadCacheFile(Animation& anim)
     // load animation data
     std::string anim_data;
     std::stringstream ss_anim_data;
-    std::string anim_data_path = std::format("resources/graphics/.tex_cache/{}.anim", anim.shortName);
+    std::string anim_data_path = std::format("resources/graphics/.tex_cache/{}@{}.anim", model_name, anim.shortName);
     std::ifstream anim_data_file(anim_data_path);
     ss_anim_data << anim_data_file.rdbuf();
     anim_data = ss_anim_data.str();
@@ -121,7 +121,7 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
 
     // save the data to a file in cache so the information can be fetched later without having to go over the frames
     std::string anim_data = std::format("{} {} {} {} {}", img_x, img_y, frames, maxCols, maxRows);
-    std::string anim_data_path = std::format("resources/graphics/.tex_cache/{}.anim", anim.shortName);
+    std::string anim_data_path = std::format("resources/graphics/.tex_cache/{}@{}.anim", model_name, anim.shortName);
 
     SPDLOG_DEBUG("Writing animation data into {}", anim_data_path);
 
