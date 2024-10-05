@@ -220,11 +220,11 @@ PatapolisMenu::PatapolisMenu()
         addSparkle(34860 + 860*3, 244*3);
 
         //TODO: to be replaced with respective .zip models
-        a_wakapon.LoadConfig("resources/units/unit/hatapon.zip");
+        a_wakapon.LoadConfig("resources/units/unit/wakapon.zip");
         a_wakapon.setAnimation("idle");
         a_wakapon.setGlobalPosition(sf::Vector2f(a_wakapon.getGlobalPosition().x, 395*3));
 
-        a_sen.LoadConfig("resources/units/unit/hatapon.zip");
+        a_sen.LoadConfig("resources/units/unit/ranpurupon.zip");
         a_sen.setAnimation("idle");
         a_sen.setGlobalPosition(sf::Vector2f(a_sen.getGlobalPosition().x, 629*3));
 
