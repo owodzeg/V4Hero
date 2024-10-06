@@ -262,6 +262,7 @@ void PNGAnimation::Load(const std::string& path)
             std::string name = entry.getName();
 
             SPDLOG_DEBUG("ZipEntry: {}", name);
+
             if(name.ends_with('\\/'))
             {
                 SPDLOG_DEBUG("Animation detected: {}", name);
@@ -363,6 +364,43 @@ void PNGAnimation::Load(const std::string& path)
             ResourceManager::getInstance().loadSprite(spr, false);
         }
     }
+
+    //Step 5 - Fetch animation.json and read parameters
+    json animation;
+
+    if(zip)
+    {
+        ZipArchive zf(f.string());
+        zf.open(ZipArchive::ReadOnly);
+        ZipEntry entry = zf.getEntry("animation.json");
+        if(!entry.isNull())
+        {
+            json animation = json::parse(entry.readAsText());
+
+            SPDLOG_INFO("Reading animation.json.");
+            SPDLOG_INFO("Framerate: {}", animation["main"]["framerate"]);
+        }
+    }
+    else
+    {
+        ifstream anim(model_name+"/animation.json");
+        if(anim.good())
+        {
+            animation << anim;
+        }
+        else
+        {
+            SPDLOG_ERROR("No animation.json file found. Will use defaults which may be incorrect.");
+        }
+    }
+
+    // animation.json is either loaded or not loaded here, so before we continue we can load the defaults
+    // Step 6: Defaults + JSON config
+    for(auto& a : animations)
+    {
+        a.origin_x = a.img_x / 2;
+        a.origin_y = a.img_y / 2;
+    }
 }
 
 int PNGAnimation::getIDfromShortName(const std::string& shortName)
@@ -436,6 +474,7 @@ void PNGAnimation::Draw()
     //rect.setFillColor(sf::Color(255,0,0,100));
     //rect.setPosition(x_start, y_start);
 
+    texture.setOrigin(curAnim.origin_x, curAnim.origin_y);
     texture.setPosition(position.x, position.y);
     texture.setScale(scale.x, scale.y);
     texture.setRotation(rotation);

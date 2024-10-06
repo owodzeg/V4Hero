@@ -29,6 +29,8 @@ class PNGAnimation
             unsigned int frames = 0;
             unsigned int maxCols = 0;
             unsigned int maxRows = 0;
+            unsigned int origin_x = 0;
+            unsigned int origin_y = 0;
             bool cached = false;
             bool zip = false;
             std::vector<std::string> frame_paths;
