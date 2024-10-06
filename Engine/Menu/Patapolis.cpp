@@ -84,7 +84,7 @@ PatapolisMenu::PatapolisMenu()
             SPDLOG_TRACE("patapolis background vx_pos: {} {}", vx_pos[i].x, vx_pos[i].y);
         }
 
-        floor_height = 54;
+        floor_height = 54*3;
         r_ground.setSize(sf::Vector2f(34500 * resRatioX, floor_height * resRatioY));
         r_ground.setFillColor(sf::Color::Black);
 
@@ -342,7 +342,7 @@ PatapolisMenu::PatapolisMenu()
         ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/paraget_sparkle_2.png");
         ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/paraget_sparkle_3.png");
 
-        ctrlTips.create(54, font, 20, sf::String("L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
+        ctrlTips.create(54*3, font, 20, sf::String("L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
 
         //TO-DO: these things are not yet supported by new system. add compatibility
         /*
@@ -683,6 +683,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
 
             MessageCloud tmp;
             tmp.Create(20, sf::Vector2f(a_sen.getGlobalPosition().x - 15, a_sen.getGlobalPosition().y - 75), sf::Color(170, 182, 250, 255), false, config->GetInt("textureQuality"));
+            tmp.x_start_offset = 15;
             tmp.msgcloud_ID = 0;
 
             vector<int> missions = saveReader->missions_unlocked;
@@ -765,6 +766,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
 
             MessageCloud tmp;
             tmp.Create(20, sf::Vector2f(a_wakapon.getGlobalPosition().x - 15, a_wakapon.getGlobalPosition().y - 75), sf::Color(255, 255, 255, 255), false, config->GetInt("textureQuality"));
+            tmp.x_start_offset = 20;
 
             vector<int> missions = saveReader->missions_unlocked;
 

@@ -130,8 +130,8 @@ class PatapolisMenu : public Menu
         };
 
         std::vector<RayStart> coords;
-        float rayXbase = 12215;
-        float rayX = 12215;
+        float rayXbase = 12215*3;
+        float rayX = 12215*3;
 
         AnimatedObject a_wakapon;
         AnimatedObject a_sen;
