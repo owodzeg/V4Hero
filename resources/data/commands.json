@@ -7,6 +7,12 @@
         },
 
         {
+            "name": "marchfast",
+            "song": "patapata",
+            "beat": [ "PATA", "PATA", "PATA", "PATA", "PATA", "PATA", "PON", "PON" ]
+        },
+
+        {
             "name": "attack",
             "song": "ponpon",
             "beat": [ "PON", "", "PON", "", "PATA", "", "PON", "" ]
