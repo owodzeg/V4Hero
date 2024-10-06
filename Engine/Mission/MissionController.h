@@ -6,7 +6,8 @@
 
 #include "Background.h"
 #include "Camera.h"
-#include "Units/AnimatedObject.h"
+#include "Units/Unit/Hatapon.h"
+#include "Units/Unit/Yaripon.h"
 
 class MissionController
 {
@@ -16,7 +17,8 @@ public:
     Background bg;
     Camera cam;
 
-    AnimatedObject hatapon;
+    std::vector<std::unique_ptr<Hatapon>> hatapons;
+    std::vector<std::unique_ptr<Yaripon>> yaripons;
 
     uint64_t lastRhythmCheck;
     sf::Clock advanceClock;

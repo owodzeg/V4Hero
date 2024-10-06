@@ -9,8 +9,14 @@ using namespace std::chrono;
 
 MissionController::MissionController()
 {
-    hatapon.LoadConfig("resources/units/unit/hatapon.zip");
-    hatapon.setAnimation("idle");
+    hatapons.push_back(std::make_unique<Hatapon>());
+
+    int pons = CoreManager::getInstance().getConfig()->GetInt("yaripons");
+
+    for(int i=1; i<=pons; i++)
+    {
+        yaripons.push_back(std::make_unique<Yaripon>(i, 15));
+    }
 
     bg.Load("shidavalley");
 
@@ -57,21 +63,42 @@ void MissionController::Update()
         if(action == Rhythm::RhythmAction::COMMAND)
         {
             SPDLOG_DEBUG("Received a command: {}. React appropriately", message.message);
-            if(message.message == "65109") // PATA PATA PATA PON
+            if(message.message == "65109" || message.message == "6") // PATA PATA PATA PON
             {
-                hatapon.setAnimation("wave");
+                hatapons.back().get()->Advance();
+
+                for(auto& yaripon : yaripons)
+                {
+                    yaripon->Advance();
+                }
 
                 advance = true;
-                pataMaxSpeed = 400;
                 advanceClock.restart();
             }
-            else if(message.message == "6") // PATA PATA PATA PON
-            {
-                hatapon.setAnimation("wave");
+        }
 
-                advance = true;
-                pataMaxSpeed = 4000;
-                advanceClock.restart();
+        if(action == Rhythm::RhythmAction::COMBO_BREAK)
+        {
+            hatapons.back().get()->StopAll();
+
+            for(auto& yaripon : yaripons)
+            {
+                yaripon->StopAll();
+            }
+
+            advance = false;
+        }
+
+        if(action == Rhythm::RhythmAction::DRUM_ANY)
+        {
+            std::vector<std::string> params = Func::Split(message.message, ' ');
+            auto drum = params[0];
+
+            SPDLOG_DEBUG("Current drum: {}", drum);
+
+            for(auto& yaripon : yaripons)
+            {
+                yaripon->Drum(drum);
             }
         }
     }
@@ -82,9 +109,15 @@ void MissionController::Update()
         if(pataSpeed > pataMaxSpeed)
             pataSpeed = pataMaxSpeed;
 
-        if(advanceClock.getElapsedTime().asMilliseconds() > 2000)
+        if(advanceClock.getElapsedTime().asMilliseconds() > CoreManager::getInstance().getRhythm()->measure_ms - CoreManager::getInstance().getRhythm()->halfbeat_ms)
         {
-            hatapon.setAnimation("idle");
+            hatapons.back().get()->StopAll();
+
+            for(auto& yaripon : yaripons)
+            {
+                yaripon->StopAll();
+            }
+
             advance = false;
         }
     }
@@ -106,8 +139,17 @@ void MissionController::Update()
     bg.pataSpeed = pataMaxSpeed / 300;
     bg.Draw(cam);
 
-    hatapon.setGlobalPosition(sf::Vector2f(followPoint*3 - 400, 1490));
-    hatapon.Draw();
+    // Update positions
+    hatapons.back().get()->global_x = followPoint*3 - 400;
+    hatapons.back().get()->global_y = 1490;
+    hatapons.back().get()->Draw();
+
+    for(auto& pon : yaripons)
+    {
+        pon->global_x = followPoint*3 - 240;
+        pon->global_y = 1730;
+        pon->Draw();
+    }
 
     if(inputCtrl->isKeyPressed(Input::Keys::UP))
         rhythmGUI->toggleDebugUI();

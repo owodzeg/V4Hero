@@ -129,7 +129,9 @@ set(ENGINE_FILES
         Engine/Graphics/PNGAnimation.cpp
         Engine/Menu/TestChamber.cpp
         Engine/Menu/ErrorChamber.cpp
-        Engine/Mechanics/Globals.cpp)
+        Engine/Mechanics/Globals.cpp
+        Engine/Mission/Units/Unit/Hatapon.cpp
+        Engine/Mission/Units/Unit/Yaripon.cpp)
 
 set(DISCORD_FILES
         DiscordSDK/achievement_manager.cpp
