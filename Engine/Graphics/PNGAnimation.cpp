@@ -431,6 +431,8 @@ void PNGAnimation::Load(const std::string& path)
             SPDLOG_DEBUG("setting custom origin for {}: {} {}", key, o_x, o_y);
             animations[id].origin_x = o_x;
             animations[id].origin_y = o_y;
+
+            animations[id].customOrigin = true;
         }
     }
 }
@@ -515,7 +517,35 @@ void PNGAnimation::Draw()
     //rect.setFillColor(sf::Color(255,0,0,100));
     //rect.setPosition(x_start, y_start);
 
-    texture.setOrigin(curAnim.origin_x, curAnim.origin_y);
+    int qualitySetting = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
+
+    if (qualitySetting != q && qualitySetting != -1)
+    {
+        SPDLOG_DEBUG("Quality has changed.");
+
+        switch (qualitySetting)
+        {
+            case 0: {
+                qscale = 6;
+                break;
+            }
+            case 1: {
+                qscale = 3;
+                break;
+            }
+            case 2: {
+                qscale = 2;
+                break;
+            }
+        }
+
+        q = qualitySetting;
+    }
+
+    if(curAnim.customOrigin)
+        texture.setOrigin(curAnim.origin_x / qscale, curAnim.origin_y / qscale);
+    else
+        texture.setOrigin(curAnim.origin_x, curAnim.origin_y);
     texture.setPosition(position.x, position.y);
     texture.setScale(scale.x, scale.y);
     texture.setRotation(rotation);

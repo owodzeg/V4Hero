@@ -33,6 +33,7 @@ class PNGAnimation
             unsigned int origin_y = 0;
             bool cached = false;
             bool zip = false;
+            bool customOrigin = false;
             std::vector<std::string> frame_paths;
             std::vector<std::string> spritesheet_paths;
         };
@@ -57,6 +58,9 @@ class PNGAnimation
 
         std::vector<std::pair<int,int>> animationStalls;
         std::vector<std::pair<int,int>> animationSwitchTo;
+
+        int q = -1;
+        int qscale = 1;
 
         PNGAnimation();
         virtual sf::Image getAnimationImage(const std::string& anim_path, const std::string& image_path, bool zipped = false);
