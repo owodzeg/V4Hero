@@ -130,6 +130,9 @@ public:
     uint64_t lastMessageCheck = 0;
 
     bool started = false;
+    bool played = false;
+
+    sf::Clock startWait;
 
     int song_channel = 0;
     float satisfaction = 0;

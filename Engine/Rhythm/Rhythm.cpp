@@ -153,6 +153,8 @@ void Rhythm::PlaySong(SongController::SongType songType)
 
 void Rhythm::Start()
 {
+    SPDLOG_INFO("START RHYTHM NOW");
+
     ///Stop any current action
     current_song = "";
 
@@ -162,9 +164,15 @@ void Rhythm::Start()
 
     //Start the rhythm
     started = true;
-
-    //Play the theme start song
-    PlaySong(SongController::SongType::START);
+    startWait.restart();
+    firstCommandDelayClock.restart(); //halfbeat delay for when we use first command without last halfbeat
+    commandWaitClock.restart(); //clock for command execution (if no input provided within given frame, break combo)
+    afterMeasureClock.restart(); //clock for patapon singing (lock input)
+    afterPerfectClock.restart(); //count one beat after a perfect noise was hit (prevents from additional halfbeats after a proper command was done)
+    afterPressClock.restart(); //clock for preventing double inputs within the same halfbeat timeframe
+    rhythmClock.restart();    ///Main clock for Rhythm purposes
+    newRhythmClock.restart();    ///Main clock for Rhythm purposes
+    lazyClock.restart();    ///Main clock for Rhythm purposes
 }
 
 void Rhythm::BreakCombo(int reason)
@@ -430,8 +438,19 @@ void Rhythm::checkRhythmController()
 
 void Rhythm::doRhythm()
 {
-    if(!started)
+    if(!started || startWait.getElapsedTime().asMilliseconds() < 100)
+    {
+        SPDLOG_INFO("WAIT");
+        firstCommandDelayClock.restart(); //halfbeat delay for when we use first command without last halfbeat
+        commandWaitClock.restart(); //clock for command execution (if no input provided within given frame, break combo)
+        afterMeasureClock.restart(); //clock for patapon singing (lock input)
+        afterPerfectClock.restart(); //count one beat after a perfect noise was hit (prevents from additional halfbeats after a proper command was done)
+        afterPressClock.restart(); //clock for preventing double inputs within the same halfbeat timeframe
+        rhythmClock.restart();    ///Main clock for Rhythm purposes
+        newRhythmClock.restart();    ///Main clock for Rhythm purposes
+        lazyClock.restart();    ///Main clock for Rhythm purposes
         return;
+    }
 
     sf::Int64 rhythmClockValue = newRhythmClock.getElapsedTime().asMicroseconds();
 
@@ -538,12 +557,24 @@ void Rhythm::doRhythm()
                 if(drumTicks == 0 && combo == 0 && drumTicksNoInput >= 1)
                 {
                     if(measureCycle == 0)
-                        PlaySong(SongController::SongType::IDLE);
+                    {
+                        if(played)
+                        {
+                            PlaySong(SongController::SongType::IDLE);
+                        }
+                    }
 
                     measureCycle += 1;
 
                     if(measureCycle == 2)
                     measureCycle = 0;
+                }
+
+                if(!played)
+                {
+                    //Play the theme start song
+                    PlaySong(SongController::SongType::START);
+                    played = true;
                 }
             }
         }
