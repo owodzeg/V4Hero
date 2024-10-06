@@ -122,7 +122,7 @@ void PText::processRichText()
     int i=0;
     int seek = 0;
 
-    SPDLOG_DEBUG("Processing text {}", std::string(txt));
+    SPDLOG_TRACE("Processing text {}", std::string(txt));
 
     int br_open = -1;
     int br_close = -1;
@@ -148,7 +148,7 @@ void PText::processRichText()
         {
             if(x == '{')
             {
-                SPDLOG_DEBUG("Opening bracket found at {}", i);
+                SPDLOG_TRACE("Opening bracket found at {}", i);
                 br_open = i;
                 seek = 1;
 
@@ -165,14 +165,14 @@ void PText::processRichText()
         {
             if(x == '}')
             {
-                SPDLOG_DEBUG("Closing bracket found at {}", i);
+                SPDLOG_TRACE("Closing bracket found at {}", i);
                 br_close = i;
                 seek = 0;
 
                 int br_size = br_close - br_open + 1;
                 sf::String keyword = txt.substring(br_open, br_size);
 
-                SPDLOG_DEBUG("Rich text keyword found! Start: {}, End: {}, Keyword: {}", br_open, br_close, std::string(keyword));
+                SPDLOG_TRACE("Rich text keyword found! Start: {}, End: {}, Keyword: {}", br_open, br_close, std::string(keyword));
 
                 rt_string.push_back(keyword);
                 buffer = sf::String();
@@ -197,26 +197,26 @@ void PText::processRichText()
             rt_string.push_back(buffer);
     }
 
-    SPDLOG_DEBUG("Result text:");
+    SPDLOG_TRACE("Result text:");
 
     int currentStyle = 0;
     int processedChars = 0;
 
     for(auto x : rt_string)
     {
-        SPDLOG_DEBUG("RichText buffer: {}", std::string(x));
+        SPDLOG_TRACE("RichText buffer: {}", std::string(x));
 
         if(x.find("{") != sf::String::InvalidPos)
         {
             //keyword
             sf::String keyword = x.substring(1, x.getSize()-2);
-            SPDLOG_DEBUG("Parsing keyword {}", std::string(keyword));
+            SPDLOG_TRACE("Parsing keyword {}", std::string(keyword));
 
             std::vector<std::string> args = split(std::string(keyword), ' ');
             
             if(args.size() > 0)
             {
-                SPDLOG_DEBUG("Found keyword {}, {} arguments", args[0], args.size()-1);
+                SPDLOG_TRACE("Found keyword {}, {} arguments", args[0], args.size()-1);
                 
                 if(args[0] == "n")
                 {
@@ -302,7 +302,7 @@ void PText::processRichText()
                         setting.speed = atoi(args[1].c_str());
                         textSettings.push_back(setting);
 
-                        SPDLOG_DEBUG("Added text setting 'speed', pos: {}, value {}", setting.pos, setting.speed);
+                        SPDLOG_TRACE("Added text setting 'speed', pos: {}, value {}", setting.pos, setting.speed);
                     }
                     else
                     {
@@ -317,7 +317,7 @@ void PText::processRichText()
                         fadein_length = atoi(args[1].c_str());
                         fadein = true;
 
-                        SPDLOG_DEBUG("Added text setting 'fadein', length {}ms", fadein_length);
+                        SPDLOG_TRACE("Added text setting 'fadein', length {}ms", fadein_length);
                     }
                     else
                     {
@@ -334,7 +334,7 @@ void PText::processRichText()
                         setting.timeout = atoi(args[1].c_str());
                         textSettings.push_back(setting);
 
-                        SPDLOG_DEBUG("Added text setting 'wait', pos: {}, value {}", setting.pos, setting.timeout);
+                        SPDLOG_TRACE("Added text setting 'wait', pos: {}, value {}", setting.pos, setting.timeout);
                     }
                     else
                     {
@@ -393,7 +393,7 @@ void PText::processRichText()
             //regular text
             t << x;
             processedChars += x.getSize();
-            SPDLOG_DEBUG("Added text: {}", std::string(x));
+            SPDLOG_TRACE("Added text: {}", std::string(x));
         }
     }
 
@@ -691,7 +691,7 @@ void PText::draw()
         {
             if(char_shown == textSettings[i].pos)
             {
-                SPDLOG_DEBUG("Processing setting pos {} speed {} timeout {}", textSettings[i].pos, textSettings[i].speed, textSettings[i].timeout);
+                SPDLOG_TRACE("Processing setting pos {} speed {} timeout {}", textSettings[i].pos, textSettings[i].speed, textSettings[i].timeout);
 
                 if(textSettings[i].speed > 0)
                 {
@@ -717,22 +717,22 @@ void PText::draw()
             int all_lines = t.getLines().size();
 
             if(current_line != all_lines)
-                SPDLOG_DEBUG("current_line: {}, all_lines: {}", current_line, all_lines);
+                SPDLOG_TRACE("current_line: {}, all_lines: {}", current_line, all_lines);
 
             if(current_line < all_lines)
             {
                 int len = t.getLines()[current_line].getLength();
-                SPDLOG_DEBUG("line length: {}, char_buffer: {}", len, char_buffer);
+                SPDLOG_TRACE("line length: {}, char_buffer: {}", len, char_buffer);
 
                 if(char_buffer >= len)
                 {
-                    SPDLOG_DEBUG("Advance to the next line");
+                    SPDLOG_TRACE("Advance to the next line");
                     char_buffer -= len;
                     current_line += 1;
                 }
                 else
                 {
-                    SPDLOG_DEBUG("char shown {} char buffer {} len {}", char_shown, char_buffer, len);
+                    SPDLOG_TRACE("char shown {} char buffer {} len {}", char_shown, char_buffer, len);
 
                     sf::Color c = t.getCharacterColor(current_line, char_buffer);
                     c.a = 255;
@@ -745,7 +745,7 @@ void PText::draw()
 
             if(current_line == all_lines)
             {
-                SPDLOG_DEBUG("Text completed");
+                SPDLOG_TRACE("Text completed");
                 speech = false;
                 speech_done = true;
             }
