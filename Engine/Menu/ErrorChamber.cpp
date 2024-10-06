@@ -32,12 +32,18 @@ void ErrorChamber::Initialize()
 
 void ErrorChamber::Update()
 {
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    auto view = window->getView();
+    window->setView(window->getDefaultView());
+
     for (int i = 0; i < dialogboxes.size(); i++)
     {
         dialogboxes[i].x = 1920;
         dialogboxes[i].y = 1080;
         dialogboxes[i].Draw();
     }
+
+    window->setView(view);
 }
 
 ErrorChamber::~ErrorChamber()
