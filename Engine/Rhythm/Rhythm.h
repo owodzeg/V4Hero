@@ -111,6 +111,7 @@ public:
     std::vector<RhythmMessage> messages;
 
     std::vector<int> command;
+    std::string commandString;
 
     int metronomeDelay = 2;
     int drumTicks = -1;

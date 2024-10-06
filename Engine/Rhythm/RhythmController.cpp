@@ -199,7 +199,7 @@ bool RhythmController::checkForInput()
                         s_perfect.setVolume(drumVolume);
                         s_perfect.play();
 
-                        rhythm->addRhythmMessage(Rhythm::RhythmAction::PERFECT_COMMAND, "");
+                        rhythm->addRhythmMessage(Rhythm::RhythmAction::PERFECT_COMMAND, to_string(command));
                     }
 
                     // we clear the command input here
@@ -259,7 +259,7 @@ bool RhythmController::checkForInput()
                             s_perfect.setVolume(drumVolume);
                             s_perfect.play();
 
-                            rhythm->addRhythmMessage(Rhythm::RhythmAction::PERFECT_COMMAND, "");
+                            rhythm->addRhythmMessage(Rhythm::RhythmAction::PERFECT_COMMAND, to_string(command));
                         }
 
                         // we clear the command input here

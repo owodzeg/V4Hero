@@ -489,7 +489,9 @@ void Rhythm::doRhythm()
                         if(firstCommandDelayClock.getElapsedTime().asMilliseconds() > halfbeat_ms)
                         {
                             SPDLOG_DEBUG("[CASE 1] Execute a command here!");
+                            addRhythmMessage(RhythmAction::COMMAND, commandString);
                             command.clear();
+                            commandString = "";
 
                             combo += 1;
                             drumTicks = 0; //reset drum ticks to keep the beat for next commands
@@ -511,7 +513,9 @@ void Rhythm::doRhythm()
                     {
                         // commands that should start instantly (ones that would end with a halfnote)
                         SPDLOG_DEBUG("[CASE 2] Execute a command here!");
+                        addRhythmMessage(RhythmAction::COMMAND, commandString);
                         command.clear();
+                        commandString = "";
 
                         combo += 1;
                         drumTicks = 0; //reset drum ticks to keep the beat for next commands
@@ -532,7 +536,9 @@ void Rhythm::doRhythm()
                     if(drumTicks == 0)
                     {
                         SPDLOG_DEBUG("[CASE 3] Execute a command here!");
+                        addRhythmMessage(RhythmAction::COMMAND, commandString);
                         command.clear();
+                        commandString = "";
 
                         combo += 1;
                         drumTicksNoInput = -3;
@@ -611,6 +617,7 @@ void Rhythm::doRhythm()
         if(message.action == RhythmAction::FOUND_COMMAND || message.action == RhythmAction::PERFECT_COMMAND) //we've found a command, we want to lock the immediately-next input
         {
             afterPerfectClock.restart();
+            commandString = message.message;
         }
     }
 

@@ -18,6 +18,16 @@ public:
 
     AnimatedObject hatapon;
 
+    uint64_t lastRhythmCheck;
+    sf::Clock advanceClock;
+    bool advance = false;
+
+    float followPoint = 340;
+    float pataSpeed = 0;
+    float pataMaxSpeed = 400;
+    float accelerationFactor = 1.0;
+    float decelerationFactor = 2.5;
+
     MissionController();
 
     void Update();
