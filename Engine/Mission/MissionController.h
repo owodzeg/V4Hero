@@ -6,6 +6,7 @@
 
 #include "Background.h"
 #include "Camera.h"
+#include "Units/AnimatedObject.h"
 
 class MissionController
 {
@@ -14,6 +15,8 @@ public:
     bool loadingError = false;
     Background bg;
     Camera cam;
+
+    AnimatedObject hatapon;
 
     MissionController();
 

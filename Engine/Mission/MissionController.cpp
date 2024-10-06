@@ -8,11 +8,14 @@ using json = nlohmann::json;
 
 MissionController::MissionController()
 {
+    hatapon.LoadConfig("resources/units/unit/hatapon.zip");
+
+    bg.Load("shidavalley");
+
     CoreManager::getInstance().reinitSongController();
     CoreManager::getInstance().getSongController()->LoadTheme("ahwoon");
     CoreManager::getInstance().getRhythm()->LoadTheme("ahwoon");
 
-    bg.Load("shidavalley");
     
     initialized = true;
 }
@@ -29,6 +32,9 @@ void MissionController::Update()
 
     cam.Work(view);
     bg.Draw(cam);
+
+    hatapon.setGlobalPosition(sf::Vector2f(800, 1490));
+    hatapon.Draw();
 
     if(inputCtrl->isKeyPressed(Input::Keys::UP))
         rhythmGUI->toggleDebugUI();
