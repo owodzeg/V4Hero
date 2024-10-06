@@ -217,6 +217,7 @@ void Rhythm::BreakCombo(int reason)
             break;
     }
 
+    addRhythmMessage(RhythmAction::COMBO_BREAK, "");
     SPDLOG_DEBUG("Combo break! Reason code: #{}", reason);
 }
 
@@ -438,7 +439,7 @@ void Rhythm::checkRhythmController()
 
 void Rhythm::doRhythm()
 {
-    if(!started || startWait.getElapsedTime().asMilliseconds() < 100)
+    if(!started || startWait.getElapsedTime().asMilliseconds() <= 0)
     {
         SPDLOG_INFO("WAIT");
         firstCommandDelayClock.restart(); //halfbeat delay for when we use first command without last halfbeat

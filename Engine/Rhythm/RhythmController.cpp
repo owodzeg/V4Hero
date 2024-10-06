@@ -84,6 +84,8 @@ bool RhythmController::checkForInput()
                 }
             }
 
+            rhythm->addRhythmMessage(Rhythm::RhythmAction::DRUM_ANY, rhythmMessage);
+
             // calculate volume
             float drumVolume = float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f);
 
