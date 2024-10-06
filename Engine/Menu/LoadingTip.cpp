@@ -172,6 +172,7 @@ void LoadingTip::Draw()
             if (inputCtrl->isAnyKeyPressed())
             {
                 tipFinished = true;
+                inputCtrl->Flush();
             }
         } else
         {
