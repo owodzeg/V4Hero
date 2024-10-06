@@ -24,7 +24,7 @@ public:
 
     uint64_t lastRhythmCheck;
 
-    bool debugToggle = false;
+    bool debugToggle = true;
 
     /// Drums in-game ///
     std::vector<Drum> drums;
