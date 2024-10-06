@@ -199,6 +199,26 @@ void MessageCloud::Draw()
     if (!firstrender)
         firstrender = true;
 
+    if (speedable)
+    {
+        // here we should do something like
+        // ptext timeout = 20ms=50letters/s temporarily
+        // then when key is not held, return to normal speed
+
+        if (inputCtrl->isKeyHeld(Input::Keys::CIRCLE))
+            SpeedUp();
+    }
+
+    if (ready)
+    {
+        // advance current text id
+
+        if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
+        {
+            NextDialog();
+        }
+    }
+
     if (active)
     {
         x = startpos.x - xsize / 40;
@@ -253,7 +273,7 @@ void MessageCloud::Draw()
         float rX = window->getSize().x / float(3840);
         float rY = window->getSize().y / float(2160);
 
-        triangle.setPoint(0, sf::Vector2f(startpos.x * rX - (xsize / 25), startpos.y * rY));
+        triangle.setPoint(0, sf::Vector2f(startpos.x * rX - (xsize / 75) + x_start_offset, startpos.y * rY));
         triangle.setPoint(1, sf::Vector2f((x - (xsize / 25)) * rX, y * rY));
         triangle.setPoint(2, sf::Vector2f((x + (xsize / 25)) * rX, y * rY));
 
@@ -273,6 +293,34 @@ void MessageCloud::Draw()
             if (dialogue_ptext.speech_done)
             {
                 ready = true;
+
+                arrow_y -= 36 / fps;
+
+                if (arrow_y <= -60)
+                    arrow_y = -60;
+
+                if (arrow_timeout.getElapsedTime().asSeconds() >= 0.75)
+                {
+                    arrow_y = 0;
+                    arrow_timeout.restart();
+                }
+
+                cross.setOrigin(cross.getLocalBounds().width / 2, cross.getLocalBounds().height / 2);
+                cross_highlight.setOrigin(cross_highlight.getLocalBounds().width / 2, cross_highlight.getLocalBounds().height / 2);
+                cross_arrow.setOrigin(cross_highlight.getLocalBounds().width / 2, cross_highlight.getLocalBounds().height);
+
+                float cross_x = x + xsize / 2 - 24;
+                float cross_y = y + ysize / 2 - 60;
+
+                cross.setPosition(cross_x, cross_y);
+                cross_highlight.setPosition(cross_x, cross_y);
+                cross_arrow.setPosition(cross_x - 6, cross_y + 60 + arrow_y);
+
+                cross_highlight.setColor(sf::Color(255, 255, 255, 240 + (arrow_y * 8)));
+
+                cross.draw(window);
+                cross_highlight.draw(window);
+                cross_arrow.draw(window);
             }
         }
 

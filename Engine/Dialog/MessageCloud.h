@@ -55,6 +55,7 @@ public:
     bool interrupt = false; //when moved away from the dialogbox source, forcefully quit
 
     sf::Vector2f startpos;
+    float x_start_offset = 0;
 
     sf::Color cur_color;
 
