@@ -135,8 +135,6 @@ void Background::Draw(Camera& camera)
 
     for (auto bg_object : bg_objects)
     {
-        float pataSpeed = 1;
-
         float camPos = camera.camera_x + camera.zoom_x + camera.manual_x + camera.debug_x;
         float xPos = (camPos/resRatioX - 3840) - (camPos * bg_object.x_speed * pataSpeed) - 99999;
 

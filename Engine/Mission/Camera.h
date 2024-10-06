@@ -9,6 +9,7 @@ class Camera
 public:
     float zoom = 1, dest_zoom = 1;
     float camera_x = 0, camera_y = 360;
+    float camera_x_dest = 0;
     float zoom_x = 0, zoom_y = 0;
     float manual_x = 0, manual_y = 0, manual_x_dest = 0, manual_y_dest = 0;
     float debug_x = 0, debug_x_dest = 0, debug_x_speed = 5;

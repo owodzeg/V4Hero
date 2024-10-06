@@ -28,6 +28,7 @@ public:
 
     float floor_height = 0;
     int quality = 0;
+    float pataSpeed = 0;
 
     sf::View bgView;
 

@@ -60,6 +60,7 @@ void Camera::Work(sf::View view, float dest_zoom_over)
 
     //camera_x += camera_xspeed / fps;
     camera_x = followobject_x + (1800 * resRatioX);
+    //camera_x += ((camera_x_dest - camera_x) * 5) / fps;
 
     /** Manual camera movement (L/R in Patapon) **/
     manual_x += ((manual_x_dest - manual_x) * 5) / fps;
