@@ -263,7 +263,7 @@ void PNGAnimation::Load(const std::string& path)
 
             SPDLOG_DEBUG("ZipEntry: {}", name);
 
-            if(name.ends_with('\\/'))
+            if(name.ends_with('\\/') && !name.ends_with(".json"))
             {
                 SPDLOG_DEBUG("Animation detected: {}", name);
                 animation_names.push_back(name);
@@ -375,7 +375,7 @@ void PNGAnimation::Load(const std::string& path)
         ZipEntry entry = zf.getEntry("animation.json");
         if(!entry.isNull())
         {
-            json animation = json::parse(entry.readAsText());
+            animation = json::parse(entry.readAsText());
 
             SPDLOG_INFO("Reading animation.json.");
             SPDLOG_INFO("Framerate: {}", animation["main"]["framerate"]);
@@ -401,6 +401,38 @@ void PNGAnimation::Load(const std::string& path)
         a.origin_x = a.img_x / 2;
         a.origin_y = a.img_y / 2;
     }
+
+    animationSpeed = 30;
+
+    for(auto s : animation["switchTo"])
+    {
+        std::string from = s[0].get<std::string>();
+        std::string to = s[1].get<std::string>();
+
+        SPDLOG_DEBUG("switchTo {} {}", from, to);
+        std::pair<int, int> st;
+        st.first = getIDfromShortName(from);
+        st.second = getIDfromShortName(to);
+        animationSwitchTo.push_back(st);
+    }
+
+    for(auto s : animation["center"].items())
+    {
+        std::string key = s.key();
+
+        if(animation["center"][key].size() == 2)
+        {
+            int o_x = animation["center"][key][0].get<int>();
+            int o_y = animation["center"][key][1].get<int>();
+
+            SPDLOG_DEBUG("set origin for {} {}", o_x, o_y);
+            int id = getIDfromShortName(key);
+
+            SPDLOG_DEBUG("setting custom origin for {}: {} {}", key, o_x, o_y);
+            animations[id].origin_x = o_x;
+            animations[id].origin_y = o_y;
+        }
+    }
 }
 
 int PNGAnimation::getIDfromShortName(const std::string& shortName)
@@ -411,7 +443,7 @@ int PNGAnimation::getIDfromShortName(const std::string& shortName)
     }
     else
     {
-        SPDLOG_ERROR("Invalid animation name found!");
+        SPDLOG_ERROR("Invalid animation name found! {}", shortName);
         throw std::exception(); // TODO: replace with a proper exception.
     }
 }
@@ -440,6 +472,15 @@ void PNGAnimation::Draw()
 
     if(currentFrame >= curAnim.frames)
     {
+        for(auto st : animationSwitchTo)
+        {
+            if(st.first == currentAnimation)
+            {
+                currentAnimation = st.second;
+                currentFrame = 0;
+            }
+        }
+
         if(isLooping)
         {
             currentFrame = 0;

@@ -49,6 +49,7 @@ public:
     // animation control
     void playAnimation();
     void stopAnimation();
+    void restartAnimation();
 
     void setAnimation(const std::string& shortAnimName);
     void setAnimationSpeed(float newFPS);

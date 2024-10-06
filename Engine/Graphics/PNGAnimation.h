@@ -56,6 +56,7 @@ class PNGAnimation
         unsigned int maxSize = 512;
 
         std::vector<std::pair<int,int>> animationStalls;
+        std::vector<std::pair<int,int>> animationSwitchTo;
 
         PNGAnimation();
         virtual sf::Image getAnimationImage(const std::string& anim_path, const std::string& image_path, bool zipped = false);

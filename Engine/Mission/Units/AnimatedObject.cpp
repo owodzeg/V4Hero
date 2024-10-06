@@ -87,6 +87,11 @@ void AnimatedObject::stopAnimation()
     animation.isPlaying = false;
 }
 
+void AnimatedObject::restartAnimation()
+{
+    animation.currentFrame = 0;
+}
+
 void AnimatedObject::setAnimation(const std::string& shortAnimName)
 {
     animation.setAnimation(shortAnimName);
