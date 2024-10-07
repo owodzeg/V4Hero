@@ -27,8 +27,10 @@ public:
     float followPoint = 340;
     float pataSpeed = 0;
     float pataMaxSpeed = 400;
-    float accelerationFactor = 1.0;
+    float accelerationFactor = 1.5;
     float decelerationFactor = 2.5;
+
+    AnimatedObject obstacle;
 
     MissionController();
 

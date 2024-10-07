@@ -15,8 +15,11 @@ MissionController::MissionController()
 
     for(int i=1; i<=pons; i++)
     {
-        yaripons.push_back(std::make_unique<Yaripon>(i, 15));
+        yaripons.push_back(std::make_unique<Yaripon>(i, pons));
     }
+
+    obstacle.LoadConfig("resources/units/entity/kirajin.zip");
+    obstacle.setAnimation("idle");
 
     bg.Load("shidavalley");
 
@@ -75,6 +78,15 @@ void MissionController::Update()
                 advance = true;
                 advanceClock.restart();
             }
+
+            if(message.message == "146359") // PON PON PATA PON
+            {
+                for(auto& yaripon : yaripons)
+                {
+                    yaripon->Attack(1);
+                    advanceClock.restart();
+                }
+            }
         }
 
         if(action == Rhythm::RhythmAction::COMBO_BREAK)
@@ -103,29 +115,34 @@ void MissionController::Update()
         }
     }
 
+    float actionClockLimit = CoreManager::getInstance().getRhythm()->measure_ms - CoreManager::getInstance().getRhythm()->halfbeat_ms;
+
     if(advance)
     {
         pataSpeed += pataMaxSpeed*accelerationFactor / fps;
         if(pataSpeed > pataMaxSpeed)
             pataSpeed = pataMaxSpeed;
-
-        if(advanceClock.getElapsedTime().asMilliseconds() > CoreManager::getInstance().getRhythm()->measure_ms - CoreManager::getInstance().getRhythm()->halfbeat_ms)
-        {
-            hatapons.back().get()->StopAll();
-
-            for(auto& yaripon : yaripons)
-            {
-                yaripon->StopAll();
-            }
-
-            advance = false;
-        }
     }
     else
     {
         pataSpeed -= pataMaxSpeed*decelerationFactor / fps;
         if(pataSpeed < 0)
             pataSpeed = 0;
+    }
+
+    if(advanceClock.getElapsedTime().asMilliseconds() > actionClockLimit)
+    {
+        hatapons.back().get()->StopAll();
+
+        for(auto& yaripon : yaripons)
+        {
+            if(yaripon->action == 2) // march
+                yaripon->StopAll();
+            if(yaripon->action == 1) // attack
+                yaripon->StopAttack();
+        }
+
+        advance = false;
     }
 
     followPoint += pataSpeed / fps;
@@ -144,12 +161,26 @@ void MissionController::Update()
     hatapons.back().get()->global_y = 1490;
     hatapons.back().get()->Draw();
 
+    // if farthest yaripon sees enemy, whole army shall be angry
+    float yari_distance = yaripons.back().get()->closestEnemyX - yaripons.back().get()->global_x - yaripons.back().get()->local_x - yaripons.back().get()->attack_x;
+    bool yari_inSight = false;
+
+    if(yari_distance < 4000)
+    {
+        yari_inSight = true;
+    }
+
     for(auto& pon : yaripons)
     {
         pon->global_x = followPoint*3 - 240;
         pon->global_y = 1730;
+        pon->closestEnemyX = 4000;
+        pon->enemyInSight = yari_inSight;
         pon->Draw();
     }
+
+    obstacle.setGlobalPosition(sf::Vector2f(4000, 1600));
+    obstacle.Draw();
 
     if(inputCtrl->isKeyPressed(Input::Keys::UP))
         rhythmGUI->toggleDebugUI();
