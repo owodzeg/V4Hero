@@ -43,6 +43,7 @@ public:
     float gravity = 1400;
 
     bool threw = false;
+    bool walkBack = false;
 
     bool toggleDebug = true;
 

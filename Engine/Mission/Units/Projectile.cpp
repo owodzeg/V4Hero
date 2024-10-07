@@ -51,13 +51,13 @@ void Projectile::Update()
 
     if (!enemy)
     {
-        hspeed -= float(300) / fps;
+        hspeed -= float(400) / fps;
 
         if (hspeed < 0)
             hspeed = 0;
     } else
     {
-        hspeed += float(300) / fps;
+        hspeed += float(400) / fps;
 
         if (hspeed > 0)
             hspeed = 0;
@@ -111,4 +111,9 @@ void Projectile::Draw()
     // Calculate the tip position using trigonometry
     tipX = origin.x + halfLength * std::cos(rotationInRadians);
     tipY = origin.y + halfLength * std::sin(rotationInRadians);
+
+    if(yPos > 3840)
+    {
+        finished = true;
+    }
 }

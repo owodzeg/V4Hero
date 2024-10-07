@@ -12,7 +12,7 @@ MissionController::MissionController()
     hatapons.push_back(std::make_unique<Hatapon>());
 
     int pons = CoreManager::getInstance().getConfig()->GetInt("yaripons");
-    kirajin_hp = pons*1;
+    kirajin_hp = pons*100;
 
     for(int i=1; i<=pons; i++)
     {
@@ -95,6 +95,25 @@ void MissionController::Update()
                     advanceClock.restart();
                 }
             }
+
+            if(message.message == "308859") // CHAKA CHAKA PATA PON
+            {
+                for(auto& yaripon : yaripons)
+                {
+                    yaripon->Attack(2);
+                    advanceClock.restart();
+                }
+            }
+        }
+
+        if(action == Rhythm::RhythmAction::FOUND_COMMAND)
+        {
+            pataCurMaxSpeed = pataMaxSpeed;
+        }
+
+        if(action == Rhythm::RhythmAction::PERFECT_COMMAND)
+        {
+            pataCurMaxSpeed = pataMaxSpeed * 1.2;
         }
 
         if(action == Rhythm::RhythmAction::COMBO_BREAK)
@@ -179,7 +198,7 @@ void MissionController::Update()
     }
 
     // if farthest yaripon sees enemy, whole army shall be angry
-    float yari_distance = yaripons.back().get()->closestEnemyX - yaripons.back().get()->global_x - yaripons.back().get()->local_x - yaripons.back().get()->attack_x;
+    float yari_distance = yaripons.back().get()->closestEnemyX - yaripons.back().get()->global_x - yaripons.back().get()->local_x - yaripons.back().get()->attack_x - yaripons.back().get()->gap_x;
     bool yari_inSight = false;
 
     if(yari_distance < 4000)

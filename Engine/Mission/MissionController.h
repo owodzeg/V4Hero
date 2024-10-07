@@ -30,6 +30,7 @@ public:
     float followPoint = 340;
     float pataSpeed = 0;
     float pataMaxSpeed = 200;
+    float pataCurMaxSpeed = pataMaxSpeed;
     float accelerationFactor = 1.5;
     float decelerationFactor = 2.5;
 
