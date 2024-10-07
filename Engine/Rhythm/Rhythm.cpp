@@ -102,7 +102,7 @@ void Rhythm::LoadTheme(string theme)
         halfbeat_ms = beat_ms / 2.f;
         measure_ms = beat_ms * 4.f;
         low_range = beat_timer / 6.25f;  ///Anything below that range will be treated as BAD hit
-        high_range = beat_timer / 3.125f; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.   
+        high_range = beat_timer / 2.875f; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
 
         // set bpm for rhythm gui
         CoreManager::getInstance().getRhythmGUI()->BPM = BPM;
