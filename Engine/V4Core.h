@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <random>
 #include <discord.h>
+#include <Graphics/PText.h>
 
 // Main game class that handles the engine
 class V4Core
@@ -11,8 +12,7 @@ class V4Core
 private:
     // Static GUI always on screen
 
-    sf::Text t_version;
-    sf::Text t_fps;
+    PText t_version, t_fps;
 
     // Variables for delta time calc
     float fps = 60;

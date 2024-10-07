@@ -144,19 +144,6 @@ void V4Core::init()
     std::getline(langConfig, buffer);
     strRepo->SetCurrentLanguage(buffer);*/
 
-    // TODO: new PText system
-    /*t_version.setFont(strRepo->font);
-    t_version.setCharacterSize(24);
-    t_version.setFillColor(sf::Color(255, 255, 255, 32));
-    t_version.setString("V4Hero Client " + hero_version);
-
-    t_fps.setFont(strRepo->font);
-    t_fps.setCharacterSize(24);
-    t_fps.setFillColor(sf::Color(255, 255, 255, 96));
-    t_fps.setOutlineColor(sf::Color(0, 0, 0, 96));
-    t_fps.setOutlineThickness(1);
-    t_fps.setString("FPS: ");*/
-
     // Load item registry
     SPDLOG_DEBUG("Loading item registry");
     SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
@@ -288,24 +275,35 @@ void V4Core::init()
         auto lastView = window->getView();
         window->setView(window->getDefaultView());
 
+        auto strRepo = CoreManager::getInstance().getStrRepo();
+        std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
+
         // Draw version number
-        //t_version.setPosition(4, 4);
-        //window->draw(t_version);
+        t_version.setFont(font);
+        t_version.setCharacterSize(24);
+        t_version.setColor(sf::Color(255, 255, 255, 32));
+        t_version.setString("{outline 2 0 0 0}V4Hero Client " + hero_version);
+        t_version.setOrigin(t_version.getLocalBounds().width, 0);
+        t_version.setPosition(3820, 0);
+        t_version.draw();
 
         // If FPS counter is enabled, draw it
         if (config->GetInt("showFPS"))
         {
-            t_fps.setString("FPS: " + to_string(int(ceil(rawFps))));
+            t_fps.setFont(font);
+            t_fps.setCharacterSize(24);
+            t_fps.setColor(sf::Color(255, 255, 255, 96));
+            t_fps.setString("{outline 2 0 0 0}FPS: " + to_string(int(ceil(rawFps))));
             t_fps.setOrigin(t_fps.getLocalBounds().width, 0);
-            t_fps.setPosition(window->getSize().x - 4, 4);
-            window->draw(t_fps);
+            t_fps.setPosition(3820, 74);
+            t_fps.draw();
         }
-
-        // Display everything in the window
-        window->display();
 
         // Return to last view
         window->setView(lastView);
+
+        // Display everything in the window
+        window->display();
 
         // Clear the key inputs
         inputCtrl->Flush();
