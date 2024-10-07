@@ -151,9 +151,11 @@ void MissionController::Update()
 
     auto view = CoreManager::getInstance().getWindow()->getView();
 
-    cam.followobject_x = followPoint;
+    float resRatioX = CoreManager::getInstance().getWindow()->getSize().x / float(3840);
+
+    cam.followobject_x = (followPoint*3 - 500) * resRatioX;
     cam.Work(view);
-    bg.pataSpeed = pataMaxSpeed / 300;
+    bg.pataSpeed = pataMaxSpeed / 900 * resRatioX;
     bg.Draw(cam);
 
     // Update positions
