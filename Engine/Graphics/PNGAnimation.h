@@ -58,6 +58,7 @@ class PNGAnimation
 
         std::vector<std::pair<int,int>> animationStalls;
         std::vector<std::pair<int,int>> animationSwitchTo;
+        std::vector<int> animationPause;
 
         int q = -1;
         int qscale = 1;

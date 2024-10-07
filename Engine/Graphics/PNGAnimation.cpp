@@ -435,6 +435,14 @@ void PNGAnimation::Load(const std::string& path)
             animations[id].customOrigin = true;
         }
     }
+
+    for(auto s : animation["noRepeat"].items())
+    {
+        std::string anim = s.value();
+
+        SPDLOG_DEBUG("noRepeat {}", anim);
+        animationPause.push_back(getIDfromShortName(anim));
+    }
 }
 
 int PNGAnimation::getIDfromShortName(const std::string& shortName)
@@ -471,6 +479,14 @@ void PNGAnimation::Draw()
 
     if(isPlaying)
         currentFrame += animationSpeed / CoreManager::getInstance().getCore()->getFPS();
+
+    isLooping = true;
+
+    for(int a:animationPause)
+    {
+        if(a == currentAnimation)
+            isLooping = false;
+    }
 
     if(currentFrame >= curAnim.frames)
     {
