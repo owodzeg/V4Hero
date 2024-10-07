@@ -47,12 +47,12 @@ void Camera::Work(sf::View view, float dest_zoom_over)
     {
         if (inputCtrl->isKeyHeld(Input::Keys::LTRIGGER))
         {
-            manual_x_dest = -500;
+            manual_x_dest = -move_cam_x;
         }
 
         if (inputCtrl->isKeyHeld(Input::Keys::RTRIGGER))
         {
-            manual_x_dest = 500;
+            manual_x_dest = move_cam_x;
         }
     }
 

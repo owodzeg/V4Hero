@@ -24,6 +24,8 @@ public:
     float zoom_point_x = 0;
     float zoom_point_y = 0;
 
+    float move_cam_x = 500;
+
     Camera();
     void zoomViewAt(sf::Vector2i pixel, float zoom);
     void Work(sf::View view, float = 1.0f);
