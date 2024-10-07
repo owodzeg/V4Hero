@@ -5,7 +5,14 @@
 #include <math.h>
 #include "../../CoreManager.h"
 
-using namespace std;
+Projectile::Projectile(std::string path, float x, float y, float thspeed, float tvspeed)
+{
+    sprite.load(path);
+    xPos = x;
+    yPos = y;
+    hspeed = thspeed;
+    vspeed = tvspeed;
+}
 
 float Projectile::GetXSpeed()
 {
@@ -27,16 +34,16 @@ void Projectile::SetNewSpeedVector(float xSpeed, float ySpeed)
     //angle = asin(ySpeed/speed);
     angle = atan2(ySpeed, xSpeed);
 }
-void Projectile::OnCollide(CollidableObject* otherObject)
-{
+//void Projectile::OnCollide(CollidableObject* otherObject)
+//{
     // this space intentionally left blank
-    SPDLOG_INFO("[COLLISION_SYSTEM]: Class derived from Projectile has not overridden OnCollide() method");
-}
+    // SPDLOG_INFO("[COLLISION_SYSTEM]: Class derived from Projectile has not overridden OnCollide() method");
+//}
 void Projectile::Update()
 {
     float fps = CoreManager::getInstance().getCore()->getFPS();
 
-    vspeed += float(981) / fps;
+    vspeed += float(2200) / fps;
 
     /// FOR REWORK: projectile should not be dependant on enemy whether it goes to left or to right.
     /// make a better unified system for projectile flight
@@ -44,27 +51,22 @@ void Projectile::Update()
 
     if (!enemy)
     {
-        hspeed -= float(166) / fps;
+        hspeed -= float(300) / fps;
 
         if (hspeed < 0)
             hspeed = 0;
     } else
     {
-        hspeed += float(166) / fps;
+        hspeed += float(300) / fps;
 
         if (hspeed > 0)
             hspeed = 0;
     }
 
+    SetNewSpeedVector(hspeed, vspeed);
+
     xPos += GetXSpeed() / fps;
     yPos += GetYSpeed() / fps;
-}
-
-Projectile::Projectile(PSprite& tsprite)
-{
-    nsprite = tsprite;
-    sprite = &nsprite;
-    sprite->setOrigin(sprite->getLocalBounds().width / 2, sprite->getLocalBounds().height / 2);
 }
 
 void Projectile::Draw()
@@ -93,7 +95,20 @@ void Projectile::Draw()
         window.draw(shape);
     }*/
 
-    sprite->setPosition(xPos, yPos);
-    sprite->setRotation(3.14159265358 / 2 + angle);
-    sprite->draw();
+    sprite.setPosition(xPos, yPos);
+    sprite.setRotation(3.14159265358 / 2 + angle);
+    sprite.draw();
+
+    sf::Vector2f origin = sprite.getPosition();
+
+    // Get the rotation angle in radians (SFML gives angle in degrees)
+    float rotationInDegrees = sprite.getRotation();
+    float rotationInRadians = rotationInDegrees * (M_PI / 180.0f);
+
+    // Half of the spear length
+    float halfLength = sprite.getLocalBounds().width / 2.0f;
+
+    // Calculate the tip position using trigonometry
+    tipX = origin.x + halfLength * std::cos(rotationInRadians);
+    tipY = origin.y + halfLength * std::sin(rotationInRadians);
 }

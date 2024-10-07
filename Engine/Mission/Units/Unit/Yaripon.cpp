@@ -13,7 +13,7 @@ Yaripon::Yaripon(int which, int maxpons)
     order = which;
     maxp = maxpons;
 
-    float max_army_spread = 650;
+    float max_army_spread = 660;
 
     double gap = 0;
 
@@ -26,6 +26,24 @@ Yaripon::Yaripon(int which, int maxpons)
         gap = static_cast<double>(max_army_spread - 1) / (maxp - 1);
         gap_x = (max_army_spread / -2) + gap*order;
     }
+
+    double center = max_army_spread / 2.0;  // Center of the space (325px in a 650px space)
+    float unit = 120;
+
+    if(maxp>6)
+    {
+        unit = max_army_spread / maxp;
+    }
+
+    // General formula for positioning units
+    double pos;
+    if (maxp % 2 == 1) {  // For odd number of units
+        pos = center + ((order-1) - (maxp - 1) / 2.0) * unit;
+    } else {  // For even number of units
+        pos = center + ((order-1) - (maxp / 2.0 - 0.5)) * unit;
+    }
+
+    gap_x = pos;
 }
 
 void Yaripon::Advance()
@@ -76,9 +94,16 @@ void Yaripon::PerformAttack()
                 main.setAnimation("attack_fever_throw");
                 main.restartAnimation();
                 canAttackIn = attackSpeed;
+                threw = false;
             }
 
             canAttackIn -= 1000 / fps;
+        }
+
+        if(main.getAnimation() == "attack_fever_throw" && main.getAnimationFrame() >= 8 && !threw)
+        {
+            CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y, 1200 + (globalRand%50)*1, -1200 - (globalRand%70)*1);
+            threw = true;
         }
 
         if(inAttackTimer.getElapsedTime().asMilliseconds() > attackEnd)
@@ -138,21 +163,22 @@ void Yaripon::Draw()
 
     if(!enemyInSight)
     {
-        pataSpeed -= pataMaxSpeed*decelerationFactor / fps;
-        if(pataSpeed < 0)
-            pataSpeed = 0;
+        if(attack_x != 0)
+        {
+            pataSpeed += pataMaxSpeed*accelerationFactor / fps;
 
-        if(attack_x-pataSpeed < 0)
-            attack_x = 0;
-        else if(attack_x+pataSpeed > 0)
-            attack_x = 0;
+            if(pataSpeed < 0)
+                pataSpeed = 0;
 
-        if(attack_x < 0)
-            attack_x -= pataSpeed / fps;
-        else if(attack_x > 0)
-            attack_x += pataSpeed / fps;
-        else
-            attack_x = 0;
+            if(attack_x > 0)
+            {
+                attack_x -= pataSpeed / fps;
+            }
+            if(attack_x < 0)
+            {
+                attack_x += pataSpeed / fps;
+            }
+        }
     }
     else
     {
@@ -160,14 +186,14 @@ void Yaripon::Draw()
 
         if(action == 1)
         {
-            if(distanceToTravel < 1200)
+            if(distanceToTravel < 1600 - globalRand%10*5)
             {
                 main.setAnimation("walk_focused");
                 pataSpeed -= pataMaxSpeed*decelerationFactor / fps;
                 if(pataSpeed < -pataMaxSpeed)
                     pataSpeed = -pataMaxSpeed;
             }
-            else if (distanceToTravel > 1800)
+            else if (distanceToTravel > 1800 + globalRand%10*5)
             {
                 main.setAnimation("walk_focused");
                 pataSpeed += pataMaxSpeed*accelerationFactor / fps;
@@ -203,6 +229,18 @@ void Yaripon::Draw()
                 }
             }
 
+            attack_x += pataSpeed / fps;
+        }
+    }
+
+    if(action == 2)
+    {
+        if(attack_x > 0)
+        {
+            attack_x -= pataSpeed / fps;
+        }
+        if(attack_x < 0)
+        {
             attack_x += pataSpeed / fps;
         }
     }

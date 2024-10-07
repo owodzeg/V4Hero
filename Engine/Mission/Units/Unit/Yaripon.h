@@ -13,7 +13,7 @@ public:
     int order = 0;
     int maxp = 0;
 
-    float attackSpeed = 500;
+    float attackSpeed = 1000;
     float closestEnemyX = 0;
     // timer when the attack can be done. (spear throwing delay when in air)
     // walk -> jump -> throw throw throw -> fall
@@ -41,6 +41,8 @@ public:
 
     float vspeed = 0;
     float gravity = 1400;
+
+    bool threw = false;
 
     bool toggleDebug = true;
 

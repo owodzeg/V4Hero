@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Units/Unit/Hatapon.h"
 #include "Units/Unit/Yaripon.h"
+#include "Units/Projectile.h"
 
 class MissionController
 {
@@ -19,6 +20,8 @@ public:
 
     std::vector<std::unique_ptr<Hatapon>> hatapons;
     std::vector<std::unique_ptr<Yaripon>> yaripons;
+    std::vector<std::unique_ptr<Projectile>> projectiles;
+    std::vector<std::unique_ptr<AnimatedObject>> obstacles;
 
     uint64_t lastRhythmCheck;
     sf::Clock advanceClock;
@@ -26,13 +29,17 @@ public:
 
     float followPoint = 340;
     float pataSpeed = 0;
-    float pataMaxSpeed = 400;
+    float pataMaxSpeed = 200;
     float accelerationFactor = 1.5;
     float decelerationFactor = 2.5;
 
     AnimatedObject obstacle;
 
+    bool debug = true;
+    int kirajin_hp = 200;
+
     MissionController();
+    void SendProjectile(float x, float y, float hspeed, float vspeed);
 
     void Update();
 

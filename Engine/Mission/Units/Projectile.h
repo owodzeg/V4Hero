@@ -1,8 +1,9 @@
 #ifndef PROJECTILE_H
 #define PROJECTILE_H
-#include "../../Graphics/PSprite.h"
-#include "CollidableObject.h"
+
+#include <Graphics/SpriteWrapper.h>
 #include <SFML/Graphics.hpp>
+
 class Projectile
 {
 public:
@@ -22,14 +23,17 @@ public:
     float hspeed;
     float vspeed;
 
-    PSprite nsprite;
-    PSprite* sprite;
-    Projectile(PSprite& tsprite);
+    float tipX, tipY;
 
+    bool finished = false;
+
+    SpriteWrapper sprite;
+
+    Projectile(std::string path, float x, float y, float thspeed, float tvspeed);
     float GetXSpeed();
     float GetYSpeed();
     void SetNewSpeedVector(float xSpeed, float ySpeed);
-    virtual void OnCollide(CollidableObject* otherObject);
+    //virtual void OnCollide(CollidableObject* otherObject);
     virtual void Update();
     virtual void Draw();
 };

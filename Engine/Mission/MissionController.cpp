@@ -12,14 +12,16 @@ MissionController::MissionController()
     hatapons.push_back(std::make_unique<Hatapon>());
 
     int pons = CoreManager::getInstance().getConfig()->GetInt("yaripons");
+    kirajin_hp = pons*1;
 
     for(int i=1; i<=pons; i++)
     {
         yaripons.push_back(std::make_unique<Yaripon>(i, pons));
     }
 
-    obstacle.LoadConfig("resources/units/entity/kirajin.zip");
-    obstacle.setAnimation("idle");
+    obstacles.push_back(std::make_unique<AnimatedObject>());
+    obstacles.back().get()->LoadConfig("resources/units/entity/kirajin.zip");
+    obstacles.back().get()->setAnimation("idle");
 
     bg.Load("shidavalley");
 
@@ -30,6 +32,12 @@ MissionController::MissionController()
     lastRhythmCheck = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     
     initialized = true;
+}
+
+void MissionController::SendProjectile(float x, float y, float hspeed, float vspeed)
+{
+    projectiles.push_back(std::make_unique<Projectile>("resources/graphics/item/textures/main/0014.png", x, y, hspeed, vspeed));
+    SPDLOG_DEBUG("SENDING PROJECTILE AT {} {} {} {}", x, y, hspeed, vspeed);
 }
 
 void MissionController::Update()
@@ -155,13 +163,20 @@ void MissionController::Update()
 
     cam.followobject_x = (followPoint*3 - 500) * resRatioX;
     cam.Work(view);
-    bg.pataSpeed = pataMaxSpeed / 900 * resRatioX;
+    bg.pataSpeed = pataMaxSpeed;
     bg.Draw(cam);
 
     // Update positions
     hatapons.back().get()->global_x = followPoint*3 - 400;
     hatapons.back().get()->global_y = 1490;
     hatapons.back().get()->Draw();
+
+    float closest = 9999999;
+
+    if(obstacles.size() > 0)
+    {
+        closest = obstacles.back().get()->getGlobalPosition().x;
+    }
 
     // if farthest yaripon sees enemy, whole army shall be angry
     float yari_distance = yaripons.back().get()->closestEnemyX - yaripons.back().get()->global_x - yaripons.back().get()->local_x - yaripons.back().get()->attack_x;
@@ -175,17 +190,75 @@ void MissionController::Update()
     for(auto& pon : yaripons)
     {
         pon->global_x = followPoint*3 - 240;
-        pon->global_y = 1730;
-        pon->closestEnemyX = 4000;
+        pon->global_y = 1740;
+        pon->closestEnemyX = closest;
         pon->enemyInSight = yari_inSight;
         pon->Draw();
     }
 
-    obstacle.setGlobalPosition(sf::Vector2f(4000, 1600));
-    obstacle.Draw();
+    if(obstacles.size() > 0)
+    {
+        obstacles.back().get()->setGlobalPosition(sf::Vector2f(4000, 1735));
+        obstacles.back().get()->Draw();
+    }
+
+    sf::RectangleShape hb;
+    hb.setSize(sf::Vector2f(10,10));
+    hb.setFillColor(sf::Color::Green);
+
+    projectiles.erase(
+        std::remove_if(
+            projectiles.begin(),
+            projectiles.end(),
+            [](const std::unique_ptr<Projectile>& projectile) {
+                return projectile->finished; // Check if the projectile hits
+            }
+        ),
+        projectiles.end() // This removes the "removed" projectiles
+    );
+
+    for(auto& projectile : projectiles)
+    {
+        projectile->Update();
+        projectile->Draw();
+
+        if(debug)
+        {
+            hb.setPosition(projectile->tipX, projectile->tipY);
+            SPDLOG_DEBUG("projectile at {} {}, tip at {} {}, hitbox at {} {}", projectile->xPos, projectile->yPos, projectile->tipX, projectile->tipY, hb.getPosition().x, hb.getPosition().y);
+            CoreManager::getInstance().getWindow()->draw(hb);
+        }
+
+        if(obstacles.size() > 0)
+        {
+            if(projectile->tipX > obstacles.back().get()->getGlobalPosition().x-60 && projectile->tipX < obstacles.back().get()->getGlobalPosition().x+60)
+            {
+                if(projectile->tipY > obstacles.back().get()->getGlobalPosition().y-60 && projectile->tipY < obstacles.back().get()->getGlobalPosition().y+60)
+                {
+                    projectile->finished = true;
+                    kirajin_hp -= rand() % 20 + 10;
+                    SPDLOG_DEBUG("kirajin got hit! {} HP left", kirajin_hp);
+                    obstacles.back().get()->setAnimation("stagger");
+                    obstacles.back().get()->restartAnimation();
+                }
+            }
+        }
+    }
+
+    if(kirajin_hp <= 0 && obstacles.size() > 0)
+    {
+        obstacles.clear();
+    }
 
     if(inputCtrl->isKeyPressed(Input::Keys::UP))
+    {
         rhythmGUI->toggleDebugUI();
+        for(auto& pon : yaripons)
+        {
+            pon->toggleDebug = !pon->toggleDebug;
+        }
+        debug = !debug;
+    }
 
     rhythmGUI->doVisuals(0, rhythm->GetCombo());
 }
