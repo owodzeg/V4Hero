@@ -67,6 +67,9 @@ public:
     std::vector<TextSettings> textSettings;
     std::vector<sf::String> additional;
 
+    // no reason to use in regular environment
+    bool disable_processing = false;
+
     PText();
     std::vector<std::string> split(std::string const & s, char delim);
     void setFont(const std::string& dst_font);

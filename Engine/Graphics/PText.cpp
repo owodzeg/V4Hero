@@ -96,16 +96,6 @@ void PText::processRichText()
 
     StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
 
-    t = sfe::RichText(strRepo->fontStore[font]);
-    t.setCharacterSize(characterSize);
-    t << sf::Color(0,0,0,0);
-    if(txt_color != "")
-        t << color;
-
-    std::vector<sf::String> rt_string;
-
-    textSettings.clear();
-
     //restart settings
     char_shown = 0;
     char_speed = 20;
@@ -118,6 +108,27 @@ void PText::processRichText()
     fadein_length = 0;
     speech_done = false;
     goback = false;
+
+    if(disable_processing)
+    {
+        t = sfe::RichText(strRepo->fontStore[font]);
+        t.setCharacterSize(characterSize);
+        t << sf::Color(0,0,0,255);
+        if(txt_color != "")
+            t << color;
+        t << txt;
+        return;
+    }
+
+    t = sfe::RichText(strRepo->fontStore[font]);
+    t.setCharacterSize(characterSize);
+    t << sf::Color(0,0,0,0);
+    if(txt_color != "")
+        t << color;
+
+    std::vector<sf::String> rt_string;
+
+    textSettings.clear();
 
     int i=0;
     int seek = 0;

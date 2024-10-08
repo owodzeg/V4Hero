@@ -341,7 +341,8 @@ void Yaripon::Draw()
         auto strRepo = CoreManager::getInstance().getStrRepo();
         debugText.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
         debugText.setCharacterSize(12);
-        debugText.setString(std::format("o{{n}}{}{{n}}act{{n}}{}{{n}}atk_x{{n}}{}{{n}}pS{{n}}{}{{n}}af{{n}}{}{{n}}ias{{n}}{}{{n}}iat{{n}}{}{{n}}cai{{n}}{:2.2f}",order, action, attack_x, pataSpeed, main.getAnimationFrame(), inAttackSequence, inAttackTimer.getElapsedTime().asMilliseconds(), canAttackIn));
+        debugText.setString(std::format("o\n{}\nact\n{}\natk_x\n{}\npS\n{}\naf\n{}\nias\n{}\niat\n{}\ncai\n{:2.2f}",order, action, attack_x, pataSpeed, main.getAnimationFrame(), inAttackSequence, inAttackTimer.getElapsedTime().asMilliseconds(), canAttackIn));
+        debugText.disable_processing = true;
         debugText.setOrigin(debugText.getLocalBounds().width/2, debugText.getLocalBounds().height);
         debugText.setPosition(global_x+local_x+attack_x+gap_x-20, global_y+local_y-100);
         debugText.draw();

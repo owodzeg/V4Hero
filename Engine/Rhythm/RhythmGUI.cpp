@@ -218,7 +218,8 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
 
         auto &view = window->getView();
         window->setView(window->getDefaultView());
-        
+
+        d_text.disable_processing = true;
         d_text.setString(debug_text);
         d_text.draw();
 
