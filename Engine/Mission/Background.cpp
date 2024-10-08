@@ -17,17 +17,6 @@ Background::Background()
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
     bgView.setSize(window->getSize().x, window->getSize().y);
     bgView.setCenter(window->getSize().x/2, window->getSize().y/2);
-
-    sf::VertexArray tmp(sf::TrianglesStrip, 4);
-    tmp[0].position = sf::Vector2f(0,420);
-    tmp[1].position = sf::Vector2f(1280, 420);
-    tmp[2].position = sf::Vector2f(0,720);
-    tmp[3].position = sf::Vector2f(1280, 720);
-    tmp[0].color = sf::Color(0,0,0,0);
-    tmp[1].color = sf::Color(0,0,0,0);
-    tmp[2].color = sf::Color(255,255,255,64);
-    tmp[3].color = sf::Color(255,255,255,64);
-    v_dark_highlight = tmp;
 }
 
 void Background::Load(const std::string& bg_name)
@@ -143,13 +132,11 @@ void Background::Draw(Camera& camera)
         bg_object.texture.setRepeated(true);
         bg_object.texture.setOrigin(0, bg_object.texture.getLocalBounds().height);
         bg_object.texture.setColor(bg_object.color);
-        bg_object.texture.setPosition(xPos / resRatioX, bg_object.position.y);
+        bg_object.texture.setPosition(xPos / resRatioX, bg_object.position.y + camera.zoom_y);
         bg_object.texture.draw();
     }
 
     window->setView(window->getDefaultView());
-
-    window->draw(v_dark_highlight);
 
     r_ground.setSize(sf::Vector2f(window->getSize().x, floor_height));
     r_ground.setFillColor(sf::Color::Black);
