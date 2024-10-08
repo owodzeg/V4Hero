@@ -43,7 +43,7 @@ void Projectile::Update()
 {
     float fps = CoreManager::getInstance().getCore()->getFPS();
 
-    vspeed += float(2200) / fps;
+    vspeed += float(3300) / fps;
 
     /// FOR REWORK: projectile should not be dependant on enemy whether it goes to left or to right.
     /// make a better unified system for projectile flight
@@ -51,13 +51,13 @@ void Projectile::Update()
 
     if (!enemy)
     {
-        hspeed -= float(400) / fps;
+        hspeed -= float(600) / fps;
 
         if (hspeed < 0)
             hspeed = 0;
     } else
     {
-        hspeed += float(400) / fps;
+        hspeed += float(600) / fps;
 
         if (hspeed > 0)
             hspeed = 0;
