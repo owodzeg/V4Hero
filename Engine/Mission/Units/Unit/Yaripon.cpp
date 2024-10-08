@@ -252,16 +252,18 @@ void Yaripon::Draw()
                 if(distanceToTravel < 2000 - globalRand%10*5) // too close
                 {
                     main.setAnimation("walk_focused");
-                    pataSpeed -= pataMaxSpeed*decelerationFactor / fps;
-                    if(pataSpeed < -pataMaxSpeed)
-                        pataSpeed = -pataMaxSpeed;
+                    pataCurMaxSpeed = pataMaxSpeed * 1.3 / (1 + ((globalRand%5)+5) * 0.02);
+                    pataSpeed -= pataCurMaxSpeed*decelerationFactor / fps;
+                    if(pataSpeed < -pataCurMaxSpeed)
+                        pataSpeed = -pataCurMaxSpeed;
                 }
                 else if (distanceToTravel > 2200 + globalRand%10*5) // too far
                 {
                     main.setAnimation("walk_focused");
-                    pataSpeed += pataMaxSpeed*accelerationFactor / fps;
-                    if(pataSpeed > pataMaxSpeed)
-                        pataSpeed = pataMaxSpeed;
+                    pataCurMaxSpeed = pataMaxSpeed * 1.3 / (1 + ((globalRand%5)+5) * 0.02);
+                    pataSpeed += pataCurMaxSpeed*accelerationFactor / fps;
+                    if(pataSpeed > pataCurMaxSpeed)
+                        pataSpeed = pataCurMaxSpeed;
                 }
                 else
                 {
@@ -289,16 +291,18 @@ void Yaripon::Draw()
                 if(distanceToTravel < 800 - globalRand%10*5)
                 {
                     main.setAnimation("walk_focused");
-                    pataSpeed -= pataMaxSpeed*decelerationFactor / fps;
-                    if(pataSpeed < -pataMaxSpeed)
-                        pataSpeed = -pataMaxSpeed;
+                    pataCurMaxSpeed = pataMaxSpeed * 1.3 / (1 + ((globalRand%5)+5) * 0.02);
+                    pataSpeed -= pataCurMaxSpeed*decelerationFactor / fps;
+                    if(pataSpeed < -pataCurMaxSpeed)
+                        pataSpeed = -pataCurMaxSpeed;
                 }
                 else if (distanceToTravel > 1000 + globalRand%10*5)
                 {
                     main.setAnimation("walk_focused");
-                    pataSpeed += pataMaxSpeed*accelerationFactor / fps;
-                    if(pataSpeed > pataMaxSpeed)
-                        pataSpeed = pataMaxSpeed;
+                    pataCurMaxSpeed = pataMaxSpeed * 1.3 / (1 + ((globalRand%5)+5) * 0.02);
+                    pataSpeed += pataCurMaxSpeed*accelerationFactor / fps;
+                    if(pataSpeed > pataCurMaxSpeed)
+                        pataSpeed = pataCurMaxSpeed;
                 }
                 else
                 {
@@ -326,16 +330,18 @@ void Yaripon::Draw()
                 if(distanceToTravel < 1400 - globalRand%10*5) // too close
                 {
                     main.setAnimation("walk_focused");
-                    pataSpeed -= pataMaxSpeed*decelerationFactor / fps;
-                    if(pataSpeed < -pataMaxSpeed)
-                        pataSpeed = -pataMaxSpeed;
+                    pataCurMaxSpeed = pataMaxSpeed * 1.3 / (1 + ((globalRand%5)+5) * 0.02);
+                    pataSpeed -= pataCurMaxSpeed*decelerationFactor / fps;
+                    if(pataSpeed < -pataCurMaxSpeed)
+                        pataSpeed = -pataCurMaxSpeed;
                 }
                 else if (distanceToTravel > 1600 + globalRand%10*5) // too far
                 {
                     main.setAnimation("walk_focused");
-                    pataSpeed += pataMaxSpeed*accelerationFactor / fps;
-                    if(pataSpeed > pataMaxSpeed)
-                        pataSpeed = pataMaxSpeed;
+                    pataCurMaxSpeed = pataMaxSpeed * 1.3 / (1 + ((globalRand%5)+5) * 0.02);
+                    pataSpeed += pataCurMaxSpeed*accelerationFactor / fps;
+                    if(pataSpeed > pataCurMaxSpeed)
+                        pataSpeed = pataCurMaxSpeed;
                 }
                 else
                 {
@@ -363,16 +369,18 @@ void Yaripon::Draw()
                 if(distanceToTravel < 800 - globalRand%10*5)
                 {
                     main.setAnimation("walk_focused");
-                    pataSpeed -= pataMaxSpeed*decelerationFactor / fps;
-                    if(pataSpeed < -pataMaxSpeed)
-                        pataSpeed = -pataMaxSpeed;
+                    pataCurMaxSpeed = pataMaxSpeed * 1.3 / (1 + ((globalRand%5)+5) * 0.02);
+                    pataSpeed -= pataCurMaxSpeed*decelerationFactor / fps;
+                    if(pataSpeed < -pataCurMaxSpeed)
+                        pataSpeed = -pataCurMaxSpeed;
                 }
                 else if (distanceToTravel > 1000 + globalRand%10*5)
                 {
                     main.setAnimation("walk_focused");
-                    pataSpeed += pataMaxSpeed*accelerationFactor / fps;
-                    if(pataSpeed > pataMaxSpeed)
-                        pataSpeed = pataMaxSpeed;
+                    pataCurMaxSpeed = pataMaxSpeed * 1.3 / (1 + ((globalRand%5)+5) * 0.02);
+                    pataSpeed += pataCurMaxSpeed*accelerationFactor / fps;
+                    if(pataSpeed > pataCurMaxSpeed)
+                        pataSpeed = pataCurMaxSpeed;
                 }
                 else
                 {

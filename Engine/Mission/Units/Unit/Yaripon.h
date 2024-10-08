@@ -30,8 +30,8 @@ public:
     float pataSpeed = 0;
     float pataMaxSpeed = 400;
     float pataCurMaxSpeed = pataMaxSpeed;
-    float accelerationFactor = 1.5;
-    float decelerationFactor = 1.5;
+    float accelerationFactor = 2;
+    float decelerationFactor = 2;
 
     int globalRand = 0;
 
