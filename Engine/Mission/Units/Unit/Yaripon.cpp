@@ -82,9 +82,11 @@ void Yaripon::PerformAttack()
         }
         else
         {
-            int jumpStart = 100;
-            int jumpEnd = 400;
-            int attackEnd = 1500;
+            auto BPM = CoreManager::getInstance().getSongController()->getBPM();
+
+            int jumpStart = 100 / (BPM/120);
+            int jumpEnd = 400 / (BPM/120);
+            int attackEnd = 1500 / (BPM/120);
 
             if(inAttackTimer.getElapsedTime().asMilliseconds() > jumpStart && inAttackTimer.getElapsedTime().asMilliseconds() < jumpEnd)
                 vspeed = -1000;
@@ -95,7 +97,7 @@ void Yaripon::PerformAttack()
                 {
                     main.setAnimation("attack_fever_throw");
                     main.restartAnimation();
-                    canAttackIn = attackSpeed;
+                    canAttackIn = attackSpeed / (BPM/120);
                     threw = false;
                 }
 
@@ -105,38 +107,87 @@ void Yaripon::PerformAttack()
             if(main.getAnimation() == "attack_fever_throw" && main.getAnimationFrame() >= 8 && !threw)
             {
                 if(attackType == 1) // ponpon
-                    CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y, 1200 + (globalRand%50)*1, -1200 - (globalRand%70)*1);
+                    CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y-90, 1800 + (globalRand%50)*1, -1800 - (globalRand%70)*1);
                 if(attackType == 2) // chakachaka
-                    CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y, 1600 + (globalRand%50)*1, 700 - (globalRand%70)*1);
+                    CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y-90, 2400 + (globalRand%50)*1, 1050 - (globalRand%70)*1);
                 threw = true;
             }
 
             if(inAttackTimer.getElapsedTime().asMilliseconds() > attackEnd)
             {
+                inAttackSequence = false;
+                StopAttack();
+            }
+        }
+    }
+
+    if(attackType == 3 || attackType == 4) // prefever nojump attack ponpon + chakachaka
+    {
+        if(!inAttackSequence)
+        {
+            inAttackTimer.restart();
+            inAttackSequence = true;
+            main.setAnimation("attack_prefever_focused_start");
+            main.restartAnimation();
+        }
+        else
+        {
+            auto BPM = CoreManager::getInstance().getSongController()->getBPM();
+
+            int jumpStart = 100 / (BPM/120);
+            int jumpEnd = 400 / (BPM/120);
+            int attackEnd = 1500 / (BPM/120);
+
+            if(inAttackTimer.getElapsedTime().asMilliseconds() >= jumpEnd && inAttackTimer.getElapsedTime().asMilliseconds() <= attackEnd)
+            {
+                if(canAttackIn <= 0)
+                {
+                    main.setAnimation("attack_prefever_focused_throw");
+                    main.restartAnimation();
+                    canAttackIn = attackSpeed / (BPM/120);
+                    threw = false;
+                }
+
+                canAttackIn -= 1000 / fps;
+            }
+
+            if(main.getAnimation() == "attack_prefever_focused_throw" && main.getAnimationFrame() >= 2 && !threw)
+            {
+                if(attackType == 3) // ponpon
+                    CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y-90, 1600 + (globalRand%50)*1, -1500 - (globalRand%70)*1);
+                if(attackType == 4) // chakachaka
+                    CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y-90, 2000 + (globalRand%50)*1, -300 - (globalRand%70)*1);
+                threw = true;
+            }
+
+            if(inAttackTimer.getElapsedTime().asMilliseconds() > attackEnd)
+            {
+                inAttackSequence = false;
                 StopAttack();
             }
         }
     }
 }
 
-void Yaripon::StopAttack()
+void Yaripon::StopAttack() //soft stop, let them finish attacks
 {
-    if(main.getAnimation() == "attack_fever_jump" || main.getAnimation() == "attack_fever_throw")
+    if(!inAttackSequence)
     {
-        main.setAnimation("attack_fever_fall");
-        main.restartAnimation();
+        if(main.getAnimation() == "attack_fever_jump" || main.getAnimation() == "attack_fever_throw" || main.getAnimation() == "attack_prefever_focused_start" || main.getAnimation() == "attack_prefever_focused_throw")
+        {
+            main.setAnimation("attack_fever_fall");
+            main.restartAnimation();
+        }
+
+        if(attackSpeed <= 1000) // below this attack speed we should guarantee at least a single throw
+        {
+            if(canAttackIn >= attackSpeed*0.6)
+                canAttackIn = 0;
+        }
+
+        if(action == 1)
+            action = 0;
     }
-
-    inAttackSequence = false;
-
-    if(attackSpeed <= 1000) // below this attack speed we should guarantee at least a single throw
-    {
-        if(canAttackIn >= attackSpeed*0.6)
-            canAttackIn = 0;
-    }
-
-    if(action == 1)
-        action = 0;
 }
 
 void Yaripon::StopAll()
@@ -149,20 +200,25 @@ void Yaripon::StopAll()
             main.setAnimation("idle_armed_focused");
     }
 
-    StopAttack();
-    action = 0;
+    if(action == 1)
+        StopAttack();
+    else
+        action = 0;
 
     walkBack = true;
 }
 
 void Yaripon::Drum(std::string drum)
 {
-    StopAttack();
+    if(!inAttackSequence)
+    {
+        StopAttack();
 
-    main.setAnimation(drum);
-    if(enemyInSight)
-        main.setAnimation(drum+"_focused");
-    main.restartAnimation();
+        main.setAnimation(drum);
+        if(enemyInSight)
+            main.setAnimation(drum+"_focused");
+        main.restartAnimation();
+    }
 }
 
 void Yaripon::Draw()
@@ -171,6 +227,12 @@ void Yaripon::Draw()
 
     if(!enemyInSight)
     {
+        if(inAttackSequence)
+        {
+            inAttackSequence = false;
+            StopAttack();
+        }
+
         if(attack_x != 0)
         {
             walkBack = true;
@@ -183,17 +245,18 @@ void Yaripon::Draw()
         if(action == 1)
         {
             walkBack = false;
+            bool doAttack = false;
 
             if(attackType == 1)
             {
-                if(distanceToTravel < 1400 - globalRand%10*5) // too close
+                if(distanceToTravel < 2000 - globalRand%10*5) // too close
                 {
                     main.setAnimation("walk_focused");
                     pataSpeed -= pataMaxSpeed*decelerationFactor / fps;
                     if(pataSpeed < -pataMaxSpeed)
                         pataSpeed = -pataMaxSpeed;
                 }
-                else if (distanceToTravel > 1600 + globalRand%10*5) // too far
+                else if (distanceToTravel > 2200 + globalRand%10*5) // too far
                 {
                     main.setAnimation("walk_focused");
                     pataSpeed += pataMaxSpeed*accelerationFactor / fps;
@@ -202,8 +265,6 @@ void Yaripon::Draw()
                 }
                 else
                 {
-                    bool doAttack = false;
-
                     if(attackWalkTimer.getElapsedTime().asMilliseconds() < 300 + 10*(globalRand%20))
                     {
                         main.setAnimation("walk_focused");
@@ -220,12 +281,6 @@ void Yaripon::Draw()
                     {
                         //SPDLOG_DEBUG("ATTACK!!!!");
                         doAttack = true;
-                    }
-
-                    if(doAttack)
-                    {
-                        pataSpeed = 0;
-                        PerformAttack();
                     }
                 }
             }
@@ -247,8 +302,6 @@ void Yaripon::Draw()
                 }
                 else
                 {
-                    bool doAttack = false;
-
                     if(attackWalkTimer.getElapsedTime().asMilliseconds() < 300 + 10*(globalRand%20))
                     {
                         main.setAnimation("walk_focused");
@@ -266,13 +319,87 @@ void Yaripon::Draw()
                         //SPDLOG_DEBUG("ATTACK!!!!");
                         doAttack = true;
                     }
-
-                    if(doAttack)
+                }
+            }
+            else if(attackType == 3)
+            {
+                if(distanceToTravel < 1400 - globalRand%10*5) // too close
+                {
+                    main.setAnimation("walk_focused");
+                    pataSpeed -= pataMaxSpeed*decelerationFactor / fps;
+                    if(pataSpeed < -pataMaxSpeed)
+                        pataSpeed = -pataMaxSpeed;
+                }
+                else if (distanceToTravel > 1600 + globalRand%10*5) // too far
+                {
+                    main.setAnimation("walk_focused");
+                    pataSpeed += pataMaxSpeed*accelerationFactor / fps;
+                    if(pataSpeed > pataMaxSpeed)
+                        pataSpeed = pataMaxSpeed;
+                }
+                else
+                {
+                    if(attackWalkTimer.getElapsedTime().asMilliseconds() < 300 + 10*(globalRand%20))
                     {
-                        pataSpeed = 0;
-                        PerformAttack();
+                        main.setAnimation("walk_focused");
+                        pataCurMaxSpeed = pataMaxSpeed / 2 / (((globalRand%5)+5) * 0.2);
+                        int neg = (((globalRand%2) - 0.5) * 2);
+                        pataSpeed += neg*pataCurMaxSpeed*accelerationFactor / fps;
+                        if(pataSpeed > pataCurMaxSpeed)
+                            pataSpeed = pataCurMaxSpeed;
+                        if(pataSpeed < -pataCurMaxSpeed)
+                            pataSpeed = -pataCurMaxSpeed;
+                        //SPDLOG_DEBUG("Yaripon {} is moving. {} {} {}", order, pataCurMaxSpeed, pataSpeed, attackWalkTimer.getElapsedTime().asMilliseconds());
+                    }
+                    else
+                    {
+                        //SPDLOG_DEBUG("ATTACK!!!!");
+                        doAttack = true;
                     }
                 }
+            }
+            else if(attackType == 4)
+            {
+                if(distanceToTravel < 800 - globalRand%10*5)
+                {
+                    main.setAnimation("walk_focused");
+                    pataSpeed -= pataMaxSpeed*decelerationFactor / fps;
+                    if(pataSpeed < -pataMaxSpeed)
+                        pataSpeed = -pataMaxSpeed;
+                }
+                else if (distanceToTravel > 1000 + globalRand%10*5)
+                {
+                    main.setAnimation("walk_focused");
+                    pataSpeed += pataMaxSpeed*accelerationFactor / fps;
+                    if(pataSpeed > pataMaxSpeed)
+                        pataSpeed = pataMaxSpeed;
+                }
+                else
+                {
+                    if(attackWalkTimer.getElapsedTime().asMilliseconds() < 300 + 10*(globalRand%20))
+                    {
+                        main.setAnimation("walk_focused");
+                        pataCurMaxSpeed = pataMaxSpeed / 2 / (((globalRand%5)+5) * 0.2);
+                        int neg = (((globalRand%2) - 0.5) * 2);
+                        pataSpeed += neg*pataCurMaxSpeed*accelerationFactor / fps;
+                        if(pataSpeed > pataCurMaxSpeed)
+                            pataSpeed = pataCurMaxSpeed;
+                        if(pataSpeed < -pataCurMaxSpeed)
+                            pataSpeed = -pataCurMaxSpeed;
+                        //SPDLOG_DEBUG("Yaripon {} is moving. {} {} {}", order, pataCurMaxSpeed, pataSpeed, attackWalkTimer.getElapsedTime().asMilliseconds());
+                    }
+                    else
+                    {
+                        //SPDLOG_DEBUG("ATTACK!!!!");
+                        doAttack = true;
+                    }
+                }
+            }
+
+            if(doAttack)
+            {
+                pataSpeed = 0;
+                PerformAttack();
             }
 
             attack_x += pataSpeed / fps;

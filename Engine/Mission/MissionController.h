@@ -34,10 +34,10 @@ public:
     float accelerationFactor = 1.5;
     float decelerationFactor = 2.5;
 
-    AnimatedObject obstacle;
-
     bool debug = true;
     int kirajin_hp = 200;
+
+    bool inFever = false;
 
     MissionController();
     void SendProjectile(float x, float y, float hspeed, float vspeed);

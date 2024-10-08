@@ -92,7 +92,7 @@ void Rhythm::LoadTheme(string theme)
     try
     {
         SongController* songController = CoreManager::getInstance().getSongController();
-        songController->LoadTheme("ahwoon");
+        songController->LoadTheme(theme);
 
         // after loading SongController, get BPM and re-do the calculations
         BPM = songController->getBPM(); ///beats per minute
@@ -101,8 +101,8 @@ void Rhythm::LoadTheme(string theme)
         beat_ms = 60.f / BPM * 1000.f; ///Amount of milliseconds for each beat
         halfbeat_ms = beat_ms / 2.f;
         measure_ms = beat_ms * 4.f;
-        low_range = beat_timer / 6.25f;  ///Anything below that range will be treated as BAD hit
-        high_range = beat_timer / 2.875f; ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
+        low_range = beat_timer / (7.25f * (BPM/120));  ///Anything below that range will be treated as BAD hit
+        high_range = beat_timer / (5.25f * (BPM/180)); ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
 
         // set bpm for rhythm gui
         CoreManager::getInstance().getRhythmGUI()->BPM = BPM;
@@ -304,6 +304,7 @@ void Rhythm::decideSongType()
                     currentSongType = SongController::SongType::FEVER_START;
                     SPDLOG_DEBUG("Awesome! Go to FEVER_START");
                     addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
+                    addRhythmMessage(RhythmAction::FEVER_ON, "");
                     return;
                 }
             }
