@@ -8,7 +8,7 @@ Hatapon::Hatapon()
     main.setAnimation("idle");
 }
 
-void Hatapon::Advance()
+void Hatapon::Wave()
 {
     main.setAnimation("wave");
 }

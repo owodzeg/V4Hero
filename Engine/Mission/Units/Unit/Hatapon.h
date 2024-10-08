@@ -10,7 +10,7 @@ public:
     float global_x=0, global_y=0;
 
     Hatapon();
-    void Advance();
+    void Wave();
     void StopAll();
     void Draw();
 };
