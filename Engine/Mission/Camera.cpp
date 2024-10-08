@@ -34,7 +34,7 @@ void Camera::Work(sf::View view, float dest_zoom_over)
     float fps = CoreManager::getInstance().getCore()->getFPS();
 
     float resRatioX = window->getSize().x / float(3840);
-    float resRatioY = window->getSize().y / float(720);
+    float resRatioY = window->getSize().y / float(2160);
 
     camera_y = window->getSize().y / 2;
 
@@ -53,6 +53,16 @@ void Camera::Work(sf::View view, float dest_zoom_over)
         if (inputCtrl->isKeyHeld(Input::Keys::RTRIGGER))
         {
             manual_x_dest = move_cam_x;
+        }
+
+        if (inputCtrl->isKeyHeld(Input::Keys::LEFT))
+        {
+            dest_zoom = 1.002;
+        }
+
+        if (inputCtrl->isKeyHeld(Input::Keys::RIGHT))
+        {
+            dest_zoom = 0.998;
         }
     }
 
@@ -106,7 +116,7 @@ void Camera::Work(sf::View view, float dest_zoom_over)
     //SPDLOG_DEBUG("[zoom] zoom: {} dest_zoom: {}", zoom, dest_zoom);
 
     if(zoom != dest_zoom)
-    zoomViewAt(sf::Vector2i(zoom_point_x, zoom_point_y), zoom);
+    zoomViewAt(sf::Vector2i(1280, 720), zoom);
 
     /** Apply camera position **/
 

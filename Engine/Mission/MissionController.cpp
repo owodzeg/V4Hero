@@ -24,10 +24,11 @@ MissionController::MissionController()
     obstacles.back().get()->setAnimation("idle");
 
     bg.Load("shidavalley");
+    std::string theme = "ahwoon";
 
     CoreManager::getInstance().reinitSongController();
-    CoreManager::getInstance().getSongController()->LoadTheme("ahwoon");
-    CoreManager::getInstance().getRhythm()->LoadTheme("ahwoon");
+    CoreManager::getInstance().getSongController()->LoadTheme(theme);
+    CoreManager::getInstance().getRhythm()->LoadTheme(theme);
 
     lastRhythmCheck = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     
@@ -74,10 +75,10 @@ void MissionController::Update()
         if(action == Rhythm::RhythmAction::COMMAND)
         {
             SPDLOG_DEBUG("Received a command: {}. React appropriately", message.message);
+            hatapons.back().get()->Wave();
+
             if(message.message == "65109" || message.message == "6") // PATA PATA PATA PON
             {
-                hatapons.back().get()->Advance();
-
                 for(auto& yaripon : yaripons)
                 {
                     yaripon->Advance();
@@ -91,7 +92,11 @@ void MissionController::Update()
             {
                 for(auto& yaripon : yaripons)
                 {
-                    yaripon->Attack(1);
+                    if(inFever)
+                        yaripon->Attack(1);
+                    else
+                        yaripon->Attack(3);
+
                     advanceClock.restart();
                 }
             }
@@ -100,7 +105,11 @@ void MissionController::Update()
             {
                 for(auto& yaripon : yaripons)
                 {
-                    yaripon->Attack(2);
+                    if(inFever)
+                        yaripon->Attack(2);
+                    else
+                        yaripon->Attack(4);
+
                     advanceClock.restart();
                 }
             }
@@ -126,6 +135,12 @@ void MissionController::Update()
             }
 
             advance = false;
+            inFever = false;
+        }
+
+        if(action == Rhythm::RhythmAction::FEVER_ON)
+        {
+            inFever = true;
         }
 
         if(action == Rhythm::RhythmAction::DRUM_ANY)
@@ -179,6 +194,7 @@ void MissionController::Update()
     auto view = CoreManager::getInstance().getWindow()->getView();
 
     float resRatioX = CoreManager::getInstance().getWindow()->getSize().x / float(3840);
+    float resRatioY = CoreManager::getInstance().getWindow()->getSize().y / float(2160);
 
     cam.followobject_x = (followPoint*3 - 500) * resRatioX;
     cam.Work(view);
@@ -243,7 +259,7 @@ void MissionController::Update()
 
         if(debug)
         {
-            hb.setPosition(projectile->tipX, projectile->tipY);
+            hb.setPosition(projectile->tipX * resRatioX, projectile->tipY * resRatioY);
             SPDLOG_DEBUG("projectile at {} {}, tip at {} {}, hitbox at {} {}", projectile->xPos, projectile->yPos, projectile->tipX, projectile->tipY, hb.getPosition().x, hb.getPosition().y);
             CoreManager::getInstance().getWindow()->draw(hb);
         }
@@ -262,6 +278,15 @@ void MissionController::Update()
                 }
             }
         }
+    }
+
+    if(debug && obstacles.size() > 0)
+    {
+        sf::RectangleShape hbx;
+        hbx.setSize(sf::Vector2f(120*resRatioX,120*resRatioY));
+        hbx.setFillColor(sf::Color(128,0,128,64));
+        hbx.setPosition((obstacles.back().get()->getGlobalPosition().x-60) * resRatioX, (obstacles.back().get()->getGlobalPosition().y-60) * resRatioY);
+        CoreManager::getInstance().getWindow()->draw(hbx);
     }
 
     if(kirajin_hp <= 0 && obstacles.size() > 0)
