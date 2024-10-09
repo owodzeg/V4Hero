@@ -440,7 +440,7 @@ void Rhythm::checkRhythmController()
 
 void Rhythm::doRhythm()
 {
-    if(!started || startWait.getElapsedTime().asMilliseconds() <= 0)
+    if(!started || startWait.getElapsedTime().asMilliseconds() <= 100)
     {
         SPDLOG_INFO("WAIT");
         firstCommandDelayClock.restart(); //halfbeat delay for when we use first command without last halfbeat

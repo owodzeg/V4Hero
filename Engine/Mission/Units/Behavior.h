@@ -1,6 +1,9 @@
 #ifndef BEHAVIOR_H
 #define BEHAVIOR_H
 
+#include <string>
+#include <unordered_map>
+
 // Database for entity behaviors and behavior-specific objects
 
 /*
@@ -88,6 +91,32 @@ public:
         INVALID = -1,
         BH_FLEE_DO_NOTHING = 0
     };
+
+    const std::unordered_map<std::string, Hit> stringToHitEnum = {
+        {"BH_HIT_DO_NOTHING", Hit::BH_HIT_DO_NOTHING},
+        {"BH_HIT_DEFAULT", Hit::BH_HIT_DEFAULT},
+        {"BH_HIT_STAGGER", Hit::BH_HIT_STAGGER}
+    };
+
+    const std::unordered_map<std::string, Death> stringToDeathEnum = {
+        {"BH_DEATH_DO_NOTHING", Death::BH_DEATH_DO_NOTHING},
+        {"BH_DEATH_REMOVE_INSTANT", Death::BH_DEATH_REMOVE_INSTANT}
+    };
+
+    Hit convStringToHitEnum(const std::string& enumName) {
+        auto it = stringToHitEnum.find(enumName);
+        if (it != stringToHitEnum.end())
+            return it->second;
+        return Hit::INVALID;
+    }
+
+    Death convStringToDeathEnum(const std::string& enumName) {
+        auto it = stringToDeathEnum.find(enumName);
+        if (it != stringToDeathEnum.end())
+            return it->second;
+        return Death::INVALID;
+    }
+
 };
 
 #endif //BEHAVIOR_H
