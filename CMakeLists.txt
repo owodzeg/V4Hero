@@ -131,7 +131,9 @@ set(ENGINE_FILES
         Engine/Menu/ErrorChamber.cpp
         Engine/Mechanics/Globals.cpp
         Engine/Mission/Units/Unit/Hatapon.cpp
-        Engine/Mission/Units/Unit/Yaripon.cpp)
+        Engine/Mission/Units/Unit/Yaripon.cpp
+        Engine/Mission/Units/Behavior.cpp
+        Engine/Mission/Units/Behavior.h)
 
 set(DISCORD_FILES
         DiscordSDK/achievement_manager.cpp

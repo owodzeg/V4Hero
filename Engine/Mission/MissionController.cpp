@@ -23,10 +23,14 @@ MissionController::MissionController()
     entities.back().get()->LoadConfig("resources/units/entity/kirajin.zip");
     entities.back().get()->setAnimation("idle");
     entities.back().get()->orderID = 0;
+    entities.back().get()->bh_hit = Behavior::Hit::BH_HIT_STAGGER;
+    entities.back().get()->bh_death = Behavior::Death::BH_DEATH_REMOVE_INSTANT;
     entities.push_back(std::make_unique<Entity>());
-    entities.back().get()->LoadConfig("resources/units/entity/wakapon.zip");
+    entities.back().get()->LoadConfig("resources/units/unit/wakapon.zip");
     entities.back().get()->setAnimation("idle");
     entities.back().get()->orderID = 1;
+    entities.back().get()->bh_hit = Behavior::Hit::BH_HIT_DEFAULT;
+    entities.back().get()->bh_death = Behavior::Death::BH_DEATH_REMOVE_INSTANT;
 
     bg.Load("shidavalley");
     std::string theme = "ahwoon";
@@ -220,9 +224,10 @@ void MissionController::Update()
 
     float closest = 9999999;
 
-    if(entities.size() > 0)
+    for(auto& entity : entities)
     {
-        closest = entities.back().get()->getGlobalPosition().x;
+        if(entity->getGlobalPosition().x < closest)
+            closest = entity->getGlobalPosition().x;
     }
 
     // if farthest yaripon sees enemy, whole army shall be angry
@@ -261,36 +266,44 @@ void MissionController::Update()
             projectiles.begin(),
             projectiles.end(),
             [](const std::unique_ptr<Projectile>& projectile) {
-                return projectile->finished; // Check if the projectile hits
+                return projectile->finished;
             }
         ),
-        projectiles.end() // This removes the "removed" projectiles
+        projectiles.end()
+    );
+
+    entities.erase(
+        std::remove_if(
+            entities.begin(),
+            entities.end(),
+            [](const std::unique_ptr<Entity>& entity) {
+                return entity->forRemoval;
+            }
+        ),
+        entities.end()
     );
 
     for(auto& projectile : projectiles)
     {
         projectile->Update();
 
-        if(entities.size() > 0)
+        for(auto& entity : entities)
         {
-            if(projectile->tipX > entities.back().get()->getGlobalPosition().x-60 && projectile->tipX < entities.back().get()->getGlobalPosition().x+60)
+            if(projectile->tipX > entity->getGlobalPosition().x-60 && projectile->tipX < entity->getGlobalPosition().x+60)
             {
-                if(projectile->tipY > entities.back().get()->getGlobalPosition().y-60 && projectile->tipY < entities.back().get()->getGlobalPosition().y+60)
+                if(projectile->tipY > entity->getGlobalPosition().y-60 && projectile->tipY < entity->getGlobalPosition().y+60)
                 {
                     projectile->finished = true;
-                    kirajin_hp -= rand() % 20 + 10;
-                    SPDLOG_DEBUG("kirajin got hit! {} HP left", kirajin_hp);
-                    entities.back().get()->setAnimation("stagger");
-                    entities.back().get()->restartAnimation();
+                    entity->handleHit(rand() % 20 + 10);
                 }
             }
         }
     }
 
-    if(kirajin_hp <= 0 && entities.size() > 0)
-    {
-        entities.clear();
-    }
+    //if(kirajin_hp <= 0 && entities.size() > 0)
+    //{
+    //    entities.clear();
+    //}
 
     // find leftmost and rightmost patapon so a middlespot can be calculated
     // i think in patapon the camera actually follows the rightmost spot
@@ -319,12 +332,10 @@ void MissionController::Update()
     if(yari_inSight)
     {
         cam.followobject_x = ((leftmostPataX + closest - 1200) / 2) * resRatioX;
-        //cam.wantedZoom = 1.6;
     }
     else
     {
         cam.followobject_x = ((leftmostPataX + rightmostPataX) / 2) * resRatioX;
-        //cam.wantedZoom = 0.7;
     }
 
     cam.Work(view);
@@ -349,16 +360,19 @@ void MissionController::Update()
         }
     }
 
-    if(entities.size() > 0)
-        entities.back().get()->Draw();
+    for(auto& entity : entities)
+        entity->Draw();
 
     if(debug && entities.size() > 0)
     {
-        sf::RectangleShape hbx;
-        hbx.setSize(sf::Vector2f(120*resRatioX,120*resRatioY));
-        hbx.setFillColor(sf::Color(128,0,128,64));
-        hbx.setPosition((entities.back().get()->getGlobalPosition().x-60) * resRatioX, (entities.back().get()->getGlobalPosition().y-60) * resRatioY);
-        CoreManager::getInstance().getWindow()->draw(hbx);
+        for(auto& entity : entities)
+        {
+            sf::RectangleShape hbx;
+            hbx.setSize(sf::Vector2f(120*resRatioX,120*resRatioY));
+            hbx.setFillColor(sf::Color(128,0,128,64));
+            hbx.setPosition((entity->getGlobalPosition().x-60) * resRatioX, (entity->getGlobalPosition().y-60) * resRatioY);
+            CoreManager::getInstance().getWindow()->draw(hbx);
+        }
     }
 
     if(inputCtrl->isKeyPressed(Input::Keys::UP))
