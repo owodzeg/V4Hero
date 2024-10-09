@@ -44,6 +44,7 @@ public:
 
     bool threw = false;
     bool walkBack = false;
+    bool performedAttack = false;
 
     bool toggleDebug = true;
 
