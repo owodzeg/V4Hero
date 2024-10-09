@@ -20,17 +20,13 @@ MissionController::MissionController()
     }
 
     entities.push_back(std::make_unique<Entity>());
-    entities.back().get()->LoadConfig("resources/units/entity/kirajin.zip");
+    entities.back().get()->LoadEntity("resources/units/entity/kirajin.zip");
     entities.back().get()->setAnimation("idle");
     entities.back().get()->orderID = 0;
-    entities.back().get()->bh_hit = Behavior::Hit::BH_HIT_STAGGER;
-    entities.back().get()->bh_death = Behavior::Death::BH_DEATH_REMOVE_INSTANT;
     entities.push_back(std::make_unique<Entity>());
-    entities.back().get()->LoadConfig("resources/units/unit/wakapon.zip");
+    entities.back().get()->LoadEntity("resources/units/entity/kirajin.zip");
     entities.back().get()->setAnimation("idle");
     entities.back().get()->orderID = 1;
-    entities.back().get()->bh_hit = Behavior::Hit::BH_HIT_DEFAULT;
-    entities.back().get()->bh_death = Behavior::Death::BH_DEATH_REMOVE_INSTANT;
 
     bg.Load("shidavalley");
     std::string theme = "ahwoon";
@@ -202,7 +198,7 @@ void MissionController::Update()
         {
             if(yaripon->action == 2) // march
                 yaripon->StopAll();
-            if(yaripon->action == 1) // attack
+            if(yaripon->action == 1 && advanceClock.getElapsedTime().asMilliseconds() > actionClockLimit*2) // attack
                 yaripon->StopAttack();
         }
 
@@ -331,11 +327,11 @@ void MissionController::Update()
 
     if(yari_inSight)
     {
-        cam.followobject_x = ((leftmostPataX + closest - 1200) / 2) * resRatioX;
+        cam.followobject_x = ((leftmostPataX + closest - 1800) / 2) * resRatioX;
     }
     else
     {
-        cam.followobject_x = ((leftmostPataX + rightmostPataX) / 2) * resRatioX;
+        cam.followobject_x = ((leftmostPataX + rightmostPataX - 300) / 2) * resRatioX;
     }
 
     cam.Work(view);

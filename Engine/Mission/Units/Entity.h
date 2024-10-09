@@ -77,6 +77,8 @@ public:
     std::vector<MessageCloud> messageclouds;
 
     Entity();
+    void LoadEntity(const std::string& path);
+
     void setEntityID(int new_entityID);
     int getEntityID();
 
