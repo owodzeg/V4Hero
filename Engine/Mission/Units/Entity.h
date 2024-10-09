@@ -2,20 +2,17 @@
 #define ENTITY_H
 
 #include "../../Dialog/MessageCloud.h"
-#include "../../Input/InputController.h"
-#include "CollidableObject.h"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <nlohmann/json.hpp>
+#include "AnimatedObject.h"
+#include "Behavior.h"
 
-class Entity : public CollidableObject
+class Entity : public AnimatedObject
 {
 public:
     int entityID = -1;
-    int spawnOrderID = -1;
-    bool dead = false;
-
-    float floorY = 0;
+    int orderID = -1;
 
     enum EntityTypes
     {
@@ -40,6 +37,20 @@ public:
         BUILDING_IRON = 9
     };
 
+    // package of behavior-specific contents
+    Behavior behavior;
+
+    Behavior::Hit bh_hit;
+    Behavior::Death bh_death;
+    Behavior::Noise bh_noise;
+    Behavior::Approach bh_approach;
+    Behavior::Command bh_command;
+    Behavior::Decision bh_decision;
+    Behavior::Spawn bh_spawn;
+    Behavior::Attack bh_attack;
+    Behavior::Idle bh_idle;
+    Behavior::Flee bh_flee;
+
     int entityType = DUMMY;
     int entityCategory = NO_CATEGORY;
 
@@ -49,55 +60,46 @@ public:
 
     std::vector<Loot> loot_table;
 
-    bool dropped_item = false;
+    float curHP = 100;
+    float maxHP = 100;
 
-    float curHP = 500;
-    float maxHP = 500;
+    bool dead = false;
+    bool forRemoval = false;
 
     float mindmg = 1;
     float maxdmg = 1;
 
-    bool custom_dmg = false;
-
     int layer = 0;   ///rendering priority
     int parent = -1; ///if entity is bound to any other entity
-
-    float distance_to_unit = 0;
-
-    float spawn_x = 0; ///base spawn X to calculate withdraw
-    float stat_multiplier = 1;
 
     nlohmann::json additional_data; ///additional data passed from mission file that can be used for exclusive cases
 
     std::vector<MessageCloud> messageclouds;
 
-    bool cloneable = false;
-    int respawnTime = 0;
-    sf::Clock respawn_clock;
-
-    bool force_spawn = false;
-    int force_spawn_lvl = 0;
-
-    bool force_drop = false;
-    string force_drop_item;
-    int force_drop_mission_lvl = 0;
-
-    float view_range = 750;
-
-    sf::Sound cur_sound;
-
     Entity();
-    virtual void setEntityID(int new_entityID);
-    virtual int getEntityID();
-    virtual bool willDrop(vector<int> item_id);
-    // TO-DO: THIS IS BAD! Make a way for the entities to reach to the global sound objects instead of passing so many arguments when they are not needed!!!
-    virtual void doRhythm(std::string current_song, std::string current_drum, int combo, int realcombo, bool advanced_prefever, float beatBounce, float satisfaction);
-    virtual bool doAttack();
-    virtual void doMessages(sf::RenderWindow& window, float fps, InputController& inputCtrl); ///manage message clouds
-    virtual void die();
-    virtual void LoadConfig(std::string unitParamPath);
-    virtual void parseAdditionalData(nlohmann::json additional_data);
-    virtual void dropItem();
+    void setEntityID(int new_entityID);
+    int getEntityID();
+
+    sf::FloatRect getHitbox();
+
+    // handlers - environment
+    void handleHit(float damage); // when inflicted damage from player
+    void handleDeath(); // when hp goes under 0
+    void handleNoise(); // when fever is activated
+    void handleApproach(); // when player gets close
+    void handleCommand(); // on player command inputted
+
+    // handlers - self
+    void handleDecisions(); // what should the entity do?
+    void handleSpawn(); // on entity creation
+    void handleAttack(); // entity's attack
+    void handleIdle(); // when entity is idling
+    void handleFlee(); // entity's flee
+
+    // communication
+    void handleRhythmMessages();
+
+    void Draw();
 };
 
 #endif // ENTITY_H

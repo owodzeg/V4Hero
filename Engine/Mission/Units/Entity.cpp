@@ -1,16 +1,13 @@
 #include "Entity.h"
 
-#include "../../CoreManager.h"
-
 Entity::Entity()
 {
-    force_drop_item.push_back(0);
+    handleSpawn();
 }
 
 void Entity::setEntityID(int new_entityID)
 {
     entityID = new_entityID;
-    //AnimatedObject::entityID = new_entityID;
 }
 
 int Entity::getEntityID()
@@ -18,51 +15,83 @@ int Entity::getEntityID()
     return entityID;
 }
 
-bool Entity::willDrop(vector<int> item_id)
+// handlers - environment
+void Entity::handleHit(float damage) // when inflicted damage from player
 {
-    for (int i = 0; i < loot_table.size(); i++)
+    switch(bh_hit)
     {
-        if (loot_table[i].order_id == item_id)
-        {
-            return true;
+        case Behavior::Hit::BH_HIT_DEFAULT: {
+            curHP -= damage;
+            break;
+        }
+
+        case Behavior::Hit::BH_HIT_STAGGER: {
+            curHP -= damage;
+            setAnimation("stagger");
+            restartAnimation();
+            break;
         }
     }
-    return false;
 }
 
-void Entity::doRhythm(std::string current_song, std::string current_drum, int combo, int realcombo, bool advanced_prefever, float beatBounce, float satisfaction)
+void Entity::handleDeath() // when hp goes under 0
 {
-    SPDLOG_WARN("Entity::doRhythm() was not overriden by child class");
+    switch(bh_death)
+    {
+        case Behavior::Death::BH_DEATH_REMOVE_INSTANT: {
+            forRemoval = true;
+            break;
+        }
+    }
 }
 
-bool Entity::doAttack()
+void Entity::handleNoise() // when fever is activated
 {
-    //cout << "Entity::doAttack() was not overriden by child class" << endl;
-    return false;
+
 }
 
-void Entity::doMessages(sf::RenderWindow& window, float fps, InputController& inputCtrl)
+void Entity::handleApproach() // when player gets close
 {
-    //cout << "Entity::doMessages() was not overriden by child class" << endl;
+
 }
 
-void Entity::die()
+void Entity::handleCommand() // on player command inputted
 {
-    ///Kills the entity, if entity has a method scripted
-    ///Made so it can be called outside of the entity function and do the same work
+
 }
 
-void Entity::LoadConfig(std::string unitParamPath)
+// handlers - self
+void Entity::handleDecisions() // what should the entity do?
 {
-    SPDLOG_WARN("Entity::LoadConfig() was not overriden by child class");
+
 }
 
-void Entity::parseAdditionalData(nlohmann::json additional_data)
+void Entity::handleSpawn() // on entity creation
 {
-    SPDLOG_WARN("Entity::parseAdditionalData() was not overriden by child class");
+
 }
 
-void Entity::dropItem()
+void Entity::handleAttack() // entity's attack
 {
 
+}
+
+void Entity::handleIdle() // when entity is idling
+{
+
+}
+
+void Entity::handleFlee() // entity's flee
+{
+
+}
+
+void Entity::Draw()
+{
+    if(curHP <= 0)
+    {
+        handleDeath();
+    }
+
+    AnimatedObject::Draw();
 }
