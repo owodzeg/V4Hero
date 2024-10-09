@@ -424,7 +424,7 @@ void Yaripon::Draw()
         walkBack = true;
     }
 
-    if(fabs(attack_x) >= 20)
+    if(fabs(attack_x) >= 0)
     {
         if(walkBack)
         {

@@ -6,6 +6,7 @@
 
 #include "Background.h"
 #include "Camera.h"
+#include "Units/Entity.h"
 #include "Units/Unit/Hatapon.h"
 #include "Units/Unit/Yaripon.h"
 #include "Units/Projectile.h"
@@ -21,7 +22,7 @@ public:
     std::vector<std::unique_ptr<Hatapon>> hatapons;
     std::vector<std::unique_ptr<Yaripon>> yaripons;
     std::vector<std::unique_ptr<Projectile>> projectiles;
-    std::vector<std::unique_ptr<AnimatedObject>> obstacles;
+    std::vector<std::unique_ptr<Entity>> entities;
 
     uint64_t lastRhythmCheck;
     sf::Clock advanceClock;
@@ -38,9 +39,11 @@ public:
     int kirajin_hp = 200;
 
     bool inFever = false;
+    bool zoomActivated = false;
 
     MissionController();
     void SendProjectile(float x, float y, float hspeed, float vspeed);
+    void ExecuteZoom(float speed, float time);
 
     void Update();
 

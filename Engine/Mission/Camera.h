@@ -24,11 +24,22 @@ public:
     float zoom_point_x = 0;
     float zoom_point_y = 0;
 
+    float zoomedTotal = 1;
+    float wantedZoom = 1;
+    float oldWantedZoom = wantedZoom;
+    float startZoom = 0;
+    float zoomDiff = 0;
+
     float move_cam_x = 500;
 
+    float zoomSpeed = 1.000;
+    float timeToZoom = 2000;
+    bool activateZoom = false;
+    sf::Clock zoomClock;
+
     Camera();
-    void zoomViewAt(sf::Vector2i pixel, float zoom);
-    void Work(sf::View view, float = 1.0f);
+    void zoomViewAt(sf::Vector2i pixel, float zoom, sf::View& view);
+    void Work(sf::View& view, float = 1.0f);
 };
 
 

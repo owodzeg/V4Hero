@@ -12,12 +12,11 @@ Camera::Camera()
     camera_x = 0;
 }
 
-void Camera::zoomViewAt(sf::Vector2i pixel, float zoom)
+void Camera::zoomViewAt(sf::Vector2i pixel, float zoom, sf::View& view)
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
 
     const sf::Vector2f beforeCoord{window->mapPixelToCoords(pixel)};
-    sf::View view{window->getView()};
     view.zoom(zoom);
     window->setView(view);
     sf::Vector2f afterCoord{window->mapPixelToCoords(pixel)};
@@ -27,7 +26,7 @@ void Camera::zoomViewAt(sf::Vector2i pixel, float zoom)
     zoom_y += offsetCoords.y;
 }
 
-void Camera::Work(sf::View view, float dest_zoom_over)
+void Camera::Work(sf::View& view, float dest_zoom_over)
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
@@ -66,10 +65,21 @@ void Camera::Work(sf::View view, float dest_zoom_over)
         }
     }
 
+    if(zoomClock.getElapsedTime().asMilliseconds() <= timeToZoom && activateZoom)
+    {
+        dest_zoom = zoomSpeed;
+    }
+
+    if(zoomClock.getElapsedTime().asMilliseconds() > timeToZoom)
+    {
+        activateZoom = false;
+    }
+
     /** Move camera **/
 
     //camera_x += camera_xspeed / fps;
-    camera_x = followobject_x + (1800 * resRatioX);
+    camera_x_dest = followobject_x + (1800 * resRatioX);
+    camera_x += ((camera_x_dest - camera_x)) / fps;
     //camera_x += ((camera_x_dest - camera_x) * 5) / fps;
 
     /** Manual camera movement (L/R in Patapon) **/
@@ -83,21 +93,22 @@ void Camera::Work(sf::View view, float dest_zoom_over)
     debug_x += ((debug_x_dest - debug_x) * 5) / fps;
 
     /** Apply zoom **/
-    zoom += ((dest_zoom - zoom) * 5) / fps;
+    zoom += ((dest_zoom - zoom)) / fps;
 
     if (dest_zoom == 1)
     {
         float zoomLower, zoomUpper;
 
-        if (fps >= 120)
-            zoomLower = 0.9995 + (0.03 / (fps));
+        if (fps >= 60)
+        {
+            zoomLower = 0.9999 + (0.01 / (fps));
+            zoomUpper = 1.0001 - (0.01 / (fps));
+        }
         else
-            zoomLower = 0.9995;
-
-        if (fps >= 120)
-            zoomUpper = 1.0005 - (0.03 / (fps));
-        else
-            zoomUpper = 1.0005;
+        {
+            zoomLower = 0.9999;
+            zoomUpper = 1.0001;
+        }
 
         if ((zoom > zoomLower) && (zoom < zoomUpper))
             zoom = 1;
@@ -116,7 +127,7 @@ void Camera::Work(sf::View view, float dest_zoom_over)
     //SPDLOG_DEBUG("[zoom] zoom: {} dest_zoom: {}", zoom, dest_zoom);
 
     if(zoom != dest_zoom)
-    zoomViewAt(sf::Vector2i(1280, 720), zoom);
+    zoomViewAt(sf::Vector2i(1280 * resRatioX, (2160-330) * resRatioY), zoom, view);
 
     /** Apply camera position **/
 

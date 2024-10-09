@@ -12,16 +12,21 @@ MissionController::MissionController()
     hatapons.push_back(std::make_unique<Hatapon>());
 
     int pons = CoreManager::getInstance().getConfig()->GetInt("yaripons");
-    kirajin_hp = pons*100;
+    kirajin_hp = pons*10;
 
     for(int i=1; i<=pons; i++)
     {
         yaripons.push_back(std::make_unique<Yaripon>(i, pons));
     }
 
-    obstacles.push_back(std::make_unique<AnimatedObject>());
-    obstacles.back().get()->LoadConfig("resources/units/entity/kirajin.zip");
-    obstacles.back().get()->setAnimation("idle");
+    entities.push_back(std::make_unique<Entity>());
+    entities.back().get()->LoadConfig("resources/units/entity/kirajin.zip");
+    entities.back().get()->setAnimation("idle");
+    entities.back().get()->orderID = 0;
+    entities.push_back(std::make_unique<Entity>());
+    entities.back().get()->LoadConfig("resources/units/entity/wakapon.zip");
+    entities.back().get()->setAnimation("idle");
+    entities.back().get()->orderID = 1;
 
     bg.Load("shidavalley");
     std::string theme = "ahwoon";
@@ -31,7 +36,9 @@ MissionController::MissionController()
     CoreManager::getInstance().getRhythm()->LoadTheme(theme);
 
     lastRhythmCheck = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    
+
+    ExecuteZoom(0.999, 1000);
+
     initialized = true;
 }
 
@@ -39,6 +46,17 @@ void MissionController::SendProjectile(float x, float y, float hspeed, float vsp
 {
     projectiles.push_back(std::make_unique<Projectile>("resources/graphics/item/textures/main/0014.png", x, y, hspeed, vspeed));
     SPDLOG_DEBUG("SENDING PROJECTILE AT {} {} {} {}", x, y, hspeed, vspeed);
+}
+
+void MissionController::ExecuteZoom(float speed, float time)
+{
+    if(speed != cam.zoomSpeed)
+    {
+        cam.zoomClock.restart();
+        cam.zoomSpeed = speed;
+        cam.timeToZoom = time;
+        cam.activateZoom = true;
+    }
 }
 
 void MissionController::Update()
@@ -196,45 +214,42 @@ void MissionController::Update()
     float resRatioX = CoreManager::getInstance().getWindow()->getSize().x / float(3840);
     float resRatioY = CoreManager::getInstance().getWindow()->getSize().y / float(2160);
 
-    cam.followobject_x = (followPoint*3 - 500) * resRatioX;
-    cam.Work(view);
-    bg.pataSpeed = pataMaxSpeed;
-    bg.Draw(cam);
-
     // Update positions
     hatapons.back().get()->global_x = followPoint*3 - 400;
-    hatapons.back().get()->global_y = 1490;
-    hatapons.back().get()->Draw();
+    hatapons.back().get()->global_y = 1490 + cam.zoom_y;
 
     float closest = 9999999;
 
-    if(obstacles.size() > 0)
+    if(entities.size() > 0)
     {
-        closest = obstacles.back().get()->getGlobalPosition().x;
+        closest = entities.back().get()->getGlobalPosition().x;
     }
 
     // if farthest yaripon sees enemy, whole army shall be angry
     float yari_distance = yaripons.back().get()->closestEnemyX - yaripons.back().get()->global_x - yaripons.back().get()->local_x - yaripons.back().get()->attack_x - yaripons.back().get()->gap_x;
     bool yari_inSight = false;
 
-    if(yari_distance < 4000)
+    if(yari_distance < 3000 && entities.size() > 0)
     {
         yari_inSight = true;
+        ExecuteZoom(1.001, 1000);
+    }
+    else
+    {
+        ExecuteZoom(0.999, 1000);
     }
 
     for(auto& pon : yaripons)
     {
         pon->global_x = followPoint*3 - 240;
-        pon->global_y = 1740;
+        pon->global_y = 1740 + cam.zoom_y;
         pon->closestEnemyX = closest;
         pon->enemyInSight = yari_inSight;
-        pon->Draw();
     }
 
-    if(obstacles.size() > 0)
+    for(auto& entity : entities)
     {
-        obstacles.back().get()->setGlobalPosition(sf::Vector2f(4000, 1735));
-        obstacles.back().get()->Draw();
+        entity->setGlobalPosition(sf::Vector2f(8000 + entity->orderID*5000, 1735 + cam.zoom_y));
     }
 
     sf::RectangleShape hb;
@@ -255,6 +270,75 @@ void MissionController::Update()
     for(auto& projectile : projectiles)
     {
         projectile->Update();
+
+        if(entities.size() > 0)
+        {
+            if(projectile->tipX > entities.back().get()->getGlobalPosition().x-60 && projectile->tipX < entities.back().get()->getGlobalPosition().x+60)
+            {
+                if(projectile->tipY > entities.back().get()->getGlobalPosition().y-60 && projectile->tipY < entities.back().get()->getGlobalPosition().y+60)
+                {
+                    projectile->finished = true;
+                    kirajin_hp -= rand() % 20 + 10;
+                    SPDLOG_DEBUG("kirajin got hit! {} HP left", kirajin_hp);
+                    entities.back().get()->setAnimation("stagger");
+                    entities.back().get()->restartAnimation();
+                }
+            }
+        }
+    }
+
+    if(kirajin_hp <= 0 && entities.size() > 0)
+    {
+        entities.clear();
+    }
+
+    // find leftmost and rightmost patapon so a middlespot can be calculated
+    // i think in patapon the camera actually follows the rightmost spot
+    // can be experimented here
+    float leftmostPataX = 99999999;
+    float rightmostPataX = -99999999;
+
+    for(auto& p : hatapons)
+    {
+        float pos = p->global_x+p->local_x;
+        if(pos < leftmostPataX)
+            leftmostPataX = pos;
+        if(pos > rightmostPataX)
+            rightmostPataX = pos;
+    }
+
+    for(auto& p : yaripons)
+    {
+        float pos = p->global_x+p->local_x+p->attack_x+p->gap_x;
+        if(pos < leftmostPataX)
+            leftmostPataX = pos;
+        if(pos > rightmostPataX)
+            rightmostPataX = pos;
+    }
+
+    if(yari_inSight)
+    {
+        cam.followobject_x = ((leftmostPataX + closest - 1200) / 2) * resRatioX;
+        //cam.wantedZoom = 1.6;
+    }
+    else
+    {
+        cam.followobject_x = ((leftmostPataX + rightmostPataX) / 2) * resRatioX;
+        //cam.wantedZoom = 0.7;
+    }
+
+    cam.Work(view);
+    bg.pataSpeed = pataMaxSpeed;
+    bg.Draw(cam);
+
+    // draw everything
+    hatapons.back().get()->Draw();
+
+    for(auto& pon : yaripons)
+        pon->Draw();
+
+    for(auto& projectile : projectiles)
+    {
         projectile->Draw();
 
         if(debug)
@@ -263,35 +347,18 @@ void MissionController::Update()
             SPDLOG_DEBUG("projectile at {} {}, tip at {} {}, hitbox at {} {}", projectile->xPos, projectile->yPos, projectile->tipX, projectile->tipY, hb.getPosition().x, hb.getPosition().y);
             CoreManager::getInstance().getWindow()->draw(hb);
         }
-
-        if(obstacles.size() > 0)
-        {
-            if(projectile->tipX > obstacles.back().get()->getGlobalPosition().x-60 && projectile->tipX < obstacles.back().get()->getGlobalPosition().x+60)
-            {
-                if(projectile->tipY > obstacles.back().get()->getGlobalPosition().y-60 && projectile->tipY < obstacles.back().get()->getGlobalPosition().y+60)
-                {
-                    projectile->finished = true;
-                    kirajin_hp -= rand() % 20 + 10;
-                    SPDLOG_DEBUG("kirajin got hit! {} HP left", kirajin_hp);
-                    obstacles.back().get()->setAnimation("stagger");
-                    obstacles.back().get()->restartAnimation();
-                }
-            }
-        }
     }
 
-    if(debug && obstacles.size() > 0)
+    if(entities.size() > 0)
+        entities.back().get()->Draw();
+
+    if(debug && entities.size() > 0)
     {
         sf::RectangleShape hbx;
         hbx.setSize(sf::Vector2f(120*resRatioX,120*resRatioY));
         hbx.setFillColor(sf::Color(128,0,128,64));
-        hbx.setPosition((obstacles.back().get()->getGlobalPosition().x-60) * resRatioX, (obstacles.back().get()->getGlobalPosition().y-60) * resRatioY);
+        hbx.setPosition((entities.back().get()->getGlobalPosition().x-60) * resRatioX, (entities.back().get()->getGlobalPosition().y-60) * resRatioY);
         CoreManager::getInstance().getWindow()->draw(hbx);
-    }
-
-    if(kirajin_hp <= 0 && obstacles.size() > 0)
-    {
-        obstacles.clear();
     }
 
     if(inputCtrl->isKeyPressed(Input::Keys::UP))
@@ -302,6 +369,16 @@ void MissionController::Update()
             pon->toggleDebug = !pon->toggleDebug;
         }
         debug = !debug;
+    }
+
+    if(inputCtrl->isKeyPressed(Input::Keys::LEFT))
+    {
+        cam.wantedZoom -= 0.5;
+    }
+
+    if(inputCtrl->isKeyPressed(Input::Keys::RIGHT))
+    {
+        cam.wantedZoom += 0.5;
     }
 
     rhythmGUI->doVisuals(0, rhythm->GetCombo());
