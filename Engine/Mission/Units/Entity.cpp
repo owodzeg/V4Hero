@@ -57,6 +57,14 @@ void Entity::LoadEntity(const std::string& path)
         }
     }
 
+    if(entity.contains("specifications"))
+    {
+        if(entity["specifications"].contains("type"))
+            entityType = convStringToTypeEnum(entity["specifications"]["type"]);
+        if(entity["specifications"].contains("category"))
+            entityType = convStringToTypeEnum(entity["specifications"]["category"]);
+    }
+
     if(entity.contains("behavior"))
     {
         if(entity["behavior"].contains("hit"))

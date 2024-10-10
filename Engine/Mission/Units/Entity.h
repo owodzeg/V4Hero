@@ -102,6 +102,39 @@ public:
     void handleRhythmMessages();
 
     void Draw();
+
+    const std::unordered_map<std::string, EntityTypes> stringToTypeEnum = {
+        {"PASSIVE", EntityTypes::PASSIVE},
+        {"HOSTILE", EntityTypes::HOSTILE},
+        {"NEUTRAL", EntityTypes::NEUTRAL}
+    };
+
+    const std::unordered_map<std::string, EntityCategories> stringToCategoryEnum = {
+        {"ANIMAL", EntityCategories::ANIMAL},
+        {"BUILDING_REGULAR", EntityCategories::BUILDING_REGULAR},
+        {"ENEMYUNIT", EntityCategories::ENEMYUNIT},
+        {"MISC", EntityCategories::MISC},
+        {"NATURE", EntityCategories::NATURE},
+        {"OBSTACLE_GROUND", EntityCategories::OBSTACLE_GROUND},
+        {"OBSTACLE_ROCK", EntityCategories::OBSTACLE_ROCK},
+        {"OBSTACLE_IRON", EntityCategories::OBSTACLE_IRON},
+        {"OBSTACLE_WOOD", EntityCategories::OBSTACLE_WOOD},
+        {"BUILDING_IRON", EntityCategories::BUILDING_IRON}
+    };
+
+    EntityTypes convStringToTypeEnum(const std::string& enumName) {
+        auto it = stringToTypeEnum.find(enumName);
+        if (it != stringToTypeEnum.end())
+            return it->second;
+        return EntityTypes::DUMMY;
+    }
+
+    EntityCategories convStringToCategoryEnum(const std::string& enumName) {
+        auto it = stringToCategoryEnum.find(enumName);
+        if (it != stringToCategoryEnum.end())
+            return it->second;
+        return EntityCategories::NO_CATEGORY;
+    }
 };
 
 #endif // ENTITY_H
