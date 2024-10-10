@@ -22,6 +22,9 @@ void Camera::zoomViewAt(sf::Vector2i pixel, float zoom, sf::View& view)
     sf::Vector2f afterCoord{window->mapPixelToCoords(pixel)};
     sf::Vector2f offsetCoords{beforeCoord - afterCoord};
 
+    SPDLOG_DEBUG("zoomViewAt before: {} {}, after: {} {}", beforeCoord.x, beforeCoord.y, afterCoord.x, afterCoord.y);
+    SPDLOG_DEBUG("zoomSpeed {} zoom {} zoomUntil {} dest_zoom {} activateZoom {} zoomedTotal {} ? {}", zoomSpeed, zoom, zoomUntil, dest_zoom, activateZoom, zoomedTotal, 330.0/ zoomedTotal);
+
     zoom_x += offsetCoords.x;
     zoom_y += offsetCoords.y;
 }
@@ -136,13 +139,13 @@ void Camera::Work(sf::View& view, float dest_zoom_over)
             zoom = dest_zoom;
     }
 
-    //SPDLOG_DEBUG("zoomSpeed {} zoom {} zoomUntil {} dest_zoom {} activateZoom {} zoomedTotal {}", zoomSpeed, zoom, zoomUntil, dest_zoom, activateZoom, zoomedTotal);
+    //SPDLOG_DEBUG("zoomSpeed {} zoom {} zoomUntil {} dest_zoom {} activateZoom {} zoomedTotal {} ? {}", zoomSpeed, zoom, zoomUntil, dest_zoom, activateZoom, zoomedTotal, 330.0/ zoomedTotal);
 
     //SPDLOG_DEBUG("[zoom] zoom: {} dest_zoom: {}", zoom, dest_zoom);
     zoomedTotal *= zoom;
 
     if(zoom != dest_zoom)
-    zoomViewAt(sf::Vector2i(1280 * resRatioX, (2160-330) * resRatioY), zoom, view);
+    zoomViewAt(sf::Vector2i(1920*resRatioX, 2160*resRatioY), zoom, view);
 
     /** Apply camera position **/
 

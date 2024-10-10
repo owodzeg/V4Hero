@@ -93,6 +93,7 @@ void MissionController::LoadMission(const std::string& path)
     lastRhythmCheck = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
     //ExecuteZoom(0.999, 1000);
+    mission_view.setSize(sf::Vector2f(CoreManager::getInstance().getWindow()->getSize().x, CoreManager::getInstance().getWindow()->getSize().y));
 
     initialized = true;
 }
@@ -123,6 +124,9 @@ void MissionController::Update()
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
 
     float fps = CoreManager::getInstance().getCore()->getFPS();
+
+    // TODO: why the fuck is this needed? without this, zoom doesn't work correctly.
+    double zoom_offset = (0.000709722222222 * CoreManager::getInstance().getWindow()->getSize().y);
 
     rhythm->doRhythm();
 
@@ -266,14 +270,15 @@ void MissionController::Update()
 
     //SPDLOG_DEBUG("PataSpeed: {}, PataMaxSpeed: {}, followPoint: {}", pataSpeed, pataMaxSpeed, followPoint);
 
-    auto view = CoreManager::getInstance().getWindow()->getView();
-
     float resRatioX = CoreManager::getInstance().getWindow()->getSize().x / float(3840);
     float resRatioY = CoreManager::getInstance().getWindow()->getSize().y / float(2160);
 
+    auto lastView = CoreManager::getInstance().getWindow()->getView();
+    CoreManager::getInstance().getWindow()->setView(mission_view);
+
     // Update positions
     hatapons.back().get()->global_x = followPoint*3 - 400;
-    hatapons.back().get()->global_y = 1490 + cam.zoom_y;
+    hatapons.back().get()->global_y = 1490 + cam.zoom_y / zoom_offset;
 
     float closest = 9999999;
 
@@ -300,14 +305,14 @@ void MissionController::Update()
     for(auto& pon : yaripons)
     {
         pon->global_x = followPoint*3 - 240;
-        pon->global_y = 1740 + cam.zoom_y;
+        pon->global_y = 1740 + cam.zoom_y / zoom_offset; // ,/0.511 dla 720p ,/ 1.533 dla 2160p
         pon->closestEnemyX = closest;
         pon->enemyInSight = yari_inSight;
     }
 
     for(auto& entity : entities)
     {
-        entity->setGlobalPosition(sf::Vector2f(entity->getGlobalPosition().x, entity->yPos + cam.zoom_y));
+        entity->setGlobalPosition(sf::Vector2f(entity->getGlobalPosition().x, entity->yPos + cam.zoom_y / zoom_offset));
     }
 
     sf::RectangleShape hb;
@@ -397,7 +402,7 @@ void MissionController::Update()
         cam.followobject_x = ((leftmostPataX + rightmostPataX - 300) / 2) * resRatioX;
     }
 
-    cam.Work(view);
+    cam.Work(mission_view);
     bg.pataSpeed = pataMaxSpeed;
     bg.Draw(cam);
 
@@ -454,6 +459,8 @@ void MissionController::Update()
     bg.DrawFloor();
 
     rhythmGUI->doVisuals(0, rhythm->GetCombo());
+
+    CoreManager::getInstance().getWindow()->setView(lastView);
 }
 
 MissionController::~MissionController()

@@ -106,6 +106,9 @@ void Background::Draw(Camera& camera)
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
 
+    // TODO: patch this out (search for zoom_offset in mission controller for details)
+    double zoom_offset = (0.000709722222222 * CoreManager::getInstance().getWindow()->getSize().y);
+
     for (int i = 0; i < vx_pos.size(); i++)
     {
         v_background[i].position = vx_pos[i];
@@ -132,7 +135,7 @@ void Background::Draw(Camera& camera)
         bg_object.texture.setRepeated(true);
         bg_object.texture.setOrigin(0, bg_object.texture.getLocalBounds().height);
         bg_object.texture.setColor(bg_object.color);
-        bg_object.texture.setPosition(xPos / resRatioX, bg_object.position.y + camera.zoom_y);
+        bg_object.texture.setPosition(xPos / resRatioX, bg_object.position.y + camera.zoom_y / zoom_offset);
         bg_object.texture.draw();
     }
 

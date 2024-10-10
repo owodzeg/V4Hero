@@ -19,6 +19,8 @@ public:
     Background bg;
     Camera cam;
 
+    sf::View mission_view;
+
     std::vector<std::unique_ptr<Hatapon>> hatapons;
     std::vector<std::unique_ptr<Yaripon>> yaripons;
     std::vector<std::unique_ptr<Projectile>> projectiles;
