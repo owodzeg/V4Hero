@@ -21,13 +21,26 @@
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 2700, "color": "1e8c5a", "layer": "nature" } },
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 2940, "color": "1e8c5a", "layer": "nature" } },
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 3180, "color": "1e8c5a", "layer": "nature" } },
+		{ "path": "resources/units/entity/kirajin.zip", "params": { "xpos": 2500 } },
+		{ "path": "resources/units/entity/kirajin.zip", "params": { "xpos": 2650 } },
+		{ "path": "resources/units/entity/kirajin.zip", "params": { "xpos": 2800 } },
+		{ "path": "resources/units/entity/kirajin_hut.zip", "params": { "xpos": 3400 } },
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 3900, "color": "1e8c5a", "layer": "nature" } },
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 4110, "color": "1e8c5a", "layer": "nature" } },
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 4920, "color": "1e8c5a", "layer": "nature" } },
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 5160, "color": "1e8c5a", "layer": "nature" } },
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 7200, "color": "1e8c5a", "layer": "nature" } },
+		{ "path": "resources/units/entity/kirajin.zip", "params": { "xpos": 8000 } },
+		{ "path": "resources/units/entity/kirajin.zip", "params": { "xpos": 8250 } },
+		{ "path": "resources/units/entity/kirajin.zip", "params": { "xpos": 8500 } },
+		{ "path": "resources/units/entity/kirajin_hut.zip", "params": { "xpos": 9100 } },
+		{ "path": "resources/units/entity/kirajin_hut.zip", "params": { "xpos": 10100 } },
+		{ "path": "resources/units/entity/kirajin_hut.zip", "params": { "xpos": 11100 } },
+		{ "path": "resources/units/entity/kirajin.zip", "params": { "xpos": 12000 } },
+		{ "path": "resources/units/entity/kirajin.zip", "params": { "xpos": 12250 } },
+		{ "path": "resources/units/entity/kirajin.zip", "params": { "xpos": 12500 } },
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 7440, "color": "1e8c5a", "layer": "nature" } },
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 8700, "color": "1e8c5a", "layer": "nature" } },
-		{ "path": "resources/units/entity/end_flag.zip", "params": { "xpos": 1500, "layer": "ui" } }
+		{ "path": "resources/units/entity/end_flag.zip", "params": { "xpos": 18000, "layer": "ui" } }
 	]
 }
