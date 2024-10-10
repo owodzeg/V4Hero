@@ -56,25 +56,29 @@ void MissionController::LoadMission(const std::string& path)
         for(auto entity : mission["entities"])
         {
             std::string p = entity["path"];
-            float x_pos = 0;
-            sf::Color c = sf::Color(255,255,255);
+
+            entities.push_back(std::make_unique<Entity>());
+            auto e = entities.back().get();
+            e->LoadEntity(p);
 
             for(auto param : entity["params"].items())
             {
                 if(param.key() == "xpos")
-                    x_pos = param.value();
+                    e->setGlobalPosition(sf::Vector2f(param.value(),e->yPos));
 
                 if(param.key() == "color")
-                    c = Func::hexToColor(param.value());
+                    e->setColor(Func::hexToColor(param.value()));
+
+                if(param.key() == "hp")
+                {
+                    e->maxHP = param.value();
+                    e->curHP = e->maxHP;
+                }
             }
 
             // TODO: add stat overrides
-            entities.push_back(std::make_unique<Entity>());
-            entities.back().get()->LoadEntity(p);
-            entities.back().get()->setColor(c);
             //entities.back().get()->setAnimation("idle");
-            entities.back().get()->setGlobalPosition(sf::Vector2f(x_pos, entities.back().get()->yPos));
-            entities.back().get()->orderID = en_c;
+            e->orderID = en_c;
 
             en_c++;
         }
@@ -340,9 +344,12 @@ void MissionController::Update()
         {
             if(entity->entityType == Entity::EntityTypes::HOSTILE || entity->entityType == Entity::EntityTypes::NEUTRAL)
             {
-                if(projectile->tipX > entity->getGlobalPosition().x-60 && projectile->tipX < entity->getGlobalPosition().x+60)
+                auto pos = entity->getGlobalPosition();
+                auto hb = entity->getHitbox();
+
+                if(projectile->tipX > pos.x+hb.left && projectile->tipX < pos.x+hb.width)
                 {
-                    if(projectile->tipY > entity->getGlobalPosition().y-60 && projectile->tipY < entity->getGlobalPosition().y+60)
+                    if(projectile->tipY > pos.y+hb.top && projectile->tipY < pos.y+hb.height)
                     {
                         projectile->finished = true;
                         entity->handleHit(rand() % 20 + 10);
@@ -401,10 +408,13 @@ void MissionController::Update()
     {
         for(auto& entity : entities)
         {
+            auto pos = entity->getGlobalPosition();
+            auto hb = entity->getHitbox();
+
             sf::RectangleShape hbx;
-            hbx.setSize(sf::Vector2f(120*resRatioX,120*resRatioY));
+            hbx.setSize(sf::Vector2f(hb.width*resRatioX,hb.height*resRatioY));
             hbx.setFillColor(sf::Color(128,0,128,64));
-            hbx.setPosition((entity->getGlobalPosition().x-60) * resRatioX, (entity->getGlobalPosition().y-60) * resRatioY);
+            hbx.setPosition((pos.x+hb.left) * resRatioX, (pos.y+hb.top) * resRatioY);
             CoreManager::getInstance().getWindow()->draw(hbx);
         }
     }
@@ -433,6 +443,10 @@ void MissionController::Update()
         for(auto& pon : yaripons)
         {
             pon->toggleDebug = !pon->toggleDebug;
+        }
+        for(auto& entity : entities)
+        {
+            entity->toggleDebug = !entity->toggleDebug;
         }
         debug = !debug;
     }
