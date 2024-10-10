@@ -38,7 +38,10 @@ sf::Image PNGAnimation::getAnimationImage(const std::string& anim_path, const st
         zf.close();
 
         TextureManager::getInstance().loadImageFromMemory(image_path, img, false);
-        TextureManager::getInstance().scaleTexture(image_path, TextureManager::getInstance().getRatio(), false);
+
+        if(TextureManager::getInstance().getRatio() != 1)
+            TextureManager::getInstance().scaleTexture(image_path, TextureManager::getInstance().getRatio(), false);
+
         img = TextureManager::getInstance().getImage(image_path);
 
         return img;
@@ -46,7 +49,10 @@ sf::Image PNGAnimation::getAnimationImage(const std::string& anim_path, const st
     else
     {
         TextureManager::getInstance().loadImageFromFile(image_path);
-        TextureManager::getInstance().scaleTexture(image_path, TextureManager::getInstance().getRatio(), false);
+
+        if(TextureManager::getInstance().getRatio() != 1)
+            TextureManager::getInstance().scaleTexture(image_path, TextureManager::getInstance().getRatio(), false);
+
         sf::Image img = TextureManager::getInstance().getImage(image_path);
 
         return img;

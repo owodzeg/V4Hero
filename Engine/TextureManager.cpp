@@ -2,6 +2,9 @@
 
 #include "TextureManager.h"
 #include "CoreManager.h"
+#include <vector>
+#include <thread>
+#include <future>
 
 TextureManager::TextureManager()
 {
@@ -120,61 +123,110 @@ sf::Texture& TextureManager::getTexture(const std::string& path, int quality, bo
 
 sf::Texture& TextureManager::scaleTexture(const std::string& path, int ratio, bool unload)
 {
+    if(loadedImages.find(path) != loadedImages.end() && ratio == 1)
+    {
+        loadTextureFromImage(path);
+
+        if (unload)
+            unloadImage(path);
+
+        SPDLOG_DEBUG("Providing downscaled texture with path {}", path);
+        return loadedTextures[path];
+    }
+
     if (loadedImages.find(path) != loadedImages.end())
     {
         SPDLOG_DEBUG("Loading source image from {}", path);
-        sf::Image source = loadedImages[path];
+        sf::Image& source = loadedImages[path];
 
-        int nwidth = ceil(source.getSize().x / float(ratio));
-        int nheight = ceil(source.getSize().y / float(ratio));
+        int originalWidth = source.getSize().x;
+        int originalHeight = source.getSize().y;
+
+        int nwidth = ceil(originalWidth / float(ratio));
+        int nheight = ceil(originalHeight / float(ratio));
 
         sf::Image dest;
         dest.create(nwidth, nheight);
 
-        for (int x=0; x<nwidth; x++)
+        // Step 1: Build the integral image for faster block summation
+        std::vector<std::vector<int>> integralR(originalWidth, std::vector<int>(originalHeight, 0));
+        std::vector<std::vector<int>> integralG(originalWidth, std::vector<int>(originalHeight, 0));
+        std::vector<std::vector<int>> integralB(originalWidth, std::vector<int>(originalHeight, 0));
+        std::vector<std::vector<int>> integralA(originalWidth, std::vector<int>(originalHeight, 0));
+
+        // Precompute the integral image (summing up color channels separately)
+        for (int x = 0; x < originalWidth; ++x)
         {
-            for (int y=0; y<nheight; y++)
+            for (int y = 0; y < originalHeight; ++y)
             {
-                int r=0, g=0, b=0, a=0, final_ratio=0;
+                sf::Color pixel = source.getPixel(x, y);
 
-                for (int p1 = 0; p1 < ratio; p1++)
-                {
-                    for (int p2 = 0; p2 < ratio; p2++)
-                    {
-                        if (x * ratio + p1 < source.getSize().x && y * ratio + p2 < source.getSize().y)
-                        {
-                            sf::Color p = source.getPixel(x * ratio + p1, y * ratio + p2);
-                            r += p.r;
-                            g += p.g;
-                            b += p.b;
-                            a += p.a;
-
-                            final_ratio++;
-                        }
-                    }
-                }
-
-                if (final_ratio < 1)
-                    final_ratio = 1; //prevent division by zero
-
-                final_ratio = ratio * ratio;
-
-                r = r / final_ratio;
-                g = g / final_ratio;
-                b = b / final_ratio;
-                a = a / final_ratio;
-
-                dest.setPixel(x, y, sf::Color(r, g, b, a));
+                integralR[x][y] = pixel.r + ((x > 0) ? integralR[x-1][y] : 0) + ((y > 0) ? integralR[x][y-1] : 0) - ((x > 0 && y > 0) ? integralR[x-1][y-1] : 0);
+                integralG[x][y] = pixel.g + ((x > 0) ? integralG[x-1][y] : 0) + ((y > 0) ? integralG[x][y-1] : 0) - ((x > 0 && y > 0) ? integralG[x-1][y-1] : 0);
+                integralB[x][y] = pixel.b + ((x > 0) ? integralB[x-1][y] : 0) + ((y > 0) ? integralB[x][y-1] : 0) - ((x > 0 && y > 0) ? integralB[x-1][y-1] : 0);
+                integralA[x][y] = pixel.a + ((x > 0) ? integralA[x-1][y] : 0) + ((y > 0) ? integralA[x][y-1] : 0) - ((x > 0 && y > 0) ? integralA[x-1][y-1] : 0);
             }
         }
 
-        loadedImages[path] = dest;
+        // Step 2: Downsample using the integral image
+        auto downscaleBlock = [&](int xStart, int xEnd) {
+            for (int x = xStart; x < xEnd; ++x)
+            {
+                for (int y = 0; y < nheight; ++y)
+                {
+                    int srcX1 = x * ratio;
+                    int srcY1 = y * ratio;
+                    int srcX2 = std::min((x + 1) * ratio - 1, originalWidth - 1);
+                    int srcY2 = std::min((y + 1) * ratio - 1, originalHeight - 1);
 
-        SPDLOG_DEBUG("Image {} has been downscaled.", path);
+                    int area = (srcX2 - srcX1 + 1) * (srcY2 - srcY1 + 1);
+
+                    int r = integralR[srcX2][srcY2]
+                            - ((srcX1 > 0) ? integralR[srcX1-1][srcY2] : 0)
+                            - ((srcY1 > 0) ? integralR[srcX2][srcY1-1] : 0)
+                            + ((srcX1 > 0 && srcY1 > 0) ? integralR[srcX1-1][srcY1-1] : 0);
+
+                    int g = integralG[srcX2][srcY2]
+                            - ((srcX1 > 0) ? integralG[srcX1-1][srcY2] : 0)
+                            - ((srcY1 > 0) ? integralG[srcX2][srcY1-1] : 0)
+                            + ((srcX1 > 0 && srcY1 > 0) ? integralG[srcX1-1][srcY1-1] : 0);
+
+                    int b = integralB[srcX2][srcY2]
+                            - ((srcX1 > 0) ? integralB[srcX1-1][srcY2] : 0)
+                            - ((srcY1 > 0) ? integralB[srcX2][srcY1-1] : 0)
+                            + ((srcX1 > 0 && srcY1 > 0) ? integralB[srcX1-1][srcY1-1] : 0);
+
+                    int a = integralA[srcX2][srcY2]
+                            - ((srcX1 > 0) ? integralA[srcX1-1][srcY2] : 0)
+                            - ((srcY1 > 0) ? integralA[srcX2][srcY1-1] : 0)
+                            + ((srcX1 > 0 && srcY1 > 0) ? integralA[srcX1-1][srcY1-1] : 0);
+
+                    dest.setPixel(x, y, sf::Color(r / area, g / area, b / area, a / area));
+                }
+            }
+        };
+
+        // Step 3: Multithreading for parallel downscaling
+        unsigned int numThreads = std::thread::hardware_concurrency();
+        std::vector<std::future<void>> futures;
+
+        int chunkSize = nwidth / numThreads;
+        for (unsigned int i = 0; i < numThreads; ++i)
+        {
+            int xStart = i * chunkSize;
+            int xEnd = (i == numThreads - 1) ? nwidth : (i + 1) * chunkSize;
+
+            futures.push_back(std::async(std::launch::async, downscaleBlock, xStart, xEnd));
+        }
+
+        for (auto& future : futures) {
+            future.get(); // Wait for all threads to finish
+        }
+
+        loadedImages[path] = dest;
         loadTextureFromImage(path);
 
-        //after loading downscaled image to texture, we no longer need to keep it in memory, so we clean it
-        if(unload)
+        if (unload)
             unloadImage(path);
 
         SPDLOG_DEBUG("Providing downscaled texture with path {}", path);
@@ -184,6 +236,7 @@ sf::Texture& TextureManager::scaleTexture(const std::string& path, int ratio, bo
     SPDLOG_ERROR("Could not find appropriate texture to scale.");
     throw TextureManagerException("Could not find appropriate texture to scale.");
 }
+
 
 bool TextureManager::checkImageExists(const std::string& key)
 {
@@ -256,13 +309,13 @@ void TextureManager::loadImageFromFileWithScale(const std::string& path, int qua
 void TextureManager::loadImageFromMemory(const std::string& key, sf::Image image, bool asTexture)
 {
     std::lock_guard<std::mutex> guard(resource_mutex);
-    SPDLOG_DEBUG("load image {} from memory. asTexture: {}", key, asTexture);
+    //SPDLOG_DEBUG("load image {} from memory. asTexture: {}", key, asTexture);
 
     if (!asTexture)
     {
         if (loadedImages.find(key) == loadedImages.end())
         {
-            SPDLOG_INFO("Loading image from memory with key {}", key);
+            //SPDLOG_INFO("Loading image from memory with key {}", key);
             loadedImages[key] = image;
         } else
         {
@@ -273,7 +326,7 @@ void TextureManager::loadImageFromMemory(const std::string& key, sf::Image image
     {
         if (loadedImages.find(key) == loadedImages.end())
         {
-            SPDLOG_INFO("Loading image from memory into texture with key {}", key);
+            //SPDLOG_INFO("Loading image from memory into texture with key {}", key);
             loadedTextures[key].loadFromImage(image);
         } else
         {
