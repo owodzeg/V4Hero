@@ -5,6 +5,8 @@
 #include <filesystem>
 #include <fstream>
 
+#include <CoreManager.h>
+
 using namespace libzippp;
 
 using json = nlohmann::json;

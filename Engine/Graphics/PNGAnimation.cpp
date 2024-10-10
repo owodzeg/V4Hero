@@ -469,7 +469,6 @@ void PNGAnimation::Load(const std::string& path)
                 {
                     int id = getIDfromShortName(key);
 
-                    SPDLOG_DEBUG("setting custom origin for {}: {} {}", key, o_x, o_y);
                     animations[id].hitbox.left = hb_x;
                     animations[id].hitbox.top = hb_y;
                     animations[id].hitbox.width = hb_width;
