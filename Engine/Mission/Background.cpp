@@ -136,6 +136,14 @@ void Background::Draw(Camera& camera)
         bg_object.texture.draw();
     }
 
+    window->setView(lastView);
+}
+
+void Background::DrawFloor()
+{
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+
+    auto lastView = window->getView();
     window->setView(window->getDefaultView());
 
     r_ground.setSize(sf::Vector2f(window->getSize().x, floor_height));

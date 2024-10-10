@@ -35,6 +35,7 @@ public:
     Background();
     void Load(const std::string& bg_name);
     void Draw(Camera& camera);
+    void DrawFloor();
 };
 
 #endif // BACKGROUND_H
