@@ -1,0 +1,33 @@
+{
+	"params":
+	{
+		"name": "Kami's Return",
+		"background": "shidavalley",
+		"bgm": "ahwoon",
+		"rich_presence": "shida"
+	},
+
+	"cutscenes":
+	{
+		"learn_patapata": [0, 0, 3]
+	},
+
+	"entities":
+	[
+		{ "path": "resources/units/entity/fever_worm.zip", "params": { "xpos": -330, "layer": "ui" } },
+		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 400, "color": "1e8c5a", "layer": "nature" } },
+		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 470, "color": "1e8c5a", "layer": "nature" } },
+		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 580, "color": "1e8c5a", "layer": "nature" } },
+		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 900, "color": "1e8c5a", "layer": "nature" } },
+		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 980, "color": "1e8c5a", "layer": "nature" } },
+		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 1060, "color": "1e8c5a", "layer": "nature" } },
+		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 1300, "color": "1e8c5a", "layer": "nature" } },
+		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 1370, "color": "1e8c5a", "layer": "nature" } },
+		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 1640, "color": "1e8c5a", "layer": "nature" } },
+		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 1720, "color": "1e8c5a", "layer": "nature" } },
+		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 2400, "color": "1e8c5a", "layer": "nature" } },
+		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 2480, "color": "1e8c5a", "layer": "nature" } },
+		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 2900, "color": "1e8c5a", "layer": "nature" } },
+		{ "path": "resources/units/entity/end_flag.zip", "params": { "xpos": 3500, "layer": "ui" } }
+	]
+}
