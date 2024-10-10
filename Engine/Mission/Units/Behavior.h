@@ -33,7 +33,8 @@ public:
         INVALID = -1,
         BH_HIT_DO_NOTHING = 0,
         BH_HIT_DEFAULT = 1,
-        BH_HIT_STAGGER = 2
+        BH_HIT_STAGGER = 2,
+        BH_HIT_STATIONARY_TWO_STATE = 3
     };
 
     enum class Death
@@ -71,7 +72,8 @@ public:
     enum class Spawn
     {
         INVALID = -1,
-        BH_SPAWN_DO_NOTHING = 0
+        BH_SPAWN_DO_NOTHING = 0,
+        BH_SPAWN_IDLE = 1
     };
 
     enum class Attack
@@ -95,12 +97,18 @@ public:
     const std::unordered_map<std::string, Hit> stringToHitEnum = {
         {"BH_HIT_DO_NOTHING", Hit::BH_HIT_DO_NOTHING},
         {"BH_HIT_DEFAULT", Hit::BH_HIT_DEFAULT},
-        {"BH_HIT_STAGGER", Hit::BH_HIT_STAGGER}
+        {"BH_HIT_STAGGER", Hit::BH_HIT_STAGGER},
+        {"BH_HIT_STATIONARY_TWO_STATE", Hit::BH_HIT_STATIONARY_TWO_STATE}
     };
 
     const std::unordered_map<std::string, Death> stringToDeathEnum = {
         {"BH_DEATH_DO_NOTHING", Death::BH_DEATH_DO_NOTHING},
         {"BH_DEATH_REMOVE_INSTANT", Death::BH_DEATH_REMOVE_INSTANT}
+    };
+
+    const std::unordered_map<std::string, Spawn> stringToSpawnEnum = {
+        {"BH_SPAWN_DO_NOTHING", Spawn::BH_SPAWN_DO_NOTHING},
+        {"BH_SPAWN_IDLE", Spawn::BH_SPAWN_IDLE}
     };
 
     Hit convStringToHitEnum(const std::string& enumName) {
@@ -115,6 +123,13 @@ public:
         if (it != stringToDeathEnum.end())
             return it->second;
         return Death::INVALID;
+    }
+
+    Spawn convStringToSpawnEnum(const std::string& enumName) {
+        auto it = stringToSpawnEnum.find(enumName);
+        if (it != stringToSpawnEnum.end())
+            return it->second;
+        return Spawn::INVALID;
     }
 
 };

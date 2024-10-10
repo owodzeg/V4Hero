@@ -57,6 +57,15 @@ void Entity::LoadEntity(const std::string& path)
         }
     }
 
+    if(entity.contains("defaultStats"))
+    {
+        if(entity["defaultStats"].contains("hp"))
+        {
+            maxHP = entity["defaultStats"]["hp"].get<int>();
+            curHP = entity["defaultStats"]["hp"].get<int>();
+        }
+    }
+
     if(entity.contains("specifications"))
     {
         if(entity["specifications"].contains("type"))
@@ -71,6 +80,8 @@ void Entity::LoadEntity(const std::string& path)
             bh_hit = behavior.convStringToHitEnum(entity["behavior"]["hit"]);
         if(entity["behavior"].contains("death"))
             bh_death = behavior.convStringToDeathEnum(entity["behavior"]["death"]);
+        if(entity["behavior"].contains("spawn"))
+            bh_spawn = behavior.convStringToSpawnEnum(entity["behavior"]["spawn"]);
     }
 
     yPos = 1735;
@@ -81,6 +92,8 @@ void Entity::LoadEntity(const std::string& path)
     }
 
     AnimatedObject::LoadConfig(path);
+
+    handleSpawn();
 }
 
 void Entity::setEntityID(int new_entityID)
@@ -91,6 +104,11 @@ void Entity::setEntityID(int new_entityID)
 int Entity::getEntityID()
 {
     return entityID;
+}
+
+sf::FloatRect Entity::getHitbox()
+{
+    return animation.animations[animation.currentAnimation].hitbox;
 }
 
 // handlers - environment
@@ -106,6 +124,15 @@ void Entity::handleHit(float damage) // when inflicted damage from player
         case Behavior::Hit::BH_HIT_STAGGER: {
             curHP -= damage;
             setAnimation("stagger");
+            restartAnimation();
+            break;
+        }
+
+        case Behavior::Hit::BH_HIT_STATIONARY_TWO_STATE: {
+            curHP -= damage;
+
+            if(curHP < maxHP * 0.35)
+            setAnimation("idle_damaged");
             restartAnimation();
             break;
         }
@@ -146,7 +173,13 @@ void Entity::handleDecisions() // what should the entity do?
 
 void Entity::handleSpawn() // on entity creation
 {
-
+    switch(bh_spawn)
+    {
+        case Behavior::Spawn::BH_SPAWN_IDLE: {
+            setAnimation("idle");
+            break;
+        }
+    }
 }
 
 void Entity::handleAttack() // entity's attack
@@ -172,4 +205,15 @@ void Entity::Draw()
     }
 
     AnimatedObject::Draw();
+
+    if(toggleDebug)
+    {
+        auto strRepo = CoreManager::getInstance().getStrRepo();
+        debugText.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
+        debugText.setCharacterSize(12);
+        debugText.setString(std::format("{{outline 2 255 255 255}}o{{n}}{}{{n}}curHP{{n}}{}{{n}}maxHP{{n}}{}", orderID, curHP, maxHP));
+        debugText.setOrigin(debugText.getLocalBounds().width/2, debugText.getLocalBounds().height);
+        debugText.setPosition(getGlobalPosition().x+getLocalPosition().x-20, getGlobalPosition().y+getLocalPosition().y-100);
+        debugText.draw();
+    }
 }

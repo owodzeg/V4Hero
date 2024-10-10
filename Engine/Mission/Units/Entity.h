@@ -78,6 +78,9 @@ public:
 
     std::vector<MessageCloud> messageclouds;
 
+    bool toggleDebug = true;
+    PText debugText;
+
     Entity();
     void LoadEntity(const std::string& path);
 
