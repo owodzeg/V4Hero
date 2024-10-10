@@ -257,14 +257,16 @@ sf::Color Func::hexToColor(const std::string& hex) {
     unsigned int r, g, b;
 
     // Remove the '#' if present
-    std::string hexColor = hex[0] == '#' ? hex.substr(1) : hex;
+    std::string hexColor = (hex[0] == '#') ? hex.substr(1) : hex;
 
-    // Use stringstream to convert hex to integers
-    std::stringstream ss;
-    ss << std::hex << hexColor;
+    // Ensure the string is 6 characters long (RGB)
+    if (hexColor.length() != 6)
+        throw std::invalid_argument("Hex color must be 6 characters long");
 
-    // Extract the red, green, and blue components from the hex string
-    ss >> r >> g >> b;
+    // Convert the red, green, and blue components
+    r = std::stoul(hexColor.substr(0, 2), nullptr, 16); // Red
+    g = std::stoul(hexColor.substr(2, 2), nullptr, 16); // Green
+    b = std::stoul(hexColor.substr(4, 2), nullptr, 16); // Blue
 
     // Return the corresponding SFML color (alpha is set to 255 by default)
     return sf::Color(static_cast<sf::Uint8>(r),
