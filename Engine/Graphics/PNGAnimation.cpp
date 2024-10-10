@@ -296,7 +296,7 @@ void PNGAnimation::Load(const std::string& path)
 
                 for (const auto& frame : fs::directory_iterator(entry.path()))
                 {
-                    SPDLOG_DEBUG("Animation frame found: {}", frame.path().string());
+                    SPDLOG_INFO("[FD] Animation frame found: {}", frame.path().string());
                     frame_names.push_back(frame.path().string());
                 }
             }
@@ -341,7 +341,7 @@ void PNGAnimation::Load(const std::string& path)
         {
             if (frame_name.find(anim_name) != std::string::npos)
             {
-                SPDLOG_DEBUG("Animation frame found: {}", frame_name);
+                SPDLOG_INFO("[FP] Animation frame found: {}", frame_name);
                 tmp.frame_paths.push_back(frame_name);
             }
         }
@@ -439,6 +439,59 @@ void PNGAnimation::Load(const std::string& path)
             animations[id].origin_y = o_y;
 
             animations[id].customOrigin = true;
+        }
+    }
+
+    if(animation.contains("hitbox"))
+    {
+        for(auto s : animation["hitbox"].items())
+        {
+            std::string key = s.key();
+
+            if(animation["hitbox"][key].size() == 4)
+            {
+                int hb_x = animation["hitbox"][key][0].get<int>();
+                int hb_y = animation["hitbox"][key][1].get<int>();
+                int hb_width = animation["hitbox"][key][2].get<int>();
+                int hb_height = animation["hitbox"][key][3].get<int>();
+
+                if(key == "default")
+                {
+                    for(auto& a : animations)
+                    {
+                        a.hitbox.left = hb_x;
+                        a.hitbox.top = hb_y;
+                        a.hitbox.width = hb_width;
+                        a.hitbox.height = hb_height;
+                    }
+                }
+                else
+                {
+                    int id = getIDfromShortName(key);
+
+                    SPDLOG_DEBUG("setting custom origin for {}: {} {}", key, o_x, o_y);
+                    animations[id].hitbox.left = hb_x;
+                    animations[id].hitbox.top = hb_y;
+                    animations[id].hitbox.width = hb_width;
+                    animations[id].hitbox.height = hb_height;
+                }
+            }
+        }
+    }
+    else
+    {
+        // default hitbox
+        for(auto& a : animations)
+        {
+            int ox = a.origin_x;
+            int oy = a.origin_y;
+            int bw = a.img_x;
+            int bh = a.img_y;
+
+            a.hitbox.left = -ox;
+            a.hitbox.top = -oy;
+            a.hitbox.width = bw;
+            a.hitbox.height = bh;
         }
     }
 

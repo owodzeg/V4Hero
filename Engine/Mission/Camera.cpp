@@ -136,7 +136,7 @@ void Camera::Work(sf::View& view, float dest_zoom_over)
             zoom = dest_zoom;
     }
 
-    SPDLOG_DEBUG("zoomSpeed {} zoom {} zoomUntil {} dest_zoom {} activateZoom {} zoomedTotal {}", zoomSpeed, zoom, zoomUntil, dest_zoom, activateZoom, zoomedTotal);
+    //SPDLOG_DEBUG("zoomSpeed {} zoom {} zoomUntil {} dest_zoom {} activateZoom {} zoomedTotal {}", zoomSpeed, zoom, zoomUntil, dest_zoom, activateZoom, zoomedTotal);
 
     //SPDLOG_DEBUG("[zoom] zoom: {} dest_zoom: {}", zoom, dest_zoom);
     zoomedTotal *= zoom;

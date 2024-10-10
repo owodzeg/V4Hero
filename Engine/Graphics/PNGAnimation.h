@@ -31,6 +31,7 @@ class PNGAnimation
             unsigned int maxRows = 0;
             unsigned int origin_x = 0;
             unsigned int origin_y = 0;
+            sf::FloatRect hitbox;
             bool cached = false;
             bool zip = false;
             bool customOrigin = false;
