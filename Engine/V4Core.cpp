@@ -183,7 +183,7 @@ void V4Core::init()
                 saveReader->CreateBlankSave();
             }
 
-            mission_file = "mis1_0.p4m";
+            mission_file = "resources/missions/mis1_0.json";
             mission_id = 0;
             mission_multiplier = 1;
 

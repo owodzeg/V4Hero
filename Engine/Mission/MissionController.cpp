@@ -4,36 +4,82 @@
 #include "../CoreManager.h"
 #include "../StateManager.h"
 
+#include <fstream>
+
 using json = nlohmann::json;
 using namespace std::chrono;
 
 MissionController::MissionController()
 {
+
+}
+
+void MissionController::LoadMission(const std::string& path)
+{
+    SPDLOG_INFO("Attempting to load {}", path);
+
+    json mission;
+
+    std::ifstream mfile(path);
+    if(mfile.good())
+    {
+        mission << mfile;
+    }
+    else
+    {
+        SPDLOG_ERROR("Mission file not found.");
+        throw std::exception();
+    }
+
+    std::string background, bgm;
+    if(mission.contains("params"))
+    {
+        if(mission["params"].contains("background"))
+            background = mission["params"]["background"];
+        if(mission["params"].contains("bgm"))
+            bgm = mission["params"]["bgm"];
+    }
+
     hatapons.push_back(std::make_unique<Hatapon>());
 
     int pons = CoreManager::getInstance().getConfig()->GetInt("yaripons");
-    kirajin_hp = pons*10;
 
     for(int i=1; i<=pons; i++)
     {
         yaripons.push_back(std::make_unique<Yaripon>(i, pons));
     }
 
-    entities.push_back(std::make_unique<Entity>());
-    entities.back().get()->LoadEntity("resources/units/entity/kirajin.zip");
-    entities.back().get()->setAnimation("idle");
-    entities.back().get()->orderID = 0;
-    entities.push_back(std::make_unique<Entity>());
-    entities.back().get()->LoadEntity("resources/units/entity/kirajin.zip");
-    entities.back().get()->setAnimation("idle");
-    entities.back().get()->orderID = 1;
+    if(mission.contains("entities"))
+    {
+        int en_c = 0;
 
-    bg.Load("shidavalley");
-    std::string theme = "ahwoon";
+        for(auto entity : mission["entities"])
+        {
+            std::string p = entity["path"];
+            float x_pos = 0;
+
+            for(auto param : entity["params"].items())
+            {
+                if(param.key() == "xpos")
+                    x_pos = param.value();
+            }
+
+            // TODO: add stat overrides
+            entities.push_back(std::make_unique<Entity>());
+            entities.back().get()->LoadEntity(p);
+            //entities.back().get()->setAnimation("idle");
+            entities.back().get()->setGlobalPosition(sf::Vector2f(x_pos, entities.back().get()->getGlobalPosition().y));
+            entities.back().get()->orderID = en_c;
+
+            en_c++;
+        }
+    }
+
+    bg.Load(background);
 
     CoreManager::getInstance().reinitSongController();
-    CoreManager::getInstance().getSongController()->LoadTheme(theme);
-    CoreManager::getInstance().getRhythm()->LoadTheme(theme);
+    CoreManager::getInstance().getSongController()->LoadTheme(bgm);
+    CoreManager::getInstance().getRhythm()->LoadTheme(bgm);
 
     lastRhythmCheck = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
@@ -222,12 +268,12 @@ void MissionController::Update()
 
     for(auto& entity : entities)
     {
-        if(entity->getGlobalPosition().x < closest)
+        if(entity->getGlobalPosition().x < closest && (entity->entityType == Entity::EntityTypes::HOSTILE || entity->entityType == Entity::EntityTypes::NEUTRAL))
             closest = entity->getGlobalPosition().x;
     }
 
     // if farthest yaripon sees enemy, whole army shall be angry
-    float yari_distance = yaripons.back().get()->closestEnemyX - yaripons.back().get()->global_x - yaripons.back().get()->local_x - yaripons.back().get()->attack_x - yaripons.back().get()->gap_x;
+    float yari_distance = closest - yaripons.back().get()->global_x - yaripons.back().get()->local_x - yaripons.back().get()->attack_x - yaripons.back().get()->gap_x;
     bool yari_inSight = false;
 
     if(yari_distance < 3000 && entities.size() > 0)
@@ -250,7 +296,7 @@ void MissionController::Update()
 
     for(auto& entity : entities)
     {
-        entity->setGlobalPosition(sf::Vector2f(8000 + entity->orderID*5000, 1735 + cam.zoom_y));
+        entity->setGlobalPosition(sf::Vector2f(entity->getGlobalPosition().x, 1735 + cam.zoom_y));
     }
 
     sf::RectangleShape hb;
@@ -338,24 +384,6 @@ void MissionController::Update()
     bg.pataSpeed = pataMaxSpeed;
     bg.Draw(cam);
 
-    // draw everything
-    hatapons.back().get()->Draw();
-
-    for(auto& pon : yaripons)
-        pon->Draw();
-
-    for(auto& projectile : projectiles)
-    {
-        projectile->Draw();
-
-        if(debug)
-        {
-            hb.setPosition(projectile->tipX * resRatioX, projectile->tipY * resRatioY);
-            SPDLOG_DEBUG("projectile at {} {}, tip at {} {}, hitbox at {} {}", projectile->xPos, projectile->yPos, projectile->tipX, projectile->tipY, hb.getPosition().x, hb.getPosition().y);
-            CoreManager::getInstance().getWindow()->draw(hb);
-        }
-    }
-
     for(auto& entity : entities)
         entity->Draw();
 
@@ -370,6 +398,24 @@ void MissionController::Update()
             CoreManager::getInstance().getWindow()->draw(hbx);
         }
     }
+
+    for(auto& projectile : projectiles)
+    {
+        projectile->Draw();
+
+        if(debug)
+        {
+            hb.setPosition(projectile->tipX * resRatioX, projectile->tipY * resRatioY);
+            SPDLOG_DEBUG("projectile at {} {}, tip at {} {}, hitbox at {} {}", projectile->xPos, projectile->yPos, projectile->tipX, projectile->tipY, hb.getPosition().x, hb.getPosition().y);
+            CoreManager::getInstance().getWindow()->draw(hb);
+        }
+    }
+
+    // draw everything
+    hatapons.back().get()->Draw();
+
+    for(auto& pon : yaripons)
+        pon->Draw();
 
     if(inputCtrl->isKeyPressed(Input::Keys::UP))
     {

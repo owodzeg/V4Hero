@@ -42,6 +42,7 @@ public:
     bool zoomActivated = false;
 
     MissionController();
+    void LoadMission(const std::string& path);
     void SendProjectile(float x, float y, float hspeed, float vspeed);
     void ExecuteZoom(float speed, float time);
 

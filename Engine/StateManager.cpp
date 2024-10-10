@@ -465,6 +465,7 @@ void StateManager::initState(int state)
                     CoreManager::getInstance().reinitMissionController();
 
                     missionControllerPtr = CoreManager::getInstance().getMissionController();
+                    missionControllerPtr->LoadMission(CoreManager::getInstance().getCore()->mission_file);
 
                     if (CoreManager::getInstance().getCore()->mission_id >= 0)
                     {
