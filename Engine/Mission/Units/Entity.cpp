@@ -62,7 +62,7 @@ void Entity::LoadEntity(const std::string& path)
         if(entity["specifications"].contains("type"))
             entityType = convStringToTypeEnum(entity["specifications"]["type"]);
         if(entity["specifications"].contains("category"))
-            entityType = convStringToTypeEnum(entity["specifications"]["category"]);
+            entityCategory = convStringToCategoryEnum(entity["specifications"]["category"]);
     }
 
     if(entity.contains("behavior"))
@@ -71,6 +71,13 @@ void Entity::LoadEntity(const std::string& path)
             bh_hit = behavior.convStringToHitEnum(entity["behavior"]["hit"]);
         if(entity["behavior"].contains("death"))
             bh_death = behavior.convStringToDeathEnum(entity["behavior"]["death"]);
+    }
+
+    yPos = 1735;
+    if(entity.contains("position"))
+    {
+        if(entity["position"].contains("y"))
+            yPos = entity["position"]["y"].get<float>();
     }
 
     AnimatedObject::LoadConfig(path);

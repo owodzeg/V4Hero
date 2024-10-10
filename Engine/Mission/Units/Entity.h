@@ -69,6 +69,8 @@ public:
     float mindmg = 1;
     float maxdmg = 1;
 
+    float yPos = 0;
+
     int layer = 0;   ///rendering priority
     int parent = -1; ///if entity is bound to any other entity
 
