@@ -57,18 +57,23 @@ void MissionController::LoadMission(const std::string& path)
         {
             std::string p = entity["path"];
             float x_pos = 0;
+            sf::Color c = sf::Color(255,255,255);
 
             for(auto param : entity["params"].items())
             {
                 if(param.key() == "xpos")
                     x_pos = param.value();
+
+                if(param.key() == "color")
+                    c = Func::hexToColor(param.value());
             }
 
             // TODO: add stat overrides
             entities.push_back(std::make_unique<Entity>());
             entities.back().get()->LoadEntity(p);
+            entities.back().get()->setColor(c);
             //entities.back().get()->setAnimation("idle");
-            entities.back().get()->setGlobalPosition(sf::Vector2f(x_pos, entities.back().get()->getGlobalPosition().y));
+            entities.back().get()->setGlobalPosition(sf::Vector2f(x_pos, entities.back().get()->yPos));
             entities.back().get()->orderID = en_c;
 
             en_c++;
@@ -83,7 +88,7 @@ void MissionController::LoadMission(const std::string& path)
 
     lastRhythmCheck = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
-    ExecuteZoom(0.999, 1000);
+    //ExecuteZoom(0.999, 1000);
 
     initialized = true;
 }
@@ -94,13 +99,15 @@ void MissionController::SendProjectile(float x, float y, float hspeed, float vsp
     SPDLOG_DEBUG("SENDING PROJECTILE AT {} {} {} {}", x, y, hspeed, vspeed);
 }
 
-void MissionController::ExecuteZoom(float speed, float time)
+void MissionController::ExecuteZoom(float speed, float zoomUntil)
 {
     if(speed != cam.zoomSpeed)
     {
+        SPDLOG_DEBUG("Executing zoom: {} {}", speed, zoomUntil);
+
         cam.zoomClock.restart();
         cam.zoomSpeed = speed;
-        cam.timeToZoom = time;
+        cam.zoomUntil = zoomUntil;
         cam.activateZoom = true;
     }
 }
@@ -276,14 +283,14 @@ void MissionController::Update()
     float yari_distance = closest - yaripons.back().get()->global_x - yaripons.back().get()->local_x - yaripons.back().get()->attack_x - yaripons.back().get()->gap_x;
     bool yari_inSight = false;
 
-    if(yari_distance < 3000 && entities.size() > 0)
+    if(yari_distance < 3000 && !entities.empty())
     {
         yari_inSight = true;
-        ExecuteZoom(1.001, 1000);
+        ExecuteZoom(1.0007, 1.2);
     }
     else
     {
-        ExecuteZoom(0.999, 1000);
+        ExecuteZoom(0.9993, 0.8);
     }
 
     for(auto& pon : yaripons)
@@ -296,7 +303,7 @@ void MissionController::Update()
 
     for(auto& entity : entities)
     {
-        entity->setGlobalPosition(sf::Vector2f(entity->getGlobalPosition().x, 1735 + cam.zoom_y));
+        entity->setGlobalPosition(sf::Vector2f(entity->getGlobalPosition().x, entity->yPos + cam.zoom_y));
     }
 
     sf::RectangleShape hb;
@@ -331,12 +338,15 @@ void MissionController::Update()
 
         for(auto& entity : entities)
         {
-            if(projectile->tipX > entity->getGlobalPosition().x-60 && projectile->tipX < entity->getGlobalPosition().x+60)
+            if(entity->entityType == Entity::EntityTypes::HOSTILE || entity->entityType == Entity::EntityTypes::NEUTRAL)
             {
-                if(projectile->tipY > entity->getGlobalPosition().y-60 && projectile->tipY < entity->getGlobalPosition().y+60)
+                if(projectile->tipX > entity->getGlobalPosition().x-60 && projectile->tipX < entity->getGlobalPosition().x+60)
                 {
-                    projectile->finished = true;
-                    entity->handleHit(rand() % 20 + 10);
+                    if(projectile->tipY > entity->getGlobalPosition().y-60 && projectile->tipY < entity->getGlobalPosition().y+60)
+                    {
+                        projectile->finished = true;
+                        entity->handleHit(rand() % 20 + 10);
+                    }
                 }
             }
         }
@@ -427,15 +437,7 @@ void MissionController::Update()
         debug = !debug;
     }
 
-    if(inputCtrl->isKeyPressed(Input::Keys::LEFT))
-    {
-        cam.wantedZoom -= 0.5;
-    }
-
-    if(inputCtrl->isKeyPressed(Input::Keys::RIGHT))
-    {
-        cam.wantedZoom += 0.5;
-    }
+    bg.DrawFloor();
 
     rhythmGUI->doVisuals(0, rhythm->GetCombo());
 }

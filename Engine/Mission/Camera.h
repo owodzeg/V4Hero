@@ -34,6 +34,7 @@ public:
 
     float zoomSpeed = 1.000;
     float timeToZoom = 2000;
+    float zoomUntil = 1.0;
     bool activateZoom = false;
     sf::Clock zoomClock;
 
