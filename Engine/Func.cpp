@@ -251,3 +251,23 @@ void Func::smoothTransition(float& current, float& destination, float& delta)
         }
     }
 }
+
+// Function to convert hex string to sf::Color
+sf::Color Func::hexToColor(const std::string& hex) {
+    unsigned int r, g, b;
+
+    // Remove the '#' if present
+    std::string hexColor = hex[0] == '#' ? hex.substr(1) : hex;
+
+    // Use stringstream to convert hex to integers
+    std::stringstream ss;
+    ss << std::hex << hexColor;
+
+    // Extract the red, green, and blue components from the hex string
+    ss >> r >> g >> b;
+
+    // Return the corresponding SFML color (alpha is set to 255 by default)
+    return sf::Color(static_cast<sf::Uint8>(r),
+                     static_cast<sf::Uint8>(g),
+                     static_cast<sf::Uint8>(b));
+}

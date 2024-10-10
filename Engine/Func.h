@@ -25,6 +25,7 @@ public:
     template<typename T>
     static std::string to_str(const T& t);
     static std::string num_padding(int num, int padding);
+    static sf::Color hexToColor(const std::string& hex);
 };
 
 #endif // FUNC_H

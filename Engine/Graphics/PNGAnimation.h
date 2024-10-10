@@ -52,6 +52,7 @@ class PNGAnimation
         sf::Vector2f position = {0, 0};
         sf::Vector2f scale = {1, 1};
         float rotation = 0;
+        sf::Color color = sf::Color(255, 255, 255);
 
         // static stuff
         unsigned int maxSize = 512;

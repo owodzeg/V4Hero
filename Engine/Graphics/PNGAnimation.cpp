@@ -565,6 +565,7 @@ void PNGAnimation::Draw()
     texture.setPosition(position.x, position.y);
     texture.setScale(scale.x, scale.y);
     texture.setRotation(rotation);
+    texture.setColor(color);
 
     texture.draw();
     //window->draw(rect);

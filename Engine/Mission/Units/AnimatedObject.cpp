@@ -76,6 +76,16 @@ sf::Vector2f AnimatedObject::getScale()
     return scale;
 }
 
+void AnimatedObject::setColor(sf::Color newColor)
+{
+    color = newColor;
+}
+
+sf::Color AnimatedObject::getColor()
+{
+    return color;
+}
+
 // animation control
 void AnimatedObject::playAnimation()
 {
@@ -168,6 +178,7 @@ void AnimatedObject::Draw()
     animation.position = sf::Vector2f(pos_global.x + pos_local.x, pos_global.y + pos_local.y);
     animation.scale = scale;
     animation.rotation = rotation;
+    animation.color = color;
     animation.Draw();
 }
 

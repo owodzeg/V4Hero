@@ -25,6 +25,7 @@ public:
     sf::Vector2f pos_local = {0, 0}; // local positioning. a simple offset from global positioning
     sf::Vector2f scale = {1, 1};
     float rotation = 0;
+    sf::Color color = sf::Color(255,255,255);
 
     AnimatedObject();
     ~AnimatedObject();
@@ -45,6 +46,9 @@ public:
     void setScale(sf::Vector2f newScale); // set a predefined scale
     void moveScale(sf::Vector2f moveBy); // increment scale by xy
     sf::Vector2f getScale();
+
+    void setColor(sf::Color newColor);
+    sf::Color getColor();
 
     // animation control
     void playAnimation();
