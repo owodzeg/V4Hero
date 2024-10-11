@@ -3,53 +3,43 @@
     {
         "name": "Hunting on Shida Valley",
         "background": "shidavalley",
-        "bgm": "Ah-woon Theme",
+        "bgm": "ahwoon",
         "rich_presence": "shida"
     },
 
     "entities":
     [
-        {
-            "comment": "SNEK (This is just me showing off, since this key isn't ever parsed it isn't even noticed by the game)",
-            "id": 1,
-            "params":
-            {
-                "xpos": -330,
-                "layer": "ui"
-            }
-        },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 500, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 580, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 660, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 1000, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 1080, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 1400, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 1560, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 1640, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 1720, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 2500, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 2580, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 3000, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 3080, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 3160, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 4000, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 4080, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 4160, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 4240, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 4320, "color": "1e8c5a", "layer": "nature" } },
+        { "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 4400, "color": "1e8c5a", "layer": "nature" } },
 
-        { "id": 3, "params": { "xpos": 500, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 580, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 660, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 1000, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 1080, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 1400, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 1560, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 1640, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 1720, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 2500, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 2580, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 3000, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 3080, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 3160, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 4000, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 4080, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 4160, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 4240, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 4320, "color": "1e8c5a", "layer": "nature" } },
-        { "id": 3, "params": { "xpos": 4400, "color": "1e8c5a", "layer": "nature" } },
-
-        { "id": 2, "params": { "xpos": 1000, "xrange": 500, "layer": "animals" } },
-        { "id": 2, "params": { "xpos": 1600, "xrange": 500, "layer": "animals" } },
-        { "id": 2, "params": { "xpos": 2300, "xrange": 500, "layer": "animals" } },
-        { "id": 2, "params": { "xpos": 2550, "xrange": 500, "layer": "animals" } },
-        { "id": 2, "params": { "xpos": 2900, "xrange": 500, "layer": "animals" } },
-        { "id": 2, "params": { "xpos": 3600, "xrange": 500, "layer": "animals" } },
+        { "path": "resources/units/entity/kacheek.zip", "params": { "xpos": 1000, "xrange": 500, "layer": "animals" } },
+        { "path": "resources/units/entity/kacheek.zip", "params": { "xpos": 1600, "xrange": 500, "layer": "animals" } },
+        { "path": "resources/units/entity/kacheek.zip", "params": { "xpos": 2300, "xrange": 500, "layer": "animals" } },
+        { "path": "resources/units/entity/kacheek.zip", "params": { "xpos": 2550, "xrange": 500, "layer": "animals" } },
+        { "path": "resources/units/entity/kacheek.zip", "params": { "xpos": 2900, "xrange": 500, "layer": "animals" } },
+        { "path": "resources/units/entity/kacheek.zip", "params": { "xpos": 3600, "xrange": 500, "layer": "animals" } },
 
         {
             "comment": "dem booty",
-            "id": 7,
+            "path": "resources/units/entity/treasure_chest.zip",
             "params":
             {
                 "xpos": 3000,
@@ -66,7 +56,7 @@
 
         {
             "comment": "*victory fanfare*",
-            "id": 0,
+            "path": "resources/units/entity/end_flag.zip",
             "params":
             {
                 "xpos": 5000,
