@@ -133,7 +133,8 @@ set(ENGINE_FILES
         Engine/Mission/Units/Unit/Hatapon.cpp
         Engine/Mission/Units/Unit/Yaripon.cpp
         Engine/Mission/Units/Behavior.cpp
-        Engine/Mission/Units/Behavior.h)
+        Engine/Mission/Units/Behavior.h
+        Engine/Mission/Units/Unit/FeverWorm.cpp)
 
 set(DISCORD_FILES
         DiscordSDK/achievement_manager.cpp

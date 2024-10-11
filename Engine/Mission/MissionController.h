@@ -9,6 +9,7 @@
 #include "Units/Entity.h"
 #include "Units/Unit/Hatapon.h"
 #include "Units/Unit/Yaripon.h"
+#include "Units/Unit/FeverWorm.h"
 #include "Units/Projectile.h"
 
 class MissionController
@@ -23,6 +24,7 @@ public:
 
     std::vector<std::unique_ptr<Hatapon>> hatapons;
     std::vector<std::unique_ptr<Yaripon>> yaripons;
+    std::vector<std::unique_ptr<FeverWorm>> feverworms;
     std::vector<std::unique_ptr<Projectile>> projectiles;
     std::vector<std::unique_ptr<Entity>> entities;
 

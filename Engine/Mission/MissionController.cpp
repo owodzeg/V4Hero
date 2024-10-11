@@ -49,6 +49,8 @@ void MissionController::LoadMission(const std::string& path)
         yaripons.push_back(std::make_unique<Yaripon>(i, pons));
     }
 
+    feverworms.push_back(std::make_unique<FeverWorm>());
+
     if(mission.contains("entities"))
     {
         int en_c = 0;
@@ -89,6 +91,8 @@ void MissionController::LoadMission(const std::string& path)
     CoreManager::getInstance().reinitSongController();
     CoreManager::getInstance().getSongController()->LoadTheme(bgm);
     CoreManager::getInstance().getRhythm()->LoadTheme(bgm);
+
+    feverworms.back().get()->main.animation.animationSpeed = 60.6 * (CoreManager::getInstance().getSongController()->getBPM() / 120.f);
 
     lastRhythmCheck = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
@@ -215,11 +219,14 @@ void MissionController::Update()
 
             advance = false;
             inFever = false;
+
+            feverworms.back().get()->Break();
         }
 
         if(action == Rhythm::RhythmAction::FEVER_ON)
         {
             inFever = true;
+            feverworms.back().get()->Transform();
         }
 
         if(action == Rhythm::RhythmAction::DRUM_ANY)
@@ -289,7 +296,7 @@ void MissionController::Update()
     }
 
     // if farthest yaripon sees enemy, whole army shall be angry
-    float yari_distance = closest - yaripons.back().get()->global_x - yaripons.back().get()->local_x - yaripons.back().get()->attack_x - yaripons.back().get()->gap_x;
+    float yari_distance = closest - yaripons.back().get()->global_x - yaripons.back().get()->local_x - yaripons.back().get()->gap_x;
     bool yari_inSight = false;
 
     if(yari_distance < 3000 && !entities.empty())
@@ -541,6 +548,7 @@ void MissionController::Update()
     unit_count.setPosition(452, thumbY + 65);
     unit_count.draw();
 
+    feverworms.back().get()->Draw();
 
     CoreManager::getInstance().getWindow()->setView(lastView);
 
