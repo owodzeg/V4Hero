@@ -862,6 +862,8 @@ void PatapolisMenu::Update()
         window->setView(patapolisView);
 
         camera.zoom_y = 0;
+        if(camera.camera_x == 0)
+            camera.camera_x = camera.followobject_x + (1800 * window->getSize().x / float(3840));
         camera.Work(patapolisView, dest_zoom);
 
         window->draw(v_background);
