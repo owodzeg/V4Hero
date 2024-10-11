@@ -302,18 +302,29 @@ void Rhythm::decideSongType()
 
         if(combo >= 2) {
             if(satisfaction >= getAccRequirement(combo)) {
-                if(!advanced_prefever || satisfaction < getAccRequirementFever(combo)) {
-                    advanced_prefever = true;
-                    currentSongType = SongController::SongType::PREFEVER_INTENSE_START;
-                    SPDLOG_DEBUG("Great! Go to PREFEVER_INTENSE_START");
-                    addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
-                    return;
-                } else {
+                if(satisfaction >= getAccRequirementFever(combo))
+                {
                     currentSongType = SongController::SongType::FEVER_START;
                     SPDLOG_DEBUG("Awesome! Go to FEVER_START");
                     addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
                     addRhythmMessage(RhythmAction::FEVER_ON, "");
                     return;
+                }
+                else
+                {
+                    if(!advanced_prefever) {
+                        advanced_prefever = true;
+                        currentSongType = SongController::SongType::PREFEVER_INTENSE_START;
+                        SPDLOG_DEBUG("Great! Go to PREFEVER_INTENSE_START");
+                        addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
+                        return;
+                    } else {
+                        currentSongType = SongController::SongType::FEVER_START;
+                        SPDLOG_DEBUG("Awesome! Go to FEVER_START");
+                        addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
+                        addRhythmMessage(RhythmAction::FEVER_ON, "");
+                        return;
+                    }
                 }
             }
         }

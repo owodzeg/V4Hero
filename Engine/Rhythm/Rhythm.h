@@ -70,7 +70,7 @@ public:
 
     // accuracy required to advance into prefever intense and into fever 
     std::vector<float> acc_req = {0, 1, 1, 0.9325, 0.875, 0.8125, 0.75, 0.75, 0.75, 0.6875, 0, 0, 0, 0, 0, 0};
-    std::vector<float> acc_req_insta = {0, 2, 1, 0.975, 0.9325, 0.875, 0.8125, 0.8125, 0.8125, 0.8125, 0, 0, 0, 0, 0, 0};
+    std::vector<float> acc_req_insta = {0, 2, 2, 0.975, 0.9325, 0.875, 0.8125, 0.8125, 0.8125, 0.8125, 0, 0, 0, 0, 0, 0};
     std::vector<float> satisfaction_value;
 
     int debug_song_type = 0;
