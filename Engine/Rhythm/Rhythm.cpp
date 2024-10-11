@@ -101,7 +101,7 @@ void Rhythm::LoadTheme(string theme)
         beat_ms = 60.f / BPM * 1000.f; ///Amount of milliseconds for each beat
         halfbeat_ms = beat_ms / 2.f;
         measure_ms = beat_ms * 4.f;
-        low_range = beat_timer / (7.25f * (BPM/120));  ///Anything below that range will be treated as BAD hit
+        low_range = beat_timer / (12.5f * (BPM/120));  ///Anything below that range will be treated as BAD hit
         high_range = beat_timer / (5.25f * (BPM/180)); ///Anything between this and low range will be treated as GOOD hit. Higher will be treated as BEST hit.
 
         // set bpm for rhythm gui
@@ -234,6 +234,14 @@ float Rhythm::getAccRequirement(int combo) {
     return 0;
 }
 
+float Rhythm::getAccRequirementFever(int combo) {
+    if(combo <= 10) {
+        return acc_req_insta[combo];
+    }
+
+    return 0;
+}
+
 void Rhythm::decideSongType()
 {
     RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
@@ -294,7 +302,7 @@ void Rhythm::decideSongType()
 
         if(combo >= 2) {
             if(satisfaction >= getAccRequirement(combo)) {
-                if(!advanced_prefever) {
+                if(!advanced_prefever || satisfaction < getAccRequirementFever(combo)) {
                     advanced_prefever = true;
                     currentSongType = SongController::SongType::PREFEVER_INTENSE_START;
                     SPDLOG_DEBUG("Great! Go to PREFEVER_INTENSE_START");
