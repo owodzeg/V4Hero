@@ -113,7 +113,7 @@ void Yaripon::PerformAttack()
                     threw = false;
                 }
 
-                canAttackIn -= 1000 / fps;
+                canAttackIn -= 1000 * (BPM/120) / fps;
             }
 
             if(main.getAnimation() == "attack_fever_throw" && main.getAnimationFrame() >= 8 && !threw)
@@ -249,12 +249,14 @@ void Yaripon::Draw()
         {
             walkBack = true;
         }
+
+        performedAttack = true;
     }
     else
     {
         distanceToTravel = closestEnemyX - global_x - local_x - attack_x - gap_x/2;
 
-        if(action == 1)
+        if(action == 1 && (fabs(vspeed) < 1))
         {
             walkBack = false;
             bool doAttack = false;
@@ -422,7 +424,13 @@ void Yaripon::Draw()
                 PerformAttack();
             }
 
-            attack_x += pataSpeed / fps;
+            if(fabs(vspeed) < 1)
+                attack_x += pataSpeed / fps;
+        }
+        else if(action == 1 && fabs(vspeed) >= 1)
+        {
+            pataSpeed = 0;
+            PerformAttack();
         }
     }
 
@@ -438,7 +446,7 @@ void Yaripon::Draw()
 
     if(floor(fabs(attack_x)) > 0)
     {
-        if(walkBack)
+        if(walkBack && (fabs(vspeed) < 1))
         {
             performedAttack = true;
 
