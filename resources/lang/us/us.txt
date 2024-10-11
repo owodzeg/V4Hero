@@ -349,6 +349,7 @@ patapolis_sen|{outline 2 0 0 0}{color 255 255 255}Sen Ranpurupon
 patapolis_trader|{outline 2 0 0 0}{color 255 255 255}Marketplace
 patapolis_tree|{outline 2 0 0 0}{color 255 255 255}Mater, Tree of Life
 patapolis_wakapon|{outline 2 0 0 0}{color 255 255 255}Wakapon, the Guardian
+patapolis_materdialog|Mater Tree's roots are too dry to bring life.{n}You need to find something that will hydrate it.
 rarepon_normal|Normal
 rarepon_normal_desc|A normal warrior from the Patapon tribe. They are renowned for their stoicism and bravery. While these Patapons may be small, with the right mindset, they can do anything!
 tip1_desc|{color 255 255 255}Hunting Kacheeks on Shida Valley{n}is an ancient Patapon tradition.{n}{n}These slow beasts have fed the tribe{n}for generations, and joining a hunting party{n}is many a Patapon's first experience of{n}wielding a spear. {n}{n}Though their sense of smell is not as good{n}as the flighty Mochichis, it is still worth{n}waiting for a headwind before approaching,{n}so they can't smell the Patapons coming.

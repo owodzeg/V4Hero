@@ -1733,14 +1733,21 @@ void PatapolisMenu::Update()
                         obelisk_menu.Show();
                         obelisk_menu.isActive = true;*/
                             break;
-                        case Buildings::MATER:
+                        case Buildings::MATER: {
                             /// festival
                             // open barracks screen
-                            StateManager::getInstance().setState(StateManager::MATER_OUTER);
+                            //StateManager::getInstance().setState(StateManager::MATER_OUTER);
+                            std::vector<sf::String> a = {"nav_understood"};
+
+                            PataDialogBox db;
+                            db.Create(font, "patapolis_materdialog", a, config->GetInt("textureQuality"));
+                            db.id = 3;
+                            dialogboxes.push_back(db);
                             //mater_menu.save_loaded = save_loaded;
                             //mater_menu.is_active = true;
                             //mater_menu.showMater();
                             break;
+                        }
                         default:
                             /// nothing
                             break;
