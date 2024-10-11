@@ -137,7 +137,7 @@ void ObeliskMenu::addMission(json missiondata)
         tmp.mission_file = missiondata["mission_file"];
     } catch (const std::exception& e)
     {
-        tmp.mission_file = "mis1_1.p4m";
+        tmp.mission_file = "mis1_1.json";
     }
 
     string level = "";

@@ -30,7 +30,7 @@ public:
     float startZoom = 0;
     float zoomDiff = 0;
 
-    float move_cam_x = 500;
+    float move_cam_x = 1000;
 
     float zoomSpeed = 1.000;
     float timeToZoom = 2000;

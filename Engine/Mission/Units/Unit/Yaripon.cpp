@@ -100,8 +100,10 @@ void Yaripon::PerformAttack()
             int jumpEnd = 400 / (BPM/120);
             int attackEnd = 1500 / (BPM/120);
 
-            if(inAttackTimer.getElapsedTime().asMilliseconds() > jumpStart && inAttackTimer.getElapsedTime().asMilliseconds() < jumpEnd)
+            if(inAttackTimer.getElapsedTime().asMilliseconds() > jumpStart && inAttackTimer.getElapsedTime().asMilliseconds() < jumpEnd && fabs(vspeed) <= 1)
+            {
                 vspeed = -1000;
+            }
 
             if(inAttackTimer.getElapsedTime().asMilliseconds() >= jumpEnd && inAttackTimer.getElapsedTime().asMilliseconds() <= attackEnd)
             {

@@ -4,14 +4,14 @@
 		"location_id": 1,
 		"mission_title": "worldmap_mission_1_title",
 		"mission_description": "worldmap_mission_1_description",
-		"mission_file": "mis1_1.p4m"
+		"mission_file": "resources/missions/debug_0001.json"
 	},
 	{
 		"mission_id": 2,
 		"location_id": 2,
 		"mission_title": "worldmap_mission_2_title",
 		"mission_description": "worldmap_mission_2_description",
-		"mission_file": "mis2_1.p4m"
+		"mission_file": "resources/missions/mis2_1.json"
 	},
 	{
 		"mission_id": 3,
@@ -19,14 +19,14 @@
 		"has_levels": true,
 		"mission_title": "worldmap_mission_3_title",
 		"mission_description": "worldmap_mission_3_description",
-		"mission_file": "mis2_2.p4m"
+		"mission_file": "resources/missions/mis2_2.json"
 	},
 	{
 		"mission_id": 4,
 		"location_id": 3,
 		"mission_title": "worldmap_mission_4_title",
 		"mission_description": "worldmap_mission_4_description",
-		"mission_file": "mis3_1.p4m"
+		"mission_file": "resources/missions/mis3_1.json"
 	},
 	{
 		"mission_id": 5,
@@ -34,20 +34,20 @@
 		"has_levels": true,
 		"mission_title": "worldmap_mission_5_title",
 		"mission_description": "worldmap_mission_5_description",
-		"mission_file": "mis3_2.p4m"
+		"mission_file": "resources/missions/mis3_2.json"
 	},
 	{
 		"mission_id": 6,
 		"location_id": 1,
 		"mission_title": "worldmap_mission_6_title",
 		"mission_description": "worldmap_mission_6_description",
-		"mission_file": "mis1_3_seasonal.p4m"
+		"mission_file": "resources/missions/mis1_3_seasonal.json"
 	},
 	{
 		"mission_id": 7,
 		"location_id": 4,
 		"mission_title": "worldmap_mission_7_title",
 		"mission_description": "worldmap_mission_7_description",
-		"mission_file": "mis4_1.p4m"
+		"mission_file": "resources/missions/mis4_1.json"
 	}
 ]

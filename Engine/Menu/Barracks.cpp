@@ -1070,8 +1070,8 @@ void Barracks::Update()
 
     for (int i = 0; i < dialog_boxes.size(); i++)
     {
-        dialog_boxes[i].x = 640;
-        dialog_boxes[i].y = 360;
+        dialog_boxes[i].x = 1920;
+        dialog_boxes[i].y = 1080;
         dialog_boxes[i].Draw();
 
         if (dialog_boxes[i].closed)
