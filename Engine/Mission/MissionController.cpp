@@ -17,6 +17,7 @@ MissionController::MissionController()
 void MissionController::LoadMission(const std::string& path)
 {
     SPDLOG_INFO("Attempting to load {}", path);
+    std::uniform_real_distribution<double> roll(0.0, 1.0);
 
     json mission;
 
@@ -95,6 +96,14 @@ void MissionController::LoadMission(const std::string& path)
                         }
                     }
 
+                    SPDLOG_INFO("Custom loot table: {}", entity["loot"].dump());
+                    if(entity.contains("loot"))
+                    {
+                        vector<Entity::Loot> new_loot;
+                        Func::parseEntityLoot(CoreManager::getInstance().getCore()->gen, roll, entity["loot"], new_loot);
+
+                        e->loot_table = new_loot;
+                    }
                     e->orderID = en_c;
                 }
                 else

@@ -20,6 +20,7 @@ Entity::Entity()
 void Entity::LoadEntity(const std::string& path)
 {
     SPDLOG_INFO("Loading PNGAnimation model from {}", path);
+    std::uniform_real_distribution<double> roll(0.0, 1.0);
 
     auto f = fs::path(path);
     std::string model_name = f.stem().string();
@@ -91,6 +92,24 @@ void Entity::LoadEntity(const std::string& path)
     {
         if(entity["position"].contains("y"))
             yPos = entity["position"]["y"].get<float>();
+    }
+
+    if(entity.contains("loot"))
+    {
+        SPDLOG_INFO("Loot table: {}", entity["loot"].dump());
+
+        std::vector<Entity::Loot> new_loot;
+        Func::parseEntityLoot(CoreManager::getInstance().getCore()->gen, roll, entity["loot"], new_loot);
+
+        loot_table = new_loot;
+
+        if(loot_table.size() > 0)
+        {
+            for(auto l : loot_table)
+            {
+                SPDLOG_INFO("This item will drop: {} {} {}", l.order_id[0], l.order_id[1], l.order_id[2]);
+            }
+        }
     }
 
     AnimatedObject::LoadConfig(path);

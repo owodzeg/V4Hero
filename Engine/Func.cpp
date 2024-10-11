@@ -279,3 +279,114 @@ sf::Color Func::hexToColor(const std::string& hex) {
                      static_cast<sf::Uint8>(g),
                      static_cast<sf::Uint8>(b));
 }
+
+nlohmann::json Func::parseLootArray(std::mt19937& gen, std::uniform_real_distribution<double>& roll, nlohmann::json loot)
+{
+    SPDLOG_DEBUG("Parse loot array");
+
+    if (!loot.is_array())
+    {
+        return loot;
+    }
+
+    int total = 0;
+    for (int i = 1; i < loot.size(); i++) // Chances -> Intervals for second loop
+    {
+        SPDLOG_DEBUG("Loot loop #1 (i={})", i);
+        if (loot[i].is_array())
+        {
+            loot[i][0] += total;
+            total = loot[i][0];
+        } else if (loot[i].is_object() && loot[i].size() == 2)
+        {
+            int tmp = loot[i]["chance"];
+            loot[i].erase("chance");
+            total += tmp;
+            loot[i]["chance"] = total;
+        } else
+        {
+			SPDLOG_WARN("Undefined behavior detected while parsing loot: {} | (Element of array is neither an array nor an object)", loot);
+        }
+    }
+
+    if (total < 100)
+    {
+		SPDLOG_WARN("Undefined behavior detected while parsing loot: {} | (Total chances in array less than 100)", loot);
+    } else if (total > 100)
+    {
+		SPDLOG_WARN("Undefined behavior detected while parsing loot: {} | (Total chances in array more than 100)", loot);
+    }
+
+    SPDLOG_DEBUG("Roll");
+    float n = roll(gen);
+    for (int i = 1; i < loot.size(); i++) // Because of the first loop, values are neatly sorted
+    {
+        SPDLOG_DEBUG("Loot loop #2 (i={})", i);
+        if (loot[i].is_array())
+        {
+            SPDLOG_DEBUG("Is array");
+            if (n <= float(loot[i][0]) / 100)
+            {
+                return parseLootArray(gen, roll, loot[i]);
+                break;
+            }
+        } else if (loot[i].is_object() && loot[i].size() == 2)
+        {
+            SPDLOG_DEBUG("Is object and loot == 2");
+            if (n <= float(loot[i]["chance"]) / 100)
+            {
+                return loot[i];
+                break;
+            }
+        } else
+        {
+			SPDLOG_WARN("Undefined behavior detected while parsing loot: {} | (Element of array is neither an array nor an object)", loot);
+        }
+    }
+}
+
+
+void Func::parseEntityLoot(std::mt19937& gen, std::uniform_real_distribution<double>& roll, json loot, vector<Entity::Loot>& to_drop)
+{
+    SPDLOG_DEBUG("Start parsing entity loot");
+
+    if (loot.is_array())
+    {
+        SPDLOG_DEBUG("Is array");
+        if (roll(gen) <= float(loot[0]) / 100)
+        {
+            Entity::Loot tmp;
+            json parsedArray = parseLootArray(gen, roll, loot);
+            tmp.order_id = CoreManager::getInstance().getSaveReader()->itemReg.getItemByName(parsedArray["item"])->order_id;
+            to_drop.push_back(tmp);
+        }
+    } else if (loot.is_object() && loot.size() > 1)
+    {
+        SPDLOG_DEBUG("Is object and loot > 1");
+        try
+        {
+            for (auto it = loot.begin(); it != loot.end(); ++it) // Assume it's an object containing two items to be parsed
+            {
+                parseEntityLoot(gen, roll, it.value(), to_drop);
+            }
+        } catch (const exception& e)
+        {
+            SPDLOG_DEBUG("Exception");
+            if (roll(gen) <= float(loot["chance"]) / 100) // Assume it's the below else if
+            {
+                Entity::Loot tmp;
+                tmp.order_id = CoreManager::getInstance().getSaveReader()->itemReg.getItemByName(loot["item"])->order_id;
+                to_drop.push_back(tmp);
+            }
+        }
+    } else if (loot.is_object() && loot.size() == 2)
+    {
+        SPDLOG_DEBUG("Is object with loot == 2");
+        if (roll(gen) <= float(loot["chance"]) / 100)
+        {
+            Entity::Loot tmp;
+            tmp.order_id = CoreManager::getInstance().getSaveReader()->itemReg.getItemByName(loot["item"])->order_id;
+            to_drop.push_back(tmp);
+        }
+    }
+}

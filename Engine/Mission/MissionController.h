@@ -13,6 +13,9 @@
 #include "Units/Unit/EndFlag.h"
 #include "Units/Projectile.h"
 #include <Dialog/DialogBox.h>
+#include <random>
+
+using json = nlohmann::json;
 
 class MissionController
 {
@@ -50,6 +53,7 @@ public:
 
     PText unit_count, unit_count_shadow;
 
+    std::vector<std::vector<int>> droppeditems;
     std::vector<PataDialogBox> dialogboxes;
 
     MissionController();
