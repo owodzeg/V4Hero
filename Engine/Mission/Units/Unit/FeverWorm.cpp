@@ -1,6 +1,8 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "FeverWorm.h"
+#include <CoreManager.h>
+#include <Func.h>
 
 FeverWorm::FeverWorm()
 {
