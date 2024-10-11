@@ -384,7 +384,6 @@ void PNGAnimation::Load(const std::string& path)
             animation = json::parse(entry.readAsText());
 
             SPDLOG_INFO("Reading animation.json.");
-            SPDLOG_INFO("Framerate: {}", animation["main"]["framerate"]);
         }
     }
     else
@@ -409,6 +408,14 @@ void PNGAnimation::Load(const std::string& path)
     }
 
     animationSpeed = 30;
+
+    if(animation.contains("main"))
+    {
+        if(animation["main"].contains("framerate"))
+        {
+            animationSpeed = animation["main"]["framerate"];
+        }
+    }
 
     for(auto s : animation["switchTo"])
     {
@@ -736,7 +743,7 @@ void PNGAnimation::Draw()
 
         auto& frame = ex_frames[name][currentAnimation][currentFrame];
 
-        SPDLOG_INFO("Drawing extra {}, anim {} frame {}, {} {} {}", name, currentAnimation, currentFrame, frame.x, frame.y, frame.r);
+        //SPDLOG_INFO("Drawing extra {}, anim {} frame {}, {} {} {}", name, currentAnimation, currentFrame, frame.x, frame.y, frame.r);
 
         spr.setPosition(position.x + frame.x, position.y + frame.y);
         spr.setRotation(frame.r);
@@ -786,7 +793,7 @@ void PNGAnimation::drawCopy(sf::Vector2f pos, sf::Vector2f sc)
 
         auto& frame = ex_frames[name][currentAnimation][currentFrame];
 
-        SPDLOG_INFO("Drawing extra {}, anim {} frame {}, {} {} {}", name, currentAnimation, currentFrame, frame.x, frame.y, frame.r);
+        //SPDLOG_INFO("Drawing extra {}, anim {} frame {}, {} {} {}", name, currentAnimation, currentFrame, frame.x, frame.y, frame.r);
 
         spr.setScale(sc.x, sc.y);
         spr.setPosition(pos.x + frame.x*sc.x, pos.y + frame.y*sc.y);
