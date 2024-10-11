@@ -588,7 +588,7 @@ sf::FloatRect PText::getGlobalBoundsScaled()
     //return t.getGlobalBounds();
 }
 
-void PText::draw()
+void PText::draw(bool noRender)
 {
     StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
@@ -765,7 +765,7 @@ void PText::draw()
         }
     }
 
-    if (rendered)
+    if (rendered && !noRender)
         window->draw(t);
 
     if (!rendered)

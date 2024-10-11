@@ -47,7 +47,10 @@ std::string Func::trim(const std::string& str, const std::string& whitespace = "
 
 std::string Func::wrap_text(std::string input, int box_width, std::string font, int character_size)
 {
+    StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
+
     //cout << "wrap_text(" << input << ", " << box_width << ")" << endl;
+    input = strRepo->GetString(input);
 
     if (input.size() <= 0)
         return "";
@@ -90,10 +93,11 @@ std::string Func::wrap_text(std::string input, int box_width, std::string font, 
             std::string prefull = prevtemp + " " + words[i];
 
             //TODO: check if it wraps text correctly
-            sf::Text t_temp;
-            t_temp.setFont(CoreManager::getInstance().getStrRepo()->GetFontFromName(font));
+            PText t_temp;
+            t_temp.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
             t_temp.setCharacterSize(character_size);
             t_temp.setString(prefull);
+            t_temp.draw(true);
 
             if (t_temp.getGlobalBounds().width >= box_width)
             {
@@ -117,14 +121,15 @@ std::string Func::wrap_text(std::string input, int box_width, std::string font, 
         temp += words[i];
         wordcount++;
 
-        sf::Text t_temp;
-        t_temp.setFont(CoreManager::getInstance().getStrRepo()->GetFontFromName(font));
+        PText t_temp;
+        t_temp.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
         t_temp.setCharacterSize(character_size);
         t_temp.setString(temp);
+        t_temp.draw(true);
 
         //cout << "Testing string \"" << temp << "\", " << wordcount << " words, size: " << t_temp.getGlobalBounds().width << endl;
 
-        if (t_temp.getGlobalBounds().width >= box_width)
+        if (t_temp.getLocalBounds().width >= box_width)
         {
             if (wordcount > 1)
             {
@@ -147,12 +152,13 @@ std::string Func::wrap_text(std::string input, int box_width, std::string font, 
                 {
                     ltemp += temp[e];
 
-                    sf::Text t_ltemp;
-                    t_ltemp.setFont(CoreManager::getInstance().getStrRepo()->GetFontFromName(font));
+                    PText t_ltemp;
+                    t_ltemp.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
                     t_ltemp.setCharacterSize(character_size);
                     t_ltemp.setString(ltemp);
+                    t_ltemp.draw(true);
 
-                    if (t_ltemp.getGlobalBounds().width >= box_width - 30)
+                    if (t_ltemp.getLocalBounds().width >= box_width - 30)
                     {
                         full += ltemp;
                         full += "-";

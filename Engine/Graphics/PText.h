@@ -99,7 +99,7 @@ public:
     sf::FloatRect getTransformedBounds();
     void setScale(float s);
 
-    void draw();
+    void draw(bool noRender=false);
     sf::Text getText();
 };
 
