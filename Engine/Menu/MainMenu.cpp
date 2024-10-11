@@ -689,7 +689,7 @@ void MainMenu::Update()
                 t_option[i].setScale(1, 1);
             }
 
-            t_option[i].setString(Func::ConvertToUtf8String(temp_menu[i]));
+            t_option[i].setStringKey(temp_menu[i]);
             t_option[i].setOrigin(t_option[i].getLocalBounds().width / 2, t_option[i].getLocalBounds().height / 2);
 
             t_option[i].setPosition(totem[i].getPosition().x + totem[i].getTransformedBounds().width / 2.f, 2160 - totem[i].getTransformedBounds().height - 84);

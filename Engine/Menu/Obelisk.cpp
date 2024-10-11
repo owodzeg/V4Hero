@@ -52,7 +52,7 @@ ObeliskMenu::ObeliskMenu()
     location_title.setFont(font);
     location_title.setCharacterSize(27);
     location_title.setColor(sf::Color::Black);
-    worldmap_title.setStringKey("worldmap_location_1_title");
+    location_title.setStringKey("worldmap_location_1_title");
     string desc = Func::wrap_text("worldmap_location_1_description", 800*3, font, 18);
 
     location_desc.setFont(font);
@@ -154,8 +154,8 @@ void ObeliskMenu::addMission(json missiondata)
     tm.setFont(font);
     tm.setCharacterSize(18);
     tm.setColor(sf::Color::Black);
-    tm.setString("");
-    tm.setString(tmp.title + level);
+    tm.setStringKey(tmp.title);
+    tm.addText(level);
     tm.setOrigin(tm.getLocalBounds().width / 2, tm.getLocalBounds().height / 2);
     tmp.p_mis = tm;
 
@@ -431,7 +431,11 @@ void ObeliskMenu::Update()
 
                     missions.clear();
 
-                    std::ifstream wmap("resources/missions/worldmap.dat", std::ios::in);
+                    std::ifstream wmap("resources/missions/worldmap.json", std::ios::in);
+
+                    if(!wmap.good())
+                        SPDLOG_ERROR("CRITICAL ERROR! No worldmap file! No maps will be loaded!");
+
                     json wmap_data;
 
                     if (wmap.good())
@@ -462,8 +466,9 @@ void ObeliskMenu::Update()
                             level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
                         }
 
-                        mission_title.setString(missions[sel_mission].title + level);
-                        string desc = Func::wrap_text(missions[sel_mission].desc, 633, font, 18);
+                        mission_title.setStringKey(missions[sel_mission].title);
+                        mission_title.addText(level);
+                        string desc = Func::wrap_text(missions[sel_mission].desc, 633*3, font, 18);
                         mission_desc.setString(desc);
                     }
                 } else
@@ -534,16 +539,16 @@ void ObeliskMenu::Update()
                         string wL1 = string(L1.begin(), L1.end());
                         string wL2 = string(L2.begin(), L2.end());
 
-                        string desc = Func::wrap_text(wL2, 800, font, 18);
+                        string desc = Func::wrap_text(wL2, 2400, font, 18);
 
-                        location_title.setString(wL1);
+                        location_title.setStringKey(wL1);
                         location_desc.setString(desc);
                     } else
                     {
                         string L1 = "worldmap_location_locked";
                         string wL1 = string(L1.begin(), L1.end());
 
-                        location_title.setString(wL1);
+                        location_title.setStringKey(wL1);
                         location_desc.setString("");
                     }
                 }
@@ -596,14 +601,14 @@ void ObeliskMenu::Update()
 
                         string desc = Func::wrap_text(wL2, 800*3, font, 18);
 
-                        location_title.setString(wL1);
+                        location_title.setStringKey(wL1);
                         location_desc.setString(desc);
                     } else
                     {
                         string L1 = "worldmap_location_locked";
                         string wL1 = string(L1.begin(), L1.end());
 
-                        location_title.setString(wL1);
+                        location_title.setStringKey(wL1);
                         location_desc.setString("");
                     }
                 }
@@ -623,7 +628,8 @@ void ObeliskMenu::Update()
                         level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
                     }
 
-                    mission_title.setString(missions[sel_mission].title + level);
+                    mission_title.setStringKey(missions[sel_mission].title);
+                    mission_title.addText(level);
                     string desc = Func::wrap_text(missions[sel_mission].desc, 633*3, font, 18);
                     mission_desc.setString(desc);
                 }
@@ -643,7 +649,8 @@ void ObeliskMenu::Update()
                         level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
                     }
 
-                    mission_title.setString(missions[sel_mission].title + level);
+                    mission_title.setStringKey(missions[sel_mission].title);
+                    mission_title.addText(level);
                     string desc = Func::wrap_text(missions[sel_mission].desc, 633*3, font, 18);
                     mission_desc.setString(desc);
                 }
