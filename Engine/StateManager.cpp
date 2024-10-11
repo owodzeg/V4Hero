@@ -773,17 +773,19 @@ void StateManager::setState(int state)
     // go from obelisk to barracks
     if (currentGameState == OBELISK && state == BARRACKS)
     {
-        if (barracksPtr != nullptr)
+        if (barracksPtr == nullptr)
         {
-            barracksPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
-            barracksPtr->obelisk = true;
-            barracksPtr->mission_id = obeliskPtr->missions[obeliskPtr->sel_mission].mis_ID;
-            barracksPtr->mission_file = obeliskPtr->missions[obeliskPtr->sel_mission].mission_file;
-            barracksPtr->refreshStats();
-            barracksPtr->updateInputControls();
-
-            CoreManager::getInstance().getCore()->changeRichPresence("In Barracks", "logo", "");
+            barracksPtr = new Barracks;
         }
+
+        barracksPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
+        barracksPtr->obelisk = true;
+        barracksPtr->mission_id = obeliskPtr->missions[obeliskPtr->sel_mission].mis_ID;
+        barracksPtr->mission_file = obeliskPtr->missions[obeliskPtr->sel_mission].mission_file;
+        barracksPtr->refreshStats();
+        barracksPtr->updateInputControls();
+
+        CoreManager::getInstance().getCore()->changeRichPresence("In Barracks", "logo", "");
     }
 
     // go from barracks to obelisk
