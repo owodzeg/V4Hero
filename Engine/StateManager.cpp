@@ -715,6 +715,11 @@ void StateManager::setState(int state)
         {
             altarPtr->reloadInventory();
         }
+        else
+        {
+            altarPtr = new AltarMenu;
+            altarPtr->reloadInventory();
+        }
     }
 
     // go from patapolis to barracks

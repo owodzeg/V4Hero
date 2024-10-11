@@ -81,7 +81,7 @@ AltarMenu::AltarMenu()
     altar_item_desc.setColor(sf::Color(111,71,51,255));
     altar_item_desc.setString("");
 
-    ctrlTips.create(54, font, 20, sf::String("Left/Right/Up/Down: Navigate      O: Exit to Patapolis"), quality);
+    ctrlTips.create(54*3, font, 20, sf::String("Left/Right/Up/Down: Navigate      O: Exit to Patapolis"), quality);
 
     SPDLOG_INFO("Initializing Altar finished.");
 }
@@ -295,8 +295,8 @@ void AltarMenu::Update()
                 inventory_boxes[curItem].icon.setPosition(40 + xpos + 36 + 2.5, 39 + ypos + 36 + 2.5);
                 inventory_boxes[curItem].icon.draw(window);
 
-                inventory_boxes[curItem].num.setPosition(40 + xpos + 51 - 1, 39 + ypos + 45 - 2);
-                inventory_boxes[curItem].num_shadow.setPosition(40 + xpos + 51, 39 + ypos + 45);
+                inventory_boxes[curItem].num.setPosition((40 + xpos + 51 - 1)*3, (39 + ypos + 45 - 2)*3);
+                inventory_boxes[curItem].num_shadow.setPosition((40 + xpos + 51)*3, (39 + ypos + 45)*3);
 
                 inventory_boxes[curItem].num_shadow.draw();
                 inventory_boxes[curItem].num.draw();
@@ -338,12 +338,12 @@ void AltarMenu::Update()
 
         window->draw(r_sel);
 
-        rr_title.Create(366, 100, 20, window->getSize().x / float(1280));
-        rr_title.x = 933;
-        rr_title.y = 141;
+        rr_title.Create(366 * 3, 100 * 3, 20 * 3, window->getSize().x / float(3840));
+        rr_title.x = 933 * 3;
+        rr_title.y = 141 * 3;
         rr_title.setOrigin(sf::Vector2f((rr_title.width + 40) / 2, (rr_title.height + 40) / 2));
 
-        rr_title_sh.Create(rr_title.width + 2, rr_title.height + 2, 20, window->getSize().x / float(1280), sf::Color(0, 0, 0, 96));
+        rr_title_sh.Create(rr_title.width + 2, rr_title.height + 2, 20 * 3, window->getSize().x / float(3840), sf::Color(0, 0, 0, 96));
         rr_title_sh.x = rr_title.x - 1;
         rr_title_sh.y = rr_title.y - 1;
         rr_title_sh.setOrigin(sf::Vector2f((rr_title.width + 40) / 2, (rr_title.height + 40) / 2));
@@ -351,12 +351,12 @@ void AltarMenu::Update()
         rr_title_sh.Draw();
         rr_title.Draw();
 
-        rr_desc.Create(440, 385, 20, window->getSize().x / float(1280));
+        rr_desc.Create(440 * 3, 385 * 3, 20 * 3, window->getSize().x / float(3840));
         rr_desc.x = rr_title.x;
-        rr_desc.y = 436;
+        rr_desc.y = 436 * 3;
         rr_desc.setOrigin(sf::Vector2f((rr_desc.width + 40) / 2, (rr_desc.height + 40) / 2));
 
-        rr_desc_sh.Create(rr_desc.width + 2, rr_desc.height + 2, 20, window->getSize().x / float(1280), sf::Color(0, 0, 0, 96));
+        rr_desc_sh.Create(rr_desc.width + 2, rr_desc.height + 2, 20 * 3, window->getSize().x / float(3840), sf::Color(0, 0, 0, 96));
         rr_desc_sh.x = rr_desc.x - 1;
         rr_desc_sh.y = rr_desc.y - 1;
         rr_desc_sh.setOrigin(sf::Vector2f((rr_desc.width + 40) / 2, (rr_desc.height + 40) / 2));
@@ -367,12 +367,12 @@ void AltarMenu::Update()
         altar_title.setOrigin(altar_title.getLocalBounds().width / 2, altar_title.getLocalBounds().height / 2);
         altar_kaching.setOrigin(altar_kaching.getLocalBounds().width / 2, altar_kaching.getLocalBounds().height / 2);
 
-        altar_title.setPosition(933, 100);
-        altar_kaching.setPosition(933, 170);
+        altar_title.setPosition(933 * 3, 100 * 3);
+        altar_kaching.setPosition(933 * 3, 170 * 3);
 
-        altar_item_title.setPosition(933, 250);
-        altar_item_category.setPosition(933, 280);
-        altar_item_desc.setPosition(725, 330);
+        altar_item_title.setPosition(933 * 3, 250 * 3);
+        altar_item_category.setPosition(933 * 3, 280 * 3);
+        altar_item_desc.setPosition(725 * 3, 330 * 3);
 
         altar_title.draw();
         altar_kaching.draw();
