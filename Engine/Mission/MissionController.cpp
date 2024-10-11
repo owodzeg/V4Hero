@@ -74,26 +74,33 @@ void MissionController::LoadMission(const std::string& path)
             }
             else
             {
-                entities.push_back(std::make_unique<Entity>());
-                auto e = entities.back().get();
-                e->LoadEntity(p);
-
-                for(auto param : entity["params"].items())
+                if(std::filesystem::exists(p))
                 {
-                    if(param.key() == "xpos")
-                        e->setGlobalPosition(sf::Vector2f(param.value(),e->yPos));
+                    entities.push_back(std::make_unique<Entity>());
+                    auto e = entities.back().get();
+                    e->LoadEntity(p);
 
-                    if(param.key() == "color")
-                        e->setColor(Func::hexToColor(param.value()));
-
-                    if(param.key() == "hp")
+                    for(auto param : entity["params"].items())
                     {
-                        e->maxHP = param.value();
-                        e->curHP = e->maxHP;
-                    }
-                }
+                        if(param.key() == "xpos")
+                            e->setGlobalPosition(sf::Vector2f(param.value(),e->yPos));
 
-                e->orderID = en_c;
+                        if(param.key() == "color")
+                            e->setColor(Func::hexToColor(param.value()));
+
+                        if(param.key() == "hp")
+                        {
+                            e->maxHP = param.value();
+                            e->curHP = e->maxHP;
+                        }
+                    }
+
+                    e->orderID = en_c;
+                }
+                else
+                {
+                    SPDLOG_ERROR("Specified entity file does not exist: {}", p);
+                }
             }
 
             en_c++;
@@ -518,7 +525,7 @@ void MissionController::Update()
     hpbar_out.setPosition(200, thumbY-120);
     hpbar_out.draw();
 
-    hpbar_fill.setPosition(hpbar_out.getPosition().x - hpbar_out.getLocalBounds().width - 22, hpbar_out.getPosition().y);
+    hpbar_fill.setPosition(118, hpbar_out.getPosition().y);
 
     float hp = hatapons.back().get()->curHP / hatapons.back().get()->maxHP;
 
@@ -540,7 +547,7 @@ void MissionController::Update()
     hpbar_out.setPosition(400, thumbY-120);
     hpbar_out.draw();
 
-    hpbar_fill.setPosition(hpbar_out.getPosition().x - hpbar_out.getLocalBounds().width - 22, hpbar_out.getPosition().y);
+    hpbar_fill.setPosition(318, hpbar_out.getPosition().y);
 
     float yari_maxhp = 0;
     float yari_curhp = 0;
