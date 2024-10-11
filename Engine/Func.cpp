@@ -237,7 +237,7 @@ bool Func::replace(std::string& str, const std::string& from, const std::string&
     return true;
 }
 
-void Func::smoothTransition(float& current, float& destination, float& delta)
+void Func::smoothTransition(float& current, float& destination, float delta)
 {
     if(fabs(current - destination) > 0)
     {
