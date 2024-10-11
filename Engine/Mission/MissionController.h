@@ -11,9 +11,9 @@
 #include "Units/Unit/Yaripon.h"
 #include "Units/Unit/FeverWorm.h"
 #include "Units/Unit/EndFlag.h"
+#include "Units/Unit/DroppedItem.h"
 #include "Units/Projectile.h"
 #include <Dialog/DialogBox.h>
-#include <random>
 
 using json = nlohmann::json;
 
@@ -32,6 +32,7 @@ public:
     std::vector<std::unique_ptr<FeverWorm>> feverworms;
     std::vector<std::unique_ptr<EndFlag>> endflags;
     std::vector<std::unique_ptr<Projectile>> projectiles;
+    std::vector<std::unique_ptr<DroppedItem>> droppeditems;
     std::vector<std::unique_ptr<Entity>> entities;
 
     uint64_t lastRhythmCheck;
@@ -53,7 +54,7 @@ public:
 
     PText unit_count, unit_count_shadow;
 
-    std::vector<std::vector<int>> droppeditems;
+    std::vector<std::vector<int>> dropped_ids;
     std::vector<PataDialogBox> dialogboxes;
 
     MissionController();

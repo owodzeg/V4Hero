@@ -135,7 +135,8 @@ set(ENGINE_FILES
         Engine/Mission/Units/Behavior.cpp
         Engine/Mission/Units/Behavior.h
         Engine/Mission/Units/Unit/FeverWorm.cpp
-        Engine/Mission/Units/Unit/EndFlag.cpp)
+        Engine/Mission/Units/Unit/EndFlag.cpp
+        Engine/Mission/Units/Unit/DroppedItem.cpp)
 
 set(DISCORD_FILES
         DiscordSDK/achievement_manager.cpp
