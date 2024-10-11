@@ -490,6 +490,7 @@ void MissionController::Update()
     else
         hpbar_fill.setColor(sf::Color(212, 0, 0, 255));
 
+    hpbar_fill.setScale(hp, 1);
     hpbar_fill.draw();
 
     thumb.setPosition(400*resRatioX, thumbY*resRatioY);
@@ -519,6 +520,7 @@ void MissionController::Update()
     else
         hpbar_fill.setColor(sf::Color(212, 0, 0, 255));
 
+    hpbar_fill.setScale(hp, 1);
     hpbar_fill.draw();
 
     unit_count_shadow.setFont(CoreManager::getInstance().getStrRepo()->GetFontNameForLanguage(CoreManager::getInstance().getStrRepo()->GetCurrentLanguage()));
