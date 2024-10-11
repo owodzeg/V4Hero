@@ -108,9 +108,9 @@ int Entity::getEntityID()
     return entityID;
 }
 
-sf::FloatRect Entity::getHitbox()
+std::vector<sf::FloatRect> Entity::getHitbox()
 {
-    return animation.animations[animation.currentAnimation].hitbox;
+    return animation.animations[animation.currentAnimation].hitboxes;
 }
 
 // handlers - environment

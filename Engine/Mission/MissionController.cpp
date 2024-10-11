@@ -315,9 +315,9 @@ void MissionController::Update()
         entity->setGlobalPosition(sf::Vector2f(entity->getGlobalPosition().x, entity->yPos + cam.zoom_y / zoom_offset));
     }
 
-    sf::RectangleShape hb;
-    hb.setSize(sf::Vector2f(10,10));
-    hb.setFillColor(sf::Color::Green);
+    sf::RectangleShape hbb;
+    hbb.setSize(sf::Vector2f(10,10));
+    hbb.setFillColor(sf::Color::Green);
 
     projectiles.erase(
         std::remove_if(
@@ -350,14 +350,16 @@ void MissionController::Update()
             if(entity->entityType == Entity::EntityTypes::HOSTILE || entity->entityType == Entity::EntityTypes::NEUTRAL)
             {
                 auto pos = entity->getGlobalPosition();
-                auto hb = entity->getHitbox();
 
-                if(projectile->tipX > pos.x+hb.left && projectile->tipX < pos.x+hb.width)
+                for(auto hb : entity->getHitbox())
                 {
-                    if(projectile->tipY > pos.y+hb.top && projectile->tipY < pos.y+hb.height)
+                    if(projectile->tipX > pos.x+hb.left && projectile->tipX < pos.x+hb.width)
                     {
-                        projectile->finished = true;
-                        entity->handleHit(rand() % 20 + 10);
+                        if(projectile->tipY > pos.y+hb.top && projectile->tipY < pos.y+hb.height)
+                        {
+                            projectile->finished = true;
+                            entity->handleHit(rand() % 20 + 10);
+                        }
                     }
                 }
             }
@@ -414,13 +416,15 @@ void MissionController::Update()
         for(auto& entity : entities)
         {
             auto pos = entity->getGlobalPosition();
-            auto hb = entity->getHitbox();
 
-            sf::RectangleShape hbx;
-            hbx.setSize(sf::Vector2f(hb.width*resRatioX,hb.height*resRatioY));
-            hbx.setFillColor(sf::Color(128,0,128,64));
-            hbx.setPosition((pos.x+hb.left) * resRatioX, (pos.y+hb.top) * resRatioY);
-            CoreManager::getInstance().getWindow()->draw(hbx);
+            for(auto hb : entity->getHitbox())
+            {
+                sf::RectangleShape hbx;
+                hbx.setSize(sf::Vector2f(hb.width*resRatioX,hb.height*resRatioY));
+                hbx.setFillColor(sf::Color(128,0,128,64));
+                hbx.setPosition((pos.x+hb.left) * resRatioX, (pos.y+hb.top) * resRatioY);
+                CoreManager::getInstance().getWindow()->draw(hbx);
+            }
         }
     }
 
@@ -430,9 +434,9 @@ void MissionController::Update()
 
         if(debug)
         {
-            hb.setPosition(projectile->tipX * resRatioX, projectile->tipY * resRatioY);
-            SPDLOG_DEBUG("projectile at {} {}, tip at {} {}, hitbox at {} {}", projectile->xPos, projectile->yPos, projectile->tipX, projectile->tipY, hb.getPosition().x, hb.getPosition().y);
-            CoreManager::getInstance().getWindow()->draw(hb);
+            hbb.setPosition(projectile->tipX * resRatioX, projectile->tipY * resRatioY);
+            SPDLOG_DEBUG("projectile at {} {}, tip at {} {}, hitbox at {} {}", projectile->xPos, projectile->yPos, projectile->tipX, projectile->tipY, hbb.getPosition().x, hbb.getPosition().y);
+            CoreManager::getInstance().getWindow()->draw(hbb);
         }
     }
 

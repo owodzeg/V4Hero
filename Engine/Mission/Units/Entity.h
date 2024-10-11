@@ -87,7 +87,7 @@ public:
     void setEntityID(int new_entityID);
     int getEntityID();
 
-    sf::FloatRect getHitbox();
+    std::vector<sf::FloatRect> getHitbox();
 
     // handlers - environment
     void handleHit(float damage); // when inflicted damage from player
