@@ -10,7 +10,9 @@
 #include "Units/Unit/Hatapon.h"
 #include "Units/Unit/Yaripon.h"
 #include "Units/Unit/FeverWorm.h"
+#include "Units/Unit/EndFlag.h"
 #include "Units/Projectile.h"
+#include <Dialog/DialogBox.h>
 
 class MissionController
 {
@@ -25,6 +27,7 @@ public:
     std::vector<std::unique_ptr<Hatapon>> hatapons;
     std::vector<std::unique_ptr<Yaripon>> yaripons;
     std::vector<std::unique_ptr<FeverWorm>> feverworms;
+    std::vector<std::unique_ptr<EndFlag>> endflags;
     std::vector<std::unique_ptr<Projectile>> projectiles;
     std::vector<std::unique_ptr<Entity>> entities;
 
@@ -46,6 +49,8 @@ public:
     bool zoomActivated = false;
 
     PText unit_count, unit_count_shadow;
+
+    std::vector<PataDialogBox> dialogboxes;
 
     MissionController();
     void LoadMission(const std::string& path);

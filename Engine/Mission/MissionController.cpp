@@ -59,28 +59,42 @@ void MissionController::LoadMission(const std::string& path)
         {
             std::string p = entity["path"];
 
-            entities.push_back(std::make_unique<Entity>());
-            auto e = entities.back().get();
-            e->LoadEntity(p);
-
-            for(auto param : entity["params"].items())
+            // handle end flag exclusively
+            if(p == "resources/units/entity/end_flag.zip")
             {
-                if(param.key() == "xpos")
-                    e->setGlobalPosition(sf::Vector2f(param.value(),e->yPos));
+                endflags.push_back(std::make_unique<EndFlag>());
+                auto e = endflags.back().get();
+                e->global_y = 1485;
 
-                if(param.key() == "color")
-                    e->setColor(Func::hexToColor(param.value()));
-
-                if(param.key() == "hp")
+                for(auto param : entity["params"].items())
                 {
-                    e->maxHP = param.value();
-                    e->curHP = e->maxHP;
+                    if(param.key() == "xpos")
+                        e->global_x = param.value();
                 }
             }
+            else
+            {
+                entities.push_back(std::make_unique<Entity>());
+                auto e = entities.back().get();
+                e->LoadEntity(p);
 
-            // TODO: add stat overrides
-            //entities.back().get()->setAnimation("idle");
-            e->orderID = en_c;
+                for(auto param : entity["params"].items())
+                {
+                    if(param.key() == "xpos")
+                        e->setGlobalPosition(sf::Vector2f(param.value(),e->yPos));
+
+                    if(param.key() == "color")
+                        e->setColor(Func::hexToColor(param.value()));
+
+                    if(param.key() == "hp")
+                    {
+                        e->maxHP = param.value();
+                        e->curHP = e->maxHP;
+                    }
+                }
+
+                e->orderID = en_c;
+            }
 
             en_c++;
         }
@@ -132,7 +146,8 @@ void MissionController::Update()
     // TODO: why the fuck is this needed? without this, zoom doesn't work correctly.
     double zoom_offset = (0.000709722222222 * CoreManager::getInstance().getWindow()->getSize().y);
 
-    rhythm->doRhythm();
+    if(dialogboxes.size() <= 0)
+        rhythm->doRhythm();
 
     std::vector<Rhythm::RhythmMessage> messages = rhythm->fetchRhythmMessages(lastRhythmCheck);
 
@@ -398,6 +413,20 @@ void MissionController::Update()
             rightmostPataX = pos;
     }
 
+    if(rightmostPataX > endflags.back().get()->global_x)
+    {
+        // end mission
+        if(dialogboxes.size() <= 0)
+        {
+            std::vector<sf::String> a = {"error_exit"};
+
+            PataDialogBox db;
+            db.Create(CoreManager::getInstance().getStrRepo()->GetFontNameForLanguage(CoreManager::getInstance().getStrRepo()->GetCurrentLanguage()), "mission_complete", a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"), 1);
+            db.id = 0;
+            dialogboxes.push_back(db);
+        }
+    }
+
     if(yari_inSight)
         cam.followobject_x = ((leftmostPataX + closest - 1800) / 2) * resRatioX;
     else
@@ -409,6 +438,9 @@ void MissionController::Update()
 
     for(auto& entity : entities)
         entity->Draw();
+
+    endflags.back().get()->global_y = 1485 + cam.zoom_y / zoom_offset;
+    endflags.back().get()->Draw();
 
     if(debug && entities.size() > 0)
     {
@@ -550,9 +582,35 @@ void MissionController::Update()
 
     feverworms.back().get()->Draw();
 
-    CoreManager::getInstance().getWindow()->setView(lastView);
-
     rhythmGUI->doVisuals(0, rhythm->GetCombo());
+
+    if(dialogboxes.size() > 0)
+    {
+        if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
+        {
+            switch (dialogboxes[dialogboxes.size() - 1].CheckSelectedOption())
+            {
+                case 0: {
+                    if (dialogboxes[dialogboxes.size() - 1].id == 0)
+                    {
+                        SPDLOG_INFO("Starting new game!");
+                        dialogboxes[dialogboxes.size() - 1].Close();
+
+                        CoreManager::getInstance().getCore()->close_window = true;
+
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < dialogboxes.size(); i++)
+    {
+        dialogboxes[i].x = 1920;
+        dialogboxes[i].y = 1080;
+        dialogboxes[i].Draw();
+    }
 
     CoreManager::getInstance().getWindow()->setView(lastView);
 }
