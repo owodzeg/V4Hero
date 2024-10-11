@@ -366,14 +366,10 @@ void MissionController::Update()
         }
     }
 
-    //if(kirajin_hp <= 0 && entities.size() > 0)
-    //{
-    //    entities.clear();
-    //}
-
     // find leftmost and rightmost patapon so a middlespot can be calculated
     // i think in patapon the camera actually follows the rightmost spot
     // can be experimented here
+
     float leftmostPataX = 99999999;
     float rightmostPataX = -99999999;
 
@@ -396,13 +392,9 @@ void MissionController::Update()
     }
 
     if(yari_inSight)
-    {
         cam.followobject_x = ((leftmostPataX + closest - 1800) / 2) * resRatioX;
-    }
     else
-    {
         cam.followobject_x = ((leftmostPataX + rightmostPataX - 300) / 2) * resRatioX;
-    }
 
     cam.Work(mission_view);
     bg.pataSpeed = pataMaxSpeed;
@@ -461,6 +453,94 @@ void MissionController::Update()
     }
 
     bg.DrawFloor();
+
+    lastView = CoreManager::getInstance().getWindow()->getView();
+    CoreManager::getInstance().getWindow()->setView(CoreManager::getInstance().getWindow()->getDefaultView());
+
+    // UI elements
+    sf::CircleShape thumb;
+    thumb.setRadius(80 * resRatioX);
+    thumb.setFillColor(sf::Color::White);
+    thumb.setOrigin(thumb.getLocalBounds().width/2, thumb.getLocalBounds().height/2);
+
+    PSprite& hpbar_out = ResourceManager::getInstance().getSprite("resources/graphics/mission/hpbar_back.png");
+    hpbar_out.setOrigin(hpbar_out.getLocalBounds().width/2, hpbar_out.getLocalBounds().height/2);
+
+    PSprite& hpbar_fill = ResourceManager::getInstance().getSprite("resources/graphics/mission/hpbar_ins.png");
+    hpbar_fill.setOrigin(0, hpbar_fill.getLocalBounds().height/2);
+
+    float thumbY = 250;
+
+    thumb.setPosition(200*resRatioX, thumbY*resRatioY);
+    CoreManager::getInstance().getWindow()->draw(thumb);
+
+    hatapons.back().get()->main.animation.drawCopy(sf::Vector2f(221, thumbY-148), sf::Vector2f(0.6, 0.6));
+
+    hpbar_out.setPosition(200, thumbY-120);
+    hpbar_out.draw();
+
+    hpbar_fill.setPosition(hpbar_out.getPosition().x - hpbar_out.getLocalBounds().width - 22, hpbar_out.getPosition().y);
+
+    float hp = hatapons.back().get()->curHP / hatapons.back().get()->maxHP;
+
+    if (hp > 0.70)
+        hpbar_fill.setColor(sf::Color(0, 255, 0, 255));
+    else if (hp > 0.35)
+        hpbar_fill.setColor(sf::Color(245, 230, 66, 255));
+    else
+        hpbar_fill.setColor(sf::Color(212, 0, 0, 255));
+
+    hpbar_fill.draw();
+
+    thumb.setPosition(400*resRatioX, thumbY*resRatioY);
+    CoreManager::getInstance().getWindow()->draw(thumb);
+
+    yaripons.back().get()->main.animation.drawCopy(sf::Vector2f(400, thumbY), sf::Vector2f(0.6, 0.6));
+
+    hpbar_out.setPosition(400, thumbY-120);
+    hpbar_out.draw();
+
+    hpbar_fill.setPosition(hpbar_out.getPosition().x - hpbar_out.getLocalBounds().width - 22, hpbar_out.getPosition().y);
+
+    float yari_maxhp = 0;
+    float yari_curhp = 0;
+    for(auto& y : yaripons)
+    {
+        yari_maxhp += y->maxHP;
+        yari_curhp += y->curHP;
+    }
+
+    hp = yari_curhp / yari_maxhp;
+
+    if (hp > 0.70)
+        hpbar_fill.setColor(sf::Color(0, 255, 0, 255));
+    else if (hp > 0.35)
+        hpbar_fill.setColor(sf::Color(245, 230, 66, 255));
+    else
+        hpbar_fill.setColor(sf::Color(212, 0, 0, 255));
+
+    hpbar_fill.draw();
+
+    unit_count_shadow.setFont(CoreManager::getInstance().getStrRepo()->GetFontNameForLanguage(CoreManager::getInstance().getStrRepo()->GetCurrentLanguage()));
+    unit_count_shadow.disable_processing = true;
+    unit_count_shadow.setCharacterSize(30);
+    unit_count_shadow.setString(to_string(yaripons.size()));
+    unit_count_shadow.setColor(sf::Color::Black);
+    unit_count_shadow.setOrigin(0, unit_count_shadow.getLocalBounds().height/2);
+    unit_count_shadow.setPosition(460, thumbY + 75);
+    unit_count_shadow.draw();
+
+    unit_count.setFont(CoreManager::getInstance().getStrRepo()->GetFontNameForLanguage(CoreManager::getInstance().getStrRepo()->GetCurrentLanguage()));
+    unit_count.disable_processing = true;
+    unit_count.setCharacterSize(30);
+    unit_count.setString(to_string(yaripons.size()));
+    unit_count.setColor(sf::Color::White);
+    unit_count.setOrigin(0, unit_count.getLocalBounds().height/2);
+    unit_count.setPosition(452, thumbY + 65);
+    unit_count.draw();
+
+
+    CoreManager::getInstance().getWindow()->setView(lastView);
 
     rhythmGUI->doVisuals(0, rhythm->GetCombo());
 

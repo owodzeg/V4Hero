@@ -88,6 +88,7 @@ class PNGAnimation
         virtual void addAnimationStalling(const std::string& animShortName, int frame, int duration);
 
         virtual void Draw();
+        virtual void drawCopy(sf::Vector2f pos, sf::Vector2f sc);
 };
 
 #endif

@@ -746,6 +746,58 @@ void PNGAnimation::Draw()
     texture.draw();
 }
 
+void PNGAnimation::drawCopy(sf::Vector2f pos, sf::Vector2f sc)
+{
+    Animation& curAnim = animations[currentAnimation];
+
+    auto currentFrameInt = static_cast<unsigned int>(floor(currentFrame));
+    unsigned int maxFramesPerSheet = curAnim.maxCols * curAnim.maxRows;
+
+    int currentSpritesheet = floor(currentFrameInt / maxFramesPerSheet);
+    int currentSpritesheetFrame = currentFrameInt % maxFramesPerSheet;
+
+    int currentRow = currentSpritesheetFrame / curAnim.maxCols;
+    int currentCol = currentSpritesheetFrame % curAnim.maxCols;
+
+    //SPDLOG_DEBUG("currentAnimation {} {}, currentFrame {}, currentFrameInt {}, maxFrames {}, animationSpeed {}, maxFramesPerSheet {}, currentSpritesheet {}, currentSpritesheetFrame {}, row {}, col {}", currentAnimation, curAnim.shortName, currentFrame, currentFrameInt, curAnim.frames, animationSpeed, maxFramesPerSheet, currentSpritesheet, currentSpritesheetFrame, currentRow, currentCol);
+
+    int x_start = currentCol * curAnim.img_x;
+    int y_start = currentRow * curAnim.img_y;
+
+    sf::IntRect textureRect = {x_start, y_start, static_cast<int>(curAnim.img_x), static_cast<int>(curAnim.img_y)};
+
+    auto& texture = ResourceManager::getInstance().getSprite(curAnim.spritesheet_paths[currentSpritesheet]);
+    texture.setTextureRect(textureRect);
+
+    if(curAnim.customOrigin)
+        texture.setOrigin(curAnim.origin_x / qscale, curAnim.origin_y / qscale);
+    else
+        texture.setOrigin(curAnim.origin_x, curAnim.origin_y);
+    texture.setPosition(pos.x, pos.y);
+    texture.setScale(sc.x, sc.y);
+    texture.setRotation(rotation);
+    texture.setColor(color);
+
+    //draw extras
+    for(auto& e : extra)
+    {
+        auto& name = e.first;
+        auto& spr = e.second;
+
+        auto& frame = ex_frames[name][currentAnimation][currentFrame];
+
+        SPDLOG_INFO("Drawing extra {}, anim {} frame {}, {} {} {}", name, currentAnimation, currentFrame, frame.x, frame.y, frame.r);
+
+        spr.setScale(sc.x, sc.y);
+        spr.setPosition(pos.x + frame.x*sc.x, pos.y + frame.y*sc.y);
+        spr.setRotation(frame.r);
+        spr.draw();
+        spr.setScale(1, 1);
+    }
+
+    texture.draw();
+}
+
 void PNGAnimation::setAnimation(const std::string& animShortName)
 {
     currentAnimation = getIDfromShortName(animShortName);

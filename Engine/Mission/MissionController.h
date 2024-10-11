@@ -43,6 +43,8 @@ public:
     bool inFever = false;
     bool zoomActivated = false;
 
+    PText unit_count, unit_count_shadow;
+
     MissionController();
     void LoadMission(const std::string& path);
     void SendProjectile(float x, float y, float hspeed, float vspeed);
