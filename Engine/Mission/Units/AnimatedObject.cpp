@@ -142,6 +142,14 @@ bool AnimatedObject::getAnimationLoop()
     return animation.isLooping;
 }
 
+void AnimatedObject::addExtra(SpriteWrapper spr, std::string name)
+{
+    std::pair<std::string, SpriteWrapper> entry;
+    entry.first = name;
+    entry.second = spr;
+    animation.extra.push_back(entry);
+}
+
 void AnimatedObject::LoadConfig(const std::string& anim_path)
 {
     if(anim_path.find(".p4a") != std::string::npos)

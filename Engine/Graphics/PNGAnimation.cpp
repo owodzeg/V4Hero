@@ -444,35 +444,80 @@ void PNGAnimation::Load(const std::string& path)
 
     if(animation.contains("hitbox"))
     {
+        SPDLOG_INFO("Loading hitboxes");
         for(auto s : animation["hitbox"].items())
         {
             std::string key = s.key();
+            SPDLOG_INFO("Hitbox key: {}", key);
 
-            if(animation["hitbox"][key].size() == 4)
-            {
+            if (animation["hitbox"][key].is_array() && !animation["hitbox"][key].empty() && animation["hitbox"][key].at(0).is_number()) {
+                SPDLOG_INFO("Single hitbox detected");
+
                 int hb_x = animation["hitbox"][key][0].get<int>();
                 int hb_y = animation["hitbox"][key][1].get<int>();
                 int hb_width = animation["hitbox"][key][2].get<int>();
                 int hb_height = animation["hitbox"][key][3].get<int>();
 
+                sf::FloatRect h;
+
+                h.left = hb_x;
+                h.top = hb_y;
+                h.width = hb_width;
+                h.height = hb_height;
+
                 if(key == "default")
                 {
+                    SPDLOG_INFO("Setting default hitbox: {} {} {} {}", h.left, h.top, h.width, h.height);
+
                     for(auto& a : animations)
                     {
-                        a.hitbox.left = hb_x;
-                        a.hitbox.top = hb_y;
-                        a.hitbox.width = hb_width;
-                        a.hitbox.height = hb_height;
+                        a.hitboxes.push_back(h);
                     }
                 }
                 else
                 {
-                    int id = getIDfromShortName(key);
+                    SPDLOG_INFO("Setting animation-specific hitbox: {} {} {} {}", h.left, h.top, h.width, h.height);
 
-                    animations[id].hitbox.left = hb_x;
-                    animations[id].hitbox.top = hb_y;
-                    animations[id].hitbox.width = hb_width;
-                    animations[id].hitbox.height = hb_height;
+                    int id = getIDfromShortName(key);
+                    animations[id].hitboxes.push_back(h);
+                }
+            }
+            else if (animation["hitbox"][key].is_array() && !animation["hitbox"][key].empty() && animation["hitbox"][key].at(0).is_array()) {
+                SPDLOG_INFO("Multi hitbox detected");
+                for(auto json_hb : animation["hitbox"][key])
+                {
+                    SPDLOG_INFO("JSON: {}", json_hb.dump());
+                    if(json_hb.size() == 4)
+                    {
+                        int hb_x = json_hb[0].get<int>();
+                        int hb_y = json_hb[1].get<int>();
+                        int hb_width = json_hb[2].get<int>();
+                        int hb_height = json_hb[3].get<int>();
+
+                        sf::FloatRect h;
+
+                        h.left = hb_x;
+                        h.top = hb_y;
+                        h.width = hb_width;
+                        h.height = hb_height;
+
+                        if(key == "default")
+                        {
+                            SPDLOG_INFO("Setting default hitbox: {} {} {} {}", h.left, h.top, h.width, h.height);
+
+                            for(auto& a : animations)
+                            {
+                                a.hitboxes.push_back(h);
+                            }
+                        }
+                        else
+                        {
+                            SPDLOG_INFO("Setting animation-specific hitbox: {} {} {} {}", h.left, h.top, h.width, h.height);
+
+                            int id = getIDfromShortName(key);
+                            animations[id].hitboxes.push_back(h);
+                        }
+                    }
                 }
             }
         }
@@ -487,10 +532,14 @@ void PNGAnimation::Load(const std::string& path)
             int bw = a.img_x;
             int bh = a.img_y;
 
-            a.hitbox.left = -ox;
-            a.hitbox.top = -oy;
-            a.hitbox.width = bw;
-            a.hitbox.height = bh;
+            sf::FloatRect h;
+
+            h.left = -ox;
+            h.top = -oy;
+            h.width = bw;
+            h.height = bh;
+
+            a.hitboxes.push_back(h);
         }
     }
 
@@ -500,6 +549,60 @@ void PNGAnimation::Load(const std::string& path)
 
         SPDLOG_DEBUG("noRepeat {}", anim);
         animationPause.push_back(getIDfromShortName(anim));
+    }
+
+    // for extra, separately animated parts
+    if(animation.contains("extras"))
+    {
+        for(auto e : animation["extras"].items())
+        {
+            std::string name = e.value();
+            SPDLOG_INFO("Loading extra: {}", name);
+
+            json extra;
+            std::string json_name = "extra_" + name + ".json";
+
+            if(zip)
+            {
+                ZipArchive zf(f.string());
+                zf.open(ZipArchive::ReadOnly);
+                ZipEntry entry = zf.getEntry(json_name);
+                if(!entry.isNull())
+                {
+                    extra = json::parse(entry.readAsText());
+
+                    SPDLOG_INFO("Reading animation.json.");
+                    SPDLOG_INFO("Framerate: {}", animation["main"]["framerate"]);
+                }
+            }
+            else
+            {
+                ifstream ex(model_name+"/"+json_name);
+                if(ex.good())
+                {
+                    extra << ex;
+                }
+                else
+                {
+                    SPDLOG_ERROR("No animation.json file found. Will use defaults which may be incorrect.");
+                }
+            }
+
+            for(auto ff : extra["animationData"])
+            {
+                ExtraFrame ef;
+                SPDLOG_INFO("Parsing extra frame: {}", ff.dump());
+
+                ef.x = ff["pos_x"].get<float>() * 3;
+                ef.y = ff["pos_y"].get<float>() * 3;
+                ef.r = ff["rotation"].get<float>();
+
+                int an = getIDfromShortName(ff["animation"]);
+                int fr = ff["frame"].get<int>();
+
+                ex_frames[name][an][fr] = ef;
+            }
+        }
     }
 }
 
@@ -625,8 +728,22 @@ void PNGAnimation::Draw()
     texture.setRotation(rotation);
     texture.setColor(color);
 
+    //draw extras
+    for(auto& e : extra)
+    {
+        auto& name = e.first;
+        auto& spr = e.second;
+
+        auto& frame = ex_frames[name][currentAnimation][currentFrame];
+
+        SPDLOG_INFO("Drawing extra {}, anim {} frame {}, {} {} {}", name, currentAnimation, currentFrame, frame.x, frame.y, frame.r);
+
+        spr.setPosition(position.x + frame.x, position.y + frame.y);
+        spr.setRotation(frame.r);
+        spr.draw();
+    }
+
     texture.draw();
-    //window->draw(rect);
 }
 
 void PNGAnimation::setAnimation(const std::string& animShortName)

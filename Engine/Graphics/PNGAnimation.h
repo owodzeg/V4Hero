@@ -2,6 +2,7 @@
 #define PNGANIMATION_H
 
 #include <SFML/Graphics.hpp>
+#include <Graphics/SpriteWrapper.h>
 #include <vector>
 #include <unordered_map>
 
@@ -31,7 +32,7 @@ class PNGAnimation
             unsigned int maxRows = 0;
             unsigned int origin_x = 0;
             unsigned int origin_y = 0;
-            sf::FloatRect hitbox;
+            std::vector<sf::FloatRect> hitboxes;
             bool cached = false;
             bool zip = false;
             bool customOrigin = false;
@@ -64,6 +65,15 @@ class PNGAnimation
 
         int q = -1;
         int qscale = 1;
+
+        std::vector<std::pair<std::string, SpriteWrapper>> extra;
+        struct ExtraFrame
+        {
+            float x=0, y=0, r=0;
+        };
+
+        // ex_frames[extra_name][animation][frame] = ExtraFrame
+        std::unordered_map<std::string, std::unordered_map<int, std::unordered_map<int, ExtraFrame>>> ex_frames;
 
         PNGAnimation();
         virtual sf::Image getAnimationImage(const std::string& anim_path, const std::string& image_path, bool zipped = false);

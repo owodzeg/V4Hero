@@ -2,7 +2,7 @@
 #define ANIMATEDOBJECT_H
 
 #include <SFML/Graphics.hpp>
-#include "../../Graphics/PNGAnimation.h"
+#include <Graphics/PNGAnimation.h>
 #include <memory>
 
 class AnimatedObjectException : public std::exception {
@@ -66,6 +66,7 @@ public:
     void setAnimationLoop(bool newLoop);
     bool getAnimationLoop();
 
+    void addExtra(SpriteWrapper spr, std::string name);
 
     // internals
     virtual void LoadConfig(const std::string& anim_path);
