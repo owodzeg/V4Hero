@@ -10,8 +10,6 @@
 
 	"entities":
 	[
-		{ "id": 1, "params": { "xpos": -330, "layer": "ui" } },
-
 		{ "id": 3, "params": { "xpos": 500, "color": "50d28c", "layer": "nature"} },
 		{ "id": 3, "params": { "xpos": 580, "color": "50d28c", "layer": "nature"} },
 		{ "id": 3, "params": { "xpos": 660, "color": "50d28c", "layer": "nature"} },
