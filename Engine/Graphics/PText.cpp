@@ -121,7 +121,6 @@ void PText::processRichText()
     }
 
     t = sfe::RichText(strRepo->fontStore[font]);
-    t.setCharacterSize(characterSize);
     t << sf::Color(0,0,0,0);
     if(txt_color != "")
         t << color;
@@ -427,6 +426,8 @@ void PText::processRichText()
         //we put it here, in case we want to have some dialogues instantly show up
         speech_done = true;
     }
+
+    t.setCharacterSize(characterSize);
 }
 
 void PText::setOrigin(float x, float y)
