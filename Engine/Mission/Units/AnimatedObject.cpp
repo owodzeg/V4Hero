@@ -1,8 +1,12 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "AnimatedObject.h"
+
+#include <CoreManager.h>
 #include <cmath>
 #include <spdlog/spdlog.h>
+#include <fstream>
+#include <Func.h>
 
 AnimatedObject::AnimatedObject()
 {
@@ -148,6 +152,44 @@ void AnimatedObject::addExtra(SpriteWrapper spr, std::string name)
     entry.first = name;
     entry.second = spr;
     animation.extra.push_back(entry);
+}
+
+void AnimatedObject::loadExtra(std::string path, std::string name)
+{
+    SPDLOG_INFO("Loading extra! {} {}", path, name);
+
+    for(auto& a : animation.extra)
+    {
+        if(a.first == name)
+        {
+            std::string texPath = "resources/graphics/item/textures/"+path+".png";
+            std::string alignPath = "resources/graphics/item/alignment/"+path+".spr";
+
+            SPDLOG_INFO("texPath: {}, alignPath: {}", texPath, alignPath);
+
+            a.second.load(texPath);
+
+            float resRatioX = CoreManager::getInstance().getWindow()->getSize().x / float(3840);
+            float resRatioY = CoreManager::getInstance().getWindow()->getSize().y / float(2160);
+
+            std::ifstream alignFile(alignPath);
+            if(alignFile.good())
+            {
+                std::string alignData;
+                std::getline(alignFile, alignData);
+
+                std::vector<std::string> data = Func::Split(alignData, ',');
+
+                a.second.setOrigin(atof(data[0].c_str())*resRatioX, atof(data[1].c_str())*resRatioY);
+            }
+            else
+            {
+                a.second.setOrigin(0, 0);
+            }
+
+            SPDLOG_INFO("set origin to {} {}", a.second.getOrigin().x, a.second.getOrigin().y);
+        }
+    }
 }
 
 void AnimatedObject::LoadConfig(const std::string& anim_path)

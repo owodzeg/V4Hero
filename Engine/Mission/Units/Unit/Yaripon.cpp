@@ -45,15 +45,8 @@ Yaripon::Yaripon(int which, int maxpons)
 
     gap_x = pos;
 
-    SpriteWrapper weapon;
-    weapon.load("resources/graphics/item/textures/main/0014.png");
-    weapon.setOrigin(weapon.getLocalBounds().width/2, weapon.getLocalBounds().height/2);
-    main.addExtra(weapon, "weapon");
-
-    SpriteWrapper helm;
-    helm.load("resources/graphics/item/textures/main/0020.png");
-    helm.setOrigin(helm.getLocalBounds().width/2, helm.getLocalBounds().height);
-    main.addExtra(helm, "helm");
+    main.loadExtra("main/0014", "weapon");
+    main.loadExtra("main/0020", "helm");
 }
 
 void Yaripon::Advance()

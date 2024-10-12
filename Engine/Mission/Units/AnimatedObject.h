@@ -67,6 +67,7 @@ public:
     bool getAnimationLoop();
 
     void addExtra(SpriteWrapper spr, std::string name);
+    void loadExtra(std::string path, std::string name);
 
     // internals
     virtual void LoadConfig(const std::string& anim_path);

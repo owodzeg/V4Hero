@@ -564,9 +564,16 @@ void PNGAnimation::Load(const std::string& path)
         for(auto e : animation["extras"].items())
         {
             std::string name = e.value();
+
+            SpriteWrapper spr;
+            std::pair<std::string, SpriteWrapper> entry;
+            entry.first = name;
+            entry.second = spr;
+            extra.push_back(entry);
+
             SPDLOG_INFO("Loading extra: {}", name);
 
-            json extra;
+            json j_extra;
             std::string json_name = "extra_" + name + ".json";
 
             if(zip)
@@ -576,7 +583,7 @@ void PNGAnimation::Load(const std::string& path)
                 ZipEntry entry = zf.getEntry(json_name);
                 if(!entry.isNull())
                 {
-                    extra = json::parse(entry.readAsText());
+                    j_extra = json::parse(entry.readAsText());
 
                     SPDLOG_INFO("Reading animation.json.");
                     SPDLOG_INFO("Framerate: {}", animation["main"]["framerate"]);
@@ -587,7 +594,7 @@ void PNGAnimation::Load(const std::string& path)
                 ifstream ex(model_name+"/"+json_name);
                 if(ex.good())
                 {
-                    extra << ex;
+                    j_extra << ex;
                 }
                 else
                 {
@@ -595,7 +602,7 @@ void PNGAnimation::Load(const std::string& path)
                 }
             }
 
-            for(auto ff : extra["animationData"])
+            for(auto ff : j_extra["animationData"])
             {
                 ExtraFrame ef;
                 SPDLOG_INFO("Parsing extra frame: {}", ff.dump());
@@ -746,6 +753,7 @@ void PNGAnimation::Draw()
         //SPDLOG_INFO("Drawing extra {}, anim {} frame {}, {} {} {}", name, currentAnimation, currentFrame, frame.x, frame.y, frame.r);
 
         spr.setPosition(position.x + frame.x, position.y + frame.y);
+        spr.setScale(scale.x, scale.y);
         spr.setRotation(frame.r);
         spr.draw();
     }

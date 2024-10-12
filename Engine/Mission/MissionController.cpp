@@ -111,18 +111,34 @@ void MissionController::LoadMission(const std::string& path)
                     auto e = entities.back().get();
                     e->LoadEntity(p);
 
-                    for(auto param : entity["params"].items())
+                    if (entity.contains("params"))
                     {
-                        if(param.key() == "xpos")
-                            e->setGlobalPosition(sf::Vector2f(param.value(),e->yPos));
+                        auto& params = entity["params"];
+                        SPDLOG_INFO("mission params: {}", params.dump());
 
-                        if(param.key() == "color")
-                            e->setColor(Func::hexToColor(param.value()));
+                        // Check xpos
+                        if (params.contains("xpos") && !params["xpos"].is_null())
+                            e->setGlobalPosition(sf::Vector2f(params["xpos"], e->yPos));
 
-                        if(param.key() == "hp")
+                        // Check color
+                        if (params.contains("color") && !params["color"].is_null())
+                            e->setColor(Func::hexToColor(params["color"]));
+
+                        // Check hp
+                        if (params.contains("hp") && !params["hp"].is_null())
                         {
-                            e->maxHP = param.value();
+                            e->maxHP = params["hp"];
                             e->curHP = e->maxHP;
+                        }
+
+                        // Check extra parameters
+                        if (params.contains("extra") && !params["extra"].is_null())
+                        {
+                            SPDLOG_INFO("mission extras: {}", params["extra"].dump());
+                            for (auto& j : params["extra"].items())
+                            {
+                                e->loadExtra(j.value(), j.key());
+                            }
                         }
                     }
 
@@ -538,8 +554,7 @@ void MissionController::Update()
     // TODO: why the fuck is this needed? without this, zoom doesn't work correctly.
     double zoom_offset = (0.000709722222222 * CoreManager::getInstance().getWindow()->getSize().y);
 
-    if(dialogboxes.size() <= 0)
-        rhythm->doRhythm();
+    rhythm->doRhythm();
 
     std::vector<Rhythm::RhythmMessage> messages = rhythm->fetchRhythmMessages(lastRhythmCheck);
 
@@ -809,16 +824,9 @@ void MissionController::Update()
 
     if(rightmostPataX > endflags.back().get()->global_x)
     {
-        // end mission
-        if(dialogboxes.size() <= 0)
-        {
-            std::vector<sf::String> a = {"error_exit"};
-
-            PataDialogBox db;
-            db.Create(CoreManager::getInstance().getStrRepo()->GetFontNameForLanguage(CoreManager::getInstance().getStrRepo()->GetCurrentLanguage()), "mission_complete", a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"), 1);
-            db.id = 0;
-            dialogboxes.push_back(db);
-        }
+        missionEnd = true;
+        rhythm->Stop();
+        missionEndTimer.restart();
     }
 
     if(!missionEnd)
@@ -1013,23 +1021,26 @@ void MissionController::Update()
 
     if (!missionEnd)
     {
-        if (inputCtrl->isKeyPressed(Input::Keys::SELECT))
+        if(dialogboxes.size() <= 0)
         {
-            std::vector<sf::String> a = {"Show hitboxes", "Hide hitboxes", "Heal units", "Kill all player units", "Kill Hatapon", "Enable verbose logging", "Mission complete", "Toggle rhythm debug UI", "Toggle song debug"};
+            if (inputCtrl->isKeyPressed(Input::Keys::SELECT))
+            {
+                std::vector<sf::String> a = {"Toggle hitboxes", "Toggle debug info", "Heal units", "Kill all player units", "Kill Hatapon", "Mission failure", "Mission complete", "Toggle rhythm debug UI", "Toggle song debug"};
 
-            PataDialogBox db;
-            db.Create(font, "Debug menu", a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"), 3);
-            db.id = 999;
-            dialogboxes.push_back(db);
-        }
+                PataDialogBox db;
+                db.Create(font, "Debug menu", a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"), 3);
+                db.id = 999;
+                dialogboxes.push_back(db);
+            }
 
-        if (inputCtrl->isKeyPressed(Input::Keys::START))
-        {
-            std::vector<sf::String> a = {"nav_yes", "nav_no"};
+            if (inputCtrl->isKeyPressed(Input::Keys::START))
+            {
+                std::vector<sf::String> a = {"nav_yes", "nav_no"};
 
-            PataDialogBox db;
-            db.Create(font, "mission_backtopatapolis", a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
-            dialogboxes.push_back(db);
+                PataDialogBox db;
+                db.Create(font, "mission_backtopatapolis", a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
+                dialogboxes.push_back(db);
+            }
         }
     }
 
@@ -1059,15 +1070,11 @@ void MissionController::Update()
                         missionEndTimer.restart();
                     } else if (dialogboxes[dialogboxes.size() - 1].id == 999)
                     {
-                        SPDLOG_DEBUG("Enable hitboxes");
+                        SPDLOG_DEBUG("Toggle hitboxes");
 
                         for(auto& pon : yaripons)
                         {
                             pon->toggleDebug = !pon->toggleDebug;
-                        }
-                        for(auto& entity : entities)
-                        {
-                            entity->toggleDebug = !entity->toggleDebug;
                         }
                         debug = !debug;
 
@@ -1084,17 +1091,12 @@ void MissionController::Update()
                         dialogboxes[dialogboxes.size() - 1].Close();
                     } else if (dialogboxes[dialogboxes.size() - 1].id == 999)
                     {
-                        SPDLOG_DEBUG("Disable hitboxes");
+                        SPDLOG_DEBUG("Toggle debug info");
 
-                        for(auto& pon : yaripons)
-                        {
-                            pon->toggleDebug = !pon->toggleDebug;
-                        }
                         for(auto& entity : entities)
                         {
                             entity->toggleDebug = !entity->toggleDebug;
                         }
-                        debug = !debug;
 
                         dialogboxes[dialogboxes.size() - 1].Close();
                     }
@@ -1106,10 +1108,10 @@ void MissionController::Update()
                     if (dialogboxes[dialogboxes.size() - 1].id == 999)
                     {
                         SPDLOG_DEBUG("Heal all units");
-                        //for (int u = 0; u < units.size(); u++)
-                        //{
-                        //    units[u].get()->current_hp = units[u].get()->max_hp;
-                        //}
+                        for(auto& pon : yaripons)
+                        {
+                            pon->curHP = pon->maxHP;
+                        }
 
                         dialogboxes[dialogboxes.size() - 1].Close();
                     }
@@ -1121,11 +1123,11 @@ void MissionController::Update()
                     if (dialogboxes[dialogboxes.size() - 1].id == 999)
                     {
                         SPDLOG_DEBUG("Kill all player units");
-                        //for (int u = 0; u < units.size(); u++)
-                        //{
-                        //    if (units[u].get()->getUnitID() == 1)
-                        //    units[u].get()->current_hp = 0;
-                        //}
+
+                        for(auto& pon : yaripons)
+                        {
+                            pon->curHP = 0;
+                        }
 
                         dialogboxes[dialogboxes.size() - 1].Close();
                     }
@@ -1137,11 +1139,11 @@ void MissionController::Update()
                     if (dialogboxes[dialogboxes.size() - 1].id == 999)
                     {
                         SPDLOG_DEBUG("Kill Hatapon");
-                        //for (int u = 0; u < units.size(); u++)
-                        //{
-                        //    if (units[u].get()->getUnitID() == 0)
-                        //        units[u].get()->current_hp = 0;
-                        //}
+
+                        for(auto& pon : hatapons)
+                        {
+                            pon->curHP = 0;
+                        }
 
                         dialogboxes[dialogboxes.size() - 1].Close();
                     }
@@ -1153,7 +1155,12 @@ void MissionController::Update()
                     if (dialogboxes[dialogboxes.size() - 1].id == 999)
                     {
                         SPDLOG_DEBUG("Deprecated: verbose logging");
-                        //verboseLogs = !verboseLogs;
+
+                        missionEnd = true;
+                        failure = true;
+                        rhythm->Stop();
+                        missionEndTimer.restart();
+
                         dialogboxes[dialogboxes.size() - 1].Close();
                     }
 
