@@ -184,7 +184,8 @@ void Rhythm::BreakCombo(int reason)
     RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
 
     combo = 0;
-    s_anvil.play();
+    if(CoreManager::getInstance().getConfig()->GetInt("musicDebug") == 1)
+        s_anvil.play();
 
     newRhythmClock.restart();
     
@@ -534,7 +535,8 @@ void Rhythm::doRhythm()
                             ClearSong();
                             PlaySong(currentSongType);
 
-                            s_ding.play();
+                            if(CoreManager::getInstance().getConfig()->GetInt("musicDebug") == 1)
+                                s_ding.play();
                         }
                     }
                     else //otherwise, handle the command that contains last halfbeat as drum
@@ -556,7 +558,8 @@ void Rhythm::doRhythm()
                         ClearSong();
                         PlaySong(currentSongType);
 
-                        s_ding.play();
+                        if(CoreManager::getInstance().getConfig()->GetInt("musicDebug") == 1)
+                            s_ding.play();
                     }
                 }
                 else // combo system in place, command needs to follow drum tick pattern
@@ -577,7 +580,8 @@ void Rhythm::doRhythm()
                         decideSongType();
                         PlaySong(currentSongType);
 
-                        s_ding.play();
+                        if(CoreManager::getInstance().getConfig()->GetInt("musicDebug") == 1)
+                            s_ding.play();
                     }
                 }
             }
