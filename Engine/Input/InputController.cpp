@@ -152,7 +152,7 @@ void InputController::parseEvents(sf::Event& event)
         {0, 25}, //don
         {2, 18}, //chaka
         {4, 16}, //ltrig
-        {5, 14}, //rtrig
+        {5, 4}, //rtrig
         {9, 58}, //options (start)
         {8, 57}  //share (select)
     };
@@ -165,7 +165,7 @@ void InputController::parseEvents(sf::Event& event)
             {1, 25}, //don
             {4, 18}, //chaka
             {5, 16}, //ltrig
-            {6, 14}, //rtrig
+            {6, 4}, //rtrig
             {8, 58}, //options (start)
             {7, 57}  //share (select)
         };
