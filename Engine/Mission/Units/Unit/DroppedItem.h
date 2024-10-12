@@ -20,6 +20,9 @@ public:
     float vspeed=0, hspeed=0;
 
     int itemID = -1;
+    std::string category = "main";
+    std::vector<int> order_id;
+
     float local_x=0, local_y=0;
     float off_x=0, off_y=0;
     float global_x=0, global_y=0;
@@ -37,7 +40,7 @@ public:
     bool pickedup = false;
     bool ready_to_erase = false;
 
-    DroppedItem(int ID, std::string cat);
+    DroppedItem(std::vector<int> item_id);
     void Collect();
     void Draw();
 };

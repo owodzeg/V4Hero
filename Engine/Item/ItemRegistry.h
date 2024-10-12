@@ -13,7 +13,6 @@ public:
     //std::vector<int> item_counts = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     //std::vector<int> type_counts = {0, 0, 0, 0, 0};
     nlohmann::json item_data;
-    SaveReader* saveReader;
     ItemRegistry();
     ~ItemRegistry();
     Item* getItemByName(std::string name, bool lang_specific = false);
@@ -27,6 +26,7 @@ public:
     };
     void readItemFiles();
     Item* getItemByID(std::vector<int> id);
+    std::vector<int> findItemByCatID(std::string cat, int id);
     int getCategoryIDByString(std::string item_category);
 };
 

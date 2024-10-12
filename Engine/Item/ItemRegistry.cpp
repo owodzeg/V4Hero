@@ -379,3 +379,15 @@ Item* ItemRegistry::getItemByName(std::string name, bool lang_specific)
         }
     }
 }
+
+std::vector<int> ItemRegistry::findItemByCatID(std::string cat, int id)
+{
+    for(auto i : items)
+    {
+        if(i->spritesheet == cat && i->spritesheet_id == id)
+            return i->order_id;
+    }
+
+    SPDLOG_WARN("Item id {} cat {} not found", id, cat);
+    return {0,0,0};
+}

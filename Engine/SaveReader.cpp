@@ -24,7 +24,6 @@ SaveReader::SaveReader()
     check.close();
 
     isNewSave = !exists;
-    itemReg.saveReader = this;
 }
 
 void SaveReader::LoadSave()

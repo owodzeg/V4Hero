@@ -493,6 +493,18 @@ void MissionController::Update()
     for(auto& pon : yaripons)
         pon->Draw();
 
+    for(auto& di : droppeditems)
+    {
+        if(rightmostPataX > di->global_x + di->local_x + di->off_x && !di->pickedup)
+        {
+            di->Collect();
+            dropped_ids.push_back(di->order_id);
+        }
+
+        di->off_y = cam.zoom_y / zoom_offset;
+        di->Draw();
+    }
+
     if(inputCtrl->isKeyPressed(Input::Keys::UP))
     {
         rhythmGUI->toggleDebugUI();
@@ -513,9 +525,11 @@ void MissionController::Update()
     CoreManager::getInstance().getWindow()->setView(CoreManager::getInstance().getWindow()->getDefaultView());
 
     // UI elements
+
+    // Unit thumbs
     sf::CircleShape thumb;
     thumb.setRadius(80 * resRatioX);
-    thumb.setFillColor(sf::Color::White);
+    thumb.setFillColor(sf::Color(224, 224, 224));
     thumb.setOrigin(thumb.getLocalBounds().width/2, thumb.getLocalBounds().height/2);
 
     PSprite& hpbar_out = ResourceManager::getInstance().getSprite("resources/graphics/mission/hpbar_back.png");
@@ -595,6 +609,35 @@ void MissionController::Update()
     unit_count.setOrigin(0, unit_count.getLocalBounds().height/2);
     unit_count.setPosition(452, thumbY + 65);
     unit_count.draw();
+
+    // item thumbs
+    int diid = 0;
+
+    for(auto iid : dropped_ids)
+    {
+        int row = floor(diid/12);
+        int col = diid%12;
+
+        sf::CircleShape i_thumb;
+        i_thumb.setRadius(80 * resRatioX);
+        i_thumb.setFillColor(sf::Color(224, 224, 224));
+        i_thumb.setOrigin(i_thumb.getLocalBounds().width/2, i_thumb.getLocalBounds().height/2);
+        i_thumb.setPosition((3840-200-(180*col))*resRatioX, (250+(180*row))*resRatioY);
+        CoreManager::getInstance().getWindow()->draw(i_thumb);
+
+        Item* itemPtr = CoreManager::getInstance().getSaveReader()->itemReg.getItemByID(iid);
+
+        PSprite& item = ResourceManager::getInstance().getSprite(std::format("resources/graphics/item/textures/{}/{:04}.png", itemPtr->spritesheet, itemPtr->spritesheet_id));
+        item.setOrigin(item.getLocalBounds().width/2, item.getLocalBounds().height/2);
+        item.setScale(0.65,0.65);
+        item.setPosition(3840-200-(180*col), 250+(180*row));
+        item.setColor(sf::Color::White);
+        item.draw();
+
+        diid++;
+    }
+
+    // worm
 
     feverworms.back().get()->Draw();
 

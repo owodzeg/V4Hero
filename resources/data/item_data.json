@@ -93,6 +93,27 @@
 					"icon": "hinoki",
 					"item_group": "main",
 					"item_id": 9
+				},
+				{
+					"name": "item_super_cedar",
+					"desc": "desc_super_cedar",
+					"icon": "super_cedar",
+					"item_group": "main",
+					"item_id": 53
+				},
+				{
+					"name": "item_bowtie_tree",
+					"desc": "desc_bowtie_tree",
+					"icon": "bowtie_tree",
+					"item_group": "main",
+					"item_id": 63
+				},
+				{
+					"name": "item_almightys_roots",
+					"desc": "desc_almightys_roots",
+					"icon": "almightys_roots",
+					"item_group": "main",
+					"item_id": 73
 				}
 			],
 			
@@ -119,6 +140,27 @@
 					"icon": "dream_meat",
 					"item_group": "main",
 					"item_id": 13
+				},
+				{
+					"name": "item_succulent_meat",
+					"desc": "desc_succulent_meat",
+					"icon": "succulent_meat",
+					"item_group": "main",
+					"item_id": 51
+				},
+				{
+					"name": "item_demon_meat",
+					"desc": "desc_demon_meat",
+					"icon": "demon_meat",
+					"item_group": "main",
+					"item_id": 61
+				},
+				{
+					"name": "item_angel_meat",
+					"desc": "desc_angel_meat",
+					"icon": "angel_meat",
+					"item_group": "main",
+					"item_id": 71
 				}
 			],
 			
@@ -145,6 +187,27 @@
 					"icon": "gizaza_fang",
 					"item_group": "main",
 					"item_id": 11
+				},
+				{
+					"name": "item_nazozo_fang",
+					"desc": "desc_nazozo_fang",
+					"icon": "nazozo_fang",
+					"item_group": "main",
+					"item_id": 52
+				},
+				{
+					"name": "item_demon_fang",
+					"desc": "desc_demon_fang",
+					"icon": "demon_fang",
+					"item_group": "main",
+					"item_id": 62
+				},
+				{
+					"name": "item_angel_fang",
+					"desc": "desc_angel_fang",
+					"icon": "angel_fang",
+					"item_group": "main",
+					"item_id": 72
 				}
 			],
 			
@@ -153,16 +216,45 @@
 					"name": "item_mudada_bone",
 					"desc": "desc_mudada_bone",
 					"icon": "mudada_bone",
-					"item_group": "none",
-					"item_id": -1
+					"item_group": "main",
+					"item_id": 33
 				},
-				
 				{
+
 					"name": "item_gashirin_bone",
 					"desc": "desc_gashirin_bone",
 					"icon": "gashirin_bone",
-					"item_group": "none",
-					"item_id": -1
+					"item_group": "main",
+					"item_id": 39
+				},
+				
+				{
+					"name": "item_dodeka_bone",
+					"desc": "desc_dodeka_bone",
+					"icon": "dodeka_bone",
+					"item_group": "main",
+					"item_id": 45
+				},
+				{
+					"name": "item_ottama_bone",
+					"desc": "desc_ottama_bone",
+					"icon": "ottama_bone",
+					"item_group": "main",
+					"item_id": 54
+				},
+				{
+					"name": "item_demon_bone",
+					"desc": "desc_demon_bone",
+					"icon": "demon_bone",
+					"item_group": "main",
+					"item_id": 64
+				},
+				{
+					"name": "item_angel_bone",
+					"desc": "desc_angel_bone",
+					"icon": "angel_bone",
+					"item_group": "main",
+					"item_id": 74
 				}
 			],
 			
@@ -189,6 +281,262 @@
 					"icon": "titanium_ore",
 					"item_group": "main",
 					"item_id": 7
+				},
+				{
+					"name": "item_mythril",
+					"desc": "desc_mythril",
+					"icon": "mythril",
+					"item_group": "main",
+					"item_id": 57
+				},
+				{
+					"name": "item_adamantine",
+					"desc": "desc_adamantine",
+					"icon": "adamantine",
+					"item_group": "main",
+					"item_id": 67
+				},
+				{
+					"name": "item_aetherium",
+					"desc": "desc_aetherium",
+					"icon": "aetherium",
+					"item_group": "main",
+					"item_id": 77
+				}
+			],
+		
+			[
+				{
+					"name": "item_eyeball_cabbage",
+					"desc": "desc_eyeball_cabbage",
+					"icon": "eyeball_cabbage",
+					"item_group": "main",
+					"item_id": 34
+				},
+				
+				{
+					"name": "item_blood_carrot",
+					"desc": "desc_blood_carrot",
+					"icon": "blood_carrot",
+					"item_group": "main",
+					"item_id": 40
+				},
+				
+				{
+					"name": "item_predator_pumpkin",
+					"desc": "desc_predator_pumpkin",
+					"icon": "predator_pumpkin",
+					"item_group": "main",
+					"item_id": 46
+				},
+				{
+					"name": "item_moor_morel",
+					"desc": "desc_moor_morel",
+					"icon": "moor_morel",
+					"item_group": "main",
+					"item_id": 55
+				},
+				{
+					"name": "item_guddorian",
+					"desc": "desc_guddorian",
+					"icon": "guddorian",
+					"item_group": "main",
+					"item_id": 65
+				},
+				{
+					"name": "item_luxury_pinefruit",
+					"desc": "desc_luxury_pinefruit",
+					"icon": "luxury_pinefruit",
+					"item_group": "main",
+					"item_id": 75
+				}
+			],
+
+			[
+				{
+					"name": "item_kasu_seed",
+					"desc": "desc_kasu_seed",
+					"icon": "kasu_seed",
+					"item_group": "main",
+					"item_id": 35
+				},
+				
+				{
+					"name": "item_yoka_seed",
+					"desc": "desc_yoka_seed",
+					"icon": "yoka_seed",
+					"item_group": "main",
+					"item_id": 41
+				},
+				
+				{
+					"name": "item_deka_seed",
+					"desc": "desc_deka_seed",
+					"icon": "deka_seed",
+					"item_group": "main",
+					"item_id": 47
+				},
+				{
+					"name": "item_bibi_seed",
+					"desc": "desc_bibi_seed",
+					"icon": "bibi_seed",
+					"item_group": "main",
+					"item_id": 56
+				},
+				{
+					"name": "item_mater_seed",
+					"desc": "desc_mater_seed",
+					"icon": "mater_seed",
+					"item_group": "main",
+					"item_id": 66
+				},
+				{
+					"name": "item_heavens_sprout",
+					"desc": "desc_heavens_sprout",
+					"icon": "heavens_sprout",
+					"item_group": "main",
+					"item_id": 76
+				}
+			],
+
+			[
+				{
+					"name": "item_berara_hide",
+					"desc": "desc_berara_hide",
+					"icon": "berara_hide",
+					"item_group": "main",
+					"item_id": 36
+				},
+				
+				{
+					"name": "item_gotsutsu_hide",
+					"desc": "desc_gotsutsu_hide",
+					"icon": "gotsutsu_hide",
+					"item_group": "main",
+					"item_id": 42
+				},
+				
+				{
+					"name": "item_subebe_hide",
+					"desc": "desc_subebe_hide",
+					"icon": "subebe_hide",
+					"item_group": "main",
+					"item_id": 48
+				},
+				{
+					"name": "item_mezura_hide",
+					"desc": "desc_mezura_hide",
+					"icon": "mezura_hide",
+					"item_group": "main",
+					"item_id": 58
+				},
+				{
+					"name": "item_demon_hide",
+					"desc": "desc_demon_hide",
+					"icon": "demon_hide",
+					"item_group": "main",
+					"item_id": 68
+				},
+				{
+					"name": "item_angel_hide",
+					"desc": "desc_angel_hide",
+					"icon": "angel_hide",
+					"item_group": "main",
+					"item_id": 78
+				}
+			],
+
+			[
+				{
+					"name": "item_sloppy_alloy",
+					"desc": "desc_sloppy_alloy",
+					"icon": "sloppy_alloy",
+					"item_group": "main",
+					"item_id": 37
+				},
+				
+				{
+					"name": "item_hard_alloy",
+					"desc": "desc_hard_alloy",
+					"icon": "hard_alloy",
+					"item_group": "main",
+					"item_id": 43
+				},
+				
+				{
+					"name": "item_awesome_alloy",
+					"desc": "desc_awesome_alloy",
+					"icon": "awesome_alloy",
+					"item_group": "main",
+					"item_id": 49
+				},
+				{
+					"name": "item_magic_alloy",
+					"desc": "desc_magic_alloy",
+					"icon": "magic_alloy",
+					"item_group": "main",
+					"item_id": 59
+				},
+				{
+					"name": "item_demons_ore",
+					"desc": "desc_demons_ore",
+					"icon": "demons_ore",
+					"item_group": "main",
+					"item_id": 69
+				},
+				{
+					"name": "item_angelic_amalgam",
+					"desc": "desc_angelic_amalgam",
+					"icon": "angelic_amalgam",
+					"item_group": "main",
+					"item_id": 79
+				}
+			],
+
+			[
+				{
+					"name": "item_familiar_liquid",
+					"desc": "desc_familiar_liquid",
+					"icon": "familiar_liquid",
+					"item_group": "main",
+					"item_id": 38
+				},
+				
+				{
+					"name": "item_hot_liquid",
+					"desc": "desc_hot_liquid",
+					"icon": "hot_liquid",
+					"item_group": "main",
+					"item_id": 44
+				},
+				
+				{
+					"name": "item_cold_liquid",
+					"desc": "desc_cold_liquid",
+					"icon": "cold_liquid",
+					"item_group": "main",
+					"item_id": 50
+				},
+				{
+					"name": "item_rainbow_liquid",
+					"desc": "desc_rainbow_liquid",
+					"icon": "rainbow_liquid",
+					"item_group": "main",
+					"item_id": 60
+				},
+				{
+					"name": "item_demon_liquid",
+					"desc": "desc_demon_liquid",
+					"icon": "demon_liquid",
+					"item_group": "main",
+					"item_id": 70
+				},
+				{
+					"name": "item_angel_liquid",
+					"desc": "desc_angel_liquid",
+					"icon": "angel_liquid",
+					"item_group": "main",
+					"item_id": 80
 				}
 			]
 		],

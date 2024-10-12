@@ -5,10 +5,15 @@
 #include <CoreManager.h>
 #include <format>
 
-DroppedItem::DroppedItem(int ID, std::string cat)
+DroppedItem::DroppedItem(std::vector<int> item_id)
 {
-    itemID = ID;
-    main.load(std::format("resources/graphics/item/textures/{}/{:04}.png", cat, ID));
+    order_id = item_id;
+
+    Item* itemPtr = CoreManager::getInstance().getSaveReader()->itemReg.getItemByID(item_id);
+    itemID = itemPtr->spritesheet_id;
+    category = itemPtr->spritesheet;
+
+    main.load(std::format("resources/graphics/item/textures/{}/{:04}.png", category, itemID));
 
     hspeed = -1000 + rand() % 1500;
     vspeed = -1000;
