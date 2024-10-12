@@ -344,7 +344,7 @@ void Entity::handleDecisions() // what should the entity do?
                         setAnimation("walk_yari_focused");
                     }
                 }
-                else if(distanceToPlayer < 800)
+                else if(distanceToPlayer < 1100)
                 {
                     if(action > 3)
                     {
