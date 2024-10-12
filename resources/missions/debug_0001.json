@@ -2,8 +2,8 @@
 	"params":
 	{
 		"name": "Kami's Return",
-		"background": "shidavalley",
-		"bgm": "ahwoon",
+		"background": "earthend_1",
+		"bgm": "hohokki",
 		"rich_presence": "shida"
 	},
 

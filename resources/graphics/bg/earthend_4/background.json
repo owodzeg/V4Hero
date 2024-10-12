@@ -1,0 +1,60 @@
+{
+    "name": "Earthend",
+    "sunny": [
+        {
+            "type": "skybox",
+            "color_points": [
+                {
+                    "y_pos": 0,
+                    "color": [21, 84, 116]
+                },
+                {
+                    "y_pos": 2160,
+                    "color": [14, 49, 71]
+                }
+            ]
+        },
+        {
+            "type": "image",
+            "texture": "1.png",
+            "y_pos": 200,
+            "x_speed": 0.10,
+            "layer": 1
+        },
+        {
+            "type": "image",
+            "texture": "2.png",
+            "y_pos": 1836,
+            "x_speed": 0.30,
+            "layer": 2
+        },
+        {
+            "type": "image",
+            "texture": "3.png",
+            "y_pos": 1836,
+            "x_speed": 0.50,
+            "layer": 3
+        },
+        {
+            "type": "image",
+            "texture": "4.png",
+            "y_pos": 1836,
+            "x_speed": 0.75,
+            "layer": 4
+        },
+        {
+            "type": "image",
+            "texture": "5.png",
+            "y_pos": 1900,
+            "x_speed": 1.00,
+            "layer": 5
+        },
+        {
+            "type": "image",
+            "texture": "6.png",
+            "y_pos": 1910,
+            "x_speed": 1.00,
+            "layer": 6
+        }
+    ]
+}

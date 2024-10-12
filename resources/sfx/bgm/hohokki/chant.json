@@ -1,0 +1,127 @@
+{
+	"march": {
+		"prefever_calm": [
+			"s_patapata1.ogg"
+		],
+		"prefever_intense": [
+			"s_patapata2.ogg"
+		],
+		"fever": [
+			"s_patapata3.ogg",
+			"s_patapata4.ogg"
+		]
+	},
+
+    "attack": {
+		"prefever_calm": [
+			"s_ponpon1.ogg"
+		],
+		"prefever_intense": [
+			"s_ponpon2.ogg"
+		],
+		"fever": [
+			"s_ponpon3.ogg",
+			"s_ponpon4.ogg"
+		]
+	}, 
+
+    "defense": {
+		"prefever_calm": [
+			"s_chakachaka1.ogg"
+		],
+		"prefever_intense": [
+			"s_chakachaka2.ogg"
+		],
+		"fever": [
+			"s_chakachaka3.ogg",
+			"s_chakachaka4.ogg"
+		]
+	}, 
+
+    "charge": {
+		"prefever_calm": [
+			"s_ponchaka1.ogg"
+		],
+		"prefever_intense": [
+			"s_ponchaka2.ogg"
+		],
+		"fever": [
+			"s_ponchaka3.ogg"
+		]
+	}, 
+
+    "party": {
+		"prefever_calm": [
+			"s_donchaka1.ogg"
+		],
+		"prefever_intense": [
+			"s_donchaka2.ogg"
+		],
+		"fever": [
+			"s_donchaka3.ogg"
+		]
+	}, 
+
+    "retreat": {
+		"prefever_calm": [
+			"s_ponpata1.ogg"
+		],
+		"prefever_intense": [
+			"s_ponpata2.ogg"
+		],
+		"fever": [
+			"s_ponpata3.ogg"
+		]
+	}, 
+
+    "jump": {
+		"prefever_calm": [
+			"s_dondon1.ogg"
+		],
+		"prefever_intense": [
+			"s_dondon2.ogg"
+		],
+		"fever": [
+			"s_dondon3.ogg"
+		]
+	}, 
+
+    "stepback": {
+		"prefever_calm": [
+			"s_chakachaka1.ogg"
+		],
+		"prefever_intense": [
+			"s_chakachaka2.ogg"
+		],
+		"fever": [
+			"s_chakachaka3.ogg",
+			"s_chakachaka4.ogg"
+		]
+	}, 
+
+    "pause": {
+		"prefever_calm": [
+			"s_chakachaka1.ogg"
+		],
+		"prefever_intense": [
+			"s_chakachaka2.ogg"
+		],
+		"fever": [
+			"s_chakachaka3.ogg",
+			"s_chakachaka4.ogg"
+		]
+	}, 
+
+    "summon": {
+		"prefever_calm": [
+			"s_chakachaka1.ogg"
+		],
+		"prefever_intense": [
+			"s_chakachaka2.ogg"
+		],
+		"fever": [
+			"s_chakachaka3.ogg",
+			"s_chakachaka4.ogg"
+		]
+	}
+}
