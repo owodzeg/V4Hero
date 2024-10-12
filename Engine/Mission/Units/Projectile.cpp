@@ -5,13 +5,14 @@
 #include <math.h>
 #include "../../CoreManager.h"
 
-Projectile::Projectile(std::string path, float x, float y, float thspeed, float tvspeed)
+Projectile::Projectile(std::string path, float x, float y, float thspeed, float tvspeed, bool evil)
 {
     sprite.load(path);
     xPos = x;
     yPos = y;
     hspeed = thspeed;
     vspeed = tvspeed;
+    fromEnemy = evil;
 }
 
 float Projectile::GetXSpeed()
@@ -49,7 +50,7 @@ void Projectile::Update()
     /// make a better unified system for projectile flight
     /// this is just a temporary workaround
 
-    if (!enemy)
+    if (!fromEnemy)
     {
         hspeed -= float(600) / fps;
 

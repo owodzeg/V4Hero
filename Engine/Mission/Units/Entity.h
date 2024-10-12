@@ -90,6 +90,15 @@ public:
 
     bool loot_sent = false;
 
+    bool approached = false;
+    sf::Clock decisionTimer;
+    sf::Clock actionTimer;
+    int action = 0;
+    float distanceToPlayer = 9999999;
+
+    sf::Clock attackTimer;
+    bool threw = false;
+
     Entity();
     void LoadEntity(const std::string& path);
 

@@ -26,10 +26,11 @@ public:
     float tipX, tipY;
 
     bool finished = false;
+    bool fromEnemy = false;
 
     SpriteWrapper sprite;
 
-    Projectile(std::string path, float x, float y, float thspeed, float tvspeed);
+    Projectile(std::string path, float x, float y, float thspeed, float tvspeed, bool evil);
     float GetXSpeed();
     float GetYSpeed();
     void SetNewSpeedVector(float xSpeed, float ySpeed);

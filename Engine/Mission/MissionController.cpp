@@ -176,6 +176,27 @@ void MissionController::LoadMission(const std::string& path)
 
                         e->loot_table = new_loot;
                     }
+
+                    if(entity.contains("behavior") && !entity["behavior"].is_null())
+                    {
+                        SPDLOG_INFO("custom mission behavior!!! {}", entity["behavior"].dump());
+
+                        if(entity["behavior"].contains("hit") && !entity["behavior"]["hit"].is_null())
+                            e->bh_hit = behavior.convStringToHitEnum(entity["behavior"]["hit"]);
+                        if(entity["behavior"].contains("death") && !entity["behavior"]["death"].is_null())
+                            e->bh_death = behavior.convStringToDeathEnum(entity["behavior"]["death"]);
+                        if(entity["behavior"].contains("spawn") && !entity["behavior"]["spawn"].is_null())
+                            e->bh_spawn = behavior.convStringToSpawnEnum(entity["behavior"]["spawn"]);
+                        if(entity["behavior"].contains("loot") && !entity["behavior"]["loot"].is_null())
+                            e->bh_loot = behavior.convStringToLootEnum(entity["behavior"]["loot"]);
+                        if(entity["behavior"].contains("decision") && !entity["behavior"]["decision"].is_null())
+                            e->bh_decision = behavior.convStringToDecisionEnum(entity["behavior"]["decision"]);
+                        if(entity["behavior"].contains("attack") && !entity["behavior"]["attack"].is_null())
+                            e->bh_attack = behavior.convStringToAttackEnum(entity["behavior"]["attack"]);
+                        if(entity["behavior"].contains("approach") && !entity["behavior"]["approach"].is_null())
+                            e->bh_approach = behavior.convStringToApproachEnum(entity["behavior"]["approach"]);
+                    }
+
                     e->orderID = en_c;
                 }
                 else
@@ -204,9 +225,9 @@ void MissionController::LoadMission(const std::string& path)
     initialized = true;
 }
 
-void MissionController::SendProjectile(float x, float y, float hspeed, float vspeed, std::string prj_tex)
+void MissionController::SendProjectile(float x, float y, float hspeed, float vspeed, std::string prj_tex, bool evil)
 {
-    projectiles.push_back(std::make_unique<Projectile>("resources/graphics/item/textures/"+prj_tex+".png", x, y, hspeed, vspeed));
+    projectiles.push_back(std::make_unique<Projectile>("resources/graphics/item/textures/"+prj_tex+".png", x, y, hspeed, vspeed, evil));
     SPDLOG_DEBUG("SENDING PROJECTILE AT {} {} {} {}", x, y, hspeed, vspeed);
 }
 
@@ -740,7 +761,7 @@ void MissionController::Update()
     for(auto& entity : entities)
     {
         if(entity->getGlobalPosition().x < closest && (entity->entityType == Entity::EntityTypes::HOSTILE || entity->entityType == Entity::EntityTypes::NEUTRAL))
-            closest = entity->getGlobalPosition().x;
+            closest = entity->getGlobalPosition().x + entity->getLocalPosition().x;
     }
 
     // if farthest yaripon sees enemy, whole army shall be angry
@@ -821,16 +842,65 @@ void MissionController::Update()
         {
             if((entity->entityType == Entity::EntityTypes::HOSTILE || entity->entityType == Entity::EntityTypes::NEUTRAL) && !entity->dead)
             {
-                auto pos = entity->getGlobalPosition();
+                auto pos = sf::Vector2f(entity->getGlobalPosition() + entity->getLocalPosition());
 
-                for(auto hb : entity->getHitbox())
+                if(!projectile->fromEnemy)
                 {
-                    if(projectile->tipX > pos.x+hb.left && projectile->tipX < pos.x+hb.width)
+                    for(auto hb : entity->getHitbox())
                     {
-                        if(projectile->tipY > pos.y+hb.top && projectile->tipY < pos.y+hb.height)
+                        if(projectile->tipX > pos.x+hb.left && projectile->tipX < pos.x+hb.width)
                         {
-                            projectile->finished = true;
-                            entity->handleHit(rand() % 20 + 10);
+                            if(projectile->tipY > pos.y+hb.top && projectile->tipY < pos.y+hb.height)
+                            {
+                                projectile->finished = true;
+                                entity->handleHit(rand() % 20 + 10);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        for(auto& pon : yaripons)
+        {
+            if(!pon->dead)
+            {
+                auto pos = sf::Vector2f(pon->main.getGlobalPosition() + pon->main.getLocalPosition());
+
+                if(projectile->fromEnemy)
+                {
+                    for(auto hb : pon->main.animation.animations[pon->main.animation.currentAnimation].hitboxes)
+                    {
+                        if(projectile->tipX > pos.x+hb.left && projectile->tipX < pos.x+hb.width)
+                        {
+                            if(projectile->tipY > pos.y+hb.top && projectile->tipY < pos.y+hb.height)
+                            {
+                                projectile->finished = true;
+                                pon->curHP -= 3 + rand() % 5;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        for(auto& pon : hatapons)
+        {
+            if(pon->curHP > 0)
+            {
+                auto pos = sf::Vector2f(pon->main.getGlobalPosition() + pon->main.getLocalPosition());
+
+                if(projectile->fromEnemy)
+                {
+                    for(auto hb : pon->main.animation.animations[pon->main.animation.currentAnimation].hitboxes)
+                    {
+                        if(projectile->tipX > pos.x+hb.left && projectile->tipX < pos.x+hb.width)
+                        {
+                            if(projectile->tipY > pos.y+hb.top && projectile->tipY < pos.y+hb.height)
+                            {
+                                projectile->finished = true;
+                                pon->curHP -= 3 + rand() % 5;
+                            }
                         }
                     }
                 }

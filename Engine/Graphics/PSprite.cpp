@@ -105,7 +105,7 @@ void PSprite::setOrigin(float x, float y)
 {
     if (x != orX || y != orY)
     {
-        SPDLOG_DEBUG("Change origin of {} to {} {}", texturePath, x, y);
+        //SPDLOG_DEBUG("Change origin of {} to {} {}", texturePath, x, y);
         orX = x;
         orY = y;
         s.setOrigin(orX, orY);

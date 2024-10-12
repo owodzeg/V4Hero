@@ -79,14 +79,20 @@ void Entity::LoadEntity(const std::string& path)
 
     if(entity.contains("behavior"))
     {
-        if(entity["behavior"].contains("hit"))
+        if(entity["behavior"].contains("hit") && !entity["behavior"]["hit"].is_null())
             bh_hit = behavior.convStringToHitEnum(entity["behavior"]["hit"]);
-        if(entity["behavior"].contains("death"))
+        if(entity["behavior"].contains("death") && !entity["behavior"]["death"].is_null())
             bh_death = behavior.convStringToDeathEnum(entity["behavior"]["death"]);
-        if(entity["behavior"].contains("spawn"))
+        if(entity["behavior"].contains("spawn") && !entity["behavior"]["spawn"].is_null())
             bh_spawn = behavior.convStringToSpawnEnum(entity["behavior"]["spawn"]);
-        if(entity["behavior"].contains("loot"))
+        if(entity["behavior"].contains("loot") && !entity["behavior"]["loot"].is_null())
             bh_loot = behavior.convStringToLootEnum(entity["behavior"]["loot"]);
+        if(entity["behavior"].contains("decision") && !entity["behavior"]["decision"].is_null())
+            bh_decision = behavior.convStringToDecisionEnum(entity["behavior"]["decision"]);
+        if(entity["behavior"].contains("attack") && !entity["behavior"]["attack"].is_null())
+            bh_attack = behavior.convStringToAttackEnum(entity["behavior"]["attack"]);
+        if(entity["behavior"].contains("approach") && !entity["behavior"]["approach"].is_null())
+            bh_approach = behavior.convStringToApproachEnum(entity["behavior"]["approach"]);
     }
 
     yPos = 1735;
@@ -145,27 +151,30 @@ std::vector<sf::FloatRect> Entity::getHitbox()
 // handlers - environment
 void Entity::handleHit(float damage) // when inflicted damage from player
 {
-    switch(bh_hit)
+    if(!dead)
     {
-        case Behavior::Hit::BH_HIT_DEFAULT: {
-            curHP -= damage;
-            break;
-        }
+        switch(bh_hit)
+        {
+            case Behavior::Hit::BH_HIT_DEFAULT: {
+                curHP -= damage;
+                break;
+            }
 
-        case Behavior::Hit::BH_HIT_STAGGER: {
-            curHP -= damage;
-            setAnimation("stagger");
-            restartAnimation();
-            break;
-        }
+            case Behavior::Hit::BH_HIT_STAGGER: {
+                curHP -= damage;
+                setAnimation("stagger");
+                restartAnimation();
+                break;
+            }
 
-        case Behavior::Hit::BH_HIT_STATIONARY_TWO_STATE: {
-            curHP -= damage;
+            case Behavior::Hit::BH_HIT_STATIONARY_TWO_STATE: {
+                curHP -= damage;
 
-            if(curHP < maxHP * 0.35)
-            setAnimation("idle_damaged");
-            restartAnimation();
-            break;
+                if(curHP < maxHP * 0.35)
+                    setAnimation("idle_damaged");
+                restartAnimation();
+                break;
+            }
         }
     }
 }
@@ -242,7 +251,21 @@ void Entity::handleNoise() // when fever is activated
 
 void Entity::handleApproach() // when player gets close
 {
+    if(!approached)
+    {
+        switch(bh_approach)
+        {
+            case Behavior::Approach::BH_APPROACH_FAR: {
 
+                    if(distanceToPlayer <= 2000)
+                    {
+                        approached = true;
+                    }
+
+                break;
+            }
+        }
+    }
 }
 
 void Entity::handleCommand() // on player command inputted
@@ -253,7 +276,108 @@ void Entity::handleCommand() // on player command inputted
 // handlers - self
 void Entity::handleDecisions() // what should the entity do?
 {
+    if(!dead)
+    {
+        if(bh_approach != Behavior::Approach::BH_APPROACH_DO_NOTHING)
+        {
+            if(!approached)
+            {
+                return;
+            }
+        }
 
+        switch(bh_decision)
+        {
+            case Behavior::Decision::BH_DECISION_YARI_SLOW: {
+                if(decisionTimer.getElapsedTime().asMilliseconds() > 8000)
+                {
+                    if(distanceToPlayer > 1400)
+                    {
+                        if(action > 3)
+                        {
+                            hspeed = -600;
+                            setAnimation("walk_yari_focused");
+                        }
+                    }
+                    else if(distanceToPlayer < 800)
+                    {
+                        if(action > 3)
+                        {
+                            hspeed = 600;
+                            setAnimation("walk_yari_focused");
+                        }
+                    }
+                    else // in range
+                    {
+                        if(action <= 4)
+                        {
+                            handleAttack();
+                            if(attackTimer.getElapsedTime().asMilliseconds() > 1500)
+                            {
+                                threw = false;
+                                attackTimer.restart();
+                                setAnimation("attack_prefever");
+                                restartAnimation();
+                            }
+                        }
+                    }
+
+                    if(actionTimer.getElapsedTime().asMilliseconds() >= 1000)
+                    {
+                        hspeed = 0;
+                        actionTimer.restart();
+                        action = rand() % 5;
+                        setAnimation("idle_armed_focused");
+                    }
+                }
+
+                break;
+            }
+
+            case Behavior::Decision::BH_DECISION_YARI_FAST: {
+
+                if(distanceToPlayer > 1400)
+                {
+                    if(action > 3)
+                    {
+                        hspeed = -600;
+                        setAnimation("walk_yari_focused");
+                    }
+                }
+                else if(distanceToPlayer < 800)
+                {
+                    if(action > 3)
+                    {
+                        hspeed = 600;
+                        setAnimation("walk_yari_focused");
+                    }
+                }
+                else // in range
+                {
+                    if(action <= 4)
+                    {
+                        handleAttack();
+                        if(attackTimer.getElapsedTime().asMilliseconds() > 1500)
+                        {
+                            threw = false;
+                            attackTimer.restart();
+                            setAnimation("attack_prefever");
+                        }
+                    }
+                }
+
+                if(actionTimer.getElapsedTime().asMilliseconds() >= 1000)
+                {
+                    hspeed = 0;
+                    actionTimer.restart();
+                    action = rand() % 5;
+                    setAnimation("idle_armed_focused");
+                }
+
+                break;
+            }
+        }
+    }
 }
 
 void Entity::handleSpawn() // on entity creation
@@ -269,7 +393,15 @@ void Entity::handleSpawn() // on entity creation
 
 void Entity::handleAttack() // entity's attack
 {
-
+    if(attackTimer.getElapsedTime().asMilliseconds() > 500)
+    {
+        if(!threw)
+        {
+            CoreManager::getInstance().getMissionController()->SendProjectile(getGlobalPosition().x+getLocalPosition().x, getGlobalPosition().y+getLocalPosition().y-90, -1800 - (rand()%50)*1, -1800 - (rand()%70)*1, "main/0025", true);
+            threw = true;
+            attackTimer.restart();
+        }
+    }
 }
 
 void Entity::handleIdle() // when entity is idling
@@ -324,6 +456,18 @@ void Entity::Draw()
 
     if(getLocalPosition().y >= 0)
         vspeed = 0;
+
+    auto mc = CoreManager::getInstance().getMissionController();
+
+    distanceToPlayer = 9999999;
+
+    for(auto& pon : mc->yaripons)
+    {
+        distanceToPlayer = min(distanceToPlayer, abs( (pon->global_x+pon->local_x+pon->gap_x) - (getGlobalPosition().x + getLocalPosition().x)));
+    }
+
+    handleApproach();
+    handleDecisions();
 
     AnimatedObject::Draw();
 
