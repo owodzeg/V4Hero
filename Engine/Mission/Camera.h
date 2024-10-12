@@ -36,6 +36,7 @@ public:
     float timeToZoom = 2000;
     float zoomUntil = 1.0;
     bool activateZoom = false;
+    bool strictZoom = false;
     sf::Clock zoomClock;
 
     Camera();

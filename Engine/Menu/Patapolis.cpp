@@ -85,7 +85,7 @@ PatapolisMenu::PatapolisMenu()
         }
 
         floor_height = 54*3;
-        r_ground.setSize(sf::Vector2f(34500 * resRatioX, floor_height * resRatioY));
+        r_ground.setSize(sf::Vector2f(34500 * resRatioX, (floor_height+1000) * resRatioY));
         r_ground.setFillColor(sf::Color::Black);
 
         std::vector<string> l2_str = {"a", "b", "c", "c_winter1", "c_winter2", "d", "e", "f"};
@@ -395,6 +395,20 @@ PatapolisMenu::PatapolisMenu()
     // what???
     initialised = true;
     initialized = true;
+}
+
+void PatapolisMenu::ExecuteZoom(float speed, float zoomUntil)
+{
+    if(speed != camera.zoomSpeed)
+    {
+        SPDLOG_DEBUG("Executing zoom: {} {}", speed, zoomUntil);
+
+        camera.zoomClock.restart();
+        camera.zoomSpeed = speed;
+        camera.zoomUntil = zoomUntil;
+        camera.activateZoom = true;
+        camera.strictZoom = true;
+    }
 }
 
 void PatapolisMenu::updateStoryPoint()
@@ -864,9 +878,14 @@ void PatapolisMenu::Update()
         camera.zoom_y = 0;
         if(camera.camera_x == 0)
             camera.camera_x = camera.followobject_x + (1800 * window->getSize().x / float(3840));
-        camera.Work(patapolisView, dest_zoom);
+        camera.Work(patapolisView, 1);
+
+        auto lastView2 = window->getView();
+        window->setView(window->getDefaultView());
 
         window->draw(v_background);
+
+        window->setView(lastView2);
 
         camDest = locations[location];
 
@@ -1527,14 +1546,14 @@ void PatapolisMenu::Update()
                         m_rm.push_back(i);
                 }
                 if (messageCloudActive){
-                    dest_zoom = 0.8f; // zoom in when message cloud is active
+                    ExecuteZoom(0.99, 0.9f); // zoom in when message cloud is active
                     if (location == 9){ // wakapon 
                         camera.manual_y_dest = -100; // move camera up a bit when wakapon is zoomed into to adjust for bridge
                     } else {
                         camera.manual_y_dest = 0;
                     }
                 } else {
-                    dest_zoom = 1.0f;
+                    ExecuteZoom(1.01, 1.f);
                     camera.manual_y_dest = 0;
                 }
             } 

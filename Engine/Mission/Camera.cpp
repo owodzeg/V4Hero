@@ -72,12 +72,28 @@ void Camera::Work(sf::View& view, float dest_zoom_over)
     {
         if(zoomSpeed > 1 && zoomedTotal <= zoomUntil)
         {
-            dest_zoom = zoomSpeed;
+            if(strictZoom)
+            {
+                //SPDLOG_INFO("Zoom left: {}", abs(zoomUntil - zoomedTotal));
+                dest_zoom = 1 + (abs(1-zoomSpeed)*abs(zoomUntil - zoomedTotal));
+            }
+            else
+            {
+                dest_zoom = zoomSpeed;
+            }
         }
 
         if(zoomSpeed < 1 && zoomedTotal >= zoomUntil)
         {
-            dest_zoom = zoomSpeed;
+            if(strictZoom)
+            {
+                //SPDLOG_INFO("Zoom left: {}", abs(zoomUntil - zoomedTotal));
+                dest_zoom = 1 - (abs(1-zoomSpeed)*abs(zoomUntil - zoomedTotal));
+            }
+            else
+            {
+                dest_zoom = zoomSpeed;
+            }
         }
     }
 

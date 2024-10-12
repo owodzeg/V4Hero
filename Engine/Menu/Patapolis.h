@@ -211,6 +211,7 @@ class PatapolisMenu : public Menu
 
         bool initialized = false;
 
+        void ExecuteZoom(float speed, float zoomUntil);
         void addL6(std::string variant, float x, float y);
         void addL2(std::string variant, float x, float y);
         void addSparkle(float x, float y);
