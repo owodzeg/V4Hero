@@ -42,7 +42,7 @@ public:
     float arrow_y = 0;
 
     int quality = 0;
-    int fontSize = 26;
+    int fontSize = 25;
 
     std::string cur_lang = "us";
 

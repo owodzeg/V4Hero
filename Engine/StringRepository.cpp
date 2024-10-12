@@ -38,6 +38,44 @@ StringRepository::StringRepository() : currentLanguageCode("us")
     }
 }
 
+void StringRepository::Reload()
+{
+    langToFontMapping.clear();
+    languages.clear();
+    languageNativeNames.clear();
+
+    // get fonts
+    std::ifstream fontFile("resources/lang/fonts.txt");
+    std::string line;
+
+    while(std::getline(fontFile, line))
+    {
+        std::vector<std::string> param = Func::Split(line, ',');
+        std::string name = param[0];
+        std::string fontf = param[1];
+
+        LoadFontFromFile("resources/font/"+fontf, name);
+
+        SPDLOG_INFO("Loaded font file {} for language {}", fontf, name);
+    }
+
+    // get langs
+    std::ifstream langFile("resources/lang/languages.txt");
+
+    while(std::getline(langFile, line))
+    {
+        std::vector<std::string> param = Func::Split(line, ',');
+        std::string code = param[0];
+        std::string name = param[1];
+        std::string font = param[2];
+
+        LoadLanguageFile(code, name, "resources/lang/"+code+"/"+code+".txt");
+        langToFontMapping[code] = font;
+
+        SPDLOG_INFO("Loaded language {} {}, font file: {}", code, name, font);
+    }
+}
+
 // Parse language data from input stream (file or stringstream)
 void StringRepository::ParseLanguageData(std::istream& inputStream, std::unordered_map<std::string, std::string>& langMap)
 {
@@ -132,27 +170,35 @@ std::vector<std::pair<std::string, std::string>> StringRepository::GetAvailableL
 // Load font from memory (string data)
 void StringRepository::LoadFontFromString(const std::string& fontName, const std::vector<char>& fontData)
 {
-    sf::Font font;
-    if (!font.loadFromMemory(fontData.data(), fontData.size())) {
-        SPDLOG_ERROR("Could not load font '{}'", fontName);
-        return;
+    if (fontStore.find(fontName) != fontStore.end()) {
+        fontStore.erase(fontStore.find(fontName));
     }
 
-    // Insert font into the map using emplace or insert
-    fontStore.emplace(fontName, std::move(font));  // Move the font to avoid copying
+    if (fontStore.find(fontName) == fontStore.end()) {
+        std::unique_ptr<sf::Font> font = std::make_unique<sf::Font>();
+        if (!font->loadFromMemory(fontData.data(), fontData.size())) {
+            throw std::runtime_error("Failed to load font from memory.");
+        }
+        fontStore[fontName] = std::move(font);
+    }
+
     SPDLOG_INFO("Font '{}' loaded successfully", fontName);
 }
 // Load font from memory (string data)
 void StringRepository::LoadFontFromFile(const std::string& fontPath, const std::string& fontName)
 {
-    sf::Font font;
-    if (!font.loadFromFile(fontPath)) {
-        SPDLOG_ERROR("Could not load font '{}'", fontPath);
-        return;
+    if (fontStore.find(fontName) != fontStore.end()) {
+        fontStore.erase(fontStore.find(fontName));
     }
 
-    // Insert font into the map using emplace or insert
-    fontStore.emplace(fontName, std::move(font));  // Move the font to avoid copying
+    if (fontStore.find(fontName) == fontStore.end()) {
+        std::unique_ptr<sf::Font> font = std::make_unique<sf::Font>();
+        if (!font->loadFromFile(fontPath)) {
+            throw std::runtime_error("Failed to load font: " + fontPath);
+        }
+        fontStore[fontName] = std::move(font);
+    }
+
     SPDLOG_INFO("Font '{}' loaded successfully", fontName);
 }
 
@@ -164,16 +210,15 @@ std::string StringRepository::GetFontNameForLanguage(const std::string& countryC
         return it->second;
     }
     SPDLOG_WARN("No font found for language '{}'", countryCode);
-    assert(0);
+    return "fallback";
 }
 
 sf::Font& StringRepository::GetFontFromName(const std::string& fontName)
 {
-    auto fontIt = fontStore.find(fontName);
-    if (fontIt != fontStore.end())
-    {
-        return fontIt->second;
+    auto it = fontStore.find(fontName);
+    if (it != fontStore.end()) {
+        return *it->second;
+    } else {
+        throw std::runtime_error("Font not found: " + fontName);
     }
-    SPDLOG_WARN("Font '{}' not found", fontName);
-    assert(0);
 }

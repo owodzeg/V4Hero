@@ -111,7 +111,7 @@ void PText::processRichText()
 
     if(disable_processing)
     {
-        t = sfe::RichText(strRepo->fontStore[font]);
+        t = sfe::RichText(*strRepo->fontStore[font]);
         t.setCharacterSize(characterSize);
         t << sf::Color(0,0,0,255);
         if(txt_color != "")
@@ -120,7 +120,7 @@ void PText::processRichText()
         return;
     }
 
-    t = sfe::RichText(strRepo->fontStore[font]);
+    t = sfe::RichText(*strRepo->fontStore[font]);
     t << sf::Color(0,0,0,0);
     if(txt_color != "")
         t << color;
@@ -535,7 +535,7 @@ void PText::setScale(float s)
 
 sf::FloatRect PText::getLocalBounds()
 {
-    t.setFont(CoreManager::getInstance().getStrRepo()->fontStore[font]);
+    t.setFont(*CoreManager::getInstance().getStrRepo()->fontStore[font]);
     t.setCharacterSize(characterSize);
     //t.setFillColor(c);
     //t.setString(txt);
@@ -544,7 +544,7 @@ sf::FloatRect PText::getLocalBounds()
 
 sf::FloatRect PText::getGlobalBounds()
 {
-    t.setFont(CoreManager::getInstance().getStrRepo()->fontStore[font]);
+    t.setFont(*CoreManager::getInstance().getStrRepo()->fontStore[font]);
     t.setCharacterSize(characterSize);
     //t.setFillColor(c);
     //t.setString(txt);
@@ -578,7 +578,7 @@ sf::FloatRect PText::getGlobalBoundsScaled()
     float nw = 1;
     float nh = 1;
 
-    t.setFont(CoreManager::getInstance().getStrRepo()->fontStore[font]);
+    t.setFont(*CoreManager::getInstance().getStrRepo()->fontStore[font]);
     if (t.getGlobalBounds().width > 0)
         nw = t.getGlobalBounds().width / resRatioX;
 
@@ -593,6 +593,8 @@ void PText::draw(bool noRender)
 {
     StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+
+    t.setCharacterSize(characterSize);
 
     if(currentKey != "")
     {
@@ -660,7 +662,7 @@ void PText::draw(bool noRender)
     resRatioX = window->getSize().x / float(3840);
     resRatioY = window->getSize().y / float(2160);
 
-    t.setFont(CoreManager::getInstance().getStrRepo()->fontStore[font]);
+    t.setFont(*CoreManager::getInstance().getStrRepo()->fontStore[font]);
     t.setCharacterSize(characterSize);
     t.setScale(resRatioX * scaleX, resRatioY * scaleY);
     t.setOrigin(orX, orY);
@@ -783,7 +785,7 @@ void PText::draw(bool noRender)
 
 sf::Text PText::getText()
 {
-    return sf::Text(sf::String("unknown text"), CoreManager::getInstance().getStrRepo()->fontStore[font], 30);
+    return sf::Text(sf::String("unknown text"), *CoreManager::getInstance().getStrRepo()->fontStore[font], 30);
     //return t;
 }
 

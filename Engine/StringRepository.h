@@ -11,6 +11,8 @@ class StringRepository
 {
 public:
     StringRepository();
+    void Reload();
+
     bool refreshStrings = false;
 
     void LoadLanguageFile(const std::string& countryCode, const std::string& countryNativeName, const std::string& filename);
@@ -29,7 +31,7 @@ public:
     sf::Font& GetFontFromName(const std::string& fontName);
 
     std::unordered_map<std::string, std::string> langToFontMapping; // Maps language to font name
-    std::unordered_map<std::string, sf::Font> fontStore;  // Use shared_ptr for automatic memory management
+    std::unordered_map<std::string, std::unique_ptr<sf::Font>> fontStore;  // Use shared_ptr for automatic memory management
 
 private:
     std::unordered_map<std::string, std::unordered_map<std::string, std::string>> languages;

@@ -56,19 +56,19 @@ ObeliskMenu::ObeliskMenu()
     string desc = Func::wrap_text("worldmap_location_1_description", 800*3, font, 18);
 
     location_desc.setFont(font);
-    location_desc.setCharacterSize(19);
+    location_desc.setCharacterSize(17);
     location_desc.setColor(sf::Color::Black);
     location_desc.setString(desc);
     select_quest.setFont(font);
-    select_quest.setCharacterSize(18);
+    select_quest.setCharacterSize(17);
     select_quest.setColor(sf::Color::Black);
     select_quest.setStringKey("worldmap_select");
     mission_title.setFont(font);
-    mission_title.setCharacterSize(18);
+    mission_title.setCharacterSize(17);
     mission_title.setColor(sf::Color::Black);
     mission_title.setString("Hunting Kacheek");
     mission_desc.setFont(font);
-    mission_desc.setCharacterSize(18);
+    mission_desc.setCharacterSize(17);
     mission_desc.setColor(sf::Color::Black);
     mission_desc.setString("(no translation needed)");
 
@@ -152,7 +152,7 @@ void ObeliskMenu::addMission(json missiondata)
 
     PText tm;
     tm.setFont(font);
-    tm.setCharacterSize(18);
+    tm.setCharacterSize(17);
     tm.setColor(sf::Color::Black);
     tm.setStringKey(tmp.title);
     tm.addText(level);
