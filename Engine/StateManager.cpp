@@ -291,6 +291,11 @@ void StateManager::initState(int state)
 {
     switch (state)
     {
+        case ENTRY: {
+
+            break;
+        }
+
         case NEWGAMEMENU: {
 
             break;
@@ -328,7 +333,7 @@ void StateManager::initState(int state)
                     break;
                 }
             }
-            
+
             if (introductionPtr == nullptr)
             {
                 try
@@ -345,6 +350,20 @@ void StateManager::initState(int state)
                     break;
                 }
             }
+
+            break;
+        }
+
+        case OPTIONSMENU: {
+            if(optionsMenuPtr == nullptr)
+                optionsMenuPtr = new OptionsMenu;
+
+            break;
+        }
+
+        case INTRODUCTION: {
+            if(introductionPtr == nullptr)
+                introductionPtr = new IntroductionMenu;
 
             break;
         }
@@ -455,6 +474,25 @@ void StateManager::initState(int state)
             break;
         }
 
+        case PATAPOLIS_ALTAR: {
+            if(altarPtr == nullptr)
+                altarPtr = new AltarMenu;
+
+            break;
+        }
+
+        case BARRACKS: {
+            if(barracksPtr == nullptr)
+                barracksPtr = new Barracks;
+            break;
+        }
+
+        case OBELISK: {
+            if(obeliskPtr == nullptr)
+                obeliskPtr = new ObeliskMenu;
+            break;
+        }
+
         case MISSIONCONTROLLER: {
 
             if (missionControllerPtr == nullptr)
@@ -495,6 +533,12 @@ void StateManager::initState(int state)
             {
                 testChamberPtr = new TestChamber;
             }
+
+            break;
+        }
+
+        case ERROR: {
+            break;
         }
     }
 }
@@ -541,10 +585,13 @@ void StateManager::setState(int state)
         errorChamberPtr = new ErrorChamber;
         errorChamberPtr->badState = currentGameState;
     }
-    
+
     //return from options to main
-    if (currentGameState == OPTIONSMENU && state == MAINMENU) 
+    if (currentGameState == OPTIONSMENU && state == MAINMENU)
     {
+        if(mainMenuPtr == nullptr)
+            initState(state);
+
         if (mainMenuPtr != nullptr)
         {
             mainMenuPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
@@ -556,6 +603,9 @@ void StateManager::setState(int state)
     //go from main to options
     if (currentGameState == MAINMENU && state == OPTIONSMENU)
     {
+        if(optionsMenuPtr == nullptr)
+            initState(state);
+
         if (optionsMenuPtr != nullptr)
         {
             optionsMenuPtr->state = 0;
@@ -569,6 +619,9 @@ void StateManager::setState(int state)
     //go from main to introduction
     if (currentGameState == MAINMENU && state == INTRODUCTION)
     {
+        if(introductionPtr == nullptr)
+            initState(state);
+
         if (introductionPtr != nullptr)
         {
             introductionPtr->timeout.restart();
@@ -581,7 +634,7 @@ void StateManager::setState(int state)
 
                 ResourceManager::getInstance().unloadState(MAINMENU);
             }
-            
+
             if (optionsMenuPtr != nullptr)
             {
                 delete optionsMenuPtr;
@@ -624,7 +677,7 @@ void StateManager::setState(int state)
     }
 
     //go from main to patapolis (forward through tips)
-    if (currentGameState == MAINMENU && state == PATAPOLIS) 
+    if (currentGameState == MAINMENU && state == PATAPOLIS)
     {
         if (loadingTipPtr == nullptr)
         {
@@ -692,6 +745,12 @@ void StateManager::setState(int state)
             barracksPtr = nullptr;
         }
 
+        if (altarPtr != nullptr)
+        {
+            delete altarPtr;
+            altarPtr = nullptr;
+        }
+
         if (obeliskPtr != nullptr)
         {
             delete obeliskPtr;
@@ -711,6 +770,9 @@ void StateManager::setState(int state)
     // go from patapolis to altar
     if (currentGameState == PATAPOLIS && state == PATAPOLIS_ALTAR)
     {
+        if(altarPtr == nullptr)
+            initState(state);
+
         if (altarPtr != nullptr)
         {
             altarPtr->reloadInventory();
@@ -725,6 +787,9 @@ void StateManager::setState(int state)
     // go from patapolis to barracks
     if (currentGameState == PATAPOLIS && state == BARRACKS)
     {
+        if(barracksPtr == nullptr)
+            initState(state);
+
         if (barracksPtr != nullptr)
         {
             barracksPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
@@ -739,6 +804,9 @@ void StateManager::setState(int state)
     // go from barracks to patapolis
     if (currentGameState == BARRACKS && state == PATAPOLIS)
     {
+        if(patapolisPtr == nullptr)
+            initState(state);
+
         if (patapolisPtr != nullptr)
         {
             patapolisPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
@@ -750,6 +818,9 @@ void StateManager::setState(int state)
     // go from patapolis to obelisk
     if (currentGameState == PATAPOLIS && state == OBELISK)
     {
+        if(obeliskPtr == nullptr)
+            initState(state);
+
         if (obeliskPtr != nullptr)
         {
             obeliskPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
@@ -762,6 +833,9 @@ void StateManager::setState(int state)
     // go from obelisk to patapolis
     if (currentGameState == OBELISK && state == PATAPOLIS)
     {
+        if(patapolisPtr == nullptr)
+            initState(state);
+
         if (patapolisPtr != nullptr)
         {
             patapolisPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
@@ -773,10 +847,8 @@ void StateManager::setState(int state)
     // go from obelisk to barracks
     if (currentGameState == OBELISK && state == BARRACKS)
     {
-        if (barracksPtr == nullptr)
-        {
-            barracksPtr = new Barracks;
-        }
+        if(barracksPtr == nullptr)
+            initState(state);
 
         barracksPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
         barracksPtr->obelisk = true;
@@ -791,6 +863,9 @@ void StateManager::setState(int state)
     // go from barracks to obelisk
     if (currentGameState == BARRACKS && state == OBELISK)
     {
+        if(obeliskPtr == nullptr)
+            initState(state);
+
         if (obeliskPtr != nullptr)
         {
             obeliskPtr->screenFade.Create(ScreenFade::FADEIN, 1024);
@@ -823,6 +898,12 @@ void StateManager::setState(int state)
             barracksPtr = nullptr;
         }
 
+        if (altarPtr != nullptr)
+        {
+            delete altarPtr;
+            altarPtr = nullptr;
+        }
+
         if (obeliskPtr != nullptr)
         {
             delete obeliskPtr;
@@ -836,7 +917,7 @@ void StateManager::setState(int state)
 
         initStateMT(afterTipState);
     }
-    
+
     //[DEBUG] special case: go from introduction directly to mission
     if (currentGameState == ENTRY && state == MISSIONCONTROLLER)
     {
@@ -859,6 +940,12 @@ void StateManager::setState(int state)
         {
             delete barracksPtr;
             barracksPtr = nullptr;
+        }
+
+        if (altarPtr != nullptr)
+        {
+            delete altarPtr;
+            altarPtr = nullptr;
         }
 
         if (obeliskPtr != nullptr)
@@ -944,6 +1031,6 @@ int StateManager::getState()
 {
     if (currentGameState == TIPS)
         return afterTipState;
-    else 
+    else
         return currentGameState;
 }
