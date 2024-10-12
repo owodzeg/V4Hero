@@ -77,7 +77,7 @@ AltarMenu::AltarMenu()
     altar_item_category.setString("");
 
     altar_item_desc.setFont(font);
-    altar_item_desc.setCharacterSize(26);
+    altar_item_desc.setCharacterSize(25);
     altar_item_desc.setColor(sf::Color(111,71,51,255));
     altar_item_desc.setString("");
 
