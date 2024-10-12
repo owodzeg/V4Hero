@@ -822,11 +822,13 @@ void MissionController::Update()
             rightmostPataX = pos;
     }
 
-    if(rightmostPataX > endflags.back().get()->global_x)
+    if(rightmostPataX > endflags.back().get()->global_x && !missionEnd)
     {
         missionEnd = true;
         rhythm->Stop();
         missionEndTimer.restart();
+        endflags.back().get()->main.setAnimation("triggered");
+        endflags.back().get()->main.restartAnimation();
     }
 
     if(!missionEnd)
