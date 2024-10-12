@@ -251,10 +251,13 @@ void AltarMenu::reloadInventory()
 
 void AltarMenu::Update()
 {
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    sf::View lastView = window->getView();
+    window->setView(window->getDefaultView());
+
     if (true)
     {
         InputController* inputCtrl = CoreManager::getInstance().getInputController();
-        sf::RenderWindow* window = CoreManager::getInstance().getWindow();
         float fps = CoreManager::getInstance().getCore()->getFPS();
 
         highlight_x += 7.0 / fps;
@@ -450,6 +453,8 @@ void AltarMenu::Update()
             StateManager::getInstance().setState(StateManager::PATAPOLIS);
         }
     }
+
+    window->setView(lastView);
 }
 
 AltarMenu::~AltarMenu()
