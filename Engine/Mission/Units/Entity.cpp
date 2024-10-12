@@ -96,6 +96,14 @@ void Entity::LoadEntity(const std::string& path)
             yPos = entity["position"]["y"].get<float>();
     }
 
+    if(entity.contains("scale"))
+    {
+        if(entity["scale"].contains("x"))
+            setScale(sf::Vector2f(entity["scale"]["x"].get<float>(), getScale().y));
+        if(entity["scale"].contains("y"))
+            setScale(sf::Vector2f(getScale().x, entity["scale"]["y"].get<float>()));
+    }
+
     if(entity.contains("loot"))
     {
         SPDLOG_INFO("Loot table: {}", entity["loot"].dump());

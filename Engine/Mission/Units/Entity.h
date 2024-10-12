@@ -79,7 +79,7 @@ public:
 
     std::vector<MessageCloud> messageclouds;
 
-    bool toggleDebug = true;
+    bool toggleDebug = false;
     PText debugText;
 
     Entity();
