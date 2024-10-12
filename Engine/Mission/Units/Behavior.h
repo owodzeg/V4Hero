@@ -94,6 +94,14 @@ public:
         BH_FLEE_DO_NOTHING = 0
     };
 
+    enum class Loot
+    {
+        INVALID = -1,
+        BH_LOOT_DO_NOTHING = 0,
+        BH_LOOT_DROP_INSTANT = 1,
+        BH_LOOT_DROP_FADEAWAY = 2
+    };
+
     const std::unordered_map<std::string, Hit> stringToHitEnum = {
         {"BH_HIT_DO_NOTHING", Hit::BH_HIT_DO_NOTHING},
         {"BH_HIT_DEFAULT", Hit::BH_HIT_DEFAULT},
@@ -109,6 +117,12 @@ public:
     const std::unordered_map<std::string, Spawn> stringToSpawnEnum = {
         {"BH_SPAWN_DO_NOTHING", Spawn::BH_SPAWN_DO_NOTHING},
         {"BH_SPAWN_IDLE", Spawn::BH_SPAWN_IDLE}
+    };
+
+    const std::unordered_map<std::string, Loot> stringToLootEnum = {
+        {"BH_LOOT_DO_NOTHING", Loot::BH_LOOT_DO_NOTHING},
+        {"BH_LOOT_DROP_INSTANT", Loot::BH_LOOT_DROP_INSTANT},
+        {"BH_LOOT_DROP_FADEAWAY", Loot::BH_LOOT_DROP_FADEAWAY}
     };
 
     Hit convStringToHitEnum(const std::string& enumName) {
@@ -130,6 +144,13 @@ public:
         if (it != stringToSpawnEnum.end())
             return it->second;
         return Spawn::INVALID;
+    }
+
+    Loot convStringToLootEnum(const std::string& enumName) {
+        auto it = stringToLootEnum.find(enumName);
+        if (it != stringToLootEnum.end())
+            return it->second;
+        return Loot::INVALID;
     }
 
 };

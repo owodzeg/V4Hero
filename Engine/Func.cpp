@@ -348,7 +348,7 @@ nlohmann::json Func::parseLootArray(std::mt19937& gen, std::uniform_real_distrib
 
 void Func::parseEntityLoot(std::mt19937& gen, std::uniform_real_distribution<double>& roll, json loot, vector<Entity::Loot>& to_drop)
 {
-    SPDLOG_DEBUG("Start parsing entity loot");
+    SPDLOG_DEBUG("Start parsing entity loot: {}", loot.dump());
 
     if (loot.is_array())
     {

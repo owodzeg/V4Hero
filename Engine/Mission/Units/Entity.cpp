@@ -85,6 +85,8 @@ void Entity::LoadEntity(const std::string& path)
             bh_death = behavior.convStringToDeathEnum(entity["behavior"]["death"]);
         if(entity["behavior"].contains("spawn"))
             bh_spawn = behavior.convStringToSpawnEnum(entity["behavior"]["spawn"]);
+        if(entity["behavior"].contains("loot"))
+            bh_loot = behavior.convStringToLootEnum(entity["behavior"]["loot"]);
     }
 
     yPos = 1735;
@@ -166,6 +168,10 @@ void Entity::handleDeath() // when hp goes under 0
     {
         case Behavior::Death::BH_DEATH_REMOVE_INSTANT: {
             forRemoval = true;
+
+            if(bh_loot == Behavior::Loot::BH_LOOT_DROP_INSTANT)
+                handleLoot();
+
             break;
         }
     }
@@ -216,6 +222,18 @@ void Entity::handleIdle() // when entity is idling
 void Entity::handleFlee() // entity's flee
 {
 
+}
+
+void Entity::handleLoot()
+{
+    switch(bh_loot)
+    {
+        case Behavior::Loot::BH_LOOT_DROP_INSTANT: {
+            for(auto id : loot_table)
+                CoreManager::getInstance().getMissionController()->SendItemDrop(id.order_id, getGlobalPosition().x+getLocalPosition().x, getGlobalPosition().y+getLocalPosition().y);
+            break;
+        }
+    }
 }
 
 void Entity::Draw()

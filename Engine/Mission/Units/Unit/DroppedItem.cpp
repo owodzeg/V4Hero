@@ -15,7 +15,7 @@ DroppedItem::DroppedItem(std::vector<int> item_id)
 
     main.load(std::format("resources/graphics/item/textures/{}/{:04}.png", category, itemID));
 
-    hspeed = -1000 + rand() % 1500;
+    hspeed = -500 + rand() % 300;
     vspeed = -1000;
 }
 
@@ -74,9 +74,9 @@ void DroppedItem::Draw()
 
         vspeed += 981.f / fps;
         if(hspeed > 0)
-            hspeed -= 200 / fps;
+            hspeed -= 140 / fps;
         if(hspeed < 0)
-            hspeed += 200 / fps;
+            hspeed += 140 / fps;
 
         if(global_y >= 2160-330-100)
         {

@@ -127,7 +127,7 @@ void MissionController::LoadMission(const std::string& path)
                     }
 
                     SPDLOG_INFO("Custom loot table: {}", entity["loot"].dump());
-                    if(entity.contains("loot"))
+                    if(entity.contains("loot") && !entity["loot"].is_null())
                     {
                         vector<Entity::Loot> new_loot;
                         Func::parseEntityLoot(CoreManager::getInstance().getCore()->gen, roll, entity["loot"], new_loot);
@@ -166,6 +166,14 @@ void MissionController::SendProjectile(float x, float y, float hspeed, float vsp
 {
     projectiles.push_back(std::make_unique<Projectile>("resources/graphics/item/textures/main/0014.png", x, y, hspeed, vspeed));
     SPDLOG_DEBUG("SENDING PROJECTILE AT {} {} {} {}", x, y, hspeed, vspeed);
+}
+
+void MissionController::SendItemDrop(std::vector<int> order_id, float x, float y)
+{
+    droppeditems.push_back(std::make_unique<DroppedItem>(order_id));
+    droppeditems.back().get()->global_x = x;
+    droppeditems.back().get()->global_y = y;
+    SPDLOG_DEBUG("SENDING DROPPED ITEM: [{}, {}, {}]", order_id[0], order_id[1], order_id[2]);
 }
 
 void MissionController::ExecuteZoom(float speed, float zoomUntil)
@@ -990,6 +998,7 @@ void MissionController::Update()
         item.setOrigin(item.getLocalBounds().width/2, item.getLocalBounds().height/2);
         item.setScale(0.65,0.65);
         item.setPosition(3840-200-(180*col), 250+(180*row));
+        item.setRotation(0);
         item.setColor(sf::Color::White);
         item.draw();
 

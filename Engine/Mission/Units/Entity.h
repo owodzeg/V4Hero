@@ -50,6 +50,7 @@ public:
     Behavior::Attack bh_attack;
     Behavior::Idle bh_idle;
     Behavior::Flee bh_flee;
+    Behavior::Loot bh_loot;
 
     int entityType = DUMMY;
     int entityCategory = NO_CATEGORY;
@@ -102,6 +103,7 @@ public:
     void handleAttack(); // entity's attack
     void handleIdle(); // when entity is idling
     void handleFlee(); // entity's flee
+    void handleLoot(); // entity's loot
 
     // communication
     void handleRhythmMessages();

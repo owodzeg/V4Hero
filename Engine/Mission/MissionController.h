@@ -94,6 +94,7 @@ public:
     MissionController();
     void LoadMission(const std::string& path);
     void SendProjectile(float x, float y, float hspeed, float vspeed);
+    void SendItemDrop(std::vector<int> order_id, float x, float y);
     void ExecuteZoom(float speed, float time);
     void ProcessDroppedItems();
     void DoMissionEnd();
