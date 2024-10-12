@@ -77,6 +77,8 @@ void Rhythm::Stop()
     s_theme[1].stop();
     s_fever_fail.stop();  ///Dying fever sound
     s_fever_start.stop(); ///FEVER!
+
+    running = false;
 }
 void Rhythm::LoadTheme(string theme)
 {
@@ -173,6 +175,8 @@ void Rhythm::Start()
     rhythmClock.restart();    ///Main clock for Rhythm purposes
     newRhythmClock.restart();    ///Main clock for Rhythm purposes
     lazyClock.restart();    ///Main clock for Rhythm purposes
+
+    running = true;
 }
 
 void Rhythm::BreakCombo(int reason)
@@ -459,6 +463,9 @@ void Rhythm::checkRhythmController()
 
 void Rhythm::doRhythm()
 {
+    if(!running)
+        return;
+
     if(!started || startWait.getElapsedTime().asMilliseconds() <= 100)
     {
         SPDLOG_INFO("WAIT");

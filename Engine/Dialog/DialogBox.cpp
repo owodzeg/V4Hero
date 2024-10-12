@@ -19,7 +19,8 @@ void PataDialogBox::Create(std::string font, sf::String text, std::vector<sf::St
 
     switch(type)
     {
-        case 1: {
+        case 1:
+        case 3: {
             t_dialogType.setFont(font);
             t_dialogType.setCharacterSize(16);
             t_dialogType.setTextQuality(qualitySetting);
@@ -37,7 +38,11 @@ void PataDialogBox::Create(std::string font, sf::String text, std::vector<sf::St
     t_dialogText.setFont(font);
     t_dialogText.setCharacterSize(30);
     t_dialogText.setTextQuality(qualitySetting);
-    t_dialogText.setStringKey(text);
+
+    if(type != 3)
+        t_dialogText.setStringKey(text);
+    else
+        t_dialogText.setString(text);
 
     for (unsigned int i = 0; i < options.size(); i++)
     {
@@ -45,7 +50,12 @@ void PataDialogBox::Create(std::string font, sf::String text, std::vector<sf::St
         tmp.setFont(font);
         tmp.setCharacterSize(22);
         tmp.setTextQuality(qualitySetting);
-        tmp.setStringKey(options[i]);
+
+        if(type != 3)
+            tmp.setStringKey(options[i]);
+        else
+            tmp.setString(options[i]);
+
         t_options.push_back(tmp);
     }
 
