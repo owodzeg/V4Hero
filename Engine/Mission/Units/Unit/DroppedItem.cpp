@@ -72,11 +72,11 @@ void DroppedItem::Draw()
             glow.erase(glow.begin() + (rm[i] - i));
         }
 
-        vspeed += 981.f / fps;
+        vspeed += 1600.f / fps;
         if(hspeed > 0)
-            hspeed -= 140 / fps;
+            hspeed -= 120 / fps;
         if(hspeed < 0)
-            hspeed += 140 / fps;
+            hspeed += 120 / fps;
 
         if(global_y >= 2160-330-100)
         {
