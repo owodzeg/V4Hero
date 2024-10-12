@@ -41,7 +41,9 @@ public:
     {
         INVALID = -1,
         BH_DEATH_DO_NOTHING = 0,
-        BH_DEATH_REMOVE_INSTANT = 1
+        BH_DEATH_REMOVE_INSTANT = 1,
+        BH_DEATH_KIRAJIN = 2,
+        BH_DEATH_PATAPON = 3
     };
 
     enum class Noise
@@ -53,7 +55,8 @@ public:
     enum class Approach
     {
         INVALID = -1,
-        BH_APPROACH_DO_NOTHING = 0
+        BH_APPROACH_DO_NOTHING = 0,
+        BH_APPROACH_FAR = 1
     };
 
     enum class Command
@@ -66,7 +69,9 @@ public:
     enum class Decision
     {
         INVALID = -1,
-        BH_DECISION_DO_NOTHING = 0
+        BH_DECISION_DO_NOTHING = 0,
+        BH_DECISION_YARI_SLOW = 1,
+        BH_DECISION_YARI_FAST = 2
     };
 
     enum class Spawn
@@ -79,7 +84,9 @@ public:
     enum class Attack
     {
         INVALID = -1,
-        BH_ATTACK_DO_NOTHING = 0
+        BH_ATTACK_DO_NOTHING = 0,
+        BH_ATTACK_YARI_GROUND = 1,
+        BH_ATTACK_YARI_JUMP = 2
     };
 
     enum class Idle
@@ -99,7 +106,8 @@ public:
         INVALID = -1,
         BH_LOOT_DO_NOTHING = 0,
         BH_LOOT_DROP_INSTANT = 1,
-        BH_LOOT_DROP_FADEAWAY = 2
+        BH_LOOT_DROP_FADEAWAY = 2,
+        BH_LOOT_DROP_BUILDING = 3
     };
 
     const std::unordered_map<std::string, Hit> stringToHitEnum = {
@@ -111,7 +119,9 @@ public:
 
     const std::unordered_map<std::string, Death> stringToDeathEnum = {
         {"BH_DEATH_DO_NOTHING", Death::BH_DEATH_DO_NOTHING},
-        {"BH_DEATH_REMOVE_INSTANT", Death::BH_DEATH_REMOVE_INSTANT}
+        {"BH_DEATH_REMOVE_INSTANT", Death::BH_DEATH_REMOVE_INSTANT},
+        {"BH_DEATH_KIRAJIN", Death::BH_DEATH_KIRAJIN},
+        {"BH_DEATH_PATAPON", Death::BH_DEATH_PATAPON}
     };
 
     const std::unordered_map<std::string, Spawn> stringToSpawnEnum = {
@@ -122,7 +132,25 @@ public:
     const std::unordered_map<std::string, Loot> stringToLootEnum = {
         {"BH_LOOT_DO_NOTHING", Loot::BH_LOOT_DO_NOTHING},
         {"BH_LOOT_DROP_INSTANT", Loot::BH_LOOT_DROP_INSTANT},
-        {"BH_LOOT_DROP_FADEAWAY", Loot::BH_LOOT_DROP_FADEAWAY}
+        {"BH_LOOT_DROP_FADEAWAY", Loot::BH_LOOT_DROP_FADEAWAY},
+        {"BH_LOOT_DROP_BUILDING", Loot::BH_LOOT_DROP_BUILDING}
+    };
+
+    const std::unordered_map<std::string, Approach> stringToApproachEnum = {
+        {"BH_APPROACH_DO_NOTHING", Approach::BH_APPROACH_DO_NOTHING},
+        {"BH_APPROACH_FAR", Approach::BH_APPROACH_FAR}
+    };
+
+    const std::unordered_map<std::string, Decision> stringToDecisionEnum = {
+        {"BH_DECISION_DO_NOTHING", Decision::BH_DECISION_DO_NOTHING},
+        {"BH_DECISION_YARI_SLOW", Decision::BH_DECISION_YARI_SLOW},
+        {"BH_DECISION_YARI_FAST", Decision::BH_DECISION_YARI_FAST}
+    };
+
+    const std::unordered_map<std::string, Attack> stringToAttackEnum = {
+        {"BH_ATTACK_DO_NOTHING", Attack::BH_ATTACK_DO_NOTHING},
+        {"BH_ATTACK_YARI_GROUND", Attack::BH_ATTACK_YARI_GROUND},
+        {"BH_ATTACK_YARI_JUMP", Attack::BH_ATTACK_YARI_JUMP}
     };
 
     Hit convStringToHitEnum(const std::string& enumName) {
@@ -151,6 +179,27 @@ public:
         if (it != stringToLootEnum.end())
             return it->second;
         return Loot::INVALID;
+    }
+
+    Decision convStringToDecisionEnum(const std::string& enumName) {
+        auto it = stringToDecisionEnum.find(enumName);
+        if (it != stringToDecisionEnum.end())
+            return it->second;
+        return Decision::INVALID;
+    }
+
+    Approach convStringToApproachEnum(const std::string& enumName) {
+        auto it = stringToApproachEnum.find(enumName);
+        if (it != stringToApproachEnum.end())
+            return it->second;
+        return Approach::INVALID;
+    }
+
+    Attack convStringToAttackEnum(const std::string& enumName) {
+        auto it = stringToAttackEnum.find(enumName);
+        if (it != stringToAttackEnum.end())
+            return it->second;
+        return Attack::INVALID;
     }
 
 };
