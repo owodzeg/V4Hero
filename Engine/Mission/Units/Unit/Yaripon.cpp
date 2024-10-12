@@ -227,6 +227,47 @@ void Yaripon::PerformMissionEnd()
     }
 }
 
+void Yaripon::PerformDeath()
+{
+    dead = true;
+
+    if(!death_start)
+    {
+        death_start = true;
+        dead_timer.restart();
+        hspeed = -700;
+        vspeed = -1200;
+        main.setAnimation("stagger_var1");
+        main.restartAnimation();
+        main.setAnimationLoop(false);
+    }
+    else
+    {
+        if(dead_timer.getElapsedTime().asMilliseconds() > 1000)
+        {
+            if(main.getAnimation() != "death" && main.getAnimation() != "death_despawn")
+            {
+                main.setAnimation("death");
+                main.restartAnimation();
+            }
+        }
+
+        if(dead_timer.getElapsedTime().asMilliseconds() > 4000)
+        {
+            if(main.getAnimation() == "death")
+            {
+                main.setAnimation("death_despawn");
+                main.restartAnimation();
+            }
+        }
+
+        if(dead_timer.getElapsedTime().asMilliseconds() > 6000)
+        {
+            for_removal = true;
+        }
+    }
+}
+
 void Yaripon::Drum(std::string drum)
 {
     if(!inAttackSequence && performedAttack)
@@ -244,7 +285,13 @@ void Yaripon::Draw()
 {
     float fps = CoreManager::getInstance().getCore()->getFPS();
 
-    if(!missionEnd)
+    if(curHP <= 0)
+    {
+        dead = true;
+        PerformDeath();
+    }
+
+    if(!missionEnd && !dead)
     {
         if(!enemyInSight)
         {
@@ -489,13 +536,19 @@ void Yaripon::Draw()
             walkBack = false;
         }
     }
-    else
+    else if(missionEnd)
     {
         PerformMissionEnd();
     }
 
     vspeed += gravity / fps;
     local_y += vspeed / fps;
+    local_x += hspeed / fps;
+
+    if(hspeed > 0)
+        hspeed -= 400 / fps;
+    if(hspeed < 0)
+        hspeed += 400 / fps;
 
     if(local_y >= 0)
     {

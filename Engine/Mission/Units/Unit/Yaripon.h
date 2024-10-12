@@ -43,6 +43,7 @@ public:
     sf::Clock inAttackTimer;
 
     float vspeed = 0;
+    float hspeed = 0;
     float gravity = 1400;
 
     bool threw = false;
@@ -55,6 +56,11 @@ public:
 
     std::string wpn, hlm;
 
+    sf::Clock dead_timer;
+    bool death_start = false;
+    bool for_removal = false;
+    bool dead = false;
+
     PText debugText;
 
     Yaripon(int which, int maxpons);
@@ -63,6 +69,7 @@ public:
     void PerformAttack();
     void StopAttack();
     void PerformMissionEnd();
+    void PerformDeath();
     void StopAll();
     void Drum(std::string drum);
     void Draw();

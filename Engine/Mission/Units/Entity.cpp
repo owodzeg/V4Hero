@@ -182,6 +182,56 @@ void Entity::handleDeath() // when hp goes under 0
 
             break;
         }
+        case Behavior::Death::BH_DEATH_KIRAJIN: {
+            dead = true;
+
+            if(!death_start)
+            {
+                death_start = true;
+                dead_timer.restart();
+                hspeed = 700;
+                vspeed = -1200;
+                setAnimation("stagger");
+                restartAnimation();
+                setAnimationLoop(false);
+            }
+            else
+            {
+                if(dead_timer.getElapsedTime().asMilliseconds() > 1000)
+                {
+                    if(getAnimation() != "death" && getAnimation() != "death_despawn")
+                    {
+                        setAnimation("death");
+                        restartAnimation();
+                        setAnimationLoop(false);
+                    }
+                }
+
+                if(dead_timer.getElapsedTime().asMilliseconds() > 4000)
+                {
+                    if(getAnimation() == "death")
+                    {
+                        setAnimation("death_despawn");
+                        restartAnimation();
+                        setAnimationLoop(false);
+
+                        if(bh_loot == Behavior::Loot::BH_LOOT_DROP_FADEAWAY)
+                            handleLoot();
+                    }
+                }
+
+                if(dead_timer.getElapsedTime().asMilliseconds() > 6000)
+                {
+                    forRemoval = true;
+                }
+            }
+
+            if(bh_loot == Behavior::Loot::BH_LOOT_DROP_INSTANT)
+                handleLoot();
+
+            break;
+        }
+
     }
 }
 
@@ -234,22 +284,46 @@ void Entity::handleFlee() // entity's flee
 
 void Entity::handleLoot()
 {
-    switch(bh_loot)
+    if(!loot_sent)
     {
-        case Behavior::Loot::BH_LOOT_DROP_INSTANT: {
-            for(auto id : loot_table)
-                CoreManager::getInstance().getMissionController()->SendItemDrop(id.order_id, getGlobalPosition().x+getLocalPosition().x, getGlobalPosition().y+getLocalPosition().y);
-            break;
+        switch(bh_loot)
+        {
+            case Behavior::Loot::BH_LOOT_DROP_INSTANT: {
+                for(auto id : loot_table)
+                    CoreManager::getInstance().getMissionController()->SendItemDrop(id.order_id, getGlobalPosition().x+getLocalPosition().x, 2160-600);
+                break;
+            }
+            case Behavior::Loot::BH_LOOT_DROP_FADEAWAY: {
+                for(auto id : loot_table)
+                    CoreManager::getInstance().getMissionController()->SendItemDrop(id.order_id, getGlobalPosition().x+getLocalPosition().x, 2160-600);
+                break;
+            }
         }
+
+        loot_sent = true;
     }
 }
 
 void Entity::Draw()
 {
+    float fps = CoreManager::getInstance().getCore()->getFPS();
+
     if(curHP <= 0)
     {
         handleDeath();
     }
+
+    setLocalPosition(sf::Vector2f(getLocalPosition().x + hspeed / fps, getLocalPosition().y + vspeed / fps));
+
+    if(hspeed > 0)
+        hspeed -= 400 / fps;
+    if(hspeed < 0)
+        hspeed += 400 / fps;
+
+    vspeed += 2000 / fps;
+
+    if(getLocalPosition().y >= 0)
+        vspeed = 0;
 
     AnimatedObject::Draw();
 

@@ -82,6 +82,14 @@ public:
     bool toggleDebug = false;
     PText debugText;
 
+    sf::Clock dead_timer;
+    bool death_start = false;
+
+    float hspeed = 0;
+    float vspeed = 0;
+
+    bool loot_sent = false;
+
     Entity();
     void LoadEntity(const std::string& path);
 
