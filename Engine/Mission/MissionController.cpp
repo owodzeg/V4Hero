@@ -1346,17 +1346,17 @@ void MissionController::Update()
 
     CoreManager::getInstance().getWindow()->setView(lastView);
 
-    if (returnToPatapolis)
-    {
-        StateManager::getInstance().setState(StateManager::PATAPOLIS);
-    }
-
     if((yaripons.size() == 0 || hatapons.back().get()->curHP <= 0) && !missionEnd)
     {
         missionEnd = true;
         missionEndTimer.restart();
         failure = true;
         rhythm->Stop();
+    }
+
+    if (returnToPatapolis)
+    {
+        StateManager::getInstance().setState(StateManager::PATAPOLIS);
     }
 }
 

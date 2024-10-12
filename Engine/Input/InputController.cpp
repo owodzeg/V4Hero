@@ -144,6 +144,32 @@ void InputController::parseEvents(sf::Event& event)
     /** Joystick buttons need to be somewhat manually assigned **/
 
     /* TODO: figure out how to implement it into the new system
+    */
+
+    std::unordered_map<int, int> ds4map = {
+        {3, 0},  //pata
+        {1, 23}, //pon
+        {0, 25}, //don
+        {2, 18}, //chaka
+        {4, 16}, //ltrig
+        {5, 14}, //rtrig
+        {9, 58}, //options (start)
+        {8, 57}  //share (select)
+    };
+
+    if(CoreManager::getInstance().getConfig()->GetInt("controllerType") == 1)
+    {
+        ds4map = {
+            {3, 0},  //pata
+            {2, 23}, //pon
+            {1, 25}, //don
+            {4, 18}, //chaka
+            {5, 16}, //ltrig
+            {6, 14}, //rtrig
+            {8, 58}, //options (start)
+            {7, 57}  //share (select)
+        };
+    }
 
     if (event.type == sf::Event::JoystickButtonPressed)
     {
@@ -151,10 +177,7 @@ void InputController::parseEvents(sf::Event& event)
         {
             SPDLOG_DEBUG("Joystick ({}) key pressed: {}", event.joystickButton.joystickId, event.joystickButton.button);
 
-            keyRegistered = true;
-            currentKey = 1000 + event.joystickButton.button;
-            keyMap[1000 + event.joystickButton.button] = true;
-            keyMapHeld[1000 + event.joystickButton.button] = true;
+            addKeyPressMessage(ds4map[event.joystickButton.button], true);
         }
     }
 
@@ -164,7 +187,7 @@ void InputController::parseEvents(sf::Event& event)
         {
             SPDLOG_DEBUG("Joystick ({}) key released: {}", event.joystickButton.joystickId, event.joystickButton.button);
 
-            keyMapHeld[1000 + event.joystickButton.button] = false;
+            addKeyPressMessage(ds4map[event.joystickButton.button], false);
         }
     }
 
@@ -223,8 +246,6 @@ void InputController::parseEvents(sf::Event& event)
             }
         }
     }
-
-    */
 }
 
 int translateKeybind(int keyID)
