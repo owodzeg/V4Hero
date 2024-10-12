@@ -101,6 +101,8 @@ void MissionController::LoadMission(const std::string& path)
         for(int i=1; i<=pons; i++)
         {
             yaripons.push_back(std::make_unique<Yaripon>(i, pons));
+            yaripons.back().get()->main.loadExtra("main/0025", "weapon");
+            yaripons.back().get()->main.loadExtra("main/0030", "helm");
         }
     }
 
@@ -742,17 +744,21 @@ void MissionController::Update()
     }
 
     // if farthest yaripon sees enemy, whole army shall be angry
-    float yari_distance = closest - yaripons.back().get()->global_x - yaripons.back().get()->local_x - yaripons.back().get()->gap_x;
     bool yari_inSight = false;
 
-    if(yari_distance < 3000 && !entities.empty())
+    if(yaripons.size() > 0)
     {
-        yari_inSight = true;
-        ExecuteZoom(1.0007, 1.2);
-    }
-    else
-    {
-        ExecuteZoom(0.9993, 0.8);
+        float yari_distance = closest - yaripons.back().get()->global_x - yaripons.back().get()->local_x - yaripons.back().get()->gap_x;
+
+        if(yari_distance < 3000 && !entities.empty())
+        {
+            yari_inSight = true;
+            ExecuteZoom(1.0007, 1.2);
+        }
+        else
+        {
+            ExecuteZoom(0.9993, 0.8);
+        }
     }
 
     for(auto& pon : yaripons)
@@ -794,7 +800,18 @@ void MissionController::Update()
             }
         ),
         entities.end()
-    );
+        );
+
+    yaripons.erase(
+            std::remove_if(
+                yaripons.begin(),
+                yaripons.end(),
+                [](const std::unique_ptr<Yaripon>& pon) {
+                    return pon->for_removal;
+                }
+            ),
+            yaripons.end()
+        );
 
     for(auto& projectile : projectiles)
     {
@@ -802,7 +819,7 @@ void MissionController::Update()
 
         for(auto& entity : entities)
         {
-            if(entity->entityType == Entity::EntityTypes::HOSTILE || entity->entityType == Entity::EntityTypes::NEUTRAL)
+            if((entity->entityType == Entity::EntityTypes::HOSTILE || entity->entityType == Entity::EntityTypes::NEUTRAL) && !entity->dead)
             {
                 auto pos = entity->getGlobalPosition();
 
@@ -963,53 +980,56 @@ void MissionController::Update()
     hpbar_fill.setScale(hp, 1);
     hpbar_fill.draw();
 
-    thumb.setPosition(400*resRatioX, thumbY*resRatioY);
-    CoreManager::getInstance().getWindow()->draw(thumb);
-
-    yaripons.back().get()->main.animation.drawCopy(sf::Vector2f(400, thumbY), sf::Vector2f(0.6, 0.6));
-
-    hpbar_out.setPosition(400, thumbY-120);
-    hpbar_out.draw();
-
-    hpbar_fill.setPosition(318, hpbar_out.getPosition().y);
-
-    float yari_maxhp = 0;
-    float yari_curhp = 0;
-    for(auto& y : yaripons)
+    if(yaripons.size() > 0)
     {
-        yari_maxhp += y->maxHP;
-        yari_curhp += y->curHP;
+        thumb.setPosition(400*resRatioX, thumbY*resRatioY);
+        CoreManager::getInstance().getWindow()->draw(thumb);
+
+        yaripons.back().get()->main.animation.drawCopy(sf::Vector2f(400, thumbY), sf::Vector2f(0.6, 0.6));
+
+        hpbar_out.setPosition(400, thumbY-120);
+        hpbar_out.draw();
+
+        hpbar_fill.setPosition(318, hpbar_out.getPosition().y);
+
+        float yari_maxhp = 0;
+        float yari_curhp = 0;
+        for(auto& y : yaripons)
+        {
+            yari_maxhp += y->maxHP;
+            yari_curhp += y->curHP;
+        }
+
+        hp = yari_curhp / yari_maxhp;
+
+        if (hp > 0.70)
+            hpbar_fill.setColor(sf::Color(0, 255, 0, 255));
+        else if (hp > 0.35)
+            hpbar_fill.setColor(sf::Color(245, 230, 66, 255));
+        else
+            hpbar_fill.setColor(sf::Color(212, 0, 0, 255));
+
+        hpbar_fill.setScale(hp, 1);
+        hpbar_fill.draw();
+
+        unit_count_shadow.setFont(CoreManager::getInstance().getStrRepo()->GetFontNameForLanguage(CoreManager::getInstance().getStrRepo()->GetCurrentLanguage()));
+        unit_count_shadow.disable_processing = true;
+        unit_count_shadow.setCharacterSize(30);
+        unit_count_shadow.setString(to_string(yaripons.size()));
+        unit_count_shadow.setColor(sf::Color::Black);
+        unit_count_shadow.setOrigin(0, unit_count_shadow.getLocalBounds().height/2);
+        unit_count_shadow.setPosition(460, thumbY + 75);
+        unit_count_shadow.draw();
+
+        unit_count.setFont(CoreManager::getInstance().getStrRepo()->GetFontNameForLanguage(CoreManager::getInstance().getStrRepo()->GetCurrentLanguage()));
+        unit_count.disable_processing = true;
+        unit_count.setCharacterSize(30);
+        unit_count.setString(to_string(yaripons.size()));
+        unit_count.setColor(sf::Color::White);
+        unit_count.setOrigin(0, unit_count.getLocalBounds().height/2);
+        unit_count.setPosition(452, thumbY + 65);
+        unit_count.draw();
     }
-
-    hp = yari_curhp / yari_maxhp;
-
-    if (hp > 0.70)
-        hpbar_fill.setColor(sf::Color(0, 255, 0, 255));
-    else if (hp > 0.35)
-        hpbar_fill.setColor(sf::Color(245, 230, 66, 255));
-    else
-        hpbar_fill.setColor(sf::Color(212, 0, 0, 255));
-
-    hpbar_fill.setScale(hp, 1);
-    hpbar_fill.draw();
-
-    unit_count_shadow.setFont(CoreManager::getInstance().getStrRepo()->GetFontNameForLanguage(CoreManager::getInstance().getStrRepo()->GetCurrentLanguage()));
-    unit_count_shadow.disable_processing = true;
-    unit_count_shadow.setCharacterSize(30);
-    unit_count_shadow.setString(to_string(yaripons.size()));
-    unit_count_shadow.setColor(sf::Color::Black);
-    unit_count_shadow.setOrigin(0, unit_count_shadow.getLocalBounds().height/2);
-    unit_count_shadow.setPosition(460, thumbY + 75);
-    unit_count_shadow.draw();
-
-    unit_count.setFont(CoreManager::getInstance().getStrRepo()->GetFontNameForLanguage(CoreManager::getInstance().getStrRepo()->GetCurrentLanguage()));
-    unit_count.disable_processing = true;
-    unit_count.setCharacterSize(30);
-    unit_count.setString(to_string(yaripons.size()));
-    unit_count.setColor(sf::Color::White);
-    unit_count.setOrigin(0, unit_count.getLocalBounds().height/2);
-    unit_count.setPosition(452, thumbY + 65);
-    unit_count.draw();
 
     // item thumbs
     int diid = 0;
@@ -1259,6 +1279,14 @@ void MissionController::Update()
     if (returnToPatapolis)
     {
         StateManager::getInstance().setState(StateManager::PATAPOLIS);
+    }
+
+    if((yaripons.size() == 0 || hatapons.back().get()->curHP <= 0) && !missionEnd)
+    {
+        missionEnd = true;
+        missionEndTimer.restart();
+        failure = true;
+        rhythm->Stop();
     }
 }
 

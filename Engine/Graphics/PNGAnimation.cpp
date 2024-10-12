@@ -550,9 +550,9 @@ void PNGAnimation::Load(const std::string& path)
         }
     }
 
-    for(auto s : animation["noRepeat"].items())
+    for(auto s : animation["noRepeat"])
     {
-        std::string anim = s.value();
+        std::string anim = s;
 
         SPDLOG_DEBUG("noRepeat {}", anim);
         animationPause.push_back(getIDfromShortName(anim));

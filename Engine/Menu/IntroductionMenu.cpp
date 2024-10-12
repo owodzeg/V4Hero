@@ -52,7 +52,7 @@ void IntroductionMenu::Update()
 
     if (timeout2.getElapsedTime().asSeconds() > 3)
     {
-        CoreManager::getInstance().getCore()->mission_file = "mis1_0.p4m";
+        CoreManager::getInstance().getCore()->mission_file = "resources/missions/mis1_0.json";
         CoreManager::getInstance().getCore()->mission_id = 0;
         CoreManager::getInstance().getCore()->mission_multiplier = 1;
 
