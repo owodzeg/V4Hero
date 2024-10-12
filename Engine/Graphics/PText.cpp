@@ -669,29 +669,33 @@ void PText::draw(bool noRender)
     if(fadein)
     {
         fadein = false;
+        fadein_set = true;
         fadein_clock.restart();
     }
 
-    if(fadein_clock.getElapsedTime().asMilliseconds() < fadein_length)
+    if(fadein_set)
     {
-        int lines = t.getLines().size();
-        float alpha = float(fadein_clock.getElapsedTime().asMilliseconds()) / float(fadein_length) * 255.f;
-
-        if(alpha < 0)
-        alpha = 0;
-
-        if(alpha >= 255)
-        alpha = 255;
-
-        for(int x=0; x<lines; x++)
+        if(fadein_clock.getElapsedTime().asMilliseconds() < fadein_length)
         {
-            int len = t.getLines()[x].getLength();
+            int lines = t.getLines().size();
+            float alpha = float(fadein_clock.getElapsedTime().asMilliseconds()) / float(fadein_length) * 255.f;
 
-            for(int y=0; y<len; y++)
+            if(alpha < 0)
+                alpha = 0;
+
+            if(alpha >= 255)
+                alpha = 255;
+
+            for(int x=0; x<lines; x++)
             {
-                sf::Color c = t.getCharacterColor(x, y);
-                c.a = alpha;
-                t.setCharacterColor(x, y, c);
+                int len = t.getLines()[x].getLength();
+
+                for(int y=0; y<len; y++)
+                {
+                    sf::Color c = t.getCharacterColor(x, y);
+                    c.a = alpha;
+                    t.setCharacterColor(x, y, c);
+                }
             }
         }
     }
@@ -765,7 +769,7 @@ void PText::draw(bool noRender)
         }
     }
 
-    if (rendered)
+    if (rendered && !noRender)
         window->draw(t);
 
     if (!rendered)

@@ -69,6 +69,7 @@ public:
 
     // no reason to use in regular environment
     bool disable_processing = false;
+    bool fadein_set = false;
 
     PText();
     std::vector<std::string> split(std::string const & s, char delim);
