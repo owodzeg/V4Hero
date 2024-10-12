@@ -152,15 +152,15 @@ void SaveReader::CreateBlankSave()
 
     kami_name = "Kamipon";
 
-    vector<string> starter_items = {"item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet"};
+    vector<string> starter_items = {"item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet"};
     for (unsigned int i = 0; i < starter_items.size(); i++)
     {
         invData.addItem(itemReg.getItemByName(starter_items[i])->order_id, itemReg);
     }
 
-    // Defining 3 Yaripons
+    // Defining 6 Yaripons
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 6; i++)
     {
         Pon newPon;
 
