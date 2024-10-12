@@ -18,6 +18,8 @@ class Barracks : public Menu
 private:
     ControlTips ctrlTips;
 
+    std::vector<std::unique_ptr<AnimatedObject>> barracks_units;
+
     sf::RectangleShape rs_cover;
     sf::RectangleShape mm_bigBox;
     sf::RectangleShape mm_titleBox;

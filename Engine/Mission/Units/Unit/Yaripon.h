@@ -53,6 +53,8 @@ public:
     bool missionEnd = false;
     bool failure = false;
 
+    std::string wpn, hlm;
+
     PText debugText;
 
     Yaripon(int which, int maxpons);

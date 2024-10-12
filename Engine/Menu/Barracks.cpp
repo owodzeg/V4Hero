@@ -78,7 +78,7 @@ Barracks::Barracks()
     s_background.loadFromFile("resources/graphics/bg/barracks/barracks.png", quality);
 
     ///         highlighted unit
-    s_pon_highlight.loadFromFile("resources/graphics/ui/highlight.png", quality);
+    s_pon_highlight.loadFromFile("resources/graphics/ui/highlighted_pon.png", quality);
 
     ///             ####   UNIT CLASS ICON
     class_icon.loadFromFile("resources/graphics/ui/yari_icon.png", quality);
@@ -188,19 +188,19 @@ Barracks::Barracks()
 
     ///             ####   WEAPON ITEM ICON
     s_weapon_icon.loadFromFile("resources/graphics/ui/sword_weapon_icon.png", quality);
-    s_weapon_icon.setPosition(946*3, s_unit_icon.getPosition().y*3 + equip_height);
+    s_weapon_icon.setPosition(946*3, s_unit_icon.getPosition().y + equip_height);
 
     ///             ####   WEAPON 2 (OTHER HAND) ITEM ICON
     s_weapon2_icon.loadFromFile("resources/graphics/ui/sword_weapon_icon.png", quality);
-    s_weapon2_icon.setPosition(946*3, s_weapon_icon.getPosition().y*3 + equip_height);
+    s_weapon2_icon.setPosition(946*3, s_weapon_icon.getPosition().y + equip_height);
 
     ///             ####   ARMOUR ITEM ICON
     s_armour_icon.loadFromFile("resources/graphics/ui/helm_icon.png", quality);
-    s_armour_icon.setPosition(946*3, s_weapon2_icon.getPosition().y*3 + equip_height);
+    s_armour_icon.setPosition(946*3, s_weapon2_icon.getPosition().y + equip_height);
 
     ///             ####   MASK ITEM ICON
     s_mask_icon.loadFromFile("resources/graphics/ui/mask_icon.png", quality);
-    s_mask_icon.setPosition(946*3, s_armour_icon.getPosition().y*3 + equip_height);
+    s_mask_icon.setPosition(946*3, s_armour_icon.getPosition().y + equip_height);
 
     /// unit + item name text
 
@@ -237,7 +237,7 @@ Barracks::Barracks()
     enabled_positons.push_back(false);
 
     quality_setting = quality;
-    highlighted_pon.loadFromFile("resources/graphics/ui/highlighted_pon.png", quality_setting, 1);
+    highlighted_pon.loadFromFile("resources/graphics/ui/highlighted_pon.png", quality_setting);
 
     //TO-DO: replace old pointers with new CoreManager pointers
     //applyEquipment();
@@ -273,6 +273,27 @@ Barracks::Barracks()
     rr_uniticon.setOrigin(sf::Vector2f((175 + 50)*3 / 2, (12 + 50)*3 / 2));
 
     //mm_inventory_background.setSize(sf::Vector2f(mm_inventory_background.getSize().x+(40*resRatioX),mm_inventory_background.getSize().y+(40*resRatioX)));
+
+    for(int i=1; i<=6; i++)
+    {
+        barracks_units.push_back(std::make_unique<AnimatedObject>());
+        barracks_units.back().get()->LoadConfig("resources/units/unit/yaripon.zip");
+
+        Pon* currentPon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i-1);
+        InventoryData::InventoryItem eq = CoreManager::getInstance().getSaveReader()->invData.items[currentPon->slots[0]];
+
+        std::string wpn = eq.item->spritesheet+"/"+Func::num_padding(eq.item->spritesheet_id, 4);
+
+        eq = CoreManager::getInstance().getSaveReader()->invData.items[currentPon->slots[1]];
+
+        std::string hlm = eq.item->spritesheet+"/"+Func::num_padding(eq.item->spritesheet_id, 4);
+
+        barracks_units.back().get()->loadExtra(wpn, "weapon");
+        barracks_units.back().get()->loadExtra(hlm, "helm");
+
+        int pon_width = 75*3;
+        barracks_units.back().get()->setGlobalPosition(sf::Vector2f((1260 + (pon_width * (i-1))), 1815));
+    }
 
     initialized = true;
 
@@ -385,7 +406,7 @@ void Barracks::loadInventory()
                 cur_box.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
                 ///look up item's icon
-                cur_box.icon.loadFromFile("resources/graphics/ui/altar/materials/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q, 1);
+                cur_box.icon.loadFromFile("resources/graphics/ui/altar/materials/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q);
                 cur_box.icon.setOrigin(cur_box.icon.getLocalBounds().width / 2, cur_box.icon.getLocalBounds().height / 2);
 
                 break;
@@ -396,7 +417,7 @@ void Barracks::loadInventory()
                 cur_box.r_inner.setFillColor(sf::Color(146, 173, 217, 255));
 
                 ///look up item's icon
-                cur_box.icon.loadFromFile("resources/graphics/ui/altar/materials/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q, 1);
+                cur_box.icon.loadFromFile("resources/graphics/ui/altar/materials/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q);
                 cur_box.icon.setOrigin(cur_box.icon.getLocalBounds().width / 2, cur_box.icon.getLocalBounds().height / 2);
 
                 break;
@@ -407,7 +428,7 @@ void Barracks::loadInventory()
                 cur_box.r_inner.setFillColor(sf::Color(199, 221, 167, 255));
 
                 ///look up item's icon
-                cur_box.icon.loadFromFile("resources/graphics/ui/altar/equip/spear_1.png", q, 1);
+                cur_box.icon.loadFromFile("resources/graphics/ui/altar/equip/spear_1.png", q);
                 cur_box.icon.setOrigin(cur_box.icon.getLocalBounds().width / 2, cur_box.icon.getLocalBounds().height / 2);
 
                 break;
@@ -418,7 +439,7 @@ void Barracks::loadInventory()
                 cur_box.r_inner.setFillColor(sf::Color(199, 221, 167, 255));
 
                 ///look up item's icon
-                cur_box.icon.loadFromFile("resources/graphics/ui/altar/equip/helm_1.png", q, 1);
+                cur_box.icon.loadFromFile("resources/graphics/ui/altar/equip/helm_1.png", q);
                 cur_box.icon.setOrigin(cur_box.icon.getLocalBounds().width / 2, cur_box.icon.getLocalBounds().height / 2);
 
                 break;
@@ -523,7 +544,20 @@ void Barracks::setInventoryPosition()
 
 void Barracks::applyEquipment()
 {
+    for(int i=1; i<=6; i++)
+    {
+        Pon* currentPon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i-1);
+        InventoryData::InventoryItem eq = CoreManager::getInstance().getSaveReader()->invData.items[currentPon->slots[0]];
 
+        std::string wpn = eq.item->spritesheet+"/"+Func::num_padding(eq.item->spritesheet_id, 4);
+
+        eq = CoreManager::getInstance().getSaveReader()->invData.items[currentPon->slots[1]];
+
+        std::string hlm = eq.item->spritesheet+"/"+Func::num_padding(eq.item->spritesheet_id, 4);
+
+        barracks_units[i-1].get()->loadExtra(wpn, "weapon");
+        barracks_units[i-1].get()->loadExtra(hlm, "helm");
+    }
 }
 
 void Barracks::refreshStats()
@@ -549,11 +583,7 @@ void Barracks::refreshStats()
         }
     }
 
-    t_unit_rarepon_name.setString("");
-    t_unit_rarepon_name.addText("key~rarepon_normal");
-    t_unit_rarepon_name.addText(" ");
-    t_unit_rarepon_name.addText("key~barracks_lvl");
-    t_unit_rarepon_name.addText(" ");
+    t_unit_rarepon_name.setStringKey("rarepon_normal");
     t_unit_rarepon_name.addText(std::to_string(currentPon->pon_level));
 
     for (int i = 0; i < currentPon->slots.size(); i++)
@@ -561,7 +591,7 @@ void Barracks::refreshStats()
         if (currentPon->slots[i] >= 0)
         {
             InventoryData::InventoryItem eq = CoreManager::getInstance().getSaveReader()->invData.items[currentPon->slots[i]];
-            t_eq_names[i].setString(eq.item->item_name);
+            t_eq_names[i].setStringKey(eq.item->item_name);
             t_eq_names[i].setOrigin(0, 0);
 
             SPDLOG_TRACE("currentPon->slots[{}]: {} {}", i, currentPon->slots[i], eq.item->item_name);
@@ -728,8 +758,8 @@ void Barracks::updatePreviewText()
     {
         if (invbox_id < inventory_boxes.size())
         {
-            item_title.setString(inventory_boxes[invbox_id].data->item_name);
-            item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(CoreManager::getInstance().getStrRepo()->GetString(inventory_boxes[invbox_id].data->item_description), 340*3, font, 22)));
+            item_title.setStringKey(inventory_boxes[invbox_id].data->item_name);
+            item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(inventory_boxes[invbox_id].data->item_description, 340*3, font, 22)));
             //preview stats -L
             unit_stat_hp_v.setString(getPreviewText(inventory_boxes[invbox_id].data->equip->hp, currentPon->pon_hp, currentPon->pon_base_hp));
             unit_stat_hp_v.setColor(getPreviewColorText(inventory_boxes[invbox_id].data->equip->hp, currentPon->pon_hp, currentPon->pon_base_hp,false));
@@ -780,7 +810,13 @@ void Barracks::Update()
     int highlight_width = 225*3;
     int pon_width = 75*3;
 
-    highlighted_pon.setPosition((468*3 + (75*3 * (current_selected_pon))), 530*3);
+    for(auto& pon : barracks_units)
+    {
+        pon->setAnimation("idle_armed");
+        pon->Draw();
+    }
+
+    highlighted_pon.setPosition((388*3 + (pon_width * (current_selected_pon))), 530*3);
     highlighted_pon.draw();
 
     s_pon_highlight.setPosition(highlight_width * 2*3, 675*3);
@@ -797,7 +833,7 @@ void Barracks::Update()
     class_icon.draw();
 
     unit_status.setStringKey("barracks_unit_status");
-    unit_status.addText(" " + to_string(current_selected_pon + 1) + "/3");
+    unit_status.addText(" " + to_string(current_selected_pon + 1) + "/6");
     unit_status.setPosition(1048*3, 38*3);
 
     Pon* currentPon = new Pon;
@@ -805,11 +841,11 @@ void Barracks::Update()
     switch (currentPon->pon_class)
     {
         case 1: {
-            class_name.setString("barracks_yaripon");
+            class_name.setStringKey("barracks_yaripon");
             break;
         }
         case 2: {
-            class_name.setString("barracks_tatepon");
+            class_name.setStringKey("barracks_tatepon");
             break;
         }
     }
@@ -978,8 +1014,8 @@ void Barracks::Update()
                     float xpos = 46*3 + (grid_x * 77*3);
                     float ypos = 37*3 + (grid_y * 54*3);
 
-                    inventory_boxes[cur_item].r_outer.setPosition((40 + xpos) * res_ratio_x*3, (366 + ypos) * res_ratio_y*3);
-                    inventory_boxes[cur_item].r_inner.setPosition((40 + xpos + 2.5) * res_ratio_x*3, (366 + ypos + 2.5) * res_ratio_y*3);
+                    inventory_boxes[cur_item].r_outer.setPosition((40*3 + xpos) * res_ratio_x, (366*3 + ypos) * res_ratio_y);
+                    inventory_boxes[cur_item].r_inner.setPosition((40*3 + xpos + 2.5*3) * res_ratio_x, (366*3 + ypos + 2.5*3) * res_ratio_y);
                     window->draw(inventory_boxes[cur_item].r_outer);
                     window->draw(inventory_boxes[cur_item].r_inner);
 
@@ -1202,7 +1238,7 @@ void Barracks::Update()
 
             if (inputCtrl->isKeyPressed(Input::Keys::RIGHT))
             {
-                if (current_selected_pon < 2)
+                if (current_selected_pon < 5)
                     current_selected_pon++;
 
                 refreshStats();

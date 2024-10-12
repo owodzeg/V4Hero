@@ -44,9 +44,6 @@ Yaripon::Yaripon(int which, int maxpons)
     }
 
     gap_x = pos;
-
-    main.loadExtra("main/0014", "weapon");
-    main.loadExtra("main/0020", "helm");
 }
 
 void Yaripon::Advance()
@@ -114,9 +111,9 @@ void Yaripon::PerformAttack()
             if(main.getAnimation() == "attack_fever_throw" && main.getAnimationFrame() >= 8 && !threw)
             {
                 if(attackType == 1) // ponpon
-                    CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y-90, 1800 + (globalRand%50)*1, -1800 - (globalRand%70)*1);
+                    CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y-90, 1800 + (globalRand%50)*1, -1800 - (globalRand%70)*1, wpn);
                 if(attackType == 2) // chakachaka
-                    CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y-90, 2400 + (globalRand%50)*1, 1050 - (globalRand%70)*1);
+                    CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y-90, 2400 + (globalRand%50)*1, 1050 - (globalRand%70)*1, wpn);
                 threw = true;
             }
 
@@ -161,9 +158,9 @@ void Yaripon::PerformAttack()
             if(main.getAnimation() == "attack_prefever_focused_throw" && main.getAnimationFrame() >= 2 && !threw)
             {
                 if(attackType == 3) // ponpon
-                    CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y-90, 1600 + (globalRand%50)*1, -1500 - (globalRand%70)*1);
+                    CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y-90, 1600 + (globalRand%50)*1, -1500 - (globalRand%70)*1, wpn);
                 if(attackType == 4) // chakachaka
-                    CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y-90, 2000 + (globalRand%50)*1, -300 - (globalRand%70)*1);
+                    CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y-90, 2000 + (globalRand%50)*1, -300 - (globalRand%70)*1, wpn);
                 threw = true;
             }
 

@@ -73,11 +73,35 @@ void MissionController::LoadMission(const std::string& path)
 
     hatapons.push_back(std::make_unique<Hatapon>());
 
-    int pons = CoreManager::getInstance().getConfig()->GetInt("yaripons");
+    int pons = CoreManager::getInstance().getConfig()->GetInt("SUPER_DEBUG_SCARY_YARIPON_COUNT");
 
-    for(int i=1; i<=pons; i++)
+    if(pons == 0)
     {
-        yaripons.push_back(std::make_unique<Yaripon>(i, pons));
+        for(int i=1; i<=6; i++)
+        {
+            yaripons.push_back(std::make_unique<Yaripon>(i, 6));
+
+            Pon* currentPon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i-1);
+            InventoryData::InventoryItem eq = CoreManager::getInstance().getSaveReader()->invData.items[currentPon->slots[0]];
+
+            std::string wpn = eq.item->spritesheet+"/"+Func::num_padding(eq.item->spritesheet_id, 4);
+            yaripons.back().get()->wpn = wpn;
+
+            eq = CoreManager::getInstance().getSaveReader()->invData.items[currentPon->slots[1]];
+
+            std::string hlm = eq.item->spritesheet+"/"+Func::num_padding(eq.item->spritesheet_id, 4);
+            yaripons.back().get()->hlm = hlm;
+
+            yaripons.back().get()->main.loadExtra(wpn, "weapon");
+            yaripons.back().get()->main.loadExtra(hlm, "helm");
+        }
+    }
+    else
+    {
+        for(int i=1; i<=pons; i++)
+        {
+            yaripons.push_back(std::make_unique<Yaripon>(i, pons));
+        }
     }
 
     feverworms.push_back(std::make_unique<FeverWorm>());
@@ -178,9 +202,9 @@ void MissionController::LoadMission(const std::string& path)
     initialized = true;
 }
 
-void MissionController::SendProjectile(float x, float y, float hspeed, float vspeed)
+void MissionController::SendProjectile(float x, float y, float hspeed, float vspeed, std::string prj_tex)
 {
-    projectiles.push_back(std::make_unique<Projectile>("resources/graphics/item/textures/main/0014.png", x, y, hspeed, vspeed));
+    projectiles.push_back(std::make_unique<Projectile>("resources/graphics/item/textures/"+prj_tex+".png", x, y, hspeed, vspeed));
     SPDLOG_DEBUG("SENDING PROJECTILE AT {} {} {} {}", x, y, hspeed, vspeed);
 }
 
