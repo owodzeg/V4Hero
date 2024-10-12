@@ -46,7 +46,7 @@ public:
     float accelerationFactor = 1.5;
     float decelerationFactor = 2.5;
 
-    bool debug = true;
+    bool debug = false;
     int kirajin_hp = 200;
 
     bool inFever = false;
@@ -57,10 +57,46 @@ public:
     std::vector<std::vector<int>> dropped_ids;
     std::vector<PataDialogBox> dialogboxes;
 
+    sf::RectangleShape fade_box;
+    float fade_alpha = 0;
+
+    sf::RectangleShape fadeout_box;
+    float fadeout_alpha = 0;
+
+    sf::Clock missionEndTimer;
+    bool playJingle = false;
+
+    sf::SoundBuffer sb_win_jingle;
+    sf::SoundBuffer sb_lose_jingle;
+    sf::Sound s_jingle;
+
+    sf::SoundBuffer sb_cheer1, sb_cheer2, sb_cheer3;
+    sf::Sound s_cheer;
+    bool playCheer[3];
+
+    PSprite bar_win;
+    PSprite bar_lose;
+
+    PText t_win, t_lose;
+
+    bool missionEnd = false;
+    float textCurX = -3840;
+    float barCurX = 3840*1.5;
+    float textDestX = 1920;
+    float barDestX = 1920;
+    float textCurScale = 1;
+    float textDestScale = 1;
+    bool textBounce = false;
+
+    bool failure = false;
+    bool returnToPatapolis = false;
+
     MissionController();
     void LoadMission(const std::string& path);
     void SendProjectile(float x, float y, float hspeed, float vspeed);
     void ExecuteZoom(float speed, float time);
+    void ProcessDroppedItems();
+    void DoMissionEnd();
 
     void Update();
 

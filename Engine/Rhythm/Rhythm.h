@@ -135,6 +135,8 @@ public:
     bool started = false;
     bool played = false;
 
+    bool running = true;
+
     sf::Clock startWait;
 
     int song_channel = 0;

@@ -49,7 +49,9 @@ public:
     bool walkBack = false;
     bool performedAttack = true;
 
-    bool toggleDebug = true;
+    bool toggleDebug = false;
+    bool missionEnd = false;
+    bool failure = false;
 
     PText debugText;
 
@@ -58,6 +60,7 @@ public:
     void Attack(int power);
     void PerformAttack();
     void StopAttack();
+    void PerformMissionEnd();
     void StopAll();
     void Drum(std::string drum);
     void Draw();

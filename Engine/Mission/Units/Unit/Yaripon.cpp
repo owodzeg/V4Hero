@@ -222,6 +222,21 @@ void Yaripon::StopAll()
     walkBack = true;
 }
 
+void Yaripon::PerformMissionEnd()
+{
+    if(!failure)
+    {
+        if(main.getAnimation() != "dance_var1" && main.getAnimation() != "dance_var2" && main.getAnimation() != "dance_var3" && main.getAnimation() != "dance_var4" && main.getAnimation() != "dance_var5")
+        {
+            main.setAnimation("walk");
+        }
+    }
+    else
+    {
+        main.setAnimation("feverbroke_hold_var1");
+    }
+}
+
 void Yaripon::Drum(std::string drum)
 {
     if(!inAttackSequence && performedAttack)
@@ -239,247 +254,254 @@ void Yaripon::Draw()
 {
     float fps = CoreManager::getInstance().getCore()->getFPS();
 
-    if(!enemyInSight)
+    if(!missionEnd)
     {
-        if(inAttackSequence)
+        if(!enemyInSight)
         {
-            inAttackSequence = false;
-            StopAttack();
+            if(inAttackSequence)
+            {
+                inAttackSequence = false;
+                StopAttack();
+            }
+
+            if(attack_x != 0)
+            {
+                walkBack = true;
+            }
+
+            performedAttack = true;
         }
-
-        if(attack_x != 0)
+        else
         {
-            walkBack = true;
-        }
+            distanceToTravel = closestEnemyX - global_x - local_x - attack_x - gap_x/2;
 
-        performedAttack = true;
-    }
-    else
-    {
-        distanceToTravel = closestEnemyX - global_x - local_x - attack_x - gap_x/2;
-
-        if(action == 1 && (fabs(vspeed) < 1))
-        {
-            walkBack = false;
-            bool doAttack = false;
-
-            if(attackType == 1)
+            if(action == 1 && (fabs(vspeed) < 1))
             {
-                if(distanceToTravel < 2000 - globalRand%10*5) // too close
+                walkBack = false;
+                bool doAttack = false;
+
+                if(attackType == 1)
                 {
-                    main.setAnimation("walk_focused");
-                    pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
-                    pataSpeed -= pataCurMaxSpeed*decelerationFactor / fps;
-                    if(pataSpeed < -pataCurMaxSpeed)
-                        pataSpeed = -pataCurMaxSpeed;
-                }
-                else if (distanceToTravel > 2200 + globalRand%10*5) // too far
-                {
-                    main.setAnimation("walk_focused");
-                    pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
-                    pataSpeed += pataCurMaxSpeed*accelerationFactor / fps;
-                    if(pataSpeed > pataCurMaxSpeed)
-                        pataSpeed = pataCurMaxSpeed;
-                }
-                else
-                {
-                    if(attackWalkTimer.getElapsedTime().asMilliseconds() < 300 + 10*(globalRand%20))
+                    if(distanceToTravel < 2000 - globalRand%10*5) // too close
                     {
                         main.setAnimation("walk_focused");
-                        pataCurMaxSpeed = pataMaxSpeed / 2 / (((globalRand%5)+5) * 0.2);
-                        int neg = (((globalRand%2) - 0.5) * 2);
-                        pataSpeed += neg*pataCurMaxSpeed*accelerationFactor / fps;
-                        if(pataSpeed > pataCurMaxSpeed)
-                            pataSpeed = pataCurMaxSpeed;
+                        pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
+                        pataSpeed -= pataCurMaxSpeed*decelerationFactor / fps;
                         if(pataSpeed < -pataCurMaxSpeed)
                             pataSpeed = -pataCurMaxSpeed;
-                        //SPDLOG_DEBUG("Yaripon {} is moving. {} {} {}", order, pataCurMaxSpeed, pataSpeed, attackWalkTimer.getElapsedTime().asMilliseconds());
+                    }
+                    else if (distanceToTravel > 2200 + globalRand%10*5) // too far
+                    {
+                        main.setAnimation("walk_focused");
+                        pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
+                        pataSpeed += pataCurMaxSpeed*accelerationFactor / fps;
+                        if(pataSpeed > pataCurMaxSpeed)
+                            pataSpeed = pataCurMaxSpeed;
                     }
                     else
                     {
-                        //SPDLOG_DEBUG("ATTACK!!!!");
-                        doAttack = true;
+                        if(attackWalkTimer.getElapsedTime().asMilliseconds() < 300 + 10*(globalRand%20))
+                        {
+                            main.setAnimation("walk_focused");
+                            pataCurMaxSpeed = pataMaxSpeed / 2 / (((globalRand%5)+5) * 0.2);
+                            int neg = (((globalRand%2) - 0.5) * 2);
+                            pataSpeed += neg*pataCurMaxSpeed*accelerationFactor / fps;
+                            if(pataSpeed > pataCurMaxSpeed)
+                                pataSpeed = pataCurMaxSpeed;
+                            if(pataSpeed < -pataCurMaxSpeed)
+                                pataSpeed = -pataCurMaxSpeed;
+                            //SPDLOG_DEBUG("Yaripon {} is moving. {} {} {}", order, pataCurMaxSpeed, pataSpeed, attackWalkTimer.getElapsedTime().asMilliseconds());
+                        }
+                        else
+                        {
+                            //SPDLOG_DEBUG("ATTACK!!!!");
+                            doAttack = true;
+                        }
                     }
                 }
-            }
-            else if(attackType == 2)
-            {
-                if(distanceToTravel < 800 - globalRand%10*5)
+                else if(attackType == 2)
                 {
-                    main.setAnimation("walk_focused");
-                    pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
-                    pataSpeed -= pataCurMaxSpeed*decelerationFactor / fps;
-                    if(pataSpeed < -pataCurMaxSpeed)
-                        pataSpeed = -pataCurMaxSpeed;
-                }
-                else if (distanceToTravel > 1000 + globalRand%10*5)
-                {
-                    main.setAnimation("walk_focused");
-                    pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
-                    pataSpeed += pataCurMaxSpeed*accelerationFactor / fps;
-                    if(pataSpeed > pataCurMaxSpeed)
-                        pataSpeed = pataCurMaxSpeed;
-                }
-                else
-                {
-                    if(attackWalkTimer.getElapsedTime().asMilliseconds() < 300 + 10*(globalRand%20))
+                    if(distanceToTravel < 800 - globalRand%10*5)
                     {
                         main.setAnimation("walk_focused");
-                        pataCurMaxSpeed = pataMaxSpeed / 2 / (((globalRand%5)+5) * 0.2);
-                        int neg = (((globalRand%2) - 0.5) * 2);
-                        pataSpeed += neg*pataCurMaxSpeed*accelerationFactor / fps;
-                        if(pataSpeed > pataCurMaxSpeed)
-                            pataSpeed = pataCurMaxSpeed;
+                        pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
+                        pataSpeed -= pataCurMaxSpeed*decelerationFactor / fps;
                         if(pataSpeed < -pataCurMaxSpeed)
                             pataSpeed = -pataCurMaxSpeed;
-                        //SPDLOG_DEBUG("Yaripon {} is moving. {} {} {}", order, pataCurMaxSpeed, pataSpeed, attackWalkTimer.getElapsedTime().asMilliseconds());
+                    }
+                    else if (distanceToTravel > 1000 + globalRand%10*5)
+                    {
+                        main.setAnimation("walk_focused");
+                        pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
+                        pataSpeed += pataCurMaxSpeed*accelerationFactor / fps;
+                        if(pataSpeed > pataCurMaxSpeed)
+                            pataSpeed = pataCurMaxSpeed;
                     }
                     else
                     {
-                        //SPDLOG_DEBUG("ATTACK!!!!");
-                        doAttack = true;
+                        if(attackWalkTimer.getElapsedTime().asMilliseconds() < 300 + 10*(globalRand%20))
+                        {
+                            main.setAnimation("walk_focused");
+                            pataCurMaxSpeed = pataMaxSpeed / 2 / (((globalRand%5)+5) * 0.2);
+                            int neg = (((globalRand%2) - 0.5) * 2);
+                            pataSpeed += neg*pataCurMaxSpeed*accelerationFactor / fps;
+                            if(pataSpeed > pataCurMaxSpeed)
+                                pataSpeed = pataCurMaxSpeed;
+                            if(pataSpeed < -pataCurMaxSpeed)
+                                pataSpeed = -pataCurMaxSpeed;
+                            //SPDLOG_DEBUG("Yaripon {} is moving. {} {} {}", order, pataCurMaxSpeed, pataSpeed, attackWalkTimer.getElapsedTime().asMilliseconds());
+                        }
+                        else
+                        {
+                            //SPDLOG_DEBUG("ATTACK!!!!");
+                            doAttack = true;
+                        }
                     }
                 }
-            }
-            else if(attackType == 3)
-            {
-                if(distanceToTravel < 1400 - globalRand%10*5) // too close
+                else if(attackType == 3)
                 {
-                    main.setAnimation("walk_focused");
-                    pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
-                    pataSpeed -= pataCurMaxSpeed*decelerationFactor / fps;
-                    if(pataSpeed < -pataCurMaxSpeed)
-                        pataSpeed = -pataCurMaxSpeed;
-                }
-                else if (distanceToTravel > 1600 + globalRand%10*5) // too far
-                {
-                    main.setAnimation("walk_focused");
-                    pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
-                    pataSpeed += pataCurMaxSpeed*accelerationFactor / fps;
-                    if(pataSpeed > pataCurMaxSpeed)
-                        pataSpeed = pataCurMaxSpeed;
-                }
-                else
-                {
-                    if(attackWalkTimer.getElapsedTime().asMilliseconds() < 300 + 10*(globalRand%20))
+                    if(distanceToTravel < 1400 - globalRand%10*5) // too close
                     {
                         main.setAnimation("walk_focused");
-                        pataCurMaxSpeed = pataMaxSpeed / 2 / (((globalRand%5)+5) * 0.2);
-                        int neg = (((globalRand%2) - 0.5) * 2);
-                        pataSpeed += neg*pataCurMaxSpeed*accelerationFactor / fps;
-                        if(pataSpeed > pataCurMaxSpeed)
-                            pataSpeed = pataCurMaxSpeed;
+                        pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
+                        pataSpeed -= pataCurMaxSpeed*decelerationFactor / fps;
                         if(pataSpeed < -pataCurMaxSpeed)
                             pataSpeed = -pataCurMaxSpeed;
-                        //SPDLOG_DEBUG("Yaripon {} is moving. {} {} {}", order, pataCurMaxSpeed, pataSpeed, attackWalkTimer.getElapsedTime().asMilliseconds());
+                    }
+                    else if (distanceToTravel > 1600 + globalRand%10*5) // too far
+                    {
+                        main.setAnimation("walk_focused");
+                        pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
+                        pataSpeed += pataCurMaxSpeed*accelerationFactor / fps;
+                        if(pataSpeed > pataCurMaxSpeed)
+                            pataSpeed = pataCurMaxSpeed;
                     }
                     else
                     {
-                        //SPDLOG_DEBUG("ATTACK!!!!");
-                        doAttack = true;
+                        if(attackWalkTimer.getElapsedTime().asMilliseconds() < 300 + 10*(globalRand%20))
+                        {
+                            main.setAnimation("walk_focused");
+                            pataCurMaxSpeed = pataMaxSpeed / 2 / (((globalRand%5)+5) * 0.2);
+                            int neg = (((globalRand%2) - 0.5) * 2);
+                            pataSpeed += neg*pataCurMaxSpeed*accelerationFactor / fps;
+                            if(pataSpeed > pataCurMaxSpeed)
+                                pataSpeed = pataCurMaxSpeed;
+                            if(pataSpeed < -pataCurMaxSpeed)
+                                pataSpeed = -pataCurMaxSpeed;
+                            //SPDLOG_DEBUG("Yaripon {} is moving. {} {} {}", order, pataCurMaxSpeed, pataSpeed, attackWalkTimer.getElapsedTime().asMilliseconds());
+                        }
+                        else
+                        {
+                            //SPDLOG_DEBUG("ATTACK!!!!");
+                            doAttack = true;
+                        }
                     }
                 }
-            }
-            else if(attackType == 4)
-            {
-                if(distanceToTravel < 800 - globalRand%10*5)
+                else if(attackType == 4)
                 {
-                    main.setAnimation("walk_focused");
-                    pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
-                    pataSpeed -= pataCurMaxSpeed*decelerationFactor / fps;
-                    if(pataSpeed < -pataCurMaxSpeed)
-                        pataSpeed = -pataCurMaxSpeed;
-                }
-                else if (distanceToTravel > 1000 + globalRand%10*5)
-                {
-                    main.setAnimation("walk_focused");
-                    pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
-                    pataSpeed += pataCurMaxSpeed*accelerationFactor / fps;
-                    if(pataSpeed > pataCurMaxSpeed)
-                        pataSpeed = pataCurMaxSpeed;
-                }
-                else
-                {
-                    if(attackWalkTimer.getElapsedTime().asMilliseconds() < 300 + 10*(globalRand%20))
+                    if(distanceToTravel < 800 - globalRand%10*5)
                     {
                         main.setAnimation("walk_focused");
-                        pataCurMaxSpeed = pataMaxSpeed / 2 / (((globalRand%5)+5) * 0.2);
-                        int neg = (((globalRand%2) - 0.5) * 2);
-                        pataSpeed += neg*pataCurMaxSpeed*accelerationFactor / fps;
-                        if(pataSpeed > pataCurMaxSpeed)
-                            pataSpeed = pataCurMaxSpeed;
+                        pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
+                        pataSpeed -= pataCurMaxSpeed*decelerationFactor / fps;
                         if(pataSpeed < -pataCurMaxSpeed)
                             pataSpeed = -pataCurMaxSpeed;
-                        //SPDLOG_DEBUG("Yaripon {} is moving. {} {} {}", order, pataCurMaxSpeed, pataSpeed, attackWalkTimer.getElapsedTime().asMilliseconds());
+                    }
+                    else if (distanceToTravel > 1000 + globalRand%10*5)
+                    {
+                        main.setAnimation("walk_focused");
+                        pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
+                        pataSpeed += pataCurMaxSpeed*accelerationFactor / fps;
+                        if(pataSpeed > pataCurMaxSpeed)
+                            pataSpeed = pataCurMaxSpeed;
                     }
                     else
                     {
-                        //SPDLOG_DEBUG("ATTACK!!!!");
-                        doAttack = true;
+                        if(attackWalkTimer.getElapsedTime().asMilliseconds() < 300 + 10*(globalRand%20))
+                        {
+                            main.setAnimation("walk_focused");
+                            pataCurMaxSpeed = pataMaxSpeed / 2 / (((globalRand%5)+5) * 0.2);
+                            int neg = (((globalRand%2) - 0.5) * 2);
+                            pataSpeed += neg*pataCurMaxSpeed*accelerationFactor / fps;
+                            if(pataSpeed > pataCurMaxSpeed)
+                                pataSpeed = pataCurMaxSpeed;
+                            if(pataSpeed < -pataCurMaxSpeed)
+                                pataSpeed = -pataCurMaxSpeed;
+                            //SPDLOG_DEBUG("Yaripon {} is moving. {} {} {}", order, pataCurMaxSpeed, pataSpeed, attackWalkTimer.getElapsedTime().asMilliseconds());
+                        }
+                        else
+                        {
+                            //SPDLOG_DEBUG("ATTACK!!!!");
+                            doAttack = true;
+                        }
                     }
                 }
-            }
 
-            if(doAttack)
+                if(doAttack)
+                {
+                    pataSpeed = 0;
+                    PerformAttack();
+                }
+
+                if(fabs(vspeed) < 1)
+                    attack_x += pataSpeed / fps;
+            }
+            else if(action == 1 && fabs(vspeed) >= 1)
             {
                 pataSpeed = 0;
                 PerformAttack();
             }
-
-            if(fabs(vspeed) < 1)
-                attack_x += pataSpeed / fps;
         }
-        else if(action == 1 && fabs(vspeed) >= 1)
+
+        if(action == 0 && !walkBack)
         {
-            pataSpeed = 0;
-            PerformAttack();
+            pataSpeed *= 0.9;
         }
-    }
 
-    if(action == 0 && !walkBack)
-    {
-        pataSpeed *= 0.9;
-    }
-
-    if(action == 2)
-    {
-        walkBack = true;
-    }
-
-    if(floor(fabs(attack_x)) > 0)
-    {
-        if(walkBack && (fabs(vspeed) < 1))
+        if(action == 2)
         {
-            performedAttack = true;
-
-            pataSpeed += pataMaxSpeed*accelerationFactor / fps;
-
-            if(pataSpeed < 0)
-                pataSpeed = 0;
-
-            if(pataSpeed > pataMaxSpeed)
-                pataSpeed = pataMaxSpeed;
-
-            if(attack_x > 0)
-            {
-                attack_x -= pataSpeed / fps;
-            }
-            if(attack_x < 0)
-            {
-                attack_x += pataSpeed / fps;
-            }
-
-            if(main.getAnimation() != "pata" && main.getAnimation() != "pon" && main.getAnimation() != "don" && main.getAnimation() != "chaka")
-            if(main.getAnimation() != "pata_focused" && main.getAnimation() != "pon_focused" && main.getAnimation() != "don_focused" && main.getAnimation() != "chaka_focused")
-            {
-                main.setAnimation("walk");
-                if(enemyInSight)
-                    main.setAnimation("walk_focused");
-            }
+            walkBack = true;
         }
-    } else
+
+        if(floor(fabs(attack_x)) > 0)
+        {
+            if(walkBack && (fabs(vspeed) < 1))
+            {
+                performedAttack = true;
+
+                pataSpeed += pataMaxSpeed*accelerationFactor / fps;
+
+                if(pataSpeed < 0)
+                    pataSpeed = 0;
+
+                if(pataSpeed > pataMaxSpeed)
+                    pataSpeed = pataMaxSpeed;
+
+                if(attack_x > 0)
+                {
+                    attack_x -= pataSpeed / fps;
+                }
+                if(attack_x < 0)
+                {
+                    attack_x += pataSpeed / fps;
+                }
+
+                if(main.getAnimation() != "pata" && main.getAnimation() != "pon" && main.getAnimation() != "don" && main.getAnimation() != "chaka")
+                    if(main.getAnimation() != "pata_focused" && main.getAnimation() != "pon_focused" && main.getAnimation() != "don_focused" && main.getAnimation() != "chaka_focused")
+                    {
+                        main.setAnimation("walk");
+                        if(enemyInSight)
+                            main.setAnimation("walk_focused");
+                    }
+            }
+        } else
+        {
+            walkBack = false;
+        }
+    }
+    else
     {
-        walkBack = false;
+        PerformMissionEnd();
     }
 
     vspeed += gravity / fps;

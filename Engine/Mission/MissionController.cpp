@@ -11,6 +11,36 @@ using namespace std::chrono;
 
 MissionController::MissionController()
 {
+    int q = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
+    auto strRepo = CoreManager::getInstance().getStrRepo();
+    std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
+
+    sb_win_jingle.loadFromFile("resources/sfx/level/victory.ogg");
+    sb_lose_jingle.loadFromFile("resources/sfx/level/failure.ogg");
+
+    sb_cheer1.loadFromFile("resources/sfx/level/cheer1.ogg");
+    sb_cheer2.loadFromFile("resources/sfx/level/cheer2.ogg");
+    sb_cheer3.loadFromFile("resources/sfx/level/cheer1.ogg");
+
+
+
+    t_win.setFont(font);
+    t_win.setCharacterSize(56);
+    t_win.setStringKey("mission_complete");
+
+    t_lose.setFont(font);
+    t_lose.setCharacterSize(56);
+    t_lose.setStringKey("mission_failed");
+
+
+    t_win.setOrigin(t_win.getLocalBounds().width / 2, t_win.getLocalBounds().height / 2);
+    t_lose.setOrigin(t_lose.getLocalBounds().width / 2, t_lose.getLocalBounds().height / 2);
+
+    bar_win.loadFromFile("resources/graphics/mission/bar_win.png", q);
+    bar_lose.loadFromFile("resources/graphics/mission/bar_lose.png", q);
+
+    bar_win.setOrigin(bar_win.getLocalBounds().width / 2, bar_win.getLocalBounds().height / 2);
+    bar_lose.setOrigin(bar_lose.getLocalBounds().width / 2, bar_lose.getLocalBounds().height / 2);
 
 }
 
@@ -151,11 +181,349 @@ void MissionController::ExecuteZoom(float speed, float zoomUntil)
     }
 }
 
+void MissionController::ProcessDroppedItems()
+{
+    for(auto iid : dropped_ids)
+    {
+        CoreManager::getInstance().getSaveReader()->invData.addItem(iid, CoreManager::getInstance().getSaveReader()->itemReg, 1);
+    }
+}
+
+void MissionController::DoMissionEnd()
+{
+    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
+    float fps = CoreManager::getInstance().getCore()->getFPS();
+
+    /** Make the missionEndTimer unusable until the mission is not finished **/
+    if (!missionEnd)
+        missionEndTimer.restart();
+
+    /** Mission end cheering **/
+
+    if (missionEnd)
+    {
+        if (!failure)
+        {
+            if (missionEndTimer.getElapsedTime().asMilliseconds() >= 2500)
+            {
+                if (!playCheer[0])
+                {
+                    s_cheer.stop();
+                    s_cheer.setBuffer(sb_cheer1);
+                    s_cheer.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
+                    s_cheer.play();
+                    playCheer[0] = true;
+                }
+            }
+
+            if (missionEndTimer.getElapsedTime().asMilliseconds() >= 4500)
+            {
+                if (!playCheer[1])
+                {
+                    s_cheer.stop();
+                    s_cheer.setBuffer(sb_cheer2);
+                    s_cheer.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
+                    s_cheer.play();
+                    playCheer[1] = true;
+                }
+            }
+
+            if (missionEndTimer.getElapsedTime().asMilliseconds() >= 6500)
+            {
+                if (!playCheer[2])
+                {
+                    s_cheer.stop();
+                    s_cheer.setBuffer(sb_cheer3);
+                    s_cheer.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
+                    s_cheer.play();
+                    playCheer[2] = true;
+                }
+            }
+
+            if (missionEndTimer.getElapsedTime().asMilliseconds() >= 8000)
+            {
+                if (!playJingle)
+                {
+                    s_jingle.setBuffer(sb_win_jingle);
+                    s_jingle.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
+                    s_jingle.play();
+                    playJingle = true;
+                }
+            }
+        } else
+        {
+            if (!playJingle)
+            {
+                s_jingle.setBuffer(sb_lose_jingle);
+                s_jingle.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
+                s_jingle.play();
+                playJingle = true;
+            }
+        }
+    }
+
+    if(!failure)
+    {
+        hatapons.back().get()->Wave();
+
+        for(auto& yaripon : yaripons)
+        {
+            yaripon->Advance();
+        }
+
+        advance = true;
+    }
+
+    /** Make the camera follow Patapons until the jingle is played **/
+
+    if (missionEndTimer.getElapsedTime().asMilliseconds() < 7700)
+    {
+        float leftmostPataX = 99999999;
+        float rightmostPataX = -99999999;
+
+        for(auto& p : hatapons)
+        {
+            float pos = p->global_x+p->local_x;
+            if(pos < leftmostPataX)
+                leftmostPataX = pos;
+            if(pos > rightmostPataX)
+                rightmostPataX = pos;
+        }
+
+        for(auto& p : yaripons)
+        {
+            float pos = p->global_x+p->local_x+p->attack_x+p->gap_x;
+            if(pos < leftmostPataX)
+                leftmostPataX = pos;
+            if(pos > rightmostPataX)
+                rightmostPataX = pos;
+        }
+
+        cam.followobject_x = ((leftmostPataX + rightmostPataX - 300) / 2) * (window->getSize().x / float(3840));
+
+    }
+
+    /** Mission fade in and fade out **/
+
+    if (!missionEnd)
+    {
+        if (fade_alpha > 0)
+        {
+            fade_alpha -= float(500) / fps;
+        }
+
+        if (fade_alpha <= 0)
+        {
+            fade_alpha = 0;
+        }
+    } else
+    {
+        if (!failure)
+        {
+            if (missionEndTimer.getElapsedTime().asMilliseconds() >= 11000)
+            {
+                if (fade_alpha < 255)
+                {
+                    fade_alpha += float(250) / fps;
+                }
+
+                if (fade_alpha >= 255)
+                {
+                    fade_alpha = 255;
+                }
+            }
+        } else
+        {
+            if (missionEndTimer.getElapsedTime().asMilliseconds() >= 10000)
+            {
+                if (fade_alpha < 255)
+                {
+                    fade_alpha += float(250) / fps;
+                }
+
+                if (fade_alpha >= 255)
+                {
+                    fade_alpha = 255;
+                }
+            }
+        }
+    }
+
+    auto v = window->getView();
+    window->setView(window->getDefaultView());
+
+    fade_box.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
+    fade_box.setFillColor(sf::Color(0, 0, 0, fade_alpha));
+    window->draw(fade_box);
+
+    /** Mission end event (Mission complete/Mission failed screen + transition to Patapolis **/
+
+    if (!failure) ///Victory
+    {
+        if (missionEndTimer.getElapsedTime().asMilliseconds() >= 11500)
+        {
+            if (!textBounce)
+            {
+                if (missionEndTimer.getElapsedTime().asMilliseconds() >= 13050)
+                {
+                    textCurScale = 1.4;
+                    textBounce = true;
+                }
+            }
+
+            t_win.setOrigin(t_win.getLocalBounds().width / 2, t_win.getLocalBounds().height / 2);
+
+            if (barCurX > barDestX)
+            {
+                barCurX -= (abs(barCurX - barDestX) * 5) / fps;
+            } else
+            {
+                barCurX = barDestX;
+            }
+
+            if (textCurX < textDestX)
+            {
+                textCurX += (abs(textCurX - textDestX) * 5) / fps;
+            } else
+            {
+                textCurX = textDestX;
+            }
+            if (textCurScale > textDestScale)
+            {
+                textCurScale -= (abs(textCurScale - textDestScale) * 5) / fps;
+            } else
+            {
+                textCurScale = textDestScale;
+            }
+
+            t_win.setScale(textCurScale);
+
+            SPDLOG_INFO("textCurX: {}, textY: {}", textCurX - 21, 1080-42);
+
+            bar_win.setPosition(barCurX, 1080);
+            t_win.setPosition(textCurX, 1080);
+            //t_win_outline.setPosition(textCurX + 6, 1080 - 12);
+
+            bar_win.draw();
+            //t_win_outline.draw();
+            t_win.draw();
+
+            if (missionEndTimer.getElapsedTime().asMilliseconds() >= 17000)
+            {
+                if (fadeout_alpha < 255)
+                {
+                    fadeout_alpha += float(250) / fps;
+                }
+
+                if (fadeout_alpha >= 255)
+                {
+                    fadeout_alpha = 255;
+                }
+
+                fadeout_box.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
+                fadeout_box.setFillColor(sf::Color(0, 0, 0, fadeout_alpha));
+                window->draw(fadeout_box);
+            }
+
+            if (missionEndTimer.getElapsedTime().asMilliseconds() > 19000)
+            {
+                SPDLOG_INFO("End mission");
+
+                //StopMission();
+
+                SPDLOG_INFO("Add the picked up items to item repository");
+                ProcessDroppedItems();
+                //submitPickedItems();
+                //updateMissions();
+                //ClearMissionMemory();
+
+                SPDLOG_INFO("Go to Patapolis");
+                returnToPatapolis = true;
+            }
+        }
+    } else ///Failure
+    {
+        if (missionEndTimer.getElapsedTime().asMilliseconds() >= 2500)
+        {
+            if (fade_alpha < 255)
+            {
+                fade_alpha += float(250) / fps;
+            }
+
+            if (fade_alpha >= 255)
+            {
+                fade_alpha = 255;
+            }
+
+            t_lose.setOrigin(t_lose.getLocalBounds().width / 2, t_lose.getLocalBounds().height / 2);
+
+            if (barCurX > barDestX)
+            {
+                barCurX -= (abs(barCurX - barDestX) * 5) / fps;
+            } else
+            {
+                barCurX = barDestX;
+            }
+
+            if (textCurX < textDestX)
+            {
+                textCurX += (abs(textCurX - textDestX) * 5) / fps;
+            } else
+            {
+                textCurX = textDestX;
+            }
+
+            t_lose.setScale(textCurScale);
+
+            bar_lose.setPosition(barCurX, 1080);
+            t_lose.setPosition(textCurX - 21, 1080 - 42);
+
+            bar_lose.draw();
+            t_lose.draw();
+
+            if (missionEndTimer.getElapsedTime().asMilliseconds() >= 6000)
+            {
+                if (fadeout_alpha < 255)
+                {
+                    fadeout_alpha += float(250) / fps;
+                }
+
+                if (fadeout_alpha >= 255)
+                {
+                    fadeout_alpha = 255;
+                }
+
+                fadeout_box.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
+                fadeout_box.setFillColor(sf::Color(0, 0, 0, fadeout_alpha));
+                window->draw(fadeout_box);
+            }
+
+            if (missionEndTimer.getElapsedTime().asMilliseconds() >= 8000)
+            {
+                /** End flag executes the mission victory code, so mission failed code needs to be executed separately here. **/
+
+                SPDLOG_INFO("End mission");
+
+                //StopMission();
+                //ClearMissionMemory();
+
+                SPDLOG_INFO("Go to Patapolis");
+                returnToPatapolis = true;
+            }
+        }
+    }
+
+    window->setView(v);
+}
+
 void MissionController::Update()
 {
     Rhythm* rhythm = CoreManager::getInstance().getRhythm();
     RhythmGUI* rhythmGUI = CoreManager::getInstance().getRhythmGUI();
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
+
+    auto strRepo = CoreManager::getInstance().getStrRepo();
+    std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
     float fps = CoreManager::getInstance().getCore()->getFPS();
 
@@ -346,6 +714,8 @@ void MissionController::Update()
         pon->global_y = 1740 + cam.zoom_y / zoom_offset; // ,/0.511 dla 720p ,/ 1.533 dla 2160p
         pon->closestEnemyX = closest;
         pon->enemyInSight = yari_inSight;
+        pon->missionEnd = missionEnd;
+        pon->failure = failure;
     }
 
     for(auto& entity : entities)
@@ -443,10 +813,13 @@ void MissionController::Update()
         }
     }
 
-    if(yari_inSight)
-        cam.followobject_x = ((leftmostPataX + closest - 1800) / 2) * resRatioX;
-    else
-        cam.followobject_x = ((leftmostPataX + rightmostPataX - 300) / 2) * resRatioX;
+    if(!missionEnd)
+    {
+        if(yari_inSight)
+            cam.followobject_x = ((leftmostPataX + closest - 1800) / 2) * resRatioX;
+        else
+            cam.followobject_x = ((leftmostPataX + rightmostPataX - 300) / 2) * resRatioX;
+    }
 
     cam.Work(mission_view);
     bg.pataSpeed = pataMaxSpeed;
@@ -503,20 +876,6 @@ void MissionController::Update()
 
         di->off_y = cam.zoom_y / zoom_offset;
         di->Draw();
-    }
-
-    if(inputCtrl->isKeyPressed(Input::Keys::UP))
-    {
-        rhythmGUI->toggleDebugUI();
-        for(auto& pon : yaripons)
-        {
-            pon->toggleDebug = !pon->toggleDebug;
-        }
-        for(auto& entity : entities)
-        {
-            entity->toggleDebug = !entity->toggleDebug;
-        }
-        debug = !debug;
     }
 
     bg.DrawFloor();
@@ -643,8 +1002,38 @@ void MissionController::Update()
 
     rhythmGUI->doVisuals(0, rhythm->GetCombo());
 
-    if(dialogboxes.size() > 0)
+    if (!missionEnd)
     {
+        if (inputCtrl->isKeyPressed(Input::Keys::SELECT))
+        {
+            std::vector<sf::String> a = {"Show hitboxes", "Hide hitboxes", "Heal units", "Kill all player units", "Kill Hatapon", "Enable verbose logging", "Mission complete", "Toggle rhythm debug UI", "Toggle song debug"};
+
+            PataDialogBox db;
+            db.Create(font, "Debug menu", a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"), 3);
+            db.id = 999;
+            dialogboxes.push_back(db);
+        }
+
+        if (inputCtrl->isKeyPressed(Input::Keys::START))
+        {
+            std::vector<sf::String> a = {"nav_yes", "nav_no"};
+
+            PataDialogBox db;
+            db.Create(font, "mission_backtopatapolis", a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
+            dialogboxes.push_back(db);
+        }
+    }
+
+    if(missionEnd)
+        DoMissionEnd();
+
+    inputCtrl->lockRhythm = false;
+
+    SPDLOG_TRACE("Handle dialog boxes");
+    if (dialogboxes.size() > 0)
+    {
+        inputCtrl->lockRhythm = true;
+
         if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
         {
             switch (dialogboxes[dialogboxes.size() - 1].CheckSelectedOption())
@@ -652,26 +1041,183 @@ void MissionController::Update()
                 case 0: {
                     if (dialogboxes[dialogboxes.size() - 1].id == 0)
                     {
-                        SPDLOG_INFO("Starting new game!");
+                        SPDLOG_DEBUG("Return to Patapolis");
                         dialogboxes[dialogboxes.size() - 1].Close();
 
-                        CoreManager::getInstance().getCore()->close_window = true;
+                        missionEnd = true;
+                        failure = true;
+                        rhythm->Stop();
+                        missionEndTimer.restart();
+                    } else if (dialogboxes[dialogboxes.size() - 1].id == 999)
+                    {
+                        SPDLOG_DEBUG("Enable hitboxes");
 
-                        break;
+                        for(auto& pon : yaripons)
+                        {
+                            pon->toggleDebug = !pon->toggleDebug;
+                        }
+                        for(auto& entity : entities)
+                        {
+                            entity->toggleDebug = !entity->toggleDebug;
+                        }
+                        debug = !debug;
+
+                        dialogboxes[dialogboxes.size() - 1].Close();
                     }
+
+                    break;
+                }
+
+                case 1: {
+                    if (dialogboxes[dialogboxes.size() - 1].id == 0)
+                    {
+                        SPDLOG_DEBUG("Back to mission");
+                        dialogboxes[dialogboxes.size() - 1].Close();
+                    } else if (dialogboxes[dialogboxes.size() - 1].id == 999)
+                    {
+                        SPDLOG_DEBUG("Disable hitboxes");
+
+                        for(auto& pon : yaripons)
+                        {
+                            pon->toggleDebug = !pon->toggleDebug;
+                        }
+                        for(auto& entity : entities)
+                        {
+                            entity->toggleDebug = !entity->toggleDebug;
+                        }
+                        debug = !debug;
+
+                        dialogboxes[dialogboxes.size() - 1].Close();
+                    }
+
+                    break;
+                }
+
+                case 2: {
+                    if (dialogboxes[dialogboxes.size() - 1].id == 999)
+                    {
+                        SPDLOG_DEBUG("Heal all units");
+                        //for (int u = 0; u < units.size(); u++)
+                        //{
+                        //    units[u].get()->current_hp = units[u].get()->max_hp;
+                        //}
+
+                        dialogboxes[dialogboxes.size() - 1].Close();
+                    }
+
+                    break;
+                }
+
+                case 3: {
+                    if (dialogboxes[dialogboxes.size() - 1].id == 999)
+                    {
+                        SPDLOG_DEBUG("Kill all player units");
+                        //for (int u = 0; u < units.size(); u++)
+                        //{
+                        //    if (units[u].get()->getUnitID() == 1)
+                        //    units[u].get()->current_hp = 0;
+                        //}
+
+                        dialogboxes[dialogboxes.size() - 1].Close();
+                    }
+
+                    break;
+                }
+
+                case 4: {
+                    if (dialogboxes[dialogboxes.size() - 1].id == 999)
+                    {
+                        SPDLOG_DEBUG("Kill Hatapon");
+                        //for (int u = 0; u < units.size(); u++)
+                        //{
+                        //    if (units[u].get()->getUnitID() == 0)
+                        //        units[u].get()->current_hp = 0;
+                        //}
+
+                        dialogboxes[dialogboxes.size() - 1].Close();
+                    }
+
+                    break;
+                }
+
+                case 5: {
+                    if (dialogboxes[dialogboxes.size() - 1].id == 999)
+                    {
+                        SPDLOG_DEBUG("Deprecated: verbose logging");
+                        //verboseLogs = !verboseLogs;
+                        dialogboxes[dialogboxes.size() - 1].Close();
+                    }
+
+                    break;
+                }
+
+                case 6: {
+                    if (dialogboxes[dialogboxes.size() - 1].id == 999)
+                    {
+                        SPDLOG_DEBUG("Mission complete");
+
+                        missionEnd = true;
+                        rhythm->Stop();
+                        missionEndTimer.restart();
+
+                        dialogboxes[dialogboxes.size() - 1].Close();
+                    }
+
+                    break;
+                }
+
+                case 7: {
+                    if (dialogboxes[dialogboxes.size() - 1].id == 999)
+                    {
+                        SPDLOG_DEBUG("Toggle rhythm debug");
+
+                        CoreManager::getInstance().getRhythmGUI()->toggleDebugUI();
+                        
+                        dialogboxes[dialogboxes.size() - 1].Close();
+                    }
+
+                    break;
+                }
+
+                case 8: {
+                    if (dialogboxes[dialogboxes.size() - 1].id == 999)
+                    {
+                        SPDLOG_DEBUG("Toggle song debug");
+
+                        CoreManager::getInstance().getRhythm()->toggleDebug();
+                        
+                        dialogboxes[dialogboxes.size() - 1].Close();
+                    }
+
+                    break;
                 }
             }
         }
     }
+
+    vector<int> db_e; ///dialog box erase
 
     for (int i = 0; i < dialogboxes.size(); i++)
     {
         dialogboxes[i].x = 1920;
         dialogboxes[i].y = 1080;
         dialogboxes[i].Draw();
+
+        if (dialogboxes[i].closed)
+            db_e.push_back(i);
+    }
+
+    for (int i = 0; i < db_e.size(); i++)
+    {
+        dialogboxes.erase(dialogboxes.begin() + db_e[i] - i);
     }
 
     CoreManager::getInstance().getWindow()->setView(lastView);
+
+    if (returnToPatapolis)
+    {
+        StateManager::getInstance().setState(StateManager::PATAPOLIS);
+    }
 }
 
 MissionController::~MissionController()

@@ -164,8 +164,8 @@ menu_languagetip|Translations are here thanks to our wonderful contributors.
 menu_languagetip2|Want to help? Click here to visit the Patafour website for more information.
 menu_controlleradvice|Controller is recommended for best game experience.
 mission_backtopatapolis|Do you want to go back to Patapolis?{n}All materials and Ka-ching will be lost.
-mission_complete|MISSION COMPLETE!
-mission_failed|MISSION FAILED!
+mission_complete|{color 222 83 0}{outline 4 255 171 0}MISSION COMPLETE!
+mission_failed|{color 138 15 26}{outline 4 254 48 55}MISSION FAILED!
 nav_agree|Agree
 nav_attack|Attack
 nav_cancel|Cancel
