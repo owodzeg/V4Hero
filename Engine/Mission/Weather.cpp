@@ -131,7 +131,7 @@ void Weather::draw(sf::RenderWindow& window, float fps)
         if ((snowflakes[i].x > 1320) || (snowflakes[i].y > 800))
             s_rm.push_back(i);
 
-        snowflakes[i].flake.draw(window);
+        snowflakes[i].flake.draw();
     }
 
     for (int i = 0; i < raindrops.size(); i++)

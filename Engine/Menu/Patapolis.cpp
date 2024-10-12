@@ -58,7 +58,7 @@ PatapolisMenu::PatapolisMenu()
 
             sf::Vector2f tmp_vector2;
 
-            tmp_vector2.x = 3840 * resRatioX;
+            tmp_vector2.x = 4000 * resRatioX;
             tmp_vector2.y = atof(tmp[0].c_str()) * resRatioY;
 
             if (tmp[0] == "-1")
@@ -902,7 +902,7 @@ void PatapolisMenu::Update()
             cloud.setPosition(clouds_A[i].x, clouds_A[i].y);
             cloud.lx = clouds_A[i].x - (camPos / 1.3);
             cloud.ly = clouds_A[i].y;
-            cloud.draw(window);
+            cloud.draw();
         }
 
         for (int i = 0; i < clouds_B.size(); i++)
@@ -917,7 +917,7 @@ void PatapolisMenu::Update()
         PSprite& rainbow = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/rainbow.png");
         rainbow.setOrigin(0, rainbow.getLocalBounds().height);
         rainbow.setPosition(9000*3 - (camPos / 1.3), 592*3);
-        rainbow.draw(window);
+        rainbow.draw();
 
         for (int i = 0; i < 4; i++)
         {
@@ -927,7 +927,7 @@ void PatapolisMenu::Update()
             b_layer.setPosition(back_pos[i], 715*3);
 
             b_layer.lx = b_layer.baseX - (camPos / 1.3);
-            b_layer.draw(window);
+            b_layer.draw();
         }
 
         for (int i = 0; i < layer_6.size(); i++)
@@ -935,7 +935,7 @@ void PatapolisMenu::Update()
             ps_layer_6[layer_6[i].type].setPosition(layer_6[i].x, layer_6[i].y);
             ps_layer_6[layer_6[i].type].lx = layer_6[i].x - (camPos / 1.1428571428571428571428571428571);
             ps_layer_6[layer_6[i].type].setOrigin(ps_layer_6[layer_6[i].type].getLocalBounds().width / 2, ps_layer_6[layer_6[i].type].getLocalBounds().height);
-            ps_layer_6[layer_6[i].type].draw(window);
+            ps_layer_6[layer_6[i].type].draw();
         }
 
         PSprite& L5 = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/5.png");
@@ -957,8 +957,8 @@ void PatapolisMenu::Update()
         L5.setOrigin(L5.getLocalBounds().width / 2, L5.getLocalBounds().height);
         L4.setOrigin(L4.getLocalBounds().width / 2, L4.getLocalBounds().height);
 
-        L5.draw(window);
-        L4.draw(window);
+        L5.draw();
+        L4.draw();
 
 
         for (int i = 0; i < layer_2.size(); i++)
@@ -973,7 +973,7 @@ void PatapolisMenu::Update()
             ps_layer_2[layer_2[i].type].setPosition(layer_2[i].x, layer_2[i].y);
             ps_layer_2[layer_2[i].type].lx = layer_2[i].x - camPos;
             ps_layer_2[layer_2[i].type].setOrigin(ps_layer_2[layer_2[i].type].getLocalBounds().width / 2, ps_layer_2[layer_2[i].type].getLocalBounds().height);
-            ps_layer_2[layer_2[i].type].draw(window);
+            ps_layer_2[layer_2[i].type].draw();
         }
 
         float resRatioX = window->getSize().x / float(3840);
@@ -1000,14 +1000,14 @@ void PatapolisMenu::Update()
             glow.setScale(1.05 + (cos(fires[i].glowsize * 3.141592 / 180) / 10));
             glow.setPosition(fires[i].baseX - camPos, fires[i].baseY);
 
-            glow.draw(window);
+            glow.draw();
 
             PSprite& fire = ResourceManager::getInstance().getSprite(fires[i].fire[id]);
 
             fire.setOrigin(fire.getLocalBounds().width / 2, fire.getLocalBounds().height / 2);
             fire.setPosition(fires[i].baseX - camPos, fires[i].baseY);
 
-            fire.draw(window);
+            fire.draw();
         }
 
         //cout << "for: " << endl;
@@ -1026,7 +1026,7 @@ void PatapolisMenu::Update()
                     barracks.setPosition(640*3, 765*3 - floor_height);
                     barracks.setOrigin(barracks.getLocalBounds().width / 2, barracks.getLocalBounds().height);
                     barracks.lx = barracks.baseX - camPos;
-                    barracks.draw(window);
+                    barracks.draw();
                     break;
                 }
 
@@ -1080,16 +1080,16 @@ void PatapolisMenu::Update()
                     glow.setScale(1.05 + (cos(forge_big.glowsize * 3.141592 / 180) / 10));
                     glow.setPosition(forge_big.baseX - camPos, forge_big.baseY);
 
-                    glow.draw(window);
+                    glow.draw();
 
                     PSprite& fire = ResourceManager::getInstance().getSprite(forge_big.fire[id]);
 
                     fire.setOrigin(fire.getLocalBounds().width / 2, fire.getLocalBounds().height / 2);
                     fire.setPosition(forge_big.baseX - camPos, forge_big.baseY);
 
-                    fire.draw(window);
+                    fire.draw();
 
-                    forge_back.draw(window);
+                    forge_back.draw();
 
                     forge_glowsize += float(90) / fps;
 
@@ -1098,7 +1098,7 @@ void PatapolisMenu::Update()
 
                     forge_glow.setOrigin(forge_glow.getLocalBounds().width / 2, forge_glow.getLocalBounds().height / 2);
                     forge_glow.setScale(1.05 + (cos(forge_glowsize * 3.141592 / 180) / 10));
-                    forge_glow.draw(window);
+                    forge_glow.draw();
 
                     forge_purple.id += float(12) / fps;
 
@@ -1118,24 +1118,24 @@ void PatapolisMenu::Update()
                     glow2.setScale(1.05 + (cos(forge_purple.glowsize * 3.141592 / 180) / 10));
                     glow2.setPosition(forge_purple.baseX - camPos, forge_purple.baseY);
 
-                    glow2.draw(window);
+                    glow2.draw();
 
                     PSprite& fire2 = ResourceManager::getInstance().getSprite(forge_purple.fire[id]);
 
                     fire2.setOrigin(fire2.getLocalBounds().width / 2, fire2.getLocalBounds().height / 2);
                     fire2.setPosition(forge_purple.baseX - camPos, forge_purple.baseY);
 
-                    fire2.draw(window);
+                    fire2.draw();
 
                     forge_slab_glow.setOrigin(forge_slab_glow.getLocalBounds().width / 2, forge_slab_glow.getLocalBounds().height / 2);
                     forge_slab_glow.setScale(1.05 + (cos(forge_glowsize * 3.141592 / 180) / 10));
-                    forge_slab_glow.draw(window);
+                    forge_slab_glow.draw();
 
-                    forge_main.draw(window);
+                    forge_main.draw();
 
-                    forge_slab.draw(window);
+                    forge_slab.draw();
 
-                    forge_fence.draw(window);
+                    forge_fence.draw();
                     break;
                 }
 
@@ -1146,7 +1146,7 @@ void PatapolisMenu::Update()
                     market.setPosition(3960*3, 728*3 - floor_height);
                     market.setOrigin(market.getLocalBounds().width / 2, market.getLocalBounds().height);
                     market.lx = market.baseX - camPos;
-                    market.draw(window);
+                    market.draw();
                     break;
                 }
 
@@ -1156,7 +1156,7 @@ void PatapolisMenu::Update()
                     mater.setPosition(9340*3, 728*3 - floor_height);
                     mater.setOrigin(mater.getLocalBounds().width / 2, mater.getLocalBounds().height);
                     mater.lx = mater.baseX - camPos;
-                    mater.draw(window);
+                    mater.draw();
                     break;
                 }
 
@@ -1191,9 +1191,9 @@ void PatapolisMenu::Update()
                     paraget_crystal_glow.ly = paraget_crystal.baseY + sin(crystal_y * 3.141592 / 180) * 10;
 
                     paraget_crystal_glow.setScale(1.05 + (cos(crystal_y2 * 3.141592 / 180) / 10));
-                    paraget_crystal_glow.draw(window);
-                    paraget_main.draw(window);
-                    paraget_crystal.draw(window);
+                    paraget_crystal_glow.draw();
+                    paraget_main.draw();
+                    paraget_crystal.draw();
 
                     for (int i = 0; i < paraget_sparkles.size(); i++)
                     {
@@ -1234,7 +1234,7 @@ void PatapolisMenu::Update()
                         sprk.setScale(paraget_sparkles[i].curScale);
                         sprk.setOrigin(sprk.getLocalBounds().width / 2, sprk.getLocalBounds().height / 2);
                         sprk.setPosition(paraget_sparkles[i].x, paraget_sparkles[i].y);
-                        sprk.draw(window);
+                        sprk.draw();
                     }
 
                     break;
@@ -1246,7 +1246,7 @@ void PatapolisMenu::Update()
                     obelisk.setPosition(8300*3, 722*3 - floor_height);
                     obelisk.setOrigin(obelisk.getLocalBounds().width / 2, obelisk.getLocalBounds().height);
                     obelisk.lx = obelisk.baseX - camPos;
-                    obelisk.draw(window);
+                    obelisk.draw();
                     break;
                 }
             }
@@ -1257,14 +1257,14 @@ void PatapolisMenu::Update()
         festival_main.setPosition(5620*3, 721*3 - floor_height);
         festival_main.setOrigin(festival_main.getLocalBounds().width / 2, festival_main.getLocalBounds().height);
         festival_main.lx = festival_main.baseX - camPos;
-        festival_main.draw(window);
+        festival_main.draw();
 
         /// Altar
         PSprite& altar = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/altar.png");
         altar.setPosition(7280*3, 720*3 - floor_height);
         altar.setOrigin(altar.getLocalBounds().width / 2, altar.getLocalBounds().height);
         altar.lx = altar.baseX - camPos;
-        altar.draw(window);
+        altar.draw();
 
         /// Smoke
         smokepath1 += 40.f / fps;
@@ -1295,7 +1295,7 @@ void PatapolisMenu::Update()
             p_smoke.setPosition(smoke[i].x, smoke[i].y);
             p_smoke.setColor(sf::Color(255, 255, 255, smoke[i].alpha));
             p_smoke.setScale(smoke[i].curScale);
-            p_smoke.draw(window);
+            p_smoke.draw();
 
             if (smoke[i].alpha <= 0)
             {
@@ -1314,7 +1314,7 @@ void PatapolisMenu::Update()
         PSprite& edge = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/edge.png");
         edge.setOrigin(0, edge.getLocalBounds().height);
         edge.setPosition(floor_x + 11500*3, 720*3);
-        edge.draw(window);
+        edge.draw();
 
         /// Remaining sparkles
         for (int i = 0; i < sparkles.size(); i++)
@@ -1355,7 +1355,7 @@ void PatapolisMenu::Update()
             sprk.setScale(sparkles[i].curScale);
             sprk.setOrigin(sprk.getLocalBounds().width / 2, sprk.getLocalBounds().height / 2);
             sprk.setPosition(sparkles[i].x, sparkles[i].y);
-            sprk.draw(window);
+            sprk.draw();
         }
 
         /// Egg light and light rays
@@ -1367,21 +1367,21 @@ void PatapolisMenu::Update()
         light_1.setOrigin(light_1.getLocalBounds().width / 2, light_1.getLocalBounds().height / 2);
         light_1.lx = light_1.baseX - camPos;
         light_1.setScale(0.9 + scale);
-        light_1.draw(window);
+        light_1.draw();
 
         PSprite& light_2 = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/light.png");
         light_2.setPosition(12720*3, 161*3);
         light_2.setOrigin(light_2.getLocalBounds().width / 2, light_2.getLocalBounds().height / 2);
         light_2.lx = light_2.baseX - camPos;
         light_2.setScale(0.9 + scale);
-        light_2.draw(window);
+        light_2.draw();
 
         PSprite& egg_light = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/egg_light.png");
         egg_light.setPosition(12217*3, 288*3);
         egg_light.setOrigin(egg_light.getLocalBounds().width / 2, egg_light.getLocalBounds().height / 2);
         egg_light.lx = egg_light.baseX - camPos;
         egg_light.setScale(0.9 + scale);
-        egg_light.draw(window);
+        egg_light.draw();
 
         for (int i = 0; i < lightrays.size(); i++)
         {
@@ -1426,7 +1426,7 @@ void PatapolisMenu::Update()
         PSprite& bridge = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/bridge.png");
         bridge.setOrigin(0, bridge.getLocalBounds().height); // could consider not drawing this + wakapon unless player camera is close
         bridge.setPosition(floor_x + 11200*3, 720*3);
-        bridge.draw(window);
+        bridge.draw();
 
         /// Wakapon
         a_wakapon.Draw();
@@ -1438,7 +1438,7 @@ void PatapolisMenu::Update()
         world_egg.setPosition(12215*3, 462*3);
         world_egg.setOrigin(world_egg.getLocalBounds().width / 2, world_egg.getLocalBounds().height);
         world_egg.lx = world_egg.baseX - camPos;
-        world_egg.draw(window);
+        world_egg.draw();
 
         //TO-DO: replace with something else probably core manager blabla
         /* if (barracks_menu.mission_started)

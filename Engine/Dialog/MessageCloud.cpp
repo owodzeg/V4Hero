@@ -76,7 +76,7 @@ void MessageCloud::AddDialog(sf::String text, bool nextdialog)
     // here i dont think we need to use more than one ptext anymore
     // just push the new dialogues into a vector of sf::Strings and let PText parse it :)
 
-    SPDLOG_DEBUG("MessageCloud::AddDialog()");
+    SPDLOG_DEBUG("MessageCloud::AddDialog(): {}, nextdialog?: {}", std::string(text), nextdialog);
 
     dialogue_strings.push_back(text);
     next_dialog.push_back(nextdialog);
@@ -318,9 +318,9 @@ void MessageCloud::Draw()
 
                 cross_highlight.setColor(sf::Color(255, 255, 255, 240 + (arrow_y * 8)));
 
-                cross.draw(window);
-                cross_highlight.draw(window);
-                cross_arrow.draw(window);
+                cross.draw();
+                cross_highlight.draw();
+                cross_arrow.draw();
             }
         }
 

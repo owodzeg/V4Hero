@@ -41,8 +41,8 @@ public:
     sf::FloatRect getGlobalBoundsScaled();
     void setScale(float ss);
     void setSmooth(bool smooth);
-    void draw(sf::RenderWindow& window);
-    void draw(sf::RenderWindow* window);
+    //void draw(sf::RenderWindow& window);
+    //void draw(sf::RenderWindow* window);
     void drawShader(sf::RenderWindow* window, sf::Shader& shader);
     void draw();
     void update(sf::RenderWindow& window);

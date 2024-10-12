@@ -765,7 +765,7 @@ void PText::draw(bool noRender)
         }
     }
 
-    if (rendered && !noRender)
+    if (rendered)
         window->draw(t);
 
     if (!rendered)

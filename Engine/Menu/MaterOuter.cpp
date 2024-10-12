@@ -178,12 +178,12 @@ void MaterOuterMenu::DrawAsleepSquad(MaterOuterMenu::SquadBox& squad, int squad_
     bg.setOrigin(bg.getLocalBounds().width / 2, bg.getLocalBounds().height / 2);
     bg.setPosition(990, squad.y);
     bg.setColor(sf::Color(255, 255, 255, squad_alpha));
-    bg.draw(window);
+    bg.draw();
 
     icon.setOrigin(icon.getLocalBounds().width / 2, icon.getLocalBounds().height / 2);
     icon.setPosition(745, squad.y-32);
     icon.setColor(sf::Color(255, 255, 255, squad_alpha));
-    icon.draw(window);
+    icon.draw();
 
     squad_title.setString(squad.title);
     squad_title.setOrigin(squad_title.getLocalBounds().width / 2, squad_title.getLocalBounds().height / 2);
@@ -202,11 +202,11 @@ void MaterOuterMenu::DrawAsleepSquad(MaterOuterMenu::SquadBox& squad, int squad_
         if (j < squad.amount)
         {
             pon.setPosition(850 + j * 73, squad.y + 15);
-            pon.draw(window);
+            pon.draw();
         } else
         {
             slot.setPosition(850 + j * 73, squad.y + 15);
-            slot.draw(window);
+            slot.draw();
         }
     }
 }
@@ -245,7 +245,7 @@ void MaterOuterMenu::Update()
         mater_main.setOrigin(mater_main.getLocalBounds().width / 2, mater_main.getLocalBounds().height / 2);
         mater_main.setPosition(1050, 322);
 
-        mater_main.draw(window);
+        mater_main.draw();
 
         mater_title.setOrigin(mater_title.getLocalBounds().width / 2, mater_title.getLocalBounds().height / 2);
         altar_kaching.setOrigin(altar_kaching.getLocalBounds().width / 2, altar_kaching.getLocalBounds().height / 2);
@@ -308,11 +308,11 @@ void MaterOuterMenu::Update()
 
         bg.setOrigin(bg.getLocalBounds().width / 2, bg.getLocalBounds().height / 2);
         bg.setPosition(990, squad.y);
-        bg.draw(window);
+        bg.draw();
 
         icon.setOrigin(icon.getLocalBounds().width / 2, icon.getLocalBounds().height / 2);
         icon.setPosition(745, squad.y - 32);
-        icon.draw(window);
+        icon.draw();
 
         squad_title.setString(squad.title);
         squad_title.setOrigin(squad_title.getLocalBounds().width / 2, squad_title.getLocalBounds().height / 2);
@@ -328,16 +328,16 @@ void MaterOuterMenu::Update()
             if (j < squad.amount)
             {
                 pon.setPosition(850 + j * 73, squad.y + 15);
-                pon.draw(window);
+                pon.draw();
             } else
             {
                 slot.setPosition(850 + j * 73, squad.y + 15);
-                slot.draw(window);
+                slot.draw();
             }
         }
         mater_selector.setOrigin(mater_selector.getLocalBounds().width / 2, mater_selector.getLocalBounds().height / 2);
         mater_selector.setPosition(850 + squadpos * 73, squad.y + 15);
-        mater_selector.draw(window);
+        mater_selector.draw();
 
         up_arrow_prompt.setOrigin(up_arrow_prompt.getLocalBounds().width / 2, up_arrow_prompt.getLocalBounds().height / 2);
         down_arrow_prompt.setOrigin(down_arrow_prompt.getLocalBounds().width / 2, down_arrow_prompt.getLocalBounds().height / 2);
@@ -345,8 +345,8 @@ void MaterOuterMenu::Update()
         up_arrow_prompt.setPosition(1050, 75);
         down_arrow_prompt.setPosition(1050, 655);
 
-        up_arrow_prompt.draw(window);
-        down_arrow_prompt.draw(window);
+        up_arrow_prompt.draw();
+        down_arrow_prompt.draw();
 
         for (int i = 0; i < squads.size(); i++)
         {

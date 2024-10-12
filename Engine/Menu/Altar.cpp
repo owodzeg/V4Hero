@@ -267,7 +267,7 @@ void AltarMenu::Update()
         altar_main.setOrigin(altar_main.getLocalBounds().width / 2, altar_main.getLocalBounds().height / 2);
         altar_main.setPosition(340, 360);
 
-        altar_main.draw(window);
+        altar_main.draw();
 
         for (int i = 0; i < 24; i++)
         {
@@ -293,7 +293,7 @@ void AltarMenu::Update()
                     inventory_boxes[curItem].icon.setScale(0.64, 0.64);
 
                 inventory_boxes[curItem].icon.setPosition(40 + xpos + 36 + 2.5, 39 + ypos + 36 + 2.5);
-                inventory_boxes[curItem].icon.draw(window);
+                inventory_boxes[curItem].icon.draw();
 
                 inventory_boxes[curItem].num.setPosition((40 + xpos + 51 - 1)*3, (39 + ypos + 45 - 2)*3);
                 inventory_boxes[curItem].num_shadow.setPosition((40 + xpos + 51)*3, (39 + ypos + 45)*3);

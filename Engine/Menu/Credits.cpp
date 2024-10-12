@@ -285,7 +285,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
             outro_text.setPosition(640, 680);
             outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height);
 
-            teaser_1.draw(window);
+            teaser_1.draw();
         }
 
         if (startTimer.getElapsedTime().asSeconds() > 16.6)
@@ -294,7 +294,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
             outro_text.setPosition(640, 700);
             outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height);
 
-            teaser_2.draw(window);
+            teaser_2.draw();
         }
 
         if (startTimer.getElapsedTime().asSeconds() > 20.5)
@@ -303,7 +303,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
             outro_text.setPosition(640, 700);
             outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height);
 
-            teaser_3.draw(window);
+            teaser_3.draw();
         }
 
         if (startTimer.getElapsedTime().asSeconds() > 24.2)

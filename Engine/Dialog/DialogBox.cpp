@@ -217,7 +217,7 @@ void PataDialogBox::Draw()
 
         arrow.setOrigin(arrow.getLocalBounds().width / 2, arrow.getLocalBounds().height / 2);
         arrow.setPosition(x - rr_main.orx + arrow_x, y - rr_main.ory + 192 + t_dialogType.getLocalBounds().height + t_dialogText.getLocalBounds().height + (option * 90));
-        arrow.draw(window);
+        arrow.draw();
 
         for (unsigned int i = 0; i < t_options.size(); i++)
         {
