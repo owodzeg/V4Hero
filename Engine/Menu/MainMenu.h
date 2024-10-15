@@ -31,8 +31,6 @@ public:
     int fade = 0;
     float alpha = 240;
 
-    float mouseX = 0, mouseY = 0;
-
     int totem_sel = 0;
     int old_sel = 0;
     float fire_count = 0;

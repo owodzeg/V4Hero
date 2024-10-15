@@ -194,23 +194,8 @@ MainMenu::MainMenu()
     startClock.restart();
     frClock.restart();
 
-   /* std::vector<CurveShape> c_frames;
+    t_pressanykey.setPosition(1920, 1320);
 
-    for (size_t i = 0; i < 120; i++)
-    {
-        sf::Vector2f startpoint = sf::Vector2f(100, 100);
-        sf::Vector2f endpoint = sf::Vector2f(700, 100);
-
-        CurveSegment* crv3 = new CurveSegment(CurveType::QUAD_CURVE, startpoint, endpoint, sf::Vector2f(200, 110 + i), sf::Vector2f(600, 110 + i));
-        CurveSegment* crv4 = new CurveSegment(CurveType::QUAD_CURVE, endpoint, startpoint, sf::Vector2f(600, 90 + i), sf::Vector2f(200, 90 + i));
-
-        std::vector<CurveSegment*> crvs2 = {crv3, crv4};
-        CurveShape shp2 = CurveShape(crvs2, sf::Color(0, 0, 0, 50));
-        c_frames.push_back(shp2);
-    }
-    shp = new AnimatedCurveShape(c_frames, sf::Color(0, 0, 0, 50));*/
-    SPDLOG_INFO("Loading AnimatedCurveShape");
-    shp = new AnimatedCurveShape("resources/data/item_data.json");
     initialized = true;
     
     //Checks if there is a save then use "continue" as default totem*/
@@ -224,51 +209,7 @@ MainMenu::MainMenu()
 
 void MainMenu::EventFired(sf::Event event)
 {
-    /*
-    rework pending
-    if (patapolisMenu.is_active)
-    {
-        patapolisMenu.EventFired(event);
-    } else if (nameEntryMenu.is_active)
-    {
-        nameEntryMenu.EventFired(event);
-    } else if (optionsMenu.is_active)
-    {
-        optionsMenu.EventFired(event);
-    } else if (v4Core->currentController.isInitialized)
-    {
-        if (event.type == sf::Event::KeyPressed)
-        {
-        }
-    } else */
-    if (is_active)
-    {
-        if (firstrun)
-        {
 
-        } else if (!premenu)
-        {
-            if (dialogboxes.size() <= 0)
-            {
-                if (event.type == sf::Event::MouseButtonReleased)
-                {
-                    if (event.mouseButton.button == sf::Mouse::Left)
-                    {
-                        if (mouseInBounds)
-                            SelectMenuOption();
-                    }
-                } else if (event.type == sf::Event::MouseMoved)
-                {
-                    mouseX = event.mouseMove.x;
-                    mouseY = event.mouseMove.y;
-
-                    //cout << mouseX << " " << mouseY << endl;
-
-                    UsingMouseSelection = true;
-                }
-            }
-        }
-    }
 }
 void MainMenu::SelectMenuOption()
 {
@@ -365,6 +306,8 @@ void MainMenu::Update()
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
+    MouseController* mouseCtrl = CoreManager::getInstance().getMouseController();
+
     float fps = CoreManager::getInstance().getCore()->getFPS();
 
     if (firstrun)
@@ -442,6 +385,7 @@ void MainMenu::Update()
                     logow_shscale = 1.2;
                     dest_y = 1080;
                     keypressed = true;
+                    t_pressanykey.setPosition(1920, 13200);
                     menuClock.restart();
                 }
             }
@@ -505,7 +449,6 @@ void MainMenu::Update()
             }
 
             t_pressanykey.setOrigin(t_pressanykey.getLocalBounds().width / 2, t_pressanykey.getLocalBounds().height / 2);
-            t_pressanykey.setPosition(1920, 1320);
             t_pressanykey.setColor(sf::Color(255, 255, 255, t_alpha));
             t_pressanykey.draw();
 
@@ -537,10 +480,10 @@ void MainMenu::Update()
         float scale = 1 + ((alpha - 220) / 500);
         float aurascale = 1 + ((alpha - 220)) / 250;
 
-        g_dest[0] = (mouseX / 960.f - 6.f) * (-1);
-        g_dest[1] = (mouseX / 318.f - 18.f) * (-1);
-        g_dest[2] = (mouseX / 135.f - 42.f) * (-1);
-        g_dest[3] = (mouseX / 63.f - 90.f) * (-1);
+        g_dest[0] = (mouseCtrl->getMousePos().x / 960.f - 6.f) * (-1);
+        g_dest[1] = (mouseCtrl->getMousePos().x / 318.f - 18.f) * (-1);
+        g_dest[2] = (mouseCtrl->getMousePos().x / 135.f - 42.f) * (-1);
+        g_dest[3] = (mouseCtrl->getMousePos().x / 63.f - 90.f) * (-1);
 
         for (int i = 0; i <= 3; i++)
         {
@@ -596,7 +539,7 @@ void MainMenu::Update()
 
         float fire_shift = 0;
 
-        //cout << "MouseX: " << (mouseX / window->getSize().x) * 1280 << endl;
+        //cout << "mouseCtrl->getMousePos().x: " << (mouseCtrl->getMousePos().x / window->getSize().x) * 1280 << endl;
 
         mouseInBounds = false;
 
@@ -604,17 +547,16 @@ void MainMenu::Update()
         {
             totem[i].setPosition((float(360) + float(918) * (i)) + g_x[3] / 1.4, 2160);
 
-            if (UsingMouseSelection)
+            SPDLOG_DEBUG("{} {} bounds {} {} {} {}", mouseCtrl->getMousePos().x / (window->getSize().x / 3840.f), mouseCtrl->getMousePos().y / (window->getSize().y / 2160.f), totem[i].getPosition().x, totem[i].getPosition().y, totem[i].getGlobalBounds().width, totem[i].getGlobalBounds().height);
+
+            if (mouseCtrl->getMousePos().x / (window->getSize().x / 3840.f) > totem[i].getPosition().x)
             {
-                if ((mouseX / window->getSize().x) * 3840 > totem[i].getPosition().x)
+                if (mouseCtrl->getMousePos().x / (window->getSize().x / 3840.f) < (totem[i].getPosition().x + totem[i].getTransformedBounds().width))
                 {
-                    if ((mouseX / window->getSize().x) * 3840 < (totem[i].getPosition().x + totem[i].getLocalBounds().width))
+                    if (mouseCtrl->getMousePos().y / (window->getSize().y / 2160.f) > totem[i].getPosition().y - totem[i].getTransformedBounds().height)
                     {
-                        if ((mouseY / window->getSize().y) * 2160 > totem[i].getPosition().y - totem[i].getLocalBounds().height)
-                        {
-                            totem_sel = i;
-                            mouseInBounds = true;
-                        }
+                        totem_sel = i;
+                        mouseInBounds = true;
                     }
                 }
             }
@@ -749,14 +691,10 @@ void MainMenu::Update()
         {
             if ((inputCtrl->isKeyPressed(Input::Keys::LEFT)) || (inputCtrl->isKeyPressed(Input::Keys::LTRIGGER)))
             {
-                UsingMouseSelection = false;
-
                 totem_sel -= 1;
                 if (totem_sel < 0)
                     totem_sel = 3;
                 old_sel = totem_sel;
-
-                mouseX = totem_sel_pos[totem_sel];
             }
 
             // TEMP TESTING OF BEZIER CURVES
@@ -767,20 +705,14 @@ void MainMenu::Update()
 
             if ((inputCtrl->isKeyPressed(Input::Keys::RIGHT)) || (inputCtrl->isKeyPressed(Input::Keys::RTRIGGER)))
             {
-                UsingMouseSelection = false;
-
                 totem_sel += 1;
                 if (totem_sel > 3)
                     totem_sel = 0;
                 old_sel = totem_sel;
-
-                mouseX = totem_sel_pos[totem_sel];
             }
 
-            if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
+            if (inputCtrl->isKeyPressed(Input::Keys::CROSS) || mouseCtrl->getClick(0))
             {
-                UsingMouseSelection = false;
-
                 SelectMenuOption();
                 //title_loop.stop();
             }
