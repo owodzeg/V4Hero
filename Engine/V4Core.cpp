@@ -155,6 +155,7 @@ void V4Core::init()
 
     // Get Input controller
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
+    MouseController* mouseCtrl = CoreManager::getInstance().getMouseController();
     inputCtrl->LoadKeybinds();
 
     StateManager::getInstance().setState(StateManager::ENTRY);
@@ -240,6 +241,7 @@ void V4Core::init()
 
             // Forward events to InputController for keyboard and controller usage
             inputCtrl->parseEvents(event);
+            mouseCtrl->parseEvents(event);
 
             // Forward events to currently enabled state
             StateManager::getInstance().parseCurrentStateEvents(event);
