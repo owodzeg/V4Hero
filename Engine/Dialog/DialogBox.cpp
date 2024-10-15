@@ -59,7 +59,7 @@ void PataDialogBox::Create(std::string font, sf::String text, std::vector<sf::St
         t_options.push_back(tmp);
     }
 
-    arrow.loadFromFile("resources/graphics/ui/dialog/arrow.png", qualitySetting, 3);
+    arrow.loadFromFile("resources/graphics/ui/dialog/arrow.png", qualitySetting);
 
     option = t_options.size() - 1;
 }
@@ -101,7 +101,7 @@ void PataDialogBox::CreateCustom(std::string font, sf::String text, std::vector<
         options_saved.push_back(options[i]);
     }
 
-    arrow.loadFromFile("resources/graphics/ui/arrow.png", qualitySetting, 3);
+    arrow.loadFromFile("resources/graphics/ui/arrow.png", qualitySetting);
 
     option = t_options.size() - 1;
 }

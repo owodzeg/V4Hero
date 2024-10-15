@@ -52,7 +52,7 @@ AltarMenu::AltarMenu()
 
 
 
-    altar_main.loadFromFile("resources/graphics/ui/altar/altar_main.png", quality, 1);
+    altar_main.loadFromFile("resources/graphics/ui/altar/altar_main.png", quality);
 
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
@@ -142,8 +142,8 @@ void AltarMenu::reloadInventory()
                     tmp.r_inner.setFillColor(sf::Color(146, 173, 217, 255));
 
                     ///look up material's icon
-                    //tmp.icon.loadFromFile("resources/graphics/ui/altar/materials/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q, 1);
-                    tmp.icon.loadFromFile("resources/graphics/item/textures/" + cur_item->spritesheet + "/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q, 1);
+                    //tmp.icon.loadFromFile("resources/graphics/ui/altar/materials/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q);
+                    tmp.icon.loadFromFile("resources/graphics/item/textures/" + cur_item->spritesheet + "/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q);
                     tmp.icon.setOrigin(tmp.icon.getLocalBounds().width / 2, tmp.icon.getLocalBounds().height / 2);
 
                     break;
@@ -154,7 +154,7 @@ void AltarMenu::reloadInventory()
                     tmp.r_inner.setFillColor(sf::Color(199, 221, 167, 255));
 
                     ///look up material's icon
-                    tmp.icon.loadFromFile("resources/graphics/ui/altar/equip/spear_1.png", q, 1);
+                    tmp.icon.loadFromFile("resources/graphics/ui/altar/equip/spear_1.png", q);
                     tmp.icon.setOrigin(tmp.icon.getLocalBounds().width / 2, tmp.icon.getLocalBounds().height / 2);
 
                     break;
@@ -165,7 +165,7 @@ void AltarMenu::reloadInventory()
                     tmp.r_inner.setFillColor(sf::Color(199, 221, 167, 255));
 
                     ///look up material's icon
-                    tmp.icon.loadFromFile("resources/graphics/ui/altar/equip/helm_1.png", q, 1);
+                    tmp.icon.loadFromFile("resources/graphics/ui/altar/equip/helm_1.png", q);
                     tmp.icon.setOrigin(tmp.icon.getLocalBounds().width / 2, tmp.icon.getLocalBounds().height / 2);
 
                     break;
@@ -176,7 +176,7 @@ void AltarMenu::reloadInventory()
                     tmp.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
                     ///look up material's icon
-                    tmp.icon.loadFromFile("resources/graphics/item/textures/" + cur_item->spritesheet + "/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q, 1);
+                    tmp.icon.loadFromFile("resources/graphics/item/textures/" + cur_item->spritesheet + "/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q);
                     tmp.icon.setOrigin(tmp.icon.getLocalBounds().width / 2, tmp.icon.getLocalBounds().height / 2);
 
                     break;

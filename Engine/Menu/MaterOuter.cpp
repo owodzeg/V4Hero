@@ -53,8 +53,8 @@ MaterOuterMenu::MaterOuterMenu()
     res_ratio_x = config->GetInt("resX") / float(1280);
     res_ratio_y = config->GetInt("resY") / float(720);
 
-    mater_main.loadFromFile("resources/graphics/ui/mater/mater_outer_bg.png", quality, 1);
-    mater_selector.loadFromFile("resources/graphics/ui/mater/materui_squad_select.png", quality, 1);
+    mater_main.loadFromFile("resources/graphics/ui/mater/mater_outer_bg.png", quality);
+    mater_selector.loadFromFile("resources/graphics/ui/mater/materui_squad_select.png", quality);
 
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/mater/matersquad_bg_asleep.png");
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/mater/matersquad_member_asleep.png");
@@ -64,8 +64,8 @@ MaterOuterMenu::MaterOuterMenu()
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/mater/matersquad_member_awake.png");
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/mater/matersquad_slot_awake.png");
 
-    up_arrow_prompt.loadFromFile("resources/graphics/ui/mater/up_prompt.png", quality, 1);
-    down_arrow_prompt.loadFromFile("resources/graphics/ui/mater/down_prompt.png", quality, 1);
+    up_arrow_prompt.loadFromFile("resources/graphics/ui/mater/up_prompt.png", quality);
+    down_arrow_prompt.loadFromFile("resources/graphics/ui/mater/down_prompt.png", quality);
 
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/mater/yaripon_icon.png");
 

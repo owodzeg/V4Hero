@@ -22,7 +22,11 @@ public:
     bool exported = false;
     PSprite();
     void loadFromFile(std::string file, int q, bool downscale = true);
-    void loadFromFile(std::string file, int q, int r, bool downscale = true);
+
+    template <typename T>
+    void loadFromFile(std::string file, int q, T) = delete;
+    // temporary solution so that deprecated r parameter won't be mistaken for downscale bool (a disaster)
+
     void setRepeated(bool r);
     void setTextureRect(sf::IntRect rect);
     sf::IntRect getTextureRect();

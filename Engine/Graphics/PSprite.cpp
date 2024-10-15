@@ -72,17 +72,6 @@ void PSprite::loadFromFile(std::string file, int q, bool downscale)
         s.setTexture(TextureManager::getInstance().getTexture(file, q, false), true);
 }
 
-void PSprite::loadFromFile(std::string file, int q, int r = 1, bool downscale)
-{
-    qualitySetting = q;
-    resSetting = r;
-
-    SPDLOG_INFO("Loading PSprite: {}", file);
-    texturePath = file;
-
-    s.setTexture(TextureManager::getInstance().getTexture(file, q), true);
-}
-
 void PSprite::setRepeated(bool r)
 {
     SPDLOG_TRACE("Change repeated state of {} to {}", texturePath, r);

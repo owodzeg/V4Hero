@@ -72,9 +72,9 @@ void Credits::Initialise(Config* thisConfig, V4Core* parent)
     anykey.setCharacterSize(36);
     anykey.setColor(sf::Color::White);
 
-    teaser_1.loadFromFile("resources/graphics/ui/credits/teaser_1.png", thisConfig->GetInt("textureQuality"), 1);
-    teaser_2.loadFromFile("resources/graphics/ui/credits/teaser_2.png", thisConfig->GetInt("textureQuality"), 1);
-    teaser_3.loadFromFile("resources/graphics/ui/credits/teaser_3.png", thisConfig->GetInt("textureQuality"), 1);
+    teaser_1.loadFromFile("resources/graphics/ui/credits/teaser_1.png", thisConfig->GetInt("textureQuality"));
+    teaser_2.loadFromFile("resources/graphics/ui/credits/teaser_2.png", thisConfig->GetInt("textureQuality"));
+    teaser_3.loadFromFile("resources/graphics/ui/credits/teaser_3.png", thisConfig->GetInt("textureQuality"));
 
     addHeaderText("credits_creator");
     addRegularText("Owocek");
