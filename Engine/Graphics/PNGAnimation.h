@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <Graphics/SpriteWrapper.h>
 #include <vector>
+#include <mutex>
 #include <unordered_map>
 #include "libzippp.h"
 
@@ -21,6 +22,8 @@ public:
 class PNGAnimation
 {
     public:
+        std::mutex resource_mutex;
+
         std::string model_name;
 
         struct Animation {

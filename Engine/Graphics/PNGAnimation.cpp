@@ -23,6 +23,8 @@ PNGAnimation::PNGAnimation()
 
 sf::Image PNGAnimation::getAnimationImage(const std::string& anim_path, const std::string& image_path, ZipArchive& zip_handle)
 {
+    std::lock_guard<std::mutex> guard(resource_mutex);
+
     if(zip_handle.isOpen())
     {
         SPDLOG_DEBUG("Providing animation file for {}, img: {}, zipped?: {}", anim_path, image_path, zip_handle.isOpen());
@@ -371,9 +373,9 @@ void PNGAnimation::Load(const std::string& path)
     }
 
     // Optionally wait for all tasks to finish
-    for(auto& f : futures)
+    for(auto& fu : futures)
     {
-        f.get(); // This will block until each spritesheet generation is done
+        fu.get(); // This will block until each spritesheet generation is done
     }
 
     //Step 4 - Load spritesheets to ResourceManager
