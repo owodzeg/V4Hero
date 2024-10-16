@@ -268,7 +268,7 @@ void AltarMenu::Update()
         ctrlTips.draw(window); */
 
         altar_main.setOrigin(altar_main.getLocalBounds().width / 2, altar_main.getLocalBounds().height / 2);
-        altar_main.setPosition(340, 360);
+        altar_main.setPosition(1020, 1080);
 
         altar_main.draw();
 
@@ -295,7 +295,7 @@ void AltarMenu::Update()
                 if ((inventory_boxes[curItem].data->item_category == "key_items") || (inventory_boxes[curItem].data->item_category == "materials")) ///Bound to break
                     inventory_boxes[curItem].icon.setScale(0.64, 0.64);
 
-                inventory_boxes[curItem].icon.setPosition(40 + xpos + 36 + 2.5, 39 + ypos + 36 + 2.5);
+                inventory_boxes[curItem].icon.setPosition((40 + xpos + 36 + 2.5)*3, (39 + ypos + 36 + 2.5)*3);
                 inventory_boxes[curItem].icon.draw();
 
                 inventory_boxes[curItem].num.setPosition((40 + xpos + 51 - 1)*3, (39 + ypos + 45 - 2)*3);
