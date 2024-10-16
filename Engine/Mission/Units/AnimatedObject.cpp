@@ -158,6 +158,25 @@ void AnimatedObject::loadExtra(std::string path, std::string name)
 {
     SPDLOG_DEBUG("Loading extra! {} {}", path, name);
 
+    int qualitySetting = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
+    float qscale = 1;
+
+    switch (qualitySetting)
+    {
+        case 0: {
+            qscale = 6;
+            break;
+        }
+        case 1: {
+            qscale = 3;
+            break;
+        }
+        case 2: {
+            qscale = 2;
+            break;
+        }
+    }
+
     for(auto& a : animation.extra)
     {
         if(a.first == name)
@@ -180,7 +199,10 @@ void AnimatedObject::loadExtra(std::string path, std::string name)
 
                 std::vector<std::string> data = Func::Split(alignData, ',');
 
-                a.second.setOrigin(atof(data[0].c_str())*resRatioX, atof(data[1].c_str())*resRatioY);
+                float o_x = atof(data[0].c_str());
+                float o_y = atof(data[1].c_str());
+
+                a.second.setOrigin(o_x / qscale, o_y / qscale);
             }
             else
             {
