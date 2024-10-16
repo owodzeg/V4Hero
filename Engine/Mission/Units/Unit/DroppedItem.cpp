@@ -41,7 +41,9 @@ void DroppedItem::Draw()
             GlowCircle tmp;
             tmp.circle.setFillColor(sf::Color(255, 255, 255, tmp.alpha));
             tmp.circle.setRadius(tmp.radius * resRatioX);
-            tmp.circle.setPosition((global_x + local_x + off_x) * resRatioX, (global_y + local_y + off_y) * resRatioY);
+            tmp.x = (global_x + local_x + off_x);
+            tmp.y = (global_y + local_y + off_y);
+            tmp.circle.setPosition(tmp.x * resRatioX, tmp.y * resRatioY);
             glow.push_back(tmp);
 
             glowTimer.restart();
@@ -60,6 +62,7 @@ void DroppedItem::Draw()
             glow[i].circle.setFillColor(sf::Color(255, 255, 255, glow[i].alpha));
             glow[i].circle.setRadius(glow[i].radius);
             glow[i].circle.setOrigin(glow[i].circle.getLocalBounds().width / 2, glow[i].circle.getLocalBounds().height / 2);
+            glow[i].circle.setPosition((global_x + local_x + off_x) * resRatioX, (global_y + local_y + off_y) * resRatioY);
 
             w->draw(glow[i].circle);
 

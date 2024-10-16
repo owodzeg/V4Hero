@@ -12,6 +12,7 @@ public:
         sf::CircleShape circle;
         float alpha = 64;
         float radius = 20;
+        float x,y;
     };
 
     std::vector<GlowCircle> glow;

@@ -144,7 +144,11 @@ void MissionController::LoadMission(const std::string& path)
 
                         // Check xpos
                         if (params.contains("xpos") && !params["xpos"].is_null())
-                            e->setGlobalPosition(sf::Vector2f(params["xpos"], e->yPos));
+                            e->global_x = params["xpos"];
+
+                        // Check ypos
+                        if (params.contains("ypos") && !params["ypos"].is_null())
+                            e->global_y = params["ypos"];
 
                         // Check color
                         if (params.contains("color") && !params["color"].is_null())
@@ -599,7 +603,7 @@ void MissionController::Update()
     float fps = CoreManager::getInstance().getCore()->getFPS();
 
     // TODO: why the fuck is this needed? without this, zoom doesn't work correctly.
-    double zoom_offset = (0.000709722222222 * CoreManager::getInstance().getWindow()->getSize().y);
+    zoom_offset = (0.000709722222222 * CoreManager::getInstance().getWindow()->getSize().y);
 
     rhythm->doRhythm();
 
@@ -785,7 +789,8 @@ void MissionController::Update()
     for(auto& pon : yaripons)
     {
         pon->global_x = followPoint*3 - 240;
-        pon->global_y = 1740 + cam.zoom_y / zoom_offset; // ,/0.511 dla 720p ,/ 1.533 dla 2160p
+        pon->global_y = 1740; // ,/0.511 dla 720p ,/ 1.533 dla 2160p
+        pon->cam_offset = cam.zoom_y / zoom_offset;
         pon->closestEnemyX = closest;
         pon->enemyInSight = yari_inSight;
         pon->missionEnd = missionEnd;
@@ -794,7 +799,7 @@ void MissionController::Update()
 
     for(auto& entity : entities)
     {
-        entity->setGlobalPosition(sf::Vector2f(entity->getGlobalPosition().x, entity->yPos + cam.zoom_y / zoom_offset));
+        entity->cam_offset = cam.zoom_y / zoom_offset;
     }
 
     sf::RectangleShape hbb;
@@ -836,6 +841,8 @@ void MissionController::Update()
 
     for(auto& projectile : projectiles)
     {
+        projectile->cam_offset = cam.zoom_y / zoom_offset;
+
         projectile->Update();
 
         for(auto& entity : entities)
@@ -964,7 +971,7 @@ void MissionController::Update()
     {
         for(auto& entity : entities)
         {
-            auto pos = entity->getGlobalPosition();
+            auto pos = sf::Vector2f(entity->global_x + entity->local_x + entity->hPos, entity->global_y + entity->local_y + entity->vPos + entity->cam_offset);
 
             for(auto hb : entity->getHitbox())
             {

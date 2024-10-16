@@ -23,10 +23,14 @@ public:
     float hspeed;
     float vspeed;
 
+    float hPos=0, vPos=0;
+
     float tipX, tipY;
 
     bool finished = false;
     bool fromEnemy = false;
+
+    float cam_offset = 0;
 
     SpriteWrapper sprite;
 

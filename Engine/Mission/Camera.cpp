@@ -56,7 +56,7 @@ void Camera::Work(sf::View& view, float dest_zoom_over)
         {
             manual_x_dest = move_cam_x;
         }
-
+        
         if (inputCtrl->isKeyHeld(Input::Keys::LEFT))
         {
             dest_zoom = 1.002;

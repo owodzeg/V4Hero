@@ -95,11 +95,11 @@ void Entity::LoadEntity(const std::string& path)
             bh_approach = behavior.convStringToApproachEnum(entity["behavior"]["approach"]);
     }
 
-    yPos = 1735;
+    global_y = 1735;
     if(entity.contains("position"))
     {
         if(entity["position"].contains("y"))
-            yPos = entity["position"]["y"].get<float>();
+            global_y = entity["position"]["y"].get<float>();
     }
 
     if(entity.contains("scale"))
@@ -397,7 +397,7 @@ void Entity::handleAttack() // entity's attack
     {
         if(!threw)
         {
-            CoreManager::getInstance().getMissionController()->SendProjectile(getGlobalPosition().x+getLocalPosition().x, getGlobalPosition().y+getLocalPosition().y-90, -1800 - (rand()%50)*1, -1800 - (rand()%70)*1, "main/0025", true);
+            CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x, global_y+local_y-90, -1800 - (rand()%50)*1, -1800 - (rand()%70)*1, "main/0025", true);
             threw = true;
             attackTimer.restart();
         }
@@ -445,7 +445,8 @@ void Entity::Draw()
         handleDeath();
     }
 
-    setLocalPosition(sf::Vector2f(getLocalPosition().x + hspeed / fps, getLocalPosition().y + vspeed / fps));
+    hPos += hspeed / fps;
+    vPos += vspeed / fps;
 
     if(hspeed > 0)
         hspeed -= 400 / fps;
@@ -463,11 +464,14 @@ void Entity::Draw()
 
     for(auto& pon : mc->yaripons)
     {
-        distanceToPlayer = min(distanceToPlayer, abs( (pon->global_x+pon->local_x+pon->gap_x) - (getGlobalPosition().x + getLocalPosition().x)));
+        distanceToPlayer = min(distanceToPlayer, abs( (pon->global_x+pon->local_x+pon->gap_x) - (global_x + local_x)));
     }
 
     handleApproach();
     handleDecisions();
+
+    setGlobalPosition(sf::Vector2f(global_x + local_x, global_y + local_y + cam_offset));
+    setLocalPosition(sf::Vector2f(local_x + hPos, local_y + vPos));
 
     AnimatedObject::Draw();
 
@@ -478,7 +482,7 @@ void Entity::Draw()
         debugText.setCharacterSize(12);
         debugText.setString(std::format("{{outline 2 255 255 255}}o{{n}}{}{{n}}curHP{{n}}{}{{n}}maxHP{{n}}{}", orderID, curHP, maxHP));
         debugText.setOrigin(debugText.getLocalBounds().width/2, debugText.getLocalBounds().height);
-        debugText.setPosition(getGlobalPosition().x+getLocalPosition().x-20, getGlobalPosition().y+getLocalPosition().y-100);
+        debugText.setPosition(global_x+local_x-20, global_y+local_y+cam_offset-100);
         debugText.draw();
     }
 }

@@ -61,6 +61,8 @@ public:
     bool for_removal = false;
     bool dead = false;
 
+    float cam_offset;
+
     PText debugText;
 
     Yaripon(int which, int maxpons);

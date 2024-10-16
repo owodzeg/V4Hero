@@ -556,7 +556,7 @@ void Yaripon::Draw()
         vspeed = 0;
     }
 
-    main.setGlobalPosition(sf::Vector2f(global_x, global_y));
+    main.setGlobalPosition(sf::Vector2f(global_x, global_y + cam_offset));
     main.setLocalPosition(sf::Vector2f(local_x+attack_x+gap_x, local_y));
     main.Draw();
 
@@ -568,7 +568,7 @@ void Yaripon::Draw()
         debugText.setString(std::format("o\n{}\nact\n{}\natk_x\n{}\npS\n{}\naf\n{}\nias\n{}\npA\n{}\niat\n{}\ncai\n{:2.2f}",order, action, attack_x, pataSpeed, main.getAnimationFrame(), inAttackSequence, performedAttack, inAttackTimer.getElapsedTime().asMilliseconds(), canAttackIn));
         debugText.disable_processing = true;
         debugText.setOrigin(debugText.getLocalBounds().width/2, debugText.getLocalBounds().height);
-        debugText.setPosition(global_x+local_x+attack_x+gap_x-20, global_y+local_y-100);
+        debugText.setPosition(global_x+local_x+attack_x+gap_x-20, global_y+local_y+cam_offset-100);
         debugText.draw();
     }
 }

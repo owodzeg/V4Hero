@@ -70,8 +70,6 @@ public:
     float mindmg = 1;
     float maxdmg = 1;
 
-    float yPos = 0;
-
     int layer = 0;   ///rendering priority
     int parent = -1; ///if entity is bound to any other entity
 
@@ -98,6 +96,12 @@ public:
 
     sf::Clock attackTimer;
     bool threw = false;
+
+    float global_x=0, global_y=0;
+    float local_x=0, local_y=0;
+    float hPos=0, vPos=0;
+
+    float cam_offset;
 
     Entity();
     void LoadEntity(const std::string& path);

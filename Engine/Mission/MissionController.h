@@ -91,6 +91,8 @@ public:
     bool failure = false;
     bool returnToPatapolis = false;
 
+    double zoom_offset;
+
     Behavior behavior;
 
     MissionController();
