@@ -6,6 +6,9 @@
 #include <thread>
 #include <future>
 
+#define STB_IMAGE_RESIZE_IMPLEMENTATION
+#include "External/stb_image_resize2.h"
+
 TextureManager::TextureManager()
 {
 }
@@ -49,7 +52,7 @@ void TextureManager::loadTexture(const std::string& path, int quality)
             }
         }
 
-        SPDLOG_INFO("Loading downscaled texture with path {} and ratio {}", path, ratio);
+        SPDLOG_DEBUG("Loading downscaled texture with path {} and ratio {}", path, ratio);
 
         applyForceLoad(true);
         scaleTexture(path, ratio);
@@ -103,7 +106,7 @@ sf::Texture& TextureManager::getTexture(const std::string& path, int quality, bo
                     }
                 }
 
-                SPDLOG_INFO("Loading downscaled texture with path {} and ratio {}", path, ratio);
+                SPDLOG_DEBUG("Loading downscaled texture with path {} and ratio {}", path, ratio);
                 return scaleTexture(path, ratio);
             } else
             {
@@ -123,7 +126,7 @@ sf::Texture& TextureManager::getTexture(const std::string& path, int quality, bo
 
 sf::Texture& TextureManager::scaleTexture(const std::string& path, int ratio, bool unload)
 {
-    if(loadedImages.find(path) != loadedImages.end() && ratio == 1)
+    if (loadedImages.find(path) != loadedImages.end() && ratio == 1)
     {
         loadTextureFromImage(path);
 
@@ -145,83 +148,19 @@ sf::Texture& TextureManager::scaleTexture(const std::string& path, int ratio, bo
         int nwidth = ceil(originalWidth / float(ratio));
         int nheight = ceil(originalHeight / float(ratio));
 
+        // Get pixel data from source image
+        const sf::Uint8* sourcePixels = source.getPixelsPtr();
+
+        // Prepare a destination buffer
+        std::vector<sf::Uint8> destPixels(nwidth * nheight * 4); // RGBA = 4 channels
+
+        // Use stb_image_resize to scale the texture
+        stbir_resize_uint8_srgb(sourcePixels, originalWidth, originalHeight, 0,
+                           destPixels.data(), nwidth, nheight, 0, STBIR_RGBA);
+
+        // Create a new SFML Image from the resized pixels
         sf::Image dest;
-        dest.create(nwidth, nheight);
-
-        // Step 1: Build the integral image for faster block summation
-        std::vector<std::vector<int>> integralR(originalWidth, std::vector<int>(originalHeight, 0));
-        std::vector<std::vector<int>> integralG(originalWidth, std::vector<int>(originalHeight, 0));
-        std::vector<std::vector<int>> integralB(originalWidth, std::vector<int>(originalHeight, 0));
-        std::vector<std::vector<int>> integralA(originalWidth, std::vector<int>(originalHeight, 0));
-
-        // Precompute the integral image (summing up color channels separately)
-        for (int x = 0; x < originalWidth; ++x)
-        {
-            for (int y = 0; y < originalHeight; ++y)
-            {
-                sf::Color pixel = source.getPixel(x, y);
-
-                integralR[x][y] = pixel.r + ((x > 0) ? integralR[x-1][y] : 0) + ((y > 0) ? integralR[x][y-1] : 0) - ((x > 0 && y > 0) ? integralR[x-1][y-1] : 0);
-                integralG[x][y] = pixel.g + ((x > 0) ? integralG[x-1][y] : 0) + ((y > 0) ? integralG[x][y-1] : 0) - ((x > 0 && y > 0) ? integralG[x-1][y-1] : 0);
-                integralB[x][y] = pixel.b + ((x > 0) ? integralB[x-1][y] : 0) + ((y > 0) ? integralB[x][y-1] : 0) - ((x > 0 && y > 0) ? integralB[x-1][y-1] : 0);
-                integralA[x][y] = pixel.a + ((x > 0) ? integralA[x-1][y] : 0) + ((y > 0) ? integralA[x][y-1] : 0) - ((x > 0 && y > 0) ? integralA[x-1][y-1] : 0);
-            }
-        }
-
-        // Step 2: Downsample using the integral image
-        auto downscaleBlock = [&](int xStart, int xEnd) {
-            for (int x = xStart; x < xEnd; ++x)
-            {
-                for (int y = 0; y < nheight; ++y)
-                {
-                    int srcX1 = x * ratio;
-                    int srcY1 = y * ratio;
-                    int srcX2 = std::min((x + 1) * ratio - 1, originalWidth - 1);
-                    int srcY2 = std::min((y + 1) * ratio - 1, originalHeight - 1);
-
-                    int area = (srcX2 - srcX1 + 1) * (srcY2 - srcY1 + 1);
-
-                    int r = integralR[srcX2][srcY2]
-                            - ((srcX1 > 0) ? integralR[srcX1-1][srcY2] : 0)
-                            - ((srcY1 > 0) ? integralR[srcX2][srcY1-1] : 0)
-                            + ((srcX1 > 0 && srcY1 > 0) ? integralR[srcX1-1][srcY1-1] : 0);
-
-                    int g = integralG[srcX2][srcY2]
-                            - ((srcX1 > 0) ? integralG[srcX1-1][srcY2] : 0)
-                            - ((srcY1 > 0) ? integralG[srcX2][srcY1-1] : 0)
-                            + ((srcX1 > 0 && srcY1 > 0) ? integralG[srcX1-1][srcY1-1] : 0);
-
-                    int b = integralB[srcX2][srcY2]
-                            - ((srcX1 > 0) ? integralB[srcX1-1][srcY2] : 0)
-                            - ((srcY1 > 0) ? integralB[srcX2][srcY1-1] : 0)
-                            + ((srcX1 > 0 && srcY1 > 0) ? integralB[srcX1-1][srcY1-1] : 0);
-
-                    int a = integralA[srcX2][srcY2]
-                            - ((srcX1 > 0) ? integralA[srcX1-1][srcY2] : 0)
-                            - ((srcY1 > 0) ? integralA[srcX2][srcY1-1] : 0)
-                            + ((srcX1 > 0 && srcY1 > 0) ? integralA[srcX1-1][srcY1-1] : 0);
-
-                    dest.setPixel(x, y, sf::Color(r / area, g / area, b / area, a / area));
-                }
-            }
-        };
-
-        // Step 3: Multithreading for parallel downscaling
-        unsigned int numThreads = std::thread::hardware_concurrency();
-        std::vector<std::future<void>> futures;
-
-        int chunkSize = nwidth / numThreads;
-        for (unsigned int i = 0; i < numThreads; ++i)
-        {
-            int xStart = i * chunkSize;
-            int xEnd = (i == numThreads - 1) ? nwidth : (i + 1) * chunkSize;
-
-            futures.push_back(std::async(std::launch::async, downscaleBlock, xStart, xEnd));
-        }
-
-        for (auto& future : futures) {
-            future.get(); // Wait for all threads to finish
-        }
+        dest.create(nwidth, nheight, destPixels.data());
 
         loadedImages[path] = dest;
         loadTextureFromImage(path);

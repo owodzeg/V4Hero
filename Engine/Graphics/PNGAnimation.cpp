@@ -10,7 +10,6 @@
 #include <exception>
 #include <fstream>
 #include <regex>
-#include "libzippp.h"
 using namespace libzippp;
 
 namespace fs = std::filesystem;
@@ -20,22 +19,17 @@ PNGAnimation::PNGAnimation()
     maxSize = sf::Texture::getMaximumSize();
 }
 
-sf::Image PNGAnimation::getAnimationImage(const std::string& anim_path, const std::string& image_path, bool zipped)
+sf::Image PNGAnimation::getAnimationImage(const std::string& anim_path, const std::string& image_path, ZipArchive& zip_handle)
 {
-    if(zipped)
+    if(zip_handle.isOpen())
     {
-        SPDLOG_DEBUG("Providing animation file for {}, img: {}, zipped?: {}", anim_path, image_path, zipped);
+        SPDLOG_DEBUG("Providing animation file for {}, img: {}, zipped?: {}", anim_path, image_path, zip_handle.isOpen());
 
-        ZipArchive zf(anim_path);
-        zf.open(ZipArchive::ReadOnly);
-
-        char* data = (char*) zf.readEntry(image_path, true);
-        ZipEntry thumb_entry = zf.getEntry(image_path);
+        char* data = (char*) zip_handle.readEntry(image_path, true);
+        ZipEntry thumb_entry = zip_handle.getEntry(image_path);
 
         sf::Image img;
         img.loadFromMemory(data, thumb_entry.getSize());
-
-        zf.close();
 
         TextureManager::getInstance().loadImageFromMemory(image_path, img, false);
 
@@ -91,9 +85,16 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
     // we need to take the largest image out of the whole animation, in case the animation has different frame dimensions...
     int img_x = 0, img_y = 0;
 
+    ZipArchive zf(anim_path);
+
+    if(anim.zip)
+    {
+        zf.open(ZipArchive::ReadOnly);
+    }
+
     for (const auto& thumb_path : anim.frame_paths)
     {
-        sf::Image thumb = getAnimationImage(anim_path, thumb_path, anim.zip);
+        sf::Image thumb = getAnimationImage(anim_path, thumb_path, zf);
 
         if(thumb.getSize().x > img_x)
             img_x = thumb.getSize().x;
@@ -117,7 +118,7 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
 
     int maxFramesPerSheet = maxCols * maxRows;
 
-    SPDLOG_INFO("Animation info dump: name {} img_x {} img_y {} frames {} x_size {} rows {} maxCols {} maxRows {} sheetsNeeded {} maxFramesPerSheet {}", anim.name, img_x, img_y, frames, x_size, rows, maxCols, maxRows, sheetsNeeded, maxFramesPerSheet);
+    SPDLOG_DEBUG("Animation info dump: name {} img_x {} img_y {} frames {} x_size {} rows {} maxCols {} maxRows {} sheetsNeeded {} maxFramesPerSheet {}", anim.name, img_x, img_y, frames, x_size, rows, maxCols, maxRows, sheetsNeeded, maxFramesPerSheet);
     // push all the important info to the animation
     anim.img_x = img_x;
     anim.img_y = img_y;
@@ -166,7 +167,7 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
 
     for (const auto& fr : anim.frame_paths)
     {
-        sf::Image f_img = getAnimationImage(anim_path, fr, anim.zip);
+        sf::Image f_img = getAnimationImage(anim_path, fr, zf);
 
         int curCol = frameBuffer % maxCols;
         int curRow = floor(float(frameBuffer) / float(maxCols));
@@ -229,7 +230,7 @@ bool PNGAnimation::getAnimationCache(Animation& anim)
         if (std::regex_search(cache_entry_name, matches, cache_regex))
         {
             // cached sheet found
-            SPDLOG_INFO("Animation {} found in .tex_cache: sheet file {}. No need to regenerate spritesheets.", anim.shortName, cache_entry_name);
+            SPDLOG_DEBUG("Animation {} found in .tex_cache: sheet file {}. No need to regenerate spritesheets.", anim.shortName, cache_entry_name);
             anim.cached = true;
             anim.spritesheet_paths.push_back(cache_entry_name);
             cache_found = true;
@@ -296,7 +297,7 @@ void PNGAnimation::Load(const std::string& path)
 
                 for (const auto& frame : fs::directory_iterator(entry.path()))
                 {
-                    SPDLOG_INFO("[FD] Animation frame found: {}", frame.path().string());
+                    SPDLOG_DEBUG("[FD] Animation frame found: {}", frame.path().string());
                     frame_names.push_back(frame.path().string());
                 }
             }
@@ -341,7 +342,7 @@ void PNGAnimation::Load(const std::string& path)
         {
             if (frame_name.find(anim_name) != std::string::npos)
             {
-                SPDLOG_INFO("[FP] Animation frame found: {}", frame_name);
+                SPDLOG_DEBUG("[FP] Animation frame found: {}", frame_name);
                 tmp.frame_paths.push_back(frame_name);
             }
         }
@@ -383,7 +384,7 @@ void PNGAnimation::Load(const std::string& path)
         {
             animation = json::parse(entry.readAsText());
 
-            SPDLOG_INFO("Reading animation.json.");
+            SPDLOG_DEBUG("Reading animation.json.");
         }
     }
     else
@@ -451,14 +452,14 @@ void PNGAnimation::Load(const std::string& path)
 
     if(animation.contains("hitbox"))
     {
-        SPDLOG_INFO("Loading hitboxes");
+        SPDLOG_DEBUG("Loading hitboxes");
         for(auto s : animation["hitbox"].items())
         {
             std::string key = s.key();
-            SPDLOG_INFO("Hitbox key: {}", key);
+            SPDLOG_DEBUG("Hitbox key: {}", key);
 
             if (animation["hitbox"][key].is_array() && !animation["hitbox"][key].empty() && animation["hitbox"][key].at(0).is_number()) {
-                SPDLOG_INFO("Single hitbox detected");
+                SPDLOG_DEBUG("Single hitbox detected");
 
                 int hb_x = animation["hitbox"][key][0].get<int>();
                 int hb_y = animation["hitbox"][key][1].get<int>();
@@ -474,7 +475,7 @@ void PNGAnimation::Load(const std::string& path)
 
                 if(key == "default")
                 {
-                    SPDLOG_INFO("Setting default hitbox: {} {} {} {}", h.left, h.top, h.width, h.height);
+                    SPDLOG_DEBUG("Setting default hitbox: {} {} {} {}", h.left, h.top, h.width, h.height);
 
                     for(auto& a : animations)
                     {
@@ -483,17 +484,17 @@ void PNGAnimation::Load(const std::string& path)
                 }
                 else
                 {
-                    SPDLOG_INFO("Setting animation-specific hitbox: {} {} {} {}", h.left, h.top, h.width, h.height);
+                    SPDLOG_DEBUG("Setting animation-specific hitbox: {} {} {} {}", h.left, h.top, h.width, h.height);
 
                     int id = getIDfromShortName(key);
                     animations[id].hitboxes.push_back(h);
                 }
             }
             else if (animation["hitbox"][key].is_array() && !animation["hitbox"][key].empty() && animation["hitbox"][key].at(0).is_array()) {
-                SPDLOG_INFO("Multi hitbox detected");
+                SPDLOG_DEBUG("Multi hitbox detected");
                 for(auto json_hb : animation["hitbox"][key])
                 {
-                    SPDLOG_INFO("JSON: {}", json_hb.dump());
+                    SPDLOG_DEBUG("JSON: {}", json_hb.dump());
                     if(json_hb.size() == 4)
                     {
                         int hb_x = json_hb[0].get<int>();
@@ -510,7 +511,7 @@ void PNGAnimation::Load(const std::string& path)
 
                         if(key == "default")
                         {
-                            SPDLOG_INFO("Setting default hitbox: {} {} {} {}", h.left, h.top, h.width, h.height);
+                            SPDLOG_DEBUG("Setting default hitbox: {} {} {} {}", h.left, h.top, h.width, h.height);
 
                             for(auto& a : animations)
                             {
@@ -519,7 +520,7 @@ void PNGAnimation::Load(const std::string& path)
                         }
                         else
                         {
-                            SPDLOG_INFO("Setting animation-specific hitbox: {} {} {} {}", h.left, h.top, h.width, h.height);
+                            SPDLOG_DEBUG("Setting animation-specific hitbox: {} {} {} {}", h.left, h.top, h.width, h.height);
 
                             int id = getIDfromShortName(key);
                             animations[id].hitboxes.push_back(h);
@@ -571,7 +572,7 @@ void PNGAnimation::Load(const std::string& path)
             entry.second = spr;
             extra.push_back(entry);
 
-            SPDLOG_INFO("Loading extra: {}", name);
+            SPDLOG_DEBUG("Loading extra: {}", name);
 
             json j_extra;
             std::string json_name = "extra_" + name + ".json";
@@ -585,8 +586,7 @@ void PNGAnimation::Load(const std::string& path)
                 {
                     j_extra = json::parse(entry.readAsText());
 
-                    SPDLOG_INFO("Reading animation.json.");
-                    SPDLOG_INFO("Framerate: {}", animation["main"]["framerate"]);
+                    SPDLOG_DEBUG("Reading animation.json.");
                 }
             }
             else
@@ -605,7 +605,7 @@ void PNGAnimation::Load(const std::string& path)
             for(auto ff : j_extra["animationData"])
             {
                 ExtraFrame ef;
-                SPDLOG_INFO("Parsing extra frame: {}", ff.dump());
+                SPDLOG_DEBUG("Parsing extra frame: {}", ff.dump());
 
                 ef.x = ff["pos_x"].get<float>() * 3;
                 ef.y = ff["pos_y"].get<float>() * 3;

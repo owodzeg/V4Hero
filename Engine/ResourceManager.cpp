@@ -53,7 +53,7 @@ void ResourceManager::loadImageAsSprite(std::string path, sf::Image image)
 
     loadedPaths[StateManager::getInstance().getState()].push_back(path);
 
-    SPDLOG_INFO("Loaded sprite with path {}", path);
+    SPDLOG_DEBUG("Loaded sprite with path {}", path);
     ///have to add handling for when texture doesn't exist
 }
 

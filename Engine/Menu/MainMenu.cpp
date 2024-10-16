@@ -547,8 +547,6 @@ void MainMenu::Update()
         {
             totem[i].setPosition((float(360) + float(918) * (i)) + g_x[3] / 1.4, 2160);
 
-            SPDLOG_DEBUG("{} {} bounds {} {} {} {}", mouseCtrl->getMousePos().x / (window->getSize().x / 3840.f), mouseCtrl->getMousePos().y / (window->getSize().y / 2160.f), totem[i].getPosition().x, totem[i].getPosition().y, totem[i].getGlobalBounds().width, totem[i].getGlobalBounds().height);
-
             if (mouseCtrl->getMousePos().x / (window->getSize().x / 3840.f) > totem[i].getPosition().x)
             {
                 if (mouseCtrl->getMousePos().x / (window->getSize().x / 3840.f) < (totem[i].getPosition().x + totem[i].getTransformedBounds().width))

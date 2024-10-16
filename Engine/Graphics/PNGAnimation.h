@@ -5,6 +5,7 @@
 #include <Graphics/SpriteWrapper.h>
 #include <vector>
 #include <unordered_map>
+#include "libzippp.h"
 
 class PNGAnimationException : public std::exception {
 private:
@@ -76,7 +77,7 @@ class PNGAnimation
         std::unordered_map<std::string, std::unordered_map<int, std::unordered_map<int, ExtraFrame>>> ex_frames;
 
         PNGAnimation();
-        virtual sf::Image getAnimationImage(const std::string& anim_path, const std::string& image_path, bool zipped = false);
+        virtual sf::Image getAnimationImage(const std::string& anim_path, const std::string& image_path, libzippp::ZipArchive& zip_handle);
         virtual void loadCacheFile(Animation& anim);
         virtual void generateSpritesheet(Animation& anim, const std::string& anim_path);
         virtual bool getAnimationCache(Animation& anim);

@@ -156,7 +156,7 @@ void AnimatedObject::addExtra(SpriteWrapper spr, std::string name)
 
 void AnimatedObject::loadExtra(std::string path, std::string name)
 {
-    SPDLOG_INFO("Loading extra! {} {}", path, name);
+    SPDLOG_DEBUG("Loading extra! {} {}", path, name);
 
     for(auto& a : animation.extra)
     {
@@ -165,7 +165,7 @@ void AnimatedObject::loadExtra(std::string path, std::string name)
             std::string texPath = "resources/graphics/item/textures/"+path+".png";
             std::string alignPath = "resources/graphics/item/alignment/"+path+".spr";
 
-            SPDLOG_INFO("texPath: {}, alignPath: {}", texPath, alignPath);
+            SPDLOG_DEBUG("texPath: {}, alignPath: {}", texPath, alignPath);
 
             a.second.load(texPath);
 
@@ -187,7 +187,7 @@ void AnimatedObject::loadExtra(std::string path, std::string name)
                 a.second.setOrigin(0, 0);
             }
 
-            SPDLOG_INFO("set origin to {} {}", a.second.getOrigin().x, a.second.getOrigin().y);
+            SPDLOG_DEBUG("set origin to {} {}", a.second.getOrigin().x, a.second.getOrigin().y);
         }
     }
 }

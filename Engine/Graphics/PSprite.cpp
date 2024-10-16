@@ -63,7 +63,7 @@ void PSprite::loadFromFile(std::string file, int q, bool downscale)
     qualitySetting = q;
     resSetting = 3;
 
-    SPDLOG_INFO("Loading PSprite: {}", file);
+    SPDLOG_DEBUG("Loading PSprite: {}", file);
     texturePath = file;
 
     if(downscale)
