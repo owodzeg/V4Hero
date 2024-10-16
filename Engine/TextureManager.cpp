@@ -245,32 +245,30 @@ void TextureManager::loadImageFromFileWithScale(const std::string& path, int qua
     }
 }
 
-void TextureManager::loadImageFromMemory(const std::string& key, sf::Image image, bool asTexture)
+void TextureManager::loadImageFromMemory(const std::string& key, sf::Image& image, bool asTexture)
 {
     std::lock_guard<std::mutex> guard(resource_mutex);
-    //SPDLOG_DEBUG("load image {} from memory. asTexture: {}", key, asTexture);
 
     if (!asTexture)
     {
         if (loadedImages.find(key) == loadedImages.end())
         {
-            //SPDLOG_INFO("Loading image from memory with key {}", key);
-            loadedImages[key] = image;
-        } else
+            loadedImages[key] = std::move(image); // Move the image into the map
+        }
+        else
         {
             SPDLOG_ERROR("Couldn't load image {}: image already loaded", key);
-            //in theory this shouldnt be an error
         }
-    } else
+    }
+    else
     {
         if (loadedImages.find(key) == loadedImages.end())
         {
-            //SPDLOG_INFO("Loading image from memory into texture with key {}", key);
-            loadedTextures[key].loadFromImage(image);
-        } else
+            loadedTextures[key].loadFromImage(image); // No need to move here since sf::Image is copied internally
+        }
+        else
         {
             SPDLOG_ERROR("Couldn't load image {}: image already loaded", key);
-            //in theory this shouldnt be an error
         }
     }
 }

@@ -10,6 +10,8 @@
 #include <exception>
 #include <fstream>
 #include <regex>
+#include <future>  // for std::async and std::future
+
 using namespace libzippp;
 
 namespace fs = std::filesystem;
@@ -354,12 +356,24 @@ void PNGAnimation::Load(const std::string& path)
     // Step 3 - Compose the spritesheets
     SPDLOG_DEBUG("Maximum texture size: {}", maxSize);
 
+    // Your for loop with multithreading using std::async
+    std::vector<std::future<void>> futures; // To store future results of async tasks
+
     for(auto& x : animations)
     {
         if(!x.cached) // skip spritesheet generation if animation cache found
         {
-            generateSpritesheet(x, path);
+            // Launch async task for each spritesheet generation
+            futures.push_back(std::async(std::launch::async, [this, &x, &path]() {
+                generateSpritesheet(x, path); // Now 'this' is captured correctly
+            }));
         }
+    }
+
+    // Optionally wait for all tasks to finish
+    for(auto& f : futures)
+    {
+        f.get(); // This will block until each spritesheet generation is done
     }
 
     //Step 4 - Load spritesheets to ResourceManager

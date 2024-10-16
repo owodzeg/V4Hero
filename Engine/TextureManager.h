@@ -33,7 +33,7 @@ public:
     bool checkImageExists(const std::string& key);
     void loadImageFromFile(const std::string& path);
     void loadImageFromFileWithScale(const std::string& path, int quality);
-    void loadImageFromMemory(const std::string& key, sf::Image image, bool asTexture = false);
+    void loadImageFromMemory(const std::string& key, sf::Image& image, bool asTexture = false);
     sf::Image& getImage(const std::string& key);
     void loadTextureFromImage(const std::string& img_key);
     void unloadTexture(const std::string& key);
