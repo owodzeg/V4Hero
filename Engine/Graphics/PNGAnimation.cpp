@@ -62,7 +62,7 @@ void PNGAnimation::loadCacheFile(Animation& anim)
     // load animation data
     std::string anim_data;
     std::stringstream ss_anim_data;
-    std::string anim_data_path = std::format("resources/graphics/.tex_cache/{}@{}.anim", model_name, anim.shortName);
+    std::string anim_data_path = std::format("resources/graphics/.tex_cache/{}@{}@{}.anim", CoreManager::getInstance().getConfig()->GetInt("textureQuality"), model_name, anim.shortName);
     std::ifstream anim_data_file(anim_data_path);
     ss_anim_data << anim_data_file.rdbuf();
     anim_data = ss_anim_data.str();
@@ -132,7 +132,7 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
 
     // save the data to a file in cache so the information can be fetched later without having to go over the frames
     std::string anim_data = std::format("{} {} {} {} {}", img_x, img_y, frames, maxCols, maxRows);
-    std::string anim_data_path = std::format("resources/graphics/.tex_cache/{}@{}.anim", model_name, anim.shortName);
+    std::string anim_data_path = std::format("resources/graphics/.tex_cache/{}@{}@{}.anim", CoreManager::getInstance().getConfig()->GetInt("textureQuality"), model_name, anim.shortName);
 
     SPDLOG_DEBUG("Writing animation data into {}", anim_data_path);
 
@@ -202,7 +202,7 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
     int sheetID = 1;
     for (const auto& s : readySheets)
     {
-        std::string spr_name = std::format("resources/graphics/.tex_cache/{}@{}_spr_{}.png", model_name, anim.shortName, sheetID);
+        std::string spr_name = std::format("resources/graphics/.tex_cache/{}@{}@{}_spr_{}.png", CoreManager::getInstance().getConfig()->GetInt("textureQuality"), model_name, anim.shortName, sheetID);
         s.saveToFile(spr_name);
         SPDLOG_DEBUG("Saved spritesheet to {}", spr_name);
         anim.spritesheet_paths.push_back(spr_name);
@@ -228,7 +228,7 @@ bool PNGAnimation::getAnimationCache(Animation& anim)
     for (const auto& cache_entry : fs::directory_iterator(cache_path))
     {
         std::string cache_entry_name = cache_entry.path().string();
-        std::regex cache_regex(std::format("{}@{}_spr_(\\d*)\\.png", model_name, anim.shortName));
+        std::regex cache_regex(std::format("{}@{}@{}_spr_(\\d*)\\.png", CoreManager::getInstance().getConfig()->GetInt("textureQuality"), model_name, anim.shortName));
         std::smatch matches;
 
         if (std::regex_search(cache_entry_name, matches, cache_regex))
