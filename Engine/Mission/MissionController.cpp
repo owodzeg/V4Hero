@@ -473,8 +473,6 @@ void MissionController::DoMissionEnd()
 
             t_win.setScale(textCurScale);
 
-            SPDLOG_INFO("textCurX: {}, textY: {}", textCurX - 21, 1080-42);
-
             bar_win.setPosition(barCurX, 1080);
             t_win.setPosition(textCurX, 1080);
             //t_win_outline.setPosition(textCurX + 6, 1080 - 12);
