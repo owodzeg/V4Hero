@@ -637,12 +637,11 @@ void Barracks::refreshStats()
     }*/
 }
 
-//i have no idea if this goes here or in other place. -L
-string Barracks::getPreviewText(int stat, int pon_stat, int pon_base_stat)
+std::string Barracks::getPreviewText(float stat, float pon_stat, float pon_base_stat, int digits)
 {
-    std::string equip_attr = to_string(stat);
-    int actual_attr = pon_base_stat + stat; //this cause problems for the atkspd stat since it eliminates the decimals -L
-    std::string preview_pon_attr = to_string(actual_attr);
+    std::string equip_attr = Func::fnum_padding(stat, digits);
+    float actual_attr = pon_base_stat + stat;
+    std::string preview_pon_attr = Func::fnum_padding(actual_attr, digits);
     std::string preview_attr;
     if (stat != 0) 
     {
@@ -661,16 +660,16 @@ string Barracks::getPreviewText(int stat, int pon_stat, int pon_base_stat)
         } 
     } else
     {
-        return std::to_string( pon_stat );
+        return Func::fnum_padding(pon_stat, digits);
     }
 }
 
-string Barracks::getPreviewText(int stat, int pon_stat, int pon_base_stat, int stat2, int pon_stat2, int pon_base_stat2)
+std::string Barracks::getPreviewText(float stat, float pon_stat, float pon_base_stat, float stat2, float pon_stat2, float pon_base_stat2, int digits)
 {
-    int actual_attr = pon_base_stat + stat;
-    int actual_attr2 = pon_base_stat2 + stat2;
-    std::string preview_pon_attr = to_string(actual_attr);
-    std::string preview_pon_attr2 = to_string(actual_attr2);
+    float actual_attr = pon_base_stat + stat;
+    float actual_attr2 = pon_base_stat2 + stat2;
+    std::string preview_pon_attr = Func::fnum_padding(actual_attr, digits);
+    std::string preview_pon_attr2 = Func::fnum_padding(actual_attr2, digits);
     std::string preview_attr;
     if (stat != 0 && stat2 != 0)
     {
@@ -689,62 +688,48 @@ string Barracks::getPreviewText(int stat, int pon_stat, int pon_base_stat, int s
         }
     } else
     {
-        return to_string(pon_stat) + "-" + to_string(pon_stat2);
+        return Func::fnum_padding(pon_stat, digits) + "-" + Func::fnum_padding(pon_stat2, digits);
     }
 }
 
-sf::Color Barracks::getPreviewColorText(int stat, int pon_stat, int pon_base_stat,bool invert_color)
+sf::Color Barracks::getPreviewColorText(float stat, float pon_stat, float pon_base_stat, bool invert_color, int digits)
 {
     if (stat != 0)
     {
         if (pon_stat == (pon_base_stat + stat))
-        {
             return sf::Color::Black;
-        } else if (pon_stat < (pon_base_stat + stat))
-        {
-            if (invert_color) {
-                return sf::Color::Red;
-            }
-            else 
-            {
-                return sf::Color::Blue;
-            }
-            
-        } else if (pon_stat > (pon_base_stat + stat))
+
+        if (pon_stat < (pon_base_stat + stat))
         {
             if (invert_color)
-            {
-                return sf::Color::Blue;
-            }
-            else
-            {
                 return sf::Color::Red;
-            }
+            return sf::Color::Blue;
         }
-    } else
-    {
-        return sf::Color::Black;
+
+        if (pon_stat > (pon_base_stat + stat))
+        {
+            if (invert_color)
+                return sf::Color::Blue;
+            return sf::Color::Red;
+        }
     }
+
+    return sf::Color::Black;
 }
 
-sf::Color Barracks::getPreviewColorText(int stat, int pon_stat, int pon_base_stat, int stat2, int pon_stat2, int pon_base_stat2)
+sf::Color Barracks::getPreviewColorText(float stat, float pon_stat, float pon_base_stat, float stat2, float pon_stat2, float pon_base_stat2, int digits)
 {
     if (stat != 0 && stat2 != 0)
     {
         if (pon_stat == (pon_base_stat + stat) && pon_stat2 == (pon_base_stat2 + stat2))
-        {
             return sf::Color::Black;
-        } else if ((stat2 - stat) < (pon_stat2 - pon_stat))
-        {
+        if ((stat2 - stat) < (pon_stat2 - pon_stat))
             return sf::Color::Red;
-        } else
-        {
-            return sf::Color::Blue;
-        }
-    } else
-    {
-        return sf::Color::Black;
+
+        return sf::Color::Blue;
     }
+
+    return sf::Color::Black;
 }
 
 void Barracks::updatePreviewText()
@@ -761,13 +746,13 @@ void Barracks::updatePreviewText()
             item_title.setStringKey(inventory_boxes[invbox_id].data->item_name);
             item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(inventory_boxes[invbox_id].data->item_description, 340*3, font, 22)));
             //preview stats -L
-            unit_stat_hp_v.setString(getPreviewText(inventory_boxes[invbox_id].data->equip->hp, currentPon->pon_hp, currentPon->pon_base_hp));
+            unit_stat_hp_v.setString(getPreviewText(inventory_boxes[invbox_id].data->equip->hp, currentPon->pon_hp, currentPon->pon_base_hp, 0));
             unit_stat_hp_v.setColor(getPreviewColorText(inventory_boxes[invbox_id].data->equip->hp, currentPon->pon_hp, currentPon->pon_base_hp,false));
 
-            unit_stat_atkspd_v.setString(getPreviewText(inventory_boxes[invbox_id].data->equip->attack_speed, currentPon->pon_attack_speed, currentPon->pon_base_attack_speed)); //the only one that gives problems with the preview. -L
+            unit_stat_atkspd_v.setString(getPreviewText(inventory_boxes[invbox_id].data->equip->attack_speed, currentPon->pon_attack_speed, currentPon->pon_base_attack_speed, 2)); //the only one that gives problems with the preview. -L
             unit_stat_atkspd_v.setColor(getPreviewColorText(inventory_boxes[invbox_id].data->equip->attack_speed, currentPon->pon_attack_speed, currentPon->pon_base_attack_speed, true));
 
-            unit_stat_dmg_v.setString(getPreviewText(inventory_boxes[invbox_id].data->equip->min_dmg, currentPon->pon_min_dmg, currentPon->pon_base_min_dmg, inventory_boxes[invbox_id].data->equip->max_dmg, currentPon->pon_max_dmg, currentPon->pon_base_max_dmg));
+            unit_stat_dmg_v.setString(getPreviewText(inventory_boxes[invbox_id].data->equip->min_dmg, currentPon->pon_min_dmg, currentPon->pon_base_min_dmg, inventory_boxes[invbox_id].data->equip->max_dmg, currentPon->pon_max_dmg, currentPon->pon_base_max_dmg, 0));
             unit_stat_dmg_v.setColor(getPreviewColorText(inventory_boxes[invbox_id].data->equip->min_dmg, currentPon->pon_min_dmg, currentPon->pon_base_min_dmg, inventory_boxes[invbox_id].data->equip->max_dmg, currentPon->pon_max_dmg, currentPon->pon_base_max_dmg));
         } else
         {

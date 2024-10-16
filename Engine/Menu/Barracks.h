@@ -169,10 +169,10 @@ public:
     void setInventoryPosition();
     void applyEquipment();
     void refreshStats();
-    std::string getPreviewText(int stat, int pon_stat, int pon_base_stat);
-    std::string getPreviewText(int stat, int pon_stat, int pon_base_stat, int stat2, int pon_stat2, int pon_base_stat2);
-    sf::Color getPreviewColorText(int stat, int pon_stat, int pon_base_stat,bool invert_color);
-    sf::Color getPreviewColorText(int stat, int pon_stat, int pon_base_stat, int stat2, int pon_stat2, int pon_base_stat2);
+    std::string getPreviewText(float stat, float pon_stat, float pon_base_stat, int digits=0);
+    std::string getPreviewText(float stat, float pon_stat, float pon_base_stat, float stat2, float pon_stat2, float pon_base_stat2, int digits=0);
+    sf::Color getPreviewColorText(float stat, float pon_stat, float pon_base_stat, bool invert_color, int digits=0);
+    sf::Color getPreviewColorText(float stat, float pon_stat, float pon_base_stat, float stat2, float pon_stat2, float pon_base_stat2, int digits=0);
     void updatePreviewText();
     void updateButtons();
     Barracks();

@@ -197,6 +197,20 @@ std::string Func::num_padding(int num, int padding) ///stolen from cplusplus.com
     return ss.str();
 }
 
+std::string Func::fnum_padding(float value, int precision) {
+    std::ostringstream stream;
+
+    // If precision is 0, cast the value to an int to remove decimal part.
+    if (precision == 0) {
+        stream << static_cast<int>(value);
+    } else {
+        // Set the fixed format and the desired precision.
+        stream << std::fixed << std::setprecision(precision) << value;
+    }
+
+    return stream.str();
+}
+
 std::string Func::getCurrentWorkingDir()
 {
     std::filesystem::path cwd = std::filesystem::current_path();

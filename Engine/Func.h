@@ -28,6 +28,7 @@ public:
     template<typename T>
     static std::string to_str(const T& t);
     static std::string num_padding(int num, int padding);
+    static std::string fnum_padding(float num, int padding);
     static sf::Color hexToColor(const std::string& hex);
     static nlohmann::json parseLootArray(std::mt19937& gen, std::uniform_real_distribution<double>& roll, nlohmann::json loot);
     static void parseEntityLoot(std::mt19937& gen, std::uniform_real_distribution<double>& roll, nlohmann::json loot, std::vector<Entity::Loot>& to_drop);
