@@ -762,7 +762,7 @@ void MissionController::Update()
 
     for(auto& entity : entities)
     {
-        if(entity->getGlobalPosition().x < closest && (entity->entityType == Entity::EntityTypes::HOSTILE || entity->entityType == Entity::EntityTypes::NEUTRAL))
+        if(entity->getGlobalPosition().x < closest && (entity->entityType == Entity::EntityTypes::HOSTILE || entity->entityType == Entity::EntityTypes::NEUTRAL) && !entity->dead)
             closest = entity->getGlobalPosition().x + entity->getLocalPosition().x;
     }
 
