@@ -366,6 +366,7 @@ void InputController::Flush()
 {
     mtx.lock();
     keyMap.clear();
+    messages.clear();
     mtx.unlock();
 
     keyRegistered = false;
