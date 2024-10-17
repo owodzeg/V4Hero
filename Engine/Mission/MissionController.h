@@ -102,6 +102,12 @@ public:
     void ExecuteZoom(float speed, float time);
     void ProcessDroppedItems();
     void DoMissionEnd();
+    void ProcessRhythmMessages();
+    void ProcessExpiredObjects();
+    void DrawHitboxes();
+    void DrawMissionUI();
+    void ProcessProjectiles();
+    void ProcessPlayerActions();
 
     void Update();
 

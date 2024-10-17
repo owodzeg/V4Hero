@@ -589,21 +589,9 @@ void MissionController::DoMissionEnd()
     window->setView(v);
 }
 
-void MissionController::Update()
+void MissionController::ProcessRhythmMessages()
 {
     Rhythm* rhythm = CoreManager::getInstance().getRhythm();
-    RhythmGUI* rhythmGUI = CoreManager::getInstance().getRhythmGUI();
-    InputController* inputCtrl = CoreManager::getInstance().getInputController();
-
-    auto strRepo = CoreManager::getInstance().getStrRepo();
-    std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
-
-    float fps = CoreManager::getInstance().getCore()->getFPS();
-
-    // TODO: why the fuck is this needed? without this, zoom doesn't work correctly.
-    zoom_offset = (0.000709722222222 * CoreManager::getInstance().getWindow()->getSize().y);
-
-    rhythm->doRhythm();
 
     std::vector<Rhythm::RhythmMessage> messages = rhythm->fetchRhythmMessages(lastRhythmCheck);
 
@@ -713,97 +701,10 @@ void MissionController::Update()
             }
         }
     }
+}
 
-    float actionClockLimit = CoreManager::getInstance().getRhythm()->measure_ms - CoreManager::getInstance().getRhythm()->halfbeat_ms;
-
-    if(advance)
-    {
-        pataSpeed += pataMaxSpeed*accelerationFactor / fps;
-        if(pataSpeed > pataMaxSpeed)
-            pataSpeed = pataMaxSpeed;
-    }
-    else
-    {
-        pataSpeed -= pataMaxSpeed*decelerationFactor / fps;
-        if(pataSpeed < 0)
-            pataSpeed = 0;
-    }
-
-    if(advanceClock.getElapsedTime().asMilliseconds() > actionClockLimit)
-    {
-        hatapons.back().get()->StopAll();
-
-        for(auto& yaripon : yaripons)
-        {
-            if(yaripon->action == 2) // march
-                yaripon->StopAll();
-            if(yaripon->action == 1 && advanceClock.getElapsedTime().asMilliseconds() > actionClockLimit*2) // attack
-                yaripon->StopAttack();
-        }
-
-        advance = false;
-    }
-
-    followPoint += pataSpeed / fps;
-
-    //SPDLOG_DEBUG("PataSpeed: {}, PataMaxSpeed: {}, followPoint: {}", pataSpeed, pataMaxSpeed, followPoint);
-
-    float resRatioX = CoreManager::getInstance().getWindow()->getSize().x / float(3840);
-    float resRatioY = CoreManager::getInstance().getWindow()->getSize().y / float(2160);
-
-    auto lastView = CoreManager::getInstance().getWindow()->getView();
-    CoreManager::getInstance().getWindow()->setView(mission_view);
-
-    // Update positions
-    hatapons.back().get()->global_x = followPoint*3 - 400;
-    hatapons.back().get()->global_y = 1490 + cam.zoom_y / zoom_offset;
-
-    float closest = 9999999;
-
-    for(auto& entity : entities)
-    {
-        if(entity->getGlobalPosition().x < closest && (entity->entityType == Entity::EntityTypes::HOSTILE || entity->entityType == Entity::EntityTypes::NEUTRAL) && !entity->dead)
-            closest = entity->getGlobalPosition().x + entity->getLocalPosition().x;
-    }
-
-    // if farthest yaripon sees enemy, whole army shall be angry
-    bool yari_inSight = false;
-
-    if(yaripons.size() > 0)
-    {
-        float yari_distance = closest - yaripons.back().get()->global_x - yaripons.back().get()->local_x - yaripons.back().get()->gap_x;
-
-        if(yari_distance < 3000 && !entities.empty())
-        {
-            yari_inSight = true;
-            ExecuteZoom(1.0007, 1.2);
-        }
-        else
-        {
-            ExecuteZoom(0.9993, 0.8);
-        }
-    }
-
-    for(auto& pon : yaripons)
-    {
-        pon->global_x = followPoint*3 - 240;
-        pon->global_y = 1740; // ,/0.511 dla 720p ,/ 1.533 dla 2160p
-        pon->cam_offset = cam.zoom_y / zoom_offset;
-        pon->closestEnemyX = closest;
-        pon->enemyInSight = yari_inSight;
-        pon->missionEnd = missionEnd;
-        pon->failure = failure;
-    }
-
-    for(auto& entity : entities)
-    {
-        entity->cam_offset = cam.zoom_y / zoom_offset;
-    }
-
-    sf::RectangleShape hbb;
-    hbb.setSize(sf::Vector2f(10,10));
-    hbb.setFillColor(sf::Color::Green);
-
+void MissionController::ProcessExpiredObjects()
+{
     projectiles.erase(
         std::remove_if(
             projectiles.begin(),
@@ -836,134 +737,26 @@ void MissionController::Update()
             ),
             yaripons.end()
         );
+}
+
+void MissionController::DrawHitboxes()
+{
+    float resRatioX = CoreManager::getInstance().getWindow()->getSize().x / float(3840);
+    float resRatioY = CoreManager::getInstance().getWindow()->getSize().y / float(2160);
+
+    sf::RectangleShape hbb;
+    hbb.setSize(sf::Vector2f(10,10));
+    hbb.setFillColor(sf::Color::Green);
 
     for(auto& projectile : projectiles)
     {
-        projectile->cam_offset = cam.zoom_y / zoom_offset;
-
-        projectile->Update();
-
-        for(auto& entity : entities)
+        if(debug)
         {
-            if((entity->entityType == Entity::EntityTypes::HOSTILE || entity->entityType == Entity::EntityTypes::NEUTRAL) && !entity->dead)
-            {
-                auto pos = sf::Vector2f(entity->getGlobalPosition() + entity->getLocalPosition());
-
-                if(!projectile->fromEnemy)
-                {
-                    for(auto hb : entity->getHitbox())
-                    {
-                        if(projectile->tipX > pos.x+hb.left && projectile->tipX < pos.x+hb.width)
-                        {
-                            if(projectile->tipY > pos.y+hb.top && projectile->tipY < pos.y+hb.height)
-                            {
-                                projectile->finished = true;
-                                entity->handleHit(rand() % 20 + 10);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        for(auto& pon : yaripons)
-        {
-            if(!pon->dead)
-            {
-                auto pos = sf::Vector2f(pon->main.getGlobalPosition() + pon->main.getLocalPosition());
-
-                if(projectile->fromEnemy)
-                {
-                    for(auto hb : pon->main.animation.animations[pon->main.animation.currentAnimation].hitboxes)
-                    {
-                        if(projectile->tipX > pos.x+hb.left && projectile->tipX < pos.x+hb.width)
-                        {
-                            if(projectile->tipY > pos.y+hb.top && projectile->tipY < pos.y+hb.height)
-                            {
-                                projectile->finished = true;
-                                pon->curHP -= 3 + rand() % 5;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        for(auto& pon : hatapons)
-        {
-            if(pon->curHP > 0)
-            {
-                auto pos = sf::Vector2f(pon->main.getGlobalPosition() + pon->main.getLocalPosition());
-
-                if(projectile->fromEnemy)
-                {
-                    for(auto hb : pon->main.animation.animations[pon->main.animation.currentAnimation].hitboxes)
-                    {
-                        if(projectile->tipX > pos.x+hb.left && projectile->tipX < pos.x+hb.width)
-                        {
-                            if(projectile->tipY > pos.y+hb.top && projectile->tipY < pos.y+hb.height)
-                            {
-                                projectile->finished = true;
-                                pon->curHP -= 3 + rand() % 5;
-                            }
-                        }
-                    }
-                }
-            }
+            hbb.setPosition(projectile->tipX * resRatioX, projectile->tipY * resRatioY);
+            SPDLOG_DEBUG("projectile at {} {}, tip at {} {}, hitbox at {} {}", projectile->xPos, projectile->yPos, projectile->tipX, projectile->tipY, hbb.getPosition().x, hbb.getPosition().y);
+            CoreManager::getInstance().getWindow()->draw(hbb);
         }
     }
-
-    // find leftmost and rightmost patapon so a middlespot can be calculated
-    // i think in patapon the camera actually follows the rightmost spot
-    // can be experimented here
-
-    float leftmostPataX = 99999999;
-    float rightmostPataX = -99999999;
-
-    for(auto& p : hatapons)
-    {
-        float pos = p->global_x+p->local_x;
-        if(pos < leftmostPataX)
-            leftmostPataX = pos;
-        if(pos > rightmostPataX)
-            rightmostPataX = pos;
-    }
-
-    for(auto& p : yaripons)
-    {
-        float pos = p->global_x+p->local_x+p->attack_x+p->gap_x;
-        if(pos < leftmostPataX)
-            leftmostPataX = pos;
-        if(pos > rightmostPataX)
-            rightmostPataX = pos;
-    }
-
-    if(rightmostPataX > endflags.back().get()->global_x && !missionEnd)
-    {
-        missionEnd = true;
-        rhythm->Stop();
-        missionEndTimer.restart();
-        endflags.back().get()->main.setAnimation("triggered");
-        endflags.back().get()->main.restartAnimation();
-    }
-
-    if(!missionEnd)
-    {
-        if(yari_inSight)
-            cam.followobject_x = ((leftmostPataX + closest - 1800) / 2) * resRatioX;
-        else
-            cam.followobject_x = ((leftmostPataX + rightmostPataX - 300) / 2) * resRatioX;
-    }
-
-    cam.Work(mission_view);
-    bg.pataSpeed = pataMaxSpeed;
-    bg.Draw(cam);
-
-    for(auto& entity : entities)
-        entity->Draw();
-
-    endflags.back().get()->global_y = 1485 + cam.zoom_y / zoom_offset;
-    endflags.back().get()->Draw();
 
     if(debug && entities.size() > 0)
     {
@@ -981,40 +774,23 @@ void MissionController::Update()
             }
         }
     }
+}
 
-    for(auto& projectile : projectiles)
-    {
-        projectile->Draw();
+void MissionController::DrawMissionUI()
+{
+    RhythmGUI* rhythmGUI = CoreManager::getInstance().getRhythmGUI();
+    InputController* inputCtrl = CoreManager::getInstance().getInputController();
+    Rhythm* rhythm = CoreManager::getInstance().getRhythm();
 
-        if(debug)
-        {
-            hbb.setPosition(projectile->tipX * resRatioX, projectile->tipY * resRatioY);
-            SPDLOG_DEBUG("projectile at {} {}, tip at {} {}, hitbox at {} {}", projectile->xPos, projectile->yPos, projectile->tipX, projectile->tipY, hbb.getPosition().x, hbb.getPosition().y);
-            CoreManager::getInstance().getWindow()->draw(hbb);
-        }
-    }
+    auto strRepo = CoreManager::getInstance().getStrRepo();
+    std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
-    // draw everything
-    hatapons.back().get()->Draw();
-
-    for(auto& pon : yaripons)
-        pon->Draw();
-
-    for(auto& di : droppeditems)
-    {
-        if(rightmostPataX > di->global_x + di->local_x + di->off_x && !di->pickedup)
-        {
-            di->Collect();
-            dropped_ids.push_back(di->order_id);
-        }
-
-        di->off_y = cam.zoom_y / zoom_offset;
-        di->Draw();
-    }
+    float resRatioX = CoreManager::getInstance().getWindow()->getSize().x / float(3840);
+    float resRatioY = CoreManager::getInstance().getWindow()->getSize().y / float(2160);
 
     bg.DrawFloor();
 
-    lastView = CoreManager::getInstance().getWindow()->getView();
+    auto lastView = CoreManager::getInstance().getWindow()->getView();
     CoreManager::getInstance().getWindow()->setView(CoreManager::getInstance().getWindow()->getDefaultView());
 
     // UI elements
@@ -1165,9 +941,6 @@ void MissionController::Update()
         }
     }
 
-    if(missionEnd)
-        DoMissionEnd();
-
     inputCtrl->lockRhythm = false;
 
     SPDLOG_TRACE("Handle dialog boxes");
@@ -1309,7 +1082,7 @@ void MissionController::Update()
                         SPDLOG_DEBUG("Toggle rhythm debug");
 
                         CoreManager::getInstance().getRhythmGUI()->toggleDebugUI();
-                        
+
                         dialogboxes[dialogboxes.size() - 1].Close();
                     }
 
@@ -1322,7 +1095,7 @@ void MissionController::Update()
                         SPDLOG_DEBUG("Toggle song debug");
 
                         CoreManager::getInstance().getRhythm()->toggleDebug();
-                        
+
                         dialogboxes[dialogboxes.size() - 1].Close();
                     }
 
@@ -1350,7 +1123,280 @@ void MissionController::Update()
     }
 
     CoreManager::getInstance().getWindow()->setView(lastView);
+}
 
+void MissionController::ProcessProjectiles()
+{
+    for(auto& projectile : projectiles)
+    {
+        projectile->cam_offset = cam.zoom_y / zoom_offset;
+
+        projectile->Update();
+
+        for(auto& entity : entities)
+        {
+            if((entity->entityType == Entity::EntityTypes::HOSTILE || entity->entityType == Entity::EntityTypes::NEUTRAL) && !entity->dead)
+            {
+                auto pos = sf::Vector2f(entity->getGlobalPosition() + entity->getLocalPosition());
+
+                if(!projectile->fromEnemy)
+                {
+                    for(auto hb : entity->getHitbox())
+                    {
+                        if(projectile->tipX > pos.x+hb.left && projectile->tipX < pos.x+hb.width)
+                        {
+                            if(projectile->tipY > pos.y+hb.top && projectile->tipY < pos.y+hb.height)
+                            {
+                                projectile->finished = true;
+                                entity->handleHit(rand() % 20 + 10);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        for(auto& pon : yaripons)
+        {
+            if(!pon->dead)
+            {
+                auto pos = sf::Vector2f(pon->main.getGlobalPosition() + pon->main.getLocalPosition());
+
+                if(projectile->fromEnemy)
+                {
+                    for(auto hb : pon->main.animation.animations[pon->main.animation.currentAnimation].hitboxes)
+                    {
+                        if(projectile->tipX > pos.x+hb.left && projectile->tipX < pos.x+hb.width)
+                        {
+                            if(projectile->tipY > pos.y+hb.top && projectile->tipY < pos.y+hb.height)
+                            {
+                                projectile->finished = true;
+                                pon->curHP -= 3 + rand() % 5;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        for(auto& pon : hatapons)
+        {
+            if(pon->curHP > 0)
+            {
+                auto pos = sf::Vector2f(pon->main.getGlobalPosition() + pon->main.getLocalPosition());
+
+                if(projectile->fromEnemy)
+                {
+                    for(auto hb : pon->main.animation.animations[pon->main.animation.currentAnimation].hitboxes)
+                    {
+                        if(projectile->tipX > pos.x+hb.left && projectile->tipX < pos.x+hb.width)
+                        {
+                            if(projectile->tipY > pos.y+hb.top && projectile->tipY < pos.y+hb.height)
+                            {
+                                projectile->finished = true;
+                                pon->curHP -= 3 + rand() % 5;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void MissionController::ProcessPlayerActions()
+{
+    float fps = CoreManager::getInstance().getCore()->getFPS();
+
+    float actionClockLimit = CoreManager::getInstance().getRhythm()->measure_ms - CoreManager::getInstance().getRhythm()->halfbeat_ms;
+
+    if(advance)
+    {
+        pataSpeed += pataMaxSpeed*accelerationFactor / fps;
+        if(pataSpeed > pataMaxSpeed)
+            pataSpeed = pataMaxSpeed;
+    }
+    else
+    {
+        pataSpeed -= pataMaxSpeed*decelerationFactor / fps;
+        if(pataSpeed < 0)
+            pataSpeed = 0;
+    }
+
+    if(advanceClock.getElapsedTime().asMilliseconds() > actionClockLimit)
+    {
+        hatapons.back().get()->StopAll();
+
+        for(auto& yaripon : yaripons)
+        {
+            if(yaripon->action == 2) // march
+                yaripon->StopAll();
+            if(yaripon->action == 1 && advanceClock.getElapsedTime().asMilliseconds() > actionClockLimit*2) // attack
+                yaripon->StopAttack();
+        }
+
+        advance = false;
+    }
+}
+
+void MissionController::Update()
+{
+    Rhythm* rhythm = CoreManager::getInstance().getRhythm();
+
+    auto strRepo = CoreManager::getInstance().getStrRepo();
+    std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
+
+    float fps = CoreManager::getInstance().getCore()->getFPS();
+
+    // TODO: why the fuck is this needed? without this, zoom doesn't work correctly.
+    zoom_offset = (0.000709722222222 * CoreManager::getInstance().getWindow()->getSize().y);
+
+    rhythm->doRhythm();
+
+    ProcessRhythmMessages();
+    ProcessPlayerActions();
+
+    followPoint += pataSpeed / fps;
+
+    //SPDLOG_DEBUG("PataSpeed: {}, PataMaxSpeed: {}, followPoint: {}", pataSpeed, pataMaxSpeed, followPoint);
+
+    float resRatioX = CoreManager::getInstance().getWindow()->getSize().x / float(3840);
+    float resRatioY = CoreManager::getInstance().getWindow()->getSize().y / float(2160);
+
+    auto lastView = CoreManager::getInstance().getWindow()->getView();
+    CoreManager::getInstance().getWindow()->setView(mission_view);
+
+    // Update positions
+    hatapons.back().get()->global_x = followPoint*3 - 400;
+    hatapons.back().get()->global_y = 1490 + cam.zoom_y / zoom_offset;
+
+    float closest = 9999999;
+
+    for(auto& entity : entities)
+    {
+        if(entity->getGlobalPosition().x < closest && (entity->entityType == Entity::EntityTypes::HOSTILE || entity->entityType == Entity::EntityTypes::NEUTRAL) && !entity->dead)
+            closest = entity->getGlobalPosition().x + entity->getLocalPosition().x;
+    }
+
+    // if farthest yaripon sees enemy, whole army shall be angry
+    bool yari_inSight = false;
+
+    if(yaripons.size() > 0)
+    {
+        float yari_distance = closest - yaripons.back().get()->global_x - yaripons.back().get()->local_x - yaripons.back().get()->gap_x;
+
+        if(yari_distance < 3000 && !entities.empty())
+        {
+            yari_inSight = true;
+            ExecuteZoom(1.0007, 1.2);
+        }
+        else
+        {
+            ExecuteZoom(0.9993, 0.8);
+        }
+    }
+
+    for(auto& pon : yaripons)
+    {
+        pon->global_x = followPoint*3 - 240;
+        pon->global_y = 1740; // ,/0.511 dla 720p ,/ 1.533 dla 2160p
+        pon->cam_offset = cam.zoom_y / zoom_offset;
+        pon->closestEnemyX = closest;
+        pon->enemyInSight = yari_inSight;
+        pon->missionEnd = missionEnd;
+        pon->failure = failure;
+    }
+
+    for(auto& entity : entities)
+    {
+        entity->cam_offset = cam.zoom_y / zoom_offset;
+    }
+
+    ProcessProjectiles();
+
+    // find leftmost and rightmost patapon so a middlespot can be calculated
+    // i think in patapon the camera actually follows the rightmost spot
+    // can be experimented here
+
+    float leftmostPataX = 99999999;
+    float rightmostPataX = -99999999;
+
+    for(auto& p : hatapons)
+    {
+        float pos = p->global_x+p->local_x;
+        if(pos < leftmostPataX)
+            leftmostPataX = pos;
+        if(pos > rightmostPataX)
+            rightmostPataX = pos;
+    }
+
+    for(auto& p : yaripons)
+    {
+        float pos = p->global_x+p->local_x+p->attack_x+p->gap_x;
+        if(pos < leftmostPataX)
+            leftmostPataX = pos;
+        if(pos > rightmostPataX)
+            rightmostPataX = pos;
+    }
+
+    if(rightmostPataX > endflags.back().get()->global_x && !missionEnd)
+    {
+        missionEnd = true;
+        rhythm->Stop();
+        missionEndTimer.restart();
+        endflags.back().get()->main.setAnimation("triggered");
+        endflags.back().get()->main.restartAnimation();
+    }
+
+    if(!missionEnd)
+    {
+        if(yari_inSight)
+            cam.followobject_x = ((leftmostPataX + closest - 1800) / 2) * resRatioX;
+        else
+            cam.followobject_x = ((leftmostPataX + rightmostPataX - 300) / 2) * resRatioX;
+    }
+
+    cam.Work(mission_view);
+    bg.pataSpeed = pataMaxSpeed;
+    bg.Draw(cam);
+
+    for(auto& entity : entities)
+        entity->Draw();
+
+    endflags.back().get()->global_y = 1485 + cam.zoom_y / zoom_offset;
+    endflags.back().get()->Draw();
+
+    for(auto& projectile : projectiles)
+    {
+        projectile->Draw();
+    }
+
+    // draw everything
+    hatapons.back().get()->Draw();
+
+    for(auto& pon : yaripons)
+        pon->Draw();
+
+    for(auto& di : droppeditems)
+    {
+        if(rightmostPataX > di->global_x + di->local_x + di->off_x && !di->pickedup)
+        {
+            di->Collect();
+            dropped_ids.push_back(di->order_id);
+        }
+
+        di->off_y = cam.zoom_y / zoom_offset;
+        di->Draw();
+    }
+
+    ProcessExpiredObjects();
+    DrawHitboxes();
+    DrawMissionUI();
+
+    if(missionEnd)
+        DoMissionEnd();
+
+    // End mission if no Patapons or Hatapon is dead
     if((yaripons.size() == 0 || hatapons.back().get()->curHP <= 0) && !missionEnd)
     {
         missionEnd = true;
@@ -1358,6 +1404,8 @@ void MissionController::Update()
         failure = true;
         rhythm->Stop();
     }
+
+    CoreManager::getInstance().getWindow()->setView(lastView);
 
     if (returnToPatapolis)
     {
