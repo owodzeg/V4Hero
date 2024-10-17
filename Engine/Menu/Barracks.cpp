@@ -1369,6 +1369,7 @@ void Barracks::Update()
                 refreshStats();
             } else
             {
+                inputCtrl->lockInput = true;
                 screenFade.Create(ScreenFade::FADEOUT, 1024);
 
                 if (obelisk)
@@ -1398,27 +1399,31 @@ void Barracks::Update()
     {
         if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
         {
-            switch (dialog_boxes[dialog_boxes.size() - 1].CheckSelectedOption())
+            if(dialog_boxes.size() > 0)
             {
-                case 0: {
-                    if (dialog_boxes[dialog_boxes.size() - 1].id == 0)
-                    {
-                        SPDLOG_DEBUG("Go on mission!");
-                        dialog_boxes[dialog_boxes.size() - 1].Close();
+                switch (dialog_boxes[dialog_boxes.size() - 1].CheckSelectedOption())
+                {
+                    case 0: {
+                        if (dialog_boxes[dialog_boxes.size() - 1].id == 0)
+                        {
+                            SPDLOG_DEBUG("Go on mission!");
+                            dialog_boxes[dialog_boxes.size() - 1].Close();
 
-                        goto_id = 2;
-                        screenFade.Create(ScreenFade::FADEOUT, 1024);
+                            goto_id = 2;
+                            inputCtrl->lockInput = true;
+                            screenFade.Create(ScreenFade::FADEOUT, 1024);
+                            break;
+                        }
+
                         break;
                     }
 
-                    break;
-                }
+                    case 1: {
+                        SPDLOG_DEBUG("Back to Barracks");
+                        dialog_boxes[dialog_boxes.size() - 1].Close();
 
-                case 1: {
-                    SPDLOG_DEBUG("Back to Barracks");
-                    dialog_boxes[dialog_boxes.size() - 1].Close();
-
-                    break;
+                        break;
+                    }
                 }
             }
         }
@@ -1426,6 +1431,8 @@ void Barracks::Update()
 
     if (screenFade.checkFinished())
     {
+        inputCtrl->lockInput = false;
+
         switch (goto_id)
         {
             case 0: {

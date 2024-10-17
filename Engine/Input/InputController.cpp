@@ -75,6 +75,9 @@ void InputController::cleanExpiredMessages()
 
 bool InputController::processKeyPressMessages(int keyID)
 {
+    if(lockInput)
+        return false;
+
     /*std::vector<Input::KeyPressMessage> last_messages = fetchKeyPressMessages();
     
     if(last_messages.size() > 0)
@@ -114,6 +117,9 @@ bool InputController::processKeyPressMessages(int keyID)
 
 void InputController::processKeyHolds()
 {
+    if(lockInput)
+        return;
+
     mtx.lock();
     for( unsigned int i=0; i<messages.size(); i++ )
     {
@@ -131,6 +137,9 @@ void InputController::processKeyHolds()
 
 void InputController::parseEvents(sf::Event& event)
 {
+    if(lockInput)
+        return;
+
     if (event.type == sf::Event::KeyPressed)
     {
         addKeyPressMessage(event.key.code, true);

@@ -55,6 +55,7 @@ class InputController
     int currentKey = -1;        //reads what key has been pressed
 
     bool lockRhythm = false;
+    bool lockInput = false;
 
     std::mutex mtx;
 
