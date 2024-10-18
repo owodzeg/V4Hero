@@ -67,6 +67,16 @@ void Entity::LoadEntity(const std::string& path)
             maxHP = entity["defaultStats"]["hp"].get<int>();
             curHP = entity["defaultStats"]["hp"].get<int>();
         }
+
+        if(entity["defaultStats"].contains("mindmg"))
+        {
+            minDmg = entity["defaultStats"]["mindmg"].get<int>();
+        }
+
+        if(entity["defaultStats"].contains("maxdmg"))
+        {
+            maxDmg = entity["defaultStats"]["maxdmg"].get<int>();
+        }
     }
 
     if(entity.contains("specifications"))
@@ -397,7 +407,13 @@ void Entity::handleAttack() // entity's attack
     {
         if(!threw)
         {
-            CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x, global_y+local_y-90, -1800 - (rand()%50)*1, -1800 - (rand()%70)*1, "main/0025", true);
+            float prj_xPos = global_x+local_x;
+            float prj_yPos = global_y+local_y-90;
+            float prj_hSpeed = -1800 - (rand()%50);
+            float prj_vSpeed = -1800 - (rand()%70);
+            auto prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn, true);
+            prj->damage = minDmg + (rand() % std::min(int(minDmg-maxDmg),1));
+
             threw = true;
             attackTimer.restart();
         }

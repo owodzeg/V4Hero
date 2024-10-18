@@ -20,24 +20,140 @@
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 2700, "color": "1e8c5a", "layer": "nature" } },
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 2940, "color": "1e8c5a", "layer": "nature" } },
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 3180, "color": "1e8c5a", "layer": "nature" } },
-		{ "path": "resources/units/entity/kirajin.zip", "params": { "xpos": 2500, "extra": { "weapon": "main/0025", "helm": "main/0026" } } },
-		{ "path": "resources/units/entity/kirajin.zip", "params": { "xpos": 2650, "extra": { "weapon": "main/0025", "helm": "main/0026" } } },
-		{ "path": "resources/units/entity/kirajin.zip", "params": { "xpos": 2800, "extra": { "weapon": "main/0025", "helm": "main/0026" } } },
+		{
+			"path": "resources/units/entity/kirajin.zip",
+			"params": {
+				"xpos": 2500,
+				"mindmg": 2,
+				"maxdmg": 5,
+				"extra": {
+					"weapon": "main/0025",
+					"helm": "main/0026"
+				}
+			}
+		},
+		{
+			"path": "resources/units/entity/kirajin.zip",
+			"params": {
+				"xpos": 2600,
+				"mindmg": 2,
+				"maxdmg": 5,
+				"extra": {
+					"weapon": "main/0016",
+					"helm": "main/0022"
+				}
+			},
+			"loot": {
+				"common": [
+					50,
+					{ "item": "item_iron_spear", "chance": 50 },
+					{ "item": "item_iron_helmet", "chance": 50 }
+				],
+				"uncommon": [
+					10,
+					{ "item": "item_steel_spear", "chance": 50 },
+					{ "item": "item_strength_helmet", "chance": 50 }
+				],
+				"rare": [
+					0.2,
+					{ "item": "item_kirajin_spear1", "chance": 50 },
+					{ "item": "item_kirajin_helmet1", "chance": 50 }
+				]
+			}
+		},
+		{
+			"path": "resources/units/entity/kirajin.zip",
+			"params": {
+				"xpos": 2700,
+				"mindmg": 2,
+				"maxdmg": 5,
+				"extra": {
+					"weapon": "main/0025",
+					"helm": "main/0026"
+				}
+			}
+		},
 		{ "path": "resources/units/entity/kirajin_hut.zip", "params": { "xpos": 3400 } },
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 3900, "color": "1e8c5a", "layer": "nature" } },
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 4110, "color": "1e8c5a", "layer": "nature" } },
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 4920, "color": "1e8c5a", "layer": "nature" } },
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 5160, "color": "1e8c5a", "layer": "nature" } },
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 7200, "color": "1e8c5a", "layer": "nature" } },
-		{ "path": "resources/units/entity/kirajin.zip", "params": { "xpos": 8000, "extra": { "weapon": "main/0025", "helm": "main/0026" } } },
-		{ "path": "resources/units/entity/kirajin.zip", "params": { "xpos": 8250, "extra": { "weapon": "main/0025", "helm": "main/0026" } } },
-		{ "path": "resources/units/entity/kirajin.zip", "params": { "xpos": 8500, "extra": { "weapon": "main/0025", "helm": "main/0026" } } },
+		{
+			"path": "resources/units/entity/kirajin.zip",
+			"params": {
+				"xpos": 8000,
+				"mindmg": 2,
+				"maxdmg": 5,
+				"extra": {
+					"weapon": "main/0025",
+					"helm": "main/0026"
+				}
+			}
+		},
+		{
+			"path": "resources/units/entity/kirajin.zip",
+			"params": {
+				"xpos": 8100,
+				"mindmg": 2,
+				"maxdmg": 5,
+				"extra": {
+					"weapon": "main/0025",
+					"helm": "main/0026"
+				}
+			}
+		},
+		{
+			"path": "resources/units/entity/kirajin.zip",
+			"params": {
+				"xpos": 8200,
+				"mindmg": 2,
+				"maxdmg": 5,
+				"extra": {
+					"weapon": "main/0025",
+					"helm": "main/0026"
+				}
+			}
+		},
 		{ "path": "resources/units/entity/kirajin_hut.zip", "params": { "xpos": 9100 } },
 		{ "path": "resources/units/entity/kirajin_hut.zip", "params": { "xpos": 10100 } },
 		{ "path": "resources/units/entity/kirajin_hut.zip", "params": { "xpos": 11100 } },
-		{ "path": "resources/units/entity/kirajin.zip", "params": { "xpos": 12000, "extra": { "weapon": "main/0025", "helm": "main/0026" } } },
-		{ "path": "resources/units/entity/kirajin.zip", "params": { "xpos": 12250, "extra": { "weapon": "main/0025", "helm": "main/0026" } } },
-		{ "path": "resources/units/entity/kirajin.zip", "params": { "xpos": 12500, "extra": { "weapon": "main/0025", "helm": "main/0026" } } },
+		{
+			"path": "resources/units/entity/kirajin.zip",
+			"params": {
+				"xpos": 12000,
+				"mindmg": 2,
+				"maxdmg": 5,
+				"extra": {
+					"weapon": "main/0025",
+					"helm": "main/0026"
+				}
+			}
+		},
+		{
+			"path": "resources/units/entity/kirajin.zip",
+			"params": {
+				"xpos": 12100,
+				"mindmg": 2,
+				"maxdmg": 5,
+				"extra": {
+					"weapon": "main/0025",
+					"helm": "main/0026"
+				}
+			}
+		},
+		{
+			"path": "resources/units/entity/kirajin.zip",
+			"params": {
+				"xpos": 12200,
+				"mindmg": 2,
+				"maxdmg": 5,
+				"extra": {
+					"weapon": "main/0025",
+					"helm": "main/0026"
+				}
+			}
+		},
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 7440, "color": "1e8c5a", "layer": "nature" } },
 		{ "path": "resources/units/entity/grass_1.zip", "params": { "xpos": 8700, "color": "1e8c5a", "layer": "nature" } },
 		{ "path": "resources/units/entity/end_flag.zip", "params": { "xpos": 18000, "layer": "ui" } }

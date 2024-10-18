@@ -67,8 +67,8 @@ public:
     bool dead = false;
     bool forRemoval = false;
 
-    float mindmg = 1;
-    float maxdmg = 1;
+    float minDmg = 1;
+    float maxDmg = 1;
 
     int layer = 0;   ///rendering priority
     int parent = -1; ///if entity is bound to any other entity
@@ -102,6 +102,8 @@ public:
     float hPos=0, vPos=0;
 
     float cam_offset;
+
+    std::string wpn = "main/0004";
 
     Entity();
     void LoadEntity(const std::string& path);

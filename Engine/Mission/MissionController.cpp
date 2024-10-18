@@ -81,19 +81,44 @@ void MissionController::LoadMission(const std::string& path)
         {
             yaripons.push_back(std::make_unique<Yaripon>(i, 6));
 
+            auto y = yaripons.back().get();
+
             Pon* currentPon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i-1);
-            InventoryData::InventoryItem eq = CoreManager::getInstance().getSaveReader()->invData.items[currentPon->slots[0]];
+
+            int hp = currentPon->pon_base_hp;
+            int minDmg = currentPon->pon_base_min_dmg;
+            int maxDmg = currentPon->pon_base_max_dmg;
+
+            for(auto s : currentPon->slots)
+            {
+                if(s != -1)
+                {
+                    auto e = CoreManager::getInstance().getSaveReader()->invData.items[s];
+                    minDmg += e.item->equip->min_dmg;
+                    maxDmg += e.item->equip->max_dmg;
+                    hp += e.item->equip->hp;
+                }
+            }
+
+            y->minDmg = minDmg;
+            y->maxDmg = maxDmg;
+            y->curHP = hp;
+            y->maxHP = hp;
+
+            auto eq = CoreManager::getInstance().getSaveReader()->invData.items[currentPon->slots[0]];
 
             std::string wpn = eq.item->spritesheet+"/"+Func::num_padding(eq.item->spritesheet_id, 4);
-            yaripons.back().get()->wpn = wpn;
+            y->wpn = wpn;
 
             eq = CoreManager::getInstance().getSaveReader()->invData.items[currentPon->slots[1]];
 
             std::string hlm = eq.item->spritesheet+"/"+Func::num_padding(eq.item->spritesheet_id, 4);
-            yaripons.back().get()->hlm = hlm;
+            y->hlm = hlm;
 
-            yaripons.back().get()->main.loadExtra(wpn, "weapon");
-            yaripons.back().get()->main.loadExtra(hlm, "helm");
+            y->main.loadExtra(wpn, "weapon");
+            y->main.loadExtra(hlm, "helm");
+
+            SPDLOG_INFO("Spawning Yaripon with stats: (dmg {}-{}, hp {})", y->minDmg, y->maxDmg, y->maxHP);
         }
     }
     else
@@ -161,6 +186,14 @@ void MissionController::LoadMission(const std::string& path)
                             e->curHP = e->maxHP;
                         }
 
+                        // Check mindmg
+                        if (params.contains("mindmg") && !params["mindmg"].is_null())
+                            e->minDmg = params["mindmg"];
+
+                        // Check maxdmg
+                        if (params.contains("maxdmg") && !params["maxdmg"].is_null())
+                            e->maxDmg = params["maxdmg"];
+
                         // Check extra parameters
                         if (params.contains("extra") && !params["extra"].is_null())
                         {
@@ -168,6 +201,11 @@ void MissionController::LoadMission(const std::string& path)
                             for (auto& j : params["extra"].items())
                             {
                                 e->loadExtra(j.value(), j.key());
+
+                                if(j.key() == "weapon")
+                                {
+                                    e->wpn = j.value();
+                                }
                             }
                         }
                     }
@@ -229,10 +267,11 @@ void MissionController::LoadMission(const std::string& path)
     initialized = true;
 }
 
-void MissionController::SendProjectile(float x, float y, float hspeed, float vspeed, std::string prj_tex, bool evil)
+Projectile* MissionController::SendProjectile(float x, float y, float hspeed, float vspeed, std::string prj_tex, bool evil)
 {
     projectiles.push_back(std::make_unique<Projectile>("resources/graphics/item/textures/"+prj_tex+".png", x, y, hspeed, vspeed, evil));
     SPDLOG_DEBUG("SENDING PROJECTILE AT {} {} {} {}", x, y, hspeed, vspeed);
+    return projectiles.back().get();
 }
 
 void MissionController::SendItemDrop(std::vector<int> order_id, float x, float y)
@@ -758,13 +797,41 @@ void MissionController::DrawHitboxes()
         }
     }
 
-    if(debug && entities.size() > 0)
+    if(debug)
     {
         for(auto& entity : entities)
         {
             auto pos = sf::Vector2f(entity->global_x + entity->local_x + entity->hPos, entity->global_y + entity->local_y + entity->vPos + entity->cam_offset);
 
             for(auto hb : entity->getHitbox())
+            {
+                sf::RectangleShape hbx;
+                hbx.setSize(sf::Vector2f(hb.width*resRatioX,hb.height*resRatioY));
+                hbx.setFillColor(sf::Color(128,0,128,64));
+                hbx.setPosition((pos.x+hb.left) * resRatioX, (pos.y+hb.top) * resRatioY);
+                CoreManager::getInstance().getWindow()->draw(hbx);
+            }
+        }
+
+        for(auto& pon : yaripons)
+        {
+            auto pos = sf::Vector2f(pon->global_x + pon->local_x + pon->attack_x + pon->gap_x, pon->global_y + pon->local_y + pon->cam_offset);
+
+            for(auto hb : pon->getHitbox())
+            {
+                sf::RectangleShape hbx;
+                hbx.setSize(sf::Vector2f(hb.width*resRatioX,hb.height*resRatioY));
+                hbx.setFillColor(sf::Color(128,0,128,64));
+                hbx.setPosition((pos.x+hb.left) * resRatioX, (pos.y+hb.top) * resRatioY);
+                CoreManager::getInstance().getWindow()->draw(hbx);
+            }
+        }
+
+        for(auto& pon : hatapons)
+        {
+            auto pos = sf::Vector2f(pon->global_x + pon->local_x, pon->global_y + pon->local_y + pon->cam_offset);
+
+            for(auto hb : pon->getHitbox())
             {
                 sf::RectangleShape hbx;
                 hbx.setSize(sf::Vector2f(hb.width*resRatioX,hb.height*resRatioY));
@@ -1148,7 +1215,7 @@ void MissionController::ProcessProjectiles()
                             if(projectile->tipY > pos.y+hb.top && projectile->tipY < pos.y+hb.height)
                             {
                                 projectile->finished = true;
-                                entity->handleHit(rand() % 20 + 10);
+                                entity->handleHit(projectile->damage);
                             }
                         }
                     }
@@ -1164,14 +1231,14 @@ void MissionController::ProcessProjectiles()
 
                 if(projectile->fromEnemy)
                 {
-                    for(auto hb : pon->main.animation.animations[pon->main.animation.currentAnimation].hitboxes)
+                    for(auto hb : pon->getHitbox())
                     {
                         if(projectile->tipX > pos.x+hb.left && projectile->tipX < pos.x+hb.width)
                         {
                             if(projectile->tipY > pos.y+hb.top && projectile->tipY < pos.y+hb.height)
                             {
                                 projectile->finished = true;
-                                pon->curHP -= 3 + rand() % 5;
+                                pon->curHP -= projectile->damage;
                             }
                         }
                     }
@@ -1187,7 +1254,7 @@ void MissionController::ProcessProjectiles()
 
                 if(projectile->fromEnemy)
                 {
-                    for(auto hb : pon->main.animation.animations[pon->main.animation.currentAnimation].hitboxes)
+                    for(auto hb : pon->getHitbox())
                     {
                         if(projectile->tipX > pos.x+hb.left && projectile->tipX < pos.x+hb.width)
                         {
@@ -1268,7 +1335,8 @@ void MissionController::Update()
 
     // Update positions
     hatapons.back().get()->global_x = followPoint*3 - 400;
-    hatapons.back().get()->global_y = 1490 + cam.zoom_y / zoom_offset;
+    hatapons.back().get()->global_y = 1490;
+    hatapons.back().get()->cam_offset = cam.zoom_y / zoom_offset;
 
     float closest = 9999999;
 
