@@ -13,6 +13,10 @@ public:
     float maxHP = 100;
     float curHP = maxHP;
 
+    float minDmg=0, maxDmg=0;
+    float dmgMultiplier = 1;
+    float defMultiplier = 1;
+
     int order = 0;
     int maxp = 0;
 
@@ -74,6 +78,7 @@ public:
     void PerformDeath();
     void StopAll();
     void Drum(std::string drum);
+    std::vector<sf::FloatRect> getHitbox();
     void Draw();
 };
 

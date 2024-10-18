@@ -110,10 +110,26 @@ void Yaripon::PerformAttack()
 
             if(main.getAnimation() == "attack_fever_throw" && main.getAnimationFrame() >= 8 && !threw)
             {
-                if(attackType == 1) // ponpon
-                    CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y-90, 1800 + (globalRand%50)*1, -1800 - (globalRand%70)*1, wpn);
-                if(attackType == 2) // chakachaka
-                    CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y-90, 2400 + (globalRand%50)*1, 1050 - (globalRand%70)*1, wpn);
+                float prj_xPos = global_x+local_x+attack_x+gap_x;
+                float prj_yPos = global_y+local_y-90;
+
+                if(attackType == 1)
+                {
+                    // ponpon
+                    float prj_hSpeed = 1800 + (globalRand%50);
+                    float prj_vSpeed = -1800 - (globalRand%70);
+                    auto prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn);
+                    prj->damage = minDmg + (rand() % std::min(int(minDmg-maxDmg),1));
+                }
+
+                if(attackType == 2)
+                {
+                    // chakachaka
+                    float prj_hSpeed = 2400 + (globalRand%50);
+                    float prj_vSpeed = 1050 - (globalRand%70);
+                    auto prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn);
+                    prj->damage = minDmg + (rand() % std::min(int(minDmg-maxDmg),1));
+                }
                 threw = true;
             }
 
@@ -157,10 +173,26 @@ void Yaripon::PerformAttack()
 
             if(main.getAnimation() == "attack_prefever_focused_throw" && main.getAnimationFrame() >= 2 && !threw)
             {
-                if(attackType == 3) // ponpon
-                    CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y-90, 1600 + (globalRand%50)*1, -1500 - (globalRand%70)*1, wpn);
-                if(attackType == 4) // chakachaka
-                    CoreManager::getInstance().getMissionController()->SendProjectile(global_x+local_x+attack_x+gap_x, global_y+local_y-90, 2000 + (globalRand%50)*1, -300 - (globalRand%70)*1, wpn);
+                float prj_xPos = global_x+local_x+attack_x+gap_x;
+                float prj_yPos = global_y+local_y-90;
+
+                if(attackType == 3)
+                {
+                    // ponpon
+                    float prj_hSpeed = 1600 + (globalRand%50);
+                    float prj_vSpeed = -1500 - (globalRand%70);
+                    auto prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn);
+                    prj->damage = minDmg + (rand() % std::min(int(minDmg-maxDmg),1));
+                }
+
+                if(attackType == 4)
+                {
+                    // chakachaka
+                    float prj_hSpeed = 2000 + (globalRand%50);
+                    float prj_vSpeed = -300 - (globalRand%70);
+                    auto prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn);
+                    prj->damage = minDmg + (rand() % std::min(int(minDmg-maxDmg),1));
+                }
                 threw = true;
             }
 
@@ -279,6 +311,11 @@ void Yaripon::Drum(std::string drum)
             main.setAnimation(drum+"_focused");
         main.restartAnimation();
     }
+}
+
+std::vector<sf::FloatRect> Yaripon::getHitbox()
+{
+    return main.animation.animations[main.animation.currentAnimation].hitboxes;
 }
 
 void Yaripon::Draw()

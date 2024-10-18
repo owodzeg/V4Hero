@@ -32,6 +32,9 @@ public:
 
     float cam_offset = 0;
 
+    // projectile parameters affecting other objects
+    float damage = 0;
+
     SpriteWrapper sprite;
 
     Projectile(std::string path, float x, float y, float thspeed, float tvspeed, bool evil);
