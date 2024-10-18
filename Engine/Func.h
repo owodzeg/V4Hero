@@ -32,6 +32,9 @@ public:
     static sf::Color hexToColor(const std::string& hex);
     static nlohmann::json parseLootArray(std::mt19937& gen, std::uniform_real_distribution<double>& roll, nlohmann::json loot);
     static void parseEntityLoot(std::mt19937& gen, std::uniform_real_distribution<double>& roll, nlohmann::json loot, std::vector<Entity::Loot>& to_drop);
+
+    static unsigned int calculateImageChecksum(const sf::Image& image);
+    static unsigned int calculateTotalChecksum(const std::vector<std::string>& filePaths, libzippp::ZipArchive& zf);
 };
 
 #endif // FUNC_H

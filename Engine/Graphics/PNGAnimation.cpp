@@ -25,10 +25,10 @@ sf::Image PNGAnimation::getAnimationImage(const std::string& anim_path, const st
 {
     std::lock_guard<std::mutex> guard(resource_mutex);
 
+    SPDLOG_DEBUG("Providing animation file for {}, img: {}, zipped?: {}", anim_path, image_path, zip_handle.isOpen());
+
     if(zip_handle.isOpen())
     {
-        SPDLOG_DEBUG("Providing animation file for {}, img: {}, zipped?: {}", anim_path, image_path, zip_handle.isOpen());
-
         char* data = (char*) zip_handle.readEntry(image_path, true);
         ZipEntry thumb_entry = zip_handle.getEntry(image_path);
 
@@ -336,11 +336,9 @@ void PNGAnimation::Load(const std::string& path)
             std::sort(tmp.spritesheet_paths.begin(), tmp.spritesheet_paths.end());
 
             loadCacheFile(tmp);
-
-            animations.push_back(tmp);
-            animationIDtoName[tmp.shortName] = animations.size()-1;
-            continue; // no need to seek for frames if we got the spritesheet ready.
         }
+
+        // we continue to seek after files anyways, because we'll perform a quick checksum check later
 
         for(auto& frame_name : frame_names)
         {
@@ -353,6 +351,43 @@ void PNGAnimation::Load(const std::string& path)
 
         animations.push_back(tmp);
         animationIDtoName[tmp.shortName] = animations.size()-1;
+    }
+
+    // Step 2.5 - Checksum calculation. Invalidate cache if checksum is different or doesn't exist
+    for(auto& a : animations)
+    {
+        std::vector<std::string> full_paths;
+
+        unsigned int new_checksum = 0;
+        unsigned int old_checksum = 0;
+
+        ZipArchive zf(f.string());
+
+        if(a.zip)
+        {
+            zf.open(ZipArchive::ReadOnly);
+        }
+
+        new_checksum = Func::calculateTotalChecksum(a.frame_paths, zf);
+
+        std::string cs_data_path = std::format("resources/graphics/.tex_cache/{}@{}@{}.hash", CoreManager::getInstance().getConfig()->GetInt("textureQuality"), model_name, a.shortName);
+
+        std::ifstream cs_file(cs_data_path);
+        if(cs_file.good())
+        {
+            std::string buffer;
+            std::getline(cs_file, buffer);
+            old_checksum = stoul(buffer);
+        }
+        cs_file.close();
+
+        if(new_checksum != old_checksum)
+        {
+            a.cached = false;
+            std::ofstream cs_file_out(cs_data_path);
+            cs_file_out << to_string(new_checksum);
+            cs_file_out.close();
+        }
     }
 
     // Step 3 - Compose the spritesheets

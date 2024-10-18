@@ -2,6 +2,7 @@
 
 #include "Func.h"
 #include <codecvt>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <locale>
@@ -403,4 +404,87 @@ void Func::parseEntityLoot(std::mt19937& gen, std::uniform_real_distribution<dou
             to_drop.push_back(tmp);
         }
     }
+}
+
+unsigned int Func::calculateImageChecksum(const sf::Image& image) {
+    unsigned int checksum = 0;
+
+    sf::Vector2u imageSize = image.getSize();
+    unsigned int width = imageSize.x;
+    unsigned int height = imageSize.y;
+
+    for (unsigned int y = 0; y < height; ++y) {
+        for (unsigned int x = 0; x < width; ++x) {
+            sf::Color pixelColor = image.getPixel(x, y);
+            unsigned int pixelValue = (pixelColor.r << 24) | (pixelColor.g << 16) | (pixelColor.b << 8) | pixelColor.a;
+            checksum ^= pixelValue;
+        }
+    }
+
+    return checksum;
+}
+
+unsigned int Func::calculateTotalChecksum(const std::vector<std::string>& filePaths, libzippp::ZipArchive& zf) {
+    unsigned int totalChecksum = 0x12345678;
+
+    if(zf.isOpen())
+    {
+        for(auto filePath : filePaths)
+        {
+            char* data = (char*) zf.readEntry(filePath, true);
+            unsigned int s = zf.getEntry(filePath).getSize();
+
+            // XOR checksum for this file
+            unsigned int fileChecksum = 0;
+            size_t i = 0;
+
+            // Process the data in 4-byte chunks (32-bit)
+            for (; i + 4 <= s; i += 4) {
+                // Treat each 4 bytes as a single 32-bit integer, and XOR it with the checksum
+                unsigned int chunk =
+                    (static_cast<unsigned char>(data[i]) << 24) |  // byte 1 (most significant byte)
+                    (static_cast<unsigned char>(data[i + 1]) << 16) |  // byte 2
+                    (static_cast<unsigned char>(data[i + 2]) << 8) |   // byte 3
+                    static_cast<unsigned char>(data[i + 3]);           // byte 4 (least significant byte)
+                fileChecksum ^= chunk;
+            }
+
+            // Handle any remaining bytes (if the file size isn't a multiple of 4)
+            unsigned int lastBytes = 0;
+            for (size_t j = 0; i < s; ++i, ++j) {
+                lastBytes |= (static_cast<unsigned char>(data[i]) << (8 * (3 - j)));  // shift remaining bytes
+            }
+            fileChecksum ^= lastBytes;
+
+            // Combine with the total checksum
+            totalChecksum ^= fileChecksum;
+        }
+    }
+    else
+    {
+        for (auto filePath : filePaths) {
+            filePath = std::filesystem::path(filePath);
+            if (std::filesystem::exists(filePath) && std::filesystem::is_regular_file(filePath)) {
+                std::ifstream file(filePath, std::ios::binary);
+                if (!file.is_open()) {
+                    std::cerr << "Failed to open file: " << filePath << std::endl;
+                    continue;  // Skip to next file if we can't open this one
+                }
+
+                unsigned int fileChecksum = 0x77777777;
+                char byte;
+                size_t byteCount = 0;  // To track how many bytes have been processed
+                while (file.get(byte)) {
+                    fileChecksum ^= (static_cast<unsigned int>(static_cast<unsigned char>(byte)) << ((byteCount % 4) * 8));
+                    ++byteCount;
+                }
+
+                totalChecksum ^= fileChecksum;  // Combine each file's checksum
+            } else {
+                std::cerr << "Skipping invalid or non-regular file: " << filePath << std::endl;
+            }
+        }
+    }
+
+    return totalChecksum;
 }
