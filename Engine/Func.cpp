@@ -462,8 +462,8 @@ unsigned int Func::calculateTotalChecksum(const std::vector<std::string>& filePa
     }
     else
     {
-        for (auto filePath : filePaths) {
-            filePath = std::filesystem::path(filePath);
+        for (auto sFilePath : filePaths) {
+            std::filesystem::path filePath = std::filesystem::path(sFilePath);
             if (std::filesystem::exists(filePath) && std::filesystem::is_regular_file(filePath)) {
                 std::ifstream file(filePath, std::ios::binary);
                 if (!file.is_open()) {
