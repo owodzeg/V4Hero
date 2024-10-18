@@ -18,9 +18,14 @@ void Hatapon::StopAll()
     main.setAnimation("idle");
 }
 
+std::vector<sf::FloatRect> Hatapon::getHitbox()
+{
+    return main.animation.animations[main.animation.currentAnimation].hitboxes;
+}
+
 void Hatapon::Draw()
 {
-    main.setGlobalPosition(sf::Vector2f(global_x, global_y));
+    main.setGlobalPosition(sf::Vector2f(global_x, global_y + cam_offset));
     main.setLocalPosition(sf::Vector2f(local_x, local_y));
     main.Draw();
 }

@@ -11,9 +11,12 @@ public:
     float maxHP = 100;
     float curHP = maxHP;
 
+    float cam_offset;
+
     Hatapon();
     void Wave();
     void StopAll();
+    std::vector<sf::FloatRect> getHitbox();
     void Draw();
 };
 
