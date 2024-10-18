@@ -291,8 +291,14 @@ void MainMenu::SelectMenuOption()
         }
         case 2: {
             // load the options menu
-            screenFade.Create(1, 512);
-            goto_id = 2;
+            //screenFade.Create(1, 512);
+            //goto_id = 2;
+            std::vector<sf::String> a = {"nav_understood"};
+
+            PataDialogBox db;
+            db.Create(font, "nav_rework", a, config->GetInt("textureQuality"));
+            db.id = 1;
+            dialogboxes.push_back(db);
             break;
         }
         case 3: {
