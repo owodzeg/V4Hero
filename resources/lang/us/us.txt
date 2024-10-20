@@ -60,7 +60,7 @@ desc_rappata_spear|A very sharp spear made from bones of hunted Rappatas. It is 
 desc_santa_hat|This cozy hat, knitted by Patapon grandmas, grants a lot of joy and warmth to the ones wearing it. Grants huge protection against cold.
 desc_scorching_spear|The magic cast upon this spear makes its tip flame. Inflicts heavy damage and sets foes on fire. The enemies will smell like roasted beef.
 desc_shubaba_mask|Hero Mask of Phantom Strike. It grants a small portion of great Shubabassa's power of rapid attack, slightly increasing the speed of the wearer's muscles, allowing them to swing faster than other warriors.
-desc_small_rock|A common stone. Full of impurities, but vital to tribal life nonetheless. Patapon children often try to skip these across the surface of lakes and rivers.
+desc_stone|A common stone. Full of impurities, but vital to tribal life nonetheless. Patapon children often try to skip these across the surface of lakes and rivers.
 desc_soggy_map|A map obtained from a buried treasure chest found in the Shida Valley. It marks the location of a hidden fortress.
 desc_steel_spear|A spear with a sharpened tip made from the rare alloy, steel. These spears are lighter than iron spears but pack even more of a punch! 
 desc_strength_helmet|This magic helmet, decorated with red algae paint from Bovo Volcano, greatly boosts attack.
@@ -114,7 +114,7 @@ item_rappata_spear|Rappata Spear
 item_santa_hat|Santa Hat
 item_scorching_spear|Scorching Spear
 item_shubaba_mask|Shuba
-item_small_rock|Stone
+item_stone|Stone
 item_soggy_map|Grubby Map
 item_steel_spear|Steel Spear
 item_strength_helmet|Strength Helmet
