@@ -209,9 +209,19 @@ if (OS STREQUAL "Linux")
 endif (OS STREQUAL "Linux")
 
 if (NOT (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR))
-    add_custom_command(
-            TARGET V4Hero POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E create_symlink ${PROJECT_SOURCE_DIR}/resources ${PROJECT_BINARY_DIR}/resources
+    if(WIN32)
+        string(REPLACE "/" "\\" _dstDir "${PROJECT_BINARY_DIR}/resources")
+        string(REPLACE "/" "\\" _srcDir "${PROJECT_SOURCE_DIR}/resources")
+        add_custom_command(
+            TARGET V4Hero POST_BUILD       
+            COMMAND ${CMAKE_COMMAND} -E env cmd /C mklink /J "${_dstDir}" "${_srcDir}"
             DEPENDS "${PROJECT_BINARY_DIR}/resources"
-    )
+        )
+    else()
+        add_custom_command(
+            TARGET V4Hero POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E create_symlink "${PROJECT_SOURCE_DIR}/resources" "${PROJECT_BINARY_DIR}/resources"
+            DEPENDS "${PROJECT_BINARY_DIR}/resources"
+        )
+    endif()
 endif()
