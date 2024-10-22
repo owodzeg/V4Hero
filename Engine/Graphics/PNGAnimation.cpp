@@ -9,12 +9,37 @@
 #include <spdlog/spdlog.h>
 #include <exception>
 #include <fstream>
-#include <regex>
+#include <format>
 #include <future>  // for std::async and std::future
 
 using namespace libzippp;
 
 namespace fs = std::filesystem;
+
+
+bool isValidCacheEntry(const std::string& filename, const std::string& quality, const std::string& model_name, const std::string& anim_shortName)
+{
+    // Construct expected prefix pattern based on quality, model, and animation short name
+    std::string prefix = quality + "@" + model_name + "@" + anim_shortName + "_spr_";
+
+    // Ensure filename starts with the expected prefix
+    if (filename.compare(0, prefix.size(), prefix) != 0)
+    {
+        return false;
+    }
+
+    // Ensure the file ends with ".png"
+    if (filename.size() < 4 || filename.substr(filename.size() - 4) != ".png")
+    {
+        return false;
+    }
+
+    // Extract the part that should be the integer
+    std::string number_part = filename.substr(prefix.size(), filename.size() - prefix.size() - 4);
+
+    // Ensure the remaining part is a valid unsigned integer
+    return !number_part.empty() && std::all_of(number_part.begin(), number_part.end(), ::isdigit);
+}
 
 PNGAnimation::PNGAnimation()
 {
@@ -82,19 +107,12 @@ void PNGAnimation::loadCacheFile(Animation& anim)
     }
 }
 
-void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_path)
+void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_path, ZipArchive& zf)
 {
     std::sort(anim.frame_paths.begin(), anim.frame_paths.end());
 
     // we need to take the largest image out of the whole animation, in case the animation has different frame dimensions...
     int img_x = 0, img_y = 0;
-
-    ZipArchive zf(anim_path);
-
-    if(anim.zip)
-    {
-        zf.open(ZipArchive::ReadOnly);
-    }
 
     for (const auto& thumb_path : anim.frame_paths)
     {
@@ -219,24 +237,25 @@ bool PNGAnimation::getAnimationCache(Animation& anim)
     bool cache_found = false;
 
     // cache folder does not exist - create it
-    if(!std::filesystem::exists(cache_path))
+    if (!fs::exists(cache_path))
     {
-        std::filesystem::create_directory(cache_path);
+        fs::create_directory(cache_path);
     }
 
-    // go through cache to find already generated spritesheets
+    // Get texture quality from the config
+    std::string textureQuality = std::to_string(CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
+
+    // Iterate through the cache folder to find already generated spritesheets
     for (const auto& cache_entry : fs::directory_iterator(cache_path))
     {
-        std::string cache_entry_name = cache_entry.path().string();
-        std::regex cache_regex(std::format("{}@{}@{}_spr_(\\d*)\\.png", CoreManager::getInstance().getConfig()->GetInt("textureQuality"), model_name, anim.shortName));
-        std::smatch matches;
+        std::string cache_entry_name = cache_entry.path().filename().string();
 
-        if (std::regex_search(cache_entry_name, matches, cache_regex))
+        if (isValidCacheEntry(cache_entry_name, textureQuality, model_name, anim.shortName))
         {
             // cached sheet found
             SPDLOG_DEBUG("Animation {} found in .tex_cache: sheet file {}. No need to regenerate spritesheets.", anim.shortName, cache_entry_name);
             anim.cached = true;
-            anim.spritesheet_paths.push_back(cache_entry_name);
+            anim.spritesheet_paths.push_back(cache_entry.path().string());
             cache_found = true;
         }
     }
@@ -255,13 +274,14 @@ void PNGAnimation::Load(const std::string& path)
     std::vector<std::string> frame_names;
     bool zip = false;
 
+    ZipArchive zf(f.string());
+
     // Step 1 - get all paths. Process varies between .zip and folder animations
     if (f.extension() == ".zip")
     {
         SPDLOG_INFO(".zip was provided, we need to extract the file");
         zip = true;
 
-        ZipArchive zf(f.string());
         zf.open(ZipArchive::ReadOnly);
         std::vector<ZipEntry> entries = zf.getEntries();
 
@@ -285,8 +305,6 @@ void PNGAnimation::Load(const std::string& path)
                 frame_names.push_back(name);
             }
         }
-
-        zf.close();
     } else if (fs::is_directory(path))
     {
         SPDLOG_INFO("Directory was provided, no need to extract the file");
@@ -361,13 +379,6 @@ void PNGAnimation::Load(const std::string& path)
         unsigned int new_checksum = 0;
         unsigned int old_checksum = 0;
 
-        ZipArchive zf(f.string());
-
-        if(a.zip)
-        {
-            zf.open(ZipArchive::ReadOnly);
-        }
-
         new_checksum = Func::calculateTotalChecksum(a.frame_paths, zf);
 
         std::string cs_data_path = std::format("resources/graphics/.tex_cache/{}@{}@{}.hash", CoreManager::getInstance().getConfig()->GetInt("textureQuality"), model_name, a.shortName);
@@ -393,24 +404,22 @@ void PNGAnimation::Load(const std::string& path)
     // Step 3 - Compose the spritesheets
     SPDLOG_DEBUG("Maximum texture size: {}", maxSize);
 
-    // Your for loop with multithreading using std::async
-    std::vector<std::future<void>> futures; // To store future results of async tasks
+    std::vector<std::future<void>> futures;
 
     for(auto& x : animations)
     {
         if(!x.cached) // skip spritesheet generation if animation cache found
         {
             // Launch async task for each spritesheet generation
-            futures.push_back(std::async(std::launch::async, [this, &x, &path]() {
-                generateSpritesheet(x, path); // Now 'this' is captured correctly
+            futures.push_back(std::async(std::launch::async, [this, &x, &path, &zf]() {
+                generateSpritesheet(x, path, zf);
             }));
         }
     }
 
-    // Optionally wait for all tasks to finish
     for(auto& fu : futures)
     {
-        fu.get(); // This will block until each spritesheet generation is done
+        fu.get();
     }
 
     //Step 4 - Load spritesheets to ResourceManager
@@ -428,9 +437,8 @@ void PNGAnimation::Load(const std::string& path)
 
     if(zip)
     {
-        ZipArchive zf(f.string());
-        zf.open(ZipArchive::ReadOnly);
         ZipEntry entry = zf.getEntry("animation.json");
+
         if(!entry.isNull())
         {
             animation = json::parse(entry.readAsText());
@@ -669,6 +677,8 @@ void PNGAnimation::Load(const std::string& path)
             }
         }
     }
+
+    zf.close();
 }
 
 int PNGAnimation::getIDfromShortName(const std::string& shortName)

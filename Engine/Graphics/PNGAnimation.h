@@ -82,7 +82,7 @@ class PNGAnimation
         PNGAnimation();
         virtual sf::Image getAnimationImage(const std::string& anim_path, const std::string& image_path, libzippp::ZipArchive& zip_handle);
         virtual void loadCacheFile(Animation& anim);
-        virtual void generateSpritesheet(Animation& anim, const std::string& anim_path);
+        virtual void generateSpritesheet(Animation& anim, const std::string& anim_path, libzippp::ZipArchive& zf);
         virtual bool getAnimationCache(Animation& anim);
         virtual void Load(const std::string& path);
         virtual int getIDfromShortName(const std::string& shortName);
