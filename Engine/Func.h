@@ -12,6 +12,8 @@
 class Func
 {
 public:
+    static std::unordered_map<std::string, unsigned int> checksums;
+
     Func();
     static std::vector<std::string> Split(const std::string& s, char delim);
     static std::vector<std::string> Split(const std::string& s, wchar_t delim);

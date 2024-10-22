@@ -5,6 +5,7 @@
 #include "../StateManager.h"
 
 #include <fstream>
+#include <future>
 
 using json = nlohmann::json;
 using namespace std::chrono;
@@ -75,60 +76,82 @@ void MissionController::LoadMission(const std::string& path)
 
     int pons = CoreManager::getInstance().getConfig()->GetInt("SUPER_DEBUG_SCARY_YARIPON_COUNT");
 
-    if(pons == 0)
+    std::vector<std::future<void>> futures;
+
+    if (pons == 0)
     {
-        for(int i=1; i<=6; i++)
+        for (int i = 1; i <= 6; i++)
         {
-            yaripons.push_back(std::make_unique<Yaripon>(i, 6));
+            futures.emplace_back(std::async(std::launch::async, [i, this]() {
+                auto yaripon = std::make_unique<Yaripon>(i, 6);
+                auto y = yaripon.get();
 
-            auto y = yaripons.back().get();
+                Pon* currentPon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i - 1);
 
-            Pon* currentPon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i-1);
+                int hp = currentPon->pon_base_hp;
+                int minDmg = currentPon->pon_base_min_dmg;
+                int maxDmg = currentPon->pon_base_max_dmg;
 
-            int hp = currentPon->pon_base_hp;
-            int minDmg = currentPon->pon_base_min_dmg;
-            int maxDmg = currentPon->pon_base_max_dmg;
-
-            for(auto s : currentPon->slots)
-            {
-                if(s != -1)
+                for (auto s : currentPon->slots)
                 {
-                    auto e = CoreManager::getInstance().getSaveReader()->invData.items[s];
-                    minDmg += e.item->equip->min_dmg;
-                    maxDmg += e.item->equip->max_dmg;
-                    hp += e.item->equip->hp;
+                    if (s != -1)
+                    {
+                        auto e = CoreManager::getInstance().getSaveReader()->invData.items[s];
+                        minDmg += e.item->equip->min_dmg;
+                        maxDmg += e.item->equip->max_dmg;
+                        hp += e.item->equip->hp;
+                    }
                 }
-            }
 
-            y->minDmg = minDmg;
-            y->maxDmg = maxDmg;
-            y->curHP = hp;
-            y->maxHP = hp;
+                y->minDmg = minDmg;
+                y->maxDmg = maxDmg;
+                y->curHP = hp;
+                y->maxHP = hp;
 
-            auto eq = CoreManager::getInstance().getSaveReader()->invData.items[currentPon->slots[0]];
+                auto eq = CoreManager::getInstance().getSaveReader()->invData.items[currentPon->slots[0]];
+                std::string wpn = eq.item->spritesheet + "/" + Func::num_padding(eq.item->spritesheet_id, 4);
+                y->wpn = wpn;
 
-            std::string wpn = eq.item->spritesheet+"/"+Func::num_padding(eq.item->spritesheet_id, 4);
-            y->wpn = wpn;
+                eq = CoreManager::getInstance().getSaveReader()->invData.items[currentPon->slots[1]];
+                std::string hlm = eq.item->spritesheet + "/" + Func::num_padding(eq.item->spritesheet_id, 4);
+                y->hlm = hlm;
 
-            eq = CoreManager::getInstance().getSaveReader()->invData.items[currentPon->slots[1]];
+                y->main.loadExtra(wpn, "weapon");
+                y->main.loadExtra(hlm, "helm");
 
-            std::string hlm = eq.item->spritesheet+"/"+Func::num_padding(eq.item->spritesheet_id, 4);
-            y->hlm = hlm;
+                SPDLOG_INFO("Spawning Yaripon with stats: (dmg {}-{}, hp {})", y->minDmg, y->maxDmg, y->maxHP);
 
-            y->main.loadExtra(wpn, "weapon");
-            y->main.loadExtra(hlm, "helm");
+                // Lock the mutex to safely modify the yaripons vector
+                {
+                    std::lock_guard<std::mutex> lock(yariponsMutex);
+                    yaripons.push_back(std::move(yaripon)); // Move unique_ptr into the vector
+                }
+            }));
+        }
+    } else
+    {
+        for (int i = 1; i <= pons; i++)
+        {
+            futures.emplace_back(std::async(std::launch::async, [i, pons, this]() {
+                auto yaripon = std::make_unique<Yaripon>(i, pons);
+                yaripon->main.loadExtra("main/0025", "weapon");
+                yaripon->main.loadExtra("main/0030", "helm");
 
-            SPDLOG_INFO("Spawning Yaripon with stats: (dmg {}-{}, hp {})", y->minDmg, y->maxDmg, y->maxHP);
+                SPDLOG_INFO("Spawning Yaripon with default equipment.");
+
+                // Lock the mutex to safely modify the yaripons vector
+                {
+                    std::lock_guard<std::mutex> lock(yariponsMutex);
+                    yaripons.push_back(std::move(yaripon)); // Move unique_ptr into the vector
+                }
+            }));
         }
     }
-    else
+
+    // Wait for all futures to complete
+    for (auto& future : futures)
     {
-        for(int i=1; i<=pons; i++)
-        {
-            yaripons.push_back(std::make_unique<Yaripon>(i, pons));
-            yaripons.back().get()->main.loadExtra("main/0025", "weapon");
-            yaripons.back().get()->main.loadExtra("main/0030", "helm");
-        }
+        future.get(); // This will block until the async task is finished
     }
 
     feverworms.push_back(std::make_unique<FeverWorm>());

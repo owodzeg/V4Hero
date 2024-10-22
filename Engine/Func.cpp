@@ -16,6 +16,8 @@
 
 namespace fs = std::filesystem;
 
+std::unordered_map<std::string, unsigned int> Func::checksums;
+
 std::vector<std::string> Func::Split(const std::string& s, char delim)
 {
     std::vector<std::string> elems;
@@ -430,6 +432,12 @@ unsigned int Func::calculateTotalChecksum(const std::vector<std::string>& filePa
     {
         for(auto filePath : filePaths)
         {
+            if (checksums.count(filePath) > 0)
+            {
+                totalChecksum ^= checksums[filePath];
+                continue;
+            }
+
             char* data = (char*) zf.readEntry(filePath, true);
             unsigned int s = zf.getEntry(filePath).getSize();
 
@@ -457,11 +465,21 @@ unsigned int Func::calculateTotalChecksum(const std::vector<std::string>& filePa
 
             // Combine with the total checksum
             totalChecksum ^= fileChecksum;
+            checksums[filePath] = fileChecksum;
+
+            delete[] data;
         }
     }
     else
     {
         for (auto sFilePath : filePaths) {
+
+            if (checksums.count(sFilePath) > 0)
+            {
+                totalChecksum ^= checksums[sFilePath];
+                continue;
+            }
+
             std::filesystem::path filePath = std::filesystem::path(sFilePath);
             if (std::filesystem::exists(filePath) && std::filesystem::is_regular_file(filePath)) {
                 std::ifstream file(filePath, std::ios::binary);
@@ -479,6 +497,7 @@ unsigned int Func::calculateTotalChecksum(const std::vector<std::string>& filePa
                 }
 
                 totalChecksum ^= fileChecksum;  // Combine each file's checksum
+                checksums[sFilePath] = fileChecksum;
             } else {
                 std::cerr << "Skipping invalid or non-regular file: " << filePath << std::endl;
             }

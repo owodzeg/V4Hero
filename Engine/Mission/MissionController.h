@@ -26,6 +26,7 @@ public:
     Camera cam;
 
     sf::View mission_view;
+    std::mutex yariponsMutex;
 
     std::vector<std::unique_ptr<Hatapon>> hatapons;
     std::vector<std::unique_ptr<Yaripon>> yaripons;
