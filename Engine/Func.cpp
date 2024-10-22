@@ -235,9 +235,8 @@ void Func::create_directory(const std::string& path) {
 std::string Func::getTempDirectory() {
 #ifdef _WIN32
     // For Windows
-    char tempPath[MAX_PATH];
-    if (GetTempPathA(MAX_PATH, tempPath)) {
-        return std::string(tempPath);
+    {
+        return std::string("");
     }
 #elif defined(__linux__) || defined(__APPLE__)
     // For Linux and macOS
