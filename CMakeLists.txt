@@ -163,15 +163,23 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
             UNITY_BUILD_BATCH_SIZE 5)
 endif()
 
-if(WIN32)
+if(MSVC)
     set_target_properties(V4Hero
-            PROPERTIES
-            LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE"
-            LINK_FLAGS_RELEASE "/SUBSYSTEM:windows /ENTRY:mainCRTStartup"
-            LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:windows /ENTRY:mainCRTStartup"
-            LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:windows /ENTRY:mainCRTStartup"
+        PROPERTIES
+        LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE"
+        LINK_FLAGS_RELEASE "/SUBSYSTEM:windows /ENTRY:mainCRTStartup"
+        LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:windows /ENTRY:mainCRTStartup"
+        LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:windows /ENTRY:mainCRTStartup"
     )
-endif(WIN32)
+elseif(MINGW)
+    set_target_properties(V4Hero
+        PROPERTIES
+        LINK_FLAGS_DEBUG "-mconsole"
+        LINK_FLAGS_RELEASE "-mwindows"
+        LINK_FLAGS_RELWITHDEBINFO "-mwindows"
+        LINK_FLAGS_MINSIZEREL "-mwindows"
+    )
+endif()
 
 if(MSVC)
     add_definitions(-DLEAN_AND_MEAN)
