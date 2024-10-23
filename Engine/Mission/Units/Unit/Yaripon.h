@@ -48,7 +48,7 @@ public:
 
     float vspeed = 0;
     float hspeed = 0;
-    float gravity = 1400;
+    float gravity = 2500;
 
     bool threw = false;
     bool walkBack = false;
