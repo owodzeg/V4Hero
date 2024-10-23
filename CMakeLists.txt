@@ -214,7 +214,7 @@ if (NOT (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR))
         string(REPLACE "/" "\\" _srcDir "${PROJECT_SOURCE_DIR}/resources")
         add_custom_command(
             TARGET V4Hero POST_BUILD       
-            COMMAND ${CMAKE_COMMAND} -E env cmd /C mklink /J "${_dstDir}" "${_srcDir}"
+            COMMAND ${CMAKE_COMMAND} -E env cmd /C if not exist "${PROJECT_BINARY_DIR}/resources" mklink /J "${_dstDir}" "${_srcDir}"
             DEPENDS "${PROJECT_BINARY_DIR}/resources"
         )
     else()
@@ -224,4 +224,28 @@ if (NOT (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR))
             DEPENDS "${PROJECT_BINARY_DIR}/resources"
         )
     endif()
+endif()
+
+if(MINGW)
+    # Percorsi delle DLL da copiare (sostituisci con i percorsi corretti)
+    set(LIBZIPPP_DLL "${CMAKE_BINARY_DIR}/_deps/libzippp-build/libzippp.dll")
+    set(LIBSPDLOG_DLL "${CMAKE_BINARY_DIR}/_deps/spdlog-build//libspdlogd.dll")
+    set(DISCORD_DLL "${CMAKE_BINARY_DIR}/../dlls/discord_game_sdk.dll")
+    set(OPENAL32_DLL "${CMAKE_BINARY_DIR}/../dlls/openal32.dll")
+    set(SFML_AUDIO_DLL "${CMAKE_BINARY_DIR}/_deps/sfml-build/lib/sfml-audio-d-2.dll")
+    set(SFML_GRAPHICS_DLL "${CMAKE_BINARY_DIR}/_deps/sfml-build/lib/sfml-graphics-d-2.dll")
+    set(SFML_SYSTEM_DLL "${CMAKE_BINARY_DIR}/_deps/sfml-build/lib/sfml-system-d-2.dll")
+    set(SFML_WINDOW_DLL "${CMAKE_BINARY_DIR}/_deps/sfml-build/lib/sfml-window-d-2.dll")
+
+    # Copia le DLL nella directory dell'eseguibile
+    add_custom_command(TARGET V4Hero POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${LIBZIPPP_DLL}" $<TARGET_FILE_DIR:V4Hero>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${LIBSPDLOG_DLL}" $<TARGET_FILE_DIR:V4Hero>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${DISCORD_DLL}" $<TARGET_FILE_DIR:V4Hero>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OPENAL32_DLL}" $<TARGET_FILE_DIR:V4Hero>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SFML_AUDIO_DLL}" $<TARGET_FILE_DIR:V4Hero>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SFML_GRAPHICS_DLL}" $<TARGET_FILE_DIR:V4Hero>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SFML_SYSTEM_DLL}" $<TARGET_FILE_DIR:V4Hero>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SFML_WINDOW_DLL}" $<TARGET_FILE_DIR:V4Hero>
+    )
 endif()
