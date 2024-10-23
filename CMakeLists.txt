@@ -227,7 +227,6 @@ if (NOT (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR))
 endif()
 
 if(MINGW)
-    # Percorsi delle DLL da copiare (sostituisci con i percorsi corretti)
     set(LIBZIPPP_DLL "${CMAKE_BINARY_DIR}/_deps/libzippp-build/libzippp.dll")
     set(LIBSPDLOG_DLL "${CMAKE_BINARY_DIR}/_deps/spdlog-build//libspdlogd.dll")
     set(DISCORD_DLL "${CMAKE_BINARY_DIR}/../dlls/discord_game_sdk.dll")
@@ -237,7 +236,6 @@ if(MINGW)
     set(SFML_SYSTEM_DLL "${CMAKE_BINARY_DIR}/_deps/sfml-build/lib/sfml-system-d-2.dll")
     set(SFML_WINDOW_DLL "${CMAKE_BINARY_DIR}/_deps/sfml-build/lib/sfml-window-d-2.dll")
 
-    # Copia le DLL nella directory dell'eseguibile
     add_custom_command(TARGET V4Hero POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different "${LIBZIPPP_DLL}" $<TARGET_FILE_DIR:V4Hero>
         COMMAND ${CMAKE_COMMAND} -E copy_if_different "${LIBSPDLOG_DLL}" $<TARGET_FILE_DIR:V4Hero>
