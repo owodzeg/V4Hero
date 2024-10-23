@@ -92,7 +92,7 @@ void Yaripon::PerformAttack()
 
             if(inAttackTimer.getElapsedTime().asMilliseconds() > jumpStart && inAttackTimer.getElapsedTime().asMilliseconds() < jumpEnd && fabs(vspeed) <= 1)
             {
-                vspeed = -1000;
+                vspeed = -1800;
             }
 
             if(inAttackTimer.getElapsedTime().asMilliseconds() >= jumpEnd && inAttackTimer.getElapsedTime().asMilliseconds() <= attackEnd)
@@ -267,8 +267,8 @@ void Yaripon::PerformDeath()
     {
         death_start = true;
         dead_timer.restart();
-        hspeed = -700;
-        vspeed = -1200;
+        hspeed = -900;
+        vspeed = -1600;
         main.setAnimation("stagger_var1");
         main.restartAnimation();
         main.setAnimationLoop(false);
@@ -583,9 +583,9 @@ void Yaripon::Draw()
     local_x += hspeed / fps;
 
     if(hspeed > 0)
-        hspeed -= 400 / fps;
+        hspeed -= 600 / fps;
     if(hspeed < 0)
-        hspeed += 400 / fps;
+        hspeed += 600 / fps;
 
     if(local_y >= 0)
     {
