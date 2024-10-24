@@ -163,15 +163,23 @@ if (CMAKE_BUILD_TYPE STREQUAL "Release")
             UNITY_BUILD_BATCH_SIZE 5)
 endif()
 
-if(WIN32)
+if(MSVC)
     set_target_properties(V4Hero
-            PROPERTIES
-            LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE"
-            LINK_FLAGS_RELEASE "/SUBSYSTEM:windows /ENTRY:mainCRTStartup"
-            LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:windows /ENTRY:mainCRTStartup"
-            LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:windows /ENTRY:mainCRTStartup"
+        PROPERTIES
+        LINK_FLAGS_DEBUG "/SUBSYSTEM:CONSOLE"
+        LINK_FLAGS_RELEASE "/SUBSYSTEM:windows /ENTRY:mainCRTStartup"
+        LINK_FLAGS_RELWITHDEBINFO "/SUBSYSTEM:windows /ENTRY:mainCRTStartup"
+        LINK_FLAGS_MINSIZEREL "/SUBSYSTEM:windows /ENTRY:mainCRTStartup"
     )
-endif(WIN32)
+elseif(MINGW)
+    set_target_properties(V4Hero
+        PROPERTIES
+        LINK_FLAGS_DEBUG "-mconsole"
+        LINK_FLAGS_RELEASE "-mwindows"
+        LINK_FLAGS_RELWITHDEBINFO "-mwindows"
+        LINK_FLAGS_MINSIZEREL "-mwindows"
+    )
+endif()
 
 if(MSVC)
     add_definitions(-DLEAN_AND_MEAN)
@@ -201,9 +209,41 @@ if (OS STREQUAL "Linux")
 endif (OS STREQUAL "Linux")
 
 if (NOT (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR))
-    add_custom_command(
-            TARGET V4Hero POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E create_symlink ${PROJECT_SOURCE_DIR}/resources ${PROJECT_BINARY_DIR}/resources
+    if(WIN32)
+        string(REPLACE "/" "\\" _dstDir "${PROJECT_BINARY_DIR}/resources")
+        string(REPLACE "/" "\\" _srcDir "${PROJECT_SOURCE_DIR}/resources")
+        add_custom_command(
+            TARGET V4Hero POST_BUILD       
+            COMMAND ${CMAKE_COMMAND} -E env cmd /C if not exist "${PROJECT_BINARY_DIR}/resources" mklink /J "${_dstDir}" "${_srcDir}"
             DEPENDS "${PROJECT_BINARY_DIR}/resources"
+        )
+    else()
+        add_custom_command(
+            TARGET V4Hero POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E create_symlink "${PROJECT_SOURCE_DIR}/resources" "${PROJECT_BINARY_DIR}/resources"
+            DEPENDS "${PROJECT_BINARY_DIR}/resources"
+        )
+    endif()
+endif()
+
+if(MINGW)
+    set(LIBZIPPP_DLL "${CMAKE_BINARY_DIR}/_deps/libzippp-build/libzippp.dll")
+    set(LIBSPDLOG_DLL "${CMAKE_BINARY_DIR}/_deps/spdlog-build//libspdlogd.dll")
+    set(DISCORD_DLL "${CMAKE_BINARY_DIR}/../dlls/discord_game_sdk.dll")
+    set(OPENAL32_DLL "${CMAKE_BINARY_DIR}/../dlls/openal32.dll")
+    set(SFML_AUDIO_DLL "${CMAKE_BINARY_DIR}/_deps/sfml-build/lib/sfml-audio-d-2.dll")
+    set(SFML_GRAPHICS_DLL "${CMAKE_BINARY_DIR}/_deps/sfml-build/lib/sfml-graphics-d-2.dll")
+    set(SFML_SYSTEM_DLL "${CMAKE_BINARY_DIR}/_deps/sfml-build/lib/sfml-system-d-2.dll")
+    set(SFML_WINDOW_DLL "${CMAKE_BINARY_DIR}/_deps/sfml-build/lib/sfml-window-d-2.dll")
+
+    add_custom_command(TARGET V4Hero POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${LIBZIPPP_DLL}" $<TARGET_FILE_DIR:V4Hero>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${LIBSPDLOG_DLL}" $<TARGET_FILE_DIR:V4Hero>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${DISCORD_DLL}" $<TARGET_FILE_DIR:V4Hero>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OPENAL32_DLL}" $<TARGET_FILE_DIR:V4Hero>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SFML_AUDIO_DLL}" $<TARGET_FILE_DIR:V4Hero>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SFML_GRAPHICS_DLL}" $<TARGET_FILE_DIR:V4Hero>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SFML_SYSTEM_DLL}" $<TARGET_FILE_DIR:V4Hero>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${SFML_WINDOW_DLL}" $<TARGET_FILE_DIR:V4Hero>
     )
 endif()

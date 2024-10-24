@@ -10,6 +10,11 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include <spdlog/spdlog.h>
 
 #include "CoreManager.h"
