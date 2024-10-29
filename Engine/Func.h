@@ -13,6 +13,7 @@ class Func
 {
 public:
     static std::unordered_map<std::string, unsigned int> checksums;
+    static std::mutex func_mutex;
 
     Func();
     static std::vector<std::string> Split(const std::string& s, char delim);

@@ -672,7 +672,7 @@ void MissionController::ProcessRhythmMessages()
 
     for(auto message : messages)
     {
-        SPDLOG_DEBUG("message-> action: {}, message: {}, timestamp {}", message.action, message.message, message.timestamp);
+        SPDLOG_DEBUG("message-> action: {}, message: {}, timestamp {}", to_string(message.action), message.message, message.timestamp);
 
         Rhythm::RhythmAction action = message.action;
 

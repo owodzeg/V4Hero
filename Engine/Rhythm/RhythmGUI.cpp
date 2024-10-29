@@ -156,7 +156,7 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
 
     for(unsigned int i=0; i<messages.size(); i++)
     {
-        SPDLOG_DEBUG("message i={}, action: {}, message: {}, timestamp {}", i, messages[i].action, messages[i].message, messages[i].timestamp);
+        SPDLOG_DEBUG("message i={}, action: {}, message: {}, timestamp {}", i, to_string(messages[i].action), messages[i].message, messages[i].timestamp);
 
         //messages[i].action directly translates into drums BEST, GOOD and BAD
         Rhythm::RhythmAction action = messages[i].action;

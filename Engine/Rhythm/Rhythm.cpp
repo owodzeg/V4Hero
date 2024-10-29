@@ -48,7 +48,7 @@ Rhythm::Rhythm()
 
     for(auto command : command_data["commands"])
     {
-        SPDLOG_DEBUG("Found command, name: {}, song: {}", command["name"], command["song"]);
+        SPDLOG_DEBUG("Found command, name: {}, song: {}", command["name"].dump(), command["song"].dump());
         av_songs.push_back(command["song"]);
 
         nlohmann::json beat_data = command["beat"];
@@ -292,7 +292,7 @@ void Rhythm::decideSongType()
         return;
     }
 
-    SPDLOG_DEBUG("Current song type: {}, advanced_prefever: {}", currentSongType, advanced_prefever);
+    SPDLOG_DEBUG("Current song type: {}, advanced_prefever: {}", to_string(currentSongType), advanced_prefever);
     if((currentSongType != SongController::SongType::FEVER) && (currentSongType != SongController::SongType::FEVER_START)) {
         if(advanced_prefever) {
             if(satisfaction <= getAccRequirement(combo) * 0.75) {
@@ -370,7 +370,7 @@ void Rhythm::addRhythmMessage(RhythmAction action_id, std::string message)
     new_message.action = action_id;
     new_message.message = message;
     new_message.timestamp = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    SPDLOG_DEBUG("Adding new rhythm message: action {}, message {}, timestamp {}", action_id, message, new_message.timestamp);
+    SPDLOG_DEBUG("Adding new rhythm message: action {}, message {}, timestamp {}", to_string(action_id), message, new_message.timestamp);
     messages.push_back(new_message);
 
     mtx.unlock();

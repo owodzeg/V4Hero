@@ -22,6 +22,7 @@
 namespace fs = std::filesystem;
 
 std::unordered_map<std::string, unsigned int> Func::checksums;
+std::mutex Func::func_mutex;
 
 std::vector<std::string> Func::Split(const std::string& s, char delim)
 {
@@ -326,16 +327,16 @@ nlohmann::json Func::parseLootArray(std::mt19937& gen, std::uniform_real_distrib
             loot[i]["chance"] = total;
         } else
         {
-			SPDLOG_WARN("Undefined behavior detected while parsing loot: {} | (Element of array is neither an array nor an object)", loot);
+			SPDLOG_WARN("Undefined behavior detected while parsing loot: {} | (Element of array is neither an array nor an object)", loot.dump());
         }
     }
 
     if (total < 100)
     {
-		SPDLOG_WARN("Undefined behavior detected while parsing loot: {} | (Total chances in array less than 100)", loot);
+		SPDLOG_WARN("Undefined behavior detected while parsing loot: {} | (Total chances in array less than 100)", loot.dump());
     } else if (total > 100)
     {
-		SPDLOG_WARN("Undefined behavior detected while parsing loot: {} | (Total chances in array more than 100)", loot);
+		SPDLOG_WARN("Undefined behavior detected while parsing loot: {} | (Total chances in array more than 100)", loot.dump());
     }
 
     SPDLOG_DEBUG("Roll");
@@ -361,7 +362,7 @@ nlohmann::json Func::parseLootArray(std::mt19937& gen, std::uniform_real_distrib
             }
         } else
         {
-			SPDLOG_WARN("Undefined behavior detected while parsing loot: {} | (Element of array is neither an array nor an object)", loot);
+			SPDLOG_WARN("Undefined behavior detected while parsing loot: {} | (Element of array is neither an array nor an object)", loot.dump());
         }
     }
 }
@@ -431,6 +432,7 @@ unsigned int Func::calculateImageChecksum(const sf::Image& image) {
 }
 
 unsigned int Func::calculateTotalChecksum(const std::vector<std::string>& filePaths, libzippp::ZipArchive& zf) {
+    std::lock_guard<std::mutex> guard(func_mutex);
     unsigned int totalChecksum = 0x12345678;
 
     if(zf.isOpen())
