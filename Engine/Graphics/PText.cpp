@@ -418,8 +418,11 @@ void PText::processRichText()
             for(int y=0; y<len; y++)
             {
                 sf::Color c = t.getCharacterColor(x, y);
-                c.a = 255;
-                t.setCharacterColor(x, y, c);
+                if (c.a != 255)
+                {
+                    c.a = 255;
+                    t.setCharacterColor(x, y, c);
+                }
             }
         }
 
@@ -427,7 +430,8 @@ void PText::processRichText()
         speech_done = true;
     }
 
-    t.setCharacterSize(characterSize);
+    if (characterSize != t.getCharacterSize())
+        t.setCharacterSize(characterSize);
 }
 
 void PText::setOrigin(float x, float y)
@@ -609,24 +613,7 @@ void PText::draw(bool noRender)
         processRichText();
     }
 
-    if(forceColor)
-    {
-        int lines = t.getLines().size();
 
-        for(int x=0; x<lines; x++)
-        {
-            int len = t.getLines()[x].getLength();
-
-            for(int y=0; y<len; y++)
-            {
-                sf::Color c = t.getCharacterColor(x, y);
-                c.r = color.r;
-                c.g = color.g;
-                c.b = color.b;
-                t.setCharacterColor(x, y, c);
-            }
-        }
-    }
 
     switch (qualitySetting)
     {
@@ -696,8 +683,11 @@ void PText::draw(bool noRender)
                 for(int y=0; y<len; y++)
                 {
                     sf::Color c = t.getCharacterColor(x, y);
-                    c.a = alpha;
-                    t.setCharacterColor(x, y, c);
+                    if (c.a != alpha)
+                    {
+                        c.a = alpha;
+                        t.setCharacterColor(x, y, c);
+                    }
                 }
             }
         }

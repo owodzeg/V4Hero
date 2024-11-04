@@ -80,7 +80,7 @@ class PNGAnimation
         std::unordered_map<std::string, std::unordered_map<int, std::unordered_map<int, ExtraFrame>>> ex_frames;
 
         PNGAnimation();
-        virtual sf::Image getAnimationImage(const std::string& anim_path, const std::string& image_path, libzippp::ZipArchive& zip_handle);
+        virtual sf::Image& getAnimationImage(const std::string& anim_path, const std::string& image_path, libzippp::ZipArchive& zip_handle);
         virtual void loadCacheFile(Animation& anim);
         virtual void generateSpritesheet(Animation& anim, const std::string& anim_path, libzippp::ZipArchive& zf);
         virtual bool getAnimationCache(Animation& anim);

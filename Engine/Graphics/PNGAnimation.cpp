@@ -46,7 +46,7 @@ PNGAnimation::PNGAnimation()
     maxSize = sf::Texture::getMaximumSize();
 }
 
-sf::Image PNGAnimation::getAnimationImage(const std::string& anim_path, const std::string& image_path, ZipArchive& zip_handle)
+sf::Image& PNGAnimation::getAnimationImage(const std::string& anim_path, const std::string& image_path, ZipArchive& zip_handle)
 {
     std::lock_guard<std::mutex> guard(resource_mutex);
 
@@ -65,9 +65,7 @@ sf::Image PNGAnimation::getAnimationImage(const std::string& anim_path, const st
         if(TextureManager::getInstance().getRatio() != 1)
             TextureManager::getInstance().scaleTexture(image_path, TextureManager::getInstance().getRatio(), false);
 
-        img = TextureManager::getInstance().getImage(image_path);
-
-        return img;
+        return TextureManager::getInstance().getImage(image_path);
     }
     else
     {
@@ -76,9 +74,7 @@ sf::Image PNGAnimation::getAnimationImage(const std::string& anim_path, const st
         if(TextureManager::getInstance().getRatio() != 1)
             TextureManager::getInstance().scaleTexture(image_path, TextureManager::getInstance().getRatio(), false);
 
-        sf::Image img = TextureManager::getInstance().getImage(image_path);
-
-        return img;
+        return TextureManager::getInstance().getImage(image_path);
     }
 }
 
@@ -116,7 +112,7 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
 
     for (const auto& thumb_path : anim.frame_paths)
     {
-        sf::Image thumb = getAnimationImage(anim_path, thumb_path, zf);
+        sf::Image& thumb = getAnimationImage(anim_path, thumb_path, zf);
 
         if(thumb.getSize().x > img_x)
             img_x = thumb.getSize().x;
@@ -189,7 +185,7 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
 
     for (const auto& fr : anim.frame_paths)
     {
-        sf::Image f_img = getAnimationImage(anim_path, fr, zf);
+        sf::Image& f_img = getAnimationImage(anim_path, fr, zf);
 
         int curCol = frameBuffer % maxCols;
         int curRow = floor(float(frameBuffer) / float(maxCols));
