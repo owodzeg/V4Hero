@@ -37,7 +37,7 @@ public:
         MISSIONCONTROLLER = 10,
         MATER_OUTER = 11,
         TEST_CHAMBER = 12,
-        ERROR = 13
+        ERROR_CHAMBER = 13
     };
 
     static StateManager& getInstance();

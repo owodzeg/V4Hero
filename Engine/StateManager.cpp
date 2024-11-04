@@ -262,7 +262,7 @@ void StateManager::updateCurrentState()
                 break;
             }
 
-            case ERROR: {
+            case ERROR_CHAMBER: {
                 if (errorChamberPtr == nullptr)
                 {
                     SPDLOG_ERROR("Error handler is not initialized? Well... If we are here, something must have initialized it! This is stupid!");
@@ -278,12 +278,12 @@ void StateManager::updateCurrentState()
     catch( std::exception& exception )
     {
         SPDLOG_ERROR("Exception occurred: {}", exception.what());
-        setState(ERROR);
+        setState(ERROR_CHAMBER);
     }
     catch( ... )
     {
         SPDLOG_ERROR("Unknown exception occurred.");
-        setState(ERROR);
+        setState(ERROR_CHAMBER);
     }
 }
 
@@ -313,7 +313,7 @@ void StateManager::initState(int state)
                 catch( ... )
                 {
                     SPDLOG_ERROR("Could not load Main Menu.");
-                    setState(ERROR);
+                    setState(ERROR_CHAMBER);
 
                     break;
                 }
@@ -328,7 +328,7 @@ void StateManager::initState(int state)
                 catch( ... )
                 {
                     SPDLOG_ERROR("Could not load Options Menu.");
-                    setState(ERROR);
+                    setState(ERROR_CHAMBER);
 
                     break;
                 }
@@ -345,7 +345,7 @@ void StateManager::initState(int state)
                 catch( ... )
                 {
                     SPDLOG_ERROR("Could not load Introduction Menu.");
-                    setState(ERROR);
+                    setState(ERROR_CHAMBER);
 
                     break;
                 }
@@ -379,7 +379,7 @@ void StateManager::initState(int state)
                 catch( ... )
                 {
                     SPDLOG_ERROR("Could not load tips.");
-                    setState(ERROR);
+                    setState(ERROR_CHAMBER);
 
                     break;
                 }
@@ -398,7 +398,7 @@ void StateManager::initState(int state)
                 catch ( ... )
                 {
                     SPDLOG_ERROR("Could not load Patapolis.");
-                    setState(ERROR);
+                    setState(ERROR_CHAMBER);
 
                     break;
                 }
@@ -416,7 +416,7 @@ void StateManager::initState(int state)
                 catch ( ... )
                 {
                     SPDLOG_ERROR("Could not load Altar.");
-                    setState(ERROR);
+                    setState(ERROR_CHAMBER);
 
                     break;
                 }
@@ -431,7 +431,7 @@ void StateManager::initState(int state)
                 catch ( ... )
                 {
                     SPDLOG_ERROR("Could not load Barracks.");
-                    setState(ERROR);
+                    setState(ERROR_CHAMBER);
 
                     break;
                 }
@@ -448,7 +448,7 @@ void StateManager::initState(int state)
                 catch ( ... )
                 {
                     SPDLOG_ERROR("Could not load Obelisk.");
-                    setState(ERROR);
+                    setState(ERROR_CHAMBER);
 
                     break;
                 }
@@ -465,7 +465,7 @@ void StateManager::initState(int state)
                 catch ( ... )
                 {
                     SPDLOG_ERROR("Could not load Mater.");
-                    setState(ERROR);
+                    setState(ERROR_CHAMBER);
 
                     break;
                 }
@@ -519,7 +519,7 @@ void StateManager::initState(int state)
                 catch ( ... )
                 {
                     SPDLOG_ERROR("Could not load Mission.");
-                    setState(ERROR);
+                    setState(ERROR_CHAMBER);
 
                     break;
                 }
@@ -537,7 +537,7 @@ void StateManager::initState(int state)
             break;
         }
 
-        case ERROR: {
+        case ERROR_CHAMBER: {
             break;
         }
     }
@@ -575,7 +575,7 @@ void StateManager::parseCurrentStateEvents(sf::Event& event)
 void StateManager::setState(int state)
 {
     // Here is a good place to put specific events that always happen when changing states
-    if(state == ERROR)
+    if(state == ERROR_CHAMBER)
     {
         if (errorChamberPtr != nullptr)
         {
