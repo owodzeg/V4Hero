@@ -27,11 +27,10 @@ void SaveReader::LoadSave()
     ifstream conf("resources/data/sv1.p4sv", std::ios::in);
     if (conf.good())
     {
+        json save_data;
         conf >> save_data;
         SaveFile save_file = save_data.get<SaveFile>();
-
         save_file_data = save_file.save;
-        save_data = save_data["save"];
 
         const SaveFileDetails& details = save_file_data.details;
         save_ver = details.version;
@@ -207,7 +206,11 @@ void SaveReader::Save()
     }
 
     SquadSlot hero{
-        .rarepon = -1
+        .rarepon = -1,
+        ._class = 0,
+        .level = 0,
+        .exp = 0,
+        .slots = {}
     };
     if (hero_unlocked)
     {
