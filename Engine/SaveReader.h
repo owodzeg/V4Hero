@@ -4,6 +4,7 @@
 #include "Item/ItemRegistry.h"
 #include "Pon/PonRegistry.h"
 #include "Pon/SquadRegistry.h"
+#include "SaveFile.h"
 #include "StringRepository.h"
 #include <SFML/Graphics.hpp>
 #include <map>
@@ -22,6 +23,7 @@ public:
     InventoryData invData;
 
     nlohmann::json save_data;
+    SaveData save_file_data;
 
     sf::String kami_name;
     bool hero_unlocked = false;

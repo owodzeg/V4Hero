@@ -21,6 +21,6 @@ Pon* PonRegistry::GetPonByID(int id)
     if(id < pons.size())
         return &pons[id];
 
-    SPDLOG_ERROR("PonRegistry could not find the appropriate Pon");
+    SPDLOG_ERROR("PonRegistry could not find the appropriate Pon for id {}. PonRegistry size: {}", id, pons.size());
     throw std::exception(); //TODO: a custom exception class perhaps?
 }
