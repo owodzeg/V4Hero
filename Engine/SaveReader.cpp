@@ -1,11 +1,8 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
 #include "SaveReader.h"
-#include "Config.h"
-#include "Func.h"
 #include <algorithm>
 #include <cassert>
-#include <cctype>
 #include <fstream>
 #include <iomanip>
 #include <nlohmann/json.hpp>
@@ -41,14 +38,14 @@ void SaveReader::LoadSave()
         kami_name = sf::String(details.name);
         story_point = details.story_point;
         locations_unlocked.clear(); // Clear the default from SaveReader.h
-        for (unsigned int i = 0; i < details.locations_unlocked.size(); i++)
+        for (int i : details.locations_unlocked)
         {
-            locations_unlocked.push_back(details.locations_unlocked[i]);
+            locations_unlocked.push_back(i);
         }
 
-        for (unsigned int i = 0; i < save_file_data.items.size(); i++)
+        for (const SavedItem& item : save_file_data.items)
         {
-            invData.addItem(itemReg.getItemByName(save_file_data.items[i].name)->order_id, itemReg, save_file_data.items[i].count);
+            invData.addItem(itemReg.getItemByName(item.name)->order_id, itemReg, item.count);
         }
 
         if (save_file_data.army.hero.rarepon != -1) // Is hero unlocked?
@@ -73,18 +70,18 @@ void SaveReader::LoadSave()
 
         for (int i = 0; i < comparison; i++)
         {
-            for (unsigned int o = 0; o < save_file_data.army.squads[i].size(); o++)
+            for (const SquadSlot& squad_slot : save_file_data.army.squads[i])
             {
                 Pon new_pon;
-                new_pon.pon_id = save_file_data.army.squads[i][o].rarepon;
-                new_pon.pon_class = save_file_data.army.squads[i][o]._class;
-                new_pon.pon_level = save_file_data.army.squads[i][o].level;
-                new_pon.pon_exp = save_file_data.army.squads[i][o].exp;
-                for (unsigned int p = 0; p < save_file_data.army.squads[i][o].slots.size(); p++)
+                new_pon.pon_id = squad_slot.rarepon;
+                new_pon.pon_class = squad_slot._class;
+                new_pon.pon_level = squad_slot.level;
+                new_pon.pon_exp = squad_slot.exp;
+                for (unsigned int p = 0; p < squad_slot.slots.size(); p++)
                 {
-                    if (save_file_data.army.squads[i][o].slots[p][0] != -1) // Is this necessary?
+                    if (squad_slot.slots[p][0] != -1) // Is this necessary?
                     {
-                        new_pon.giveItem(invData.getInvIDByItemID(save_file_data.army.squads[i][o].slots[p]), p);
+                        new_pon.giveItem(invData.getInvIDByItemID(squad_slot.slots[p]), p);
                     }
                 }
                 ponReg.pons.push_back(new_pon);
@@ -96,18 +93,18 @@ void SaveReader::LoadSave()
 
         for (unsigned int i = 4; i < save_file_data.army.squads.size(); i++)
         {
-            for (unsigned int o = 0; o < save_file_data.army.squads[i].size(); o++)
+            for (const SquadSlot& squad_slot : save_file_data.army.squads[i])
             {
                 Pon new_pon;
-                new_pon.pon_id = save_file_data.army.squads[i][o].rarepon;
-                new_pon.pon_class = save_file_data.army.squads[i][o]._class;
-                new_pon.pon_level = save_file_data.army.squads[i][o].level;
-                new_pon.pon_exp = save_file_data.army.squads[i][o].exp;
-                for (unsigned int p = 0; p < save_file_data.army.squads[i][o].slots.size(); p++)
+                new_pon.pon_id = squad_slot.rarepon;
+                new_pon.pon_class = squad_slot._class;
+                new_pon.pon_level = squad_slot.level;
+                new_pon.pon_exp = squad_slot.exp;
+                for (unsigned int p = 0; p < squad_slot.slots.size(); p++)
                 {
-                    if (save_file_data.army.squads[i][o].slots[0][0] != -1) // Is this necessary?
+                    if (squad_slot.slots[0][0] != -1) // Is this necessary?
                     {
-                        new_pon.giveItem(invData.getInvIDByItemID(save_file_data.army.squads[i][o].slots[p]), p);
+                        new_pon.giveItem(invData.getInvIDByItemID(squad_slot.slots[p]), p);
                     }
                 }
                 ponReg.pons.push_back(new_pon);
@@ -116,13 +113,13 @@ void SaveReader::LoadSave()
             ponReg.squads_available.push_back(save_file_data.army.squads[i][0]._class); // Save to available squads for choosing in barracks / prep
         }
 
-        for (unsigned int i = 0; i < save_file_data.missions.size(); i++) // Each mission is stored as a single array so it can be handled elegantly (slightly increases file size, but shouldn't be a problem)
+        for (const SavedMission& mission : save_file_data.missions) // Each mission is stored as a single array so it can be handled elegantly (slightly increases file size, but shouldn't be a problem)
         {
-            if (save_file_data.missions[i].unlocked) // Is unlocked?
+            if (mission.unlocked) // Is unlocked?
             {
-                missions_unlocked.push_back(save_file_data.missions[i].id); // Add mission id
+                missions_unlocked.push_back(mission.id); // Add mission id
             }
-            mission_levels.insert(pair<int, int>(save_file_data.missions[i].id, save_file_data.missions[i].level)); // Add mission level regardless
+            mission_levels.insert(pair<int, int>(mission.id, mission.level)); // Add mission level regardless
         }
     } else
     {
@@ -154,9 +151,9 @@ void SaveReader::CreateBlankSave()
     kami_name = "Kamipon";
 
     vector<string> starter_items = {"item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet"};
-    for (unsigned int i = 0; i < starter_items.size(); i++)
+    for (const string& starter_item : starter_items)
     {
-        invData.addItem(itemReg.getItemByName(starter_items[i])->order_id, itemReg);
+        invData.addItem(itemReg.getItemByName(starter_item)->order_id, itemReg);
     }
 
     // Defining 6 Yaripons
@@ -199,11 +196,11 @@ void SaveReader::Save()
     };
 
     std::vector<SavedItem> items;
-    for (unsigned int i = 0; i < invData.items.size(); i++)
+    for (const auto& item : invData.items)
     {
         SavedItem new_item{
-            .name = invData.items[i].item->item_name,
-            .count = invData.items[i].item_count
+            .name = item.item->item_name,
+            .count = item.item_count
         };
 
         items.push_back(new_item);
@@ -236,24 +233,24 @@ void SaveReader::Save()
     std::vector<std::vector<SquadSlot>> squads(ponReg.squads_available.size());
     for (unsigned int i = 0; i <= ponReg.squads_available.size(); i++)
     {
-        for (unsigned int o = 0; o < ponReg.pons.size(); o++)
+        for (const Pon& pon : ponReg.pons)
         {
-            if (ponReg.pons[o].pon_class == ponReg.squads_available[i])
+            if (pon.pon_class == ponReg.squads_available[i])
             {
                 SquadSlot squad_slot{
-                    .rarepon = ponReg.pons[o].pon_id,
-                    ._class = ponReg.pons[o].pon_class,
-                    .level = ponReg.pons[o].pon_level,
-                    .exp = ponReg.pons[o].pon_exp,
+                    .rarepon = pon.pon_id,
+                    ._class = pon.pon_class,
+                    .level = pon.pon_level,
+                    .exp = pon.pon_exp,
                     .slots = {}
                 };
 
                 std::vector<std::vector<int>> slots;
                 for (int p = 0; p < 5; p++) // Potentially dangerous magic number. Use ponReg.pons[o].slots.size() in case it causes trouble
                 {
-                    if (ponReg.pons[o].slots[p] != -1)
+                    if (pon.slots[p] != -1)
                     {
-                        std::vector<int> curItem = invData.items[ponReg.pons[o].slots[p]].item->order_id;
+                        std::vector<int> curItem = invData.items[pon.slots[p]].item->order_id;
                         slots.push_back(curItem);
                     } else
                     {
