@@ -9,13 +9,14 @@
 #include <spdlog/spdlog.h>
 #include <string>
 #include "CoreManager.h"
+#include "Constants.h"
 
 using namespace std;
 using json = nlohmann::json; // Convenience recommended by the library
 
 SaveReader::SaveReader()
 {
-    ifstream check("resources/data/sv1.p4sv");
+    ifstream check(SAVEFILE_PATH);
     bool exists = check.good();
     check.close();
 
@@ -24,7 +25,7 @@ SaveReader::SaveReader()
 
 void SaveReader::LoadSave()
 {
-    ifstream conf("resources/data/sv1.p4sv", std::ios::in);
+    ifstream conf(SAVEFILE_PATH, std::ios::in);
     if (conf.good())
     {
         json save_data;
@@ -306,7 +307,7 @@ void SaveReader::Save()
     }
     */
 
-    ofstream save_file("resources/data/sv1.p4sv", ios::ate);
+    ofstream save_file(SAVEFILE_PATH, ios::ate);
     save_file.seekp(0); // Honestly no idea what this does but it was in the previous version
 
     json save_json = SaveFile{

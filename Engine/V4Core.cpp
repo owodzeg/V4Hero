@@ -3,6 +3,7 @@
 #include "V4Core.h"
 #include "CoreManager.h"
 #include "StateManager.h"
+#include "Constants.h"
 #include <chrono>
 #include <fstream>
 
@@ -169,7 +170,7 @@ void V4Core::init()
         }
         case 2: {
             SPDLOG_INFO("Test initialized. Moving to MISSION CONTROLLER, mission_file = mis1_0.p4m.");
-            ifstream check("resources/data/sv1.p4sv");
+            ifstream check(SAVEFILE_PATH);
             bool exists = check.good();
             check.close();
 
@@ -204,7 +205,7 @@ void V4Core::init()
         case 4: {
             SPDLOG_INFO("Test initialized. LOAD PATAPOLIS.");
 
-            ifstream check("resources/data/sv1.p4sv");
+            ifstream check(SAVEFILE_PATH);
             bool exists = check.good();
             check.close();
 

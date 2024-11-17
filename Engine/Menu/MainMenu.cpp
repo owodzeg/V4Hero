@@ -3,6 +3,7 @@
 #include "MainMenu.h"
 #include "../CoreManager.h"
 #include "../StateManager.h"
+#include "../Constants.h"
 
 #include "../V4Core.h"
 #include <iostream>
@@ -199,7 +200,7 @@ MainMenu::MainMenu()
     initialized = true;
     
     //Checks if there is a save then use "continue" as default totem*/
-    ifstream check("resources/data/sv1.p4sv");
+    ifstream check(SAVEFILE_PATH);
     bool exists = check.good();
     check.close();
     if (exists) {
@@ -224,7 +225,7 @@ void MainMenu::SelectMenuOption()
     {
         case 0: // load the start game cutscenes and menu
         {
-            ifstream check("resources/data/sv1.p4sv");
+            ifstream check(SAVEFILE_PATH);
             bool exists = check.good();
             check.close();
 
@@ -250,7 +251,7 @@ void MainMenu::SelectMenuOption()
         }
         case 1: // load save and patapolis
         {
-            ifstream check("resources/data/sv1.p4sv");
+            ifstream check(SAVEFILE_PATH);
             bool exists = check.good();
             check.close();
 
