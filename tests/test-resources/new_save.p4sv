@@ -2,7 +2,11 @@
     "save": {
         "army": [
             {
-                "rarepon": -1
+                "class": 0,
+                "exp": 0,
+                "level": 0,
+                "rarepon": -1,
+                "slots": []
             },
             [
                 {
