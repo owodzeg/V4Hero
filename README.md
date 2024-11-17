@@ -49,11 +49,11 @@ When the compilation is done, you can just run `./V4Hero` and the game will laun
 
 ### Ubuntu / Debian
 
-```sudo apt install build-essential libx11-dev libxrandr-dev libxcursor-dev libgl1-mesa-dev libudev-dev libopenal-dev libvorbis-dev libflac-dev libfreetype-dev libfreetype6 libfreetype6-dev zlib1g-dev libzip-dev liblzma-dev libbz2-dev```
+```sudo apt install build-essential libx11-dev libxrandr-dev libxcursor-dev libgl1-mesa-dev libudev-dev libopenal-dev libvorbis-dev libflac-dev libfreetype-dev libfreetype6 libfreetype6-dev zlib1g-dev libzip-dev liblzma-dev libbz2-dev catch2```
 
 ### Fedora / Red Hat
 
-```sudo dnf install make automake gcc gcc-c++ libstdc++-static kernel-devel SFML-devel systemd-devel libzip-devel libXcursor-devel libXrandr-devel mesa-libGL-devel```
+```sudo dnf install make automake gcc gcc-c++ libstdc++-static kernel-devel SFML-devel systemd-devel libzip-devel libXcursor-devel libXrandr-devel mesa-libGL-devel catch2```
 
 ### GPU support
 
@@ -70,7 +70,7 @@ Make sure you have [Git](https://git-scm.com/downloads) installed.
 * Install [MSYS](https://www.msys2.org/) preferably in `C:/msys64` directory. **We will need the MSYS installation directory in the next steps!**
 * Make sure to always run **MSYS MINGW64**!!!!! Otherwise it will most likely not work! If you see **MINGW64** in your MSYS window, you're good to go.
 * Run command `pacman -Syu`. Agree to everything (type the letter Y). The terminal might restart to update. Run **MSYS MINGW64** again if it does.
-* Run command `pacman -S --needed base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake mingw-w64-x86_64-make mingw-w64-x86_64-libzip mingw-w64-x86_64-zlib`. Agree to installation (type the letter Y).
+* Run command `pacman -S --needed base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-cmake mingw-w64-x86_64-make mingw-w64-x86_64-libzip mingw-w64-x86_64-zlib catch2`. Agree to installation (type the letter Y).
 * Add the MSYS `bin` folder to your global **PATH** environmental variable. When selecting the install directory from the first step, it would be `C:/msys64/mingw64/bin`. [Here is how you can add a new folder to your PATH.](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/)
 * If you had any other programs opened (such as IDE or Command Prompt), reopen them so they can detect the new environmental variable.
 
@@ -108,6 +108,7 @@ Please contact the developer team on Discord if you intend to make wide changes 
   * [nlohmann/json](https://github.com/nlohmann/json) - wonderful and simple json support
   * [gabime/spdlog](https://github.com/gabime/spdlog) - much better and more detailed logs
   * [ctabin/libzippp](https://github.com/ctabin/libzippp) - .zip file support
+  * [catchorg/Catch2](https://github.com/catchorg/Catch2) - unit testing library
 
 
 ## License
