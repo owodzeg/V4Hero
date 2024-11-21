@@ -136,7 +136,10 @@ set(ENGINE_FILES
         Engine/Mission/Units/Behavior.h
         Engine/Mission/Units/Unit/FeverWorm.cpp
         Engine/Mission/Units/Unit/EndFlag.cpp
-        Engine/Mission/Units/Unit/DroppedItem.cpp)
+        Engine/Mission/Units/Unit/DroppedItem.cpp
+        Engine/SaveFile.cpp
+        Engine/SaveFile.h
+        Engine/Constants.h)
 
 set(DISCORD_FILES
         DiscordSDK/achievement_manager.cpp
@@ -155,6 +158,19 @@ set(DISCORD_FILES
         DiscordSDK/voice_manager.cpp)
 
 add_executable(V4Hero ${ENGINE_FILES} ${DISCORD_FILES} main.cpp)
+
+find_package(Catch2 REQUIRED)
+add_executable(
+        tests
+        ${ENGINE_FILES}
+        ${DISCORD_FILES}
+        tests/test.cpp
+)
+target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
+
+include(CTest)
+include(Catch)
+catch_discover_tests(tests)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
     message("Enabling Unity build for Release build")
@@ -195,7 +211,18 @@ endif()
 target_include_directories(V4Hero PRIVATE Engine/)
 target_include_directories(V4Hero PRIVATE DiscordSDK)
 
+target_include_directories(tests PRIVATE Engine/)
+target_include_directories(tests PRIVATE DiscordSDK)
+
 target_link_libraries(V4Hero PRIVATE
+        sfml-graphics
+        sfml-audio
+        DiscordSDK
+        nlohmann_json::nlohmann_json
+        spdlog::spdlog
+        libzippp)
+
+target_link_libraries(tests PRIVATE
         sfml-graphics
         sfml-audio
         DiscordSDK
@@ -210,18 +237,29 @@ endif (OS STREQUAL "Linux")
 
 if (NOT (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR))
     if(WIN32)
-        string(REPLACE "/" "\\" _dstDir "${PROJECT_BINARY_DIR}/resources")
-        string(REPLACE "/" "\\" _srcDir "${PROJECT_SOURCE_DIR}/resources")
+        string(REPLACE "/" "\\" _dstDir "${PROJECT_BINARY_DIR}")
+        string(REPLACE "/" "\\" _srcDir "${PROJECT_SOURCE_DIR}")
         add_custom_command(
             TARGET V4Hero POST_BUILD       
-            COMMAND ${CMAKE_COMMAND} -E env cmd /C if not exist "${PROJECT_BINARY_DIR}/resources" mklink /J "${_dstDir}" "${_srcDir}"
+            COMMAND ${CMAKE_COMMAND} -E env cmd /C if not exist "${PROJECT_BINARY_DIR}/resources" mklink /J "${_dstDir}/resources" "${_srcDir}/resources"
             DEPENDS "${PROJECT_BINARY_DIR}/resources"
+        )
+
+        add_custom_command(
+                TARGET tests POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E env cmd /C if not exist "${PROJECT_BINARY_DIR}/test-resources" mklink /J "${_dstDir}/test-resources" "${_srcDir}/tests/test-resources"
+                DEPENDS "${PROJECT_BINARY_DIR}/resources"
         )
     else()
         add_custom_command(
-            TARGET V4Hero POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E create_symlink "${PROJECT_SOURCE_DIR}/resources" "${PROJECT_BINARY_DIR}/resources"
-            DEPENDS "${PROJECT_BINARY_DIR}/resources"
+                TARGET V4Hero POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E create_symlink "${PROJECT_SOURCE_DIR}/resources" "${PROJECT_BINARY_DIR}/resources"
+                DEPENDS "${PROJECT_BINARY_DIR}/resources"
+        )
+        add_custom_command(
+            TARGET tests POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E create_symlink "${PROJECT_SOURCE_DIR}/tests/test-resources" "${PROJECT_BINARY_DIR}/test-resources"
+            DEPENDS "${PROJECT_BINARY_DIR}/test-resources"
         )
     endif()
 endif()
