@@ -241,14 +241,14 @@ if (NOT (PROJECT_SOURCE_DIR STREQUAL PROJECT_BINARY_DIR))
         string(REPLACE "/" "\\" _srcDir "${PROJECT_SOURCE_DIR}")
         add_custom_command(
             TARGET V4Hero POST_BUILD       
-            COMMAND ${CMAKE_COMMAND} -E env cmd /C if not exist "${PROJECT_BINARY_DIR}/resources" mklink /J "${_dstDir}/resources" "${_srcDir}/resources"
-            DEPENDS "${PROJECT_BINARY_DIR}/resources"
+            COMMAND ${CMAKE_COMMAND} -E env cmd /C if not exist "${PROJECT_BINARY_DIR}\\resources" mklink /J "${_dstDir}\\resources" "${_srcDir}\\resources"
+            DEPENDS "${PROJECT_BINARY_DIR}\\resources"
         )
 
         add_custom_command(
                 TARGET tests POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E env cmd /C if not exist "${PROJECT_BINARY_DIR}/test-resources" mklink /J "${_dstDir}/test-resources" "${_srcDir}/tests/test-resources"
-                DEPENDS "${PROJECT_BINARY_DIR}/resources"
+                COMMAND ${CMAKE_COMMAND} -E env cmd /C if not exist "${PROJECT_BINARY_DIR}\\test-resources" mklink /J "${_dstDir}\\test-resources" "${_srcDir}\\tests\\test-resources"
+                DEPENDS "${PROJECT_BINARY_DIR}\\resources"
         )
     else()
         add_custom_command(
