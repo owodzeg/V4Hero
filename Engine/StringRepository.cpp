@@ -43,6 +43,8 @@ void StringRepository::Reload()
     langToFontMapping.clear();
     languages.clear();
     languageNativeNames.clear();
+    kerningStore.clear();
+    advanceStore.clear();
 
     // get fonts
     std::ifstream fontFile("resources/lang/fonts.txt");
@@ -126,6 +128,7 @@ void StringRepository::SetCurrentLanguage(const std::string& countryCode)
         currentLanguageCode = countryCode;
         refreshStrings = true;
         kerningStore.clear();
+        advanceStore.clear();
         SPDLOG_INFO("Current language set to: {}", countryCode);
     }
     else
