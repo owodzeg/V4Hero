@@ -125,6 +125,7 @@ void StringRepository::SetCurrentLanguage(const std::string& countryCode)
     {
         currentLanguageCode = countryCode;
         refreshStrings = true;
+        kerningStore.clear();
         SPDLOG_INFO("Current language set to: {}", countryCode);
     }
     else
@@ -133,7 +134,7 @@ void StringRepository::SetCurrentLanguage(const std::string& countryCode)
     }
 }
 
-std::string StringRepository::GetCurrentLanguage() const
+std::string& StringRepository::GetCurrentLanguage()
 {
     return currentLanguageCode;
 }
@@ -202,15 +203,16 @@ void StringRepository::LoadFontFromFile(const std::string& fontPath, const std::
     SPDLOG_INFO("Font '{}' loaded successfully", fontName);
 }
 
-std::string StringRepository::GetFontNameForLanguage(const std::string& countryCode)
+std::string& StringRepository::GetFontNameForLanguage(const std::string& countryCode)
 {
-    auto it = langToFontMapping.find(countryCode);
-    if (it != langToFontMapping.end())
+    auto& fontName = langToFontMapping[countryCode];
+
+    if (fontName == std::nullopt)
     {
-        return it->second;
+        SPDLOG_WARN("No font found for language '{}'", countryCode);
+        return defaultFont;
     }
-    SPDLOG_WARN("No font found for language '{}'", countryCode);
-    return "fallback";
+    return fontName.value();
 }
 
 sf::Font& StringRepository::GetFontFromName(const std::string& fontName)
@@ -221,4 +223,22 @@ sf::Font& StringRepository::GetFontFromName(const std::string& fontName)
     } else {
         throw std::runtime_error("Font not found: " + fontName);
     }
+}
+
+float StringRepository::GetKerning(std::string& font, sf::Uint32& char1, sf::Uint32& char2)
+{
+    auto& kerning = kerningStore[font][char1][char2];
+
+    if (kerning == std::nullopt)
+        return -999;
+    return kerning.value();
+}
+
+float StringRepository::GetAdvance(std::string& font, sf::Uint32& char1, unsigned int& fsize)
+{
+    auto& advance = advanceStore[font][char1][fsize];
+
+    if (advance == std::nullopt)
+        return -999;
+    return advance.value();
 }

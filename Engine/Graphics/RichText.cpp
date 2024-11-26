@@ -13,6 +13,8 @@
 
 #include <SFML/System/String.hpp>
 
+#include <CoreManager.h>
+
 namespace sfe
 {
 
@@ -207,19 +209,44 @@ void RichText::Line::updateTextAndGeometry(sf::Text& prevText, sf::Text& text) c
     auto font = text.getFont();
     text.setPosition(m_bounds.width, 0.f);
 
+    auto& prevStr = prevText.getString();
+    auto& nextStr = text.getString();
+
+    auto charSize = text.getCharacterSize();
+    auto prevGlyph = prevStr[0];
+    auto nextGlyph = nextStr[0];
+
+    auto strRepo = CoreManager::getInstance().getStrRepo();
+    auto& fontName = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
+
     if(m_bounds.width != 0)
     {
-        auto kerning = font->getKerning(prevText.getString().toUtf32()[0], text.getString().toUtf32()[0], text.getCharacterSize());
+        float kerning = strRepo->GetKerning(fontName, prevGlyph, nextGlyph);
+
+        if (kerning == -999) {
+            kerning = font->getKerning(prevGlyph, nextGlyph, charSize);
+            strRepo->kerningStore[fontName][prevGlyph][nextGlyph] = kerning;
+        }
+        
         text.setPosition(m_bounds.width + kerning, 0.f);
     }
 
     // Update bounds
-    float lineSpacing = std::floor(text.getFont()->getLineSpacing(text.getCharacterSize()));
+    float lineSpacing = std::floor(font->getLineSpacing(charSize));
     m_bounds.height = std::max(m_bounds.height, lineSpacing);
 
     //std::cout << text.getString().toAnsiString() << " " << text.getString().toUtf32()[0] << std::endl;
-    if(text.getString() != "")
-        m_bounds.width += font->getGlyph(text.getString().toUtf32()[0], text.getCharacterSize(), false).advance;
+    if (!nextStr.isEmpty())
+    {
+        float advance = strRepo->GetAdvance(fontName, nextGlyph, charSize);
+        if (advance == -999)
+        {
+            advance = font->getGlyph(nextGlyph, charSize, false).advance;
+            strRepo->advanceStore[fontName][nextGlyph][charSize] = advance;
+        }
+
+        m_bounds.width += advance;
+    }
 }
 
 
