@@ -5,6 +5,7 @@
     "sfml",
     "nlohmann-json",
     "spdlog",
-    "libzippp"
+    "libzippp",
+    "catch2"
   ]
 }
