@@ -1012,7 +1012,7 @@ void MissionController::DrawMissionUI()
         {
             if (inputCtrl->isKeyPressed(Input::Keys::SELECT))
             {
-                std::vector<sf::String> a = {"Toggle hitboxes", "Toggle debug info", "Heal units", "Kill all player units", "Kill Hatapon", "Mission failure", "Mission complete", "Toggle rhythm debug UI", "Toggle song debug"};
+                std::vector<sf::String> a = {"Toggle hitboxes", "Toggle debug info", "Heal units", "Kill all player units", "Kill Hatapon", "Mission failure", "Mission complete", "Toggle rhythm debug UI", "Toggle song debug", "Toggle behavior debug"};
 
                 PataDialogBox db;
                 db.Create(font, "Debug menu", a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"), 3);
@@ -1185,6 +1185,22 @@ void MissionController::DrawMissionUI()
                         SPDLOG_DEBUG("Toggle song debug");
 
                         CoreManager::getInstance().getRhythm()->toggleDebug();
+
+                        dialogboxes[dialogboxes.size() - 1].Close();
+                    }
+
+                    break;
+                }
+
+                case 9: {
+                    if (dialogboxes[dialogboxes.size() - 1].id == 999)
+                    {
+                        SPDLOG_DEBUG("Toggle behavior debug");
+
+                        for (auto& entity : entities)
+                        {
+                            entity->toggleBehaviorDebug = !entity->toggleBehaviorDebug;
+                        }
 
                         dialogboxes[dialogboxes.size() - 1].Close();
                     }

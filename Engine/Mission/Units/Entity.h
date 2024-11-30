@@ -78,6 +78,7 @@ public:
     std::vector<MessageCloud> messageclouds;
 
     bool toggleDebug = false;
+    bool toggleBehaviorDebug = false;
     PText debugText;
 
     sf::Clock dead_timer;
