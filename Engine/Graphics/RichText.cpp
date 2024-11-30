@@ -116,6 +116,7 @@ const std::vector<sf::Text> &RichText::Line::getTexts() const
 void RichText::Line::appendText(sf::Text text)
 {
     updateTextAndGeometry(text,text);
+    m_reusableText = text;
     m_texts.push_back(std::move(text));
 }
 
@@ -162,26 +163,24 @@ void RichText::Line::isolateCharacter(std::size_t pos)
 {
     std::size_t localPos = pos;
     std::size_t index = convertLinePosToLocal(localPos);
-    sf::Text temp = m_texts[index];
 
-    sf::String string = temp.getString();
-    if (string.getSize() == 1)
+    if (m_texts[index].getString().getSize() == 1)
         return;
 
-    m_texts.erase(m_texts.begin() + index);
-    if (localPos != string.getSize() - 1)
-    {
-        temp.setString(string.substring(localPos+1));
-        m_texts.insert(m_texts.begin() + index, temp);
-    }
+    m_reusableString = m_texts[index].getString();
 
-    temp.setString(string.substring(localPos, 1));
-    m_texts.insert(m_texts.begin() + index, temp);
-    
     if (localPos != 0)
     {
-        temp.setString(string.substring(0, localPos));
-        m_texts.insert(m_texts.begin() + index, temp);
+        m_reusableText.setString(m_reusableString.substring(0, localPos));
+        m_texts.insert(m_texts.begin() + index, m_reusableText);
+    }
+
+    m_texts[index].setString(m_reusableString.substring(localPos, 1));
+
+    if (localPos != m_reusableString.getSize() - 1)
+    {
+        m_reusableText.setString(m_reusableString.substring(localPos + 1));
+        m_texts.insert(m_texts.begin() + index + 1, m_reusableText);
     }
 }
 
@@ -190,13 +189,18 @@ void RichText::Line::isolateCharacter(std::size_t pos)
 void RichText::Line::updateGeometry() const
 {
     m_bounds = sf::FloatRect();
-    sf::Text prevText;
-    prevText.setString("");
 
-    for (sf::Text& text : m_texts)
+    auto itCurr = m_texts.begin();
+    auto itPrev = itCurr;
+
+    for (++itCurr; itCurr != m_texts.end(); ++itCurr)
     {
-        updateTextAndGeometry(prevText, text);
-        prevText = text;
+        if (itPrev == m_texts.begin()) {
+            updateTextAndGeometry(m_emptyText, *itPrev);
+        }
+
+        updateTextAndGeometry(*itPrev, *itCurr);
+        ++itPrev;
     }
 }
 
@@ -204,7 +208,6 @@ void RichText::Line::updateGeometry() const
 ////////////////////////////////////////////////////////////////////////////////
 void RichText::Line::updateTextAndGeometry(sf::Text& prevText, sf::Text& text) const
 {
-
     // Set text offset
     auto font = text.getFont();
     text.setPosition(m_bounds.width, 0.f);
@@ -217,15 +220,16 @@ void RichText::Line::updateTextAndGeometry(sf::Text& prevText, sf::Text& text) c
     auto nextGlyph = nextStr[0];
 
     auto strRepo = CoreManager::getInstance().getStrRepo();
-    auto& fontName = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
     if(m_bounds.width != 0)
     {
-        float kerning = strRepo->GetKerning(fontName, prevGlyph, nextGlyph);
+        std::pair<sf::Uint32, sf::Uint32> p = {prevGlyph, nextGlyph};
+        float kerning = strRepo->GetKerning(p);
 
-        if (kerning == -999) {
+        if (kerning == -999) 
+        {
             kerning = font->getKerning(prevGlyph, nextGlyph, charSize);
-            strRepo->kerningStore[fontName][prevGlyph][nextGlyph] = kerning;
+            strRepo->kerningStore[{prevGlyph, nextGlyph}] = kerning;
         }
         
         text.setPosition(m_bounds.width + kerning, 0.f);
@@ -235,14 +239,15 @@ void RichText::Line::updateTextAndGeometry(sf::Text& prevText, sf::Text& text) c
     float lineSpacing = std::floor(font->getLineSpacing(charSize));
     m_bounds.height = std::max(m_bounds.height, lineSpacing);
 
-    //std::cout << text.getString().toAnsiString() << " " << text.getString().toUtf32()[0] << std::endl;
     if (!nextStr.isEmpty())
     {
-        float advance = strRepo->GetAdvance(fontName, nextGlyph, charSize);
+        std::pair<sf::Uint32, sf::Uint32> p = {nextGlyph, charSize};
+        float advance = strRepo->GetAdvance(p);
+
         if (advance == -999)
         {
             advance = font->getGlyph(nextGlyph, charSize, false).advance;
-            strRepo->advanceStore[fontName][nextGlyph][charSize] = advance;
+            strRepo->advanceStore[{nextGlyph, charSize}] = advance;
         }
 
         m_bounds.width += advance;
@@ -534,8 +539,9 @@ sf::Text RichText::createText(const sf::String& string) const
     text.setStyle(m_currentStyle);
     text.setCharacterSize(m_characterSize);
     if (m_font)
+    {
         text.setFont(*m_font);
-
+    }
     return text;
 }
 

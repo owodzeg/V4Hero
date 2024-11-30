@@ -228,20 +228,12 @@ sf::Font& StringRepository::GetFontFromName(const std::string& fontName)
     }
 }
 
-float StringRepository::GetKerning(std::string& font, sf::Uint32& char1, sf::Uint32& char2)
+float StringRepository::GetKerning(std::pair<sf::Uint32, sf::Uint32>& pair)
 {
-    auto& kerning = kerningStore[font][char1][char2];
-
-    if (kerning == std::nullopt)
-        return -999;
-    return kerning.value();
+    return kerningStore[pair].value_or(-999);
 }
 
-float StringRepository::GetAdvance(std::string& font, sf::Uint32& char1, unsigned int& fsize)
+float StringRepository::GetAdvance(std::pair<sf::Uint32, sf::Uint32>& pair)
 {
-    auto& advance = advanceStore[font][char1][fsize];
-
-    if (advance == std::nullopt)
-        return -999;
-    return advance.value();
+    return advanceStore[pair].value_or(-999);
 }

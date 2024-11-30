@@ -125,14 +125,12 @@ void PText::processRichText()
     if(txt_color != "")
         t << color;
 
-    std::vector<sf::String> rt_string;
-
+    
+    rt_string.clear();
     textSettings.clear();
 
     int i=0;
     int seek = 0;
-
-    SPDLOG_TRACE("Processing text {}", std::string(txt));
 
     int br_open = -1;
     int br_close = -1;
@@ -158,7 +156,6 @@ void PText::processRichText()
         {
             if(x == '{')
             {
-                SPDLOG_TRACE("Opening bracket found at {}", i);
                 br_open = i;
                 seek = 1;
 
@@ -167,7 +164,7 @@ void PText::processRichText()
                 if(buffer.getSize() > 0)
                     rt_string.push_back(buffer);
                 
-                buffer = sf::String();
+                buffer.clear();
                 continue;
             }
         }
@@ -175,17 +172,14 @@ void PText::processRichText()
         {
             if(x == '}')
             {
-                SPDLOG_TRACE("Closing bracket found at {}", i);
                 br_close = i;
                 seek = 0;
 
                 int br_size = br_close - br_open + 1;
                 sf::String keyword = txt.substring(br_open, br_size);
 
-                SPDLOG_TRACE("Rich text keyword found! Start: {}, End: {}, Keyword: {}", br_open, br_close, std::string(keyword));
-
                 rt_string.push_back(keyword);
-                buffer = sf::String();
+                buffer.clear();
 
                 ++i;
                 continue;
@@ -207,15 +201,11 @@ void PText::processRichText()
             rt_string.push_back(buffer);
     }
 
-    SPDLOG_TRACE("Result text:");
-
     int currentStyle = 0;
     int processedChars = 0;
 
     for(auto x : rt_string)
     {
-        SPDLOG_TRACE("RichText buffer: {}", std::string(x));
-
         if(x.find("{") != sf::String::InvalidPos)
         {
             //keyword
@@ -403,7 +393,6 @@ void PText::processRichText()
             //regular text
             t << x;
             processedChars += x.getSize();
-            SPDLOG_TRACE("Added text: {}", std::string(x));
         }
     }
 

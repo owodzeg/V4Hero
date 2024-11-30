@@ -65,6 +65,7 @@ public:
     };
 
     std::vector<TextSettings> textSettings;
+    std::vector<sf::String> rt_string;
     std::vector<sf::String> additional;
 
     // no reason to use in regular environment

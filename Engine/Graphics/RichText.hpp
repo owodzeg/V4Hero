@@ -154,6 +154,10 @@ public:
         // Member data
         //////////////////////////////////////////////////////////////////////
         mutable std::vector<sf::Text> m_texts; ///< List of texts
+        mutable sf::Text m_emptyText;
+        mutable sf::Text m_reusableText;
+        mutable sf::String m_reusableString;
+        mutable std::vector<sf::Text> m_newTexts;
         mutable sf::FloatRect m_bounds;        ///< Local bounds
     };
 

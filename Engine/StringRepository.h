@@ -11,6 +11,19 @@
 class StringRepository
 {
 public:
+    template<typename T1, typename T2>
+    struct pair_hash {
+        std::size_t operator()(const std::pair<T1, T2>& p) const
+        {
+            // Combine the hash of the first element and the second element
+            std::size_t hash1 = std::hash<T1>{}(p.first);
+            std::size_t hash2 = std::hash<T2>{}(p.second);
+
+            // Use bitwise XOR and bit shifting to combine the hashes
+            return hash1 ^ (hash2 << 1); // hash1 XOR shifted hash2
+        }
+    };
+
     StringRepository();
     void Reload();
 
@@ -32,13 +45,13 @@ public:
     std::string& GetFontNameForLanguage(const std::string& countryCode);
     sf::Font& GetFontFromName(const std::string& fontName);
 
-    float GetKerning(std::string& font, sf::Uint32& char1, sf::Uint32& char2);
-    float GetAdvance(std::string& font, sf::Uint32& char1, unsigned int& fsize);
+    float GetKerning(std::pair<sf::Uint32, sf::Uint32>& pair);
+    float GetAdvance(std::pair<sf::Uint32, sf::Uint32>& pair);
 
     std::unordered_map<std::string, std::optional<std::string>> langToFontMapping; // Maps language to font name
     std::unordered_map<std::string, std::unique_ptr<sf::Font>> fontStore;  // Use shared_ptr for automatic memory management
-    std::unordered_map<std::string, std::unordered_map<sf::Uint32, std::unordered_map<sf::Uint32, std::optional<float>>>> kerningStore; // Store font kerning
-    std::unordered_map<std::string, std::unordered_map<sf::Uint32, std::unordered_map<unsigned int, std::optional<float>>>> advanceStore; // Store letter advance, [font][glyph][size]
+    std::unordered_map<std::pair<sf::Uint32, sf::Uint32>, std::optional<float>, pair_hash<sf::Uint32, sf::Uint32>> kerningStore; // Store font kerning
+    std::unordered_map<std::pair<sf::Uint32, sf::Uint32>, std::optional<float>, pair_hash<sf::Uint32, sf::Uint32>> advanceStore; // Store letter advance, [glyph][size]
 
 private:
     std::unordered_map<std::string, std::unordered_map<std::string, std::string>> languages;
