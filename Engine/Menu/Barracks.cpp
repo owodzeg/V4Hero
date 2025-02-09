@@ -274,7 +274,10 @@ Barracks::Barracks()
 
     //mm_inventory_background.setSize(sf::Vector2f(mm_inventory_background.getSize().x+(40*resRatioX),mm_inventory_background.getSize().y+(40*resRatioX)));
 
-    for(int i=1; i<=6; i++)
+    // TODO: hardcoded yaripons. change when tatepons are implemented.
+    auto yaripon_count = CoreManager::getInstance().getSaveReader()->ponReg.pons.size();
+
+    for(int i=1; i<=yaripon_count; i++)
     {
         barracks_units.push_back(std::make_unique<AnimatedObject>());
         barracks_units.back().get()->LoadConfig("resources/units/unit/yaripon.zip");
@@ -291,7 +294,7 @@ Barracks::Barracks()
         barracks_units.back().get()->loadExtra(wpn, "weapon");
         barracks_units.back().get()->loadExtra(hlm, "helm");
 
-        int pon_width = 75*3;
+        int pon_width = 75*3 / yaripon_count * 6;
         barracks_units.back().get()->setGlobalPosition(sf::Vector2f((1260 + (pon_width * (i-1))), 1815));
     }
 
@@ -792,8 +795,10 @@ void Barracks::Update()
     s_background.setPosition(0, 0);
     s_background.draw();
 
+    int yaripon_count = CoreManager::getInstance().getSaveReader()->ponReg.pons.size();
+
     int highlight_width = 225*3;
-    int pon_width = 75*3;
+    int pon_width = 75 * 3 / yaripon_count * 6;
 
     for(auto& pon : barracks_units)
     {
@@ -1223,7 +1228,7 @@ void Barracks::Update()
 
             if (inputCtrl->isKeyPressed(Input::Keys::RIGHT))
             {
-                if (current_selected_pon < 5)
+                if (current_selected_pon < CoreManager::getInstance().getSaveReader()->ponReg.pons.size() - 1)
                     current_selected_pon++;
 
                 refreshStats();

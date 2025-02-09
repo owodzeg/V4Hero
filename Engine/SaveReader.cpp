@@ -220,7 +220,7 @@ void SaveReader::Save()
         hero.level = ponReg.pons[0].pon_id;
         hero.exp = ponReg.pons[0].pon_id;
         std::vector<std::vector<int>> slots;
-        for (int p = 0; p < 5; p++) // Potentially dangerous magic number. Use ponReg.pons[o].slots.size() in case it causes trouble
+        for (int p = 0; p < ponReg.pons[0].slots.size(); p++)
         {
             if (ponReg.pons[0].slots[p] != -1)
             {
@@ -250,7 +250,7 @@ void SaveReader::Save()
                 };
 
                 std::vector<std::vector<int>> slots;
-                for (int p = 0; p < 5; p++) // Potentially dangerous magic number. Use ponReg.pons[o].slots.size() in case it causes trouble
+                for (int p = 0; p < pon.slots.size(); p++)
                 {
                     if (pon.slots[p] != -1)
                     {

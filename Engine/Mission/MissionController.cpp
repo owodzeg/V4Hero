@@ -78,12 +78,14 @@ void MissionController::LoadMission(const std::string& path)
 
     std::vector<std::future<void>> futures;
 
+    int yaripon_count = CoreManager::getInstance().getSaveReader()->ponReg.pons.size();
+
     if (pons == 0)
     {
-        for (int i = 1; i <= 6; i++)
+        for (int i = 1; i <= yaripon_count; i++)
         {
-            futures.emplace_back(std::async(std::launch::async, [i, this]() {
-                auto yaripon = std::make_unique<Yaripon>(i, 6);
+            futures.emplace_back(std::async(std::launch::async, [i, yaripon_count, this]() {
+                auto yaripon = std::make_unique<Yaripon>(i, yaripon_count);
                 auto y = yaripon.get();
 
                 Pon* currentPon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i - 1);
