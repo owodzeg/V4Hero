@@ -235,7 +235,7 @@ void SaveReader::Save()
     }
 
     std::vector<std::vector<SquadSlot>> squads(ponReg.squads_available.size());
-    for (unsigned int i = 0; i <= ponReg.squads_available.size(); i++)
+    for (unsigned int i = 0; i < ponReg.squads_available.size(); i++)
     {
         for (const Pon& pon : ponReg.pons)
         {
