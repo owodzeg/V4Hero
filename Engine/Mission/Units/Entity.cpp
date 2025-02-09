@@ -407,8 +407,8 @@ void Entity::handleAttack() // entity's attack
     {
         if(!threw)
         {
-            float prj_xPos = global_x+local_x;
-            float prj_yPos = global_y+local_y-90;
+            float prj_xPos = global_x+local_x+hPos;
+            float prj_yPos = global_y+local_y+vPos-90;
             float prj_hSpeed = -1800 - (rand()%50);
             float prj_vSpeed = -1800 - (rand()%70);
             auto prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn, true);
