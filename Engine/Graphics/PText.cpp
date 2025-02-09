@@ -124,7 +124,7 @@ void PText::processRichText()
     t << sf::Color(0,0,0,0);
     if(txt_color != "")
         t << color;
-
+    t.setCharacterSize(characterSize);
     
     rt_string.clear();
     textSettings.clear();
@@ -419,8 +419,7 @@ void PText::processRichText()
         speech_done = true;
     }
 
-    if (characterSize != t.getCharacterSize())
-        t.setCharacterSize(characterSize);
+    t.setCharacterSize(characterSize);
 }
 
 void PText::setOrigin(float x, float y)
