@@ -35,8 +35,11 @@ void TestChamber::Initialize()
     SPDLOG_INFO("Yaripon 2: {}s ({}us)", bench2 / 1000000.f, bench2);
     SPDLOG_INFO("Yaripon 3: {}s ({}us)", bench3 / 1000000.f, bench3);
 
-    initialized = true;
     SPDLOG_DEBUG("Welcome to the Test Chamber");
+
+    ptext.append("{color 255 0 0}{bold}{size 30}Hello, {size 50}VAVAVAVAVAVA! V4Hero Client v1.2 is real!{n}{size 10}This {size 15}is {size 40}{color 0 255 128}a test {color 0 0 0}{size 20}of the {italic}PataText{italic} system.{bold}{n}{size 60}{color 255 0 0}R{color 255 128 0}A{color 255 255 0}I{color 128 255 0}N{color 0 255 0}B{color 0 255 128}O{color 0 255 255}W{color 0 0 0}{size 30}{n}{n}Let's test kerning!{n}VAVAVAVAVAVAVA{n}{font fallback}VAVAVAVAVAVAVA{n}{font kaku-uni}A quick brown fox jumps over a lazy dog.{n}{font kaku-cn}A quick brown fox jumps over a lazy dog.{n}{font fallback}A quick brown fox jumps over a lazy dog.{font kaku-uni}{n}{size 30}Yo... I heard that these... {shake 2}{color 255 0 0}{bold}KIRAJINS{bold}{color 0 0 0}{shake 0} are some real trouble...{n}{hwave 4 10}I'm dizzy.{hwave 0 0}{n}{n}{vwave 6 10}heyyyyyy sweetie <3{vwave 0 0}{n}{n}{shake 5}{hwave 6 10}{vwave 7 10}oh{color 100 0 0}hh hh{color 0 0 0}h {font kaku-cn}my{size 50}y{color 0 200 0}yy{font kaku-uni} gg{color 0 0 0}o{size 20}oo{font fallback}oo{color 255 0 255}o{size 20}ddd{color 0 0 0}{size 30}dd{font kaku-uni}ddd {color 255 0 0}{shake 10}AAAAAAAA");
+
+    initialized = true;
 }
 
 void TestChamber::Update()
@@ -47,13 +50,17 @@ void TestChamber::Update()
     window->draw(bg);
 
     yaripon.pos_global = sf::Vector2f(400, 200);
-    yaripon.Draw();
+    //yaripon.Draw();
 
     hatapon.pos_global = sf::Vector2f(100, 200);
-    hatapon.Draw();
+    //hatapon.Draw();
 
     dropped_item.pos_global = sf::Vector2f(100, 500);
-    dropped_item.Draw();
+    //dropped_item.Draw();
+
+    ptext.setGlobalOrigin(ptext.getGlobalBounds().width / 2, ptext.getGlobalBounds().height / 2);
+    ptext.setGlobalPosition(640, 360);
+    ptext.draw();
 }
 
 TestChamber::~TestChamber()

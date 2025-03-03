@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "../Mission/Units/AnimatedObject.h"
+#include "../Graphics/PataText.h"
 
 class TestChamber
 {
@@ -14,6 +15,8 @@ public:
     AnimatedObject hatapon;
     AnimatedObject dropped_item;
     float fun = 0;
+
+    PataText ptext;
 
     void Initialize();
     void Update();
