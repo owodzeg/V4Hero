@@ -35,6 +35,7 @@ public:
     std::string save_ver = "2.0";
 
     SaveReader();
+    ~SaveReader();
     void LoadSave(Config& tconfig);
     void LoadSave();
     void Flush();

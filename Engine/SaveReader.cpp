@@ -23,6 +23,11 @@ SaveReader::SaveReader()
     isNewSave = !exists;
 }
 
+SaveReader::~SaveReader()
+{
+    SPDLOG_DEBUG("SaveReader Destructor.");
+}
+
 void SaveReader::LoadSave()
 {
     ifstream conf(SAVEFILE_PATH, std::ios::in);

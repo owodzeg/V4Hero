@@ -9,10 +9,13 @@ StateManager::StateManager()
 
 StateManager::~StateManager()
 {
+    SPDLOG_DEBUG("StateManager Destructor start.");
+
     for (auto& t : loadingThreads)
     {
         t.detach();
     }
+    SPDLOG_DEBUG("StateManager Destructor completed.");
 }
 
 StateManager& StateManager::getInstance()

@@ -48,6 +48,11 @@ Config::Config()
     SPDLOG_INFO("Config initialization finished");
 }
 
+Config::~Config()
+{
+    SPDLOG_DEBUG("Config Destructor.");
+}
+
 void Config::LoadConfig()
 {
     std::ifstream conf("config.ini");

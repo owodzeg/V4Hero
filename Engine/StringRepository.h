@@ -49,9 +49,28 @@ public:
     float GetAdvance(std::pair<sf::Uint32, sf::Uint32>& pair);
 
     std::unordered_map<std::string, std::optional<std::string>> langToFontMapping; // Maps language to font name
-    std::unordered_map<std::string, std::unique_ptr<sf::Font>> fontStore;  // Use shared_ptr for automatic memory management
+    std::unordered_map<std::string, std::shared_ptr<sf::Font>> fontStore;  // Use shared_ptr for automatic memory management
     std::unordered_map<std::pair<sf::Uint32, sf::Uint32>, std::optional<float>, pair_hash<sf::Uint32, sf::Uint32>> kerningStore; // Store font kerning
     std::unordered_map<std::pair<sf::Uint32, sf::Uint32>, std::optional<float>, pair_hash<sf::Uint32, sf::Uint32>> advanceStore; // Store letter advance, [glyph][size]
+
+    struct GlyphCache
+    {
+        double advance = 0;
+        double height = 0;
+        double advance_bold = 0;
+        double height_bold = 0;
+    };
+
+    // new for PataText
+    // kerningCache[font][charSize][{char1, char2}]
+    std::unordered_map<std::string, std::unordered_map<double, std::unordered_map<std::pair<sf::Uint32, sf::Uint32>, std::optional<double>, pair_hash<sf::Uint32, sf::Uint32>>>> kerningCache;
+
+    // advanceCache[font][charSize][char]
+    std::unordered_map<std::string, std::unordered_map<double, std::unordered_map<sf::Uint32, GlyphCache>>> advanceCache;
+
+    float GetKerningForFont(const std::string& fontName, std::pair<sf::Uint32, sf::Uint32>& pair, const double charSize);
+    float GetAdvanceForFont(const std::string& fontName, sf::Uint32& character, const double charSize, bool bold);
+    float GetHeightForFont(const std::string& fontName, sf::Uint32& character, const double charSize, bool bold);
 
 private:
     std::unordered_map<std::string, std::unordered_map<std::string, std::string>> languages;

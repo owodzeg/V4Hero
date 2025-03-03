@@ -63,6 +63,11 @@ V4Core::V4Core()
     ResourceManager::getInstance().getQuality();
 }
 
+V4Core::~V4Core()
+{
+    SPDLOG_DEBUG("V4Core Destructor.");
+}
+
 void V4Core::changeRichPresence(std::string title, std::string bg_image, std::string sm_image)
 {
     if(core)

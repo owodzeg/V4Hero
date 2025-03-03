@@ -43,6 +43,7 @@ public:
 
     // Functions
     V4Core();
+    ~V4Core();
     void changeRichPresence(std::string title, std::string bg_image, std::string sm_image);
     float getFPS();
     void init();

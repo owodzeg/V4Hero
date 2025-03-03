@@ -114,6 +114,7 @@ public:
     std::string fontPath = "";
     
     Config();
+    ~Config();
     void LoadConfig();
 
     StringRepository strRepo;

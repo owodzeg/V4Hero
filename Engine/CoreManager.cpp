@@ -9,7 +9,38 @@ CoreManager::CoreManager()
 
 CoreManager::~CoreManager()
 {
+    SPDLOG_DEBUG("CoreManager Destructor.");
 
+    SPDLOG_DEBUG("Delete Window.");
+    delete window;
+    SPDLOG_DEBUG("Delete songController.");
+    delete songController;
+    SPDLOG_DEBUG("Delete rhythmController.");
+    delete rhythmController;
+    SPDLOG_DEBUG("Delete rhythmGUI.");
+    delete rhythmGUI;
+    SPDLOG_DEBUG("Delete Rhythm.");
+    delete rhythm;
+    SPDLOG_DEBUG("Delete missionController.");
+    delete missionController;
+    SPDLOG_DEBUG("Delete tips utility.");
+    delete tipsUtil;
+    SPDLOG_DEBUG("Delete globals.");
+    delete globals;
+    SPDLOG_DEBUG("Delete mouse controller.");
+    delete mouseCtrl;
+    SPDLOG_DEBUG("Delete text controller.");
+    delete textCtrl;
+    SPDLOG_DEBUG("Delete input controller.");
+    delete inputCtrl;
+    SPDLOG_DEBUG("Delete save reader.");
+    delete saveReader;
+    SPDLOG_DEBUG("Delete string repository.");
+    delete strRepo;
+    SPDLOG_DEBUG("Delete config.");
+    delete config;
+    SPDLOG_DEBUG("Delete core.");
+    delete core;
 }
 
 CoreManager& CoreManager::getInstance()

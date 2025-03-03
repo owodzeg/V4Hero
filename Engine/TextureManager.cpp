@@ -15,6 +15,7 @@ TextureManager::TextureManager()
 
 TextureManager::~TextureManager()
 {
+    SPDLOG_DEBUG("TextureManager Destructor.");
 }
 
 TextureManager& TextureManager::getInstance()

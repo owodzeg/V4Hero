@@ -12,7 +12,7 @@ ResourceManager::ResourceManager()
 
 ResourceManager::~ResourceManager()
 {
-
+    SPDLOG_DEBUG("ResourceManager Destructor.");
 }
 
 ResourceManager& ResourceManager::getInstance()

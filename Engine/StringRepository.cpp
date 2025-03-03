@@ -237,3 +237,71 @@ float StringRepository::GetAdvance(std::pair<sf::Uint32, sf::Uint32>& pair)
 {
     return advanceStore[pair].value_or(-999);
 }
+
+float StringRepository::GetKerningForFont(const std::string& fontName, std::pair<sf::Uint32, sf::Uint32>& pair, const double charSize)
+{
+    if (kerningCache.contains(fontName)) {
+        auto& fontCache = kerningCache[fontName];
+        if (fontCache.contains(charSize))
+        {
+            auto& sizeCache = fontCache[charSize];
+            if (sizeCache.contains(pair))
+            {
+                return sizeCache[pair].value();
+            }
+        }
+    }
+
+    // cache not found
+    auto& font = GetFontFromName(fontName);
+    float kerning = font.getKerning(pair.first, pair.second, charSize);
+    kerningCache[fontName][charSize][pair] = kerning;
+    return kerning;
+}
+
+float StringRepository::GetAdvanceForFont(const std::string& fontName, sf::Uint32& character, const double charSize, bool bold)
+{
+    if (advanceCache.contains(fontName))
+    {
+        auto& fontCache = advanceCache[fontName];
+        if (fontCache.contains(charSize))
+        {
+            auto& sizeCache = fontCache[charSize];
+            if (sizeCache.contains(character))
+            {
+                return bold ? sizeCache[character].advance_bold : sizeCache[character].advance;
+            }
+        }
+    }
+    // cache not found
+    auto& font = GetFontFromName(fontName);
+    auto glyph = font.getGlyph(character, charSize, false);
+    auto glyphBold = font.getGlyph(character, charSize, true);
+    advanceCache[fontName][charSize][character] = {glyph.advance, glyph.bounds.height, glyphBold.advance, glyphBold.bounds.height};
+    return bold ? glyphBold.advance : glyph.advance;
+}
+
+float StringRepository::GetHeightForFont(const std::string& fontName, sf::Uint32& character, const double charSize, bool bold)
+{
+    // Try to get the cached value directly, if available
+    auto& fontCache = advanceCache[fontName];
+    auto& sizeCache = fontCache[charSize];
+
+    if (sizeCache.contains(character))
+    {
+        const auto& cacheEntry = sizeCache[character];
+        return bold ? cacheEntry.height_bold : cacheEntry.height;
+    }
+
+    // If cache miss, calculate and store values
+    auto& font = GetFontFromName(fontName);
+
+    // Retrieve both regular and bold glyphs once to minimize redundant calls
+    auto glyph = font.getGlyph(character, charSize, false);
+    auto glyphBold = font.getGlyph(character, charSize, true);
+
+    // Store the values in cache, including both regular and bold heights
+    sizeCache[character] = {glyph.advance, glyph.bounds.height, glyphBold.advance, glyphBold.bounds.height};
+
+    return bold ? glyphBold.bounds.height : glyph.bounds.height;
+}
