@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <random>
 #include <discord.h>
-#include <Graphics/PText.h>
+#include <Graphics/PataText.h>
 
 // Main game class that handles the engine
 class V4Core
@@ -12,7 +12,7 @@ class V4Core
 private:
     // Static GUI always on screen
 
-    PText t_version, t_fps;
+    PataText t_version, t_fps;
 
     // Variables for delta time calc
     float fps = 60;

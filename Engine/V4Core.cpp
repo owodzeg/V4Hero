@@ -138,6 +138,11 @@ void V4Core::init()
     if (framerate_limit > 500)
         framerate_limit = 500;
 
+    // Version text
+    t_version.append("{outline 2 0 0 0}{color 255 255 255}{size 24}V4Hero Client ");
+    t_version.append(hero_version);
+    t_version.setGlobalOrigin(t_version.getGlobalBounds().width, 0);
+
     // Apply window settings (fps limit, vsync)
     SPDLOG_INFO("Applying window settings");
     window->setFramerateLimit(framerate_limit);
@@ -287,23 +292,17 @@ void V4Core::init()
         std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
         // Draw version number
-        t_version.setFont(font);
-        t_version.setCharacterSize(24);
-        t_version.setColor(sf::Color(255, 255, 255, 32));
-        t_version.setString("{outline 2 0 0 0}V4Hero Client " + hero_version);
-        t_version.setOrigin(t_version.getLocalBounds().width, 0);
-        t_version.setPosition(3820, 0);
+        t_version.setGlobalPosition(1276, 0);
         t_version.draw();
 
         // If FPS counter is enabled, draw it
         if (config->GetInt("showFPS"))
         {
-            t_fps.setFont(font);
-            t_fps.setCharacterSize(24);
-            t_fps.setColor(sf::Color(255, 255, 255, 96));
-            t_fps.setString("{outline 2 0 0 0}FPS: " + to_string(int(ceil(rawFps))));
-            t_fps.setOrigin(t_fps.getLocalBounds().width, 0);
-            t_fps.setPosition(3820, 74);
+            t_fps.reset();
+            t_fps.append("{outline 2 0 0 0}{color 255 255 255}FPS: ");
+            t_fps.append(to_string(int(ceil(rawFps))));
+            t_fps.setGlobalOrigin(t_fps.getGlobalBounds().width, 0);
+            t_fps.setGlobalPosition(1276, 24);
             t_fps.draw();
         }
 
