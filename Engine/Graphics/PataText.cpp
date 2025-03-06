@@ -7,32 +7,18 @@
 
 std::vector<sf::String> PataText::split_and_remove(const sf::String& s, const sf::String& delim)
 {
-    // Fast path for empty string input
     if (s.isEmpty())
     {
         return {};
     }
 
-    // Fast path for empty delimiter (invalid case)
     const size_t delimSize = delim.getSize();
     if (delimSize == 0)
     {
         return {s};
     }
 
-    // Estimate result size by counting delimiters
-    size_t count = 0;
-    size_t pos = 0;
-    while ((pos = s.find(delim, pos)) != sf::String::InvalidPos)
-    {
-        ++count;
-        pos += delimSize;
-    }
-
     std::vector<sf::String> result;
-    result.reserve(count + 1);
-
-    // Single scan through the string
     size_t start = 0;
     size_t end = 0;
 
@@ -42,11 +28,9 @@ std::vector<sf::String> PataText::split_and_remove(const sf::String& s, const sf
         start = end + delimSize;
     }
 
-    // Add final segment
-    if (start < s.getSize())
-        result.emplace_back(s.substring(start));
+    result.emplace_back(s.substring(start));
 
-    return std::move(result); // Enable return value optimization
+    return result;
 }
 
 std::vector<std::string> PataText::split_fast(const std::string& s, char delim)
@@ -59,12 +43,11 @@ std::vector<std::string> PataText::split_fast(const std::string& s, char delim)
 
     while ((end = s.find(delim, start)) != std::string::npos)
     {
-        if (end > start) // Skip empty strings
+        if (end > start)
             result.emplace_back(s.substr(start, end - start));
         start = end + 1;
     }
 
-    // Add the last segment if it's not empty
     if (start < s.length())
         result.emplace_back(s.substr(start));
 
@@ -80,14 +63,14 @@ std::vector<std::string> PataText::split_fast(const std::string& s, char delim)
 std::vector<sf::String> PataText::extract_tokens(const sf::String& str)
 {
     std::vector<sf::String> result;
-    // Reserve space based on a rough estimate of tokens (assuming every opening brace creates a token)
+
     size_t braceCount = 0;
     for (size_t i = 0; i < str.getSize(); ++i)
     {
         if (str[i] == '{')
             braceCount++;
     }
-    result.reserve(braceCount * 2 + 1); // Allocate for braces, text between braces, and potential final text
+    result.reserve(braceCount * 2 + 1);
 
     std::size_t pos = 0;
     std::size_t prev = 0;
@@ -96,10 +79,8 @@ std::vector<sf::String> PataText::extract_tokens(const sf::String& str)
 
     while (pos < str.getSize())
     {
-        // Find opening brace
         pos = str.find(openBrace, prev);
 
-        // Add text before the token if exists
         if (pos != sf::String::InvalidPos)
         {
             if (pos > prev)
@@ -107,27 +88,22 @@ std::vector<sf::String> PataText::extract_tokens(const sf::String& str)
                 result.emplace_back(str.substring(prev, pos - prev));
             }
 
-            // Find closing brace
             std::size_t endPos = str.find(closeBrace, pos);
             if (endPos != sf::String::InvalidPos)
             {
-                // Add the complete token (including braces)
                 result.emplace_back(str.substring(pos, endPos - pos + 1));
                 prev = endPos + 1;
             } else
             {
-                // No closing brace found, treat the rest as a token
                 result.emplace_back(str.substring(pos));
-                return result; // Early return, no need to process further
+                return result;
             }
         } else
         {
-            // No more opening braces
             break;
         }
     }
 
-    // Add remaining text if any
     if (prev < str.getSize())
     {
         result.emplace_back(str.substring(prev));
@@ -139,6 +115,7 @@ std::vector<sf::String> PataText::extract_tokens(const sf::String& str)
 PataText::PataText()
 {
     styleResetAllStyles(m_marker);
+    m_lines.push_back(std::vector<PTChar>());
 }
 
 void PataText::applyFadeIn()
@@ -331,7 +308,7 @@ void PataText::styleResetAllStyles(PTStyle& style)
     style.font = strRepo->fontStore[style.fontStr];
 }
 
-void PataText::append(std::string& input_text)
+void PataText::append(std::string input_text)
 {
     sf::String sf_input_text(input_text);
     append(sf_input_text);
@@ -370,9 +347,9 @@ void PataText::append(sf::String& input_text)
 
     for (auto line : lines)
     {
-        m_lines.push_back(std::vector<PTChar>());
+        if (lines.size() > 1)
+            m_lines.push_back(std::vector<PTChar>());
 
-        SPDLOG_TRACE("Processing line: {}", std::string(line));
         std::vector<sf::String> tokens = extract_tokens(line);
 
         // Step 3: Distinguish tokens and regular text.
@@ -384,21 +361,28 @@ void PataText::append(sf::String& input_text)
             if (token[0] == '{')
             {
                 // token is a style token
-                SPDLOG_TRACE("Processing style token: {}", std::string(token));
                 ProcessStyleToken(token);
             } else
             {
                 // token is a regular text
-                SPDLOG_TRACE("Processing regular text: {}", std::string(token));
                 ProcessRegularText(token);
             }
         }
     }
 
     // Step 4: Apply kerning from font data.
-    applyDefaultKerning();
+    applyDefaultKerning(); 
 
+    // Step 5: Calculate positions before rendering
+    ProcessPositioning();
     refreshPositioning = true;
+}
+
+void PataText::reset()
+{
+    m_lines.clear();
+    styleResetAllStyles(m_marker);
+    m_lines.push_back(std::vector<PTChar>());
 }
 
 void PataText::ProcessStyleToken(const sf::String& token)
@@ -458,7 +442,7 @@ void PataText::ProcessStyleToken(const sf::String& token)
     {
         // extract outline values
         std::vector<std::string> args = split_fast(keywordStr, ' ');
-        if (args.size() == 4)
+        if (args.size() == 5)
         {
             int th = atoi(args[1].c_str());
             int r = atoi(args[2].c_str());
@@ -495,7 +479,17 @@ void PataText::ProcessStyleToken(const sf::String& token)
         std::vector<std::string> args = split_fast(keywordStr, ' ');
         if (args.size() == 2)
         {
-            double speed = 1000 / atoi(args[1].c_str());
+            double cps = atoi(args[1].c_str());
+            double speed;
+
+            if (cps == 0)
+            {
+                speed = 0;
+            } else
+            {
+                speed = 1000 / cps;
+            }
+            
             styleSetSpeed(m_marker, speed);
             SPDLOG_TRACE("Set speed to {}", speed);
         } 
@@ -571,15 +565,18 @@ void PataText::ProcessStyleToken(const sf::String& token)
 
 void PataText::ProcessRegularText(const sf::String& token)
 {
-    for (auto character : token) {
-        PTChar ptChar;
-        ptChar.character = character;
-        ptChar.style = m_marker;
+    size_t tokenSize = token.getSize();
+    if (tokenSize > 0)
+    {
+        std::vector<PTChar>& currentLine = m_lines.back();
+        currentLine.reserve(currentLine.size() + tokenSize);
 
-        m_marker.curCharTimeout = 0; // reset single-use timeout.
-
-        m_lines.back().push_back(ptChar);
-        SPDLOG_TRACE("Added character: {}", character);
+        for (size_t i = 0; i < tokenSize; ++i)
+        {
+            // Reset single-use timeout
+            m_marker.curCharTimeout = 0;
+            currentLine.emplace_back(token[i], m_marker);
+        }
     }
 }
 
@@ -587,7 +584,7 @@ void PataText::applyDefaultKerning()
 {
     auto strRepo = CoreManager::getInstance().getStrRepo();
 
-    for (auto line : m_lines)
+    for (auto& line : m_lines)
     {
         if (line.size() < 2)
             continue;
@@ -708,7 +705,11 @@ void PataText::draw()
                 character.text.setString(character.character);
             }
         }
+
+        dialogue_clock.restart();
     }
+
+    double timeRequired = 0;
 
     for (auto& line : m_lines)
     {
@@ -743,7 +744,11 @@ void PataText::draw()
 
             character.text.setRotation(character.style.rotation + character.style.r_offset);
             character.text.setPosition(global_x + character.position.x - origin_x + character.style.x_offset, global_y + character.position.y - origin_y + character.style.y_offset);
-            window->draw(character.text);
+            
+            timeRequired += character.style.curCharTimeout;
+            if (timeRequired <= dialogue_clock.getElapsedTime().asMilliseconds())
+                window->draw(character.text);
+            timeRequired += character.style.nextCharTimeout;
         }
     }
 }

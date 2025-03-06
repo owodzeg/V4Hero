@@ -16,10 +16,8 @@ class PataText
     {italic} = Toggles italic on/off
     {underline} = Toggles underline on/off
     {strike} = Toggles strike-through on/off
-
-    # text behavior
-    {speed 10} = sets text speed to 10 letters per sec
-    {wait 500} = waits for 500 milliseconds before putting next characters
+    {size 16} = sets text size to 16.
+    {font Name} = will try to load font with name "Name" according to resources/lang/fonts.txt
 
     # animations
     {hwave 4 10} = sets the text to be wavy, horizontally, with wave power = 4, speed = 10
@@ -31,11 +29,11 @@ class PataText
 
     # dialogue
     {goback} = lets the message cloud know to revert to the first text in dialogue (for patapolis npc's to return to their greeting)
+    {speed 10} = sets text speed to 10 letters per sec
+    {wait 500} = waits for 500 milliseconds before putting next characters
 
     # single-use at the beginning
-    {font Name.ttf} = will try to load Name.ttf from game resources/or mod resources and change the font of the text to it
-    {fadein 1000} = text will start at 0% opacity and fade to 100% opacity during 1000 milliseconds. !!!will collide with {speech}!!!
-    {size 16} = sets text size to 16.
+    {fadein 1000} = text will start at 0% opacity and fade to 100% opacity during 1000 milliseconds.
     {speech} = makes the text appear letter by letter, use if you dont want the text to appear instantly.
 
     # notes
@@ -94,6 +92,17 @@ class PataText
 
         struct PTChar {
             // base obj for storing the character and render object
+
+            // Default constructor
+            PTChar() : character(0)
+            {
+            }
+
+            // Constructor with parameters
+            PTChar(sf::Uint32 newChar, const PTStyle& newStyle) : character(newChar), style(newStyle)
+            {
+            }
+
             sf::Uint32 character;
             sf::Text text;
             sf::Vector2f position;
@@ -142,8 +151,9 @@ class PataText
 
         // PataText functions
         void append(sf::String& input_text);
-        void append(std::string& input_text);
+        void append(std::string input_text);
         void append(const char* input_text);
+        void reset();
 
         void setGlobalPosition(double new_x, double new_y);
         sf::Vector2f getGlobalPosition();
@@ -165,6 +175,7 @@ class PataText
         void ProcessPositioning();
 
         sf::Clock effect;
+        sf::Clock dialogue_clock;
         double random = 0;
 
         PTStyle m_marker; // current text style
@@ -175,7 +186,6 @@ class PataText
         double max_width = 0, max_height = 0; // bounds
         int m_counter = 0, m_counter_line = 0; // counters
         bool refreshPositioning = true; // do it only when we're moving somewhere/changing something
-        std::map<int, int> m_readingMarker; // for dialogues, what characters appeared already (m_readingMarker[line_id] = cur_char_id;
         std::vector<std::vector<PTChar>> m_lines; // text data. vector consists of lines (separated by {n}), lines consist of PTChar objects. 
 };
 
