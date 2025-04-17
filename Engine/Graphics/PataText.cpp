@@ -293,7 +293,7 @@ void PataText::styleResetAllStyles(PTStyle& style)
     style.c_green = 0;
     style.c_blue = 0;
     style.c_alpha = 255;
-    style.char_size = 24;
+    style.char_size = 72;
     style.shake = 0;
     style.hwave = 0;
     style.vwave = 0;
@@ -686,6 +686,8 @@ void PataText::draw()
 {
     auto window = CoreManager::getInstance().getWindow();
 
+    double windowScale = window->getSize().x / 3840.f;
+
     // Step 5: Apply position based on letter width and line height.
     if (refreshPositioning)
     {
@@ -697,10 +699,10 @@ void PataText::draw()
             for (auto& character : line)
             {
                 character.text.setFont(*character.style.font);
-                character.text.setCharacterSize(character.style.char_size);
+                character.text.setCharacterSize(character.style.char_size * windowScale);
                 character.text.setFillColor(sf::Color(character.style.c_red, character.style.c_green, character.style.c_blue, character.style.c_alpha));
                 character.text.setOutlineColor(sf::Color(character.style.ot_c_red, character.style.ot_c_green, character.style.ot_c_blue, character.style.ot_c_alpha));
-                character.text.setOutlineThickness(character.style.thickness);
+                character.text.setOutlineThickness(character.style.thickness * windowScale);
                 character.text.setStyle(character.style.bold * sf::Text::Bold + character.style.italic * sf::Text::Italic + character.style.underline * sf::Text::Underlined + character.style.strike * sf::Text::StrikeThrough);
                 character.text.setString(character.character);
             }
@@ -743,7 +745,11 @@ void PataText::draw()
             character.style.y_offset = total_y_offset;
 
             character.text.setRotation(character.style.rotation + character.style.r_offset);
-            character.text.setPosition(global_x + character.position.x - origin_x + character.style.x_offset, global_y + character.position.y - origin_y + character.style.y_offset);
+
+            double final_x = windowScale * (global_x + character.position.x - origin_x + character.style.x_offset);
+            double final_y = windowScale * (global_y + character.position.y - origin_y + character.style.y_offset);
+
+            character.text.setPosition(final_x, final_y);
             
             timeRequired += character.style.curCharTimeout;
             if (timeRequired <= dialogue_clock.getElapsedTime().asMilliseconds())

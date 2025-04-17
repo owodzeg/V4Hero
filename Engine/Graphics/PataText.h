@@ -58,7 +58,7 @@ class PataText
             double c_red = 0, c_green = 0, c_blue = 0, c_alpha = 255;
 
             // size
-            double char_size = 24;
+            double char_size = 72;
 
             // font
             std::shared_ptr<sf::Font> font;

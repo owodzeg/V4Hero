@@ -139,7 +139,7 @@ void V4Core::init()
         framerate_limit = 500;
 
     // Version text
-    t_version.append("{outline 2 0 0 0}{color 255 255 255}{size 24}V4Hero Client ");
+    t_version.append("{outline 6 0 0 0}{color 255 255 255}V4Hero Client ");
     t_version.append(hero_version);
     t_version.setGlobalOrigin(t_version.getGlobalBounds().width, 0);
 
@@ -292,17 +292,17 @@ void V4Core::init()
         std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
         // Draw version number
-        t_version.setGlobalPosition(1276, 0);
+        t_version.setGlobalPosition(3828, 0);
         t_version.draw();
 
         // If FPS counter is enabled, draw it
         if (config->GetInt("showFPS"))
         {
             t_fps.reset();
-            t_fps.append("{outline 2 0 0 0}{color 255 255 255}FPS: ");
+            t_fps.append("{outline 6 0 0 0}{color 255 255 255}FPS: ");
             t_fps.append(to_string(int(ceil(rawFps))));
             t_fps.setGlobalOrigin(t_fps.getGlobalBounds().width, 0);
-            t_fps.setGlobalPosition(1276, 24);
+            t_fps.setGlobalPosition(3828, 72);
             t_fps.draw();
         }
 
