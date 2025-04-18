@@ -46,10 +46,10 @@ MainMenu::MainMenu()
 
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
-    t_pressanykey.setFont(font);
-    t_pressanykey.setCharacterSize(26);
-    t_pressanykey.setColor(sf::Color(255, 255, 255, t_alpha));
-    t_pressanykey.setStringKey("menu_pressanykey");
+    t_pressanykey.defaultStyleSetFont(font);
+    t_pressanykey.defaultStyleSetCharSize(78);
+    t_pressanykey.defaultStyleSetColor(sf::Color(255, 255, 255, t_alpha));
+    t_pressanykey.append(Func::GetStrFromKey("menu_pressanykey"));
 
 
     sb_smash.loadFromFile("resources/sfx/menu/smash.ogg");
@@ -92,10 +92,11 @@ MainMenu::MainMenu()
 
     for (int i = 0; i <= 3; i++)
     {
-        t_option[i].setFont(font);
-        t_option[i].setCharacterSize(24);
-        t_option[i].setColor(sf::Color(255, 255, 255));
-        t_option[i].setString("");
+        t_option[i].reset();
+        t_option[i].defaultStyleSetFont(font);
+        t_option[i].defaultStyleSetCharSize(72);
+        t_option[i].defaultStyleSetColor(sf::Color(255, 255, 255));
+        t_option[i].append("");
     }
 
     string vx_params = "0,135,38,23;240,135,38,23;2040,205,107,132;-1,205,107,132";
@@ -195,7 +196,7 @@ MainMenu::MainMenu()
     startClock.restart();
     frClock.restart();
 
-    t_pressanykey.setPosition(1920, 1320);
+    t_pressanykey.setGlobalPosition(1920, 1320);
 
     initialized = true;
     
@@ -392,7 +393,7 @@ void MainMenu::Update()
                     logow_shscale = 1.2;
                     dest_y = 1080;
                     keypressed = true;
-                    t_pressanykey.setPosition(1920, 13200);
+                    t_pressanykey.setGlobalPosition(1920, 13200);
                     menuClock.restart();
                 }
             }
@@ -455,8 +456,8 @@ void MainMenu::Update()
                 }
             }
 
-            t_pressanykey.setOrigin(t_pressanykey.getLocalBounds().width / 2, t_pressanykey.getLocalBounds().height / 2);
-            t_pressanykey.setColor(sf::Color(255, 255, 255, t_alpha));
+            t_pressanykey.setGlobalOrigin(t_pressanykey.getGlobalBounds().width / 2, t_pressanykey.getGlobalBounds().height / 2);
+            t_pressanykey.defaultStyleSetColor(sf::Color(255, 255, 255, t_alpha));
             t_pressanykey.draw();
 
             rs_cover2.setFillColor(sf::Color(0, 0, 0, cv_alpha));
@@ -622,42 +623,45 @@ void MainMenu::Update()
         if (old_sel != totem_sel)
         {
             SPDLOG_TRACE("Totem changed to {}", totem_sel);
-            t_option[totem_sel].setScale(1.2, 1.2);
+            //TO-DO: PataText scale support
+            //t_option[totem_sel].setScale(1.2, 1.2);
         }
 
         for (int i = 0; i <= 3; i++)
         {
-            if (t_option[i].getScale().x > 1)
-            {
-                float new_scale = t_option[i].getScale().x - float(1) / fps;
-                t_option[i].setScale(new_scale, new_scale);
-            } else
-            {
-                t_option[i].setScale(1, 1);
-            }
+            //TO-DO: PataText scale support
+            //if (t_option[i].getScale().x > 1)
+            //{
+            //    float new_scale = t_option[i].getScale().x - float(1) / fps;
+            //    t_option[i].setScale(new_scale, new_scale);
+            //} else
+            //{
+            //    t_option[i].setScale(1, 1);
+            //}
 
-            t_option[i].setStringKey(temp_menu[i]);
-            t_option[i].setOrigin(t_option[i].getLocalBounds().width / 2, t_option[i].getLocalBounds().height / 2);
+            t_option[i].reset();
+            t_option[i].append(Func::GetStrFromKey(temp_menu[i]));
+            t_option[i].setGlobalOrigin(t_option[i].getGlobalBounds().width / 2, t_option[i].getGlobalBounds().height / 2);
 
-            t_option[i].setPosition(totem[i].getPosition().x + totem[i].getTransformedBounds().width / 2.f, 2160 - totem[i].getTransformedBounds().height - 84);
+            t_option[i].setGlobalPosition(totem[i].getPosition().x + totem[i].getTransformedBounds().width / 2.f, 2160 - totem[i].getTransformedBounds().height - 84);
             
             if (i == totem_sel)
             {
-                t_option[i].setPosition(totem[i].getPosition().x + totem[i].getTransformedBounds().width / 2.f, 2160 - totem[i].getTransformedBounds().height - 210);
+                t_option[i].setGlobalPosition(totem[i].getPosition().x + totem[i].getTransformedBounds().width / 2.f, 2160 - totem[i].getTransformedBounds().height - 210);
             }
 
-            t_option[i].setColor(sf::Color(255, 255, 255, 96));
-            t_option[totem_sel].setColor(sf::Color::White);
+            t_option[i].defaultStyleSetColor(sf::Color(255, 255, 255, 96));
+            t_option[totem_sel].defaultStyleSetColor(sf::Color::White);
 
             t_option[i].draw();
         }
 
         sword[0].setScale(1, 1);
-        sword[0].setPosition(t_option[totem_sel].getPosition().x - t_option[totem_sel].getLocalBounds().width / 2 - sword[0].getTransformedBounds().width / 2 - 15, t_option[totem_sel].getPosition().y + 63);
+        sword[0].setPosition(t_option[totem_sel].getGlobalPosition().x - t_option[totem_sel].getGlobalBounds().width / 2 - sword[0].getTransformedBounds().width / 2 - 15, t_option[totem_sel].getGlobalPosition().y + 63);
         sword[0].draw();
 
         sword[1].setScale(-1, 1);
-        sword[1].setPosition(t_option[totem_sel].getPosition().x + t_option[totem_sel].getLocalBounds().width / 2 + sword[0].getTransformedBounds().width / 2 + 15, t_option[totem_sel].getPosition().y + 63);
+        sword[1].setPosition(t_option[totem_sel].getGlobalPosition().x + t_option[totem_sel].getGlobalBounds().width / 2 + sword[0].getTransformedBounds().width / 2 + 15, t_option[totem_sel].getGlobalPosition().y + 63);
         sword[1].draw();
 
         old_sel = totem_sel;

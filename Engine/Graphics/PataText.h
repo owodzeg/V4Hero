@@ -111,6 +111,8 @@ class PataText
 
         // constructor
         PataText();
+        ~PataText();
+        PTStyle default_style; // default style set
 
         // affects whole text
         void applyDefaultKerning(); // auto applies kerning data from the font file
@@ -148,6 +150,12 @@ class PataText
         void styleSetSpeed(PTStyle& style, double newMsSpeed);
         void styleSetTimeout(PTStyle& style, double newMsTimeout); // SINGLE USE! Only for the current character.
         void styleResetAllStyles(PTStyle& style);
+
+        void defaultStyleSetColor(sf::Color newColor);
+        void defaultStyleSetCharSize(double newCharSize);
+        void defaultStyleSetFont(const std::string& fontStr);
+        void defaultStyleSetOutlineColor(sf::Color newColor);
+        void defaultStyleSetOutlineThickness(double newThickness);
 
         // PataText functions
         void append(sf::String& input_text);

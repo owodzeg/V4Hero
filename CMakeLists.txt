@@ -83,9 +83,7 @@ set(ENGINE_FILES
         Engine/Graphics/PSprite.cpp
         Engine/Graphics/SpriteWrapper.cpp
         Engine/Graphics/Menu.cpp
-        Engine/Graphics/PText.cpp
         Engine/Graphics/PataText.cpp
-        Engine/Graphics/RichText.cpp
         Engine/Graphics/ScreenFade.cpp
         Engine/Math/PVector.cpp
         Engine/SaveReader.cpp

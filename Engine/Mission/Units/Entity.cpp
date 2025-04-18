@@ -494,22 +494,20 @@ void Entity::Draw()
     if (toggleDebug)
     {
         auto strRepo = CoreManager::getInstance().getStrRepo();
-        debugText.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
-        debugText.setCharacterSize(12);
-        debugText.setString(std::format("{{outline 2 255 255 255}}o{{n}}{}{{n}}curHP{{n}}{}{{n}}maxHP{{n}}{}", orderID, curHP, maxHP));
-        debugText.setOrigin(debugText.getLocalBounds().width / 2, debugText.getLocalBounds().height);
-        debugText.setPosition(global_x + local_x + hPos - 20, global_y + local_y + vPos + cam_offset - 100);
+        debugText.reset();
+        debugText.append(std::format("{{size 36}}{{outline 2 255 255 255}}o{{n}}{}{{n}}curHP{{n}}{}{{n}}maxHP{{n}}{}", orderID, curHP, maxHP));
+        debugText.setGlobalOrigin(debugText.getGlobalBounds().width / 2, debugText.getGlobalBounds().height);
+        debugText.setGlobalPosition(global_x + local_x + hPos - 20, global_y + local_y + vPos + cam_offset - 100);
         debugText.draw();
     }
 
     if (toggleBehaviorDebug)
     {
         auto strRepo = CoreManager::getInstance().getStrRepo();
-        debugText.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
-        debugText.setCharacterSize(12);
-        debugText.setString(std::format("{{outline 2 255 255 255}}anim{{n}}{}{{n}}frame{{n}}{}{{n}}hspeed{{n}}{}{{n}}vspeed{{n}}{}{{n}}hPos{{n}}{}{{n}}vPos{{n}}{}{{n}}action{{n}}{}{{n}}threw{{n}}{}{{n}}dtp{{n}}{}", getAnimation(), getAnimationFrame(), hspeed, vspeed, hPos, vPos, action, threw, distanceToPlayer));
-        debugText.setOrigin(debugText.getLocalBounds().width / 2, debugText.getLocalBounds().height);
-        debugText.setPosition(global_x + local_x + hPos - 20, global_y + local_y + vPos + cam_offset - 100);
+        debugText.reset();
+        debugText.append(std::format("{{size 36}}{{outline 2 255 255 255}}anim{{n}}{}{{n}}frame{{n}}{}{{n}}hspeed{{n}}{}{{n}}vspeed{{n}}{}{{n}}hPos{{n}}{}{{n}}vPos{{n}}{}{{n}}action{{n}}{}{{n}}threw{{n}}{}{{n}}dtp{{n}}{}", getAnimation(), getAnimationFrame(), hspeed, vspeed, hPos, vPos, action, threw, distanceToPlayer));
+        debugText.setGlobalOrigin(debugText.getGlobalBounds().width / 2, debugText.getGlobalBounds().height);
+        debugText.setGlobalPosition(global_x + local_x + hPos - 20, global_y + local_y + vPos + cam_offset - 100);
         debugText.draw();
     }
 }

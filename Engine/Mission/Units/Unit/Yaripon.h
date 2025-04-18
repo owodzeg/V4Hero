@@ -2,7 +2,7 @@
 #define YARIPON_H
 
 #include "../AnimatedObject.h"
-#include "../../../Graphics/PText.h"
+#include "../../../Graphics/PataText.h"
 
 class Yaripon {
 public:
@@ -67,7 +67,7 @@ public:
 
     float cam_offset;
 
-    PText debugText;
+    PataText debugText;
 
     Yaripon(int which, int maxpons);
     void Advance();

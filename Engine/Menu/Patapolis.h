@@ -43,7 +43,7 @@ class PatapolisMenu : public Menu
         int quality = 0;
 
 
-        PText t_title;
+        PataText t_title;
 
         sf::VertexArray v_background;
         sf::RectangleShape r_ground;

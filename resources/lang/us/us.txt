@@ -331,25 +331,25 @@ outro_cutscene_6|Learn the Ancient Arts from the very first of the Patapon Tribe
 outro_cutscene_7|The other tribes will need you, Almighty...
 outro_cutscene_8|Save the world in the full version of Patafour!
 outro_end|Thank you for playing!
-patapolis|{outline 2 0 0 0}{color 255 255 255}Patapolis
-patapolis_altar|{outline 2 0 0 0}{color 255 255 255}Altar
-patapolis_barracks|{outline 2 0 0 0}{color 255 255 255}Barracks
-patapolis_blacksmith|{outline 2 0 0 0}{color 255 255 255}Blacksmith
+patapolis|Patapolis
+patapolis_altar|Altar
+patapolis_barracks|Barracks
+patapolis_blacksmith|Blacksmith
 patapolis_demofinish|Congratulations, you finished the demo!
 patapolis_demo_pick1|Watch credits
 patapolis_demo_pick2|Cancel
-patapolis_egg|{outline 2 0 0 0}{color 255 255 255}World Egg
-patapolis_festival|{outline 2 0 0 0}{color 255 255 255}Festival Square
-patapolis_obelisk|{outline 2 0 0 0}{color 255 255 255}Obelisk
-patapolis_paraget|{outline 2 0 0 0}{color 255 255 255}Paraget
+patapolis_egg|World Egg
+patapolis_festival|Festival Square
+patapolis_obelisk|Obelisk
+patapolis_paraget|Paraget
 patapolis_returntomain|Do you want to return{n}to the Title screen?
 patapolis_returntomainsave|Unsaved data will be lost.{n}Are you sure?
 patapolis_save|Do you want to save your game?
 patapolis_saved|Game has been saved.
-patapolis_sen|{outline 2 0 0 0}{color 255 255 255}Sen Ranpurupon
-patapolis_trader|{outline 2 0 0 0}{color 255 255 255}Marketplace
-patapolis_tree|{outline 2 0 0 0}{color 255 255 255}Mater, Tree of Life
-patapolis_wakapon|{outline 2 0 0 0}{color 255 255 255}Wakapon, the Guardian
+patapolis_sen|Sen Ranpurupon
+patapolis_trader|Marketplace
+patapolis_tree|Mater, Tree of Life
+patapolis_wakapon|Wakapon, the Guardian
 patapolis_materdialog|Mater Tree's roots are too dry to bring life.{n}You need to find something that will hydrate it.
 rarepon_normal|Normal
 rarepon_normal_desc|A normal warrior from the Patapon tribe. They are renowned for their stoicism and bravery. While these Patapons may be small, with the right mindset, they can do anything!

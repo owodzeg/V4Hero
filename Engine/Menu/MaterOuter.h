@@ -46,9 +46,9 @@ public:
 
     float highlight_x = 0;
 
-    PText altar_kaching;
-    PText mater_title;
-    PText squad_title;
+    PataText altar_kaching;
+    PataText mater_title;
+    PataText squad_title;
 
     bool save_loaded = false;
 

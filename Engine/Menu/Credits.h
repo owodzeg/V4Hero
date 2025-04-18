@@ -3,7 +3,7 @@
 
 #include "../Func.h"
 #include "../Graphics/PSprite.h"
-#include "../Graphics/PText.h"
+#include "../Graphics/PataText.h"
 #include "../Input/InputController.h"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
@@ -25,13 +25,13 @@ public:
 
     bool playOutro = false;
 
-    PText outro_text;
+    PataText outro_text;
     PSprite teaser_1, teaser_2, teaser_3;
 
     int mode = 0; ///0 = outro, 1 = credits
 
-    std::vector<PText> credits_text;
-    PText anykey;
+    std::vector<PataText> credits_text;
+    PataText anykey;
     float flash_x = 0;
 
     Credits();

@@ -66,13 +66,13 @@ Barracks::Barracks()
     mm_selected_item_line.setSize(sf::Vector2f(135*3 * res_ratio_x, 3*3 * res_ratio_y));
     mm_selected_item_line.setFillColor(sf::Color::Red);
 
-    t_title.setFont(font);
-    t_title.setCharacterSize(57);
-    t_title.setColor(sf::Color::White);
+    //t_title.defaultStyleSetFont(font);
+    //t_title.defaultStyleSetCharSize(57);
+    //t_title.setColor(sf::Color::White);
 
-    t_item_title.setFont(font);
-    t_item_title.setCharacterSize(42);
-    t_item_title.setColor(sf::Color::Black);
+    //t_item_title.defaultStyleSetFont(font);
+    //t_item_title.defaultStyleSetCharSize(42);
+    //t_item_title.setColor(sf::Color::Black);
 
     ///             ####   BARRACKS MENU BACKGROUND
     s_background.loadFromFile("resources/graphics/bg/barracks/barracks.png", quality);
@@ -91,98 +91,57 @@ Barracks::Barracks()
 
     Pon* cur_pon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(current_selected_pon);
 
-    unit_status.setFont(font);
-    unit_status.setCharacterSize(22);
-    unit_status.setColor(sf::Color(239, 88, 98, 255));
-    unit_status.setStringKey("barracks_unit_status");
+    //unit_status.defaultStyleSetFont(font);
+    //unit_status.defaultStyleSetCharSize(22);
+    unit_status.append("{size 66}{color 239 88 98}");
+    unit_status.append(Func::GetStrFromKey("barracks_unit_status"));
 
-    class_name.setFont(font);
-    class_name.setCharacterSize(34);
-    class_name.setColor(sf::Color::Black);
-    class_name.setStringKey("barracks_yaripon");
+    //class_name.defaultStyleSetFont(font);
+    //class_name.defaultStyleSetCharSize(34);
+    //class_name.setColor(sf::Color::Black);
+    class_name.append("{size 102}{color 0 0 0}");
+    class_name.append(Func::GetStrFromKey("barracks_yaripon"));
 
     /// Stat text
-    unit_stat_level_t.setFont(font);
-    unit_stat_level_t.setCharacterSize(27);
-    unit_stat_level_t.setColor(sf::Color::Black);
-    unit_stat_level_t.setStringKey("barracks_stat_level");
-    unit_stat_level_v.setFont(font);
-    unit_stat_level_v.setCharacterSize(27);
-    unit_stat_level_v.setColor(sf::Color::Black);
+    unit_stat_level_t.append("{size 27}{color 0 0 0}");
+    unit_stat_level_t.append(Func::GetStrFromKey("barracks_stat_level"));
+    unit_stat_level_v.append("{size 27}{color 0 0 0}");
 
-    unit_stat_exp_t.setFont(font);
-    unit_stat_exp_t.setCharacterSize(27);
-    unit_stat_exp_t.setColor(sf::Color::Black);
-    unit_stat_exp_t.setStringKey("barracks_stat_exp");
-    unit_stat_exp_v.setFont(font);
-    unit_stat_exp_v.setCharacterSize(27);
-    unit_stat_exp_v.setColor(sf::Color::Black);
+    unit_stat_exp_t.append("{size 27}{color 0 0 0}");
+    unit_stat_exp_t.append(Func::GetStrFromKey("barracks_stat_exp"));
+    unit_stat_exp_v.append("{size 27}{color 0 0 0}");
 
-    unit_stat_hp_t.setFont(font);
-    unit_stat_hp_t.setCharacterSize(27);
-    unit_stat_hp_t.setColor(sf::Color::Black);
-    unit_stat_hp_t.setStringKey("barracks_stat_hp");
-    unit_stat_hp_v.setFont(font);
-    unit_stat_hp_v.setCharacterSize(27);
-    unit_stat_hp_v.setColor(sf::Color::Black);
+    unit_stat_hp_t.append("{size 27}{color 0 0 0}");
+    unit_stat_hp_t.append(Func::GetStrFromKey("barracks_stat_hp"));
+    unit_stat_hp_v.append("{size 27}{color 0 0 0}");
 
-    unit_stat_dmg_t.setFont(font);
-    unit_stat_dmg_t.setCharacterSize(27);
-    unit_stat_dmg_t.setColor(sf::Color::Black);
-    unit_stat_dmg_t.setStringKey("barracks_stat_damage");
-    unit_stat_dmg_v.setFont(font);
-    unit_stat_dmg_v.setCharacterSize(27);
-    unit_stat_dmg_v.setColor(sf::Color::Black);
+    unit_stat_dmg_t.append("{size 27}{color 0 0 0}");
+    unit_stat_dmg_t.append(Func::GetStrFromKey("barracks_stat_damage"));
+    unit_stat_dmg_v.append("{size 27}{color 0 0 0}");
 
-    unit_stat_atkspd_t.setFont(font);
-    unit_stat_atkspd_t.setCharacterSize(27);
-    unit_stat_atkspd_t.setColor(sf::Color::Black);
-    unit_stat_atkspd_t.setStringKey("barracks_stat_attackspeed");
-    unit_stat_atkspd_v.setFont(font);
-    unit_stat_atkspd_v.setCharacterSize(27);
-    unit_stat_atkspd_v.setColor(sf::Color::Black);
+    unit_stat_atkspd_t.append("{size 27}{color 0 0 0}");
+    unit_stat_atkspd_t.append(Func::GetStrFromKey("barracks_stat_attackspeed"));
+    unit_stat_atkspd_v.append("{size 27}{color 0 0 0}");
 
+    unit_stat_critc_t.append("{size 27}{color 0 0 0}");
+    unit_stat_critc_t.append(Func::GetStrFromKey("barracks_stat_critchance"));
+    unit_stat_critc_v.append("{size 27}{color 0 0 0}");
 
+    unit_stat_kbc_t.append("{size 27}{color 0 0 0}");
+    unit_stat_kbc_t.append(Func::GetStrFromKey("barracks_stat_knockbackchance"));
+    unit_stat_kbc_v.append("{size 27}{color 0 0 0}");
 
-    unit_stat_critc_t.setFont(font);
-    unit_stat_critc_t.setCharacterSize(27);
-    unit_stat_critc_t.setColor(sf::Color::Black);
-    unit_stat_critc_t.setStringKey("barracks_stat_critchance");
-    unit_stat_critc_v.setFont(font);
-    unit_stat_critc_v.setCharacterSize(27);
-    unit_stat_critc_v.setColor(sf::Color::Black);
+    unit_stat_stgc_t.append("{size 27}{color 0 0 0}");
+    unit_stat_stgc_t.append(Func::GetStrFromKey("barracks_stat_staggerchance"));
+    unit_stat_stgc_v.append("{size 27}{color 0 0 0}");
 
-    unit_stat_kbc_t.setFont(font);
-    unit_stat_kbc_t.setCharacterSize(27);
-    unit_stat_kbc_t.setColor(sf::Color::Black);
-    unit_stat_kbc_t.setStringKey("barracks_stat_knockbackchance");
-    unit_stat_kbc_v.setFont(font);
-    unit_stat_kbc_v.setCharacterSize(27);
-    unit_stat_kbc_v.setColor(sf::Color::Black);
+    unit_stat_firec_t.append("{size 27}{color 0 0 0}");
+    unit_stat_firec_t.append(Func::GetStrFromKey("barracks_stat_burnchance"));
+    unit_stat_firec_v.append("{size 27}{color 0 0 0}");
 
-    unit_stat_stgc_t.setFont(font);
-    unit_stat_stgc_t.setCharacterSize(27);
-    unit_stat_stgc_t.setColor(sf::Color::Black);
-    unit_stat_stgc_t.setStringKey("barracks_stat_staggerchance");
-    unit_stat_stgc_v.setFont(font);
-    unit_stat_stgc_v.setCharacterSize(27);
-    unit_stat_stgc_v.setColor(sf::Color::Black);
-
-    unit_stat_firec_t.setFont(font);
-    unit_stat_firec_t.setCharacterSize(27);
-    unit_stat_firec_t.setColor(sf::Color::Black);
-    unit_stat_firec_t.setStringKey("barracks_stat_burnchance");
-    unit_stat_firec_v.setFont(font);
-    unit_stat_firec_v.setCharacterSize(27);
-    unit_stat_firec_v.setColor(sf::Color::Black);
-
-    unit_stat_icec_t.setFont(font);
-    unit_stat_icec_t.setCharacterSize(27);
-    unit_stat_icec_t.setColor(sf::Color::Black);
-    unit_stat_icec_t.setStringKey("barracks_stat_freezechance");
-    unit_stat_icec_v.setFont(font);
-    unit_stat_icec_v.setCharacterSize(27);
-    unit_stat_icec_v.setColor(sf::Color::Black);
+    unit_stat_icec_t.append("{size 27}{color 0 0 0}");
+    unit_stat_icec_t.append(Func::GetStrFromKey("barracks_stat_freezechance"));
+    unit_stat_icec_v.append("{size 27}{color 0 0 0}");
 
     int equip_height = 50*3;
 
@@ -204,30 +163,21 @@ Barracks::Barracks()
 
     /// unit + item name text
 
-    t_unit_rarepon_name.setFont(font);
-    t_unit_rarepon_name.setCharacterSize(24);
-    t_unit_rarepon_name.setColor(sf::Color::Black);
-    t_unit_rarepon_name.setStringKey("item_wooden_spear");
-    t_unit_rarepon_name.setOrigin(0, t_unit_rarepon_name.getLocalBounds().height / 2);
+    t_unit_rarepon_name.append("{size 72}{color 0 0 0}");
+    t_unit_rarepon_name.append(Func::GetStrFromKey("item_wooden_spear"));
+    t_unit_rarepon_name.setGlobalOrigin(0, t_unit_rarepon_name.getGlobalBounds().height / 2);
 
     for (int i = 0; i < t_eq_names.size(); i++)
     {
-        t_eq_names[i].setFont(font);
-        t_eq_names[i].setCharacterSize(24);
-        t_eq_names[i].setColor(sf::Color::Black);
-        t_eq_names[i].setStringKey("item_wooden_spear");
-        t_eq_names[i].setOrigin(0, t_eq_names[i].getLocalBounds().height / 2);
+        t_eq_names[i].append("{size 72}{color 0 0 0}");
+        t_eq_names[i].append(Func::GetStrFromKey("item_wooden_spear"));
+        t_eq_names[i].setGlobalOrigin(0, t_eq_names[i].getGlobalBounds().height / 2);
     }
 
     inv_box.loadFromFile("resources/graphics/ui/mini_inventory.png", quality);
 
-    item_title.setFont(font);
-    item_title.setCharacterSize(34);
-    item_title.setColor(sf::Color::Black);
-
-    item_desc.setFont(font);
-    item_desc.setCharacterSize(22);
-    item_desc.setColor(sf::Color::Black);
+    item_title.append("{size 72}{color 0 0 0}");
+    item_desc.append("{size 72}{color 0 0 0}");
 
     current_menu_position = -1;
     enabled_positons.push_back(true);
@@ -452,18 +402,24 @@ void Barracks::loadInventory()
         auto strRepo = CoreManager::getInstance().getStrRepo();
         std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
-        cur_box.num.setFont(font);
-        cur_box.num.setCharacterSize(20);
-        cur_box.num.setColor(sf::Color::White);
-        cur_box.num.setString("001");
-        cur_box.num_shadow.setFont(font);
-        cur_box.num_shadow.setCharacterSize(20);
-        cur_box.num_shadow.setColor(sf::Color(136, 136, 36, 255));
-        cur_box.num_shadow.setString("001");
+        cur_box.num.default_style.char_size = 60;
+        cur_box.num.default_style.c_red = 255;
+        cur_box.num.default_style.c_green = 255;
+        cur_box.num.default_style.c_blue = 255;
+        cur_box.num.reset();
+        cur_box.num.append("001");
+        cur_box.num_shadow.default_style.char_size = 60;
+        cur_box.num_shadow.default_style.c_red = 136;
+        cur_box.num_shadow.default_style.c_green = 136;
+        cur_box.num_shadow.default_style.c_blue = 36;
+        cur_box.num_shadow.reset();
+        cur_box.num_shadow.append("001");
 
         inventory_boxes.push_back(cur_box);
-        inventory_boxes[i].num.setString(Func::num_padding(inventory_boxes[i].amount, 3));
-        inventory_boxes[i].num_shadow.setString(Func::num_padding(inventory_boxes[i].amount, 3));
+        inventory_boxes[i].num.reset();
+        inventory_boxes[i].num.append(Func::num_padding(inventory_boxes[i].amount, 3));
+        inventory_boxes[i].num_shadow.reset();
+        inventory_boxes[i].num_shadow.append(Func::num_padding(inventory_boxes[i].amount, 3));
     }
 
     if (inventory_boxes.size() > 0) // I'm absolutely sure this is broken.
@@ -547,7 +503,9 @@ void Barracks::setInventoryPosition()
 
 void Barracks::applyEquipment()
 {
-    for(int i=1; i<=6; i++)
+    int yaripon_count = CoreManager::getInstance().getSaveReader()->ponReg.pons.size();
+
+    for (int i = 1; i <= yaripon_count; i++)
     {
         Pon* currentPon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i-1);
         InventoryData::InventoryItem eq = CoreManager::getInstance().getSaveReader()->invData.items[currentPon->slots[0]];
@@ -566,76 +524,90 @@ void Barracks::applyEquipment()
 void Barracks::refreshStats()
 {
     Pon* currentPon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(current_selected_pon);
+    class_name.reset();
+
     switch (currentPon->pon_class)
     {
         case 1: {
-            class_name.setStringKey("barracks_yaripon");
+            class_name.append(Func::GetStrFromKey("barracks_yaripon"));
             break;
         }
         case 2: {
-            class_name.setStringKey("barracks_tatepon");
+            class_name.append(Func::GetStrFromKey("barracks_tatepon"));
             break;
         }
         case 3: {
-            class_name.setStringKey("barracks_yumipon");
+            class_name.append(Func::GetStrFromKey("barracks_yumipon"));
             break;
         }
         case 4: {
-            class_name.setString(CoreManager::getInstance().getSaveReader()->kami_name);
+            class_name.append(CoreManager::getInstance().getSaveReader()->kami_name);
             break;
         }
     }
 
-    t_unit_rarepon_name.setStringKey("rarepon_normal");
-    t_unit_rarepon_name.addText(std::to_string(currentPon->pon_level));
+    t_unit_rarepon_name.reset();
+    t_unit_rarepon_name.append(Func::GetStrFromKey("rarepon_normal"));
+    t_unit_rarepon_name.append(std::to_string(currentPon->pon_level));
 
     for (int i = 0; i < currentPon->slots.size(); i++)
     {
         if (currentPon->slots[i] >= 0)
         {
             InventoryData::InventoryItem eq = CoreManager::getInstance().getSaveReader()->invData.items[currentPon->slots[i]];
-            t_eq_names[i].setStringKey(eq.item->item_name);
-            t_eq_names[i].setOrigin(0, 0);
+            t_eq_names[i].reset();
+            t_eq_names[i].append(Func::GetStrFromKey(eq.item->item_name));
+            t_eq_names[i].setGlobalOrigin(0, 0);
 
             SPDLOG_TRACE("currentPon->slots[{}]: {} {}", i, currentPon->slots[i], eq.item->item_name);
         }
     }
 
-    //s_unit_level.setString(std::to_string(currentPon->pon_level));
-    //s_unit_experience.setString(std::to_string(currentPon->pon_exp));
-    //s_unit_experience.setString(std::to_string(currentPon->pon_exp));
-    //s_unit_damage.setString(std::to_string(currentPon->pon_min_dmg)+"/"+std::to_string(currentPon->pon_max_dmg));
-    //s_unit_hp.setString(std::to_string(currentPon->pon_hp));
-    //s_unit_crit.setString(std::to_string(currentPon->pon_crit));
-    //s_unit_attack_speed.setString(std::to_string(currentPon->pon_attack_speed));
+    //s_unit_level.append(std::to_string(currentPon->pon_level));
+    //s_unit_experience.append(std::to_string(currentPon->pon_exp));
+    //s_unit_experience.append(std::to_string(currentPon->pon_exp));
+    //s_unit_damage.append(std::to_string(currentPon->pon_min_dmg)+"/"+std::to_string(currentPon->pon_max_dmg));
+    //s_unit_hp.append(std::to_string(currentPon->pon_hp));
+    //s_unit_crit.append(std::to_string(currentPon->pon_crit));
+    //s_unit_attack_speed.append(std::to_string(currentPon->pon_attack_speed));
     
     // added to reset text color after the preview -L
-    unit_stat_hp_v.setColor(sf::Color::Black);
-    unit_stat_atkspd_v.setColor(sf::Color::Black);
-    unit_stat_dmg_v.setColor(sf::Color::Black);
+    unit_stat_hp_v.defaultStyleSetColor(sf::Color::Black);
+    unit_stat_atkspd_v.defaultStyleSetColor(sf::Color::Black);
+    unit_stat_dmg_v.defaultStyleSetColor(sf::Color::Black);
 
-    unit_stat_level_v.setString(std::to_string(currentPon->pon_level)); /// CHANGE THESE WHEN IMPLEMENTING STATUS EFFECTS ETC.
-    unit_stat_exp_v.setString(std::to_string(currentPon->pon_exp) + "/1200");
-    unit_stat_hp_v.setString(std::to_string(currentPon->pon_hp));
-    unit_stat_dmg_v.setString(std::to_string(currentPon->pon_min_dmg) + "-" + std::to_string(currentPon->pon_max_dmg));
-    unit_stat_atkspd_v.setString(to_string_with_precision(currentPon->pon_attack_speed, 2));
-    unit_stat_critc_v.setString("0%");
-    unit_stat_kbc_v.setString("0%");
-    unit_stat_stgc_v.setString("0%");
-    unit_stat_firec_v.setString("0%");
-    unit_stat_icec_v.setString("0%");
+    unit_stat_level_v.reset();
+    unit_stat_exp_v.reset();
+    unit_stat_hp_v.reset();
+    unit_stat_dmg_v.reset();
+    unit_stat_atkspd_v.reset();
+    unit_stat_critc_v.reset();
+    unit_stat_kbc_v.reset();
+    unit_stat_stgc_v.reset();
+    unit_stat_firec_v.reset();
+    unit_stat_icec_v.reset();
 
+    unit_stat_level_v.append(std::to_string(currentPon->pon_level)); /// CHANGE THESE WHEN IMPLEMENTING STATUS EFFECTS ETC.
+    unit_stat_exp_v.append(std::to_string(currentPon->pon_exp) + "/1200");
+    unit_stat_hp_v.append(std::to_string(currentPon->pon_hp));
+    unit_stat_dmg_v.append(std::to_string(currentPon->pon_min_dmg) + "-" + std::to_string(currentPon->pon_max_dmg));
+    unit_stat_atkspd_v.append(to_string_with_precision(currentPon->pon_attack_speed, 2));
+    unit_stat_critc_v.append("0%");
+    unit_stat_kbc_v.append("0%");
+    unit_stat_stgc_v.append("0%");
+    unit_stat_firec_v.append("0%");
+    unit_stat_icec_v.append("0%");
 
     /*if (inventoryGridXPos+inventoryGridYPos*numItemColumns<CoreManager::getInstance().getSaveReader()->invdata.ItemsByType(activeCategory).size())
     {
         Item* starting_item = CoreManager::getInstance().getSaveReader()->invdata.ItemsByType(activeCategory)[inventoryGridXPos+inventoryGridYPos*numItemColumns].item;
 
-        t_itemtitle.setString(starting_item->item_name)));
+        t_itemtitle.append(starting_item->item_name)));
         t_itemtitle.setOrigin(t_itemtitle.getLocalBounds().width/2,t_itemtitle.getLocalBounds().height/2);
     }
     else
     {
-        t_itemtitle.setString("item_none")));
+        t_itemtitle.append("item_none")));
         t_itemtitle.setOrigin(t_itemtitle.getLocalBounds().width/2,t_itemtitle.getLocalBounds().height/2);
     }*/
 }
@@ -746,32 +718,53 @@ void Barracks::updatePreviewText()
     {
         if (invbox_id < inventory_boxes.size())
         {
-            item_title.setStringKey(inventory_boxes[invbox_id].data->item_name);
-            item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(inventory_boxes[invbox_id].data->item_description, 340*3, font, 22)));
+            item_title.reset();
+            item_desc.reset();
+
+            item_title.append(Func::GetStrFromKey(inventory_boxes[invbox_id].data->item_name));
+            item_desc.append(Func::ConvertToUtf8String(Func::wrap_text(inventory_boxes[invbox_id].data->item_description, 340*3, font, 22)));
             //preview stats -L
-            unit_stat_hp_v.setString(getPreviewText(inventory_boxes[invbox_id].data->equip->hp, currentPon->pon_hp, currentPon->pon_base_hp, 0));
-            unit_stat_hp_v.setColor(getPreviewColorText(inventory_boxes[invbox_id].data->equip->hp, currentPon->pon_hp, currentPon->pon_base_hp,false));
+            unit_stat_hp_v.reset();
+            unit_stat_hp_v.append(getPreviewText(inventory_boxes[invbox_id].data->equip->hp, currentPon->pon_hp, currentPon->pon_base_hp, 0));
+            unit_stat_hp_v.defaultStyleSetColor(getPreviewColorText(inventory_boxes[invbox_id].data->equip->hp, currentPon->pon_hp, currentPon->pon_base_hp, false));
 
-            unit_stat_atkspd_v.setString(getPreviewText(inventory_boxes[invbox_id].data->equip->attack_speed, currentPon->pon_attack_speed, currentPon->pon_base_attack_speed, 2)); //the only one that gives problems with the preview. -L
-            unit_stat_atkspd_v.setColor(getPreviewColorText(inventory_boxes[invbox_id].data->equip->attack_speed, currentPon->pon_attack_speed, currentPon->pon_base_attack_speed, true));
+            unit_stat_atkspd_v.reset();
+            unit_stat_atkspd_v.append(getPreviewText(inventory_boxes[invbox_id].data->equip->attack_speed, currentPon->pon_attack_speed, currentPon->pon_base_attack_speed, 2)); //the only one that gives problems with the preview. -L
+            unit_stat_atkspd_v.defaultStyleSetColor(getPreviewColorText(inventory_boxes[invbox_id].data->equip->attack_speed, currentPon->pon_attack_speed, currentPon->pon_base_attack_speed, true));
 
-            unit_stat_dmg_v.setString(getPreviewText(inventory_boxes[invbox_id].data->equip->min_dmg, currentPon->pon_min_dmg, currentPon->pon_base_min_dmg, inventory_boxes[invbox_id].data->equip->max_dmg, currentPon->pon_max_dmg, currentPon->pon_base_max_dmg, 0));
-            unit_stat_dmg_v.setColor(getPreviewColorText(inventory_boxes[invbox_id].data->equip->min_dmg, currentPon->pon_min_dmg, currentPon->pon_base_min_dmg, inventory_boxes[invbox_id].data->equip->max_dmg, currentPon->pon_max_dmg, currentPon->pon_base_max_dmg));
+            unit_stat_dmg_v.reset();
+            unit_stat_dmg_v.append(getPreviewText(inventory_boxes[invbox_id].data->equip->min_dmg, currentPon->pon_min_dmg, currentPon->pon_base_min_dmg, inventory_boxes[invbox_id].data->equip->max_dmg, currentPon->pon_max_dmg, currentPon->pon_base_max_dmg, 0));
+            unit_stat_dmg_v.defaultStyleSetColor(getPreviewColorText(inventory_boxes[invbox_id].data->equip->min_dmg, currentPon->pon_min_dmg, currentPon->pon_base_min_dmg, inventory_boxes[invbox_id].data->equip->max_dmg, currentPon->pon_max_dmg, currentPon->pon_base_max_dmg));
         } else
         {
-            unit_stat_hp_v.setColor(sf::Color::Black);
-            unit_stat_atkspd_v.setColor(sf::Color::Black);
-            unit_stat_dmg_v.setColor(sf::Color::Black);
-            item_title.setString("");
-            item_desc.setString("");
+            unit_stat_hp_v.defaultStyleSetColor(sf::Color::Black);
+            unit_stat_atkspd_v.defaultStyleSetColor(sf::Color::Black);
+            unit_stat_dmg_v.defaultStyleSetColor(sf::Color::Black);
+
+            unit_stat_hp_v.reset();
+            unit_stat_atkspd_v.reset();
+            unit_stat_dmg_v.reset();
+
+            item_title.reset();
+            item_desc.reset();
+            item_title.append("");
+            item_desc.append("");
         }
     } else
     {
-        unit_stat_hp_v.setColor(sf::Color::Black);
-        unit_stat_atkspd_v.setColor(sf::Color::Black);
-        unit_stat_dmg_v.setColor(sf::Color::Black);
-        item_title.setString("");
-        item_desc.setString("");
+        unit_stat_hp_v.defaultStyleSetColor(sf::Color::Black);
+        unit_stat_atkspd_v.defaultStyleSetColor(sf::Color::Black);
+        unit_stat_dmg_v.defaultStyleSetColor(sf::Color::Black);
+
+        unit_stat_hp_v.reset();
+        unit_stat_atkspd_v.reset();
+        unit_stat_dmg_v.reset();
+
+        item_title.reset();
+        item_desc.reset();
+
+        item_title.append("");
+        item_desc.append("");
     }
 }
 
@@ -821,73 +814,76 @@ void Barracks::Update()
     rr_uniticon.Draw();
 
     class_icon.draw();
-
-    unit_status.setStringKey("barracks_unit_status");
-    unit_status.addText(" " + to_string(current_selected_pon + 1) + "/6");
-    unit_status.setPosition(1048*3, 38*3);
+    
+    unit_status.reset();
+    unit_status.append(Func::GetStrFromKey("barracks_unit_status"));
+    unit_status.append(" " + to_string(current_selected_pon + 1) + "/6");
+    unit_status.setGlobalPosition(1048*3, 38*3);
 
     Pon* currentPon = new Pon;
     currentPon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(current_selected_pon);
+    class_name.reset();
+
     switch (currentPon->pon_class)
     {
         case 1: {
-            class_name.setStringKey("barracks_yaripon");
+            class_name.append(Func::GetStrFromKey("barracks_yaripon"));
             break;
         }
         case 2: {
-            class_name.setStringKey("barracks_tatepon");
+            class_name.append(Func::GetStrFromKey("barracks_tatepon"));
             break;
         }
     }
-    class_name.setPosition(136*3, 74*3);
+    class_name.setGlobalPosition(136*3, 74*3);
 
     unit_status.draw();
     class_name.draw();
 
     ///stat text
-    unit_stat_level_t.setOrigin(0, unit_stat_level_t.getLocalBounds().height / 2);
-    unit_stat_exp_t.setOrigin(0, unit_stat_exp_t.getLocalBounds().height / 2);
-    unit_stat_hp_t.setOrigin(0, unit_stat_hp_t.getLocalBounds().height / 2);
-    unit_stat_dmg_t.setOrigin(0, unit_stat_dmg_t.getLocalBounds().height / 2);
-    unit_stat_atkspd_t.setOrigin(0, unit_stat_atkspd_t.getLocalBounds().height / 2);
-    unit_stat_critc_t.setOrigin(0, unit_stat_critc_t.getLocalBounds().height / 2);
-    unit_stat_kbc_t.setOrigin(0, unit_stat_kbc_t.getLocalBounds().height / 2);
-    unit_stat_stgc_t.setOrigin(0, unit_stat_stgc_t.getLocalBounds().height / 2);
-    unit_stat_firec_t.setOrigin(0, unit_stat_firec_t.getLocalBounds().height / 2);
-    unit_stat_icec_t.setOrigin(0, unit_stat_icec_t.getLocalBounds().height / 2);
+    unit_stat_level_t.setGlobalOrigin(0, unit_stat_level_t.getGlobalBounds().height / 2);
+    unit_stat_exp_t.setGlobalOrigin(0, unit_stat_exp_t.getGlobalBounds().height / 2);
+    unit_stat_hp_t.setGlobalOrigin(0, unit_stat_hp_t.getGlobalBounds().height / 2);
+    unit_stat_dmg_t.setGlobalOrigin(0, unit_stat_dmg_t.getGlobalBounds().height / 2);
+    unit_stat_atkspd_t.setGlobalOrigin(0, unit_stat_atkspd_t.getGlobalBounds().height / 2);
+    unit_stat_critc_t.setGlobalOrigin(0, unit_stat_critc_t.getGlobalBounds().height / 2);
+    unit_stat_kbc_t.setGlobalOrigin(0, unit_stat_kbc_t.getGlobalBounds().height / 2);
+    unit_stat_stgc_t.setGlobalOrigin(0, unit_stat_stgc_t.getGlobalBounds().height / 2);
+    unit_stat_firec_t.setGlobalOrigin(0, unit_stat_firec_t.getGlobalBounds().height / 2);
+    unit_stat_icec_t.setGlobalOrigin(0, unit_stat_icec_t.getGlobalBounds().height / 2);
 
-    unit_stat_level_v.setOrigin(unit_stat_level_v.getLocalBounds().width, unit_stat_level_v.getLocalBounds().height / 2);
-    unit_stat_exp_v.setOrigin(unit_stat_exp_v.getLocalBounds().width, unit_stat_exp_v.getLocalBounds().height / 2);
-    unit_stat_hp_v.setOrigin(unit_stat_hp_v.getLocalBounds().width, unit_stat_hp_v.getLocalBounds().height / 2);
-    unit_stat_dmg_v.setOrigin(unit_stat_dmg_v.getLocalBounds().width, unit_stat_dmg_v.getLocalBounds().height / 2);
-    unit_stat_atkspd_v.setOrigin(unit_stat_atkspd_v.getLocalBounds().width, unit_stat_atkspd_v.getLocalBounds().height / 2);
-    unit_stat_critc_v.setOrigin(unit_stat_critc_v.getLocalBounds().width, unit_stat_critc_v.getLocalBounds().height / 2);
-    unit_stat_kbc_v.setOrigin(unit_stat_kbc_v.getLocalBounds().width, unit_stat_kbc_v.getLocalBounds().height / 2);
-    unit_stat_stgc_v.setOrigin(unit_stat_stgc_v.getLocalBounds().width, unit_stat_stgc_v.getLocalBounds().height / 2);
-    unit_stat_firec_v.setOrigin(unit_stat_firec_v.getLocalBounds().width, unit_stat_firec_v.getLocalBounds().height / 2);
-    unit_stat_icec_v.setOrigin(unit_stat_icec_v.getLocalBounds().width, unit_stat_icec_v.getLocalBounds().height / 2);
+    unit_stat_level_v.setGlobalOrigin(unit_stat_level_v.getGlobalBounds().width, unit_stat_level_v.getGlobalBounds().height / 2);
+    unit_stat_exp_v.setGlobalOrigin(unit_stat_exp_v.getGlobalBounds().width, unit_stat_exp_v.getGlobalBounds().height / 2);
+    unit_stat_hp_v.setGlobalOrigin(unit_stat_hp_v.getGlobalBounds().width, unit_stat_hp_v.getGlobalBounds().height / 2);
+    unit_stat_dmg_v.setGlobalOrigin(unit_stat_dmg_v.getGlobalBounds().width, unit_stat_dmg_v.getGlobalBounds().height / 2);
+    unit_stat_atkspd_v.setGlobalOrigin(unit_stat_atkspd_v.getGlobalBounds().width, unit_stat_atkspd_v.getGlobalBounds().height / 2);
+    unit_stat_critc_v.setGlobalOrigin(unit_stat_critc_v.getGlobalBounds().width, unit_stat_critc_v.getGlobalBounds().height / 2);
+    unit_stat_kbc_v.setGlobalOrigin(unit_stat_kbc_v.getGlobalBounds().width, unit_stat_kbc_v.getGlobalBounds().height / 2);
+    unit_stat_stgc_v.setGlobalOrigin(unit_stat_stgc_v.getGlobalBounds().width, unit_stat_stgc_v.getGlobalBounds().height / 2);
+    unit_stat_firec_v.setGlobalOrigin(unit_stat_firec_v.getGlobalBounds().width, unit_stat_firec_v.getGlobalBounds().height / 2);
+    unit_stat_icec_v.setGlobalOrigin(unit_stat_icec_v.getGlobalBounds().width, unit_stat_icec_v.getGlobalBounds().height / 2);
 
-    unit_stat_level_t.setPosition(136*3, 146*3);
-    unit_stat_level_v.setPosition(136*3 + 370*3, 146*3);
-    unit_stat_exp_t.setPosition(136*3, 180*3);
-    unit_stat_exp_v.setPosition(136*3 + 370*3, 180*3);
-    unit_stat_hp_t.setPosition(136*3, 214*3);
-    unit_stat_hp_v.setPosition(136*3 + 370*3, 214*3);
-    unit_stat_dmg_t.setPosition(136*3, 248*3);
-    unit_stat_dmg_v.setPosition(136*3 + 370*3, 248*3);
-    unit_stat_atkspd_t.setPosition(136*3, 282*3);
-    unit_stat_atkspd_v.setPosition(136*3 + 370*3, 282*3);
+    unit_stat_level_t.setGlobalPosition(136*3, 146*3);
+    unit_stat_level_v.setGlobalPosition(136*3 + 370*3, 146*3);
+    unit_stat_exp_t.setGlobalPosition(136*3, 180*3);
+    unit_stat_exp_v.setGlobalPosition(136*3 + 370*3, 180*3);
+    unit_stat_hp_t.setGlobalPosition(136*3, 214*3);
+    unit_stat_hp_v.setGlobalPosition(136*3 + 370*3, 214*3);
+    unit_stat_dmg_t.setGlobalPosition(136*3, 248*3);
+    unit_stat_dmg_v.setGlobalPosition(136*3 + 370*3, 248*3);
+    unit_stat_atkspd_t.setGlobalPosition(136*3, 282*3);
+    unit_stat_atkspd_v.setGlobalPosition(136*3 + 370*3, 282*3);
 
-    unit_stat_critc_t.setPosition(540*3, 146*3);
-    unit_stat_critc_v.setPosition(540*3 + 370*3, 146*3);
-    unit_stat_kbc_t.setPosition(540*3, 180*3);
-    unit_stat_kbc_v.setPosition(540*3 + 370*3, 180*3);
-    unit_stat_stgc_t.setPosition(540*3, 214*3);
-    unit_stat_stgc_v.setPosition(540*3 + 370*3, 214*3);
-    unit_stat_firec_t.setPosition(540*3, 248*3);
-    unit_stat_firec_v.setPosition(540*3 + 370*3, 248*3);
-    unit_stat_icec_t.setPosition(540*3, 282*3);
-    unit_stat_icec_v.setPosition(540*3 + 370*3, 282*3);
+    unit_stat_critc_t.setGlobalPosition(540*3, 146*3);
+    unit_stat_critc_v.setGlobalPosition(540*3 + 370*3, 146*3);
+    unit_stat_kbc_t.setGlobalPosition(540*3, 180*3);
+    unit_stat_kbc_v.setGlobalPosition(540*3 + 370*3, 180*3);
+    unit_stat_stgc_t.setGlobalPosition(540*3, 214*3);
+    unit_stat_stgc_v.setGlobalPosition(540*3 + 370*3, 214*3);
+    unit_stat_firec_t.setGlobalPosition(540*3, 248*3);
+    unit_stat_firec_v.setGlobalPosition(540*3 + 370*3, 248*3);
+    unit_stat_icec_t.setGlobalPosition(540*3, 282*3);
+    unit_stat_icec_v.setGlobalPosition(540*3 + 370*3, 282*3);
 
     unit_stat_level_t.draw();
     unit_stat_level_v.draw();
@@ -917,26 +913,26 @@ void Barracks::Update()
 
     if (enabled_positons[0]) /// Rarepon
     {
-        t_unit_rarepon_name.setOrigin(0, 0);
-        t_unit_rarepon_name.setPosition(s_unit_icon.getPosition().x + equip_height, s_unit_icon.getPosition().y + 8*3);
+        t_unit_rarepon_name.setGlobalOrigin(0, 0);
+        t_unit_rarepon_name.setGlobalPosition(s_unit_icon.getPosition().x + equip_height, s_unit_icon.getPosition().y + 8*3);
         s_unit_icon.setPosition(s_unit_icon.getPosition().x, s_unit_icon.getPosition().y);
         s_unit_icon.draw();
         t_unit_rarepon_name.draw();
     }
     if (enabled_positons[1]) /// wep1
     {
-        t_slot_1_name.setPosition(s_unit_icon.getPosition().x + equip_height, s_weapon_icon.getPosition().y + 8*3);
+        t_slot_1_name.setGlobalPosition(s_unit_icon.getPosition().x + equip_height, s_weapon_icon.getPosition().y + 8*3);
         s_weapon_icon.setPosition(s_unit_icon.getPosition().x, s_weapon_icon.getPosition().y);
         s_weapon_icon.draw();
         t_slot_1_name.draw();
 
-        t_eq_names[0].setPosition(s_unit_icon.getPosition().x + equip_height, s_weapon_icon.getPosition().y + 8*3);
+        t_eq_names[0].setGlobalPosition(s_unit_icon.getPosition().x + equip_height, s_weapon_icon.getPosition().y + 8*3);
         t_eq_names[0].draw();
     }
 
     if (enabled_positons[2]) /// wep2
     {
-        t_slot_2_name.setPosition(s_unit_icon.getPosition().x + equip_height, s_weapon2_icon.getPosition().y + 8*3);
+        t_slot_2_name.setGlobalPosition(s_unit_icon.getPosition().x + equip_height, s_weapon2_icon.getPosition().y + 8*3);
         s_weapon2_icon.setPosition(s_unit_icon.getPosition().x, s_weapon2_icon.getPosition().y);
         s_weapon2_icon.draw();
         t_slot_2_name.draw();
@@ -947,7 +943,7 @@ void Barracks::Update()
 
     if (enabled_positons[3]) /// armour
     {
-        t_slot_3_name.setPosition(s_unit_icon.getPosition().x + equip_height, s_armour_icon.getPosition().y + 8*3);
+        t_slot_3_name.setGlobalPosition(s_unit_icon.getPosition().x + equip_height, s_armour_icon.getPosition().y + 8*3);
         s_armour_icon.setPosition(s_unit_icon.getPosition().x, s_armour_icon.getPosition().y);
         s_armour_icon.draw();
         t_slot_3_name.draw();
@@ -958,18 +954,18 @@ void Barracks::Update()
         /// slot[1] in ponregistry is armor
         /// armor is slot 2 (third) in equipment, not second
         /// //////////////////// ///
-        t_eq_names[1].setPosition(s_unit_icon.getPosition().x + equip_height, s_armour_icon.getPosition().y + 8*3);
+        t_eq_names[1].setGlobalPosition(s_unit_icon.getPosition().x + equip_height, s_armour_icon.getPosition().y + 8*3);
         t_eq_names[1].draw();
     }
 
     if (enabled_positons[4]) /// mask
     {
-        t_slot_4_name.setPosition(s_unit_icon.getPosition().x + equip_height, s_armour_icon.getPosition().y + 8*3);
+        t_slot_4_name.setGlobalPosition(s_unit_icon.getPosition().x + equip_height, s_armour_icon.getPosition().y + 8*3);
         s_armour_icon.setPosition(s_unit_icon.getPosition().x, s_armour_icon.getPosition().y);
         s_armour_icon.draw();
         t_slot_4_name.draw();
 
-        t_eq_names[3].setPosition(s_unit_icon.getPosition().x + equip_height, s_armour_icon.getPosition().y + 8*3);
+        t_eq_names[3].setGlobalPosition(s_unit_icon.getPosition().x + equip_height, s_armour_icon.getPosition().y + 8*3);
         t_eq_names[3].draw();
     }
 
@@ -1020,8 +1016,8 @@ void Barracks::Update()
                     inventory_boxes[cur_item].icon.setPosition(40*3 + xpos + 23*3 + 1.5*3, 366*3 + ypos + 23*3 + 1.5*3);
                     inventory_boxes[cur_item].icon.draw();
 
-                    inventory_boxes[cur_item].num.setPosition(40*3 + xpos + 36*3 - 1*3, 366*3 + ypos + 29*3 - 2*3);
-                    inventory_boxes[cur_item].num_shadow.setPosition(40*3 + xpos + 36*3, 366*3 + ypos + 29*3);
+                    inventory_boxes[cur_item].num.setGlobalPosition(40 * 3 + xpos + 36 * 3 - 1 * 3, 366 * 3 + ypos + 29 * 3 - 2 * 3);
+                    inventory_boxes[cur_item].num_shadow.setGlobalPosition(40*3 + xpos + 36*3, 366*3 + ypos + 29*3);
 
                     inventory_boxes[cur_item].num_shadow.draw();
                     inventory_boxes[cur_item].num.draw();
@@ -1082,11 +1078,11 @@ void Barracks::Update()
         rr_itempreview.setOrigin(sf::Vector2f((360 + 40)*3 / 2, (220 + 40)*3 / 2));
         rr_itempreview.Draw();
 
-        item_title.setOrigin(item_title.getLocalBounds().width / 2, item_title.getLocalBounds().height / 2);
-        item_title.setPosition(650*3, 390*3);
+        item_title.setGlobalOrigin(item_title.getGlobalBounds().width / 2, item_title.getGlobalBounds().height / 2);
+        item_title.setGlobalPosition(650*3, 390*3);
         item_title.draw();
 
-        item_desc.setPosition(480*3, 440*3);
+        item_desc.setGlobalPosition(480*3, 440*3);
         item_desc.draw();
     }
 

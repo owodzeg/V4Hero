@@ -45,18 +45,18 @@ void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bo
     startpos = start_pos;
 
     StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
-
-    dialogue_ptext.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
+    //TO-DO: PataText rework
+    /* dialogue_ptext.defaultStyleSetFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
     dialogue_ptext.setTextQuality(q);
-    dialogue_ptext.setCharacterSize(fontSize);
+    dialogue_ptext.defaultStyleSetCharSize(fontSize);
     dialogue_ptext.setString("");
 
-    visual_ptext.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
+    visual_ptext.defaultStyleSetFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
     visual_ptext.setTextQuality(q);
-    visual_ptext.setCharacterSize(fontSize);
+    visual_ptext.defaultStyleSetCharSize(fontSize);
     visual_ptext.setString("");
 
-    visual_ptext.force_nonspeech = true;
+    visual_ptext.force_nonspeech = true; */
 
     SPDLOG_DEBUG("MessageCloud::Create(): finished");
 }
@@ -74,7 +74,7 @@ void MessageCloud::setFontSize(int newFontSize)
 void MessageCloud::AddDialog(sf::String text, bool nextdialog)
 {
     // here i dont think we need to use more than one ptext anymore
-    // just push the new dialogues into a vector of sf::Strings and let PText parse it :)
+    // just push the new dialogues into a vector of sf::Strings and let PataText parse it :)
 
     SPDLOG_DEBUG("MessageCloud::AddDialog(): {}, nextdialog?: {}", std::string(text), nextdialog);
 
@@ -99,13 +99,15 @@ void MessageCloud::Show()
             AddDialog(sf::String("no message"), true);
         }
 
-        dialogue_ptext.setStringKey(dialogue_strings[cur_dialog]);
-        visual_ptext.setStringKey(dialogue_strings[cur_dialog]);
+        //TO-DO: PataText rework
+        /*
+        dialogue_ptext.append(Func::GetStrFromKey(dialogue_strings[cur_dialog]);
+        visual_ptext.append(Func::GetStrFromKey(dialogue_strings[cur_dialog]);
 
         for(auto x:additional[cur_dialog])
         {
-            dialogue_ptext.addText(x);
-            visual_ptext.addText(x);
+            dialogue_ptext.append(x);
+            visual_ptext.append(x);
         }
 
         dialogue_ptext.draw();
@@ -113,6 +115,7 @@ void MessageCloud::Show()
 
         dest_xsize = visual_ptext.getLocalBounds().width + 120 + (visual_ptext.getLocalBounds().width / 30);
         dest_ysize = visual_ptext.getLocalBounds().height + 150 + (visual_ptext.getLocalBounds().height / 4.5);
+        */
 
         text_timeout.restart();
 
@@ -147,22 +150,23 @@ void MessageCloud::NextDialog()
         old_xsize = dest_xsize;
         old_ysize = dest_ysize;
 
-        dialogue_ptext.setStringKey(dialogue_strings[cur_dialog]);
-        visual_ptext.setStringKey(dialogue_strings[cur_dialog]);
+        dialogue_ptext.append(dialogue_strings[cur_dialog]);
+        visual_ptext.append(dialogue_strings[cur_dialog]);
 
         dialogue_ptext.draw();
         visual_ptext.draw();
 
-        dest_xsize = visual_ptext.getLocalBounds().width + 120 + (visual_ptext.getLocalBounds().width / 30);
-        dest_ysize = visual_ptext.getLocalBounds().height + 150 + (visual_ptext.getLocalBounds().height / 4.5);
+        dest_xsize = visual_ptext.getGlobalBounds().width + 120 + (visual_ptext.getGlobalBounds().width / 30);
+        dest_ysize = visual_ptext.getGlobalBounds().height + 150 + (visual_ptext.getGlobalBounds().height / 4.5);
 
         text_timeout.restart();
     } else
     {
-        if(dialogue_ptext.goback)
-        {
-            goback = true;
-        }
+        // TO-DO: fix
+        //if(dialogue_ptext.goback)
+        //{
+        //    goback = true;
+        //}
 
         dest_xsize = 0;
         dest_ysize = 0;
@@ -189,8 +193,8 @@ void MessageCloud::Draw()
         firstrender = false;
 
         cur_lang = strRepo->GetCurrentLanguage();
-        dialogue_ptext.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
-        visual_ptext.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
+        //dialogue_ptext.defaultStyleSetFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
+        //visual_ptext.defaultStyleSetFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
 
         Show();
 
@@ -282,15 +286,17 @@ void MessageCloud::Draw()
 
         if (!done)
         {
-            dialogue_ptext.speedup = speedup;
-            dialogue_ptext.setPosition(x - visual_ptext.getLocalBounds().width / 2, y - 12 - visual_ptext.getLocalBounds().height / 2);
+            //TO-DO: PataText rework
+            //dialogue_ptext.speedup = speedup;
+            //dialogue_ptext.setPosition(x - visual_ptext.getLocalBounds().width / 2, y - 12 - visual_ptext.getLocalBounds().height / 2);
             dialogue_ptext.draw();
 
             //loaded_text[cur_dialog].setPosition(x - ptext[cur_dialog].getLocalBounds().width / 2, y - 4 - ptext[cur_dialog].getLocalBounds().height / 2);
             //showtext[cur_dialog].setString(viewed_text[cur_dialog]);
             //loaded_text[cur_dialog].draw(window);
 
-            if (dialogue_ptext.speech_done)
+            //TO-DO: PataText rework
+            //if (dialogue_ptext.speech_done)
             {
                 ready = true;
 

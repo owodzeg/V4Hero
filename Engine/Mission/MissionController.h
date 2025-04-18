@@ -53,7 +53,7 @@ public:
     bool inFever = false;
     bool zoomActivated = false;
 
-    PText unit_count, unit_count_shadow;
+    PataText unit_count, unit_count_shadow;
 
     std::vector<std::vector<int>> dropped_ids;
     std::vector<PataDialogBox> dialogboxes;
@@ -78,7 +78,7 @@ public:
     PSprite bar_win;
     PSprite bar_lose;
 
-    PText t_win, t_lose;
+    PataText t_win, t_lose;
 
     bool missionEnd = false;
     float textCurX = -3840;

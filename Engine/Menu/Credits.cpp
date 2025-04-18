@@ -11,12 +11,15 @@ void Credits::addHeaderText(sf::String text)
     auto strRepo = CoreManager::getInstance().getStrRepo();
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
-    PText p;
-    p.setFont(font);
-    p.setCharacterSize(36);
+    PataText p;
+    //TO-DO: PataText rework
+    /*
+    p.defaultStyleSetFont(font);
+    p.defaultStyleSetCharSize(36);
     p.setColor(sf::Color::White);
-    p.setStringKey(text);
+    p.append(Func::GetStrFromKey(text);
     p.setPosition(640, 800 + (36 * credits_text.size()));
+    */
     credits_text.push_back(p);
 }
 
@@ -25,23 +28,25 @@ void Credits::addRegularText(sf::String text, int font)
     auto strRepo = CoreManager::getInstance().getStrRepo();
     std::string font_str = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
-    PText p;
+    PataText p;
+    /*
     if (font == 0)
     {
-        p.setFont(font_str);
-        p.setCharacterSize(24);
+        p.defaultStyleSetFont(font_str);
+        p.defaultStyleSetCharSize(24);
         p.setColor(sf::Color::White);
         p.setString(text);
     }
     else if (font == 1)
     {
-        p.setFont("kaku-cn");
-        p.setCharacterSize(24);
+        p.defaultStyleSetFont("kaku-cn");
+        p.defaultStyleSetCharSize(24);
         p.setColor(sf::Color::White);
         p.setString(text);
     }
 
     p.setPosition(640, 800 + (36 * credits_text.size()));
+    */
     credits_text.push_back(p);
 }
 
@@ -62,15 +67,17 @@ void Credits::Initialise(Config* thisConfig, V4Core* parent)
     auto strRepo = CoreManager::getInstance().getStrRepo();
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
-    outro_text.setFont(font);
-    outro_text.setCharacterSize(36);
+    /*
+    outro_text.defaultStyleSetFont(font);
+    outro_text.defaultStyleSetCharSize(36);
     outro_text.setColor(sf::Color::White);
     outro_text.setOutlineThickness(2);
     outro_text.setOutlineColor(sf::Color::Black);
 
-    anykey.setFont(font);
-    anykey.setCharacterSize(36);
+    anykey.defaultStyleSetFont(font);
+    anykey.defaultStyleSetCharSize(36);
     anykey.setColor(sf::Color::White);
+    */
 
     teaser_1.loadFromFile("resources/graphics/ui/credits/teaser_1.png", thisConfig->GetInt("textureQuality"));
     teaser_2.loadFromFile("resources/graphics/ui/credits/teaser_2.png", thisConfig->GetInt("textureQuality"));
@@ -234,10 +241,10 @@ void Credits::restart()
 
     for (int i = 0; i < credits_text.size(); i++)
     {
-        credits_text[i].setPosition(640, 800 + (36 * i));
+        //credits_text[i].setPosition(640, 800 + (36 * i));
     }
 
-    outro_text.setString("");
+    //outro_text.setString("");
 }
 
 void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCtrl)
@@ -258,6 +265,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
             }
         }
 
+        /*
         if (startTimer.getElapsedTime().asSeconds() > 3.2)
         {
             outro_text.setString("outro_cutscene_1");
@@ -341,6 +349,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
         }
 
         outro_text.draw();
+        */
     }
 
     if (mode == 1)
@@ -349,19 +358,19 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
 
         for (int i = 0; i < credits_text.size(); i++)
         {
-            credits_text[i].ly -= 50.0 / fps;
-            credits_text[i].setOrigin(credits_text[i].getLocalBounds().width / 2, credits_text[i].getLocalBounds().height / 2);
+            //credits_text[i].ly -= 50.0 / fps;
+            //credits_text[i].setOrigin(credits_text[i].getLocalBounds().width / 2, credits_text[i].getLocalBounds().height / 2);
             credits_text[i].draw();
         }
 
-        if (credits_text[credits_text.size() - 1].ly < -120)
+        //if (credits_text[credits_text.size() - 1].ly < -120)
         {
             flash_x += 1.0 / fps;
 
-            anykey.setStringKey("tips_anykey");
-            anykey.setOrigin(anykey.getLocalBounds().width / 2, anykey.getLocalBounds().height / 2);
-            anykey.setColor(sf::Color(255, 255, 255, 127 + (cos(flash_x) * 127)));
-            anykey.setPosition(640, 360);
+            //anykey.append(Func::GetStrFromKey("tips_anykey");
+            //anykey.setOrigin(anykey.getLocalBounds().width / 2, anykey.getLocalBounds().height / 2);
+            //anykey.setColor(sf::Color(255, 255, 255, 127 + (cos(flash_x) * 127)));
+            //anykey.setPosition(640, 360);
             anykey.draw();
 
             if (inputCtrl.isAnyKeyPressed())

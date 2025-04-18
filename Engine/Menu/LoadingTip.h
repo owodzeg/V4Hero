@@ -1,7 +1,7 @@
 #ifndef LOADINGTIP_H
 #define LOADINGTIP_H
 
-#include "../Graphics/PText.h"
+#include "../Graphics/PataText.h"
 #include "../Graphics/SpriteWrapper.h"
 #include <SFML/Graphics.hpp>
 
@@ -13,10 +13,10 @@ public:
 
 
 
-    PText t_tipTitle;
-    PText t_tipText;
-    PText t_pressAnyKey;
-    PText t_nowLoading;
+    PataText t_tipTitle;
+    PataText t_tipText;
+    PataText t_pressAnyKey;
+    PataText t_nowLoading;
 
     sf::RectangleShape box_1, box_2;
 

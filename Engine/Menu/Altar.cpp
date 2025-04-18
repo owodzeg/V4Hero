@@ -56,30 +56,30 @@ AltarMenu::AltarMenu()
 
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
-    altar_title.setFont(font);
-    altar_title.setCharacterSize(40);
-    altar_title.setColor(sf::Color(111,71,51,255));
-    altar_title.setStringKey("altar_title");
+    altar_title.defaultStyleSetFont(font);
+    altar_title.defaultStyleSetCharSize(40);
+    altar_title.defaultStyleSetColor(sf::Color(111, 71, 51, 255));
+    altar_title.append(Func::GetStrFromKey("altar_title"));
 
-    altar_kaching.setFont(font);
-    altar_kaching.setCharacterSize(30);
-    altar_kaching.setColor(sf::Color(111,71,51,255));
-    altar_kaching.setStringKey("altar_title");
+    altar_kaching.defaultStyleSetFont(font);
+    altar_kaching.defaultStyleSetCharSize(30);
+    altar_kaching.defaultStyleSetColor(sf::Color(111,71,51,255));
+    altar_kaching.append(Func::GetStrFromKey("altar_title"));
 
-    altar_item_title.setFont(font);
-    altar_item_title.setCharacterSize(24);
-    altar_item_title.setColor(sf::Color(111,71,51,255));
-    altar_item_title.setString("");
+    altar_item_title.defaultStyleSetFont(font);
+    altar_item_title.defaultStyleSetCharSize(24);
+    altar_item_title.defaultStyleSetColor(sf::Color(111,71,51,255));
+    altar_item_title.append("");
 
-    altar_item_category.setFont(font);
-    altar_item_category.setCharacterSize(20);
-    altar_item_category.setColor(sf::Color(111,71,51,255));
-    altar_item_category.setString("");
+    altar_item_category.defaultStyleSetFont(font);
+    altar_item_category.defaultStyleSetCharSize(20);
+    altar_item_category.defaultStyleSetColor(sf::Color(111,71,51,255));
+    altar_item_category.append("");
 
-    altar_item_desc.setFont(font);
-    altar_item_desc.setCharacterSize(25);
-    altar_item_desc.setColor(sf::Color(111,71,51,255));
-    altar_item_desc.setString("");
+    altar_item_desc.defaultStyleSetFont(font);
+    altar_item_desc.defaultStyleSetCharSize(25);
+    altar_item_desc.defaultStyleSetColor(sf::Color(111,71,51,255));
+    altar_item_desc.append("");
 
     ctrlTips.create(54*3, font, 20, sf::String("Left/Right/Up/Down: Navigate      O: Exit to Patapolis"), quality);
 
@@ -95,14 +95,20 @@ void AltarMenu::updateAltarDescriptions()
 
     if (selItem < inventory_boxes.size())
     {
-        altar_item_title.setStringKey(inventory_boxes[selItem].data->item_name);
-        altar_item_category.setStringKey("altar_category_" + inventory_boxes[selItem].data->item_category);
-        altar_item_desc.setString(Func::ConvertToUtf8String(Func::wrap_text(inventory_boxes[selItem].data->item_description, 420*3, font, 26)));
+        altar_item_title.reset();
+        altar_item_title.append(Func::GetStrFromKey(inventory_boxes[selItem].data->item_name));
+        altar_item_category.reset();
+        altar_item_category.append(Func::GetStrFromKey("altar_category_" + inventory_boxes[selItem].data->item_category));
+        altar_item_desc.reset();
+        altar_item_desc.append(Func::ConvertToUtf8String(Func::wrap_text(inventory_boxes[selItem].data->item_description, 420*3, font, 26)));
     } else
     {
-        altar_item_title.setString("");
-        altar_item_category.setString("");
-        altar_item_desc.setString("");
+        altar_item_title.reset();
+        altar_item_title.append("");
+        altar_item_category.reset();
+        altar_item_category.append("");
+        altar_item_desc.reset();
+        altar_item_desc.append("");
     }
 }
 
@@ -186,15 +192,17 @@ void AltarMenu::reloadInventory()
             auto strRepo = CoreManager::getInstance().getStrRepo();
             std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
-            tmp.num.setFont(font);
-            tmp.num.setCharacterSize(30);
-            tmp.num.setColor(sf::Color::White);
-            tmp.num.setString(Func::num_padding(tmp.amount, 3));
+            tmp.num.defaultStyleSetFont(font);
+            tmp.num.defaultStyleSetCharSize(30);
+            tmp.num.defaultStyleSetColor(sf::Color::White);
+            tmp.num.reset();
+            tmp.num.append(Func::num_padding(tmp.amount, 3));
 
-            tmp.num_shadow.setFont(font);
-            tmp.num_shadow.setCharacterSize(30);
-            tmp.num_shadow.setColor(sf::Color(136, 136, 136, 255));
-            tmp.num_shadow.setString(Func::num_padding(tmp.amount, 3));
+            tmp.num_shadow.defaultStyleSetFont(font);
+            tmp.num_shadow.defaultStyleSetCharSize(30);
+            tmp.num_shadow.defaultStyleSetColor(sf::Color(136, 136, 136, 255));
+            tmp.num_shadow.reset();
+            tmp.num_shadow.append(Func::num_padding(tmp.amount, 3));
 
             inventory_boxes.push_back(tmp);
         }
@@ -298,8 +306,8 @@ void AltarMenu::Update()
                 inventory_boxes[curItem].icon.setPosition((40 + xpos + 36 + 2.5)*3, (39 + ypos + 36 + 2.5)*3);
                 inventory_boxes[curItem].icon.draw();
 
-                inventory_boxes[curItem].num.setPosition((40 + xpos + 51 - 1)*3, (39 + ypos + 45 - 2)*3);
-                inventory_boxes[curItem].num_shadow.setPosition((40 + xpos + 51)*3, (39 + ypos + 45)*3);
+                inventory_boxes[curItem].num.setGlobalPosition((40 + xpos + 51 - 1)*3, (39 + ypos + 45 - 2)*3);
+                inventory_boxes[curItem].num_shadow.setGlobalPosition((40 + xpos + 51) * 3, (39 + ypos + 45) * 3);
 
                 inventory_boxes[curItem].num_shadow.draw();
                 inventory_boxes[curItem].num.draw();
@@ -367,22 +375,22 @@ void AltarMenu::Update()
         rr_desc_sh.Draw();
         rr_desc.Draw();
 
-        altar_title.setOrigin(altar_title.getLocalBounds().width / 2, altar_title.getLocalBounds().height / 2);
-        altar_kaching.setOrigin(altar_kaching.getLocalBounds().width / 2, altar_kaching.getLocalBounds().height / 2);
+        altar_title.setGlobalOrigin(altar_title.getGlobalBounds().width / 2, altar_title.getGlobalBounds().height / 2);
+        altar_kaching.setGlobalOrigin(altar_kaching.getGlobalBounds().width / 2, altar_kaching.getGlobalBounds().height / 2);
 
-        altar_title.setPosition(933 * 3, 100 * 3);
-        altar_kaching.setPosition(933 * 3, 170 * 3);
+        altar_title.setGlobalPosition(933 * 3, 100 * 3);
+        altar_kaching.setGlobalPosition(933 * 3, 170 * 3);
 
-        altar_item_title.setPosition(933 * 3, 250 * 3);
-        altar_item_category.setPosition(933 * 3, 280 * 3);
-        altar_item_desc.setPosition(725 * 3, 330 * 3);
+        altar_item_title.setGlobalPosition(933 * 3, 250 * 3);
+        altar_item_category.setGlobalPosition(933 * 3, 280 * 3);
+        altar_item_desc.setGlobalPosition(725 * 3, 330 * 3);
 
         altar_title.draw();
         altar_kaching.draw();
 
-        altar_item_title.setOrigin(altar_item_title.getLocalBounds().width / 2, altar_item_title.getLocalBounds().height / 2);
-        altar_item_category.setOrigin(altar_item_category.getLocalBounds().width / 2, altar_item_category.getLocalBounds().height / 2);
-        altar_item_desc.setOrigin(0, 0);
+        altar_item_title.setGlobalOrigin(altar_item_title.getGlobalBounds().width / 2, altar_item_title.getGlobalBounds().height / 2);
+        altar_item_category.setGlobalOrigin(altar_item_category.getGlobalBounds().width / 2, altar_item_category.getGlobalBounds().height / 2);
+        altar_item_desc.setGlobalOrigin(0, 0);
 
         altar_item_title.draw();
         altar_item_category.draw();

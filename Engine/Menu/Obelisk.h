@@ -3,7 +3,7 @@
 #include "../Config.h"
 #include "../Dialog/ControlTips.h"
 #include "../Graphics/Menu.h"
-#include "../Graphics/PText.h"
+#include "../Graphics/PataText.h"
 #include "../Graphics/SpriteWrapper.h"
 #include <SFML/Graphics.hpp>
 #include <nlohmann/json.hpp>
@@ -33,12 +33,12 @@ public:
     SpriteWrapper missionselect;
 
     ///text
-    PText worldmap_title;
-    PText location_title;
-    PText location_desc;
-    PText select_quest;
-    PText mission_title;
-    PText mission_desc;
+    PataText worldmap_title;
+    PataText location_title;
+    PataText location_desc;
+    PataText select_quest;
+    PataText mission_title;
+    PataText mission_desc;
 
     int cur_location = 0;
     float mainbox_destX = 640*3, mainbox_destY = 360*3;
@@ -64,7 +64,7 @@ public:
     std::vector<int> fields_unlocked = {1};
 
     struct Mission {
-        PText p_mis;
+        PataText p_mis;
         int mis_ID = 0; ///mission ID
         int loc_ID = 0; ///location ID
         std::string title;

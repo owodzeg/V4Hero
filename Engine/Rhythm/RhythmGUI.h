@@ -2,7 +2,7 @@
 #define RYTHMGUI_H
 
 #include "../Config.h"
-#include "../Graphics/PText.h"
+#include "../Graphics/PataText.h"
 #include <SFML/Graphics.hpp>
 #include <chrono>
 
@@ -30,7 +30,7 @@ public:
     std::vector<Drum> drums;
 
     /// Debug UI ///
-    PText d_text;
+    PataText d_text;
     sf::RectangleShape d_green, d_orange, d_red, d_marker;
 
     void Initialise(Config& config, std::map<int, bool>& keymap);

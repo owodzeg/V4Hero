@@ -72,18 +72,18 @@ MaterOuterMenu::MaterOuterMenu()
     auto strRepo = CoreManager::getInstance().getStrRepo();
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
-    mater_title.setFont(font);
-    mater_title.setCharacterSize(40);
-    mater_title.setColor(sf::Color(255, 234, 191, 255));
-    mater_title.setStringKey("mater_title");
-    mater_title.setFont(font);
-    mater_title.setCharacterSize(30);
-    mater_title.setColor(sf::Color(255, 234, 191, 255));
-    mater_title.setString("0 Ka-ching");
-    mater_title.setFont(font);
-    mater_title.setCharacterSize(30);
-    mater_title.setColor(sf::Color(255, 234, 191, 255));
-    mater_title.setStringKey("yaripon_squad");
+    mater_title.defaultStyleSetFont(font);
+    mater_title.defaultStyleSetCharSize(40);
+    mater_title.defaultStyleSetColor(sf::Color(255, 234, 191, 255));
+    mater_title.append(Func::GetStrFromKey("mater_title"));
+    mater_title.defaultStyleSetFont(font);
+    mater_title.defaultStyleSetCharSize(30);
+    mater_title.defaultStyleSetColor(sf::Color(255, 234, 191, 255));
+    mater_title.append("0 Ka-ching");
+    mater_title.defaultStyleSetFont(font);
+    mater_title.defaultStyleSetCharSize(30);
+    mater_title.defaultStyleSetColor(sf::Color(255, 234, 191, 255));
+    mater_title.append(Func::GetStrFromKey("yaripon_squad"));
 
     ctrlTips.create(54, font, 20, "mater_outer_ctrl_tips", quality);
 
@@ -185,10 +185,10 @@ void MaterOuterMenu::DrawAsleepSquad(MaterOuterMenu::SquadBox& squad, int squad_
     icon.setColor(sf::Color(255, 255, 255, squad_alpha));
     icon.draw();
 
-    squad_title.setString(squad.title);
-    squad_title.setOrigin(squad_title.getLocalBounds().width / 2, squad_title.getLocalBounds().height / 2);
-    squad_title.setPosition(875, squad.y - 65);
-    squad_title.setColor(sf::Color(0, 0, 0, squad_alpha));
+    squad_title.append(squad.title);
+    squad_title.setGlobalOrigin(squad_title.getGlobalBounds().width / 2, squad_title.getGlobalBounds().height / 2);
+    squad_title.setGlobalPosition(875, squad.y - 65);
+    squad_title.defaultStyleSetColor(sf::Color(0, 0, 0, squad_alpha));
     squad_title.draw();
 
     pon.setOrigin(pon.getLocalBounds().width / 2, pon.getLocalBounds().height / 2);
@@ -247,11 +247,11 @@ void MaterOuterMenu::Update()
 
         mater_main.draw();
 
-        mater_title.setOrigin(mater_title.getLocalBounds().width / 2, mater_title.getLocalBounds().height / 2);
-        altar_kaching.setOrigin(altar_kaching.getLocalBounds().width / 2, altar_kaching.getLocalBounds().height / 2);
+        mater_title.setGlobalOrigin(mater_title.getGlobalBounds().width / 2, mater_title.getGlobalBounds().height / 2);
+        altar_kaching.setGlobalOrigin(altar_kaching.getGlobalBounds().width / 2, altar_kaching.getGlobalBounds().height / 2);
 
-        mater_title.setPosition(1050, 15);
-        altar_kaching.setPosition(1050, 45);
+        mater_title.setGlobalPosition(1050, 15);
+        altar_kaching.setGlobalPosition(1050, 45);
 
         mater_title.draw();
         altar_kaching.draw();
@@ -314,10 +314,10 @@ void MaterOuterMenu::Update()
         icon.setPosition(745, squad.y - 32);
         icon.draw();
 
-        squad_title.setString(squad.title);
-        squad_title.setOrigin(squad_title.getLocalBounds().width / 2, squad_title.getLocalBounds().height / 2);
-        squad_title.setPosition(875, squad.y - 65);
-        squad_title.setColor(sf::Color(0, 0, 0, 255));
+        squad_title.append(squad.title);
+        squad_title.setGlobalOrigin(squad_title.getGlobalBounds().width / 2, squad_title.getGlobalBounds().height / 2);
+        squad_title.setGlobalPosition(875, squad.y - 65);
+        squad_title.defaultStyleSetColor(sf::Color(0, 0, 0, 255));
         squad_title.draw();
         GetSquadsCentered();
 

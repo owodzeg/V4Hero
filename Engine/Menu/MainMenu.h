@@ -6,7 +6,7 @@
 #include "../Dialog/MessageCloud.h"
 #include "../Graphics/Menu.h"
 #include "../Graphics/SpriteWrapper.h"
-#include "../Graphics/PText.h"
+#include "../Graphics/PataText.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <Graphics/AnimatedCurveShape.h>
@@ -23,7 +23,7 @@ public:
 
     std::vector<std::string> temp_menu;
 
-    PText t_option[4];
+    PataText t_option[4];
 
     sf::VertexArray v_background;
 
@@ -41,7 +41,7 @@ public:
     ///Pre-menu screen
     sf::RectangleShape rs_cover;
     sf::RectangleShape rs_cover2;
-    PText t_pressanykey;
+    PataText t_pressanykey;
 
     sf::SoundBuffer sb_smash;
     sf::Sound s_smash;

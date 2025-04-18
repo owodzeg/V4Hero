@@ -79,7 +79,7 @@ public:
 
     bool toggleDebug = false;
     bool toggleBehaviorDebug = false;
-    PText debugText;
+    PataText debugText;
 
     sf::Clock dead_timer;
     bool death_start = false;

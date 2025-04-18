@@ -4,7 +4,7 @@
 #include "../Dialog/DialogBox.h"
 #include "../Graphics/Menu.h"
 #include "../Graphics/PSprite.h"
-#include "../Graphics/PText.h"
+#include "../Graphics/PataText.h"
 #include "../Input/InputController.h"
 #include "../Mission/MissionController.h"
 #include <SFML/Graphics.hpp>
@@ -43,23 +43,23 @@ public:
         std::string value;
     };
 
-    PText options_header;
-    std::vector<PText> options;              ///main options
-    std::vector<PText> g_options;            /// graphics options
-    std::vector<PText> a_options;            /// audio options
-    std::map<int, std::vector<PText>> langs; ///languages (with pages)
+    PataText options_header;
+    std::vector<PataText> options;              ///main options
+    std::vector<PataText> g_options;            /// graphics options
+    std::vector<PataText> a_options;            /// audio options
+    std::map<int, std::vector<PataText>> langs; ///languages (with pages)
     std::vector<Resolution> float_resolutions;
-    std::vector<PText> resolutions;
+    std::vector<PataText> resolutions;
     std::vector<float> float_framerates;
-    std::vector<PText> framerates;
-    std::vector<PText> qualities;
-    std::vector<PText> ms_volume;
-    std::vector<PText> switches;
+    std::vector<PataText> framerates;
+    std::vector<PataText> qualities;
+    std::vector<PataText> ms_volume;
+    std::vector<PataText> switches;
     std::vector<ConfigValue> original_config; ///If the changes are reverted, keep the original settings to return them back
-    std::vector<PText> restarts;
-    std::vector<PText> inputs;
-    std::vector<PText> diff_options;
-    PText t_restart;
+    std::vector<PataText> restarts;
+    std::vector<PataText> inputs;
+    std::vector<PataText> diff_options;
+    PataText t_restart;
 
     PSprite dg_restart, dg_select;
 
@@ -67,11 +67,11 @@ public:
 
     ///Input manager (change keybinds)
     PSprite input_manager;                                  ///sprite
-    PText t_presets[9];                                     ///preset numbers
-    PText t_igbutton, t_assigned;                           ///titles
-    PText t_igkey[12], t_askey[12];                         ///keys
-    PText t_im_tip;                                         ///input manager's tip
-    PText t_change_title, t_change_button, t_change_anykey; ///change dialog
+    PataText t_presets[9];                                     ///preset numbers
+    PataText t_igbutton, t_assigned;                           ///titles
+    PataText t_igkey[12], t_askey[12];                         ///keys
+    PataText t_im_tip;                                         ///input manager's tip
+    PataText t_change_title, t_change_button, t_change_anykey; ///change dialog
     sf::RectangleShape block;
 
     int currentPreset = 0;
@@ -82,7 +82,7 @@ public:
     std::vector<std::string> assigned_names = {"Unknown", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Num0", "Num1", "Num2", "Num3", "Num4", "Num5", "Num6", "Num7", "Num8", "Num9", "Escape", "LControl", "LShift", "LAlt", "LSystem", "RControl", "RShift", "RAlt", "RSystem", "Menu", "LBracket", "RBracket", "Semicolon", "Comma", "Period", "Quote", "Slash", "Backslash", "Tilde", "Equal", "Hyphen", "Space", "Enter", "Backspace", "Tab", "PageUp", "PageDown", "End", "Home", "Insert", "Delete", "Add", "Subtract", "Multiply", "Divide", "Left", "Right", "Up", "Down", "Numpad0", "Numpad1", "Numpad2", "Numpad3", "Numpad4", "Numpad5", "Numpad6", "Numpad7", "Numpad8", "Numpad9", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "F13", "F14", "F15", "Pause"};
 
     ///Controller setup
-    PText t_cs_title, t_cs_desc, t_cs_bigbutton, t_cs_tip;
+    PataText t_cs_title, t_cs_desc, t_cs_bigbutton, t_cs_tip;
     int setup_stage = 1;
     int setup_key = -2;
 

@@ -5,7 +5,7 @@
 #include "../Dialog/DialogBox.h"
 #include "../Dialog/RoundedRect.h"
 #include "../Graphics/Menu.h"
-#include "../Graphics/PText.h"
+#include "../Graphics/PataText.h"
 #include "../Input/InputController.h"
 #include "../Mission/MissionController.h"
 #include "../Mission/Camera.h"
@@ -39,7 +39,7 @@ private:
     int quality_setting = 0;
 
 
-    PText t_title;
+    PataText t_title;
     int current_item_position = 0;
     std::vector<bool> enabled_positons;
 
@@ -49,28 +49,28 @@ private:
 
     PSprite class_icon;
 
-    PText unit_status, class_name;
+    PataText unit_status, class_name;
 
-    PText unit_stat_level_t, unit_stat_level_v;
-    PText unit_stat_exp_t, unit_stat_exp_v;
-    PText unit_stat_hp_t, unit_stat_hp_v;
-    PText unit_stat_dmg_t, unit_stat_dmg_v;
-    PText unit_stat_atkspd_t, unit_stat_atkspd_v;
+    PataText unit_stat_level_t, unit_stat_level_v;
+    PataText unit_stat_exp_t, unit_stat_exp_v;
+    PataText unit_stat_hp_t, unit_stat_hp_v;
+    PataText unit_stat_dmg_t, unit_stat_dmg_v;
+    PataText unit_stat_atkspd_t, unit_stat_atkspd_v;
 
-    PText unit_stat_critc_t, unit_stat_critc_v;
-    PText unit_stat_kbc_t, unit_stat_kbc_v;
-    PText unit_stat_stgc_t, unit_stat_stgc_v;
-    PText unit_stat_firec_t, unit_stat_firec_v;
-    PText unit_stat_icec_t, unit_stat_icec_v;
+    PataText unit_stat_critc_t, unit_stat_critc_v;
+    PataText unit_stat_kbc_t, unit_stat_kbc_v;
+    PataText unit_stat_stgc_t, unit_stat_stgc_v;
+    PataText unit_stat_firec_t, unit_stat_firec_v;
+    PataText unit_stat_icec_t, unit_stat_icec_v;
 
     /// Barracks Equipment Text
-    PText t_unit_rarepon_name;
-    PText t_slot_1_name;
-    PText t_slot_2_name;
-    PText t_slot_3_name;
-    PText t_slot_4_name;
-    PText t_slot_5_name;
-    std::vector<PText> t_eq_names = {t_slot_1_name, t_slot_2_name, t_slot_3_name, t_slot_4_name, t_slot_5_name};
+    PataText t_unit_rarepon_name;
+    PataText t_slot_1_name;
+    PataText t_slot_2_name;
+    PataText t_slot_3_name;
+    PataText t_slot_4_name;
+    PataText t_slot_5_name;
+    std::vector<PataText> t_eq_names = {t_slot_1_name, t_slot_2_name, t_slot_3_name, t_slot_4_name, t_slot_5_name};
 
     PSprite inv_box;
     int grid_sel_x = 0, grid_sel_y = 0, grid_offset_y = 0;
@@ -116,7 +116,7 @@ private:
         sf::RectangleShape r_outer;
         sf::RectangleShape r_inner;
         sf::RectangleShape r_highlight;
-        PText num, num_shadow;
+        PataText num, num_shadow;
         PSprite icon;
     };
 
@@ -124,7 +124,7 @@ private:
     sf::RectangleShape r_sel;
 
     RoundedRect rr_itempreview, rr_itempreview_sh;
-    PText item_title, item_desc;
+    PataText item_title, item_desc;
 
     int current_item_id;
 
@@ -139,8 +139,8 @@ private:
 
     PSprite highlighted_pon;
 
-    PText t_item_title;
-    std::vector<PText> t_item_description;
+    PataText t_item_title;
+    std::vector<PataText> t_item_description;
 
     std::vector<PataDialogBox> dialog_boxes;
 

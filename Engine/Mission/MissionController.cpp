@@ -25,17 +25,17 @@ MissionController::MissionController()
 
 
 
-    t_win.setFont(font);
-    t_win.setCharacterSize(56);
-    t_win.setStringKey("mission_complete");
+    t_win.defaultStyleSetFont(font);
+    t_win.defaultStyleSetCharSize(56);
+    t_win.append(Func::GetStrFromKey("mission_complete"));
 
-    t_lose.setFont(font);
-    t_lose.setCharacterSize(56);
-    t_lose.setStringKey("mission_failed");
+    t_lose.defaultStyleSetFont(font);
+    t_lose.defaultStyleSetCharSize(56);
+    t_lose.append(Func::GetStrFromKey("mission_failed"));
 
 
-    t_win.setOrigin(t_win.getLocalBounds().width / 2, t_win.getLocalBounds().height / 2);
-    t_lose.setOrigin(t_lose.getLocalBounds().width / 2, t_lose.getLocalBounds().height / 2);
+    t_win.setGlobalOrigin(t_win.getGlobalBounds().width / 2, t_win.getGlobalBounds().height / 2);
+    t_lose.setGlobalOrigin(t_lose.getGlobalBounds().width / 2, t_lose.getGlobalBounds().height / 2);
 
     bar_win.loadFromFile("resources/graphics/mission/bar_win.png", q);
     bar_lose.loadFromFile("resources/graphics/mission/bar_lose.png", q);
@@ -510,7 +510,7 @@ void MissionController::DoMissionEnd()
                 }
             }
 
-            t_win.setOrigin(t_win.getLocalBounds().width / 2, t_win.getLocalBounds().height / 2);
+            t_win.setGlobalOrigin(t_win.getGlobalBounds().width / 2, t_win.getGlobalBounds().height / 2);
 
             if (barCurX > barDestX)
             {
@@ -535,10 +535,11 @@ void MissionController::DoMissionEnd()
                 textCurScale = textDestScale;
             }
 
-            t_win.setScale(textCurScale);
+            //TO-DO: PataText scale
+            //t_win.setScale(textCurScale);
 
             bar_win.setPosition(barCurX, 1080);
-            t_win.setPosition(textCurX, 1080);
+            t_win.setGlobalPosition(textCurX, 1080);
             //t_win_outline.setPosition(textCurX + 6, 1080 - 12);
 
             bar_win.draw();
@@ -592,7 +593,7 @@ void MissionController::DoMissionEnd()
                 fade_alpha = 255;
             }
 
-            t_lose.setOrigin(t_lose.getLocalBounds().width / 2, t_lose.getLocalBounds().height / 2);
+            t_lose.setGlobalOrigin(t_lose.getGlobalBounds().width / 2, t_lose.getGlobalBounds().height / 2);
 
             if (barCurX > barDestX)
             {
@@ -610,10 +611,11 @@ void MissionController::DoMissionEnd()
                 textCurX = textDestX;
             }
 
-            t_lose.setScale(textCurScale);
+            //TO-DO: PataText scale
+            //t_lose.setScale(textCurScale);
 
             bar_lose.setPosition(barCurX, 1080);
-            t_lose.setPosition(textCurX - 21, 1080 - 42);
+            t_lose.setGlobalPosition(textCurX - 21, 1080 - 42);
 
             bar_lose.draw();
             t_lose.draw();
@@ -955,22 +957,22 @@ void MissionController::DrawMissionUI()
         hpbar_fill.setScale(hp, 1);
         hpbar_fill.draw();
 
-        unit_count_shadow.setFont(CoreManager::getInstance().getStrRepo()->GetFontNameForLanguage(CoreManager::getInstance().getStrRepo()->GetCurrentLanguage()));
-        unit_count_shadow.disable_processing = true;
-        unit_count_shadow.setCharacterSize(30);
-        unit_count_shadow.setString(to_string(yaripons.size()));
-        unit_count_shadow.setColor(sf::Color::Black);
-        unit_count_shadow.setOrigin(0, unit_count_shadow.getLocalBounds().height/2);
-        unit_count_shadow.setPosition(460, thumbY + 75);
+        unit_count_shadow.reset();
+        unit_count_shadow.defaultStyleSetFont(CoreManager::getInstance().getStrRepo()->GetFontNameForLanguage(CoreManager::getInstance().getStrRepo()->GetCurrentLanguage()));
+        unit_count_shadow.defaultStyleSetCharSize(30);
+        unit_count_shadow.append(to_string(yaripons.size()));
+        unit_count_shadow.defaultStyleSetColor(sf::Color::Black);
+        unit_count_shadow.setGlobalOrigin(0, unit_count_shadow.getGlobalBounds().height / 2);
+        unit_count_shadow.setGlobalPosition(460, thumbY + 75);
         unit_count_shadow.draw();
 
-        unit_count.setFont(CoreManager::getInstance().getStrRepo()->GetFontNameForLanguage(CoreManager::getInstance().getStrRepo()->GetCurrentLanguage()));
-        unit_count.disable_processing = true;
-        unit_count.setCharacterSize(30);
-        unit_count.setString(to_string(yaripons.size()));
-        unit_count.setColor(sf::Color::White);
-        unit_count.setOrigin(0, unit_count.getLocalBounds().height/2);
-        unit_count.setPosition(452, thumbY + 65);
+        unit_count.reset();
+        unit_count.defaultStyleSetFont(CoreManager::getInstance().getStrRepo()->GetFontNameForLanguage(CoreManager::getInstance().getStrRepo()->GetCurrentLanguage()));
+        unit_count.defaultStyleSetCharSize(30);
+        unit_count.append(to_string(yaripons.size()));
+        unit_count.defaultStyleSetColor(sf::Color::White);
+        unit_count.setGlobalOrigin(0, unit_count.getGlobalBounds().height / 2);
+        unit_count.setGlobalPosition(452, thumbY + 65);
         unit_count.draw();
     }
 

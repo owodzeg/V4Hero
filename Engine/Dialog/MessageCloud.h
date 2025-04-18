@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../Graphics/SpriteWrapper.h"
-#include "../Graphics/PText.h"
+#include "../Graphics/PataText.h"
 #include "../Input/InputController.h"
 
 class MessageCloud
@@ -14,8 +14,8 @@ public:
     PSprite cross, cross_highlight, cross_arrow;
     sf::ConvexShape triangle;
 
-    PText dialogue_ptext; ///text that's going to appear on screen
-    PText visual_ptext; ///text that will help calculating dimensions
+    PataText dialogue_ptext; ///text that's going to appear on screen
+    PataText visual_ptext; ///text that will help calculating dimensions
 
     std::vector<sf::String> dialogue_strings;
 

@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../Graphics/PText.h"
+#include "../Graphics/PataText.h"
 
 class ControlTips
 {
@@ -13,7 +13,7 @@ public:
     float rr = 0; ///resRatio
 
     sf::RectangleShape box;
-    PText text;
+    PataText text;
 
     ControlTips();
     void create(float ysz, std::string font, int characterSize, std::string displayText, int qualitySetting, sf::Color color = sf::Color(222, 222, 222, 255));

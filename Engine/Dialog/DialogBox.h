@@ -2,7 +2,7 @@
 #define DIALOGBOX_H
 
 #include "../Graphics/PSprite.h"
-#include "../Graphics/PText.h"
+#include "../Graphics/PataText.h"
 #include "../Input/InputController.h"
 #include "RoundedRect.h"
 #include <SFML/Graphics.hpp>
@@ -17,8 +17,8 @@ public:
     RoundedRect rr_main;
     RoundedRect rr_shadow;
     sf::Font d_font;
-    PText t_dialogType, t_dialogText;
-    std::vector<PText> t_options;
+    PataText t_dialogType, t_dialogText;
+    std::vector<PataText> t_options;
     std::vector<sf::String> options_saved;
 
     sf::RectangleShape highlight;

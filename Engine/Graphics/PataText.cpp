@@ -114,8 +114,36 @@ std::vector<sf::String> PataText::extract_tokens(const sf::String& str)
 
 PataText::PataText()
 {
+    default_style.bold = false;
+    default_style.italic = false;
+    default_style.underline = false;
+    default_style.strike = false;
+    default_style.additional_kerning = 0;
+    default_style.x_offset = 0;
+    default_style.y_offset = 0;
+    default_style.c_red = 0;
+    default_style.c_green = 0;
+    default_style.c_blue = 0;
+    default_style.c_alpha = 255;
+    default_style.char_size = 72;
+    default_style.shake = 0;
+    default_style.hwave = 0;
+    default_style.vwave = 0;
+    default_style.ot_c_red = 0;
+    default_style.ot_c_green = 0;
+    default_style.ot_c_blue = 0;
+    default_style.ot_c_alpha = 255;
+    default_style.thickness = 0;
+
     styleResetAllStyles(m_marker);
     m_lines.push_back(std::vector<PTChar>());
+}
+
+PataText::~PataText()
+{
+    SPDLOG_DEBUG("Destroying PataText instance");
+    m_lines.clear();
+    SPDLOG_DEBUG("Destroying PataText instance.. completed");
 }
 
 void PataText::applyFadeIn()
@@ -282,30 +310,44 @@ void PataText::styleSetTimeout(PTStyle& style, double newMsTimeout)
 
 void PataText::styleResetAllStyles(PTStyle& style)
 {
-    style.bold = false;
-    style.italic = false;
-    style.underline = false;
-    style.strike = false;
-    style.additional_kerning = 0;
-    style.x_offset = 0;
-    style.y_offset = 0;
-    style.c_red = 0;
-    style.c_green = 0;
-    style.c_blue = 0;
-    style.c_alpha = 255;
-    style.char_size = 72;
-    style.shake = 0;
-    style.hwave = 0;
-    style.vwave = 0;
-    style.ot_c_red = 0;
-    style.ot_c_green = 0;
-    style.ot_c_blue = 0;
-    style.ot_c_alpha = 255;
-    style.thickness = 0;
+    PTStyle def = default_style;
+    style = def;
 
     auto strRepo = CoreManager::getInstance().getStrRepo();
     style.fontStr = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
     style.font = strRepo->fontStore[style.fontStr];
+}
+
+void PataText::defaultStyleSetColor(sf::Color newColor)
+{
+    default_style.c_red = newColor.r;
+    default_style.c_green = newColor.g;
+    default_style.c_blue = newColor.b;
+    default_style.c_alpha = newColor.a;
+}
+
+void PataText::defaultStyleSetCharSize(double newCharSize)
+{
+    default_style.char_size = newCharSize;
+}
+
+void PataText::defaultStyleSetFont(const std::string& fontStr)
+{
+    default_style.fontStr = fontStr;
+    default_style.font = CoreManager::getInstance().getStrRepo()->fontStore[fontStr];
+}
+
+void PataText::defaultStyleSetOutlineColor(sf::Color newColor)
+{
+    default_style.ot_c_red = newColor.r;
+    default_style.ot_c_green = newColor.g;
+    default_style.ot_c_blue = newColor.b;
+    default_style.ot_c_alpha = newColor.a;
+}
+
+void PataText::defaultStyleSetOutlineThickness(double newThickness)
+{
+    default_style.thickness = newThickness;
 }
 
 void PataText::append(std::string input_text)
@@ -382,6 +424,8 @@ void PataText::reset()
 {
     m_lines.clear();
     styleResetAllStyles(m_marker);
+    max_width = 0;
+    max_height = 0;
     m_lines.push_back(std::vector<PTChar>());
 }
 

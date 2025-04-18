@@ -359,6 +359,11 @@ PatapolisMenu::PatapolisMenu()
         city_loop.setLoop(true);
         city_loop.setVolume(volume);
 
+        t_title.defaultStyleSetFont(font);
+        t_title.defaultStyleSetCharSize(114);
+        t_title.defaultStyleSetOutlineThickness(6);
+        t_title.defaultStyleSetOutlineColor(sf::Color::Black);
+        t_title.defaultStyleSetColor(sf::Color::White);
 
         SetTitle(location);
         camPos = locations[location];
@@ -673,23 +678,25 @@ void PatapolisMenu::SetTitle(int menuPosition)
 
     SPDLOG_TRACE("draw_ID: {}", draw_ID_log);
 
+    t_title.reset();
+
     switch (menuPosition)
     {
         case Buildings::MARKET:
-            t_title.setStringKey("patapolis_trader");
+            t_title.append(Func::GetStrFromKey("patapolis_trader"));
             break;
         case Buildings::FORGE:
-            t_title.setStringKey("patapolis_blacksmith");
+            t_title.append(Func::GetStrFromKey("patapolis_blacksmith"));
             break;
         case Buildings::BARRACKS:
-            t_title.setStringKey("patapolis_barracks");
+            t_title.append(Func::GetStrFromKey("patapolis_barracks"));
             a += "X: Interact      ";
             break;
         case Buildings::FESTIVAL:
-            t_title.setStringKey("patapolis_festival");
+            t_title.append(Func::GetStrFromKey("patapolis_festival"));
             break;
         case Buildings::SEN: {
-            t_title.setStringKey("patapolis_sen");
+            t_title.append(Func::GetStrFromKey("patapolis_sen"));
             a += "X: Interact      ";
 
             ///activate her dialogue
@@ -757,21 +764,21 @@ void PatapolisMenu::SetTitle(int menuPosition)
             break;
         }
         case Buildings::ALTAR:
-            t_title.setStringKey("patapolis_altar");
+            t_title.append(Func::GetStrFromKey("patapolis_altar"));
             a += "X: Interact      ";
             break;
         case Buildings::OBELISK:
-            t_title.setStringKey("patapolis_obelisk");
+            t_title.append(Func::GetStrFromKey("patapolis_obelisk"));
             a += "X: Interact      ";
             break;
         case Buildings::MATER:
-            t_title.setStringKey("patapolis_tree");
+            t_title.append(Func::GetStrFromKey("patapolis_tree"));
             break;
         case Buildings::PARAGET:
-            t_title.setStringKey("patapolis_paraget");
+            t_title.append(Func::GetStrFromKey("patapolis_paraget"));
             break;
         case Buildings::WAKAPON: {
-            t_title.setStringKey("patapolis_wakapon");
+            t_title.append(Func::GetStrFromKey("patapolis_wakapon"));
 
             a += "X: Interact      ";
 
@@ -837,10 +844,10 @@ void PatapolisMenu::SetTitle(int menuPosition)
             break;
         }
         case Buildings::EGG:
-            t_title.setStringKey("patapolis_egg");
+            t_title.append(Func::GetStrFromKey("patapolis_egg"));
             break;
         default:
-            t_title.setStringKey("patapolis");
+            t_title.append(Func::GetStrFromKey("patapolis"));
             break;
     }
 
@@ -1493,12 +1500,8 @@ void PatapolisMenu::Update()
                 city_loop.play();
             }
 
-            t_title.setFont(font);
-            t_title.setCharacterSize(38);
-            t_title.setOutlineThickness(2);
-            t_title.setOutlineColor(sf::Color::Black);
-            t_title.setOrigin(t_title.getLocalBounds().width / 2, t_title.getLocalBounds().height / 2);
-            t_title.setPosition(640*3, 80*3);
+            t_title.setGlobalOrigin(t_title.getGlobalBounds().width / 2, t_title.getGlobalBounds().height / 2);
+            t_title.setGlobalPosition(640*3, 80*3);
             t_title.draw();
 
             vector<int> m_rm;

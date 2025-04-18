@@ -15,10 +15,11 @@ void ControlTips::create(float ysz, std::string font, int characterSize, std::st
 {
     ySize = ysz;
 
-    text.setFont(font);
-    text.setCharacterSize(characterSize);
-    text.setColor(color);
-    text.setString(displayText);
+    //TO-DO: PataText rework
+    //text.defaultStyleSetFont(font);
+    //text.defaultStyleSetCharSize(characterSize);
+    //text.setColor(color);
+    //text.setString(displayText);
 }
 
 void ControlTips::draw()
@@ -30,8 +31,9 @@ void ControlTips::draw()
     box.setPosition(x, y * (window->getSize().x / float(1280)));
 
     window->draw(box);
-
-    text.setOrigin(0, text.getLocalBounds().height / 2);
-    text.setPosition(x + 16, y + (ySize / 2));
-    text.draw();
+    
+    //TO-DO: PataText rework
+    //text.setOrigin(0, text.getLocalBounds().height / 2);
+    //text.setPosition(x + 16, y + (ySize / 2));
+    //text.draw();
 }

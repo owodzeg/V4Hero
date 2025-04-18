@@ -31,7 +31,7 @@ public:
         sf::RectangleShape r_outer;
         sf::RectangleShape r_inner;
         sf::RectangleShape r_highlight;
-        PText num, num_shadow;
+        PataText num, num_shadow;
         PSprite icon;
     };
 
@@ -39,9 +39,9 @@ public:
     RoundedRect rr_title, rr_title_sh;
     RoundedRect rr_desc, rr_desc_sh;
 
-    PText altar_title;
-    PText altar_kaching;
-    PText altar_item_title, altar_item_category, altar_item_desc;
+    PataText altar_title;
+    PataText altar_kaching;
+    PataText altar_item_title, altar_item_category, altar_item_desc;
 
     int grid_sel_x = 0, grid_sel_y = 0, grid_offset_y = 0;
     sf::RectangleShape r_sel;

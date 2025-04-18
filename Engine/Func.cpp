@@ -23,7 +23,6 @@ namespace fs = std::filesystem;
 
 std::unordered_map<std::string, unsigned int> Func::checksums;
 std::mutex Func::func_mutex;
-PText Func::tmp_ptext;
 
 std::vector<std::string> Func::Split(const std::string& s, char delim)
 {
@@ -43,6 +42,13 @@ sf::String Func::ConvertToUtf8String(const std::string& s)
 {
     return sf::String::fromUtf8(s.begin(), s.end());
 }
+
+sf::String Func::GetStrFromKey(const std::string& key)
+{
+    auto strRepo = CoreManager::getInstance().getStrRepo();
+    return Func::ConvertToUtf8String(strRepo->GetString(key));
+}
+
 std::string Func::trim(const std::string& str, const std::string& whitespace = " \t")
 {
     const auto strBegin = str.find_first_not_of(whitespace);
@@ -57,7 +63,11 @@ std::string Func::trim(const std::string& str, const std::string& whitespace = "
 
 std::string Func::wrap_text(std::string input, int box_width, std::string font, int character_size)
 {
+    //TO-DO: replacement because wrap_text has issues atm
+    return input;
+
     StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
+    PataText tmp_ptext;
 
     //cout << "wrap_text(" << input << ", " << box_width << ")" << endl;
     input = strRepo->GetString(input);
@@ -103,10 +113,10 @@ std::string Func::wrap_text(std::string input, int box_width, std::string font, 
             std::string prefull = prevtemp + " " + words[i];
 
             //TODO: check if it wraps text correctly
-            tmp_ptext.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
-            tmp_ptext.setCharacterSize(character_size);
-            tmp_ptext.setString(prefull);
-            tmp_ptext.draw(true);
+            //tmp_ptext.defaultStyleSetFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
+            //tmp_ptext.defaultStyleSetCharSize(character_size);
+            tmp_ptext.append(prefull);
+            tmp_ptext.draw();
 
             if (tmp_ptext.getGlobalBounds().width >= box_width)
             {
@@ -130,14 +140,14 @@ std::string Func::wrap_text(std::string input, int box_width, std::string font, 
         temp += words[i];
         wordcount++;
 
-        tmp_ptext.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
-        tmp_ptext.setCharacterSize(character_size);
-        tmp_ptext.setString(temp);
-        tmp_ptext.draw(true);
+        //tmp_ptext.defaultStyleSetFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
+        //tmp_ptext.defaultStyleSetCharSize(character_size);
+        tmp_ptext.append(temp);
+        tmp_ptext.draw();
 
         //cout << "Testing string \"" << temp << "\", " << wordcount << " words, size: " << t_temp.getGlobalBounds().width << endl;
 
-        if (tmp_ptext.getLocalBounds().width >= box_width)
+        if (tmp_ptext.getGlobalBounds().width >= box_width)
         {
             if (wordcount > 1)
             {
@@ -160,12 +170,12 @@ std::string Func::wrap_text(std::string input, int box_width, std::string font, 
                 {
                     ltemp += temp[e];
 
-                    tmp_ptext.setFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
-                    tmp_ptext.setCharacterSize(character_size);
-                    tmp_ptext.setString(ltemp);
-                    tmp_ptext.draw(true);
+                    //tmp_ptext.defaultStyleSetFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
+                    //tmp_ptext.defaultStyleSetCharSize(character_size);
+                    tmp_ptext.append(ltemp);
+                    tmp_ptext.draw();
 
-                    if (tmp_ptext.getLocalBounds().width >= box_width - 30)
+                    if (tmp_ptext.getGlobalBounds().width >= box_width - 30)
                     {
                         full += ltemp;
                         full += "-";

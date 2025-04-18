@@ -59,25 +59,26 @@ LoadingTip::LoadingTip(int mode)
         sf::String str_tipText = Func::ConvertToUtf8String(strRepo->GetString(wdesc_key));
 
 
-        t_tipTitle.setFont(font);
-        t_tipTitle.setCharacterSize(48);
-        t_tipTitle.setColor(sf::Color::White);
-        t_tipTitle.setStringKey(title_key);
+        //t_tipTitle.defaultStyleSetFont(font);
+        //t_tipTitle.defaultStyleSetCharSize(48);
+        //t_tipTitle.setColor(sf::Color::White);
+        t_tipTitle.append(Func::GetStrFromKey(title_key));
 
-        t_tipText.setFont(font);
-        t_tipText.setCharacterSize(32);
-        t_tipText.setColor(sf::Color::White);
-        t_tipText.setStringKey(desc_key);
+        //t_tipText.defaultStyleSetFont(font);
+        //t_tipText.defaultStyleSetCharSize(32);
+        //t_tipText.setColor(sf::Color::White);
+        t_tipText.append(Func::GetStrFromKey(desc_key));
 
-        t_pressAnyKey.setFont(font);
-        t_pressAnyKey.setCharacterSize(48);
-        t_pressAnyKey.setColor(sf::Color::White);
-        t_pressAnyKey.setStringKey("tips_anykey");
+        //t_pressAnyKey.defaultStyleSetFont(font);
+        //t_pressAnyKey.defaultStyleSetCharSize(48);
+        //t_pressAnyKey.setColor(sf::Color::White);
+        t_pressAnyKey.append(Func::GetStrFromKey("tips_anykey"));
 
-        t_nowLoading.setFont(font);
-        t_nowLoading.setCharacterSize(48);
-        t_nowLoading.setColor(sf::Color::White);
-        t_nowLoading.setStringKey("tips_loading");
+        //t_nowLoading.defaultStyleSetFont(font);
+        //t_nowLoading.defaultStyleSetCharSize(48);
+        //t_nowLoading.setColor(sf::Color::White);
+        t_nowLoading.append(Func::GetStrFromKey("tips_loading"));
+
     } else if (tipMode == 1)
     {
         float resRatioX = window->getSize().x / float(3840);
@@ -99,10 +100,11 @@ LoadingTip::LoadingTip(int mode)
         box_1.setFillColor(sf::Color(0, 0, 0, 192));
         box_2.setFillColor(sf::Color(0, 0, 0, 192));
 
-        t_nowLoading.setFont(font);
-        t_nowLoading.setCharacterSize(48);
-        t_nowLoading.setColor(sf::Color::White);
-        t_nowLoading.setStringKey("tips_loading");
+        //t_nowLoading.defaultStyleSetFont(font);
+        //t_nowLoading.defaultStyleSetCharSize(48);
+        //t_nowLoading.setColor(sf::Color::White);
+        //t_nowLoading.append(Func::GetStrFromKey("tips_loading");
+        t_nowLoading.append(Func::GetStrFromKey("tips_loading"));
     }
 }
 
@@ -128,10 +130,10 @@ void LoadingTip::Draw()
         s_icon.setPosition(3120, 1140);
         s_icon.draw();
 
-        t_tipTitle.setPosition(72, 96);
+        t_tipTitle.setGlobalPosition(72, 96);
         t_tipTitle.draw();
 
-        t_tipText.setPosition(72, 390);
+        t_tipText.setGlobalPosition(72, 390);
         t_tipText.draw();
 
         // drawing some text
@@ -160,13 +162,13 @@ void LoadingTip::Draw()
             alpha = std::max(0, std::min(255, static_cast<int>(alpha)));
 
 
-            t_pressAnyKey.setColor(sf::Color(255, 255, 255, alpha));
+            //t_pressAnyKey.setColor(sf::Color(255, 255, 255, alpha));
 
 
 
 
-            t_pressAnyKey.setOrigin(t_pressAnyKey.getLocalBounds().width, t_pressAnyKey.getLocalBounds().height / 2);
-            t_pressAnyKey.setPosition(3744, 2037);
+            t_pressAnyKey.setGlobalOrigin(t_pressAnyKey.getGlobalBounds().width, t_pressAnyKey.getGlobalBounds().height / 2);
+            t_pressAnyKey.setGlobalPosition(3744, 2037);
             t_pressAnyKey.draw();
 
             if (inputCtrl->isAnyKeyPressed())
@@ -176,18 +178,18 @@ void LoadingTip::Draw()
             }
         } else
         {
-            t_nowLoading.setOrigin(t_nowLoading.getLocalBounds().width, t_nowLoading.getLocalBounds().height / 2);
-            t_nowLoading.setPosition(3624, 2052);
+            t_nowLoading.setGlobalOrigin(t_nowLoading.getGlobalBounds().width, t_nowLoading.getGlobalBounds().height / 2);
+            t_nowLoading.setGlobalPosition(3624, 2052);
             t_nowLoading.draw();
 
-            loading_head.setPosition(t_nowLoading.getPosition().x - t_nowLoading.getLocalBounds().width - 138, t_nowLoading.getPosition().y - 84);
-            loading_eye1.setPosition(t_nowLoading.getPosition().x - t_nowLoading.getLocalBounds().width - 81, t_nowLoading.getPosition().y + 45);
+            loading_head.setPosition(t_nowLoading.getGlobalPosition().x - t_nowLoading.getGlobalBounds().width - 138, t_nowLoading.getGlobalPosition().y - 84);
+            loading_eye1.setPosition(t_nowLoading.getGlobalPosition().x - t_nowLoading.getGlobalBounds().width - 81, t_nowLoading.getGlobalPosition().y + 45);
             loading_eye1.setRotation(angle_1);
             loading_head.draw();
             loading_eye1.draw();
 
-            loading_head.setPosition(t_nowLoading.getPosition().x + 36, t_nowLoading.getPosition().y - 74);
-            loading_eye2.setPosition(t_nowLoading.getPosition().x + 93, t_nowLoading.getPosition().y + 45);
+            loading_head.setPosition(t_nowLoading.getGlobalPosition().x + 36, t_nowLoading.getGlobalPosition().y - 74);
+            loading_eye2.setPosition(t_nowLoading.getGlobalPosition().x + 93, t_nowLoading.getGlobalPosition().y + 45);
             loading_eye2.setRotation(angle_2);
             loading_head.draw();
             loading_eye2.draw();
