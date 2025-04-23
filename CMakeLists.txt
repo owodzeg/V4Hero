@@ -26,7 +26,7 @@ find_package(DiscordSDK 2.5.6 COMPONENTS x86_64 REQUIRED)
 include(FetchContent)
 
 if(MSVC)
-    find_package(SFML REQUIRED COMPONENTS graphics audio)
+    find_package(SFML REQUIRED COMPONENTS Graphics Audio)
     find_package(nlohmann_json REQUIRED)
 else()
     FetchContent_Declare(
@@ -107,6 +107,7 @@ set(ENGINE_FILES
         Engine/TextureManager.cpp
         Engine/CoreManager.cpp
         Engine/StateManager.cpp
+        Engine/SoundManager.cpp
         Engine/Mission/Background.cpp
         Engine/Mission/Camera.cpp
         Engine/Mission/MissionController.cpp
@@ -214,16 +215,16 @@ target_include_directories(tests PRIVATE Engine/)
 target_include_directories(tests PRIVATE DiscordSDK)
 
 target_link_libraries(V4Hero PRIVATE
-        sfml-graphics
-        sfml-audio
+        SFML::Graphics
+        SFML::Audio
         DiscordSDK
         nlohmann_json::nlohmann_json
         spdlog::spdlog
         libzippp)
 
 target_link_libraries(tests PRIVATE
-        sfml-graphics
-        sfml-audio
+        SFML::Graphics
+        SFML::Audio
         DiscordSDK
         nlohmann_json::nlohmann_json
         spdlog::spdlog
