@@ -8,7 +8,7 @@
 class PSprite
 {
 public:
-    sf::Sprite s;
+    sf::Sprite* s = nullptr;
     std::string texturePath;
     int qualitySetting = -1, oldQualitySetting = -999;
     int resSetting = 3, oldResSetting = -999;
@@ -21,6 +21,7 @@ public:
     float angle = 0;
     bool exported = false;
     PSprite();
+    ~PSprite();
     void loadFromFile(std::string file, int q, bool downscale = true);
 
     template <typename T>

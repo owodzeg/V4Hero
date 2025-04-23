@@ -15,7 +15,7 @@ public:
     int quality = 0;
 
     sf::SoundBuffer sb_outro, sb_credits;
-    sf::Sound s_outro, s_credits;
+    sf::Sound *s_outro, *s_credits;
 
     sf::RectangleShape r_black;
 
@@ -35,6 +35,7 @@ public:
     float flash_x = 0;
 
     Credits();
+    ~Credits();
     void addHeaderText(sf::String text);
     void addRegularText(sf::String text, int font = 0);
     void Initialise(Config* thisConfig, V4Core* parent);

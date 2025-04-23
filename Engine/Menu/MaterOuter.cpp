@@ -136,36 +136,11 @@ void MaterOuterMenu::showMater()
     }
 }
 
-void MaterOuterMenu::eventFired(sf::Event event)
+void MaterOuterMenu::eventFired(const std::optional<sf::Event>& event)
 {
-    if (is_active)
-    {
-        if (event.type == sf::Event::KeyPressed)
-        {
-            // do something here;
-        } else if (event.type == sf::Event::MouseButtonReleased) {
-            if (event.mouseButton.button == sf::Mouse::Left) 
-            {
-                SPDLOG_DEBUG("Mouse clicked at {},{}", mouseX, mouseY);
-                // need to convert mouse pos to standard coords.
-                sf::Vector2i mousepos = sf::Vector2i(mouseX, mouseY);
-                for (auto i = 0; i < squads.size(); i++)
-                {
-                    SquadBox& squad = squads[i];
-                    sf::IntRect rect(680, squad.y-50, 120, 100);
-                    if (rect.contains(mousepos)) {
-                        cursquad = i;
-                    }
-                }
-            }
-        } 
-        else if (event.type == sf::Event::MouseMoved)
-        {
-            mouseX = event.mouseMove.x;
-            mouseY = event.mouseMove.y;
-        }
-    }
+
 }
+
 void MaterOuterMenu::DrawAsleepSquad(MaterOuterMenu::SquadBox& squad, int squad_alpha, sf::RenderWindow* window)
 {
     PSprite& bg = ResourceManager::getInstance().getSprite("resources/graphics/ui/mater/matersquad_bg_asleep.png");
@@ -175,24 +150,24 @@ void MaterOuterMenu::DrawAsleepSquad(MaterOuterMenu::SquadBox& squad, int squad_
     
     PSprite& icon = ResourceManager::getInstance().getSprite("resources/graphics/"+squad.squad_icon+".png");
 
-    bg.setOrigin(bg.getLocalBounds().width / 2, bg.getLocalBounds().height / 2);
+    bg.setOrigin(bg.getLocalBounds().size.x / 2, bg.getLocalBounds().size.y / 2);
     bg.setPosition(990, squad.y);
     bg.setColor(sf::Color(255, 255, 255, squad_alpha));
     bg.draw();
 
-    icon.setOrigin(icon.getLocalBounds().width / 2, icon.getLocalBounds().height / 2);
+    icon.setOrigin(icon.getLocalBounds().size.x / 2, icon.getLocalBounds().size.y / 2);
     icon.setPosition(745, squad.y-32);
     icon.setColor(sf::Color(255, 255, 255, squad_alpha));
     icon.draw();
 
     squad_title.append(squad.title);
-    squad_title.setGlobalOrigin(squad_title.getGlobalBounds().width / 2, squad_title.getGlobalBounds().height / 2);
+    squad_title.setGlobalOrigin(squad_title.getGlobalBounds().size.x / 2, squad_title.getGlobalBounds().size.y / 2);
     squad_title.setGlobalPosition(875, squad.y - 65);
     squad_title.defaultStyleSetColor(sf::Color(0, 0, 0, squad_alpha));
     squad_title.draw();
 
-    pon.setOrigin(pon.getLocalBounds().width / 2, pon.getLocalBounds().height / 2);
-    slot.setOrigin(pon.getLocalBounds().width / 2, pon.getLocalBounds().height / 2);
+    pon.setOrigin(pon.getLocalBounds().size.x / 2, pon.getLocalBounds().size.y / 2);
+    slot.setOrigin(pon.getLocalBounds().size.x / 2, pon.getLocalBounds().size.y / 2);
 
     pon.setColor(sf::Color(255, 255, 255, squad_alpha));
     slot.setColor(sf::Color(255, 255, 255, squad_alpha));
@@ -242,13 +217,13 @@ void MaterOuterMenu::Update()
         ctrlTips.y = (720 - ctrlTips.ySize);
         ctrlTips.draw();
 
-        mater_main.setOrigin(mater_main.getLocalBounds().width / 2, mater_main.getLocalBounds().height / 2);
+        mater_main.setOrigin(mater_main.getLocalBounds().size.x / 2, mater_main.getLocalBounds().size.y / 2);
         mater_main.setPosition(1050, 322);
 
         mater_main.draw();
 
-        mater_title.setGlobalOrigin(mater_title.getGlobalBounds().width / 2, mater_title.getGlobalBounds().height / 2);
-        altar_kaching.setGlobalOrigin(altar_kaching.getGlobalBounds().width / 2, altar_kaching.getGlobalBounds().height / 2);
+        mater_title.setGlobalOrigin(mater_title.getGlobalBounds().size.x / 2, mater_title.getGlobalBounds().size.y / 2);
+        altar_kaching.setGlobalOrigin(altar_kaching.getGlobalBounds().size.x / 2, altar_kaching.getGlobalBounds().size.y / 2);
 
         mater_title.setGlobalPosition(1050, 15);
         altar_kaching.setGlobalPosition(1050, 45);
@@ -306,23 +281,23 @@ void MaterOuterMenu::Update()
         
         PSprite& icon = ResourceManager::getInstance().getSprite("resources/graphics/"+squad.squad_icon+".png");
 
-        bg.setOrigin(bg.getLocalBounds().width / 2, bg.getLocalBounds().height / 2);
+        bg.setOrigin(bg.getLocalBounds().size.x / 2, bg.getLocalBounds().size.y / 2);
         bg.setPosition(990, squad.y);
         bg.draw();
 
-        icon.setOrigin(icon.getLocalBounds().width / 2, icon.getLocalBounds().height / 2);
+        icon.setOrigin(icon.getLocalBounds().size.x / 2, icon.getLocalBounds().size.y / 2);
         icon.setPosition(745, squad.y - 32);
         icon.draw();
 
         squad_title.append(squad.title);
-        squad_title.setGlobalOrigin(squad_title.getGlobalBounds().width / 2, squad_title.getGlobalBounds().height / 2);
+        squad_title.setGlobalOrigin(squad_title.getGlobalBounds().size.x / 2, squad_title.getGlobalBounds().size.y / 2);
         squad_title.setGlobalPosition(875, squad.y - 65);
         squad_title.defaultStyleSetColor(sf::Color(0, 0, 0, 255));
         squad_title.draw();
         GetSquadsCentered();
 
-        pon.setOrigin(pon.getLocalBounds().width / 2, pon.getLocalBounds().height / 2);
-        slot.setOrigin(slot.getLocalBounds().width / 2, slot.getLocalBounds().height / 2);
+        pon.setOrigin(pon.getLocalBounds().size.x / 2, pon.getLocalBounds().size.y / 2);
+        slot.setOrigin(slot.getLocalBounds().size.x / 2, slot.getLocalBounds().size.y / 2);
         for (int j = 0; j < squad.maxSize; j++)
         {
             if (j < squad.amount)
@@ -335,12 +310,12 @@ void MaterOuterMenu::Update()
                 slot.draw();
             }
         }
-        mater_selector.setOrigin(mater_selector.getLocalBounds().width / 2, mater_selector.getLocalBounds().height / 2);
+        mater_selector.setOrigin(mater_selector.getLocalBounds().size.x / 2, mater_selector.getLocalBounds().size.y / 2);
         mater_selector.setPosition(850 + squadpos * 73, squad.y + 15);
         mater_selector.draw();
 
-        up_arrow_prompt.setOrigin(up_arrow_prompt.getLocalBounds().width / 2, up_arrow_prompt.getLocalBounds().height / 2);
-        down_arrow_prompt.setOrigin(down_arrow_prompt.getLocalBounds().width / 2, down_arrow_prompt.getLocalBounds().height / 2);
+        up_arrow_prompt.setOrigin(up_arrow_prompt.getLocalBounds().size.x / 2, up_arrow_prompt.getLocalBounds().size.y / 2);
+        down_arrow_prompt.setOrigin(down_arrow_prompt.getLocalBounds().size.x / 2, down_arrow_prompt.getLocalBounds().size.y / 2);
 
         up_arrow_prompt.setPosition(1050, 75);
         down_arrow_prompt.setPosition(1050, 655);

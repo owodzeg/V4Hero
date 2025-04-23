@@ -24,10 +24,8 @@ void ErrorChamber::Initialize()
     db.id = 0;
     dialogboxes.push_back(db);
 
-    b_anvil.loadFromFile("resources/sfx/drums/anvil.ogg");
-    s_anvil.setBuffer(b_anvil);
-    s_anvil.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("bgmVolume")) / 100.f));
-    s_anvil.play();
+    SoundManager::getInstance().loadBufferFromFile("resources/sfx/drums/anvil.ogg");
+    SoundManager::getInstance().playSound("resources/sfx/drums/anvil.ogg", SoundManager::SoundTag::INTERFACE);
 }
 
 void ErrorChamber::Update()

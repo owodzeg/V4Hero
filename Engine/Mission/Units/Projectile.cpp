@@ -83,7 +83,7 @@ void Projectile::Draw()
     float rotationInRadians = rotationInDegrees * (M_PI / 180.0f);
 
     // Half of the spear length
-    float halfLength = sprite.getLocalBounds().width / 2.0f;
+    float halfLength = sprite.getLocalBounds().size.x / 2.0f;
 
     // Calculate the tip position using trigonometry
     tipX = origin.x + halfLength * std::cos(rotationInRadians);

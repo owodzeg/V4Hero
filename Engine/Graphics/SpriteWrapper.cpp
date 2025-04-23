@@ -88,7 +88,7 @@ sf::FloatRect SpriteWrapper::getLocalBounds()
     sf::Vector2f ratio(windowSize.x / x[quality], windowSize.y / y[quality]);
     sf::Vector2f r((fabs(scale.x) * ratio.x), (fabs(scale.y) * ratio.y));
 
-    return sf::FloatRect(l_bounds.top * r.x, l_bounds.left * r.y, l_bounds.width * r.x, l_bounds.height * r.y); */
+    return sf::FloatRect(l_bounds.position.y * r.x, l_bounds.position.x * r.y, l_bounds.width * r.x, l_bounds.height * r.y); */
 
     // lol 
     return l_bounds;
@@ -122,7 +122,7 @@ sf::FloatRect SpriteWrapper::getTransformedBounds()
     sf::Vector2f ratio(windowSize.x / x[quality], windowSize.y / y[quality]);
     sf::Vector2f r((fabs(scale.x) * ratio.x / resRatio.x), (fabs(scale.y) * ratio.y / resRatio.y));
 
-    return sf::FloatRect(l_bounds.top * r.x, l_bounds.left * r.y, l_bounds.width * r.x, l_bounds.height * r.y);
+    return sf::FloatRect(sf::Vector2f(l_bounds.position.x * r.x, l_bounds.position.y * r.y), sf::Vector2f(l_bounds.size.x * r.x, l_bounds.size.y * r.y));
 }
 
 void SpriteWrapper::setColor(sf::Color c)

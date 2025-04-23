@@ -30,7 +30,7 @@ void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bo
     speedable = true; //unskippable dialogues are dumb, let the player speed up anything
 
     cloud.load("resources/graphics/ui/dialog/message.png");
-    cloud.setOrigin(cloud.getLocalBounds().width, cloud.getLocalBounds().height);
+    cloud.setOrigin(cloud.getLocalBounds().size.x, cloud.getLocalBounds().size.y);
     cloud.setColor(color);
 
     cur_color = color;
@@ -113,8 +113,8 @@ void MessageCloud::Show()
         dialogue_ptext.draw();
         visual_ptext.draw();
 
-        dest_xsize = visual_ptext.getLocalBounds().width + 120 + (visual_ptext.getLocalBounds().width / 30);
-        dest_ysize = visual_ptext.getLocalBounds().height + 150 + (visual_ptext.getLocalBounds().height / 4.5);
+        dest_xsize = visual_ptext.getLocalBounds().size.x + 120 + (visual_ptext.getLocalBounds().size.x / 30);
+        dest_ysize = visual_ptext.getLocalBounds().size.y + 150 + (visual_ptext.getLocalBounds().size.y / 4.5);
         */
 
         text_timeout.restart();
@@ -156,8 +156,8 @@ void MessageCloud::NextDialog()
         dialogue_ptext.draw();
         visual_ptext.draw();
 
-        dest_xsize = visual_ptext.getGlobalBounds().width + 120 + (visual_ptext.getGlobalBounds().width / 30);
-        dest_ysize = visual_ptext.getGlobalBounds().height + 150 + (visual_ptext.getGlobalBounds().height / 4.5);
+        dest_xsize = visual_ptext.getGlobalBounds().size.x + 120 + (visual_ptext.getGlobalBounds().size.x / 30);
+        dest_ysize = visual_ptext.getGlobalBounds().size.y + 150 + (visual_ptext.getGlobalBounds().size.y / 4.5);
 
         text_timeout.restart();
     } else
@@ -288,10 +288,10 @@ void MessageCloud::Draw()
         {
             //TO-DO: PataText rework
             //dialogue_ptext.speedup = speedup;
-            //dialogue_ptext.setPosition(x - visual_ptext.getLocalBounds().width / 2, y - 12 - visual_ptext.getLocalBounds().height / 2);
+            //dialogue_ptext.setPosition(x - visual_ptext.getLocalBounds().size.x / 2, y - 12 - visual_ptext.getLocalBounds().size.y / 2);
             dialogue_ptext.draw();
 
-            //loaded_text[cur_dialog].setPosition(x - ptext[cur_dialog].getLocalBounds().width / 2, y - 4 - ptext[cur_dialog].getLocalBounds().height / 2);
+            //loaded_text[cur_dialog].setPosition(x - ptext[cur_dialog].getLocalBounds().size.x / 2, y - 4 - ptext[cur_dialog].getLocalBounds().size.y / 2);
             //showtext[cur_dialog].setString(viewed_text[cur_dialog]);
             //loaded_text[cur_dialog].draw(window);
 
@@ -311,9 +311,9 @@ void MessageCloud::Draw()
                     arrow_timeout.restart();
                 }
 
-                cross.setOrigin(cross.getLocalBounds().width / 2, cross.getLocalBounds().height / 2);
-                cross_highlight.setOrigin(cross_highlight.getLocalBounds().width / 2, cross_highlight.getLocalBounds().height / 2);
-                cross_arrow.setOrigin(cross_highlight.getLocalBounds().width / 2, cross_highlight.getLocalBounds().height);
+                cross.setOrigin(cross.getLocalBounds().size.x / 2, cross.getLocalBounds().size.y / 2);
+                cross_highlight.setOrigin(cross_highlight.getLocalBounds().size.x / 2, cross_highlight.getLocalBounds().size.y / 2);
+                cross_arrow.setOrigin(cross_highlight.getLocalBounds().size.x / 2, cross_highlight.getLocalBounds().size.y);
 
                 float cross_x = x + xsize / 2 - 24;
                 float cross_y = y + ysize / 2 - 60;

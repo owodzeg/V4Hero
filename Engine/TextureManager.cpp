@@ -150,10 +150,10 @@ sf::Texture& TextureManager::scaleTexture(const std::string& path, int ratio, bo
         int nheight = ceil(originalHeight / float(ratio));
 
         // Get pixel data from source image
-        const sf::Uint8* sourcePixels = source.getPixelsPtr();
+        const uint8_t* sourcePixels = source.getPixelsPtr();
 
         // Prepare a destination buffer
-        std::vector<sf::Uint8> destPixels(nwidth * nheight * 4); // RGBA = 4 channels
+        std::vector<uint8_t> destPixels(nwidth * nheight * 4); // RGBA = 4 channels
 
         // Use stb_image_resize to scale the texture
         stbir_resize_uint8_srgb(sourcePixels, originalWidth, originalHeight, 0,
@@ -161,7 +161,7 @@ sf::Texture& TextureManager::scaleTexture(const std::string& path, int ratio, bo
 
         // Create a new SFML Image from the resized pixels
         sf::Image dest;
-        dest.create(nwidth, nheight, destPixels.data());
+        dest.resize(sf::Vector2u(nwidth, nheight), destPixels.data());
 
         loadedImages[path] = dest;
         loadTextureFromImage(path);

@@ -17,10 +17,10 @@ public:
     sf::RectangleShape mm_smallerBox;
     sf::RectangleShape mm_titleBox;
 
-    sf::Text t_title;
+    PataText t_title;
 
-    sf::Text t_disclaimer;
-    sf::Text t_pressToContinue;
+    PataText t_disclaimer;
+    PataText t_pressToContinue;
     bool madeChanges;
 
     PSprite bg, sword;

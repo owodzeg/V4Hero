@@ -30,11 +30,11 @@ LoadingTip::LoadingTip(int mode)
         loading_eye1.load("resources/graphics/ui/tips/loading_eye.png");
         loading_eye2.load("resources/graphics/ui/tips/loading_eye.png");
 
-        loading_eye1.setOrigin(loading_eye1.getGlobalBounds().width * 0.85, loading_eye1.getGlobalBounds().height * 0.85);
-        loading_eye2.setOrigin(loading_eye2.getGlobalBounds().width * 0.85, loading_eye2.getGlobalBounds().height * 0.85);
+        loading_eye1.setOrigin(loading_eye1.getGlobalBounds().size.x * 0.85, loading_eye1.getGlobalBounds().size.y * 0.85);
+        loading_eye2.setOrigin(loading_eye2.getGlobalBounds().size.x * 0.85, loading_eye2.getGlobalBounds().size.y * 0.85);
 
-        box_1.setPosition(0, 60 * resRatioY);
-        box_2.setPosition(0, 360 * resRatioY);
+        box_1.setPosition(sf::Vector2f(0, 60 * resRatioY));
+        box_2.setPosition(sf::Vector2f(0, 360 * resRatioY));
 
         box_1.setFillColor(sf::Color(0, 0, 0, 192));
         box_2.setFillColor(sf::Color(0, 0, 0, 192));
@@ -54,7 +54,7 @@ LoadingTip::LoadingTip(int mode)
 
         s_bg.load(bg_key);
         s_icon.load(icon_key);
-        s_icon.setOrigin(s_icon.getGlobalBounds().width / 2, s_icon.getGlobalBounds().height / 2);
+        s_icon.setOrigin(s_icon.getGlobalBounds().size.x / 2, s_icon.getGlobalBounds().size.y / 2);
 
         sf::String str_tipText = Func::ConvertToUtf8String(strRepo->GetString(wdesc_key));
 
@@ -91,11 +91,11 @@ LoadingTip::LoadingTip(int mode)
         loading_eye1.load("resources/graphics/ui/tips/loading_eye.png");
         loading_eye2.load("resources/graphics/ui/tips/loading_eye.png");
 
-        loading_eye1.setOrigin(loading_eye1.getGlobalBounds().width * 0.85, loading_eye1.getGlobalBounds().height * 0.85);
-        loading_eye2.setOrigin(loading_eye1.getGlobalBounds().width * 0.85, loading_eye1.getGlobalBounds().height * 0.85);
+        loading_eye1.setOrigin(loading_eye1.getGlobalBounds().size.x * 0.85, loading_eye1.getGlobalBounds().size.y * 0.85);
+        loading_eye2.setOrigin(loading_eye1.getGlobalBounds().size.x * 0.85, loading_eye1.getGlobalBounds().size.y * 0.85);
 
-        box_1.setPosition(0, 60 * resRatioY);
-        box_2.setPosition(0, 360 * resRatioY);
+        box_1.setPosition(sf::Vector2f(0, 60 * resRatioY));
+        box_2.setPosition(sf::Vector2f(0, 360 * resRatioY));
 
         box_1.setFillColor(sf::Color(0, 0, 0, 192));
         box_2.setFillColor(sf::Color(0, 0, 0, 192));
@@ -167,7 +167,7 @@ void LoadingTip::Draw()
 
 
 
-            t_pressAnyKey.setGlobalOrigin(t_pressAnyKey.getGlobalBounds().width, t_pressAnyKey.getGlobalBounds().height / 2);
+            t_pressAnyKey.setGlobalOrigin(t_pressAnyKey.getGlobalBounds().size.x, t_pressAnyKey.getGlobalBounds().size.y / 2);
             t_pressAnyKey.setGlobalPosition(3744, 2037);
             t_pressAnyKey.draw();
 
@@ -178,12 +178,12 @@ void LoadingTip::Draw()
             }
         } else
         {
-            t_nowLoading.setGlobalOrigin(t_nowLoading.getGlobalBounds().width, t_nowLoading.getGlobalBounds().height / 2);
+            t_nowLoading.setGlobalOrigin(t_nowLoading.getGlobalBounds().size.x, t_nowLoading.getGlobalBounds().size.y / 2);
             t_nowLoading.setGlobalPosition(3624, 2052);
             t_nowLoading.draw();
 
-            loading_head.setPosition(t_nowLoading.getGlobalPosition().x - t_nowLoading.getGlobalBounds().width - 138, t_nowLoading.getGlobalPosition().y - 84);
-            loading_eye1.setPosition(t_nowLoading.getGlobalPosition().x - t_nowLoading.getGlobalBounds().width - 81, t_nowLoading.getGlobalPosition().y + 45);
+            loading_head.setPosition(t_nowLoading.getGlobalPosition().x - t_nowLoading.getGlobalBounds().size.x - 138, t_nowLoading.getGlobalPosition().y - 84);
+            loading_eye1.setPosition(t_nowLoading.getGlobalPosition().x - t_nowLoading.getGlobalBounds().size.x - 81, t_nowLoading.getGlobalPosition().y + 45);
             loading_eye1.setRotation(angle_1);
             loading_head.draw();
             loading_eye1.draw();

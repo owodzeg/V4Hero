@@ -6,6 +6,12 @@ Credits::Credits()
 {
 }
 
+Credits::~Credits()
+{
+    delete s_outro;
+    delete s_credits;
+}
+
 void Credits::addHeaderText(sf::String text)
 {
     auto strRepo = CoreManager::getInstance().getStrRepo();
@@ -61,8 +67,11 @@ void Credits::Initialise(Config* thisConfig, V4Core* parent)
     sb_outro.loadFromFile("resources/sfx/fun/outro.ogg");
     sb_credits.loadFromFile("resources/sfx/fun/patafour4.ogg");
 
-    s_outro.setVolume(float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("bgmVolume")) / 100.f));
-    s_credits.setVolume(float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("bgmVolume")) / 100.f));
+    s_outro = new sf::Sound(sb_outro);
+    s_credits = new sf::Sound(sb_credits);
+
+    s_outro->setVolume(float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("bgmVolume")) / 100.f));
+    s_credits->setVolume(float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("bgmVolume")) / 100.f));
 
     auto strRepo = CoreManager::getInstance().getStrRepo();
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
@@ -257,9 +266,9 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
         {
             if (startTimer.getElapsedTime().asSeconds() > 1)
             {
-                s_outro.stop();
-                s_outro.setBuffer(sb_outro);
-                s_outro.play();
+                s_outro->stop();
+                s_outro->setBuffer(sb_outro);
+                s_outro->play();
 
                 playOutro = true;
             }
@@ -270,28 +279,28 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
         {
             outro_text.setString("outro_cutscene_1");
             outro_text.setPosition(640, 360);
-            outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height / 2);
+            outro_text.setOrigin(outro_text.getLocalBounds().size.x / 2, outro_text.getLocalBounds().size.y / 2);
         }
 
         if (startTimer.getElapsedTime().asSeconds() > 7)
         {
             outro_text.setString("outro_cutscene_2");
             outro_text.setPosition(640, 360);
-            outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height / 2);
+            outro_text.setOrigin(outro_text.getLocalBounds().size.x / 2, outro_text.getLocalBounds().size.y / 2);
         }
 
         if (startTimer.getElapsedTime().asSeconds() > 9)
         {
             outro_text.setString("outro_cutscene_3");
             outro_text.setPosition(640, 360);
-            outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height / 2);
+            outro_text.setOrigin(outro_text.getLocalBounds().size.x / 2, outro_text.getLocalBounds().size.y / 2);
         }
 
         if (startTimer.getElapsedTime().asSeconds() > 12.8)
         {
             outro_text.setString("outro_cutscene_4");
             outro_text.setPosition(640, 680);
-            outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height);
+            outro_text.setOrigin(outro_text.getLocalBounds().size.x / 2, outro_text.getLocalBounds().size.y);
 
             teaser_1.draw();
         }
@@ -300,7 +309,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
         {
             outro_text.setString("outro_cutscene_5");
             outro_text.setPosition(640, 700);
-            outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height);
+            outro_text.setOrigin(outro_text.getLocalBounds().size.x / 2, outro_text.getLocalBounds().size.y);
 
             teaser_2.draw();
         }
@@ -309,7 +318,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
         {
             outro_text.setString("outro_cutscene_6");
             outro_text.setPosition(640, 700);
-            outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height);
+            outro_text.setOrigin(outro_text.getLocalBounds().size.x / 2, outro_text.getLocalBounds().size.y);
 
             teaser_3.draw();
         }
@@ -318,7 +327,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
         {
             outro_text.setString("outro_cutscene_7");
             outro_text.setPosition(640, 360);
-            outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height / 2);
+            outro_text.setOrigin(outro_text.getLocalBounds().size.x / 2, outro_text.getLocalBounds().size.y / 2);
             window.draw(r_black);
         }
 
@@ -326,7 +335,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
         {
             outro_text.setString("outro_cutscene_8");
             outro_text.setPosition(640, 360);
-            outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height / 2);
+            outro_text.setOrigin(outro_text.getLocalBounds().size.x / 2, outro_text.getLocalBounds().size.y / 2);
             window.draw(r_black);
         }
 
@@ -334,7 +343,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
         {
             outro_text.setString("outro_end");
             outro_text.setPosition(640, 360);
-            outro_text.setOrigin(outro_text.getLocalBounds().width / 2, outro_text.getLocalBounds().height / 2);
+            outro_text.setOrigin(outro_text.getLocalBounds().size.x / 2, outro_text.getLocalBounds().size.y / 2);
             window.draw(r_black);
         }
 
@@ -342,10 +351,10 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
         {
             mode = 1;
 
-            s_credits.stop();
-            s_credits.setBuffer(sb_credits);
-            s_credits.setLoop(true);
-            s_credits.play();
+            s_credits->stop();
+            s_credits->setBuffer(sb_credits);
+            s_credits->setLooping(true);
+            s_credits->play();
         }
 
         outro_text.draw();
@@ -359,7 +368,7 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
         for (int i = 0; i < credits_text.size(); i++)
         {
             //credits_text[i].ly -= 50.0 / fps;
-            //credits_text[i].setOrigin(credits_text[i].getLocalBounds().width / 2, credits_text[i].getLocalBounds().height / 2);
+            //credits_text[i].setOrigin(credits_text[i].getLocalBounds().size.x / 2, credits_text[i].getLocalBounds().size.y / 2);
             credits_text[i].draw();
         }
 
@@ -368,14 +377,14 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
             flash_x += 1.0 / fps;
 
             //anykey.append(Func::GetStrFromKey("tips_anykey");
-            //anykey.setOrigin(anykey.getLocalBounds().width / 2, anykey.getLocalBounds().height / 2);
+            //anykey.setOrigin(anykey.getLocalBounds().size.x / 2, anykey.getLocalBounds().size.y / 2);
             //anykey.setColor(sf::Color(255, 255, 255, 127 + (cos(flash_x) * 127)));
             //anykey.setPosition(640, 360);
             anykey.draw();
 
             if (inputCtrl.isAnyKeyPressed())
             {
-                s_credits.stop();
+                s_credits->stop();
                 is_active = false;
             }
         }
@@ -383,8 +392,8 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
 
     if (inputCtrl.isKeyPressed(Input::Keys::START))
     {
-        s_credits.stop();
-        s_outro.stop();
+        s_credits->stop();
+        s_outro->stop();
         is_active = false;
     }
 }

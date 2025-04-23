@@ -50,7 +50,7 @@ public:
 
     bool isFever = false;
 
-    sf::Sound cur_sound;
+    //sf::Sound cur_sound;
 
     std::string old_current_song = "";
 

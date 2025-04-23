@@ -15,8 +15,8 @@ using namespace nlohmann;
 Background::Background()
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
-    bgView.setSize(window->getSize().x, window->getSize().y);
-    bgView.setCenter(window->getSize().x/2, window->getSize().y/2);
+    bgView.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
+    bgView.setCenter(sf::Vector2f(window->getSize().x/2, window->getSize().y/2));
 }
 
 void Background::Load(const std::string& bg_name)
@@ -64,7 +64,7 @@ void Background::Load(const std::string& bg_name)
                         vx_color.push_back(color);
                     }
 
-                    sf::VertexArray tmp(sf::TrianglesStrip, vx_pos.size());
+                    sf::VertexArray tmp(sf::PrimitiveType::TriangleStrip, vx_pos.size());
                     v_background = tmp;
                 }
                 else if(object["type"] == "image")
@@ -131,9 +131,9 @@ void Background::Draw(Camera& camera)
         float camPos = (camera.camera_x + camera.zoom_x + camera.manual_x + camera.debug_x);
         float xPos = (camPos - 3840) - (camPos * bg_object.x_speed) - 99999;
 
-        bg_object.texture.setTextureRect(sf::IntRect(0,0,999999, bg_object.texture.getLocalBounds().height));
+        bg_object.texture.setTextureRect(sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(999999, bg_object.texture.getLocalBounds().size.y)));
         bg_object.texture.setRepeated(true);
-        bg_object.texture.setOrigin(0, bg_object.texture.getLocalBounds().height);
+        bg_object.texture.setOrigin(0, bg_object.texture.getLocalBounds().size.y);
         bg_object.texture.setColor(bg_object.color);
         bg_object.texture.setPosition(xPos / resRatioX, bg_object.position.y + camera.zoom_y / zoom_offset);
         bg_object.texture.draw();
@@ -151,7 +151,7 @@ void Background::DrawFloor()
 
     r_ground.setSize(sf::Vector2f(window->getSize().x, floor_height));
     r_ground.setFillColor(sf::Color::Black);
-    r_ground.setPosition(0, window->getSize().y - floor_height);
+    r_ground.setPosition(sf::Vector2f(0, window->getSize().y - floor_height));
     window->draw(r_ground);
 
     window->setView(lastView);

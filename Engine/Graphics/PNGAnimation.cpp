@@ -172,7 +172,7 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
     if (rows == 1)
         spritesheetXsize = frames * img_x;
 
-    spritesheet_buffer.create(spritesheetXsize, spritesheetYsize, sf::Color(255, 255, 255, 0));
+    spritesheet_buffer.resize(sf::Vector2u(spritesheetXsize, spritesheetYsize), sf::Color(255, 255, 255, 0));
 
     std::vector<sf::Image> readySheets;
 
@@ -189,7 +189,7 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
 
         int curCol = frameBuffer % maxCols;
         int curRow = floor(float(frameBuffer) / float(maxCols));
-        spritesheet_buffer.copy(f_img, curCol * img_x, curRow * img_y);
+        spritesheet_buffer.copy(f_img, sf::Vector2u(curCol * img_x, curRow * img_y));
 
         --framesLeft;
         --framesTotal;
@@ -204,7 +204,7 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
                 framesLeft = framesTotal;
 
             readySheets.push_back(spritesheet_buffer);
-            spritesheet_buffer.create(spritesheetXsize, spritesheetYsize, sf::Color(255, 255, 255, 0));
+            spritesheet_buffer.resize(sf::Vector2u(spritesheetXsize, spritesheetYsize), sf::Color(255, 255, 255, 0));
         }
 
         TextureManager::getInstance().unloadImage(fr);
@@ -523,14 +523,14 @@ void PNGAnimation::Load(const std::string& path)
 
                 sf::FloatRect h;
 
-                h.left = hb_x;
-                h.top = hb_y;
-                h.width = hb_width;
-                h.height = hb_height;
+                h.position.x = hb_x;
+                h.position.y = hb_y;
+                h.size.x = hb_width;
+                h.size.y = hb_height;
 
                 if(key == "default")
                 {
-                    SPDLOG_DEBUG("Setting default hitbox: {} {} {} {}", h.left, h.top, h.width, h.height);
+                    SPDLOG_DEBUG("Setting default hitbox: {} {} {} {}", h.position.x, h.position.y, h.size.x, h.size.y);
 
                     for(auto& a : animations)
                     {
@@ -539,7 +539,7 @@ void PNGAnimation::Load(const std::string& path)
                 }
                 else
                 {
-                    SPDLOG_DEBUG("Setting animation-specific hitbox: {} {} {} {}", h.left, h.top, h.width, h.height);
+                    SPDLOG_DEBUG("Setting animation-specific hitbox: {} {} {} {}", h.position.x, h.position.y, h.size.x, h.size.y);
 
                     int id = getIDfromShortName(key);
                     animations[id].hitboxes.push_back(h);
@@ -559,14 +559,14 @@ void PNGAnimation::Load(const std::string& path)
 
                         sf::FloatRect h;
 
-                        h.left = hb_x;
-                        h.top = hb_y;
-                        h.width = hb_width;
-                        h.height = hb_height;
+                        h.position.x = hb_x;
+                        h.position.y = hb_y;
+                        h.size.x = hb_width;
+                        h.size.y = hb_height;
 
                         if(key == "default")
                         {
-                            SPDLOG_DEBUG("Setting default hitbox: {} {} {} {}", h.left, h.top, h.width, h.height);
+                            SPDLOG_DEBUG("Setting default hitbox: {} {} {} {}", h.position.x, h.position.y, h.size.x, h.size.y);
 
                             for(auto& a : animations)
                             {
@@ -575,7 +575,7 @@ void PNGAnimation::Load(const std::string& path)
                         }
                         else
                         {
-                            SPDLOG_DEBUG("Setting animation-specific hitbox: {} {} {} {}", h.left, h.top, h.width, h.height);
+                            SPDLOG_DEBUG("Setting animation-specific hitbox: {} {} {} {}", h.position.x, h.position.y, h.size.x, h.size.y);
 
                             int id = getIDfromShortName(key);
                             animations[id].hitboxes.push_back(h);
@@ -597,10 +597,10 @@ void PNGAnimation::Load(const std::string& path)
 
             sf::FloatRect h;
 
-            h.left = -ox;
-            h.top = -oy;
-            h.width = bw;
-            h.height = bh;
+            h.position.x = -ox;
+            h.position.y = -oy;
+            h.size.x = bw;
+            h.size.y = bh;
 
             a.hitboxes.push_back(h);
         }
@@ -755,8 +755,8 @@ void PNGAnimation::Draw()
     int x_start = currentCol * curAnim.img_x;
     int y_start = currentRow * curAnim.img_y;
 
-    sf::IntRect textureRect = {x_start, y_start, static_cast<int>(curAnim.img_x), static_cast<int>(curAnim.img_y)};
-    //SPDLOG_DEBUG("setting texture rect to {} {} {} {}", textureRect.left, textureRect.top, textureRect.width, textureRect.height);
+    sf::IntRect textureRect = sf::IntRect(sf::Vector2i(x_start, y_start), sf::Vector2i(static_cast<int>(curAnim.img_x), static_cast<int>(curAnim.img_y)));
+    //SPDLOG_DEBUG("setting texture rect to {} {} {} {}", textureRect.position.x, textureRect.position.y, texturerect.size.x, texturerect.size.y);
 
     auto& texture = ResourceManager::getInstance().getSprite(curAnim.spritesheet_paths[currentSpritesheet]);
     texture.setTextureRect(textureRect);
@@ -836,7 +836,7 @@ void PNGAnimation::drawCopy(sf::Vector2f pos, sf::Vector2f sc)
     int x_start = currentCol * curAnim.img_x;
     int y_start = currentRow * curAnim.img_y;
 
-    sf::IntRect textureRect = {x_start, y_start, static_cast<int>(curAnim.img_x), static_cast<int>(curAnim.img_y)};
+    sf::IntRect textureRect = sf::IntRect(sf::Vector2i(x_start, y_start), sf::Vector2i(static_cast<int>(curAnim.img_x), static_cast<int>(curAnim.img_y)));
 
     auto& texture = ResourceManager::getInstance().getSprite(curAnim.spritesheet_paths[currentSpritesheet]);
     texture.setTextureRect(textureRect);

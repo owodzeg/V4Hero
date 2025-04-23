@@ -496,7 +496,7 @@ void Entity::Draw()
         auto strRepo = CoreManager::getInstance().getStrRepo();
         debugText.reset();
         debugText.append(std::format("{{size 36}}{{outline 2 255 255 255}}o{{n}}{}{{n}}curHP{{n}}{}{{n}}maxHP{{n}}{}", orderID, curHP, maxHP));
-        debugText.setGlobalOrigin(debugText.getGlobalBounds().width / 2, debugText.getGlobalBounds().height);
+        debugText.setGlobalOrigin(debugText.getGlobalBounds().size.x / 2, debugText.getGlobalBounds().size.y);
         debugText.setGlobalPosition(global_x + local_x + hPos - 20, global_y + local_y + vPos + cam_offset - 100);
         debugText.draw();
     }
@@ -506,7 +506,7 @@ void Entity::Draw()
         auto strRepo = CoreManager::getInstance().getStrRepo();
         debugText.reset();
         debugText.append(std::format("{{size 36}}{{outline 2 255 255 255}}anim{{n}}{}{{n}}frame{{n}}{}{{n}}hspeed{{n}}{}{{n}}vspeed{{n}}{}{{n}}hPos{{n}}{}{{n}}vPos{{n}}{}{{n}}action{{n}}{}{{n}}threw{{n}}{}{{n}}dtp{{n}}{}", getAnimation(), getAnimationFrame(), hspeed, vspeed, hPos, vPos, action, threw, distanceToPlayer));
-        debugText.setGlobalOrigin(debugText.getGlobalBounds().width / 2, debugText.getGlobalBounds().height);
+        debugText.setGlobalOrigin(debugText.getGlobalBounds().size.x / 2, debugText.getGlobalBounds().size.y);
         debugText.setGlobalPosition(global_x + local_x + hPos - 20, global_y + local_y + vPos + cam_offset - 100);
         debugText.draw();
     }

@@ -59,7 +59,7 @@ void PataDialogBox::Create(std::string font, sf::String text, std::vector<sf::St
         t_options.push_back(tmp);
     }
 
-    arrow.loadFromFile("resources/graphics/ui/dialog/arrow.png", qualitySetting);
+    //arrow.loadFromFile("resources/graphics/ui/dialog/arrow.png", qualitySetting);
 
     option = t_options.size() - 1;
 }
@@ -101,7 +101,7 @@ void PataDialogBox::CreateCustom(std::string font, sf::String text, std::vector<
         options_saved.push_back(options[i]);
     }
 
-    arrow.loadFromFile("resources/graphics/ui/arrow.png", qualitySetting);
+    //arrow.loadFromFile("resources/graphics/ui/arrow.png", qualitySetting);
 
     option = t_options.size() - 1;
 }
@@ -113,18 +113,18 @@ void PataDialogBox::Readjust()
 
     for (unsigned int i = 0; i < t_options.size(); i++)
     {
-        //if (t_options[i].getLocalBounds().width > width)
-        //    width = t_options[i].getLocalBounds().width;
+        //if (t_options[i].getLocalBounds().size.x > width)
+        //    width = t_options[i].getLocalBounds().size.x;
 
         height += 90;
     }
 
     //if (t_dialogText.rendered)
     //{
-    //    if (t_dialogText.getLocalBounds().width > width)
-    //        width = t_dialogText.getLocalBounds().width;
+    //    if (t_dialogText.getLocalBounds().size.x > width)
+    //        width = t_dialogText.getLocalBounds().size.x;
 
-    //    height += t_dialogText.getLocalBounds().height;
+    //    height += t_dialogText.getLocalBounds().size.y;
     //}
 
     height += 120; ///gap for options
@@ -198,16 +198,16 @@ void PataDialogBox::Draw()
         //t_dialogType.setPosition(x - rr_main.orx + 30, y - rr_main.ory);
         t_dialogType.draw();
 
-        //t_dialogText.setOrigin(t_dialogText.getLocalBounds().width / 2, 0);
-        //t_dialogText.setPosition(x, y - rr_main.ory + t_dialogType.getLocalBounds().height);
+        //t_dialogText.setOrigin(t_dialogText.getLocalBounds().size.x / 2, 0);
+        //t_dialogText.setPosition(x, y - rr_main.ory + t_dialogType.getLocalBounds().size.y);
         t_dialogText.draw();
 
         //cout << "stuff: " << rr_main.orx << " " << rr_main.ory << endl;
 
         highlight.setSize(sf::Vector2f((width + 120) * resRatio, 90 * resRatio));
         highlight.setFillColor(sf::Color(0, 200, 0, 255));
-        highlight.setOrigin(highlight.getLocalBounds().width / 2, 0);
-        //highlight.setPosition((x) *resRatio, (y - rr_main.ory + 138 + t_dialogType.getLocalBounds().height + t_dialogText.getLocalBounds().height + (option * 90)) * resRatio);
+        highlight.setOrigin({highlight.getLocalBounds().size.x / 2, 0});
+        //highlight.setPosition((x) *resRatio, (y - rr_main.ory + 138 + t_dialogType.getLocalBounds().size.y + t_dialogText.getLocalBounds().size.y + (option * 90)) * resRatio);
         window->draw(highlight);
 
         arrow_x -= 9 / fps;
@@ -215,14 +215,14 @@ void PataDialogBox::Draw()
         if (arrow_x <= -9)
             arrow_x = 0;
 
-        arrow.setOrigin(arrow.getLocalBounds().width / 2, arrow.getLocalBounds().height / 2);
-        //arrow.setPosition(x - rr_main.orx + arrow_x, y - rr_main.ory + 192 + t_dialogType.getLocalBounds().height + t_dialogText.getLocalBounds().height + (option * 90));
-        arrow.draw();
+        //arrow.setOrigin(arrow.getLocalBounds().size.x / 2, arrow.getLocalBounds().size.y / 2);
+        //arrow.setPosition(x - rr_main.orx + arrow_x, y - rr_main.ory + 192 + t_dialogType.getLocalBounds().size.y + t_dialogText.getLocalBounds().size.y + (option * 90));
+        //arrow.draw();
 
         for (unsigned int i = 0; i < t_options.size(); i++)
         {
-        //    t_options[i].setOrigin(t_options[i].getLocalBounds().width / 2, 0);
-        //    t_options[i].setPosition(x, y - rr_main.ory + 138 + t_dialogType.getLocalBounds().height + t_dialogText.getLocalBounds().height + (i * 90));
+        //    t_options[i].setOrigin(t_options[i].getLocalBounds().size.x / 2, 0);
+        //    t_options[i].setPosition(x, y - rr_main.ory + 138 + t_dialogType.getLocalBounds().size.y + t_dialogText.getLocalBounds().size.y + (i * 90));
             t_options[i].draw();
         }
     }

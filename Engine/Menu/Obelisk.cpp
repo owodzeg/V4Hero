@@ -29,17 +29,17 @@ ObeliskMenu::ObeliskMenu()
 
     ///boxes
     mainbox.load("resources/graphics/ui/worldmap/main_box.png");
-    mainbox.setOrigin(mainbox.getLocalBounds().width / 2, mainbox.getLocalBounds().height / 2);
+    mainbox.setOrigin(mainbox.getLocalBounds().size.x / 2, mainbox.getLocalBounds().size.y / 2);
     mainbox.setPosition(640*3, 320*3);
 
     descbox.load("resources/graphics/ui/worldmap/description_box.png");
-    descbox.setOrigin(descbox.getLocalBounds().width / 2, descbox.getLocalBounds().height / 2);
+    descbox.setOrigin(descbox.getLocalBounds().size.x / 2, descbox.getLocalBounds().size.y / 2);
     descbox.setPosition(820*3, 542*3);
 
     iconbox.load("resources/graphics/ui/worldmap/icon_box.png");
 
     missionbox.load("resources/graphics/ui/worldmap/mission_box.png");
-    missionbox.setOrigin(missionbox.getLocalBounds().width / 2, missionbox.getLocalBounds().height / 2);
+    missionbox.setOrigin(missionbox.getLocalBounds().size.x / 2, missionbox.getLocalBounds().size.y / 2);
     missionbox.setPosition(290*3, 542*3);
 
     auto strRepo = CoreManager::getInstance().getStrRepo();
@@ -74,7 +74,7 @@ ObeliskMenu::ObeliskMenu()
 
     unavailable.load("resources/graphics/ui/worldmap/unavailable.png");
     location_highlight.load("resources/graphics/ui/worldmap/location_highlight.png");
-    location_highlight.setOrigin(location_highlight.getLocalBounds().width / 2, location_highlight.getLocalBounds().height / 2);
+    location_highlight.setOrigin(location_highlight.getLocalBounds().size.x / 2, location_highlight.getLocalBounds().size.y / 2);
 
     mission_select.load("resources/graphics/ui/worldmap/mission_select.png");
 
@@ -156,7 +156,7 @@ void ObeliskMenu::addMission(json missiondata)
     tm.defaultStyleSetColor(sf::Color::Black);
     tm.append(Func::GetStrFromKey(tmp.title));
     tm.append(level);
-    tm.setGlobalOrigin(tm.getGlobalBounds().width / 2, tm.getGlobalBounds().height / 2);
+    tm.setGlobalOrigin(tm.getGlobalBounds().size.x / 2, tm.getGlobalBounds().size.y / 2);
     tmp.p_mis = tm;
 
     SPDLOG_DEBUG("[WorldMap] Making text {}", tmp.title);
@@ -302,15 +302,15 @@ void ObeliskMenu::Update()
 
         mainbox.draw();
 
-        worldmap_title.setGlobalOrigin(worldmap_title.getGlobalBounds().width / 2, worldmap_title.getGlobalBounds().height / 2);
+        worldmap_title.setGlobalOrigin(worldmap_title.getGlobalBounds().size.x / 2, worldmap_title.getGlobalBounds().size.y / 2);
         worldmap_title.setGlobalPosition(mainbox.getPosition().x - 303 * 3, mainbox.getPosition().y - 174 * 3);
         worldmap_title.draw();
 
-        location_title.setGlobalOrigin(location_title.getGlobalBounds().width / 2, location_title.getGlobalBounds().height / 2);
+        location_title.setGlobalOrigin(location_title.getGlobalBounds().size.x / 2, location_title.getGlobalBounds().size.y / 2);
         location_title.setGlobalPosition(mainbox.getPosition().x, mainbox.getPosition().y + 72 * 3);
         location_title.draw();
 
-        location_desc.setGlobalOrigin(location_desc.getGlobalBounds().width / 2, location_desc.getGlobalBounds().height / 2);
+        location_desc.setGlobalOrigin(location_desc.getGlobalBounds().size.x / 2, location_desc.getGlobalBounds().size.y / 2);
         location_desc.setGlobalPosition(mainbox.getPosition().x, mainbox.getPosition().y + 142 * 3);
         location_desc.draw();
 
@@ -332,9 +332,9 @@ void ObeliskMenu::Update()
         if (mapX <= maxBound)
             mapX = maxBound;
 
-        v_render_map.setSize(1012*3 * resRatioX, 720*3 * resRatioY);
-        v_render_map.setCenter((506*3) * resRatioX, -360*3 * resRatioY);
-        v_render_map.setViewport(sf::FloatRect(134.0*3 / 3840.0, (mainbox.getPosition().y - 115*3) / 2160.0, 1012.0*3 / 3840.0, 1.f));
+        v_render_map.setSize(sf::Vector2f(1012*3 * resRatioX, 720*3 * resRatioY));
+        v_render_map.setCenter(sf::Vector2f((506*3) * resRatioX, -360*3 * resRatioY));
+        v_render_map.setViewport(sf::FloatRect(sf::Vector2f(134.0*3 / 3840.0, (mainbox.getPosition().y - 115*3) / 2160.0), sf::Vector2f(1012.0*3 / 3840.0, 1.f)));
 
         window->setView(v_render_map);
 
@@ -344,13 +344,13 @@ void ObeliskMenu::Update()
             worldmap_fields[i].draw();
         }
 
-        location_highlight.setOrigin(location_highlight.getLocalBounds().width / 2, location_highlight.getLocalBounds().height / 2);
+        location_highlight.setOrigin(location_highlight.getLocalBounds().size.x / 2, location_highlight.getLocalBounds().size.y / 2);
         location_highlight.setPosition(sel_location * 123*3 + mapX - 62*3, 78*3 - 720*3);
         location_highlight.draw();
 
         for (int i = 0; i < worldmap_fields.size(); i++)
         {
-            worldmap_icons[i].setOrigin(worldmap_icons[i].getLocalBounds().width / 2, worldmap_icons[i].getLocalBounds().height);
+            worldmap_icons[i].setOrigin(worldmap_icons[i].getLocalBounds().size.x / 2, worldmap_icons[i].getLocalBounds().size.y);
             worldmap_icons[i].setPosition(i * 123*3 + mapX + 61*3, 155*3 - 720*3);
             worldmap_icons[i].draw();
 
@@ -368,11 +368,11 @@ void ObeliskMenu::Update()
             missionbox.draw();
             descbox.draw();
 
-            select_quest.setGlobalOrigin(0, select_quest.getGlobalBounds().height / 2);
+            select_quest.setGlobalOrigin(0, select_quest.getGlobalBounds().size.y / 2);
             select_quest.setGlobalPosition(missionbox.getPosition().x - 141 * 3, missionbox.getPosition().y - 74 * 3);
             select_quest.draw();
 
-            mission_title.setGlobalOrigin(0, mission_title.getGlobalBounds().height / 2);
+            mission_title.setGlobalOrigin(0, mission_title.getGlobalBounds().size.y / 2);
             mission_title.setGlobalPosition(descbox.getPosition().x - 315 * 3, descbox.getPosition().y - 74 * 3);
             mission_title.draw();
 
@@ -383,9 +383,9 @@ void ObeliskMenu::Update()
             mission_select.setPosition(135*3, missionbox.getPosition().y - 56*3 + (sel_mission * 24*3));
             mission_select.draw();
 
-            v_render_missions_map.setSize(298*3 * resRatioX, 120*3 * resRatioY);
-            v_render_missions_map.setCenter((1280*3 + 149*3) * resRatioX, (-720*3 + 60*3) * resRatioY);
-            v_render_missions_map.setViewport(sf::FloatRect(143.0*3 / 3840, (missionbox.getPosition().y - 53*3) / 2160.0, 298.0*3 / 3840.0, 120.0*3 / 2160.0));
+            v_render_missions_map.setSize(sf::Vector2f(298*3 * resRatioX, 120*3 * resRatioY));
+            v_render_missions_map.setCenter(sf::Vector2f((1280*3 + 149*3) * resRatioX, (-720*3 + 60*3) * resRatioY));
+            v_render_missions_map.setViewport(sf::FloatRect(sf::Vector2f(143.0*3 / 3840, (missionbox.getPosition().y - 53*3) / 2160.0), sf::Vector2f(298.0*3 / 3840.0, 120.0*3 / 2160.0)));
 
             window->setView(v_render_missions_map);
 

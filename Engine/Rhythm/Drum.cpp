@@ -16,7 +16,7 @@ void Drum::Load(string drum, int perfection, std::string& drum_texture)
     SPDLOG_DEBUG("Loading drum {}, perfection {}, drum_texture {}", drum, perfection, drum_texture);
 
     s_flash.load("resources/graphics/rhythm/drums/flash.png");
-    s_flash.setOrigin(s_flash.getLocalBounds().width / 2, s_flash.getLocalBounds().height / 2);
+    s_flash.setOrigin(s_flash.getLocalBounds().size.x / 2, s_flash.getLocalBounds().size.y / 2);
 
     cur_drum = drum;
 
@@ -77,7 +77,7 @@ void Drum::Load(string drum, int perfection, std::string& drum_texture)
     }
 
     s_drum.load(drum_texture);
-    s_drum.setOrigin(s_drum.getLocalBounds().width / 2, s_drum.getLocalBounds().height / 2);
+    s_drum.setOrigin(s_drum.getLocalBounds().size.x / 2, s_drum.getLocalBounds().size.y / 2);
 
     int particle_amount = 14;
 
@@ -118,7 +118,7 @@ void Drum::Load(string drum, int perfection, std::string& drum_texture)
 
         temp.setFillColor(sf::Color(red, green, 0, 170));
         temp.setRadius(radius);
-        temp.setPosition(-1000, -1000);
+        temp.setPosition(sf::Vector2f(-1000, -1000));
 
         int distance = (rand() % 200) + 50;
 
@@ -251,13 +251,13 @@ void Drum::Draw()
     {
         c_shockwave.setRadius(shockwaveSize);
         c_shockwave.setFillColor(sf::Color(255, 255, 255, shockwaveAlpha));
-        c_shockwave.setOrigin(c_shockwave.getLocalBounds().width / 2, c_shockwave.getLocalBounds().height / 2);
-        c_shockwave.setPosition(x + drumPatterns[pattern].x*3 * ratio_X, y + drumPatterns[pattern].y*3 * ratio_Y);
+        c_shockwave.setOrigin(sf::Vector2f(c_shockwave.getLocalBounds().size.x / 2, c_shockwave.getLocalBounds().size.y / 2));
+        c_shockwave.setPosition(sf::Vector2f(x + drumPatterns[pattern].x*3 * ratio_X, y + drumPatterns[pattern].y*3 * ratio_Y));
 
         c_shockwave2.setRadius(shockwave2Size);
         c_shockwave2.setFillColor(sf::Color(255, 255, 255, shockwave2Alpha));
-        c_shockwave2.setOrigin(c_shockwave2.getLocalBounds().width / 2, c_shockwave2.getLocalBounds().height / 2);
-        c_shockwave2.setPosition(x + drumPatterns[pattern].x*3 * ratio_X, y + drumPatterns[pattern].y*3 * ratio_Y);
+        c_shockwave2.setOrigin(sf::Vector2f(c_shockwave2.getLocalBounds().size.x / 2, c_shockwave2.getLocalBounds().size.y / 2));
+        c_shockwave2.setPosition(sf::Vector2f(x + drumPatterns[pattern].x*3 * ratio_X, y + drumPatterns[pattern].y*3 * ratio_Y));
     }
 
     s_drum.draw();
@@ -299,7 +299,7 @@ void Drum::Draw()
             particles[i].c_particle.setFillColor(sf::Color(particles[i].c_particle.getFillColor().r, particles[i].c_particle.getFillColor().g, 0, c_alpha));
         }
 
-        particles[i].c_particle.setPosition(particles[i].x, particles[i].y);
+        particles[i].c_particle.setPosition(sf::Vector2f(particles[i].x, particles[i].y));
         window->draw(particles[i].c_particle);
     }
 }

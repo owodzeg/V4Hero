@@ -551,7 +551,7 @@ void StateManager::initStateMT(int state)
     loadingThreads.push_back(std::thread(&StateManager::initState, this, state));
 }
 
-void StateManager::parseCurrentStateEvents(sf::Event& event)
+void StateManager::parseCurrentStateEvents(const std::optional<sf::Event>& event)
 {
     switch (currentGameState)
     {
@@ -564,8 +564,6 @@ void StateManager::parseCurrentStateEvents(sf::Event& event)
             {
                 mainMenuPtr = new MainMenu;
             }
-
-            mainMenuPtr->EventFired(event);
             break;
         }
 

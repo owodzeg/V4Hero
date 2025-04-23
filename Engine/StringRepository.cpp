@@ -180,7 +180,7 @@ void StringRepository::LoadFontFromString(const std::string& fontName, const std
 
     if (fontStore.find(fontName) == fontStore.end()) {
         std::unique_ptr<sf::Font> font = std::make_unique<sf::Font>();
-        if (!font->loadFromMemory(fontData.data(), fontData.size())) {
+        if (!font->openFromMemory(fontData.data(), fontData.size())) {
             throw std::runtime_error("Failed to load font from memory.");
         }
         fontStore[fontName] = std::move(font);
@@ -197,7 +197,7 @@ void StringRepository::LoadFontFromFile(const std::string& fontPath, const std::
 
     if (fontStore.find(fontName) == fontStore.end()) {
         std::unique_ptr<sf::Font> font = std::make_unique<sf::Font>();
-        if (!font->loadFromFile(fontPath)) {
+        if (!font->openFromFile(fontPath)) {
             throw std::runtime_error("Failed to load font: " + fontPath);
         }
         fontStore[fontName] = std::move(font);
@@ -228,17 +228,17 @@ sf::Font& StringRepository::GetFontFromName(const std::string& fontName)
     }
 }
 
-float StringRepository::GetKerning(std::pair<sf::Uint32, sf::Uint32>& pair)
+float StringRepository::GetKerning(std::pair<char32_t, char32_t>& pair)
 {
     return kerningStore[pair].value_or(-999);
 }
 
-float StringRepository::GetAdvance(std::pair<sf::Uint32, sf::Uint32>& pair)
+float StringRepository::GetAdvance(std::pair<char32_t, char32_t>& pair)
 {
     return advanceStore[pair].value_or(-999);
 }
 
-float StringRepository::GetKerningForFont(const std::string& fontName, std::pair<sf::Uint32, sf::Uint32>& pair, const double charSize)
+float StringRepository::GetKerningForFont(const std::string& fontName, std::pair<char32_t, char32_t>& pair, const double charSize)
 {
     if (kerningCache.contains(fontName)) {
         auto& fontCache = kerningCache[fontName];
@@ -259,7 +259,7 @@ float StringRepository::GetKerningForFont(const std::string& fontName, std::pair
     return kerning;
 }
 
-float StringRepository::GetAdvanceForFont(const std::string& fontName, sf::Uint32& character, const double charSize, bool bold)
+float StringRepository::GetAdvanceForFont(const std::string& fontName, char32_t& character, const double charSize, bool bold)
 {
     if (advanceCache.contains(fontName))
     {
@@ -277,11 +277,11 @@ float StringRepository::GetAdvanceForFont(const std::string& fontName, sf::Uint3
     auto& font = GetFontFromName(fontName);
     auto glyph = font.getGlyph(character, charSize, false);
     auto glyphBold = font.getGlyph(character, charSize, true);
-    advanceCache[fontName][charSize][character] = {glyph.advance, glyph.bounds.height, glyphBold.advance, glyphBold.bounds.height};
+    advanceCache[fontName][charSize][character] = {glyph.advance, glyph.bounds.size.y, glyphBold.advance, glyphBold.bounds.size.y};
     return bold ? glyphBold.advance : glyph.advance;
 }
 
-float StringRepository::GetHeightForFont(const std::string& fontName, sf::Uint32& character, const double charSize, bool bold)
+float StringRepository::GetHeightForFont(const std::string& fontName, char32_t& character, const double charSize, bool bold)
 {
     // Try to get the cached value directly, if available
     auto& fontCache = advanceCache[fontName];
@@ -301,7 +301,7 @@ float StringRepository::GetHeightForFont(const std::string& fontName, sf::Uint32
     auto glyphBold = font.getGlyph(character, charSize, true);
 
     // Store the values in cache, including both regular and bold heights
-    sizeCache[character] = {glyph.advance, glyph.bounds.height, glyphBold.advance, glyphBold.bounds.height};
+    sizeCache[character] = {glyph.advance, glyph.bounds.size.y, glyphBold.advance, glyphBold.bounds.size.y};
 
-    return bold ? glyphBold.bounds.height : glyph.bounds.height;
+    return bold ? glyphBold.bounds.size.y : glyph.bounds.size.y;
 }

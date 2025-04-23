@@ -71,7 +71,7 @@ class InputController
     bool processKeyPressMessages(int keyID);
     void processKeyHolds();
 
-    void parseEvents(sf::Event& event);
+    void parseEvents(const std::optional<sf::Event>& event);
     int translateKeybind(int keyID);
     bool isAnyKeyPressed();
     int whatKeyPressed(int restrictMode = 0);

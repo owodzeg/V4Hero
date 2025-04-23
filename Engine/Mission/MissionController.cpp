@@ -16,14 +16,10 @@ MissionController::MissionController()
     auto strRepo = CoreManager::getInstance().getStrRepo();
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
-    sb_win_jingle.loadFromFile("resources/sfx/level/victory.ogg");
-    sb_lose_jingle.loadFromFile("resources/sfx/level/failure.ogg");
-
-    sb_cheer1.loadFromFile("resources/sfx/level/cheer1.ogg");
-    sb_cheer2.loadFromFile("resources/sfx/level/cheer2.ogg");
-    sb_cheer3.loadFromFile("resources/sfx/level/cheer1.ogg");
-
-
+    SoundManager::getInstance().loadBufferFromFile("resources/sfx/level/victory.ogg");
+    SoundManager::getInstance().loadBufferFromFile("resources/sfx/level/failure.ogg");
+    SoundManager::getInstance().loadBufferFromFile("resources/sfx/level/cheer1.ogg");
+    SoundManager::getInstance().loadBufferFromFile("resources/sfx/level/cheer2.ogg");
 
     t_win.defaultStyleSetFont(font);
     t_win.defaultStyleSetCharSize(56);
@@ -34,14 +30,14 @@ MissionController::MissionController()
     t_lose.append(Func::GetStrFromKey("mission_failed"));
 
 
-    t_win.setGlobalOrigin(t_win.getGlobalBounds().width / 2, t_win.getGlobalBounds().height / 2);
-    t_lose.setGlobalOrigin(t_lose.getGlobalBounds().width / 2, t_lose.getGlobalBounds().height / 2);
+    t_win.setGlobalOrigin(t_win.getGlobalBounds().size.x / 2, t_win.getGlobalBounds().size.y / 2);
+    t_lose.setGlobalOrigin(t_lose.getGlobalBounds().size.x / 2, t_lose.getGlobalBounds().size.y / 2);
 
     bar_win.loadFromFile("resources/graphics/mission/bar_win.png", q);
     bar_lose.loadFromFile("resources/graphics/mission/bar_lose.png", q);
 
-    bar_win.setOrigin(bar_win.getLocalBounds().width / 2, bar_win.getLocalBounds().height / 2);
-    bar_lose.setOrigin(bar_lose.getLocalBounds().width / 2, bar_lose.getLocalBounds().height / 2);
+    bar_win.setOrigin(bar_win.getLocalBounds().size.x / 2, bar_win.getLocalBounds().size.y / 2);
+    bar_lose.setOrigin(bar_lose.getLocalBounds().size.x / 2, bar_lose.getLocalBounds().size.y / 2);
 
 }
 
@@ -347,10 +343,11 @@ void MissionController::DoMissionEnd()
             {
                 if (!playCheer[0])
                 {
-                    s_cheer.stop();
-                    s_cheer.setBuffer(sb_cheer1);
-                    s_cheer.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
-                    s_cheer.play();
+                    //s_cheer.stop();
+                    //s_cheer.setBuffer(sb_cheer1);
+                    //s_cheer.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
+                    //s_cheer.play();
+                    SoundManager::getInstance().playSound("resources/sfx/level/cheer1.ogg", SoundManager::SoundTag::INTERFACE);
                     playCheer[0] = true;
                 }
             }
@@ -359,10 +356,11 @@ void MissionController::DoMissionEnd()
             {
                 if (!playCheer[1])
                 {
-                    s_cheer.stop();
-                    s_cheer.setBuffer(sb_cheer2);
-                    s_cheer.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
-                    s_cheer.play();
+                    //s_cheer.stop();
+                    //s_cheer.setBuffer(sb_cheer2);
+                    //s_cheer.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
+                    //s_cheer.play();
+                    SoundManager::getInstance().playSound("resources/sfx/level/cheer2.ogg", SoundManager::SoundTag::INTERFACE);
                     playCheer[1] = true;
                 }
             }
@@ -371,10 +369,11 @@ void MissionController::DoMissionEnd()
             {
                 if (!playCheer[2])
                 {
-                    s_cheer.stop();
-                    s_cheer.setBuffer(sb_cheer3);
-                    s_cheer.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
-                    s_cheer.play();
+                    //s_cheer.stop();
+                    //s_cheer.setBuffer(sb_cheer3);
+                    //s_cheer.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
+                    //s_cheer.play();
+                    SoundManager::getInstance().playSound("resources/sfx/level/cheer1.ogg", SoundManager::SoundTag::INTERFACE);
                     playCheer[2] = true;
                 }
             }
@@ -383,9 +382,10 @@ void MissionController::DoMissionEnd()
             {
                 if (!playJingle)
                 {
-                    s_jingle.setBuffer(sb_win_jingle);
-                    s_jingle.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
-                    s_jingle.play();
+                    //s_jingle.setBuffer(sb_win_jingle);
+                    //s_jingle.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
+                    //s_jingle.play();
+                    SoundManager::getInstance().playSound("resources/sfx/level/victory.ogg", SoundManager::SoundTag::INTERFACE);
                     playJingle = true;
                 }
             }
@@ -393,9 +393,10 @@ void MissionController::DoMissionEnd()
         {
             if (!playJingle)
             {
-                s_jingle.setBuffer(sb_lose_jingle);
-                s_jingle.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
-                s_jingle.play();
+                //s_jingle.setBuffer(sb_lose_jingle);
+                //s_jingle.setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f));
+                //s_jingle.play();
+                SoundManager::getInstance().playSound("resources/sfx/level/failure.ogg", SoundManager::SoundTag::INTERFACE);
                 playJingle = true;
             }
         }
@@ -510,7 +511,7 @@ void MissionController::DoMissionEnd()
                 }
             }
 
-            t_win.setGlobalOrigin(t_win.getGlobalBounds().width / 2, t_win.getGlobalBounds().height / 2);
+            t_win.setGlobalOrigin(t_win.getGlobalBounds().size.x / 2, t_win.getGlobalBounds().size.y / 2);
 
             if (barCurX > barDestX)
             {
@@ -593,7 +594,7 @@ void MissionController::DoMissionEnd()
                 fade_alpha = 255;
             }
 
-            t_lose.setGlobalOrigin(t_lose.getGlobalBounds().width / 2, t_lose.getGlobalBounds().height / 2);
+            t_lose.setGlobalOrigin(t_lose.getGlobalBounds().size.x / 2, t_lose.getGlobalBounds().size.y / 2);
 
             if (barCurX > barDestX)
             {
@@ -816,9 +817,9 @@ void MissionController::DrawHitboxes()
 
     for(auto& projectile : projectiles)
     {
-        if(debug)
+        if (debug)
         {
-            hbb.setPosition(projectile->tipX * resRatioX, projectile->tipY * resRatioY);
+            hbb.setPosition(sf::Vector2f(projectile->tipX * resRatioX, projectile->tipY * resRatioY));
             SPDLOG_DEBUG("projectile at {} {}, tip at {} {}, hitbox at {} {}", projectile->xPos, projectile->yPos, projectile->tipX, projectile->tipY, hbb.getPosition().x, hbb.getPosition().y);
             CoreManager::getInstance().getWindow()->draw(hbb);
         }
@@ -833,9 +834,9 @@ void MissionController::DrawHitboxes()
             for(auto hb : entity->getHitbox())
             {
                 sf::RectangleShape hbx;
-                hbx.setSize(sf::Vector2f(hb.width*resRatioX,hb.height*resRatioY));
+                hbx.setSize(sf::Vector2f(hb.size.x*resRatioX,hb.size.y*resRatioY));
                 hbx.setFillColor(sf::Color(128,0,128,64));
-                hbx.setPosition((pos.x+hb.left) * resRatioX, (pos.y+hb.top) * resRatioY);
+                hbx.setPosition(sf::Vector2f((pos.x+hb.position.x) * resRatioX, (pos.y+hb.position.y) * resRatioY));
                 CoreManager::getInstance().getWindow()->draw(hbx);
             }
         }
@@ -847,9 +848,9 @@ void MissionController::DrawHitboxes()
             for(auto hb : pon->getHitbox())
             {
                 sf::RectangleShape hbx;
-                hbx.setSize(sf::Vector2f(hb.width*resRatioX,hb.height*resRatioY));
+                hbx.setSize(sf::Vector2f(hb.size.x*resRatioX,hb.size.y*resRatioY));
                 hbx.setFillColor(sf::Color(128,0,128,64));
-                hbx.setPosition((pos.x+hb.left) * resRatioX, (pos.y+hb.top) * resRatioY);
+                hbx.setPosition(sf::Vector2f((pos.x+hb.position.x) * resRatioX, (pos.y+hb.position.y) * resRatioY));
                 CoreManager::getInstance().getWindow()->draw(hbx);
             }
         }
@@ -861,9 +862,9 @@ void MissionController::DrawHitboxes()
             for(auto hb : pon->getHitbox())
             {
                 sf::RectangleShape hbx;
-                hbx.setSize(sf::Vector2f(hb.width*resRatioX,hb.height*resRatioY));
+                hbx.setSize(sf::Vector2f(hb.size.x*resRatioX,hb.size.y*resRatioY));
                 hbx.setFillColor(sf::Color(128,0,128,64));
-                hbx.setPosition((pos.x+hb.left) * resRatioX, (pos.y+hb.top) * resRatioY);
+                hbx.setPosition(sf::Vector2f((pos.x+hb.position.x) * resRatioX, (pos.y+hb.position.y) * resRatioY));
                 CoreManager::getInstance().getWindow()->draw(hbx);
             }
         }
@@ -893,17 +894,17 @@ void MissionController::DrawMissionUI()
     sf::CircleShape thumb;
     thumb.setRadius(80 * resRatioX);
     thumb.setFillColor(sf::Color(224, 224, 224));
-    thumb.setOrigin(thumb.getLocalBounds().width/2, thumb.getLocalBounds().height/2);
+    thumb.setOrigin(sf::Vector2f(thumb.getLocalBounds().size.x/2, thumb.getLocalBounds().size.y/2));
 
     PSprite& hpbar_out = ResourceManager::getInstance().getSprite("resources/graphics/mission/hpbar_back.png");
-    hpbar_out.setOrigin(hpbar_out.getLocalBounds().width/2, hpbar_out.getLocalBounds().height/2);
+    hpbar_out.setOrigin(hpbar_out.getLocalBounds().size.x/2, hpbar_out.getLocalBounds().size.y/2);
 
     PSprite& hpbar_fill = ResourceManager::getInstance().getSprite("resources/graphics/mission/hpbar_ins.png");
-    hpbar_fill.setOrigin(0, hpbar_fill.getLocalBounds().height/2);
+    hpbar_fill.setOrigin(0, hpbar_fill.getLocalBounds().size.y/2);
 
     float thumbY = 250;
 
-    thumb.setPosition(200*resRatioX, thumbY*resRatioY);
+    thumb.setPosition(sf::Vector2f(200*resRatioX, thumbY*resRatioY));
     CoreManager::getInstance().getWindow()->draw(thumb);
 
     hatapons.back().get()->main.animation.drawCopy(sf::Vector2f(221, thumbY-148), sf::Vector2f(0.6, 0.6));
@@ -927,7 +928,7 @@ void MissionController::DrawMissionUI()
 
     if(yaripons.size() > 0)
     {
-        thumb.setPosition(400*resRatioX, thumbY*resRatioY);
+        thumb.setPosition(sf::Vector2f(400*resRatioX, thumbY*resRatioY));
         CoreManager::getInstance().getWindow()->draw(thumb);
 
         yaripons.back().get()->main.animation.drawCopy(sf::Vector2f(400, thumbY), sf::Vector2f(0.6, 0.6));
@@ -962,7 +963,7 @@ void MissionController::DrawMissionUI()
         unit_count_shadow.defaultStyleSetCharSize(30);
         unit_count_shadow.append(to_string(yaripons.size()));
         unit_count_shadow.defaultStyleSetColor(sf::Color::Black);
-        unit_count_shadow.setGlobalOrigin(0, unit_count_shadow.getGlobalBounds().height / 2);
+        unit_count_shadow.setGlobalOrigin(0, unit_count_shadow.getGlobalBounds().size.y / 2);
         unit_count_shadow.setGlobalPosition(460, thumbY + 75);
         unit_count_shadow.draw();
 
@@ -971,7 +972,7 @@ void MissionController::DrawMissionUI()
         unit_count.defaultStyleSetCharSize(30);
         unit_count.append(to_string(yaripons.size()));
         unit_count.defaultStyleSetColor(sf::Color::White);
-        unit_count.setGlobalOrigin(0, unit_count.getGlobalBounds().height / 2);
+        unit_count.setGlobalOrigin(0, unit_count.getGlobalBounds().size.y / 2);
         unit_count.setGlobalPosition(452, thumbY + 65);
         unit_count.draw();
     }
@@ -987,14 +988,14 @@ void MissionController::DrawMissionUI()
         sf::CircleShape i_thumb;
         i_thumb.setRadius(80 * resRatioX);
         i_thumb.setFillColor(sf::Color(224, 224, 224));
-        i_thumb.setOrigin(i_thumb.getLocalBounds().width/2, i_thumb.getLocalBounds().height/2);
-        i_thumb.setPosition((3840-200-(180*col))*resRatioX, (250+(180*row))*resRatioY);
+        i_thumb.setOrigin(sf::Vector2f(i_thumb.getLocalBounds().size.x/2, i_thumb.getLocalBounds().size.y/2));
+        i_thumb.setPosition(sf::Vector2f((3840-200-(180*col))*resRatioX, (250+(180*row))*resRatioY));
         CoreManager::getInstance().getWindow()->draw(i_thumb);
 
         Item* itemPtr = CoreManager::getInstance().getSaveReader()->itemReg.getItemByID(iid);
 
         PSprite& item = ResourceManager::getInstance().getSprite(std::format("resources/graphics/item/textures/{}/{:04}.png", itemPtr->spritesheet, itemPtr->spritesheet_id));
-        item.setOrigin(item.getLocalBounds().width/2, item.getLocalBounds().height/2);
+        item.setOrigin(item.getLocalBounds().size.x/2, item.getLocalBounds().size.y/2);
         item.setScale(0.65,0.65);
         item.setPosition(3840-200-(180*col), 250+(180*row));
         item.setRotation(0);
@@ -1253,9 +1254,9 @@ void MissionController::ProcessProjectiles()
                 {
                     for(auto hb : entity->getHitbox())
                     {
-                        if(projectile->tipX > pos.x+hb.left && projectile->tipX < pos.x+hb.width)
+                        if(projectile->tipX > pos.x+hb.position.x && projectile->tipX < pos.x+hb.size.x)
                         {
-                            if(projectile->tipY > pos.y+hb.top && projectile->tipY < pos.y+hb.height)
+                            if(projectile->tipY > pos.y+hb.position.y && projectile->tipY < pos.y+hb.size.y)
                             {
                                 projectile->finished = true;
                                 entity->handleHit(projectile->damage);
@@ -1276,9 +1277,9 @@ void MissionController::ProcessProjectiles()
                 {
                     for(auto hb : pon->getHitbox())
                     {
-                        if(projectile->tipX > pos.x+hb.left && projectile->tipX < pos.x+hb.width)
+                        if(projectile->tipX > pos.x+hb.position.x && projectile->tipX < pos.x+hb.size.x)
                         {
-                            if(projectile->tipY > pos.y+hb.top && projectile->tipY < pos.y+hb.height)
+                            if(projectile->tipY > pos.y+hb.position.y && projectile->tipY < pos.y+hb.size.y)
                             {
                                 projectile->finished = true;
                                 pon->curHP -= projectile->damage;
@@ -1299,9 +1300,9 @@ void MissionController::ProcessProjectiles()
                 {
                     for(auto hb : pon->getHitbox())
                     {
-                        if(projectile->tipX > pos.x+hb.left && projectile->tipX < pos.x+hb.width)
+                        if(projectile->tipX > pos.x+hb.position.x && projectile->tipX < pos.x+hb.size.x)
                         {
-                            if(projectile->tipY > pos.y+hb.top && projectile->tipY < pos.y+hb.height)
+                            if(projectile->tipY > pos.y+hb.position.y && projectile->tipY < pos.y+hb.size.y)
                             {
                                 projectile->finished = true;
                                 pon->curHP -= 3 + rand() % 5;

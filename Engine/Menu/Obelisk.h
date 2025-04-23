@@ -74,9 +74,6 @@ public:
 
     std::vector<Mission> missions; ///Missions returned for a specific location
 
-    sf::Texture test_tex;
-    sf::Sprite test_spr;
-
     float mapX = 0;
     float mapXdest = 0;
 

@@ -87,7 +87,7 @@ namespace sfml
     {
         if ((a < points.size()) && (b < points.size()) && (c < points.size()))
         {
-            triangles.push_back(sf::VertexArray(sf::Triangles, 3));
+            triangles.push_back(sf::VertexArray(sf::PrimitiveType::Triangles, 3));
             triangles.back()[0].position = points[a];
             triangles.back()[1].position = points[b];
             triangles.back()[2].position = points[c];

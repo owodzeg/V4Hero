@@ -67,12 +67,6 @@ public:
     sf::Clock missionEndTimer;
     bool playJingle = false;
 
-    sf::SoundBuffer sb_win_jingle;
-    sf::SoundBuffer sb_lose_jingle;
-    sf::Sound s_jingle;
-
-    sf::SoundBuffer sb_cheer1, sb_cheer2, sb_cheer3;
-    sf::Sound s_cheer;
     bool playCheer[3];
 
     PSprite bar_win;

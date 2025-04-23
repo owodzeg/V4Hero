@@ -74,8 +74,8 @@ std::vector<sf::String> PataText::extract_tokens(const sf::String& str)
 
     std::size_t pos = 0;
     std::size_t prev = 0;
-    const uint32_t openBrace = '{';
-    const uint32_t closeBrace = '}';
+    const sf::String openBrace = '{';
+    const sf::String closeBrace = '}';
 
     while (pos < str.getSize())
     {
@@ -142,6 +142,17 @@ PataText::PataText()
 PataText::~PataText()
 {
     SPDLOG_DEBUG("Destroying PataText instance");
+    for (auto& line : m_lines)
+    {
+        for (auto& character : line)
+        {
+            if (character.text != nullptr)
+            {
+                delete character.text;
+                character.text = nullptr;
+            }
+        }
+    }
     m_lines.clear();
     SPDLOG_DEBUG("Destroying PataText instance.. completed");
 }
@@ -619,7 +630,9 @@ void PataText::ProcessRegularText(const sf::String& token)
         {
             // Reset single-use timeout
             m_marker.curCharTimeout = 0;
-            currentLine.emplace_back(token[i], m_marker);
+            PTChar newChar(token[i], m_marker);
+            newChar.text = new sf::Text(*newChar.style.font, token[i], newChar.style.char_size);
+            currentLine.emplace_back(newChar);
         }
     }
 }
@@ -640,7 +653,7 @@ void PataText::applyDefaultKerning()
 
             const std::string& fontStr = currentCharacter.style.fontStr;
 
-            std::pair<sf::Uint32, sf::Uint32> p = {currentCharacter.character, nextCharacter.character};
+            std::pair<char32_t, char32_t> p = {currentCharacter.character, nextCharacter.character};
             currentCharacter.style.kerning = strRepo->GetKerningForFont(fontStr, p, currentCharacter.style.char_size);
         }
     }
@@ -723,7 +736,7 @@ sf::Vector2f PataText::getGlobalOrigin()
 
 sf::FloatRect PataText::getGlobalBounds()
 {
-    return sf::FloatRect(0, 0, max_width, max_height);
+    return sf::FloatRect(sf::Vector2f(0, 0), sf::Vector2f(max_width, max_height));
 }
 
 void PataText::draw()
@@ -742,13 +755,16 @@ void PataText::draw()
         {
             for (auto& character : line)
             {
-                character.text.setFont(*character.style.font);
-                character.text.setCharacterSize(character.style.char_size * windowScale);
-                character.text.setFillColor(sf::Color(character.style.c_red, character.style.c_green, character.style.c_blue, character.style.c_alpha));
-                character.text.setOutlineColor(sf::Color(character.style.ot_c_red, character.style.ot_c_green, character.style.ot_c_blue, character.style.ot_c_alpha));
-                character.text.setOutlineThickness(character.style.thickness * windowScale);
-                character.text.setStyle(character.style.bold * sf::Text::Bold + character.style.italic * sf::Text::Italic + character.style.underline * sf::Text::Underlined + character.style.strike * sf::Text::StrikeThrough);
-                character.text.setString(character.character);
+                if (character.text)
+                {
+                    character.text->setFont(*character.style.font);
+                    character.text->setCharacterSize(character.style.char_size * windowScale);
+                    character.text->setFillColor(sf::Color(character.style.c_red, character.style.c_green, character.style.c_blue, character.style.c_alpha));
+                    character.text->setOutlineColor(sf::Color(character.style.ot_c_red, character.style.ot_c_green, character.style.ot_c_blue, character.style.ot_c_alpha));
+                    character.text->setOutlineThickness(character.style.thickness * windowScale);
+                    character.text->setStyle(character.style.bold * sf::Text::Bold + character.style.italic * sf::Text::Italic + character.style.underline * sf::Text::Underlined + character.style.strike * sf::Text::StrikeThrough);
+                    character.text->setString(character.character);
+                }
             }
         }
 
@@ -760,7 +776,7 @@ void PataText::draw()
     for (auto& line : m_lines)
     {
         for (auto& character : line)
-        {  
+        {
             // effects! :D
             double total_x_offset = 0;
             double total_y_offset = 0;
@@ -788,16 +804,16 @@ void PataText::draw()
             character.style.x_offset = total_x_offset;
             character.style.y_offset = total_y_offset;
 
-            character.text.setRotation(character.style.rotation + character.style.r_offset);
+            character.text->setRotation(sf::degrees(character.style.rotation + character.style.r_offset));
 
             double final_x = windowScale * (global_x + character.position.x - origin_x + character.style.x_offset);
             double final_y = windowScale * (global_y + character.position.y - origin_y + character.style.y_offset);
 
-            character.text.setPosition(final_x, final_y);
-            
+            character.text->setPosition(sf::Vector2f(final_x, final_y));
+
             timeRequired += character.style.curCharTimeout;
             if (timeRequired <= dialogue_clock.getElapsedTime().asMilliseconds())
-                window->draw(character.text);
+                window->draw(*character.text);
             timeRequired += character.style.nextCharTimeout;
         }
     }

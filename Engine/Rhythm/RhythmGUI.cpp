@@ -60,7 +60,7 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
         r_rhythm.setOutlineThickness(-ceil(3 * ratio_universal));
         r_rhythm.setOutlineColor(sf::Color(255, 255, 255, rhythmAlpha));
         r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (24 * ratio_X), (720 * ratio_Y) - (24 * ratio_Y)));
-        r_rhythm.setPosition(12 * ratio_X, 12 * ratio_Y);
+        r_rhythm.setPosition(sf::Vector2f(12 * ratio_X, 12 * ratio_Y));
 
         r_rhythm2.setOutlineColor(sf::Color(0, 0, 0, 0));
     } else if ((combo > 1) && (v_cycle_mode == 1))
@@ -69,13 +69,13 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
         r_rhythm.setOutlineThickness(-ceil(2 * ratio_universal));
         r_rhythm.setOutlineColor(sf::Color(64, 64, 64, rhythmAlpha));
         r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (20 * ratio_X), (720 * ratio_Y) - (20 * ratio_Y)));
-        r_rhythm.setPosition(10 * ratio_X, 10 * ratio_Y);
+        r_rhythm.setPosition(sf::Vector2f(10 * ratio_X, 10 * ratio_Y));
 
         r_rhythm2.setFillColor(sf::Color(0, 0, 0, 0));
         r_rhythm2.setOutlineThickness(-ceil(2 * ratio_universal));
         r_rhythm2.setOutlineColor(sf::Color(64, 64, 64, rhythmAlpha));
         r_rhythm2.setSize(sf::Vector2f((1280 * ratio_X) - (30 * ratio_X), (720 * ratio_Y) - (30 * ratio_Y)));
-        r_rhythm2.setPosition(15 * ratio_X, 15 * ratio_Y);
+        r_rhythm2.setPosition(sf::Vector2f(15 * ratio_X, 15 * ratio_Y));
 
         if (v_cycle == 4)
         {
@@ -100,7 +100,7 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
         r_rhythm.setOutlineThickness(-ceil(7 * ratio_universal));
 
         r_rhythm.setSize(sf::Vector2f((1280 * ratio_X) - (20 * ratio_X), (720 * ratio_Y) - (20 * ratio_Y)));
-        r_rhythm.setPosition(10 * ratio_X, 10 * ratio_Y);
+        r_rhythm.setPosition(sf::Vector2f(10 * ratio_X, 10 * ratio_Y));
 
         r_rhythm2.setOutlineColor(sf::Color(0, 0, 0, 0));
 
@@ -238,17 +238,17 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
         d_orange.setSize(sf::Vector2f(o_width, 40));
         d_red.setSize(sf::Vector2f(r_width, 40));
 
-        d_green.setPosition(window->getSize().x/2-125, window->getSize().y-80);
+        d_green.setPosition(sf::Vector2f(window->getSize().x/2-125, window->getSize().y-80));
         window->draw(d_green);
 
-        d_red.setPosition(window->getSize().x/2-125, window->getSize().y-80);
+        d_red.setPosition(sf::Vector2f(window->getSize().x/2-125, window->getSize().y-80));
         window->draw(d_red);
-        d_red.setPosition(window->getSize().x/2+125-r_width, window->getSize().y-80);
+        d_red.setPosition(sf::Vector2f(window->getSize().x/2+125-r_width, window->getSize().y-80));
         window->draw(d_red);
 
-        d_orange.setPosition(window->getSize().x/2-125+r_width, window->getSize().y-80);
+        d_orange.setPosition(sf::Vector2f(window->getSize().x/2-125+r_width, window->getSize().y-80));
         window->draw(d_orange);
-        d_orange.setPosition(window->getSize().x/2+125-r_width-o_width, window->getSize().y-80);
+        d_orange.setPosition(sf::Vector2f(window->getSize().x/2+125-r_width-o_width, window->getSize().y-80));
         window->draw(d_orange);
 
         int marker_alpha = 25;
@@ -261,7 +261,7 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
             
             marker_pos = (marker_pos / rhythm->beat_timer) * 250;
 
-            d_marker.setPosition((window->getSize().x/2-1) + marker_pos, window->getSize().y-90);
+            d_marker.setPosition(sf::Vector2f((window->getSize().x/2-1) + marker_pos, window->getSize().y-90));
             d_marker.setFillColor(sf::Color(0, 64, 255, marker_alpha));
             window->draw(d_marker);
             marker_alpha += 22;

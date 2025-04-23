@@ -62,17 +62,6 @@ public:
     std::map<int, std::map<int, sf::SoundBuffer>> b_drum;
     std::map<int, std::map<int, sf::SoundBuffer>> b_drumchant;
 
-    // Table for storing all the drums being hit
-    std::deque<sf::Sound> s_drums;                                     
-
-    // sound player for given chant
-    sf::Sound drum_c;
-    sf::Sound drum_nc;
-
-    // buffer and sound player for perfect measure noise
-    sf::SoundBuffer b_perfect;
-    sf::Sound s_perfect;
-
     map<string, int> patterns;
     bool drumAlreadyHit = false;
 

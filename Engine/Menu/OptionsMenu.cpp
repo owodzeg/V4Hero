@@ -29,7 +29,7 @@ OptionsMenu::OptionsMenu()
     //t_pressToContinue.setColor(sf::Color::White);
     //t_pressToContinue.setFillColor(sf::Color::White);
     //t_pressToContinue.setString("Press any key to continue...");
-    //t_pressToContinue.setOrigin(t_pressToContinue.getGlobalBounds().width/2,t_pressToContinue.getGlobalBounds().height/2);
+    //t_pressToContinue.setOrigin(t_pressToContinue.getGlobalBounds().size.x/2,t_pressToContinue.getGlobalBounds().size.y/2);
 
     mm_bigBox.setSize(sf::Vector2f(100,10));
     mm_bigBox.setFillColor(sf::Color(4,0,90));
@@ -474,7 +474,7 @@ void OptionsMenu::SetConfigValue(std::string key, std::string value, bool select
 
 void OptionsMenu::EventFired(sf::Event event)
 {
-    if (event.type == sf::Event::KeyPressed)
+    /* if (event.type == sf::Event::KeyPressed)
     {
 
     } else if (event.type == sf::Event::MouseButtonReleased)
@@ -488,7 +488,7 @@ void OptionsMenu::EventFired(sf::Event event)
     {
         mouseX = event.mouseMove.x;
         mouseY = event.mouseMove.y;
-    }
+    }*/
 }
 
 void OptionsMenu::Update()
@@ -515,9 +515,9 @@ void OptionsMenu::Show()
     /*Menu::Show();
     buttonList.Show();
     t_title.setString("menu_button_3")));
-    t_title.setOrigin(t_title.getGlobalBounds().width/2,t_title.getGlobalBounds().height/2);
+    t_title.setOrigin(t_title.getGlobalBounds().size.x/2,t_title.getGlobalBounds().size.y/2);
     t_disclaimer.setString("option_disclaimer")));
-    t_disclaimer.setOrigin(t_disclaimer.getGlobalBounds().width/2,t_disclaimer.getGlobalBounds().height/2);*/
+    t_disclaimer.setOrigin(t_disclaimer.getGlobalBounds().size.x/2,t_disclaimer.getGlobalBounds().size.y/2);*/
 }
 OptionsMenu::~OptionsMenu()
 {

@@ -10,7 +10,7 @@ using namespace std;
 
 RhythmController::RhythmController()
 {
-    b_perfect.loadFromFile("resources/sfx/drums/perfect.ogg");
+    SoundManager::getInstance().loadBufferFromFile("resources/sfx/drums/perfect.ogg");
 
     patterns["pata"] = 0;
     patterns["pon"] = 0;
@@ -30,17 +30,6 @@ bool RhythmController::checkForInput()
     vector<int> s_rm;
 
     //cout << "RhythmController currently holds " << s_drums.size() << "/220 sounds." << endl;
-
-    for (int i = s_drums.size() - 1; i > 0; i--)
-    {
-        if (s_drums[i].getStatus() == sf::Sound::Status::Stopped)
-        {
-            s_drums.erase(s_drums.begin() + i);
-        } else
-        {
-            break;
-        }
-    }
 
     ///Set initial values for Drum quality check
     SongController::DrumQuality drum_quality = SongController::DrumQuality::BAD;
@@ -92,12 +81,6 @@ bool RhythmController::checkForInput()
             // set buffers and volumes
             SongController* songController = CoreManager::getInstance().getSongController();
 
-            drum_nc.setBuffer(songController->getDrum(songController->drumToEnum(drum_pngs[i]), drum_quality, SongController::DrumType::DRUM));
-            drum_c.setBuffer(songController->getDrum(songController->drumToEnum(drum_pngs[i]), drum_quality, SongController::DrumType::VOICE));
-
-            drum_nc.setVolume(drumVolume);
-            drum_c.setVolume(drumVolume);
-
             // add drum to user input table
             if(drum_quality != SongController::DrumQuality::BAD)
             {
@@ -139,16 +122,14 @@ bool RhythmController::checkForInput()
             if (CoreManager::getInstance().getConfig()->GetInt("enableDrums"))
             {
                 ///And play it
-                s_drums.push_back(drum_nc);
-                s_drums[s_drums.size() - 1].play();
+                SoundManager::getInstance().playSoundFromBuffer(songController->getDrum(songController->drumToEnum(drum_pngs[i]), drum_quality, SongController::DrumType::DRUM), drumToLoad, SoundManager::SoundTag::RHYTHM_DRUM);
             }
 
             ///Check config if drum chant sound effect should be played
             if (CoreManager::getInstance().getConfig()->GetInt("enableDrumChants"))
             {
                 ///And play it
-                s_drums.push_back(drum_c);
-                s_drums[s_drums.size() - 1].play();
+                SoundManager::getInstance().playSoundFromBuffer(songController->getDrum(songController->drumToEnum(drum_pngs[i]), drum_quality, SongController::DrumType::VOICE), drumToLoad, SoundManager::SoundTag::RHYTHM_DRUM_CHANT);
             }
 
             ///Remove drums from user input if user has hit more than 4 drums (8 half-beats)
@@ -196,10 +177,7 @@ bool RhythmController::checkForInput()
                     SPDLOG_DEBUG("Command found! Perfects: {}", perfect);
                     if (perfect == 8)
                     {
-                        s_perfect.stop();
-                        s_perfect.setBuffer(b_perfect);
-                        s_perfect.setVolume(drumVolume);
-                        s_perfect.play();
+                        SoundManager::getInstance().playSound("resources/sfx/drums/perfect.ogg", SoundManager::SoundTag::RHYTHM_DRUM);
 
                         rhythm->addRhythmMessage(Rhythm::RhythmAction::PERFECT_COMMAND, to_string(command));
                     }
@@ -256,10 +234,7 @@ bool RhythmController::checkForInput()
                         SPDLOG_DEBUG("[Hack] Command found! Perfects: {}", perfect);
                         if (perfect == 8)
                         {
-                            s_perfect.stop();
-                            s_perfect.setBuffer(b_perfect);
-                            s_perfect.setVolume(drumVolume);
-                            s_perfect.play();
+                            SoundManager::getInstance().playSound("resources/sfx/drums/perfect.ogg", SoundManager::SoundTag::RHYTHM_DRUM);
 
                             rhythm->addRhythmMessage(Rhythm::RhythmAction::PERFECT_COMMAND, to_string(command));
                         }

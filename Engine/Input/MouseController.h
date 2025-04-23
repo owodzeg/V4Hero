@@ -8,7 +8,7 @@ class MouseController {
     int x=0,y=0;
     bool lmb = false, rmb = false;
     MouseController();
-    void parseEvents(sf::Event& event);
+    void parseEvents(const std::optional<sf::Event>& event);
     sf::Vector2i getMousePos();
     bool getClick(int which);
 };

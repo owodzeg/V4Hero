@@ -13,7 +13,7 @@ V4Core::V4Core()
     //const unsigned int maxSize = sf::Texture::getMaximumSize();
     //SPDLOG_DEBUG("Max allowed texture size: {}", maxSize);
     sf::RenderTexture rtx;
-    SPDLOG_DEBUG("Max antialiasing level: {}", rtx.getMaximumAntialiasingLevel());
+    SPDLOG_DEBUG("Max antialiasing level: {}", rtx.getMaximumAntiAliasingLevel());
 
     /** Initialize Discord Rich Presence **/
     auto result = discord::Core::Create(712761245752623226, DiscordCreateFlags_NoRequireDiscord, &core);
@@ -113,7 +113,7 @@ void V4Core::init()
 
     // Set antialiasing level (hardcoded, apply from config)
     sf::ContextSettings settings;
-    settings.antialiasingLevel = 16;
+    settings.antiAliasingLevel = 16;
 
     // Create the game window
     SPDLOG_INFO("Creating window");
@@ -122,12 +122,14 @@ void V4Core::init()
     // Gather the Config pointer so we can get values from there
     Config* config = CoreManager::getInstance().getConfig();
 
+    sf::Vector2u windowSize(config->GetInt("resX"), config->GetInt("resY"));
+
     if (config->GetInt("enableFullscreen")) // open in fullscreen
-        window->create(sf::VideoMode(config->GetInt("resX"), config->GetInt("resY")), "Patafour", sf::Style::Fullscreen, settings);
+        window->create(sf::VideoMode(windowSize), "Patafour", sf::State::Fullscreen, settings);
     else if (config->GetInt("enableBorderlessWindow")) // open as borderless window
-        window->create(sf::VideoMode(config->GetInt("resX"), config->GetInt("resY")), "Patafour", sf::Style::None, settings);
+        window->create(sf::VideoMode(windowSize), "Patafour", sf::Style::None, sf::State::Windowed, settings);
     else // open as a regular window
-        window->create(sf::VideoMode(config->GetInt("resX"), config->GetInt("resY")), "Patafour", sf::Style::Titlebar | sf::Style::Close, settings);
+        window->create(sf::VideoMode(windowSize), "Patafour", sf::Style::Titlebar | sf::Style::Close, sf::State::Windowed, settings);
 
     // Get current framerate limit
     framerate_limit = config->GetInt("framerateLimit");
@@ -141,7 +143,7 @@ void V4Core::init()
     // Version text
     t_version.append("{outline 6 0 0 0}{color 255 255 255}V4Hero Client ");
     t_version.append(hero_version);
-    t_version.setGlobalOrigin(t_version.getGlobalBounds().width, 0);
+    t_version.setGlobalOrigin(t_version.getGlobalBounds().size.x, 0);
 
     // Apply window settings (fps limit, vsync)
     SPDLOG_INFO("Applying window settings");
@@ -243,12 +245,12 @@ void V4Core::init()
     while (window->isOpen())
     {
         // Check for window events
-        sf::Event event;
-        while (window->pollEvent(event))
+        while (const std::optional event = window->pollEvent())
         {
-            // Close the window when cross is clicked
-            if (event.type == sf::Event::Closed)
+            if (event->is<sf::Event::Closed>())
+            {
                 window->close();
+            }
 
             // Forward events to InputController for keyboard and controller usage
             inputCtrl->parseEvents(event);
@@ -301,7 +303,7 @@ void V4Core::init()
             t_fps.reset();
             t_fps.append("{outline 6 0 0 0}{color 255 255 255}FPS: ");
             t_fps.append(to_string(int(ceil(rawFps))));
-            t_fps.setGlobalOrigin(t_fps.getGlobalBounds().width, 0);
+            t_fps.setGlobalOrigin(t_fps.getGlobalBounds().size.x, 0);
             t_fps.setGlobalPosition(3828, 72);
             t_fps.draw();
         }

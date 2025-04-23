@@ -135,19 +135,19 @@ void InputController::processKeyHolds()
     mtx.unlock();
 }
 
-void InputController::parseEvents(sf::Event& event)
+void InputController::parseEvents(const std::optional<sf::Event>& event)
 {
     if(lockInput)
         return;
 
-    if (event.type == sf::Event::KeyPressed)
+    if (const auto* e = event->getIf<sf::Event::KeyPressed>())
     {
-        addKeyPressMessage(event.key.code, true);
+        addKeyPressMessage(static_cast<int>(e->scancode), true);
     }
 
-    if (event.type == sf::Event::KeyReleased)
+    if (const auto* e = event->getIf<sf::Event::KeyReleased>())
     {
-        addKeyPressMessage(event.key.code, false);
+        addKeyPressMessage(static_cast<int>(e->scancode), false);
     }
 
     /** Joystick buttons need to be somewhat manually assigned **/
@@ -180,33 +180,34 @@ void InputController::parseEvents(sf::Event& event)
         };
     }
 
-    if (event.type == sf::Event::JoystickButtonPressed)
+    if (const auto* e = event->getIf<sf::Event::JoystickButtonPressed>())
     {
-        if (event.joystickButton.joystickId == 0)
+        if (e->joystickId == 0)
         {
-            SPDLOG_DEBUG("Joystick ({}) key pressed: {}", event.joystickButton.joystickId, event.joystickButton.button);
+            SPDLOG_DEBUG("Joystick ({}) key pressed: {}", e->joystickId, e->button);
 
-            addKeyPressMessage(ds4map[event.joystickButton.button], true);
+            addKeyPressMessage(ds4map[e->button], true);
         }
     }
 
-    if (event.type == sf::Event::JoystickButtonReleased)
+    if (const auto* e = event->getIf<sf::Event::JoystickButtonReleased>())
     {
-        if (event.joystickButton.joystickId == 0)
+        if (e->joystickId == 0)
         {
-            SPDLOG_DEBUG("Joystick ({}) key released: {}", event.joystickButton.joystickId, event.joystickButton.button);
+            SPDLOG_DEBUG("Joystick ({}) key released: {}", e->joystickId, e->button);
 
-            addKeyPressMessage(ds4map[event.joystickButton.button], false);
+            addKeyPressMessage(ds4map[e->button], false);
         }
     }
 
-    if (event.type == sf::Event::JoystickMoved)
+    //if (event.type == sf::Event::JoystickMoved)
+    if (const auto* e = event->getIf<sf::Event::JoystickMoved>())
     {
-        if (event.joystickMove.joystickId == 0)
+        if (e->joystickId == 0)
         {
-            if (event.joystickMove.axis == sf::Joystick::PovX)
+            if (e->axis == sf::Joystick::Axis::PovX)
             {
-                if (event.joystickMove.position == -100) ///left
+                if (e->position == -100) ///left
                 {
                     keyRegistered = true;
                     currentKey = 1100;
@@ -217,7 +218,7 @@ void InputController::parseEvents(sf::Event& event)
                     keyMapHeld[1100] = false;
                 }
 
-                if (event.joystickMove.position == 100) ///right
+                if (e->position == 100) ///right
                 {
                     keyRegistered = true;
                     currentKey = 1101;
@@ -229,9 +230,9 @@ void InputController::parseEvents(sf::Event& event)
                 }
             }
 
-            if (event.joystickMove.axis == sf::Joystick::PovY)
+            if (e->axis == sf::Joystick::Axis::PovY)
             {
-                if (event.joystickMove.position == -100) ///down
+                if (e->position == -100) ///down
                 {
                     keyRegistered = true;
                     currentKey = 1102;
@@ -242,7 +243,7 @@ void InputController::parseEvents(sf::Event& event)
                     keyMapHeld[1102] = false;
                 }
 
-                if (event.joystickMove.position == 100) ///up
+                if (e->position == 100) ///up
                 {
                     keyRegistered = true;
                     currentKey = 1103;

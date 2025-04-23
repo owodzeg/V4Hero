@@ -18,6 +18,15 @@ using json = nlohmann::json;
 
 Rhythm::Rhythm()
 {
+    SoundManager::getInstance().loadBufferFromFile("resources/sfx/bgm/fever_start.ogg");
+    SoundManager::getInstance().loadBufferFromFile("resources/sfx/bgm/fever_fail.ogg");
+    SoundManager::getInstance().loadBufferFromFile("resources/sfx/level/badrhythm_1.ogg");
+    SoundManager::getInstance().loadBufferFromFile("resources/sfx/level/badrhythm_2.ogg");
+    SoundManager::getInstance().loadBufferFromFile("resources/sfx/drums/metronome.ogg");
+    SoundManager::getInstance().loadBufferFromFile("resources/sfx/drums/ding.ogg");
+    SoundManager::getInstance().loadBufferFromFile("resources/sfx/drums/anvil.ogg");
+
+    /*
     b_fever_start.loadFromFile("resources/sfx/bgm/fever_start.ogg");
     b_fever_fail.loadFromFile("resources/sfx/bgm/fever_fail.ogg");
 
@@ -32,6 +41,7 @@ Rhythm::Rhythm()
 
     b_anvil.loadFromFile("resources/sfx/drums/anvil.ogg");
     s_anvil.setBuffer(b_anvil);
+    */
 
     // fetch commands from file
     std::ifstream t("resources/data/commands.json", std::ios::in);
@@ -73,10 +83,11 @@ Rhythm::Rhythm()
 
 void Rhythm::Stop()
 {
-    s_theme[0].stop();
-    s_theme[1].stop();
-    s_fever_fail.stop();  ///Dying fever sound
-    s_fever_start.stop(); ///FEVER!
+    SoundManager::getInstance().stopTaggedSounds(SoundManager::SoundTag::RHYTHM_DRUM);
+    SoundManager::getInstance().stopTaggedSounds(SoundManager::SoundTag::RHYTHM_DRUM_CHANT);
+    SoundManager::getInstance().stopTaggedSounds(SoundManager::SoundTag::RHYTHM_METRONOME);
+    SoundManager::getInstance().stopTaggedSounds(SoundManager::SoundTag::RHYTHM_CHANT);
+    SoundManager::getInstance().stopTaggedSounds(SoundManager::SoundTag::RHYTHM_BGM);
 
     running = false;
 }
@@ -136,8 +147,7 @@ void Rhythm::LoadTheme(string theme)
 
 void Rhythm::ClearSong()
 {
-    s_theme[0].stop();
-    s_theme[1].stop();
+    SoundManager::getInstance().stopTaggedSounds(SoundManager::SoundTag::RHYTHM_BGM);
 }
 
 void Rhythm::PlaySong(SongController::SongType songType)
@@ -146,11 +156,14 @@ void Rhythm::PlaySong(SongController::SongType songType)
     SPDLOG_DEBUG("Playing songType: {}, song_channel: {}", static_cast<int>(songType), song_channel);
 
     SongController* songController = CoreManager::getInstance().getSongController();
-    
+    SoundManager::getInstance().playSoundFromBuffer(songController->getSong(songType), "key", SoundManager::SoundTag::RHYTHM_BGM);
+
+    /* 
     s_theme[song_channel].stop();
     s_theme[song_channel].setBuffer(songController->getSong(songType));
     s_theme[song_channel].setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("bgmVolume")) / 100.f));
     s_theme[song_channel].play();
+    */
 }
 
 void Rhythm::Start()
@@ -184,8 +197,9 @@ void Rhythm::BreakCombo(int reason)
     RhythmController* rhythmController = CoreManager::getInstance().getRhythmController();
 
     combo = 0;
-    if(CoreManager::getInstance().getConfig()->GetInt("musicDebug") == 1)
-        s_anvil.play();
+    if (CoreManager::getInstance().getConfig()->GetInt("musicDebug") == 1)
+        SoundManager::getInstance().playSound("resources/sfx/drums/anvil.ogg", SoundManager::SoundTag::OTHER);
+        //s_anvil.play();
 
     newRhythmClock.restart();
     
@@ -194,8 +208,7 @@ void Rhythm::BreakCombo(int reason)
     metronomeState = 1;
     metronomeClick = false;
 
-    s_theme[0].stop();
-    s_theme[1].stop();
+    SoundManager::getInstance().stopTaggedSounds(SoundManager::SoundTag::RHYTHM_BGM);
 
     drumTicks = -1;
     measureCycle = 0;
@@ -405,7 +418,7 @@ void Rhythm::checkRhythmController()
     ///RHYTHM CONTROLLER SETUP
     rhythmController->combo = combo;
 
-    sf::Int64 rhythmClockValue = newRhythmClock.getElapsedTime().asMicroseconds();
+    int64_t rhythmClockValue = newRhythmClock.getElapsedTime().asMicroseconds();
 
     rhythmController->masterTimer = abs((rhythmClockValue % int(beat_timer)) - (beat_timer/2));
     rhythmController->masterTimerNoAbs = rhythmClockValue % int(beat_timer) - (beat_timer/2);
@@ -481,7 +494,7 @@ void Rhythm::doRhythm()
         return;
     }
 
-    sf::Int64 rhythmClockValue = newRhythmClock.getElapsedTime().asMicroseconds();
+    int64_t rhythmClockValue = newRhythmClock.getElapsedTime().asMicroseconds();
 
     metronomeVal = (rhythmClockValue % int(beat_timer));
     //SPDLOG_DEBUG("metronome: {}", metronomeVal);
@@ -496,7 +509,8 @@ void Rhythm::doRhythm()
 
         if(metronomeState == 0)
         {
-            s_metronome.play();
+            //s_metronome.play();
+            SoundManager::getInstance().playSound("resources/sfx/drums/metronome.ogg", SoundManager::SoundTag::RHYTHM_METRONOME);
 
             CoreManager::getInstance().getRhythmGUI()->click();
             
@@ -536,7 +550,8 @@ void Rhythm::doRhythm()
                             PlaySong(currentSongType);
 
                             if(CoreManager::getInstance().getConfig()->GetInt("musicDebug") == 1)
-                                s_ding.play();
+                                SoundManager::getInstance().playSound("resources/sfx/drums/ding.ogg", SoundManager::SoundTag::OTHER);
+                                //s_ding.play();
                         }
                     }
                     else //otherwise, handle the command that contains last halfbeat as drum
@@ -559,7 +574,8 @@ void Rhythm::doRhythm()
                         PlaySong(currentSongType);
 
                         if(CoreManager::getInstance().getConfig()->GetInt("musicDebug") == 1)
-                            s_ding.play();
+                            SoundManager::getInstance().playSound("resources/sfx/drums/ding.ogg", SoundManager::SoundTag::OTHER);
+                            //s_ding.play();
                     }
                 }
                 else // combo system in place, command needs to follow drum tick pattern
@@ -580,8 +596,9 @@ void Rhythm::doRhythm()
                         decideSongType();
                         PlaySong(currentSongType);
 
-                        if(CoreManager::getInstance().getConfig()->GetInt("musicDebug") == 1)
-                            s_ding.play();
+                        if (CoreManager::getInstance().getConfig()->GetInt("musicDebug") == 1)
+                            SoundManager::getInstance().playSound("resources/sfx/drums/ding.ogg", SoundManager::SoundTag::OTHER);
+                            //s_ding.play();
                     }
                 }
             }

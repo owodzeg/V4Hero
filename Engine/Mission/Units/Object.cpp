@@ -16,8 +16,8 @@ Object::Object(std::string mem, int xpos, int ypos, int l, int p)
 
     s_obj.setTexture(tex_obj);
 
-    or_x = s_obj.getGlobalBounds().width / 2;
-    or_y = s_obj.getGlobalBounds().height / 2;
+    or_x = s_obj.getGlobalBounds().size.x / 2;
+    or_y = s_obj.getGlobalBounds().size.y / 2;
 
     x = xpos;
     y = ypos;
@@ -36,8 +36,8 @@ void Object::Load(string filename, int xpos, int ypos)
     {
         s_obj.setTexture(tex_obj);
 
-        or_x = s_obj.getGlobalBounds().width / 2;
-        or_y = s_obj.getGlobalBounds().height / 2;
+        or_x = s_obj.getGlobalBounds().size.x / 2;
+        or_y = s_obj.getGlobalBounds().size.y / 2;
 
         x = xpos;
         y = ypos;
@@ -53,8 +53,8 @@ void Object::Load(sf::Texture& texture, int xpos, int ypos)
     tex_obj = texture;
     s_obj.setTexture(tex_obj);
 
-    or_x = s_obj.getGlobalBounds().width / 2;
-    or_y = s_obj.getGlobalBounds().height / 2;
+    or_x = s_obj.getGlobalBounds().size.x / 2;
+    or_y = s_obj.getGlobalBounds().size.y / 2;
 
     x = xpos;
     y = ypos;
@@ -72,8 +72,8 @@ void Object::LoadFromMemory(std::string mem, int xpos, int ypos)
 
     s_obj.setTexture(tex_obj);
 
-    or_x = s_obj.getGlobalBounds().width / 2;
-    or_y = s_obj.getGlobalBounds().height / 2;
+    or_x = s_obj.getGlobalBounds().size.x / 2;
+    or_y = s_obj.getGlobalBounds().size.y / 2;
 
     x = xpos;
     y = ypos;
@@ -109,7 +109,7 @@ void Object::swapTexture(sf::Image first, vector<Pixel> px)
     //cout << c.getElapsedTime().asMicroseconds() << "us ";
     for (int i = 0; i < px.size(); i++)
     {
-        nw.setPixel(px[i].x, px[i].y, px[i].color);
+        nw.setPixel(sf::Vector2u(px[i].x, px[i].y), px[i].color);
     }
     //cout << c.getElapsedTime().asMicroseconds() << "us ";
     //s_obj.t.loadFromImage(nw);
@@ -418,19 +418,6 @@ void Object::Draw(int orx, int ory)
         obj.setRotation(g_r + r);
         obj.setColor(color);
         obj.draw();
-
-        if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
-        {
-            if (!exported)
-            {
-                sf::Image img;
-                //img = s_obj.t.copyToImage();
-                int rrr = rand() % 100000000;
-                img.saveToFile("texDump/obj_" + std::to_string(rrr) + ".png");
-
-                exported = true;
-            }
-        }
     }
 }
 
@@ -440,7 +427,7 @@ void Object::Draw(int x1, int y1, int x2, int y2, int orx, int ory)
     if (!disable)
     {
         //cout << x1 << " " << y1 << " " << x2 << " " << y2 << endl;
-        s_obj.setTextureRect(sf::IntRect(x1, y1, x2, y2));
+        s_obj.setTextureRect(sf::IntRect(sf::Vector2i(x1, y1), sf::Vector2i(x2, y2)));
 
         //s_obj.setTexture(tex_obj);
         s_obj.setScale(s_x + (g_sx - 1), s_y + (g_sy - 1));
@@ -449,19 +436,5 @@ void Object::Draw(int x1, int y1, int x2, int y2, int orx, int ory)
         s_obj.setRotation(g_r + r);
         s_obj.setColor(color);
         s_obj.draw();
-
-
-        if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
-        {
-            if (!exported)
-            {
-                sf::Image img;
-                //img = s_obj.t.copyToImage();
-                int rrr = rand() % 100000000;
-                img.saveToFile("texDump/obj_" + std::to_string(rrr) + ".png");
-
-                exported = true;
-            }
-        }
     }
 }

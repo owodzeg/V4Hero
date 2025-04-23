@@ -66,7 +66,7 @@ void PSpritesheet::load(std::string file, int q, int r)
     {
         vector<string> s_rect = Func::Split(buff, ',');
 
-        rect.push_back(sf::IntRect(atoi(s_rect[0].c_str()), atoi(s_rect[1].c_str()), atoi(s_rect[2].c_str()), atoi(s_rect[3].c_str())));
+        rect.push_back(sf::IntRect(sf::Vector2i(atoi(s_rect[0].c_str()), atoi(s_rect[1].c_str())), sf::Vector2i(atoi(s_rect[2].c_str()), atoi(s_rect[3].c_str()))));
     }
 
     spr.close();

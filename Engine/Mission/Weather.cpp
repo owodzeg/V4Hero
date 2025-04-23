@@ -22,7 +22,7 @@ void Weather::loadWeather(int type)
             for (int i = 0; i < 3; i++)
             {
                 ps_snowflakes[i].loadFromFile("resources/graphics/weather/snowflake_" + std::to_string(i + 1) + ".png", thisConfig->GetInt("textureQuality"));
-                ps_snowflakes[i].setOrigin(ps_snowflakes[i].getLocalBounds().width / 2, ps_snowflakes[i].getLocalBounds().height / 2);
+                ps_snowflakes[i].setOrigin(ps_snowflakes[i].getLocalBounds().size.x / 2, ps_snowflakes[i].getLocalBounds().size.y / 2);
             }
 
             break;
@@ -139,7 +139,7 @@ void Weather::draw(sf::RenderWindow& window, float fps)
         raindrops[i].x += raindrops[i].xspeed / fps;
         raindrops[i].y += raindrops[i].yspeed / fps;
 
-        raindrops[i].droplet.setPosition(raindrops[i].x, raindrops[i].y);
+        raindrops[i].droplet.setPosition(sf::Vector2f(raindrops[i].x, raindrops[i].y));
 
         if ((raindrops[i].x > 1320) || (raindrops[i].y > 800))
             r_rm.push_back(i);

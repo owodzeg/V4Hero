@@ -45,22 +45,6 @@ public:
 
     std::shared_ptr<spdlog::logger> logger = spdlog::get("rhythm");
 
-    /// Initialize sounds ///
-    sf::SoundBuffer b_fever_fail;
-    sf::SoundBuffer b_fever_start;
-
-    sf::SoundBuffer b_metronome;
-    sf::SoundBuffer b_ding;
-    sf::SoundBuffer b_anvil;
-
-    sf::Sound s_theme[2];    ///For playing BGM
-    sf::Sound s_fever_fail;  ///Dying fever sound
-    sf::Sound s_fever_start; ///FEVER!
-    
-    sf::Sound s_metronome; //rhythm helper
-    sf::Sound s_ding; //rhythm helper
-    sf::Sound s_anvil; //rhythm helper
-
     /// Initialize Rhythm System values ///
     int combo = 1;     ///Rhythm combo, main navigator through BGM
 
@@ -83,8 +67,8 @@ public:
     /// Config and Keybindings ///
     std::string current_song;
 
-    sf::SoundBuffer s_badrhythm1, s_badrhythm2; ///absolutely terrible! (shoutouts to shockturtle)
-    sf::Sound pata_react;
+    //sf::SoundBuffer s_badrhythm1, s_badrhythm2; ///absolutely terrible! (shoutouts to shockturtle)
+    //sf::Sound pata_react;
 
     // Callback system for rhythm engine
     enum RhythmAction // describes rhythm actions that are going to be broadcasted to any entity that wants to use the rhythm engine

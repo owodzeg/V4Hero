@@ -82,7 +82,7 @@ Barracks::Barracks()
 
     ///             ####   UNIT CLASS ICON
     class_icon.loadFromFile("resources/graphics/ui/yari_icon.png", quality);
-    class_icon.setOrigin(class_icon.getLocalBounds().width / 2, class_icon.getLocalBounds().height / 2);
+    class_icon.setOrigin(class_icon.getLocalBounds().size.x / 2, class_icon.getLocalBounds().size.y / 2);
     class_icon.setPosition(102*3, 98*3);
 
     ///             ####   UNIT ITEM ICON
@@ -165,13 +165,13 @@ Barracks::Barracks()
 
     t_unit_rarepon_name.append("{size 72}{color 0 0 0}");
     t_unit_rarepon_name.append(Func::GetStrFromKey("item_wooden_spear"));
-    t_unit_rarepon_name.setGlobalOrigin(0, t_unit_rarepon_name.getGlobalBounds().height / 2);
+    t_unit_rarepon_name.setGlobalOrigin(0, t_unit_rarepon_name.getGlobalBounds().size.y / 2);
 
     for (int i = 0; i < t_eq_names.size(); i++)
     {
         t_eq_names[i].append("{size 72}{color 0 0 0}");
         t_eq_names[i].append(Func::GetStrFromKey("item_wooden_spear"));
-        t_eq_names[i].setGlobalOrigin(0, t_eq_names[i].getGlobalBounds().height / 2);
+        t_eq_names[i].setGlobalOrigin(0, t_eq_names[i].getGlobalBounds().size.y / 2);
     }
 
     inv_box.loadFromFile("resources/graphics/ui/mini_inventory.png", quality);
@@ -256,17 +256,7 @@ Barracks::Barracks()
 
 void Barracks::eventFired(sf::Event event)
 {
-    if (is_active)
-    {
-        if (event.type == sf::Event::KeyPressed)
-        {
 
-
-        } else if (event.type == sf::Event::MouseButtonReleased)
-        {
-            // We use mouse released so a user can change their mind by keeping the mouse held and moving away.
-        }
-    }
 }
 
 int Barracks::countOccupied(vector<int> order_id)
@@ -360,7 +350,7 @@ void Barracks::loadInventory()
 
                 ///look up item's icon
                 cur_box.icon.loadFromFile("resources/graphics/ui/altar/materials/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q);
-                cur_box.icon.setOrigin(cur_box.icon.getLocalBounds().width / 2, cur_box.icon.getLocalBounds().height / 2);
+                cur_box.icon.setOrigin(cur_box.icon.getLocalBounds().size.x / 2, cur_box.icon.getLocalBounds().size.y / 2);
 
                 break;
             }
@@ -371,7 +361,7 @@ void Barracks::loadInventory()
 
                 ///look up item's icon
                 cur_box.icon.loadFromFile("resources/graphics/ui/altar/materials/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q);
-                cur_box.icon.setOrigin(cur_box.icon.getLocalBounds().width / 2, cur_box.icon.getLocalBounds().height / 2);
+                cur_box.icon.setOrigin(cur_box.icon.getLocalBounds().size.x / 2, cur_box.icon.getLocalBounds().size.y / 2);
 
                 break;
             }
@@ -382,7 +372,7 @@ void Barracks::loadInventory()
 
                 ///look up item's icon
                 cur_box.icon.loadFromFile("resources/graphics/ui/altar/equip/spear_1.png", q);
-                cur_box.icon.setOrigin(cur_box.icon.getLocalBounds().width / 2, cur_box.icon.getLocalBounds().height / 2);
+                cur_box.icon.setOrigin(cur_box.icon.getLocalBounds().size.x / 2, cur_box.icon.getLocalBounds().size.y / 2);
 
                 break;
             }
@@ -393,7 +383,7 @@ void Barracks::loadInventory()
 
                 ///look up item's icon
                 cur_box.icon.loadFromFile("resources/graphics/ui/altar/equip/helm_1.png", q);
-                cur_box.icon.setOrigin(cur_box.icon.getLocalBounds().width / 2, cur_box.icon.getLocalBounds().height / 2);
+                cur_box.icon.setOrigin(cur_box.icon.getLocalBounds().size.x / 2, cur_box.icon.getLocalBounds().size.y / 2);
 
                 break;
             }
@@ -603,12 +593,12 @@ void Barracks::refreshStats()
         Item* starting_item = CoreManager::getInstance().getSaveReader()->invdata.ItemsByType(activeCategory)[inventoryGridXPos+inventoryGridYPos*numItemColumns].item;
 
         t_itemtitle.append(starting_item->item_name)));
-        t_itemtitle.setOrigin(t_itemtitle.getLocalBounds().width/2,t_itemtitle.getLocalBounds().height/2);
+        t_itemtitle.setOrigin(t_itemtitle.getLocalBounds().size.x/2,t_itemtitle.getLocalBounds().size.y/2);
     }
     else
     {
         t_itemtitle.append("item_none")));
-        t_itemtitle.setOrigin(t_itemtitle.getLocalBounds().width/2,t_itemtitle.getLocalBounds().height/2);
+        t_itemtitle.setOrigin(t_itemtitle.getLocalBounds().size.x/2,t_itemtitle.getLocalBounds().size.y/2);
     }*/
 }
 
@@ -782,7 +772,7 @@ void Barracks::Update()
 
     rs_cover.setSize(sf::Vector2f(1280*3 * res_ratio_x, 720*3 * res_ratio_y));
     rs_cover.setFillColor(sf::Color::Black);
-    rs_cover.setPosition(0, 0);
+    rs_cover.setPosition({0, 0});
     window->draw(rs_cover);
 
     s_background.setPosition(0, 0);
@@ -841,27 +831,27 @@ void Barracks::Update()
     class_name.draw();
 
     ///stat text
-    unit_stat_level_t.setGlobalOrigin(0, unit_stat_level_t.getGlobalBounds().height / 2);
-    unit_stat_exp_t.setGlobalOrigin(0, unit_stat_exp_t.getGlobalBounds().height / 2);
-    unit_stat_hp_t.setGlobalOrigin(0, unit_stat_hp_t.getGlobalBounds().height / 2);
-    unit_stat_dmg_t.setGlobalOrigin(0, unit_stat_dmg_t.getGlobalBounds().height / 2);
-    unit_stat_atkspd_t.setGlobalOrigin(0, unit_stat_atkspd_t.getGlobalBounds().height / 2);
-    unit_stat_critc_t.setGlobalOrigin(0, unit_stat_critc_t.getGlobalBounds().height / 2);
-    unit_stat_kbc_t.setGlobalOrigin(0, unit_stat_kbc_t.getGlobalBounds().height / 2);
-    unit_stat_stgc_t.setGlobalOrigin(0, unit_stat_stgc_t.getGlobalBounds().height / 2);
-    unit_stat_firec_t.setGlobalOrigin(0, unit_stat_firec_t.getGlobalBounds().height / 2);
-    unit_stat_icec_t.setGlobalOrigin(0, unit_stat_icec_t.getGlobalBounds().height / 2);
+    unit_stat_level_t.setGlobalOrigin(0, unit_stat_level_t.getGlobalBounds().size.y / 2);
+    unit_stat_exp_t.setGlobalOrigin(0, unit_stat_exp_t.getGlobalBounds().size.y / 2);
+    unit_stat_hp_t.setGlobalOrigin(0, unit_stat_hp_t.getGlobalBounds().size.y / 2);
+    unit_stat_dmg_t.setGlobalOrigin(0, unit_stat_dmg_t.getGlobalBounds().size.y / 2);
+    unit_stat_atkspd_t.setGlobalOrigin(0, unit_stat_atkspd_t.getGlobalBounds().size.y / 2);
+    unit_stat_critc_t.setGlobalOrigin(0, unit_stat_critc_t.getGlobalBounds().size.y / 2);
+    unit_stat_kbc_t.setGlobalOrigin(0, unit_stat_kbc_t.getGlobalBounds().size.y / 2);
+    unit_stat_stgc_t.setGlobalOrigin(0, unit_stat_stgc_t.getGlobalBounds().size.y / 2);
+    unit_stat_firec_t.setGlobalOrigin(0, unit_stat_firec_t.getGlobalBounds().size.y / 2);
+    unit_stat_icec_t.setGlobalOrigin(0, unit_stat_icec_t.getGlobalBounds().size.y / 2);
 
-    unit_stat_level_v.setGlobalOrigin(unit_stat_level_v.getGlobalBounds().width, unit_stat_level_v.getGlobalBounds().height / 2);
-    unit_stat_exp_v.setGlobalOrigin(unit_stat_exp_v.getGlobalBounds().width, unit_stat_exp_v.getGlobalBounds().height / 2);
-    unit_stat_hp_v.setGlobalOrigin(unit_stat_hp_v.getGlobalBounds().width, unit_stat_hp_v.getGlobalBounds().height / 2);
-    unit_stat_dmg_v.setGlobalOrigin(unit_stat_dmg_v.getGlobalBounds().width, unit_stat_dmg_v.getGlobalBounds().height / 2);
-    unit_stat_atkspd_v.setGlobalOrigin(unit_stat_atkspd_v.getGlobalBounds().width, unit_stat_atkspd_v.getGlobalBounds().height / 2);
-    unit_stat_critc_v.setGlobalOrigin(unit_stat_critc_v.getGlobalBounds().width, unit_stat_critc_v.getGlobalBounds().height / 2);
-    unit_stat_kbc_v.setGlobalOrigin(unit_stat_kbc_v.getGlobalBounds().width, unit_stat_kbc_v.getGlobalBounds().height / 2);
-    unit_stat_stgc_v.setGlobalOrigin(unit_stat_stgc_v.getGlobalBounds().width, unit_stat_stgc_v.getGlobalBounds().height / 2);
-    unit_stat_firec_v.setGlobalOrigin(unit_stat_firec_v.getGlobalBounds().width, unit_stat_firec_v.getGlobalBounds().height / 2);
-    unit_stat_icec_v.setGlobalOrigin(unit_stat_icec_v.getGlobalBounds().width, unit_stat_icec_v.getGlobalBounds().height / 2);
+    unit_stat_level_v.setGlobalOrigin(unit_stat_level_v.getGlobalBounds().size.x, unit_stat_level_v.getGlobalBounds().size.y / 2);
+    unit_stat_exp_v.setGlobalOrigin(unit_stat_exp_v.getGlobalBounds().size.x, unit_stat_exp_v.getGlobalBounds().size.y / 2);
+    unit_stat_hp_v.setGlobalOrigin(unit_stat_hp_v.getGlobalBounds().size.x, unit_stat_hp_v.getGlobalBounds().size.y / 2);
+    unit_stat_dmg_v.setGlobalOrigin(unit_stat_dmg_v.getGlobalBounds().size.x, unit_stat_dmg_v.getGlobalBounds().size.y / 2);
+    unit_stat_atkspd_v.setGlobalOrigin(unit_stat_atkspd_v.getGlobalBounds().size.x, unit_stat_atkspd_v.getGlobalBounds().size.y / 2);
+    unit_stat_critc_v.setGlobalOrigin(unit_stat_critc_v.getGlobalBounds().size.x, unit_stat_critc_v.getGlobalBounds().size.y / 2);
+    unit_stat_kbc_v.setGlobalOrigin(unit_stat_kbc_v.getGlobalBounds().size.x, unit_stat_kbc_v.getGlobalBounds().size.y / 2);
+    unit_stat_stgc_v.setGlobalOrigin(unit_stat_stgc_v.getGlobalBounds().size.x, unit_stat_stgc_v.getGlobalBounds().size.y / 2);
+    unit_stat_firec_v.setGlobalOrigin(unit_stat_firec_v.getGlobalBounds().size.x, unit_stat_firec_v.getGlobalBounds().size.y / 2);
+    unit_stat_icec_v.setGlobalOrigin(unit_stat_icec_v.getGlobalBounds().size.x, unit_stat_icec_v.getGlobalBounds().size.y / 2);
 
     unit_stat_level_t.setGlobalPosition(136*3, 146*3);
     unit_stat_level_v.setGlobalPosition(136*3 + 370*3, 146*3);
@@ -975,7 +965,7 @@ void Barracks::Update()
     int bar_offset = 78*3;
     mm_selected_item_line.setSize(sf::Vector2f(bar_size*3 * res_ratio_x, 9 * res_ratio_y));
     mm_selected_item_line.setFillColor(sf::Color(239, 88, 98, 128 + (sin(item_line_flash) * 128)));
-    mm_selected_item_line.setPosition((s_unit_icon.getPosition().x) * res_ratio_x, ((s_unit_icon.getPosition().y + current_item_position * 50*3) + 47*3) * res_ratio_y);
+    mm_selected_item_line.setPosition({(s_unit_icon.getPosition().x) * res_ratio_x, ((s_unit_icon.getPosition().y + current_item_position * 50 * 3) + 47 * 3) * res_ratio_y});
 
     ctrlTips.x = 0;
     ctrlTips.y = (2160 - ctrlTips.ySize);
@@ -1000,13 +990,13 @@ void Barracks::Update()
                     float xpos = 46*3 + (grid_x * 77*3);
                     float ypos = 37*3 + (grid_y * 54*3);
 
-                    inventory_boxes[cur_item].r_outer.setPosition((40*3 + xpos) * res_ratio_x, (366*3 + ypos) * res_ratio_y);
-                    inventory_boxes[cur_item].r_inner.setPosition((40*3 + xpos + 2.5*3) * res_ratio_x, (366*3 + ypos + 2.5*3) * res_ratio_y);
+                    inventory_boxes[cur_item].r_outer.setPosition(sf::Vector2f((40 * 3 + xpos) * res_ratio_x, (366 * 3 + ypos) * res_ratio_y));
+                    inventory_boxes[cur_item].r_inner.setPosition(sf::Vector2f((40 * 3 + xpos + 2.5 * 3) * res_ratio_x, (366 * 3 + ypos + 2.5 * 3) * res_ratio_y));
                     window->draw(inventory_boxes[cur_item].r_outer);
                     window->draw(inventory_boxes[cur_item].r_inner);
 
-                    //inventory_boxes[i].num.setOrigin(inventory_boxes[i].num.getLocalBounds().width,inventory_boxes[i].num.getLocalBounds().height);
-                    //inventory_boxes[i].num_shadow.setOrigin(inventory_boxes[i].num_shadow.getLocalBounds().width,inventory_boxes[i].num_shadow.getLocalBounds().height);
+                    //inventory_boxes[i].num.setOrigin(inventory_boxes[i].num.getLocalBounds().size.x,inventory_boxes[i].num.getLocalBounds().size.y);
+                    //inventory_boxes[i].num_shadow.setOrigin(inventory_boxes[i].num_shadow.getLocalBounds().size.x,inventory_boxes[i].num_shadow.getLocalBounds().size.y);
 
                     inventory_boxes[cur_item].icon.setScale(0.64, 0.64);
 
@@ -1025,7 +1015,7 @@ void Barracks::Update()
                     if (inventory_boxes[cur_item].highlight)
                     {
                         inventory_boxes[cur_item].r_highlight.setSize(sf::Vector2f(70.0*3 * res_ratio_x, 51.0*3 * res_ratio_y));
-                        inventory_boxes[cur_item].r_highlight.setPosition((40*3 + xpos) * res_ratio_x, (366*3 + ypos) * res_ratio_y);
+                        inventory_boxes[cur_item].r_highlight.setPosition({(40 * 3 + xpos) * res_ratio_x, (366 * 3 + ypos) * res_ratio_y});
                         inventory_boxes[cur_item].r_highlight.setFillColor(sf::Color(0, 0, 0, 192));
                         window->draw(inventory_boxes[cur_item].r_highlight);
                     }
@@ -1046,13 +1036,13 @@ void Barracks::Update()
                 tmp_inv.r_inner.setSize(sf::Vector2f(46.0*3 * res_ratio_x, 46.0*3 * res_ratio_y));
                 tmp_inv.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
-                tmp_inv.r_outer.setPosition((40*3 + xpos) * res_ratio_x, (366*3 + ypos) * res_ratio_y);
-                tmp_inv.r_inner.setPosition((40*3 + xpos + 2.5*3) * res_ratio_x, (366*3 + ypos + 2.5*3) * res_ratio_y);
+                tmp_inv.r_outer.setPosition({(40 * 3 + xpos) * res_ratio_x, (366 * 3 + ypos) * res_ratio_y});
+                tmp_inv.r_inner.setPosition(sf::Vector2f((40 * 3 + xpos + 2.5 * 3) * res_ratio_x, (366 * 3 + ypos + 2.5 * 3) * res_ratio_y));
                 window->draw(tmp_inv.r_outer);
                 window->draw(tmp_inv.r_inner);
 
                 tmp_inv.r_highlight.setSize(sf::Vector2f(70.0*3 * res_ratio_x, 51.0*3 * res_ratio_y));
-                tmp_inv.r_highlight.setPosition((40*3 + xpos) * res_ratio_x, (366*3 + ypos) * res_ratio_y);
+                tmp_inv.r_highlight.setPosition({(40 * 3 + xpos) * res_ratio_x, (366 * 3 + ypos) * res_ratio_y});
                 tmp_inv.r_highlight.setFillColor(sf::Color(0, 0, 0, 192));
                 window->draw(tmp_inv.r_highlight);
             }
@@ -1062,7 +1052,7 @@ void Barracks::Update()
         r_sel.setFillColor(sf::Color::Transparent);
         r_sel.setOutlineThickness(2);
         r_sel.setOutlineColor(sf::Color(255, 0, 32, 255));
-        r_sel.setPosition((40*3 + 46*3 + (grid_sel_x * 77*3)) * res_ratio_x, (366*3 + 37*3 + (grid_sel_y * 54*3)) * res_ratio_y);
+        r_sel.setPosition({(40 * 3 + 46 * 3 + (grid_sel_x * 77 * 3)) * res_ratio_x, (366 * 3 + 37 * 3 + (grid_sel_y * 54 * 3)) * res_ratio_y});
 
         window->draw(r_sel);
 
@@ -1078,7 +1068,7 @@ void Barracks::Update()
         rr_itempreview.setOrigin(sf::Vector2f((360 + 40)*3 / 2, (220 + 40)*3 / 2));
         rr_itempreview.Draw();
 
-        item_title.setGlobalOrigin(item_title.getGlobalBounds().width / 2, item_title.getGlobalBounds().height / 2);
+        item_title.setGlobalOrigin(item_title.getGlobalBounds().size.x / 2, item_title.getGlobalBounds().size.y / 2);
         item_title.setGlobalPosition(650*3, 390*3);
         item_title.draw();
 

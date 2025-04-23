@@ -12,8 +12,17 @@ PSprite::PSprite()
 {
 }
 
+PSprite::~PSprite()
+{
+    if (s != nullptr)
+        delete s;
+}
+
 void PSprite::loadFromFile(std::string file, int q, bool downscale)
 {
+    if (s != nullptr)
+        delete s;
+
     if (qualitySetting != q && qualitySetting != -1)
     {
         SPDLOG_DEBUG("Quality has changed.");
@@ -67,27 +76,27 @@ void PSprite::loadFromFile(std::string file, int q, bool downscale)
     texturePath = file;
 
     if(downscale)
-        s.setTexture(TextureManager::getInstance().getTexture(file, q), true);
+        s = new sf::Sprite(TextureManager::getInstance().getTexture(file, q));
     else
-        s.setTexture(TextureManager::getInstance().getTexture(file, q, false), true);
+        s = new sf::Sprite(TextureManager::getInstance().getTexture(file, q, false));
 }
 
 void PSprite::setRepeated(bool r)
 {
     SPDLOG_TRACE("Change repeated state of {} to {}", texturePath, r);
     TextureManager::getInstance().getTexture(texturePath).setRepeated(r);
-    //s.setTexture(TextureManager::getInstance().getTexture(texturePath), true);
+    //s->setTexture(TextureManager::getInstance().getTexture(texturePath), true);
 }
 
 void PSprite::setTextureRect(sf::IntRect rect)
 {
-    SPDLOG_TRACE("Set texture rect of {} to {} {} {} {}", texturePath, rect.top, rect.left, rect.width, rect.height);
-    s.setTextureRect(rect);
+    SPDLOG_TRACE("Set texture rect of {} to {} {} {} {}", texturePath, rect.position.x, rect.position.y, rect.size.x, rect.size.y);
+    s->setTextureRect(rect);
 }
 
 sf::IntRect PSprite::getTextureRect()
 {
-    return s.getTextureRect();
+    return s->getTextureRect();
 }
 
 void PSprite::setOrigin(float x, float y)
@@ -97,7 +106,7 @@ void PSprite::setOrigin(float x, float y)
         //SPDLOG_DEBUG("Change origin of {} to {} {}", texturePath, x, y);
         orX = x;
         orY = y;
-        s.setOrigin(orX, orY);
+        s->setOrigin(sf::Vector2f(orX, orY));
     }
 }
 
@@ -108,7 +117,7 @@ void PSprite::setScale(float x, float y)
         SPDLOG_TRACE("Change scale of {} to {} {}", texturePath, x, y);
         scaleX = x;
         scaleY = y;
-        s.setScale(ratioX * scaleX, ratioY * scaleY);
+        s->setScale(sf::Vector2f(ratioX * scaleX, ratioY * scaleY));
     }
 }
 
@@ -123,33 +132,34 @@ void PSprite::setRotation(float a)
 
 void PSprite::setColor(sf::Color color)
 {
-    if (color != s.getColor())
+    if (color != s->getColor())
     {
         SPDLOG_TRACE("Change color of {} to {} {} {} {}", texturePath, color.r, color.g, color.b, color.a);
-        s.setColor(color);
+        s->setColor(color);
     }
 }
 
 sf::Color PSprite::getColor()
 {
-    return s.getColor();
+    return s->getColor();
 }
 
 void PSprite::setTexture(sf::Texture& texture)
 {
-    s.setTexture(texture, true);
+    s->setTexture(texture, true);
     exported = false;
 }
 
 void PSprite::applyTexture()
 {
-    //s.setTexture(t, true);
+    //s->setTexture(t, true);
     exported = false;
 }
 
 void PSprite::setSprite(sf::Sprite& sprite)
 {
-    s = sprite;
+    SPDLOG_ERROR("PSPRITE TRIGGER");
+    //s = sprite;
 }
 
 void PSprite::setPosition(float x, float y)
@@ -158,7 +168,7 @@ void PSprite::setPosition(float x, float y)
     {
         SPDLOG_TRACE("Change position of {} to {} {}", texturePath, x, y);
 
-        //s.setPosition(x*ratioX,y*ratioY);
+        //s->setPosition(x*ratioX,y*ratioY);
         if (baseX == -999)
             baseX = x;
 
@@ -181,20 +191,20 @@ void PSprite::setScale(float ss)
 {
     scaleX = ss;
     scaleY = ss;
-    s.setScale(ratioX * scaleX, ratioY * scaleY);
+    s->setScale(sf::Vector2f(ratioX * scaleX, ratioY * scaleY));
 }
 
 sf::FloatRect PSprite::getLocalBounds()
 {
-    sf::FloatRect rect = s.getLocalBounds();
-    SPDLOG_TRACE("Returning local bounds of {}: {} {} {} {}", texturePath, rect.top, rect.left, rect.width, rect.height);
+    sf::FloatRect rect = s->getLocalBounds();
+    SPDLOG_TRACE("Returning local bounds of {}: {} {} {} {}", texturePath, rect.position.y, rect.position.x, rect.size.x, rect.size.y);
     return rect;
 }
 
 sf::FloatRect PSprite::getGlobalBounds()
 {
-    sf::FloatRect rect = s.getGlobalBounds();
-    SPDLOG_TRACE("Returning global bounds of {}: {} {} {} {}", texturePath, rect.top, rect.left, rect.width, rect.height);
+    sf::FloatRect rect = s->getGlobalBounds();
+    SPDLOG_TRACE("Returning global bounds of {}: {} {} {} {}", texturePath, rect.position.y, rect.position.x, rect.size.x, rect.size.y);
     return rect;
 }
 
@@ -203,20 +213,20 @@ sf::FloatRect PSprite::getGlobalBoundsScaled()
     float nw = 1;
     float nh = 1;
 
-    if (s.getGlobalBounds().width > 0)
-        nw = s.getGlobalBounds().width / resRatioX;
+    if (s->getGlobalBounds().size.x > 0)
+        nw = s->getGlobalBounds().size.x / resRatioX;
 
-    if (s.getGlobalBounds().height > 0)
-        nh = s.getGlobalBounds().height / resRatioY;
+    if (s->getGlobalBounds().size.y > 0)
+        nh = s->getGlobalBounds().size.y / resRatioY;
 
-    return sf::FloatRect(s.getGlobalBounds().left, s.getGlobalBounds().top, nw, nh);
-    //return s.getGlobalBounds();
+    return sf::FloatRect(sf::Vector2f(s->getGlobalBounds().position.x, s->getGlobalBounds().position.y), sf::Vector2f(nw, nh));
+    //return s->getGlobalBounds();
 }
 
 void PSprite::setSmooth(bool smooth)
 {
     TextureManager::getInstance().getTexture(texturePath).setSmooth(smooth);
-    s.setTexture(TextureManager::getInstance().getTexture(texturePath), true);
+    s->setTexture(TextureManager::getInstance().getTexture(texturePath), true);
 }
 
 void PSprite::drawShader(sf::RenderWindow* window, sf::Shader& shader)
@@ -249,13 +259,13 @@ void PSprite::drawShader(sf::RenderWindow* window, sf::Shader& shader)
         resRatioY = ratio.y;
     }
 
-    s.setTexture(TextureManager::getInstance().getTexture(texturePath));
-    s.setScale(ratioX * scaleX, ratioY * scaleY);
-    s.setOrigin(orX, orY);
-    s.setPosition(lx * resRatioX, ly * resRatioY);
-    s.setRotation(angle * (180 / 3.14159265358));
+    s->setTexture(TextureManager::getInstance().getTexture(texturePath));
+    s->setScale(sf::Vector2f(ratioX * scaleX, ratioY * scaleY));
+    s->setOrigin(sf::Vector2f(orX, orY));
+    s->setPosition(sf::Vector2f(lx * resRatioX, ly * resRatioY));
+    s->setRotation(sf::degrees(angle));
 
-    window->draw(s,&shader);
+    window->draw(*s,&shader);
 
     oldQualitySetting = qualitySetting;
     oldResSetting = resSetting;
@@ -293,12 +303,12 @@ void PSprite::draw()
         resRatioY = ratio.y;
     }
 
-    s.setTexture(TextureManager::getInstance().getTexture(texturePath));
-    s.setScale(ratioX * scaleX, ratioY * scaleY);
-    s.setOrigin(orX, orY);
-    s.setPosition(lx * resRatioX, ly * resRatioY);
-    s.setRotation(angle * (180 / 3.14159265358));
-    window->draw(s);
+    s->setTexture(TextureManager::getInstance().getTexture(texturePath));
+    s->setScale(sf::Vector2f(ratioX * scaleX, ratioY * scaleY));
+    s->setOrigin(sf::Vector2f(orX, orY));
+    s->setPosition(sf::Vector2f(lx * resRatioX, ly * resRatioY));
+    s->setRotation(sf::degrees(angle));
+    window->draw(*s);
 
     oldQualitySetting = qualitySetting;
     oldResSetting = resSetting;
@@ -370,24 +380,11 @@ void PSprite::update(sf::RenderWindow& window)
         }
     }
 
-    s.setTexture(TextureManager::getInstance().getTexture(texturePath));
-    s.setScale(ratioX * scaleX, ratioY * scaleY);
-    s.setOrigin(orX, orY);
-    s.setPosition(lx * resRatioX, ly * resRatioY);
-    s.setRotation(angle * (180 / 3.14159265358));
-
-    if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) && (sf::Keyboard::isKeyPressed(sf::Keyboard::F9)))
-    {
-        if (!exported)
-        {
-            sf::Image img;
-            img = s.getTexture()->copyToImage();
-            int rrr = rand() % 100000000;
-            img.saveToFile("texDump/" + std::to_string(rrr) + ".png");
-
-            exported = true;
-        }
-    }
+    s->setTexture(TextureManager::getInstance().getTexture(texturePath));
+    s->setScale(sf::Vector2f(ratioX * scaleX, ratioY * scaleY));
+    s->setOrigin(sf::Vector2f(orX, orY));
+    s->setPosition(sf::Vector2f(lx * resRatioX, ly * resRatioY));
+    s->setRotation(sf::degrees(angle));
 }
 
 void saveToFile(std::string file)

@@ -12,11 +12,6 @@ public:
     bool initialized = false;
     int badState = -1;
 
-
-
-    sf::SoundBuffer b_anvil;
-    sf::Sound s_anvil;
-
     std::vector<PataDialogBox> dialogboxes;
 
     void Initialize();

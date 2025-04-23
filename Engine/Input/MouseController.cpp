@@ -5,33 +5,33 @@ MouseController::MouseController()
 
 }
 
-void MouseController::parseEvents(sf::Event& event)
+void MouseController::parseEvents(const std::optional<sf::Event>& event)
 {
-    if (event.type == sf::Event::MouseMoved)
+    if (const auto* e = event->getIf<sf::Event::MouseMoved>())
     {
-        x = event.mouseMove.x;
-        y = event.mouseMove.y;
+        x = e->position.x;
+        y = e->position.y;
     }
 
-    if (event.type == sf::Event::MouseButtonPressed)
+    if (const auto* e = event->getIf<sf::Event::MouseButtonPressed>())
     {
-        if(event.mouseButton.button == sf::Mouse::Left)
+        if (e->button == sf::Mouse::Button::Left)
         {
             lmb = true;
         }
-        if(event.mouseButton.button == sf::Mouse::Right)
+        if (e->button == sf::Mouse::Button::Right)
         {
             rmb = true;
         }
     }
 
-    if (event.type == sf::Event::MouseButtonReleased)
+    if (const auto* e = event->getIf<sf::Event::MouseButtonReleased>())
     {
-        if(event.mouseButton.button == sf::Mouse::Left)
+        if (e->button == sf::Mouse::Button::Left)
         {
             lmb = false;
         }
-        if(event.mouseButton.button == sf::Mouse::Right)
+        if (e->button == sf::Mouse::Button::Right)
         {
             rmb = false;
         }

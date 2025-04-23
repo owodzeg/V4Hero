@@ -602,7 +602,7 @@ void Yaripon::Draw()
         auto strRepo = CoreManager::getInstance().getStrRepo();
         debugText.reset();
         debugText.append(std::format("{{size 36}}o\n{}\nact\n{}\natk_x\n{}\npS\n{}\naf\n{}\nias\n{}\npA\n{}\niat\n{}\ncai\n{:2.2f}",order, action, attack_x, pataSpeed, main.getAnimationFrame(), inAttackSequence, performedAttack, inAttackTimer.getElapsedTime().asMilliseconds(), canAttackIn));
-        debugText.setGlobalOrigin(debugText.getGlobalBounds().width / 2, debugText.getGlobalBounds().height);
+        debugText.setGlobalOrigin(debugText.getGlobalBounds().size.x / 2, debugText.getGlobalBounds().size.y);
         debugText.setGlobalPosition(global_x+local_x+attack_x+gap_x-20, global_y+local_y+cam_offset-100);
         debugText.draw();
     }

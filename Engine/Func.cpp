@@ -118,7 +118,7 @@ std::string Func::wrap_text(std::string input, int box_width, std::string font, 
             tmp_ptext.append(prefull);
             tmp_ptext.draw();
 
-            if (tmp_ptext.getGlobalBounds().width >= box_width)
+            if (tmp_ptext.getGlobalBounds().size.x >= box_width)
             {
                 full += prevtemp + '\n';
                 i--;
@@ -145,13 +145,13 @@ std::string Func::wrap_text(std::string input, int box_width, std::string font, 
         tmp_ptext.append(temp);
         tmp_ptext.draw();
 
-        //cout << "Testing string \"" << temp << "\", " << wordcount << " words, size: " << t_temp.getGlobalBounds().width << endl;
+        //cout << "Testing string \"" << temp << "\", " << wordcount << " words, size: " << t_temp.getGlobalBounds().size.x << endl;
 
-        if (tmp_ptext.getGlobalBounds().width >= box_width)
+        if (tmp_ptext.getGlobalBounds().size.x >= box_width)
         {
             if (wordcount > 1)
             {
-                //cout << "String exceeded the max box width (" << box_width << " vs " << t_temp.getGlobalBounds().width << ")" << endl;
+                //cout << "String exceeded the max box width (" << box_width << " vs " << t_temp.getGlobalBounds().size.x << ")" << endl;
                 full += prevtemp;
                 full += '\n';
 
@@ -175,7 +175,7 @@ std::string Func::wrap_text(std::string input, int box_width, std::string font, 
                     tmp_ptext.append(ltemp);
                     tmp_ptext.draw();
 
-                    if (tmp_ptext.getGlobalBounds().width >= box_width - 30)
+                    if (tmp_ptext.getGlobalBounds().size.x >= box_width - 30)
                     {
                         full += ltemp;
                         full += "-";
@@ -305,9 +305,9 @@ sf::Color Func::hexToColor(const std::string& hex) {
     b = std::stoul(hexColor.substr(4, 2), nullptr, 16); // Blue
 
     // Return the corresponding SFML color (alpha is set to 255 by default)
-    return sf::Color(static_cast<sf::Uint8>(r),
-                     static_cast<sf::Uint8>(g),
-                     static_cast<sf::Uint8>(b));
+    return sf::Color(static_cast<uint8_t>(r),
+                     static_cast<uint8_t>(g),
+                     static_cast<uint8_t>(b));
 }
 
 nlohmann::json Func::parseLootArray(std::mt19937& gen, std::uniform_real_distribution<double>& roll, nlohmann::json loot)
@@ -430,7 +430,7 @@ unsigned int Func::calculateImageChecksum(const sf::Image& image) {
 
     for (unsigned int y = 0; y < height; ++y) {
         for (unsigned int x = 0; x < width; ++x) {
-            sf::Color pixelColor = image.getPixel(x, y);
+            sf::Color pixelColor = image.getPixel({x, y});
             unsigned int pixelValue = (pixelColor.r << 24) | (pixelColor.g << 16) | (pixelColor.b << 8) | pixelColor.a;
             checksum ^= pixelValue;
         }

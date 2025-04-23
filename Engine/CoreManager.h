@@ -9,6 +9,7 @@
 #include "SaveReader.h"
 #include "ResourceManager.h"
 #include "TextureManager.h"
+#include "SoundManager.h"
 #include "StringRepository.h"
 #include "TipsUtil.h"
 #include "Mission/MissionController.h"

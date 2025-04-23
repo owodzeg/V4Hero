@@ -24,7 +24,7 @@ public:
     sf::RectangleShape highlight;
     unsigned int option = 0;
 
-    PSprite arrow;
+    //PSprite arrow;
 
     float arrow_x;
 

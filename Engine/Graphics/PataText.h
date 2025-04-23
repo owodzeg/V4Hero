@@ -99,12 +99,12 @@ class PataText
             }
 
             // Constructor with parameters
-            PTChar(sf::Uint32 newChar, const PTStyle& newStyle) : character(newChar), style(newStyle)
+            PTChar(char32_t newChar, const PTStyle& newStyle) : character(newChar), style(newStyle)
             {
             }
 
-            sf::Uint32 character;
-            sf::Text text;
+            char32_t character;
+            sf::Text* text = nullptr;
             sf::Vector2f position;
             PTStyle style;
         };

@@ -42,7 +42,7 @@ public:
 
     static StateManager& getInstance();
     void updateCurrentState();
-    void parseCurrentStateEvents(sf::Event& event);
+    void parseCurrentStateEvents(const std::optional<sf::Event>& event);
     void initState(int state);
     void initStateMT(int state);
     void setState(int state);

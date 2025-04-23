@@ -39,17 +39,17 @@ void RoundedRect::Draw()
 
     float resRatio = window->getSize().x / float(3840);
 
-    edges[0].setPosition((x - orx) * resRatio, (y - ory) * resRatio);
-    edges[1].setPosition((x - orx + width) * resRatio, (y - ory) * resRatio);
-    edges[2].setPosition((x - orx) * resRatio, (y - ory + height) * resRatio);
-    edges[3].setPosition((x - orx + width) * resRatio, (y - ory + height) * resRatio);
+    edges[0].setPosition({(x - orx) * resRatio, (y - ory) * resRatio});
+    edges[1].setPosition({(x - orx + width) * resRatio, (y - ory) * resRatio});
+    edges[2].setPosition({(x - orx) * resRatio, (y - ory + height) * resRatio});
+    edges[3].setPosition({(x - orx + width) * resRatio, (y - ory + height) * resRatio});
 
-    connections[0].setPosition((x - orx + edge_size) * resRatio, (y - ory) * resRatio);
-    connections[1].setPosition((x - orx + edge_size) * resRatio, (y - ory + height) * resRatio);
-    connections[2].setPosition((x - orx) * resRatio, (y - ory + edge_size) * resRatio);
-    connections[3].setPosition((x - orx + width) * resRatio, (y - ory + edge_size) * resRatio);
+    connections[0].setPosition({(x - orx + edge_size) * resRatio, (y - ory) * resRatio});
+    connections[1].setPosition({(x - orx + edge_size) * resRatio, (y - ory + height) * resRatio});
+    connections[2].setPosition({(x - orx) * resRatio, (y - ory + edge_size) * resRatio});
+    connections[3].setPosition({(x - orx + width) * resRatio, (y - ory + edge_size) * resRatio});
 
-    contents.setPosition((x - orx + edge_size * 2) * resRatio, (y - ory + edge_size * 2) * resRatio);
+    contents.setPosition({(x - orx + edge_size * 2) * resRatio, (y - ory + edge_size * 2) * resRatio});
 
     for (int i = 0; i < 4; i++)
     {

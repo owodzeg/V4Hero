@@ -205,7 +205,7 @@ class PatapolisMenu : public Menu
         };
 
         sf::SoundBuffer sb_city_loop;
-        sf::Sound city_loop;
+        sf::Sound* city_loop;
 
         sf::View patapolisView;
 

@@ -150,7 +150,7 @@ void AltarMenu::reloadInventory()
                     ///look up material's icon
                     //tmp.icon.loadFromFile("resources/graphics/ui/altar/materials/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q);
                     tmp.icon.loadFromFile("resources/graphics/item/textures/" + cur_item->spritesheet + "/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q);
-                    tmp.icon.setOrigin(tmp.icon.getLocalBounds().width / 2, tmp.icon.getLocalBounds().height / 2);
+                    tmp.icon.setOrigin(tmp.icon.getLocalBounds().size.x / 2, tmp.icon.getLocalBounds().size.y / 2);
 
                     break;
                 }
@@ -161,7 +161,7 @@ void AltarMenu::reloadInventory()
 
                     ///look up material's icon
                     tmp.icon.loadFromFile("resources/graphics/ui/altar/equip/spear_1.png", q);
-                    tmp.icon.setOrigin(tmp.icon.getLocalBounds().width / 2, tmp.icon.getLocalBounds().height / 2);
+                    tmp.icon.setOrigin(tmp.icon.getLocalBounds().size.x / 2, tmp.icon.getLocalBounds().size.y / 2);
 
                     break;
                 }
@@ -172,7 +172,7 @@ void AltarMenu::reloadInventory()
 
                     ///look up material's icon
                     tmp.icon.loadFromFile("resources/graphics/ui/altar/equip/helm_1.png", q);
-                    tmp.icon.setOrigin(tmp.icon.getLocalBounds().width / 2, tmp.icon.getLocalBounds().height / 2);
+                    tmp.icon.setOrigin(tmp.icon.getLocalBounds().size.x / 2, tmp.icon.getLocalBounds().size.y / 2);
 
                     break;
                 }
@@ -183,7 +183,7 @@ void AltarMenu::reloadInventory()
 
                     ///look up material's icon
                     tmp.icon.loadFromFile("resources/graphics/item/textures/" + cur_item->spritesheet + "/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q);
-                    tmp.icon.setOrigin(tmp.icon.getLocalBounds().width / 2, tmp.icon.getLocalBounds().height / 2);
+                    tmp.icon.setOrigin(tmp.icon.getLocalBounds().size.x / 2, tmp.icon.getLocalBounds().size.y / 2);
 
                     break;
                 }
@@ -275,7 +275,7 @@ void AltarMenu::Update()
         ctrlTips.y = (720 - ctrlTips.ySize);
         ctrlTips.draw(window); */
 
-        altar_main.setOrigin(altar_main.getLocalBounds().width / 2, altar_main.getLocalBounds().height / 2);
+        altar_main.setOrigin(altar_main.getLocalBounds().size.x / 2, altar_main.getLocalBounds().size.y / 2);
         altar_main.setPosition(1020, 1080);
 
         altar_main.draw();
@@ -292,13 +292,13 @@ void AltarMenu::Update()
                 float xpos = 72 + (grid_x * 118);
                 float ypos = 64 + (grid_y * 88);
 
-                inventory_boxes[curItem].r_outer.setPosition((40 + xpos) * res_ratio_x, (39 + ypos) * res_ratio_y);
-                inventory_boxes[curItem].r_inner.setPosition((40 + xpos + 2.5) * res_ratio_x, (39 + ypos + 2.5) * res_ratio_y);
+                inventory_boxes[curItem].r_outer.setPosition(sf::Vector2f((40 + xpos) * res_ratio_x, (39 + ypos) * res_ratio_y));
+                inventory_boxes[curItem].r_inner.setPosition(sf::Vector2f((40 + xpos + 2.5) * res_ratio_x, (39 + ypos + 2.5) * res_ratio_y));
                 window->draw(inventory_boxes[curItem].r_outer);
                 window->draw(inventory_boxes[curItem].r_inner);
 
-                //inventory_boxes[i].num.setOrigin(inventory_boxes[i].num.getLocalBounds().width,inventory_boxes[i].num.getLocalBounds().height);
-                //inventory_boxes[i].num_shadow.setOrigin(inventory_boxes[i].num_shadow.getLocalBounds().width,inventory_boxes[i].num_shadow.getLocalBounds().height);
+                //inventory_boxes[i].num.setOrigin(inventory_boxes[i].num.getLocalBounds().size.x,inventory_boxes[i].num.getLocalBounds().size.y);
+                //inventory_boxes[i].num_shadow.setOrigin(inventory_boxes[i].num_shadow.getLocalBounds().size.x,inventory_boxes[i].num_shadow.getLocalBounds().size.y);
 
                 if ((inventory_boxes[curItem].data->item_category == "key_items") || (inventory_boxes[curItem].data->item_category == "materials")) ///Bound to break
                     inventory_boxes[curItem].icon.setScale(0.64, 0.64);
@@ -314,7 +314,7 @@ void AltarMenu::Update()
 
                 if (inventory_boxes[curItem].highlight)
                 {
-                    inventory_boxes[curItem].r_highlight.setPosition((40 + xpos) * res_ratio_x, (39 + ypos) * res_ratio_y);
+                    inventory_boxes[curItem].r_highlight.setPosition({(40 + xpos) * res_ratio_x, (39 + ypos) * res_ratio_y});
                     inventory_boxes[curItem].r_highlight.setFillColor(sf::Color(255, 255, 255, 64 + (sin(highlight_x) * 64)));
                     window->draw(inventory_boxes[curItem].r_highlight);
                 }
@@ -334,8 +334,8 @@ void AltarMenu::Update()
                 tmp_inv.r_inner.setSize(sf::Vector2f(72.0 * res_ratio_x, 72.0 * res_ratio_y));
                 tmp_inv.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
-                tmp_inv.r_outer.setPosition((40 + xpos) * res_ratio_x, (39 + ypos) * res_ratio_y);
-                tmp_inv.r_inner.setPosition((40 + xpos + 2.5) * res_ratio_x, (39 + ypos + 2.5) * res_ratio_y);
+                tmp_inv.r_outer.setPosition(sf::Vector2f((40 + xpos) * res_ratio_x, (39 + ypos) * res_ratio_y));
+                tmp_inv.r_inner.setPosition(sf::Vector2f((40 + xpos + 2.5) * res_ratio_x, (39 + ypos + 2.5) * res_ratio_y));
                 window->draw(tmp_inv.r_outer);
                 window->draw(tmp_inv.r_inner);
             }
@@ -345,7 +345,7 @@ void AltarMenu::Update()
         r_sel.setFillColor(sf::Color::Transparent);
         r_sel.setOutlineThickness(3);
         r_sel.setOutlineColor(sf::Color(255, 0, 32, 255));
-        r_sel.setPosition((41 + 72 + (grid_sel_x * 118)) * res_ratio_x, (39 + 64 + (grid_sel_y * 88)) * res_ratio_y);
+        r_sel.setPosition({(41 + 72 + (grid_sel_x * 118)) * res_ratio_x, (39 + 64 + (grid_sel_y * 88)) * res_ratio_y});
 
         window->draw(r_sel);
 
@@ -375,8 +375,8 @@ void AltarMenu::Update()
         rr_desc_sh.Draw();
         rr_desc.Draw();
 
-        altar_title.setGlobalOrigin(altar_title.getGlobalBounds().width / 2, altar_title.getGlobalBounds().height / 2);
-        altar_kaching.setGlobalOrigin(altar_kaching.getGlobalBounds().width / 2, altar_kaching.getGlobalBounds().height / 2);
+        altar_title.setGlobalOrigin(altar_title.getGlobalBounds().size.x / 2, altar_title.getGlobalBounds().size.y / 2);
+        altar_kaching.setGlobalOrigin(altar_kaching.getGlobalBounds().size.x / 2, altar_kaching.getGlobalBounds().size.y / 2);
 
         altar_title.setGlobalPosition(933 * 3, 100 * 3);
         altar_kaching.setGlobalPosition(933 * 3, 170 * 3);
@@ -388,8 +388,8 @@ void AltarMenu::Update()
         altar_title.draw();
         altar_kaching.draw();
 
-        altar_item_title.setGlobalOrigin(altar_item_title.getGlobalBounds().width / 2, altar_item_title.getGlobalBounds().height / 2);
-        altar_item_category.setGlobalOrigin(altar_item_category.getGlobalBounds().width / 2, altar_item_category.getGlobalBounds().height / 2);
+        altar_item_title.setGlobalOrigin(altar_item_title.getGlobalBounds().size.x / 2, altar_item_title.getGlobalBounds().size.y / 2);
+        altar_item_category.setGlobalOrigin(altar_item_category.getGlobalBounds().size.x / 2, altar_item_category.getGlobalBounds().size.y / 2);
         altar_item_desc.setGlobalOrigin(0, 0);
 
         altar_item_title.draw();

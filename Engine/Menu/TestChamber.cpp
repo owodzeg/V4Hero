@@ -14,8 +14,8 @@ void TestChamber::Initialize()
     bg.setFillColor(sf::Color::White);
 
     sf::Clock loadSpeed;
-    sf::Int64 cur=0, old=0;
-    sf::Int64 bench1,bench2,bench3;
+    int64_t cur=0, old=0;
+    int64_t bench1,bench2,bench3;
     cur = loadSpeed.getElapsedTime().asMicroseconds();
     SPDLOG_INFO("Load timer: {}us", cur-old);
     old = cur;

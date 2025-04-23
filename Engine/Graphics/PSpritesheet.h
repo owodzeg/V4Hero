@@ -2,6 +2,8 @@
 #define PSPRITESHEET_H
 
 #include <SFML/Graphics.hpp>
+#include <map>
+#include <vector>
 
 class PSpritesheet
 {

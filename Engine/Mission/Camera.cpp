@@ -166,6 +166,6 @@ void Camera::Work(sf::View& view, float dest_zoom_over)
     /** Apply camera position **/
 
     //sf::View view{window->getView()};
-    view.setCenter(camera_x + zoom_x + manual_x + debug_x - 300, camera_y + zoom_y + manual_y);
+    view.setCenter(sf::Vector2f(camera_x + zoom_x + manual_x + debug_x - 300, camera_y + zoom_y + manual_y));
     window->setView(view);
 }

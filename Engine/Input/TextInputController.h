@@ -10,7 +10,7 @@ public:
     TextInputController();
     void latchOn(sf::String& targetString);
     void release();
-    void parseEvents(const sf::Event& event);
+    void parseEvents(const std::optional<sf::Event>& event);
     int sendSpecial();
 
 private:

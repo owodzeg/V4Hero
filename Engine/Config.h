@@ -72,7 +72,7 @@ public:
                                                "0",
                                                "1",
                                                "1",
-                                               std::to_string(sf::Keyboard::Escape),
+                                               std::to_string(static_cast<int>(sf::Keyboard::Key::Escape)),
                                                "0",
                                                "0",
                                                "1",

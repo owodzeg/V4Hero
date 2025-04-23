@@ -19,7 +19,7 @@ public:
 
 
     sf::SoundBuffer sb_title_loop;
-    sf::Sound title_loop;
+    sf::Sound* title_loop;
 
     std::vector<std::string> temp_menu;
 
@@ -44,7 +44,7 @@ public:
     PataText t_pressanykey;
 
     sf::SoundBuffer sb_smash;
-    sf::Sound s_smash;
+    sf::Sound* s_smash;
 
     bool premenu = false;
     bool keypressed = false;
@@ -84,7 +84,6 @@ public:
     SpriteWrapper aura;
 
     void Update();
-    void EventFired(sf::Event event);
     void SelectMenuOption();
     MainMenu();
     ~MainMenu();

@@ -53,42 +53,43 @@ MainMenu::MainMenu()
 
 
     sb_smash.loadFromFile("resources/sfx/menu/smash.ogg");
-    s_smash.setBuffer(sb_smash);
-    s_smash.setVolume(float(config->GetInt("masterVolume")) * (float(config->GetInt("sfxVolume")) / 100.f));
+    s_smash = new sf::Sound(sb_smash);
+    s_smash->setBuffer(sb_smash);
+    s_smash->setVolume(float(config->GetInt("masterVolume")) * (float(config->GetInt("sfxVolume")) / 100.f));
 
     for (int g = 0; g < 4; g++)
     {
         grass[g].load("resources/graphics/ui/menu/grass_" + to_string(g+1) + ".png");
         grass[g].setScale(1.05, 1.05);
-        grass[g].setOrigin(grass[g].getGlobalBounds().width / float(100), grass[g].getGlobalBounds().height);
+        grass[g].setOrigin(grass[g].getGlobalBounds().size.x / float(100), grass[g].getGlobalBounds().size.y);
     }
 
     logo.load("resources/graphics/ui/menu/logo.png");
     logo_shadow.load("resources/graphics/ui/menu/logo_shadow.png");
 
-    logo.setOrigin(logo.getGlobalBounds().width / 2, logo.getGlobalBounds().height / 2);
-    logo_shadow.setOrigin(logo_shadow.getGlobalBounds().width / 2, logo_shadow.getGlobalBounds().height / 2);
+    logo.setOrigin(logo.getGlobalBounds().size.x / 2, logo.getGlobalBounds().size.y / 2);
+    logo_shadow.setOrigin(logo_shadow.getGlobalBounds().size.x / 2, logo_shadow.getGlobalBounds().size.y / 2);
 
     for (int t = 0; t < 4; t++)
     {
         totem[t].load("resources/graphics/ui/menu/totem_" + to_string(t+1) + ".png");
-        totem[t].setOrigin(0, totem[t].getGlobalBounds().height);
+        totem[t].setOrigin(0, totem[t].getGlobalBounds().size.y);
     }
 
     for (int f = 0; f < 3; f++)
     {
         fire[f].load("resources/graphics/ui/menu/fire_" + to_string(f+1) + ".png");
-        fire[f].setOrigin(fire[f].getGlobalBounds().width / 2, fire[f].getGlobalBounds().height);
+        fire[f].setOrigin(fire[f].getGlobalBounds().size.x / 2, fire[f].getGlobalBounds().size.y);
     }
 
     for (int s = 0; s < 2; s++)
     {
         sword[s].load("resources/graphics/ui/menu/sword.png");
-        sword[s].setOrigin(sword[s].getGlobalBounds().width / 2, sword[s].getGlobalBounds().height);
+        sword[s].setOrigin(sword[s].getGlobalBounds().size.x / 2, sword[s].getGlobalBounds().size.y);
     }
 
     aura.load("resources/graphics/ui/menu/aura.png");
-    aura.setOrigin(aura.getGlobalBounds().width / 2, aura.getGlobalBounds().height / 2);
+    aura.setOrigin(aura.getGlobalBounds().size.x / 2, aura.getGlobalBounds().size.y / 2);
 
     for (int i = 0; i <= 3; i++)
     {
@@ -141,7 +142,7 @@ MainMenu::MainMenu()
         vx_color.push_back(tmp_color);
     }
 
-    sf::VertexArray tmp(sf::TrianglesStrip, vx_pos.size());
+    sf::VertexArray tmp(sf::PrimitiveType::TriangleStrip, vx_pos.size());
     v_background = tmp;
 
     for (int i = 0; i < vx_pos.size(); i++)
@@ -160,9 +161,10 @@ MainMenu::MainMenu()
     float volume = (float(config->GetInt("masterVolume")) * (float(config->GetInt("bgmVolume")) / 100.f));
 
     sb_title_loop.loadFromFile("resources/sfx/menu/menuloop.ogg");
-    title_loop.setBuffer(sb_title_loop);
-    title_loop.setLoop(true);
-    title_loop.setVolume(volume);
+    title_loop = new sf::Sound(sb_title_loop);
+    title_loop->setBuffer(sb_title_loop);
+    title_loop->setLooping(true);
+    title_loop->setVolume(volume);
 
     ifstream fr("resources/firstrun");
     if (fr.good())
@@ -209,10 +211,6 @@ MainMenu::MainMenu()
     }
 }
 
-void MainMenu::EventFired(sf::Event event)
-{
-
-}
 void MainMenu::SelectMenuOption()
 {
     StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
@@ -384,7 +382,7 @@ void MainMenu::Update()
 
                 if (inputCtrl->isAnyKeyPressed())
                 {
-                    s_smash.play();
+                    s_smash->play();
                     logow_bg.setColor(sf::Color(200, 0, 0, 255));
                     logow_shadow.setColor(sf::Color(200, 0, 0, 255));
                     logow_text.setColor(sf::Color(255, 255, 255, 255));
@@ -398,9 +396,9 @@ void MainMenu::Update()
                 }
             }
 
-            logow_bg.setOrigin(logow_bg.getGlobalBounds().width / 2, logow_bg.getGlobalBounds().height / 2);
-            logow_text.setOrigin(logow_text.getGlobalBounds().width / 2, logow_text.getGlobalBounds().height / 2);
-            logow_shadow.setOrigin(logow_shadow.getGlobalBounds().width / 2, logow_shadow.getGlobalBounds().height / 2);
+            logow_bg.setOrigin(logow_bg.getGlobalBounds().size.x / 2, logow_bg.getGlobalBounds().size.y / 2);
+            logow_text.setOrigin(logow_text.getGlobalBounds().size.x / 2, logow_text.getGlobalBounds().size.y / 2);
+            logow_shadow.setOrigin(logow_shadow.getGlobalBounds().size.x / 2, logow_shadow.getGlobalBounds().size.y / 2);
 
             if (dest_y > cur_y)
             {
@@ -456,7 +454,7 @@ void MainMenu::Update()
                 }
             }
 
-            t_pressanykey.setGlobalOrigin(t_pressanykey.getGlobalBounds().width / 2, t_pressanykey.getGlobalBounds().height / 2);
+            t_pressanykey.setGlobalOrigin(t_pressanykey.getGlobalBounds().size.x / 2, t_pressanykey.getGlobalBounds().size.y / 2);
             t_pressanykey.defaultStyleSetColor(sf::Color(255, 255, 255, t_alpha));
             t_pressanykey.draw();
 
@@ -465,10 +463,10 @@ void MainMenu::Update()
         }
     } else
     {
-        if (title_loop.getStatus() == sf::Sound::Status::Stopped)
+        if (title_loop->getStatus() == sf::Sound::Status::Stopped)
         {
             SPDLOG_DEBUG("Playing title_loop");
-            title_loop.play();
+            title_loop->play();
         }
 
         window->draw(v_background);
@@ -557,9 +555,9 @@ void MainMenu::Update()
 
             if (mouseCtrl->getMousePos().x / (window->getSize().x / 3840.f) > totem[i].getPosition().x)
             {
-                if (mouseCtrl->getMousePos().x / (window->getSize().x / 3840.f) < (totem[i].getPosition().x + totem[i].getTransformedBounds().width))
+                if (mouseCtrl->getMousePos().x / (window->getSize().x / 3840.f) < (totem[i].getPosition().x + totem[i].getTransformedBounds().size.x))
                 {
-                    if (mouseCtrl->getMousePos().y / (window->getSize().y / 2160.f) > totem[i].getPosition().y - totem[i].getTransformedBounds().height)
+                    if (mouseCtrl->getMousePos().y / (window->getSize().y / 2160.f) > totem[i].getPosition().y - totem[i].getTransformedBounds().size.y)
                     {
                         totem_sel = i;
                         mouseInBounds = true;
@@ -609,7 +607,7 @@ void MainMenu::Update()
         if (fire_count >= 3)
             fire_count = 0;
 
-        aura.setPosition(fire[0].getPosition().x, fire[0].getPosition().y - (fire[0].getTransformedBounds().height / 2));
+        aura.setPosition(fire[0].getPosition().x, fire[0].getPosition().y - (fire[0].getTransformedBounds().size.y / 2));
         aura.setScale(aurascale);
         aura.draw();
 
@@ -641,13 +639,13 @@ void MainMenu::Update()
 
             t_option[i].reset();
             t_option[i].append(Func::GetStrFromKey(temp_menu[i]));
-            t_option[i].setGlobalOrigin(t_option[i].getGlobalBounds().width / 2, t_option[i].getGlobalBounds().height / 2);
+            t_option[i].setGlobalOrigin(t_option[i].getGlobalBounds().size.x / 2, t_option[i].getGlobalBounds().size.y / 2);
 
-            t_option[i].setGlobalPosition(totem[i].getPosition().x + totem[i].getTransformedBounds().width / 2.f, 2160 - totem[i].getTransformedBounds().height - 84);
+            t_option[i].setGlobalPosition(totem[i].getPosition().x + totem[i].getTransformedBounds().size.x / 2.f, 2160 - totem[i].getTransformedBounds().size.y - 84);
             
             if (i == totem_sel)
             {
-                t_option[i].setGlobalPosition(totem[i].getPosition().x + totem[i].getTransformedBounds().width / 2.f, 2160 - totem[i].getTransformedBounds().height - 210);
+                t_option[i].setGlobalPosition(totem[i].getPosition().x + totem[i].getTransformedBounds().size.x / 2.f, 2160 - totem[i].getTransformedBounds().size.y - 210);
             }
 
             t_option[i].defaultStyleSetColor(sf::Color(255, 255, 255, 96));
@@ -657,11 +655,11 @@ void MainMenu::Update()
         }
 
         sword[0].setScale(1, 1);
-        sword[0].setPosition(t_option[totem_sel].getGlobalPosition().x - t_option[totem_sel].getGlobalBounds().width / 2 - sword[0].getTransformedBounds().width / 2 - 15, t_option[totem_sel].getGlobalPosition().y + 63);
+        sword[0].setPosition(t_option[totem_sel].getGlobalPosition().x - t_option[totem_sel].getGlobalBounds().size.x / 2 - sword[0].getTransformedBounds().size.x / 2 - 15, t_option[totem_sel].getGlobalPosition().y + 63);
         sword[0].draw();
 
         sword[1].setScale(-1, 1);
-        sword[1].setPosition(t_option[totem_sel].getGlobalPosition().x + t_option[totem_sel].getGlobalBounds().width / 2 + sword[0].getTransformedBounds().width / 2 + 15, t_option[totem_sel].getGlobalPosition().y + 63);
+        sword[1].setPosition(t_option[totem_sel].getGlobalPosition().x + t_option[totem_sel].getGlobalBounds().size.x / 2 + sword[0].getTransformedBounds().size.x / 2 + 15, t_option[totem_sel].getGlobalPosition().y + 63);
         sword[1].draw();
 
         old_sel = totem_sel;
@@ -777,7 +775,7 @@ void MainMenu::Update()
                         saveReader->Flush();
                         saveReader->CreateBlankSave();
 
-                        title_loop.stop();
+                        title_loop->stop();
                         StateManager::getInstance().setState(StateManager::INTRODUCTION);
 
                         break;
@@ -785,7 +783,7 @@ void MainMenu::Update()
 
                     case 1: ///Continue
                     {
-                        title_loop.stop();
+                        title_loop->stop();
                         StateManager::getInstance().setState(StateManager::PATAPOLIS);
 
                         break;
@@ -793,7 +791,7 @@ void MainMenu::Update()
 
                     case 2: ///Options
                     {
-                        title_loop.stop();
+                        title_loop->stop();
                         StateManager::getInstance().setState(StateManager::OPTIONSMENU);
                         goto_id = -1;
                         break;
@@ -808,4 +806,6 @@ MainMenu::~MainMenu()
 {
     //dtor
     SPDLOG_DEBUG("MainMenu destructor");
+    delete s_smash;
+    delete title_loop;
 }
