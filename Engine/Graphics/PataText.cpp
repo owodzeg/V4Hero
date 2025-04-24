@@ -142,17 +142,6 @@ PataText::PataText()
 PataText::~PataText()
 {
     SPDLOG_DEBUG("Destroying PataText instance");
-    for (auto& line : m_lines)
-    {
-        for (auto& character : line)
-        {
-            if (character.text != nullptr)
-            {
-                delete character.text;
-                character.text = nullptr;
-            }
-        }
-    }
     m_lines.clear();
     SPDLOG_DEBUG("Destroying PataText instance.. completed");
 }
@@ -631,7 +620,7 @@ void PataText::ProcessRegularText(const sf::String& token)
             // Reset single-use timeout
             m_marker.curCharTimeout = 0;
             PTChar newChar(token[i], m_marker);
-            newChar.text = new sf::Text(*newChar.style.font, token[i], newChar.style.char_size);
+            newChar.text = std::make_unique<sf::Text>(*newChar.style.font, token[i], newChar.style.char_size);
             currentLine.emplace_back(newChar);
         }
     }

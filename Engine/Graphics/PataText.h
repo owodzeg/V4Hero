@@ -88,26 +88,113 @@ class PataText
             // misc
             int offset = 0; // which character (in total)
             int line_offset = 0; // which character (in specific line)
+
+            PTStyle() = default;
+            PTStyle(const PTStyle&) = default;
+            PTStyle& operator=(const PTStyle&) = default;
+            PTStyle(PTStyle&&) noexcept = default;
+            PTStyle& operator=(PTStyle&&) noexcept = default;
+
+            void swap(PTStyle& other) noexcept
+            {
+                using std::swap;
+                swap(kerning, other.kerning);
+                swap(additional_kerning, other.additional_kerning);
+                swap(rotation, other.rotation);
+                swap(x_offset, other.x_offset);
+                swap(y_offset, other.y_offset);
+                swap(r_offset, other.r_offset);
+                swap(c_red, other.c_red);
+                swap(c_green, other.c_green);
+                swap(c_blue, other.c_blue);
+                swap(c_alpha, other.c_alpha);
+                swap(char_size, other.char_size);
+                swap(font, other.font);
+                swap(fontStr, other.fontStr);
+                swap(display, other.display);
+                swap(fadein, other.fadein);
+                swap(bold, other.bold);
+                swap(italic, other.italic);
+                swap(underline, other.underline);
+                swap(strike, other.strike);
+                swap(shake, other.shake);
+                swap(hwave, other.hwave);
+                swap(hwave_speed, other.hwave_speed);
+                swap(vwave, other.vwave);
+                swap(vwave_speed, other.vwave_speed);
+                swap(thickness, other.thickness);
+                swap(ot_c_red, other.ot_c_red);
+                swap(ot_c_green, other.ot_c_green);
+                swap(ot_c_blue, other.ot_c_blue);
+                swap(ot_c_alpha, other.ot_c_alpha);
+                swap(nextCharTimeout, other.nextCharTimeout);
+                swap(curCharTimeout, other.curCharTimeout);
+                swap(offset, other.offset);
+                swap(line_offset, other.line_offset);
+            }
         };
 
         struct PTChar {
-            // base obj for storing the character and render object
+            char32_t character;
+            std::unique_ptr<sf::Text> text;
+            sf::Vector2f position;
+            PTStyle style;
 
             // Default constructor
-            PTChar() : character(0)
+            PTChar()
+                : character(0)
             {
             }
 
             // Constructor with parameters
-            PTChar(char32_t newChar, const PTStyle& newStyle) : character(newChar), style(newStyle)
+            PTChar(char32_t newChar, const PTStyle& newStyle)
+                : character(newChar),
+                  style(newStyle)
             {
             }
 
-            char32_t character;
-            sf::Text* text = nullptr;
-            sf::Vector2f position;
-            PTStyle style;
+            PTChar(const PTChar& other)
+                : character(other.character),
+                  position(other.position),
+                  style(other.style)
+            {
+                if (other.text)
+                {
+                    text = std::make_unique<sf::Text>(*other.text);
+                } else
+                {
+                    text = nullptr;
+                }
+            }
+
+            PTChar& operator=(const PTChar& other)
+            {
+                PTChar temp(other);
+                swap(temp);
+                return *this;
+            }
+
+            PTChar(PTChar&& other) noexcept = default;
+            PTChar& operator=(PTChar&& other) noexcept = default;
+
+            void swap(PTChar& other) noexcept
+            {
+                using std::swap;
+                swap(character, other.character);
+                swap(text, other.text);
+                swap(position, other.position);
+                swap(style, other.style);
+            }
         };
+
+        friend void swap(PTChar& a, PTChar& b) noexcept
+        {
+            a.swap(b);
+        }
+        friend void swap(PTStyle& a, PTStyle& b) noexcept
+        {
+            a.swap(b);
+        }
 
         // constructor
         PataText();

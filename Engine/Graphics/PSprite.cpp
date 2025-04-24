@@ -8,21 +8,8 @@
 #include <string>
 #include <spdlog/spdlog.h>
 
-PSprite::PSprite() 
-{
-}
-
-PSprite::~PSprite()
-{
-    if (s != nullptr)
-        delete s;
-}
-
 void PSprite::loadFromFile(std::string file, int q, bool downscale)
 {
-    if (s != nullptr)
-        delete s;
-
     if (qualitySetting != q && qualitySetting != -1)
     {
         SPDLOG_DEBUG("Quality has changed.");
@@ -75,10 +62,7 @@ void PSprite::loadFromFile(std::string file, int q, bool downscale)
     SPDLOG_DEBUG("Loading PSprite: {}", file);
     texturePath = file;
 
-    if(downscale)
-        s = new sf::Sprite(TextureManager::getInstance().getTexture(file, q));
-    else
-        s = new sf::Sprite(TextureManager::getInstance().getTexture(file, q, false));
+    s = std::make_unique<sf::Sprite>(TextureManager::getInstance().getTexture(file, q, downscale));
 }
 
 void PSprite::setRepeated(bool r)
@@ -156,11 +140,11 @@ void PSprite::applyTexture()
     exported = false;
 }
 
-void PSprite::setSprite(sf::Sprite& sprite)
-{
-    SPDLOG_ERROR("PSPRITE TRIGGER");
+//void PSprite::setSprite(sf::Sprite& sprite)
+//{
+//    SPDLOG_ERROR("PSPRITE TRIGGER");
     //s = sprite;
-}
+//}
 
 void PSprite::setPosition(float x, float y)
 {
