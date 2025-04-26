@@ -17,6 +17,7 @@ private:
     // Variables for delta time calc
     float fps = 60;
     sf::Clock fpsclock;
+    sf::Clock fpsDisplayClock;
     unsigned int framerate_limit = 60;
     std::vector<float> frame_times;
 

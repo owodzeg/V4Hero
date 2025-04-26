@@ -300,9 +300,14 @@ void V4Core::init()
         // If FPS counter is enabled, draw it
         if (config->GetInt("showFPS"))
         {
-            t_fps.reset();
-            t_fps.append("{outline 6 0 0 0}{color 255 255 255}FPS: ");
-            t_fps.append(to_string(int(ceil(rawFps))));
+            if (fpsDisplayClock.getElapsedTime().asMilliseconds() > 100)
+            {
+                fpsDisplayClock.restart();
+                t_fps.reset();
+                t_fps.append("{outline 6 0 0 0}{color 255 255 255}FPS: ");
+                t_fps.append(to_string(int(ceil(average))));
+            }
+            
             t_fps.setGlobalOrigin(t_fps.getGlobalBounds().size.x, 0);
             t_fps.setGlobalPosition(3828, 72);
             t_fps.draw();
