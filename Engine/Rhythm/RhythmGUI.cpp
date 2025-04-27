@@ -6,7 +6,7 @@
 #include <spdlog/spdlog.h>
 #include "../CoreManager.h"
 
-using namespace std;
+
 using namespace std::chrono;
 
 RhythmGUI::RhythmGUI()
@@ -156,7 +156,7 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
 
     for(unsigned int i=0; i<messages.size(); i++)
     {
-        SPDLOG_DEBUG("message i={}, action: {}, message: {}, timestamp {}", i, to_string(messages[i].action), messages[i].message, messages[i].timestamp);
+        SPDLOG_DEBUG("message i={}, action: {}, message: {}, timestamp {}", i, std::to_string(messages[i].action), messages[i].message, messages[i].timestamp);
 
         //messages[i].action directly translates into drums BEST, GOOD and BAD
         Rhythm::RhythmAction action = messages[i].action;
@@ -211,7 +211,7 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
         debug_text += "command input: ";
         for(auto c : rhythmController->commandInput)
         {
-            debug_text += to_string(c);
+            debug_text += std::to_string(c);
         }
         debug_text += "\n";
         debug_text += std::format("can hit? (double input prevention): {}", rhythm->hitAllowed);

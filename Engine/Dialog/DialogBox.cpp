@@ -7,7 +7,7 @@
 #include "../Func.h"
 #include "../Input/InputController.h"
 
-using namespace std;
+
 
 PataDialogBox::PataDialogBox()
 {

@@ -12,7 +12,7 @@
 
 #include <nlohmann/json.hpp>
 
-using namespace std;
+
 using namespace std::chrono;
 using json = nlohmann::json;
 
@@ -91,7 +91,7 @@ void Rhythm::Stop()
 
     running = false;
 }
-void Rhythm::LoadTheme(string theme)
+void Rhythm::LoadTheme(std::string theme)
 {
     //TO-DO: uncomment this later
     //low_range = CoreManager::getInstance().getConfig()->GetInt("lowRange");
@@ -294,18 +294,18 @@ void Rhythm::decideSongType()
     {
         currentSongType = SongController::SongType::IDLE;
         SPDLOG_DEBUG("I am deciding: IDLE");
-        addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
+        addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, std::to_string(currentSongType));
         return;
     }
 
     if(combo == 1) {
         currentSongType = SongController::SongType::PREFEVER_CALM;
         SPDLOG_DEBUG("I am deciding: PREFEVER_CALM");
-        addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
+        addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, std::to_string(currentSongType));
         return;
     }
 
-    SPDLOG_DEBUG("Current song type: {}, advanced_prefever: {}", to_string(currentSongType), advanced_prefever);
+    SPDLOG_DEBUG("Current song type: {}, advanced_prefever: {}", std::to_string(currentSongType), advanced_prefever);
     if((currentSongType != SongController::SongType::FEVER) && (currentSongType != SongController::SongType::FEVER_START)) {
         if(advanced_prefever) {
             if(satisfaction <= getAccRequirement(combo) * 0.75) {
@@ -313,7 +313,7 @@ void Rhythm::decideSongType()
                 currentSongType = SongController::SongType::PREFEVER_CALM;
                 songController->flushOrder();
                 SPDLOG_DEBUG("Poor timing! Go back to PREFEVER_CALM");
-                addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
+                addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, std::to_string(currentSongType));
                 return;
             }
         }
@@ -324,7 +324,7 @@ void Rhythm::decideSongType()
                 {
                     currentSongType = SongController::SongType::FEVER_START;
                     SPDLOG_DEBUG("Awesome! Go to FEVER_START");
-                    addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
+                    addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, std::to_string(currentSongType));
                     addRhythmMessage(RhythmAction::FEVER_ON, "");
                     return;
                 }
@@ -334,12 +334,12 @@ void Rhythm::decideSongType()
                         advanced_prefever = true;
                         currentSongType = SongController::SongType::PREFEVER_INTENSE_START;
                         SPDLOG_DEBUG("Great! Go to PREFEVER_INTENSE_START");
-                        addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
+                        addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, std::to_string(currentSongType));
                         return;
                     } else {
                         currentSongType = SongController::SongType::FEVER_START;
                         SPDLOG_DEBUG("Awesome! Go to FEVER_START");
-                        addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
+                        addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, std::to_string(currentSongType));
                         addRhythmMessage(RhythmAction::FEVER_ON, "");
                         return;
                     }
@@ -350,19 +350,19 @@ void Rhythm::decideSongType()
         if(currentSongType == SongController::SongType::PREFEVER_INTENSE_START) {
             currentSongType = SongController::SongType::PREFEVER_INTENSE;
             SPDLOG_DEBUG("PREFEVER_INTENSE_START -> PREFEVER_INTENSE");
-            addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
+            addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, std::to_string(currentSongType));
             return;
         }
 
         if(!advanced_prefever) {
             currentSongType = SongController::SongType::PREFEVER_CALM;
             SPDLOG_DEBUG("No choice made, also no advanced prefever. Choosing PREFEVER_CALM"); 
-            addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
+            addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, std::to_string(currentSongType));
             return;
         } else {
             currentSongType = SongController::SongType::PREFEVER_INTENSE;
             SPDLOG_DEBUG("No choice made, advanced prefever set. Chooding PREFEVER_INTENSE");
-            addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType)); 
+            addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, std::to_string(currentSongType)); 
             return;
         }
     }
@@ -370,7 +370,7 @@ void Rhythm::decideSongType()
     if(currentSongType == SongController::SongType::FEVER_START) {
         currentSongType = SongController::SongType::FEVER;
         SPDLOG_DEBUG("FEVER_START -> FEVER");
-        addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, to_string(currentSongType));
+        addRhythmMessage(RhythmAction::SONG_TYPE_CHANGED, std::to_string(currentSongType));
         return;
     }
 }
@@ -383,7 +383,7 @@ void Rhythm::addRhythmMessage(RhythmAction action_id, std::string message)
     new_message.action = action_id;
     new_message.message = message;
     new_message.timestamp = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-    SPDLOG_DEBUG("Adding new rhythm message: action {}, message {}, timestamp {}", to_string(action_id), message, new_message.timestamp);
+    SPDLOG_DEBUG("Adding new rhythm message: action {}, message {}, timestamp {}", std::to_string(action_id), message, new_message.timestamp);
     messages.push_back(new_message);
 
     mtx.unlock();

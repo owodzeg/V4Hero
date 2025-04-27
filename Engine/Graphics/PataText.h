@@ -281,7 +281,7 @@ class PataText
         double max_width = 0, max_height = 0; // bounds
         int m_counter = 0, m_counter_line = 0; // counters
         bool refreshPositioning = true; // do it only when we're moving somewhere/changing something
-        std::vector<std::vector<PTChar>> m_lines; // text data. vector consists of lines (separated by {n}), lines consist of PTChar objects. 
+        std::vector<std::vector<PTChar>> m_lines; // text data. std::vector consists of lines (separated by {n}), lines consist of PTChar objects. 
 };
 
 #endif

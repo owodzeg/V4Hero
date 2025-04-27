@@ -7,7 +7,7 @@
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
 
-using namespace std;
+
 using json = nlohmann::json; // Convenience recommended by the library
 
 //
@@ -18,7 +18,7 @@ AnimatedCurveShape::AnimatedCurveShape(std::string path)
 
     SPDLOG_INFO("Loading AnimatedCurveShape at " + path);
     frames.clear();
-    ifstream t("resources/data/anim_data.json", std::ios::in);
+    std::ifstream t("resources/data/anim_data.json", std::ios::in);
     nlohmann::json frame_data;
     t >> frame_data;
     for (int i = 0; i < frame_data["frames"].size(); i++)

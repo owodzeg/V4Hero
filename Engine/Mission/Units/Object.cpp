@@ -1,7 +1,7 @@
 #include "Object.h"
 #include "../../ResourceManager.h"
 
-using namespace std;
+
 
 Object::Object()
 {
@@ -26,7 +26,7 @@ Object::Object(std::string mem, int xpos, int ypos, int l, int p)
     parent = p;
 }
 
-void Object::Load(string filename, int xpos, int ypos)
+void Object::Load(std::string filename, int xpos, int ypos)
 {
     //cout << "Loading object" << endl;
     texture_path = filename.substr(filename.find_last_of("\\/") + 1);
@@ -98,7 +98,7 @@ void Object::swapTexture(sf::Image& img)
     //cout << "[AnimatedObject::swapTexture A] swapping done" << endl;
 }
 
-void Object::swapTexture(sf::Image first, vector<Pixel> px)
+void Object::swapTexture(sf::Image first, std::vector<Pixel> px)
 {
     //cout << "[AnimatedObject::swapTexture B] swapping texture" << endl;
     //cout << "[Object] Object::swapTexture(): " << texture_path << endl;
@@ -274,7 +274,7 @@ void Object::SetPos(float time)
         }
     }
 
-    // cout << x << " " << y << " " << r << " " << or_x << " " << or_y << " " << s_x << " " << s_y << endl;
+    // //cout << x << " " << y << " " << r << " " << or_x << " " << or_y << " " << s_x << " " << s_y << endl;
 }
 
 void Object::SetPosFrame(float time, int frame)
@@ -394,7 +394,7 @@ void Object::SetPosFrame(float time, int frame)
         }
     }
 
-    // cout << x << " " << y << " " << r << " " << or_x << " " << or_y << " " << s_x << " " << s_y << endl;
+    // //cout << x << " " << y << " " << r << " " << or_x << " " << or_y << " " << s_x << " " << s_y << endl;
 }
 
 void Object::Draw(int orx, int ory)

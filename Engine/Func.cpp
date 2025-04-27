@@ -376,7 +376,7 @@ nlohmann::json Func::parseLootArray(std::mt19937& gen, std::uniform_real_distrib
 }
 
 
-void Func::parseEntityLoot(std::mt19937& gen, std::uniform_real_distribution<double>& roll, json loot, vector<Entity::Loot>& to_drop)
+void Func::parseEntityLoot(std::mt19937& gen, std::uniform_real_distribution<double>& roll, json loot, std::vector<Entity::Loot>& to_drop)
 {
     SPDLOG_DEBUG("Start parsing entity loot: {}", loot.dump());
 
@@ -399,7 +399,7 @@ void Func::parseEntityLoot(std::mt19937& gen, std::uniform_real_distribution<dou
             {
                 parseEntityLoot(gen, roll, it.value(), to_drop);
             }
-        } catch (const exception& e)
+        } catch (const std::exception& e)
         {
             SPDLOG_DEBUG("Exception");
             if (roll(gen) <= float(loot["chance"]) / 100) // Assume it's the below else if

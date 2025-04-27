@@ -7,7 +7,7 @@
 #include "SquadRegistry.h"
 
 using json = nlohmann::json;
-using namespace std;
+
 
 SquadRegistry::SquadRegistry()
 {

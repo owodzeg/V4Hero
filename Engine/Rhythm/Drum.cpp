@@ -4,14 +4,14 @@
 #include <iostream>
 #include "../CoreManager.h"
 
-using namespace std;
+
 
 Drum::Drum()
 {
 
 }
 
-void Drum::Load(string drum, int perfection, std::string& drum_texture)
+void Drum::Load(std::string drum, int perfection, std::string& drum_texture)
 {
     SPDLOG_DEBUG("Loading drum {}, perfection {}, drum_texture {}", drum, perfection, drum_texture);
 

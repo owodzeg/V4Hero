@@ -53,7 +53,7 @@ ObeliskMenu::ObeliskMenu()
     location_title.defaultStyleSetCharSize(27 * 3);
     location_title.defaultStyleSetColor(sf::Color::Black);
     location_title.append(Func::GetStrFromKey("worldmap_location_1_title"));
-    string desc = Func::wrap_text("worldmap_location_1_description", 800*3, font, 18);
+    std::string desc = Func::wrap_text("worldmap_location_1_description", 800*3, font, 18);
 
     location_desc.defaultStyleSetFont(font);
     location_desc.defaultStyleSetCharSize(17 * 3);
@@ -82,11 +82,11 @@ ObeliskMenu::ObeliskMenu()
     for (int i = 1; i <= fields; i++)
     {
         SpriteWrapper bg;
-        bg.load("resources/graphics/ui/worldmap/locationbg_" + to_string(i) + ".png");
+        bg.load("resources/graphics/ui/worldmap/locationbg_" + std::to_string(i) + ".png");
         preloaded_location_bgs.push_back(bg);
 
         SpriteWrapper loc;
-        loc.load("resources/graphics/ui/worldmap/location_" + to_string(i) + ".png");
+        loc.load("resources/graphics/ui/worldmap/location_" + std::to_string(i) + ".png");
         preloaded_worldmap_icons.push_back(loc);
     }
 
@@ -120,7 +120,7 @@ void ObeliskMenu::addMission(json missiondata)
     } catch (const std::exception& e)
     {
         std::string title = "No Data";
-        tmp.title = string(title.begin(), title.end());
+        tmp.title = std::string(title.begin(), title.end());
     }
     try
     {
@@ -129,7 +129,7 @@ void ObeliskMenu::addMission(json missiondata)
     } catch (const std::exception& e)
     {
         std::string desc = "No Data";
-        tmp.desc = string(desc.begin(), desc.end());
+        tmp.desc = std::string(desc.begin(), desc.end());
     }
 
     try
@@ -140,11 +140,11 @@ void ObeliskMenu::addMission(json missiondata)
         tmp.mission_file = "mis1_1.json";
     }
 
-    string level = "";
+    std::string level = "";
 
     if (CoreManager::getInstance().getSaveReader()->mission_levels[tmp.mis_ID] != 0)
     {
-        level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[tmp.mis_ID]);
+        level = std::to_string(CoreManager::getInstance().getSaveReader()->mission_levels[tmp.mis_ID]);
     }
 
     auto strRepo = CoreManager::getInstance().getStrRepo();
@@ -459,17 +459,17 @@ void ObeliskMenu::Update()
 
                         displayMissions = true;
 
-                        string level = "";
+                        std::string level = "";
 
                         if (CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID] != 0)
                         {
-                            level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
+                            level = std::to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
                         }
 
                         mission_title.reset();
                         mission_title.append(Func::GetStrFromKey(missions[sel_mission].title));
                         mission_title.append(level);
-                        string desc = Func::wrap_text(missions[sel_mission].desc, 633*3, font, 18);
+                        std::string desc = Func::wrap_text(missions[sel_mission].desc, 633*3, font, 18);
                         mission_desc.reset();
                         mission_desc.append(desc);
                     }
@@ -536,12 +536,12 @@ void ObeliskMenu::Update()
 
                     if (std::find(unlocked.begin(), unlocked.end(), sel_location - 1) != unlocked.end())
                     {
-                        string L1 = "worldmap_location_" + to_string(sel_location) + "_title";
-                        string L2 = "worldmap_location_" + to_string(sel_location) + "_description";
-                        string wL1 = string(L1.begin(), L1.end());
-                        string wL2 = string(L2.begin(), L2.end());
+                        std::string L1 = "worldmap_location_" + std::to_string(sel_location) + "_title";
+                        std::string L2 = "worldmap_location_" + std::to_string(sel_location) + "_description";
+                        std::string wL1 = std::string(L1.begin(), L1.end());
+                        std::string wL2 = std::string(L2.begin(), L2.end());
 
-                        string desc = Func::wrap_text(wL2, 2400, font, 18);
+                        std::string desc = Func::wrap_text(wL2, 2400, font, 18);
 
                         location_title.reset();
                         location_desc.reset();
@@ -549,8 +549,8 @@ void ObeliskMenu::Update()
                         location_desc.append(desc);
                     } else
                     {
-                        string L1 = "worldmap_location_locked";
-                        string wL1 = string(L1.begin(), L1.end());
+                        std::string L1 = "worldmap_location_locked";
+                        std::string wL1 = std::string(L1.begin(), L1.end());
 
                         location_title.reset();
                         location_desc.reset();
@@ -600,12 +600,12 @@ void ObeliskMenu::Update()
 
                     if (std::find(unlocked.begin(), unlocked.end(), sel_location - 1) != unlocked.end())
                     {
-                        string L1 = "worldmap_location_" + to_string(sel_location) + "_title";
-                        string L2 = "worldmap_location_" + to_string(sel_location) + "_description";
-                        string wL1 = string(L1.begin(), L1.end());
-                        string wL2 = string(L2.begin(), L2.end());
+                        std::string L1 = "worldmap_location_" + std::to_string(sel_location) + "_title";
+                        std::string L2 = "worldmap_location_" + std::to_string(sel_location) + "_description";
+                        std::string wL1 = std::string(L1.begin(), L1.end());
+                        std::string wL2 = std::string(L2.begin(), L2.end());
 
-                        string desc = Func::wrap_text(wL2, 800*3, font, 18);
+                        std::string desc = Func::wrap_text(wL2, 800*3, font, 18);
 
                         location_title.reset();
                         location_desc.reset();
@@ -613,8 +613,8 @@ void ObeliskMenu::Update()
                         location_desc.append(desc);
                     } else
                     {
-                        string L1 = "worldmap_location_locked";
-                        string wL1 = string(L1.begin(), L1.end());
+                        std::string L1 = "worldmap_location_locked";
+                        std::string wL1 = std::string(L1.begin(), L1.end());
 
                         location_title.reset();
                         location_desc.reset();
@@ -631,18 +631,18 @@ void ObeliskMenu::Update()
 
                     SPDLOG_DEBUG("Selecting Obelisk mission {}", sel_mission);
 
-                    string level = "";
+                    std::string level = "";
 
                     if (CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID] != 0)
                     {
-                        level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
+                        level = std::to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
                     }
 
                     mission_title.reset();
                     mission_desc.reset();
                     mission_title.append(Func::GetStrFromKey(missions[sel_mission].title));
                     mission_title.append(level);
-                    string desc = Func::wrap_text(missions[sel_mission].desc, 633*3, font, 18);
+                    std::string desc = Func::wrap_text(missions[sel_mission].desc, 633*3, font, 18);
                     mission_desc.append(desc);
                 }
             } else if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
@@ -654,16 +654,16 @@ void ObeliskMenu::Update()
 
                     SPDLOG_DEBUG("Selecting Obelisk mission {}", sel_mission);
 
-                    string level = "";
+                    std::string level = "";
 
                     if (CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID] != 0)
                     {
-                        level = to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
+                        level = std::to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
                     }
 
                     mission_title.append(Func::GetStrFromKey(missions[sel_mission].title));
                     mission_title.append(level);
-                    string desc = Func::wrap_text(missions[sel_mission].desc, 633*3, font, 18);
+                    std::string desc = Func::wrap_text(missions[sel_mission].desc, 633*3, font, 18);
                     mission_desc.append(desc);
                 }
             }

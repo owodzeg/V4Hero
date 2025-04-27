@@ -59,7 +59,7 @@ OptionsMenu::OptionsMenu()
     t_restart.defaultStyleSetColor(sf::Color::Black);
     t_restart.append(Func::GetStrFromKey("options_restart_notice"));
 
-    vector<sf::String> restart_opt = {"options_restart_button1", "options_restart_button2"};
+    std::vector<sf::String> restart_opt = {"options_restart_button1", "options_restart_button2"};
     restart_prompt.Create(font, "options_restart_notice", restart_opt, q);
 
     // TODO: this gets rewritten anyway
@@ -127,12 +127,12 @@ OptionsMenu::OptionsMenu()
     opt.append(Func::GetStrFromKey("options_back");
     g_options.push_back(opt);
 
-    vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes();
+    std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes();
     for (int i = 0; i < modes.size(); i++)
     {
         if (float(modes[i].height) / float(modes[i].width) == 0.5625)
         {
-            string res = to_string(modes[i].width) + "x" + to_string(modes[i].height);
+            std::string res = std::to_string(modes[i].width) + "x" + std::to_string(modes[i].height);
 
             opt.defaultStyleSetFont(font);
             opt.defaultStyleSetCharSize(25);
@@ -307,14 +307,14 @@ OptionsMenu::OptionsMenu()
     opt.createText(m_font, 25, sf::Color::White, "options_back", q, 2);
     diff_options.push_back(opt);
 
-    ifstream langfile("resources/lang/lang.txt");
-    string buf;
+    std::ifstream langfile("resources/lang/lang.txt");
+    std::string buf;
     int langcount = 0;
     int page = 0;
 
     while (getline(langfile, buf))
     {
-        vector<string> param = Func::Split(buf, '|');
+        std::vector<std::string> param = Func::Split(buf, '|');
 
         opt.createText(m_font, 25, sf::Color::White, param[1], q, 2);
         langs[page].push_back(opt);
@@ -356,7 +356,7 @@ OptionsMenu::OptionsMenu()
 
     for (int i = 0; i < 9; i++)
     {
-        t_presets[i].createText(m_font, 18, sf::Color::Black, to_string(i + 1), q, 1);
+        t_presets[i].createText(m_font, 18, sf::Color::Black, std::to_string(i + 1), q, 1);
     }
 
     t_igbutton.createText(m_font, 18, sf::Color::Black, "options_ingame_btn")), q, 1);

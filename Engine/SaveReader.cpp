@@ -11,12 +11,12 @@
 #include "CoreManager.h"
 #include "Constants.h"
 
-using namespace std;
+
 using json = nlohmann::json; // Convenience recommended by the library
 
 SaveReader::SaveReader()
 {
-    ifstream check(SAVEFILE_PATH);
+    std::ifstream check(SAVEFILE_PATH);
     bool exists = check.good();
     check.close();
 
@@ -30,7 +30,7 @@ SaveReader::~SaveReader()
 
 void SaveReader::LoadSave()
 {
-    ifstream conf(SAVEFILE_PATH, std::ios::in);
+    std::ifstream conf(SAVEFILE_PATH, std::ios::in);
     if (conf.good())
     {
         json save_data;
@@ -124,7 +124,7 @@ void SaveReader::LoadSave()
             {
                 missions_unlocked.push_back(mission.id); // Add mission id
             }
-            mission_levels.insert(pair<int, int>(mission.id, mission.level)); // Add mission level regardless
+            mission_levels.insert(std::pair<int, int>(mission.id, mission.level)); // Add mission level regardless
         }
     } else
     {
@@ -155,8 +155,8 @@ void SaveReader::CreateBlankSave()
 
     kami_name = "Kamipon";
 
-    vector<string> starter_items = {"item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet"};
-    for (const string& starter_item : starter_items)
+    std::vector<std::string> starter_items = {"item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_spear", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet", "item_wooden_helmet"};
+    for (const std::string& starter_item : starter_items)
     {
         invData.addItem(itemReg.getItemByName(starter_item)->order_id, itemReg);
     }
@@ -312,7 +312,7 @@ void SaveReader::Save()
     }
     */
 
-    ofstream save_file(SAVEFILE_PATH, ios::ate);
+    std::ofstream save_file(SAVEFILE_PATH, std::ios::ate);
     save_file.seekp(0); // Honestly no idea what this does but it was in the previous version
 
     json save_json = SaveFile{

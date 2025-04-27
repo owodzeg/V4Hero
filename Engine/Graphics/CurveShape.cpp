@@ -56,7 +56,7 @@ void CurveShape::Draw()
             sfml::ConcaveShape polygon = sfml::ConcaveShape(points, fillcolor);
             window->draw(polygon);
         } 
-        catch (exception)
+        catch (std::exception)
         {
             // not in strict anim mode so let error pass
         }

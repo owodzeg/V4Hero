@@ -118,7 +118,7 @@ void AltarMenu::reloadInventory()
 
     SPDLOG_DEBUG("AltarMenu::reloadInventory();");
 
-    vector<InvBox> old_invboxes = inventory_boxes; ///for comparison and new item highlight
+    std::vector<InvBox> old_invboxes = inventory_boxes; ///for comparison and new item highlight
 
     inventory_boxes.clear();
 

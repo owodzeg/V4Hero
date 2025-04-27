@@ -259,7 +259,7 @@ void Barracks::eventFired(sf::Event event)
 
 }
 
-int Barracks::countOccupied(vector<int> order_id)
+int Barracks::countOccupied(std::vector<int> order_id)
 {
     SPDLOG_DEBUG("Barracks::countOccupied({} {} {})", order_id[0], order_id[1], order_id[2]);
     int occ = 0;
@@ -807,7 +807,7 @@ void Barracks::Update()
     
     unit_status.reset();
     unit_status.append(Func::GetStrFromKey("barracks_unit_status"));
-    unit_status.append(" " + to_string(current_selected_pon + 1) + "/6");
+    unit_status.append(" " + std::to_string(current_selected_pon + 1) + "/6");
     unit_status.setGlobalPosition(1048*3, 38*3);
 
     Pon* currentPon = new Pon;
@@ -1078,7 +1078,7 @@ void Barracks::Update()
 
     window->draw(mm_selected_item_line);
 
-    vector<int> db_e; ///dialog box erase
+    std::vector<int> db_e; ///dialog box erase
 
     for (int i = 0; i < dialog_boxes.size(); i++)
     {

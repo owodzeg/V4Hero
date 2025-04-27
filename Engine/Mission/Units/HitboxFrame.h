@@ -22,7 +22,7 @@ public:
     ///timestamp
     float time;
     ///global position, so the hitbox can be moved around as a whole. 
-    ///Note this is relative to the vertex vectors (Which in the case of projectiles means it the center but other hitboxes may be different
+    ///Note this is relative to the vertex std::vectors (Which in the case of projectiles means it the center but other hitboxes may be different
     float g_x = 0;
     float g_y = 0;
     ///rotation (in radians)

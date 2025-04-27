@@ -6,7 +6,7 @@
 #include <spdlog/spdlog.h>
 #include "../CoreManager.h"
 
-using namespace std;
+
 
 RhythmController::RhythmController()
 {
@@ -27,7 +27,7 @@ bool RhythmController::checkForInput()
         return false;
 
     ///Flush the buffers
-    vector<int> s_rm;
+    std::vector<int> s_rm;
 
     //cout << "RhythmController currently holds " << s_drums.size() << "/220 sounds." << endl;
 
@@ -52,7 +52,7 @@ bool RhythmController::checkForInput()
             current_drum = drumToLoad;
             currentPattern = patterns[drumToLoad];
 
-            std::string rhythmMessage = current_drum+" "+to_string(currentPattern);
+            std::string rhythmMessage = current_drum+" "+std::to_string(currentPattern);
 
             if (masterTimer < low_range) ///BAD hit
             {
@@ -179,7 +179,7 @@ bool RhythmController::checkForInput()
                     {
                         SoundManager::getInstance().playSound("resources/sfx/drums/perfect.ogg", SoundManager::SoundTag::RHYTHM_DRUM);
 
-                        rhythm->addRhythmMessage(Rhythm::RhythmAction::PERFECT_COMMAND, to_string(command));
+                        rhythm->addRhythmMessage(Rhythm::RhythmAction::PERFECT_COMMAND, std::to_string(command));
                     }
 
                     // we clear the command input here
@@ -207,7 +207,7 @@ bool RhythmController::checkForInput()
                     command_perfects.clear();
                     rl_input_perfects.clear();
 
-                    rhythm->addRhythmMessage(Rhythm::RhythmAction::FOUND_COMMAND, to_string(command));
+                    rhythm->addRhythmMessage(Rhythm::RhythmAction::FOUND_COMMAND, std::to_string(command));
                 }
                 else
                 {
@@ -236,7 +236,7 @@ bool RhythmController::checkForInput()
                         {
                             SoundManager::getInstance().playSound("resources/sfx/drums/perfect.ogg", SoundManager::SoundTag::RHYTHM_DRUM);
 
-                            rhythm->addRhythmMessage(Rhythm::RhythmAction::PERFECT_COMMAND, to_string(command));
+                            rhythm->addRhythmMessage(Rhythm::RhythmAction::PERFECT_COMMAND, std::to_string(command));
                         }
 
                         // we clear the command input here
@@ -266,7 +266,7 @@ bool RhythmController::checkForInput()
 
                         commandWithMissingHalfBeat = true;
 
-                        rhythm->addRhythmMessage(Rhythm::RhythmAction::FOUND_COMMAND, to_string(command));
+                        rhythm->addRhythmMessage(Rhythm::RhythmAction::FOUND_COMMAND, std::to_string(command));
                     }
                     else
                     {
@@ -326,12 +326,12 @@ bool RhythmController::checkForInput()
 
     for (unsigned int c = 0; c < commandInput.size(); c++)
     {
-        s_command += to_string(commandInput[c]) + " ";
+        s_command += std::to_string(commandInput[c]) + " ";
     }
 
     for (unsigned int c = 0; c < command_perfects.size(); c++)
     {
-        s_perfects += to_string(command_perfects[c]) + " ";
+        s_perfects += std::to_string(command_perfects[c]) + " ";
     }
 
     int command = 0;

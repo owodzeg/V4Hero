@@ -7,7 +7,7 @@
 #include <sstream>
 #include <spdlog/spdlog.h>
 
-using namespace std;
+
 
 PSpritesheet::PSpritesheet()
 {
@@ -47,7 +47,7 @@ void PSpritesheet::load(std::string file, int q, int r)
 
     SPDLOG_DEBUG("Loading {}", c);
 
-    std::ifstream sfile(c, ios::binary);
+    std::ifstream sfile(c, std::ios::binary);
     std::ostringstream ss;
     ss << sfile.rdbuf();
     const std::string& s = ss.str();
@@ -59,12 +59,12 @@ void PSpritesheet::load(std::string file, int q, int r)
     t.loadFromFile(c);
     t.setSmooth(true);
 
-    ifstream spr(d);
-    string buff;
+    std::ifstream spr(d);
+    std::string buff;
 
     while (getline(spr, buff))
     {
-        vector<string> s_rect = Func::Split(buff, ',');
+        std::vector<std::string> s_rect = Func::Split(buff, ',');
 
         rect.push_back(sf::IntRect(sf::Vector2i(atoi(s_rect[0].c_str()), atoi(s_rect[1].c_str())), sf::Vector2i(atoi(s_rect[2].c_str()), atoi(s_rect[3].c_str()))));
     }

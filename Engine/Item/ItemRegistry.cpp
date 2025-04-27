@@ -274,20 +274,20 @@ void ItemRegistry::readItemFiles()
     SPDLOG_INFO("ItemRegistry registered {} items", items.size());
 
     /*
-    cout << "Loaded items:" << endl;
+    //cout << "Loaded items:" << endl;
     for(int i = 0; i < items.size(); i++)
     {
-        cout << "Item: " << items[i]->item_name << endl;
+        //cout << "Item: " << items[i]->item_name << endl;
     }
     */
     // Use this to print out all loaded items
     /*
-    cout << "Item counts:" << endl;
+    //cout << "Item counts:" << endl;
     for(int i = 0; i < item_counts.size(); i++)
     {
         for(int o = 0; o < item_counts[i].size(); o++)
         {
-            cout << "Category:" << i << ", Type:" << o << ", Count:" << item_counts[i][o] << endl;
+            //cout << "Category:" << i << ", Type:" << o << ", Count:" << item_counts[i][o] << endl;
         }
     }
     */
@@ -324,7 +324,7 @@ Item* ItemRegistry::getItemByID(std::vector<int> id)
     cerr << "total_id is " << total_id << endl;
     if(items[total_id + id[id.size() - 1]]->order_id != id)
     {
-        cout << "[ERROR] Item \"found\" but is wrong" << endl;
+        //cout << "[ERROR] Item \"found\" but is wrong" << endl;
     }
     else
     {
@@ -360,7 +360,7 @@ Item* ItemRegistry::getItemByName(std::string name, bool lang_specific)
 {
     if (lang_specific) // By e.g. Wooden Spear (won't return if comparing between languages)
     {
-        string converted_name = Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(name));
+        std::string converted_name = Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(name));
         for (int i = 0; i < items.size(); i++)
         {
             if (Func::ConvertToUtf8String(CoreManager::getInstance().getStrRepo()->GetString(items[i]->item_name)) == converted_name)

@@ -6,7 +6,7 @@
 #include <spdlog/spdlog.h>
 #include "../CoreManager.h"
 
-using namespace std;
+
 
 MessageCloud::MessageCloud()
 {
@@ -72,7 +72,7 @@ void MessageCloud::setFontSize(int newFontSize)
 void MessageCloud::AddDialog(sf::String text, bool nextdialog)
 {
     // here i dont think we need to use more than one ptext anymore
-    // just push the new dialogues into a vector of sf::Strings and let PataText parse it :)
+    // just push the new dialogues into a std::vector of sf::Strings and let PataText parse it :)
 
     SPDLOG_DEBUG("MessageCloud::AddDialog(): {}, nextdialog?: {}", std::string(text), nextdialog);
 

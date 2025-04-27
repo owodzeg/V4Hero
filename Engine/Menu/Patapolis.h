@@ -56,7 +56,7 @@ class PatapolisMenu : public Menu
         };
 
         ///Patapolis components
-        std::map<std::string, PSprite> ps_layer_6, ps_layer_2; ///we split PSprites and the position vectors; we will use only one PSprite to draw all of the elements of the background
+        std::map<std::string, PSprite> ps_layer_6, ps_layer_2; ///we split PSprites and the position std::vectors; we will use only one PSprite to draw all of the elements of the background
         std::vector<L> layer_2, layer_6; ///here we store locations and type only
 
         float floor_x_base = 0;

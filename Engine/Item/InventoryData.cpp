@@ -9,7 +9,7 @@
 
 /** Needs some rework **/
 
-using namespace std;
+
 
 InventoryData::InventoryData()
 {
@@ -20,7 +20,7 @@ InventoryData::~InventoryData()
 {
 }
 
-Item* InventoryData::getItemByItemID(vector<int> inv_id)
+Item* InventoryData::getItemByItemID(std::vector<int> inv_id)
 {
     for (int i = 0; i < items.size(); i++)
     {
@@ -31,7 +31,7 @@ Item* InventoryData::getItemByItemID(vector<int> inv_id)
     }
 }
 
-int InventoryData::getItemCountByID(vector<int> item_id)
+int InventoryData::getItemCountByID(std::vector<int> item_id)
 {
     for (int i = 0; i < items.size(); i++)
     {
@@ -42,11 +42,11 @@ int InventoryData::getItemCountByID(vector<int> item_id)
     }
 }
 
-int InventoryData::getInvIDByItemID(vector<int> item_id) // Please for the love of- make this better
+int InventoryData::getInvIDByItemID(std::vector<int> item_id) // Please for the love of- make this better
 {
     for (int i = 0; i < items.size(); i++)
     {
-        vector<int> cur_id = items[i].item->order_id;
+        std::vector<int> cur_id = items[i].item->order_id;
         if (cur_id.size() != item_id.size())
         {
             continue;
@@ -73,7 +73,7 @@ int InventoryData::getInvIDByItemID(vector<int> item_id) // Please for the love 
     return 0;
 }
 
-bool InventoryData::checkItemObtained(vector<int> item_id)
+bool InventoryData::checkItemObtained(std::vector<int> item_id)
 {
     if (item_id.size() > 2)
     {
@@ -98,7 +98,7 @@ bool InventoryData::checkItemObtained(vector<int> item_id)
     return false;
 }
 
-bool InventoryData::checkItemObtainedByName(string item_name)
+bool InventoryData::checkItemObtainedByName(std::string item_name)
 {
     for (int i = 0; i < items.size(); i++)
     {
@@ -115,7 +115,7 @@ bool InventoryData::checkItemObtainedByName(string item_name)
     return false;
 }
 
-void InventoryData::addItem(vector<int> item_id, ItemRegistry& itemReg, int count)
+void InventoryData::addItem(std::vector<int> item_id, ItemRegistry& itemReg, int count)
 {
     std::string str_item_id = std::to_string(item_id[0]);
 

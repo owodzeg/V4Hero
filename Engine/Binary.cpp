@@ -6,7 +6,7 @@
 #include <iostream>
 #include <spdlog/spdlog.h>
 
-using namespace std;
+
 
 ///Read entire binary file to std::string
 std::string Binary::get_file(const std::string& path)
@@ -101,6 +101,6 @@ std::string Binary::to_string(const std::vector<unsigned char>& source)
 ///Read a block of given size from file on given offset
 std::vector<unsigned char> Binary::get_block(const std::vector<unsigned char>& source, int offset, int block_size)
 {
-    vector<unsigned char> a(source.begin() + offset, source.begin() + offset + block_size);
+    std::vector<unsigned char> a(source.begin() + offset, source.begin() + offset + block_size);
     return a;
 }

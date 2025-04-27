@@ -6,7 +6,7 @@
 #include <SFML/Graphics.hpp>
 
 
-using namespace std;
+
 
 class CollidableObject : public AnimatedObject
 {
@@ -15,7 +15,7 @@ public:
     bool isAttackable = true;
 
     CollidableObject();
-    virtual void OnCollide(CollidableObject* otherObject, int collidedWith = -1, vector<string> collisionData = {});
+    virtual void OnCollide(CollidableObject* otherObject, int collidedWith = -1, std::vector<std::string> collisionData = {});
 };
 
 #endif // COLLIDABLEOBJECT_H

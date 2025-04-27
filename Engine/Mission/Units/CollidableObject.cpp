@@ -8,8 +8,8 @@
 CollidableObject::CollidableObject()
 {
 }
-void CollidableObject::OnCollide(CollidableObject* otherObject, int collidedWith, vector<std::string> collisionData)
+void CollidableObject::OnCollide(CollidableObject* otherObject, int collidedWith, std::vector<std::string> collisionData)
 {
     // this space intentionally left blank
-    cout << "[COLLISION_SYSTEM]: Class derived from CollidableObject has not overridden OnCollide() method" << endl;
+    //cout << "[COLLISION_SYSTEM]: Class derived from CollidableObject has not overridden OnCollide() method" << endl;
 }

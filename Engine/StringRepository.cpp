@@ -171,7 +171,7 @@ std::vector<std::pair<std::string, std::string>> StringRepository::GetAvailableL
     return langs;
 }
 
-// Load font from memory (string data)
+// Load font from memory (std::string data)
 void StringRepository::LoadFontFromString(const std::string& fontName, const std::vector<char>& fontData)
 {
     if (fontStore.find(fontName) != fontStore.end()) {
@@ -188,7 +188,7 @@ void StringRepository::LoadFontFromString(const std::string& fontName, const std
 
     SPDLOG_INFO("Font '{}' loaded successfully", fontName);
 }
-// Load font from memory (string data)
+// Load font from memory (std::string data)
 void StringRepository::LoadFontFromFile(const std::string& fontPath, const std::string& fontName)
 {
     if (fontStore.find(fontName) != fontStore.end()) {

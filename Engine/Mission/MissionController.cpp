@@ -119,10 +119,10 @@ void MissionController::LoadMission(const std::string& path)
 
                 SPDLOG_INFO("Spawning Yaripon with stats: (dmg {}-{}, hp {})", y->minDmg, y->maxDmg, y->maxHP);
 
-                // Lock the mutex to safely modify the yaripons vector
+                // Lock the mutex to safely modify the yaripons std::vector
                 {
                     std::lock_guard<std::mutex> lock(yariponsMutex);
-                    yaripons.push_back(std::move(yaripon)); // Move unique_ptr into the vector
+                    yaripons.push_back(std::move(yaripon)); // Move unique_ptr into the std::vector
                 }
             }));
         }
@@ -137,10 +137,10 @@ void MissionController::LoadMission(const std::string& path)
 
                 SPDLOG_INFO("Spawning Yaripon with default equipment.");
 
-                // Lock the mutex to safely modify the yaripons vector
+                // Lock the mutex to safely modify the yaripons std::vector
                 {
                     std::lock_guard<std::mutex> lock(yariponsMutex);
-                    yaripons.push_back(std::move(yaripon)); // Move unique_ptr into the vector
+                    yaripons.push_back(std::move(yaripon)); // Move unique_ptr into the std::vector
                 }
             }));
         }
@@ -234,7 +234,7 @@ void MissionController::LoadMission(const std::string& path)
                     SPDLOG_INFO("Custom loot table: {}", entity["loot"].dump());
                     if(entity.contains("loot") && !entity["loot"].is_null())
                     {
-                        vector<Entity::Loot> new_loot;
+                        std::vector<Entity::Loot> new_loot;
                         Func::parseEntityLoot(CoreManager::getInstance().getCore()->gen, roll, entity["loot"], new_loot);
 
                         e->loot_table = new_loot;
@@ -677,7 +677,7 @@ void MissionController::ProcessRhythmMessages()
 
     for(auto message : messages)
     {
-        SPDLOG_DEBUG("message-> action: {}, message: {}, timestamp {}", to_string(message.action), message.message, message.timestamp);
+        SPDLOG_DEBUG("message-> action: {}, message: {}, timestamp {}", std::to_string(message.action), message.message, message.timestamp);
 
         Rhythm::RhythmAction action = message.action;
 
@@ -961,7 +961,7 @@ void MissionController::DrawMissionUI()
         unit_count_shadow.reset();
         unit_count_shadow.defaultStyleSetFont(CoreManager::getInstance().getStrRepo()->GetFontNameForLanguage(CoreManager::getInstance().getStrRepo()->GetCurrentLanguage()));
         unit_count_shadow.defaultStyleSetCharSize(30);
-        unit_count_shadow.append(to_string(yaripons.size()));
+        unit_count_shadow.append(std::to_string(yaripons.size()));
         unit_count_shadow.defaultStyleSetColor(sf::Color::Black);
         unit_count_shadow.setGlobalOrigin(0, unit_count_shadow.getGlobalBounds().size.y / 2);
         unit_count_shadow.setGlobalPosition(460, thumbY + 75);
@@ -970,7 +970,7 @@ void MissionController::DrawMissionUI()
         unit_count.reset();
         unit_count.defaultStyleSetFont(CoreManager::getInstance().getStrRepo()->GetFontNameForLanguage(CoreManager::getInstance().getStrRepo()->GetCurrentLanguage()));
         unit_count.defaultStyleSetCharSize(30);
-        unit_count.append(to_string(yaripons.size()));
+        unit_count.append(std::to_string(yaripons.size()));
         unit_count.defaultStyleSetColor(sf::Color::White);
         unit_count.setGlobalOrigin(0, unit_count.getGlobalBounds().size.y / 2);
         unit_count.setGlobalPosition(452, thumbY + 65);
@@ -1216,7 +1216,7 @@ void MissionController::DrawMissionUI()
         }
     }
 
-    vector<int> db_e; ///dialog box erase
+    std::vector<int> db_e; ///dialog box erase
 
     for (int i = 0; i < dialogboxes.size(); i++)
     {

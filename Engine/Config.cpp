@@ -57,12 +57,12 @@ void Config::LoadConfig()
 {
     std::ifstream conf("config.ini");
 
-    vector<string> keysCheckList = configKeys;
-    vector<string> keysCheckDefaults = configDefaults;
+    std::vector<std::string> keysCheckList = configKeys;
+    std::vector<std::string> keysCheckDefaults = configDefaults;
 
     if (conf.good())
     {
-        string line;
+        std::string line;
         while (getline(conf, line))
         {
             ///ignore comments
@@ -73,7 +73,7 @@ void Config::LoadConfig()
                     line.pop_back();
                 }
                 ///Split the Key and Value
-                vector<string> key = Func::Split(line, ':');
+                std::vector<std::string> key = Func::Split(line, ':');
 
                 if (key.size() > 1)
                 {
@@ -103,7 +103,7 @@ void Config::LoadConfig()
 
     conf.close();
 
-    std::ofstream conf2("config.ini", ios::app);
+    std::ofstream conf2("config.ini", std::ios::app);
 
     if (conf2.is_open())
     {
@@ -129,7 +129,7 @@ void Config::LoadConfig()
 
 void Config::SaveConfig()
 {
-    std::ofstream conf2("config.ini", ios::trunc);
+    std::ofstream conf2("config.ini", std::ios::trunc);
     SPDLOG_DEBUG("Config Size: {}, Config Keys: {}", configMap.size(), configKeys.size());
 
     if (conf2.is_open())

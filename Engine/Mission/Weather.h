@@ -5,7 +5,7 @@
 #include "../Graphics/PSprite.h"
 #include <SFML/Graphics.hpp>
 
-using namespace std;
+
 
 class Weather
 {
@@ -26,7 +26,7 @@ public:
         float xspeed = 0, yspeed = 0, rspeed = 0;
     };
 
-    vector<Snowflake> snowflakes;
+    std::vector<Snowflake> snowflakes;
     float snowflakesToRender = 0;
 
     /// //////////// ///
@@ -39,7 +39,7 @@ public:
         float xspeed = 0, yspeed = 0;
     };
 
-    vector<Raindrop> raindrops;
+    std::vector<Raindrop> raindrops;
     float raindropsToRender = 0;
 
     /// ////// ///

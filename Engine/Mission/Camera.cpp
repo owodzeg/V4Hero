@@ -5,7 +5,7 @@
 #include <math.h> /* fabs */
 #include "../CoreManager.h"
 
-using namespace std;
+
 
 Camera::Camera()
 {

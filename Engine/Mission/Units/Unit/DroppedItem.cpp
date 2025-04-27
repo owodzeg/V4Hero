@@ -46,7 +46,7 @@ void DroppedItem::Draw()
             glowTimer.restart();
         }
 
-        vector<int> rm;
+        std::vector<int> rm;
 
         for (int i = 0; i < glow.size(); i++)
         {

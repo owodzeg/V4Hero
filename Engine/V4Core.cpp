@@ -99,16 +99,16 @@ void V4Core::init()
 {
     // Create a random seed for all of the randomization 
     srand(time(NULL));
-    random_device rd; // https://stackoverflow.com/questions/13445688
-    seed = rd() ^ ((mt19937::result_type)
-                           chrono::duration_cast<chrono::seconds>(
-                                   chrono::system_clock::now().time_since_epoch())
+    std::random_device rd; // https://stackoverflow.com/questions/13445688
+    seed = rd() ^ ((std::mt19937::result_type)
+                           std::chrono::duration_cast<std::chrono::seconds>(
+                                   std::chrono::system_clock::now().time_since_epoch())
                                    .count() +
-                   (mt19937::result_type)
-                           chrono::duration_cast<chrono::microseconds>(
-                                   chrono::high_resolution_clock::now().time_since_epoch())
+                   (std::mt19937::result_type)
+                           std::chrono::duration_cast<std::chrono::microseconds>(
+                                   std::chrono::high_resolution_clock::now().time_since_epoch())
                                    .count());
-    mt19937 tmp(seed);
+    std::mt19937 tmp(seed);
     gen = tmp;
 
     // Set antialiasing level (hardcoded, apply from config)
@@ -182,7 +182,7 @@ void V4Core::init()
         }
         case 2: {
             SPDLOG_INFO("Test initialized. Moving to MISSION CONTROLLER, mission_file = mis1_0.p4m.");
-            ifstream check(SAVEFILE_PATH);
+            std::ifstream check(SAVEFILE_PATH);
             bool exists = check.good();
             check.close();
 
@@ -217,7 +217,7 @@ void V4Core::init()
         case 4: {
             SPDLOG_INFO("Test initialized. LOAD PATAPOLIS.");
 
-            ifstream check(SAVEFILE_PATH);
+            std::ifstream check(SAVEFILE_PATH);
             bool exists = check.good();
             check.close();
 
@@ -307,7 +307,7 @@ void V4Core::init()
                 fpsDisplayClock.restart();
                 t_fps.reset();
                 t_fps.append("{outline 6 0 0 0}{color 255 255 255}FPS: ");
-                t_fps.append(to_string(int(ceil(average))));
+                t_fps.append(std::to_string(int(ceil(average))));
             }
             
             t_fps.setGlobalOrigin(t_fps.getGlobalBounds().size.x, 0);

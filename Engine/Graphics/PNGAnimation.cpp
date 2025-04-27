@@ -392,7 +392,7 @@ void PNGAnimation::Load(const std::string& path)
         {
             a.cached = false;
             std::ofstream cs_file_out(cs_data_path);
-            cs_file_out << to_string(new_checksum);
+            cs_file_out << std::to_string(new_checksum);
             cs_file_out.close();
         }
     }
@@ -444,7 +444,7 @@ void PNGAnimation::Load(const std::string& path)
     }
     else
     {
-        ifstream anim(model_name+"/animation.json");
+        std::ifstream anim(model_name+"/animation.json");
         if(anim.good())
         {
             animation << anim;
@@ -646,7 +646,7 @@ void PNGAnimation::Load(const std::string& path)
             }
             else
             {
-                ifstream ex(model_name+"/"+json_name);
+                std::ifstream ex(model_name+"/"+json_name);
                 if(ex.good())
                 {
                     j_extra << ex;

@@ -124,7 +124,7 @@ void HitboxFrame::calcMaxWidth(float maxWidth, bool forceRecalc)
 std::vector<sf::Vector2f> HitboxFrame::getCurrentVertices()
 {
     /// oh man.... we need to apply the transformation matrix to this bad boy;
-    /// transformation matrix is 4x4 so we need a 4x1 vector for each point
+    /// transformation matrix is 4x4 so we need a 4x1 std::vector for each point
     /// yes, it is a 3d transformation even though we are in 2d, thats just how the math goes because a 2D rotation is a rotation about the z-axis
     /// it will be as follows:
     ///     -----       ---------------------------------------------------------
@@ -133,7 +133,7 @@ std::vector<sf::Vector2f> HitboxFrame::getCurrentVertices()
     ///     | 0 |   *   | 0                     0                   1   0       |
     ///     | 1 |       | g_xpos                g_ypos              0   1       |
     ///     -----       ---------------------------------------------------------
-    /// result: a 1x4 vector
+    /// result: a 1x4 std::vector
 
     /// Apply changes only if rotation has changed, if rotation havent changed, theres no need to recalculate the vertices
     if (lastRotation != rotation)

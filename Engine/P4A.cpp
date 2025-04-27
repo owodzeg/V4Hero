@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <spdlog/spdlog.h>
 
-using namespace std;
+
 
 P4A::P4A()
 {
@@ -18,14 +18,14 @@ P4A::P4A()
     output_header.push_back(0x01);
 }
 
-int P4A::GetFileSize(string filename)
+int P4A::GetFileSize(std::string filename)
 {
     ///Reads the size of a file
     std::ifstream in(filename, std::ifstream::ate | std::ifstream::binary);
     return int(in.tellg());
 }
 
-void P4A::LoadFile(string filename)
+void P4A::LoadFile(std::string filename)
 {
     ///Save the original path of the file
     original_path.push_back(filename);
@@ -51,7 +51,7 @@ void P4A::CreateDictionary()
     for (int i = 0; i < filenames.size(); i++)
     {
         ///Get file name, name's length and convert it to 1 byte signed (what for???)
-        string file = filenames[i];
+        std::string file = filenames[i];
         int filename_length = file.size();
         int8_t length_8bit = filename_length;
 
@@ -89,7 +89,7 @@ void P4A::CreateDictionary()
     output_header.push_back(char(uint32_t(dictionary_size - 8) >> 24));
 }
 
-void P4A::SaveToFile(string filename)
+void P4A::SaveToFile(std::string filename)
 {
     ///Clear the dictionary in case the handle was used before
     output_dictionary.clear();
@@ -97,7 +97,7 @@ void P4A::SaveToFile(string filename)
     ///Rebuild dictionary
     CreateDictionary();
 
-    ofstream file(filename, std::ios_base::binary);
+    std::ofstream file(filename, std::ios_base::binary);
 
     while (file.is_open())
     {
@@ -116,7 +116,7 @@ void P4A::SaveToFile(string filename)
         ///Write files
         for (int i = 0; i < filenames.size(); i++)
         {
-            ifstream get_file(filenames[i], std::ios_base::binary);
+            std::ifstream get_file(filenames[i], std::ios_base::binary);
 
             char ch;
 
@@ -136,7 +136,7 @@ void P4A::ReadDictionary(std::string filename)
 
     SPDLOG_INFO("Reading file: {}", p4a_filename);
 
-    ifstream file(filename, std::ifstream::binary);
+    std::ifstream file(filename, std::ifstream::binary);
 
     char header[3];
     file.read(header, 3);
@@ -168,7 +168,7 @@ void P4A::ReadDictionary(std::string filename)
                 uint8_t filename_length = Binary::get_uint8(bin_data, p4a_offset);
                 p4a_offset += 1;
 
-                string str_filename = Binary::to_string(Binary::get_block(bin_data, p4a_offset, filename_length));
+                std::string str_filename = Binary::to_string(Binary::get_block(bin_data, p4a_offset, filename_length));
                 p4a_offset += filename_length;
 
                 uint32_t file_offset = Binary::get_uint32(bin_data, p4a_offset);
@@ -196,10 +196,10 @@ std::string P4A::ReadToMemory(std::string name)
 {
     SPDLOG_INFO("Reading file from memory: {}", name);
 
-    return string(files[name].begin(), files[name].end());
+    return std::string(files[name].begin(), files[name].end());
 }
 
-vector<unsigned char> P4A::ReadToMemoryChar(std::string name)
+std::vector<unsigned char> P4A::ReadToMemoryChar(std::string name)
 {
     return files[name];
 }

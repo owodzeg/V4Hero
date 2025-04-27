@@ -31,15 +31,15 @@ PatapolisMenu::PatapolisMenu()
         
         
 
-        string vx_params = "0,24,128,238;198,24,128,238;1332,184,243,202;1773,184,243,202;1774,255,255,255;2130,171,243,214;2160,171,243,214";
+        std::string vx_params = "0,24,128,238;198,24,128,238;1332,184,243,202;1773,184,243,202;1774,255,255,255;2130,171,243,214;2160,171,243,214";
 
-        vector<string> v_vxparams = Func::Split(vx_params, ';');
+        std::vector<std::string> v_vxparams = Func::Split(vx_params, ';');
         std::vector<sf::Vector2f> vx_pos;
         std::vector<sf::Color> vx_color;
 
         for (int i = 0; i < v_vxparams.size(); i++)
         {
-            vector<string> tmp = Func::Split(v_vxparams[i], ',');
+            std::vector<std::string> tmp = Func::Split(v_vxparams[i], ',');
 
             sf::Vector2f tmp_vector;
             sf::Color tmp_color;
@@ -88,8 +88,8 @@ PatapolisMenu::PatapolisMenu()
         r_ground.setSize(sf::Vector2f(34500 * CoreManager::getInstance().getCore()->resRatio, (floor_height+1000) * CoreManager::getInstance().getCore()->resRatio));
         r_ground.setFillColor(sf::Color::Black);
 
-        std::vector<string> l2_str = {"a", "b", "c", "c_winter1", "c_winter2", "d", "e", "f"};
-        std::vector<string> l6_str = {"a", "b", "c", "d", "e"};
+        std::vector<std::string> l2_str = {"a", "b", "c", "c_winter1", "c_winter2", "d", "e", "f"};
+        std::vector<std::string> l6_str = {"a", "b", "c", "d", "e"};
 
         for (int i = 0; i < l2_str.size(); i++)
         {
@@ -195,12 +195,12 @@ PatapolisMenu::PatapolisMenu()
 
         for (int i = 0; i < 4; i++)
         {
-            back_layer[i] = "resources/graphics/bg/patapolis/back_" + to_string(i + 1) + ".png";
+            back_layer[i] = "resources/graphics/bg/patapolis/back_" + std::to_string(i + 1) + ".png";
 
-            ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/back_" + to_string(i + 1) + ".png");
+            ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/back_" + std::to_string(i + 1) + ".png");
         }
 
-        // to be replaced to store only data in vectors and draw the same sprite in draw call
+        // to be replaced to store only data in std::vectors and draw the same sprite in draw call
         addSparkle(34860 + 25*3, 400*3);
         addSparkle(34860 + 170*3, 380*3);
         addSparkle(34860 + 83*3, 270*3);
@@ -494,7 +494,7 @@ void PatapolisMenu::addParagetSparkle(float x, float y)
     ParagetSparkle tmp;
 
     int choice = rand() % 3 + 1;
-    string nm = "paraget_sparkle_" + to_string(choice) + ".png";
+    std::string nm = "paraget_sparkle_" + std::to_string(choice) + ".png";
 
     tmp.tx_name = nm;
     tmp.initScale = scale;
@@ -529,7 +529,7 @@ PatapolisMenu::Fire PatapolisMenu::addFire(int type, float x, float y, bool add)
     SPDLOG_TRACE("Adding Fire: type {} x {} y {} add {}", type, x, y, add);
     Fire tmp;
 
-    string str_type = "";
+    std::string str_type = "";
 
     switch (type)
     {
@@ -652,7 +652,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
     std::string draw_ID_log = "";
 
     for (auto i : draw_ID)
-        draw_ID_log += to_string(i);
+        draw_ID_log += std::to_string(i);
 
     SPDLOG_TRACE("draw_ID: {}", draw_ID_log);
 
@@ -685,7 +685,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
             tmp.x_start_offset = 15;
             tmp.msgcloud_ID = 0;
 
-            vector<int> missions = saveReader->missions_unlocked;
+            std::vector<int> missions = saveReader->missions_unlocked;
 
             switch (saveReader->story_point)
             {
@@ -767,7 +767,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
             tmp.Create(20, sf::Vector2f(a_wakapon.getGlobalPosition().x - 15, a_wakapon.getGlobalPosition().y - 75), sf::Color(255, 255, 255, 255), false, config->GetInt("textureQuality"));
             tmp.x_start_offset = 20;
 
-            vector<int> missions = saveReader->missions_unlocked;
+            std::vector<int> missions = saveReader->missions_unlocked;
 
             if (std::find(missions.begin(), missions.end(), 1) != missions.end())
             {
@@ -1281,7 +1281,7 @@ void PatapolisMenu::Update()
         if (rand() % 100 == 1)
             addSmokeParticle(altar.baseX + 186*3 + (sin(smokepath1 * 3.141592 / 180) * 2), 410*3);
 
-        vector<int> e_s;
+        std::vector<int> e_s;
 
         for (int i = 0; i < smoke.size(); i++)
         {
@@ -1482,7 +1482,7 @@ void PatapolisMenu::Update()
             t_title.setGlobalPosition(640*3, 80*3);
             t_title.draw();
 
-            vector<int> m_rm;
+            std::vector<int> m_rm;
 
             if (dialogboxes.size() <= 0)
             {
@@ -1546,7 +1546,7 @@ void PatapolisMenu::Update()
             }
         }
 
-        vector<int> db_e; ///dialog box erase
+        std::vector<int> db_e; ///dialog box erase
 
         for (int i = 0; i < dialogboxes.size(); i++)
         {

@@ -59,7 +59,7 @@ MainMenu::MainMenu()
 
     for (int g = 0; g < 4; g++)
     {
-        grass[g].load("resources/graphics/ui/menu/grass_" + to_string(g+1) + ".png");
+        grass[g].load("resources/graphics/ui/menu/grass_" + std::to_string(g+1) + ".png");
         grass[g].setScale(1.05, 1.05);
         grass[g].setOrigin(grass[g].getGlobalBounds().size.x / float(100), grass[g].getGlobalBounds().size.y);
     }
@@ -72,13 +72,13 @@ MainMenu::MainMenu()
 
     for (int t = 0; t < 4; t++)
     {
-        totem[t].load("resources/graphics/ui/menu/totem_" + to_string(t+1) + ".png");
+        totem[t].load("resources/graphics/ui/menu/totem_" + std::to_string(t+1) + ".png");
         totem[t].setOrigin(0, totem[t].getGlobalBounds().size.y);
     }
 
     for (int f = 0; f < 3; f++)
     {
-        fire[f].load("resources/graphics/ui/menu/fire_" + to_string(f+1) + ".png");
+        fire[f].load("resources/graphics/ui/menu/fire_" + std::to_string(f+1) + ".png");
         fire[f].setOrigin(fire[f].getGlobalBounds().size.x / 2, fire[f].getGlobalBounds().size.y);
     }
 
@@ -100,15 +100,15 @@ MainMenu::MainMenu()
         t_option[i].append("");
     }
 
-    string vx_params = "0,135,38,23;240,135,38,23;2040,205,107,132;-1,205,107,132";
+    std::string vx_params = "0,135,38,23;240,135,38,23;2040,205,107,132;-1,205,107,132";
 
-    vector<string> v_vxparams = Func::Split(vx_params, ';');
+    std::vector<std::string> v_vxparams = Func::Split(vx_params, ';');
     std::vector<sf::Vector2f> vx_pos;
     std::vector<sf::Color> vx_color;
 
     for (int i = 0; i < v_vxparams.size(); i++)
     {
-        vector<string> tmp = Func::Split(v_vxparams[i], ',');
+        std::vector<std::string> tmp = Func::Split(v_vxparams[i], ',');
 
         sf::Vector2f tmp_vector;
         sf::Color tmp_color;
@@ -166,7 +166,7 @@ MainMenu::MainMenu()
     title_loop->setLooping(true);
     title_loop->setVolume(volume);
 
-    ifstream fr("resources/firstrun");
+    std::ifstream fr("resources/firstrun");
     if (fr.good())
     {
         firstrun = false;
@@ -203,7 +203,7 @@ MainMenu::MainMenu()
     initialized = true;
     
     //Checks if there is a save then use "continue" as default totem*/
-    ifstream check(SAVEFILE_PATH);
+    std::ifstream check(SAVEFILE_PATH);
     bool exists = check.good();
     check.close();
     if (exists) {
@@ -224,7 +224,7 @@ void MainMenu::SelectMenuOption()
     {
         case 0: // load the start game cutscenes and menu
         {
-            ifstream check(SAVEFILE_PATH);
+            std::ifstream check(SAVEFILE_PATH);
             bool exists = check.good();
             check.close();
 
@@ -250,7 +250,7 @@ void MainMenu::SelectMenuOption()
         }
         case 1: // load save and patapolis
         {
-            ifstream check(SAVEFILE_PATH);
+            std::ifstream check(SAVEFILE_PATH);
             bool exists = check.good();
             check.close();
 
@@ -343,7 +343,7 @@ void MainMenu::Update()
             {
                 firstrun = false;
 
-                std::ofstream fr("resources/firstrun", ios::trunc);
+                std::ofstream fr("resources/firstrun", std::ios::trunc);
                 fr.close();
             }
         }
@@ -677,7 +677,7 @@ void MainMenu::Update()
 
         window->setView(window->getDefaultView());
 
-        vector<int> db_e; ///dialog box erase
+        std::vector<int> db_e; ///dialog box erase
 
         for (int i = 0; i < dialogboxes.size(); i++)
         {

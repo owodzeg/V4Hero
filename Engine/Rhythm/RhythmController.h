@@ -16,7 +16,7 @@
 #include <spdlog/logger.h>
 #include <spdlog/spdlog.h>
 
-using namespace std;
+
 
 class RhythmController
 {
@@ -62,11 +62,11 @@ public:
     std::map<int, std::map<int, sf::SoundBuffer>> b_drum;
     std::map<int, std::map<int, sf::SoundBuffer>> b_drumchant;
 
-    map<string, int> patterns;
+    std::map<std::string, int> patterns;
     bool drumAlreadyHit = false;
 
     ///For output, reset every frame
-    string drumToLoad = "";
+    std::string drumToLoad = "";
     int drum_perfection = 0;
     int currentPattern = 0;
     bool breakCombo = false;
@@ -77,7 +77,7 @@ public:
     int perfect = 0;                             ///value used for calculating perfect drums in a command
     std::vector<int> command_perfects;           ///vector used for storing perfection of each drum
     std::vector<int> perfects = {4, 4, 4, 4, 4}; ///vector of perfections of inputted commands (with default data)
-    std::vector<string> av_commands;
+    std::vector<std::string> av_commands;
     std::vector<int> base5_commands;
     std::vector<int> rl_input_commands; // amount of real inputs in a command
 

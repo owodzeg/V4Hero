@@ -40,11 +40,11 @@ LoadingTip::LoadingTip(int mode)
         int tipIcon = rand() % tipsUtil->iconFileNames.size();
         int tipText = (rand() % tipsUtil->tipAmount) + 1;
 
-        string title_key = "tip" + to_string(tipText) + "_title";
-        string desc_key = "tip" + to_string(tipText) + "_desc";
+        std::string title_key = "tip" + std::to_string(tipText) + "_title";
+        std::string desc_key = "tip" + std::to_string(tipText) + "_desc";
 
-        string wtitle_key(title_key.begin(), title_key.end());
-        string wdesc_key(desc_key.begin(), desc_key.end());
+        std::string wtitle_key(title_key.begin(), title_key.end());
+        std::string wdesc_key(desc_key.begin(), desc_key.end());
 
         bg_key = "resources/graphics/ui/tips/" + tipsUtil->backgroundFileNames[tipBackground];
         icon_key = "resources/graphics/ui/tips/" + tipsUtil->iconFileNames[tipIcon];

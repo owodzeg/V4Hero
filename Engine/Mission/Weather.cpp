@@ -6,7 +6,6 @@
 
 #include "../CoreManager.h"
 
-using namespace std;
 using std::floor;
 
 Weather::Weather()
@@ -15,12 +14,12 @@ Weather::Weather()
 
 void Weather::loadWeather(int type)
 {
-    cout << "[Weather] Loading weather " << type << endl;
+    //cout << "[Weather] Loading weather " << type << endl;
 
     switch (type)
     {
         case 1: {
-            cout << "[Weather] Loading snowflakes" << endl;
+            //cout << "[Weather] Loading snowflakes" << endl;
             for (int i = 0; i < 3; i++)
             {
                 ps_snowflakes[i].loadFromFile("resources/graphics/weather/snowflake_" + std::to_string(i + 1) + ".png", thisConfig->GetInt("textureQuality"));
@@ -115,8 +114,8 @@ void Weather::draw(sf::RenderWindow& window, float fps)
     auto view = window.getView();
     window.setView(window.getDefaultView());
 
-    vector<int> s_rm;
-    vector<int> r_rm;
+    std::vector<int> s_rm;
+    std::vector<int> r_rm;
 
     for (int i = 0; i < snowflakes.size(); i++)
     {

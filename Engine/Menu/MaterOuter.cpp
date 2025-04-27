@@ -129,7 +129,7 @@ void MaterOuterMenu::showMater()
     }
 
     
-    vector<MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
+    std::vector<MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
     for (int i = 0; i < 5; i++)
     {
         centered_squads[i]->y = 165 + 100 * i; // re-center the squads
@@ -186,9 +186,9 @@ void MaterOuterMenu::DrawAsleepSquad(MaterOuterMenu::SquadBox& squad, int squad_
     }
 }
 
-vector<MaterOuterMenu::SquadBox*> MaterOuterMenu::GetSquadsCentered()
+std::vector<MaterOuterMenu::SquadBox*> MaterOuterMenu::GetSquadsCentered()
 {
-    vector<MaterOuterMenu::SquadBox*> out;
+    std::vector<MaterOuterMenu::SquadBox*> out;
     for (int i = -2; i < 3; i++)
     {
         int pos = cursquad + i;
@@ -231,7 +231,7 @@ void MaterOuterMenu::Update()
         mater_title.draw();
         altar_kaching.draw();
 
-        vector < MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
+        std::vector < MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
 
 
         std::span<SquadBox*> beforesquads = std::span(centered_squads).subspan(0, 2);
@@ -353,7 +353,7 @@ void MaterOuterMenu::Update()
             }
             squadpos = 0; // reset squad pos in case squad has different max size
 
-            vector<MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
+            std::vector<MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
             for (int i = 0; i < 5; i++)
             {
                 centered_squads[i]->y = 165 + 100 * i; // re-center the squads
@@ -368,7 +368,7 @@ void MaterOuterMenu::Update()
             }
             squadpos = 0; // reset squad pos in case squad has different max size
 
-            vector<MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
+            std::vector<MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
             for (int i = 0; i < 5; i++)
             {
                 centered_squads[i]->y = 165 + 100 * i; // re-center the squads

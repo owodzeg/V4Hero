@@ -6,7 +6,7 @@
 #include <spdlog/spdlog.h>
 #include <mutex>
 
-using namespace std;
+
 using namespace std::chrono;
 
 InputController::InputController()
@@ -30,7 +30,7 @@ void InputController::LoadKeybinds()
     {
         for (int i = 1; i <= 9; i++)
         {
-            string confkey = "keybind" + keyLabels[k] + to_string(i);
+            std::string confkey = "keybind" + keyLabels[k] + std::to_string(i);
             SPDLOG_TRACE("Checking confkey {}", confkey);
 
             if (config->keyExists(confkey))
