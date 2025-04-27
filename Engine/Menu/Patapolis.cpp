@@ -28,8 +28,8 @@ PatapolisMenu::PatapolisMenu()
 
         quality = config->GetInt("textureQuality");
 
-        float resRatioX = config->GetInt("resX") / float(3840);
-        float resRatioY = config->GetInt("resY") / float(2160);
+        
+        
 
         string vx_params = "0,24,128,238;198,24,128,238;1332,184,243,202;1773,184,243,202;1774,255,255,255;2130,171,243,214;2160,171,243,214";
 
@@ -45,11 +45,11 @@ PatapolisMenu::PatapolisMenu()
             sf::Color tmp_color;
 
             tmp_vector.x = 0;
-            tmp_vector.y = atof(tmp[0].c_str()) * resRatioY;
+            tmp_vector.y = atof(tmp[0].c_str()) * CoreManager::getInstance().getCore()->resRatio;
 
             if (tmp[0] == "-1")
             {
-                tmp_vector.y = 2160 * resRatioY;
+                tmp_vector.y = 2160 * CoreManager::getInstance().getCore()->resRatio;
             }
 
             tmp_color.r = atoi(tmp[1].c_str());
@@ -58,12 +58,12 @@ PatapolisMenu::PatapolisMenu()
 
             sf::Vector2f tmp_vector2;
 
-            tmp_vector2.x = 4000 * resRatioX;
-            tmp_vector2.y = atof(tmp[0].c_str()) * resRatioY;
+            tmp_vector2.x = 4000 * CoreManager::getInstance().getCore()->resRatio;
+            tmp_vector2.y = atof(tmp[0].c_str()) * CoreManager::getInstance().getCore()->resRatio;
 
             if (tmp[0] == "-1")
             {
-                tmp_vector2.y = 2160 * resRatioY;
+                tmp_vector2.y = 2160 * CoreManager::getInstance().getCore()->resRatio;
             }
 
             vx_pos.push_back(tmp_vector);
@@ -85,7 +85,7 @@ PatapolisMenu::PatapolisMenu()
         }
 
         floor_height = 54*3;
-        r_ground.setSize(sf::Vector2f(34500 * resRatioX, (floor_height+1000) * resRatioY));
+        r_ground.setSize(sf::Vector2f(34500 * CoreManager::getInstance().getCore()->resRatio, (floor_height+1000) * CoreManager::getInstance().getCore()->resRatio));
         r_ground.setFillColor(sf::Color::Black);
 
         std::vector<string> l2_str = {"a", "b", "c", "c_winter1", "c_winter2", "d", "e", "f"};
@@ -980,8 +980,8 @@ void PatapolisMenu::Update()
             ps_layer_2[layer_2[i].type].draw();
         }
 
-        float resRatioX = window->getSize().x / float(3840);
-        float resRatioY = window->getSize().y / float(2160);
+        
+        
 
         /// Fires
         for (int i = 0; i < fires.size(); i++)
@@ -1312,7 +1312,7 @@ void PatapolisMenu::Update()
             smoke.erase(smoke.begin() + e_s[i] - i);
         }
 
-        r_ground.setPosition({floor_x * resRatioX, (float(720 * 3) - floor_height) * resRatioY});
+        r_ground.setPosition(sf::Vector2f(floor_x * CoreManager::getInstance().getCore()->resRatio, (float(720 * 3) - floor_height) * CoreManager::getInstance().getCore()->resRatio));
         window->draw(r_ground);
 
         PSprite& edge = ResourceManager::getInstance().getSprite("resources/graphics/bg/patapolis/edge.png");
@@ -1417,9 +1417,9 @@ void PatapolisMenu::Update()
                 float x2 = coords[i].x2 + rayX;
                 float y2 = coords[i].y2;
 
-                lightrays[i].triangle[0].position = sf::Vector2f(x1 * resRatioX, y1 * resRatioY);
-                lightrays[i].triangle[1].position = sf::Vector2f(x2 * resRatioX, y2 * resRatioY);
-                lightrays[i].triangle[2].position = sf::Vector2f((((x1 + x2) / 2) + (lightrays[i].cur_distance * sin(lightrays[i].angle * 3.14159265 / 180))) * resRatioX, (((y1 + y2) / 2) + (lightrays[i].cur_distance * cos(lightrays[i].angle * 3.14159265 / 180))) * resRatioY);
+                lightrays[i].triangle[0].position = sf::Vector2f(x1 * CoreManager::getInstance().getCore()->resRatio, y1 * CoreManager::getInstance().getCore()->resRatio);
+                lightrays[i].triangle[1].position = sf::Vector2f(x2 * CoreManager::getInstance().getCore()->resRatio, y2 * CoreManager::getInstance().getCore()->resRatio);
+                lightrays[i].triangle[2].position = sf::Vector2f((((x1 + x2) / 2) + (lightrays[i].cur_distance * sin(lightrays[i].angle * 3.14159265 / 180))) * CoreManager::getInstance().getCore()->resRatio, (((y1 + y2) / 2) + (lightrays[i].cur_distance * cos(lightrays[i].angle * 3.14159265 / 180))) * CoreManager::getInstance().getCore()->resRatio);
 
                 //cout << "[coord #" << i << "]" << lightrays[i].triangle[0].position.x << " " << lightrays[i].triangle[0].position.y << " " << lightrays[i].triangle[1].position.x << " " << lightrays[i].triangle[1].position.y << " " << lightrays[i].triangle[2].position.x << " " << lightrays[i].triangle[2].position.y << endl;
 

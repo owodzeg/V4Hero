@@ -198,10 +198,10 @@ sf::FloatRect PSprite::getGlobalBoundsScaled()
     float nh = 1;
 
     if (s->getGlobalBounds().size.x > 0)
-        nw = s->getGlobalBounds().size.x / resRatioX;
+        nw = s->getGlobalBounds().size.x / CoreManager::getInstance().getCore()->resRatio;
 
     if (s->getGlobalBounds().size.y > 0)
-        nh = s->getGlobalBounds().size.y / resRatioY;
+        nh = s->getGlobalBounds().size.y / CoreManager::getInstance().getCore()->resRatio;
 
     return sf::FloatRect(sf::Vector2f(s->getGlobalBounds().position.x, s->getGlobalBounds().position.y), sf::Vector2f(nw, nh));
     //return s->getGlobalBounds();
@@ -238,15 +238,12 @@ void PSprite::drawShader(sf::RenderWindow* window, sf::Shader& shader)
         std::vector<float> y = {360, 720, 1080, 2160};
 
         sf::Vector2f ratio(windowSize.x / x[resSetting], windowSize.y / y[resSetting]);
-
-        resRatioX = ratio.x;
-        resRatioY = ratio.y;
     }
 
     s->setTexture(TextureManager::getInstance().getTexture(texturePath));
     s->setScale(sf::Vector2f(ratioX * scaleX, ratioY * scaleY));
     s->setOrigin(sf::Vector2f(orX, orY));
-    s->setPosition(sf::Vector2f(lx * resRatioX, ly * resRatioY));
+    s->setPosition(sf::Vector2f(lx * CoreManager::getInstance().getCore()->resRatio, ly * CoreManager::getInstance().getCore()->resRatio));
     s->setRotation(sf::degrees(angle));
 
     window->draw(*s,&shader);
@@ -282,15 +279,12 @@ void PSprite::draw()
         std::vector<float> y = {360, 720, 1080, 2160};
 
         sf::Vector2f ratio(windowSize.x / x[resSetting], windowSize.y / y[resSetting]);
-
-        resRatioX = ratio.x;
-        resRatioY = ratio.y;
     }
 
     s->setTexture(TextureManager::getInstance().getTexture(texturePath));
     s->setScale(sf::Vector2f(ratioX * scaleX, ratioY * scaleY));
     s->setOrigin(sf::Vector2f(orX, orY));
-    s->setPosition(sf::Vector2f(lx * resRatioX, ly * resRatioY));
+    s->setPosition(sf::Vector2f(lx * CoreManager::getInstance().getCore()->resRatio, ly * CoreManager::getInstance().getCore()->resRatio));
     s->setRotation(sf::degrees(angle));
     window->draw(*s);
 
@@ -301,73 +295,10 @@ void PSprite::draw()
 void PSprite::update(sf::RenderWindow& window)
 {
     ///Update updates the sprite without drawing it on screen. Useful for RenderTexture
-
-    switch (qualitySetting)
-    {
-        case 0: ///low
-        {
-            ratioX = window.getSize().x / float(640);
-            ratioY = window.getSize().y / float(360);
-            break;
-        }
-
-        case 1: ///med
-        {
-            ratioX = window.getSize().x / float(1280);
-            ratioY = window.getSize().y / float(720);
-            break;
-        }
-
-        case 2: ///high
-        {
-            ratioX = window.getSize().x / float(1920);
-            ratioY = window.getSize().y / float(1080);
-            break;
-        }
-
-        case 3: ///ultra
-        {
-            ratioX = window.getSize().x / float(3840);
-            ratioY = window.getSize().y / float(2160);
-            break;
-        }
-    }
-
-    switch (resSetting)
-    {
-        case 0: ///low
-        {
-            resRatioX = window.getSize().x / float(640);
-            resRatioY = window.getSize().y / float(360);
-            break;
-        }
-
-        case 1: ///med
-        {
-            resRatioX = window.getSize().x / float(1280);
-            resRatioY = window.getSize().y / float(720);
-            break;
-        }
-
-        case 2: ///high
-        {
-            resRatioX = window.getSize().x / float(1920);
-            resRatioY = window.getSize().y / float(1080);
-            break;
-        }
-
-        case 3: ///ultra
-        {
-            resRatioX = window.getSize().x / float(3840);
-            resRatioY = window.getSize().y / float(2160);
-            break;
-        }
-    }
-
     s->setTexture(TextureManager::getInstance().getTexture(texturePath));
     s->setScale(sf::Vector2f(ratioX * scaleX, ratioY * scaleY));
     s->setOrigin(sf::Vector2f(orX, orY));
-    s->setPosition(sf::Vector2f(lx * resRatioX, ly * resRatioY));
+    s->setPosition(sf::Vector2f(lx * CoreManager::getInstance().getCore()->resRatio, ly * CoreManager::getInstance().getCore()->resRatio));
     s->setRotation(sf::degrees(angle));
 }
 

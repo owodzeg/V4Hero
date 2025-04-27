@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 
+#include "../CoreManager.h"
+
 using namespace std;
 using std::floor;
 
@@ -75,9 +77,6 @@ void Weather::draw(sf::RenderWindow& window, float fps)
 
         case 2: ///Rain
         {
-            float resRatioX = window.getSize().x / float(1280);
-            float resRatioY = window.getSize().y / float(720);
-
             raindropsToRender += weatherIntensivity / fps;
 
             for (int i = 0; i < floor(raindropsToRender); i++)
@@ -90,7 +89,7 @@ void Weather::draw(sf::RenderWindow& window, float fps)
                     d = 0;
 
                 sf::RectangleShape r_drop;
-                r_drop.setSize(sf::Vector2f(3.0 * resRatioX, 64.0 * resRatioY));
+                r_drop.setSize(sf::Vector2f(3.0 * CoreManager::getInstance().getCore()->resRatio, 64.0 * CoreManager::getInstance().getCore()->resRatio));
 
                 if (d == 1)
                     r_drop.setFillColor(sf::Color(240, 240, 240, 255));

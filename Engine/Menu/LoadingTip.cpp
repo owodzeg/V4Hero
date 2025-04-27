@@ -18,11 +18,8 @@ LoadingTip::LoadingTip(int mode)
     {
         TipsUtil* tipsUtil = CoreManager::getInstance().getTipsUtil();
 
-        float resRatioX = window->getSize().x / float(3840);
-        float resRatioY = window->getSize().y / float(2160);
-
-        box_1.setSize(sf::Vector2f(3840 * resRatioX, 240 * resRatioY));
-        box_2.setSize(sf::Vector2f(3840 * resRatioX, 1542 * resRatioY));
+        box_1.setSize(sf::Vector2f(3840 * CoreManager::getInstance().getCore()->resRatio, 240 * CoreManager::getInstance().getCore()->resRatio));
+        box_2.setSize(sf::Vector2f(3840 * CoreManager::getInstance().getCore()->resRatio, 1542 * CoreManager::getInstance().getCore()->resRatio));
 
         tip_logo.load("resources/graphics/ui/tips/tip-logo.png");
 
@@ -33,8 +30,8 @@ LoadingTip::LoadingTip(int mode)
         loading_eye1.setOrigin(loading_eye1.getGlobalBounds().size.x * 0.85, loading_eye1.getGlobalBounds().size.y * 0.85);
         loading_eye2.setOrigin(loading_eye2.getGlobalBounds().size.x * 0.85, loading_eye2.getGlobalBounds().size.y * 0.85);
 
-        box_1.setPosition(sf::Vector2f(0, 60 * resRatioY));
-        box_2.setPosition(sf::Vector2f(0, 360 * resRatioY));
+        box_1.setPosition(sf::Vector2f(0, 60 * CoreManager::getInstance().getCore()->resRatio));
+        box_2.setPosition(sf::Vector2f(0, 360 * CoreManager::getInstance().getCore()->resRatio));
 
         box_1.setFillColor(sf::Color(0, 0, 0, 192));
         box_2.setFillColor(sf::Color(0, 0, 0, 192));
@@ -81,11 +78,8 @@ LoadingTip::LoadingTip(int mode)
 
     } else if (tipMode == 1)
     {
-        float resRatioX = window->getSize().x / float(3840);
-        float resRatioY = window->getSize().y / float(2160);
-
-        box_1.setSize(sf::Vector2f(3840 * resRatioX, 240 * resRatioY));
-        box_2.setSize(sf::Vector2f(2160 * resRatioX, 1542 * resRatioY));
+        box_1.setSize(sf::Vector2f(3840 * CoreManager::getInstance().getCore()->resRatio, 240 * CoreManager::getInstance().getCore()->resRatio));
+        box_2.setSize(sf::Vector2f(2160 * CoreManager::getInstance().getCore()->resRatio, 1542 * CoreManager::getInstance().getCore()->resRatio));
 
         loading_head.load("resources/graphics/ui/tips/loading_head.png");
         loading_eye1.load("resources/graphics/ui/tips/loading_eye.png");
@@ -94,8 +88,8 @@ LoadingTip::LoadingTip(int mode)
         loading_eye1.setOrigin(loading_eye1.getGlobalBounds().size.x * 0.85, loading_eye1.getGlobalBounds().size.y * 0.85);
         loading_eye2.setOrigin(loading_eye1.getGlobalBounds().size.x * 0.85, loading_eye1.getGlobalBounds().size.y * 0.85);
 
-        box_1.setPosition(sf::Vector2f(0, 60 * resRatioY));
-        box_2.setPosition(sf::Vector2f(0, 360 * resRatioY));
+        box_1.setPosition(sf::Vector2f(0, 60 * CoreManager::getInstance().getCore()->resRatio));
+        box_2.setPosition(sf::Vector2f(0, 360 * CoreManager::getInstance().getCore()->resRatio));
 
         box_1.setFillColor(sf::Color(0, 0, 0, 192));
         box_2.setFillColor(sf::Color(0, 0, 0, 192));

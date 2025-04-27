@@ -42,6 +42,9 @@ public:
     // Misc
     bool close_window = false;
 
+    // Window
+    double resRatio = 0.0f;
+
     // Functions
     V4Core();
     ~V4Core();

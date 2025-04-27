@@ -188,8 +188,8 @@ void AnimatedObject::loadExtra(std::string path, std::string name)
 
             a.second.load(texPath);
 
-            float resRatioX = CoreManager::getInstance().getWindow()->getSize().x / float(3840);
-            float resRatioY = CoreManager::getInstance().getWindow()->getSize().y / float(2160);
+            
+            
 
             std::ifstream alignFile(alignPath);
             if(alignFile.good())

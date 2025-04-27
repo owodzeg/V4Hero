@@ -16,7 +16,6 @@ public:
     int qualitySetting = -1, oldQualitySetting = -999;
     int resSetting = 3, oldResSetting = -999;
     float ratioX = 1, ratioY = 1;
-    float resRatioX = 1, resRatioY = 1;
     float scaleX = 1, scaleY = 1;
     float orX = 0, orY = 0;
     float baseX = -999, baseY = -999;
@@ -36,8 +35,6 @@ public:
           oldResSetting(other.oldResSetting),
           ratioX(other.ratioX),
           ratioY(other.ratioY),
-          resRatioX(other.resRatioX),
-          resRatioY(other.resRatioY),
           scaleX(other.scaleX),
           scaleY(other.scaleY),
           orX(other.orX),
@@ -79,8 +76,6 @@ public:
         swap(oldResSetting, other.oldResSetting);
         swap(ratioX, other.ratioX);
         swap(ratioY, other.ratioY);
-        swap(resRatioX, other.resRatioX);
-        swap(resRatioY, other.resRatioY);
         swap(scaleX, other.scaleX);
         swap(scaleY, other.scaleY);
         swap(orX, other.orX);

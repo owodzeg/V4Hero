@@ -28,8 +28,8 @@ MainMenu::MainMenu()
 
     quality = q;
 
-    float resRatioX = config->GetInt("resX") / float(3840);
-    float resRatioY = config->GetInt("resY") / float(2160);
+    
+    
 
     rs_cover.setSize(sf::Vector2f(config->GetInt("resX"), config->GetInt("resY")));
     rs_cover.setFillColor(sf::Color(0, 0, 0, 255));
@@ -114,11 +114,11 @@ MainMenu::MainMenu()
         sf::Color tmp_color;
 
         tmp_vector.x = 0;
-        tmp_vector.y = atof(tmp[0].c_str()) * resRatioY;
+        tmp_vector.y = atof(tmp[0].c_str()) * CoreManager::getInstance().getCore()->resRatio;
 
         if (tmp[0] == "-1")
         {
-            tmp_vector.y = 2160 * resRatioY;
+            tmp_vector.y = 2160 * CoreManager::getInstance().getCore()->resRatio;
         }
 
         tmp_color.r = atoi(tmp[1].c_str());
@@ -127,12 +127,12 @@ MainMenu::MainMenu()
 
         sf::Vector2f tmp_vector2;
 
-        tmp_vector2.x = 3840 * resRatioX;
-        tmp_vector2.y = atof(tmp[0].c_str()) * resRatioY;
+        tmp_vector2.x = 3840 * CoreManager::getInstance().getCore()->resRatio;
+        tmp_vector2.y = atof(tmp[0].c_str()) * CoreManager::getInstance().getCore()->resRatio;
 
         if (tmp[0] == "-1")
         {
-            tmp_vector2.y = 2160 * resRatioY;
+            tmp_vector2.y = 2160 * CoreManager::getInstance().getCore()->resRatio;
         }
 
         vx_pos.push_back(tmp_vector);

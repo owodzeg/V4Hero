@@ -23,8 +23,8 @@ void Background::Load(const std::string& bg_name)
 {
     SPDLOG_DEBUG("Loading background: {}", bg_name);
 
-    float resRatioX = CoreManager::getInstance().getWindow()->getSize().x / float(3840);
-    float resRatioY = CoreManager::getInstance().getWindow()->getSize().y / float(2160);
+    
+    
 
     std::ifstream bg(std::format("resources/graphics/bg/{}/background.json", bg_name));
     SPDLOG_INFO("Attempting to read a background from resources/graphics/bg/{}", bg_name);
@@ -57,8 +57,8 @@ void Background::Load(const std::string& bg_name)
                         int y_pos = color_point["y_pos"];
                         sf::Color color = sf::Color(color_point["color"][0], color_point["color"][1], color_point["color"][2], 255);
 
-                        vx_pos.push_back(sf::Vector2f(0, y_pos * resRatioY));
-                        vx_pos.push_back(sf::Vector2f(3840 * resRatioX, y_pos * resRatioY));
+                        vx_pos.push_back(sf::Vector2f(0, y_pos * CoreManager::getInstance().getCore()->resRatio));
+                        vx_pos.push_back(sf::Vector2f(3840 * CoreManager::getInstance().getCore()->resRatio, y_pos * CoreManager::getInstance().getCore()->resRatio));
 
                         vx_color.push_back(color);
                         vx_color.push_back(color);
@@ -99,7 +99,7 @@ void Background::Load(const std::string& bg_name)
         return;
     }
 
-    floor_height = float(330) * resRatioY;
+    floor_height = float(330) * CoreManager::getInstance().getCore()->resRatio;
 }
 
 void Background::Draw(Camera& camera)
@@ -124,7 +124,7 @@ void Background::Draw(Camera& camera)
     window->setView(bgView);
     camera.Work(bgView);
 
-    float resRatioX = CoreManager::getInstance().getWindow()->getSize().x / float(3840);
+    
 
     for (auto bg_object : bg_objects)
     {
@@ -135,7 +135,7 @@ void Background::Draw(Camera& camera)
         bg_object.texture.setRepeated(true);
         bg_object.texture.setOrigin(0, bg_object.texture.getLocalBounds().size.y);
         bg_object.texture.setColor(bg_object.color);
-        bg_object.texture.setPosition(xPos / resRatioX, bg_object.position.y + camera.zoom_y / zoom_offset);
+        bg_object.texture.setPosition(xPos / CoreManager::getInstance().getCore()->resRatio, bg_object.position.y + camera.zoom_y / zoom_offset);
         bg_object.texture.draw();
     }
 

@@ -293,6 +293,8 @@ void V4Core::init()
         auto strRepo = CoreManager::getInstance().getStrRepo();
         std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
+        resRatio = window->getSize().x / float(3840);
+
         // Draw version number
         t_version.setGlobalPosition(3828, 0);
         t_version.draw();

@@ -808,8 +808,8 @@ void MissionController::ProcessExpiredObjects()
 
 void MissionController::DrawHitboxes()
 {
-    float resRatioX = CoreManager::getInstance().getWindow()->getSize().x / float(3840);
-    float resRatioY = CoreManager::getInstance().getWindow()->getSize().y / float(2160);
+    
+    
 
     sf::RectangleShape hbb;
     hbb.setSize(sf::Vector2f(10,10));
@@ -819,7 +819,7 @@ void MissionController::DrawHitboxes()
     {
         if (debug)
         {
-            hbb.setPosition(sf::Vector2f(projectile->tipX * resRatioX, projectile->tipY * resRatioY));
+            hbb.setPosition(sf::Vector2f(projectile->tipX * CoreManager::getInstance().getCore()->resRatio, projectile->tipY * CoreManager::getInstance().getCore()->resRatio));
             SPDLOG_DEBUG("projectile at {} {}, tip at {} {}, hitbox at {} {}", projectile->xPos, projectile->yPos, projectile->tipX, projectile->tipY, hbb.getPosition().x, hbb.getPosition().y);
             CoreManager::getInstance().getWindow()->draw(hbb);
         }
@@ -834,9 +834,9 @@ void MissionController::DrawHitboxes()
             for(auto hb : entity->getHitbox())
             {
                 sf::RectangleShape hbx;
-                hbx.setSize(sf::Vector2f(hb.size.x*resRatioX,hb.size.y*resRatioY));
+                hbx.setSize(sf::Vector2f(hb.size.x*CoreManager::getInstance().getCore()->resRatio,hb.size.y*CoreManager::getInstance().getCore()->resRatio));
                 hbx.setFillColor(sf::Color(128,0,128,64));
-                hbx.setPosition(sf::Vector2f((pos.x+hb.position.x) * resRatioX, (pos.y+hb.position.y) * resRatioY));
+                hbx.setPosition(sf::Vector2f((pos.x+hb.position.x) * CoreManager::getInstance().getCore()->resRatio, (pos.y+hb.position.y) * CoreManager::getInstance().getCore()->resRatio));
                 CoreManager::getInstance().getWindow()->draw(hbx);
             }
         }
@@ -848,9 +848,9 @@ void MissionController::DrawHitboxes()
             for(auto hb : pon->getHitbox())
             {
                 sf::RectangleShape hbx;
-                hbx.setSize(sf::Vector2f(hb.size.x*resRatioX,hb.size.y*resRatioY));
+                hbx.setSize(sf::Vector2f(hb.size.x*CoreManager::getInstance().getCore()->resRatio,hb.size.y*CoreManager::getInstance().getCore()->resRatio));
                 hbx.setFillColor(sf::Color(128,0,128,64));
-                hbx.setPosition(sf::Vector2f((pos.x+hb.position.x) * resRatioX, (pos.y+hb.position.y) * resRatioY));
+                hbx.setPosition(sf::Vector2f((pos.x+hb.position.x) * CoreManager::getInstance().getCore()->resRatio, (pos.y+hb.position.y) * CoreManager::getInstance().getCore()->resRatio));
                 CoreManager::getInstance().getWindow()->draw(hbx);
             }
         }
@@ -862,9 +862,9 @@ void MissionController::DrawHitboxes()
             for(auto hb : pon->getHitbox())
             {
                 sf::RectangleShape hbx;
-                hbx.setSize(sf::Vector2f(hb.size.x*resRatioX,hb.size.y*resRatioY));
+                hbx.setSize(sf::Vector2f(hb.size.x*CoreManager::getInstance().getCore()->resRatio,hb.size.y*CoreManager::getInstance().getCore()->resRatio));
                 hbx.setFillColor(sf::Color(128,0,128,64));
-                hbx.setPosition(sf::Vector2f((pos.x+hb.position.x) * resRatioX, (pos.y+hb.position.y) * resRatioY));
+                hbx.setPosition(sf::Vector2f((pos.x+hb.position.x) * CoreManager::getInstance().getCore()->resRatio, (pos.y+hb.position.y) * CoreManager::getInstance().getCore()->resRatio));
                 CoreManager::getInstance().getWindow()->draw(hbx);
             }
         }
@@ -880,8 +880,8 @@ void MissionController::DrawMissionUI()
     auto strRepo = CoreManager::getInstance().getStrRepo();
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
-    float resRatioX = CoreManager::getInstance().getWindow()->getSize().x / float(3840);
-    float resRatioY = CoreManager::getInstance().getWindow()->getSize().y / float(2160);
+    
+    
 
     bg.DrawFloor();
 
@@ -892,7 +892,7 @@ void MissionController::DrawMissionUI()
 
     // Unit thumbs
     sf::CircleShape thumb;
-    thumb.setRadius(80 * resRatioX);
+    thumb.setRadius(80 * CoreManager::getInstance().getCore()->resRatio);
     thumb.setFillColor(sf::Color(224, 224, 224));
     thumb.setOrigin(sf::Vector2f(thumb.getLocalBounds().size.x/2, thumb.getLocalBounds().size.y/2));
 
@@ -904,7 +904,7 @@ void MissionController::DrawMissionUI()
 
     float thumbY = 250;
 
-    thumb.setPosition(sf::Vector2f(200*resRatioX, thumbY*resRatioY));
+    thumb.setPosition(sf::Vector2f(200*CoreManager::getInstance().getCore()->resRatio, thumbY*CoreManager::getInstance().getCore()->resRatio));
     CoreManager::getInstance().getWindow()->draw(thumb);
 
     hatapons.back().get()->main.animation.drawCopy(sf::Vector2f(221, thumbY-148), sf::Vector2f(0.6, 0.6));
@@ -928,7 +928,7 @@ void MissionController::DrawMissionUI()
 
     if(yaripons.size() > 0)
     {
-        thumb.setPosition(sf::Vector2f(400*resRatioX, thumbY*resRatioY));
+        thumb.setPosition(sf::Vector2f(400*CoreManager::getInstance().getCore()->resRatio, thumbY*CoreManager::getInstance().getCore()->resRatio));
         CoreManager::getInstance().getWindow()->draw(thumb);
 
         yaripons.back().get()->main.animation.drawCopy(sf::Vector2f(400, thumbY), sf::Vector2f(0.6, 0.6));
@@ -986,10 +986,10 @@ void MissionController::DrawMissionUI()
         int col = diid%12;
 
         sf::CircleShape i_thumb;
-        i_thumb.setRadius(80 * resRatioX);
+        i_thumb.setRadius(80 * CoreManager::getInstance().getCore()->resRatio);
         i_thumb.setFillColor(sf::Color(224, 224, 224));
         i_thumb.setOrigin(sf::Vector2f(i_thumb.getLocalBounds().size.x/2, i_thumb.getLocalBounds().size.y/2));
-        i_thumb.setPosition(sf::Vector2f((3840-200-(180*col))*resRatioX, (250+(180*row))*resRatioY));
+        i_thumb.setPosition(sf::Vector2f((3840-200-(180*col))*CoreManager::getInstance().getCore()->resRatio, (250+(180*row))*CoreManager::getInstance().getCore()->resRatio));
         CoreManager::getInstance().getWindow()->draw(i_thumb);
 
         Item* itemPtr = CoreManager::getInstance().getSaveReader()->itemReg.getItemByID(iid);
@@ -1371,8 +1371,8 @@ void MissionController::Update()
 
     //SPDLOG_DEBUG("PataSpeed: {}, PataMaxSpeed: {}, followPoint: {}", pataSpeed, pataMaxSpeed, followPoint);
 
-    float resRatioX = CoreManager::getInstance().getWindow()->getSize().x / float(3840);
-    float resRatioY = CoreManager::getInstance().getWindow()->getSize().y / float(2160);
+    
+    
 
     auto lastView = CoreManager::getInstance().getWindow()->getView();
     CoreManager::getInstance().getWindow()->setView(mission_view);
@@ -1463,9 +1463,9 @@ void MissionController::Update()
     if(!missionEnd)
     {
         if(yari_inSight)
-            cam.followobject_x = ((leftmostPataX + closest - 1800) / 2) * resRatioX;
+            cam.followobject_x = ((leftmostPataX + closest - 1800) / 2) * CoreManager::getInstance().getCore()->resRatio;
         else
-            cam.followobject_x = ((leftmostPataX + rightmostPataX - 300) / 2) * resRatioX;
+            cam.followobject_x = ((leftmostPataX + rightmostPataX - 300) / 2) * CoreManager::getInstance().getCore()->resRatio;
     }
 
     cam.Work(mission_view);

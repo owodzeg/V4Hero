@@ -236,8 +236,8 @@ void ObeliskMenu::Update()
 
         window->setView(window->getDefaultView());
 
-        float resRatioX = window->getSize().x / float(3840);
-        float resRatioY = window->getSize().y / float(2160);
+        
+        
 
         if (!displayMissions)
         {
@@ -332,8 +332,8 @@ void ObeliskMenu::Update()
         if (mapX <= maxBound)
             mapX = maxBound;
 
-        v_render_map.setSize(sf::Vector2f(1012*3 * resRatioX, 720*3 * resRatioY));
-        v_render_map.setCenter(sf::Vector2f((506*3) * resRatioX, -360*3 * resRatioY));
+        v_render_map.setSize(sf::Vector2f(1012*3 * CoreManager::getInstance().getCore()->resRatio, 720*3 * CoreManager::getInstance().getCore()->resRatio));
+        v_render_map.setCenter(sf::Vector2f((506*3) * CoreManager::getInstance().getCore()->resRatio, -360*3 * CoreManager::getInstance().getCore()->resRatio));
         v_render_map.setViewport(sf::FloatRect(sf::Vector2f(134.0*3 / 3840.0, (mainbox.getPosition().y - 115*3) / 2160.0), sf::Vector2f(1012.0*3 / 3840.0, 1.f)));
 
         window->setView(v_render_map);
@@ -383,8 +383,8 @@ void ObeliskMenu::Update()
             mission_select.setPosition(135*3, missionbox.getPosition().y - 56*3 + (sel_mission * 24*3));
             mission_select.draw();
 
-            v_render_missions_map.setSize(sf::Vector2f(298*3 * resRatioX, 120*3 * resRatioY));
-            v_render_missions_map.setCenter(sf::Vector2f((1280*3 + 149*3) * resRatioX, (-720*3 + 60*3) * resRatioY));
+            v_render_missions_map.setSize(sf::Vector2f(298*3 * CoreManager::getInstance().getCore()->resRatio, 120*3 * CoreManager::getInstance().getCore()->resRatio));
+            v_render_missions_map.setCenter(sf::Vector2f((1280*3 + 149*3) * CoreManager::getInstance().getCore()->resRatio, (-720*3 + 60*3) * CoreManager::getInstance().getCore()->resRatio));
             v_render_missions_map.setViewport(sf::FloatRect(sf::Vector2f(143.0*3 / 3840, (missionbox.getPosition().y - 53*3) / 2160.0), sf::Vector2f(298.0*3 / 3840.0, 120.0*3 / 2160.0)));
 
             window->setView(v_render_missions_map);

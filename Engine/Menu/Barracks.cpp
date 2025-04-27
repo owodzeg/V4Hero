@@ -222,7 +222,7 @@ Barracks::Barracks()
     rr_uniticon.y = 64*3;
     rr_uniticon.setOrigin(sf::Vector2f((175 + 50)*3 / 2, (12 + 50)*3 / 2));
 
-    //mm_inventory_background.setSize(sf::Vector2f(mm_inventory_background.getSize().x+(40*resRatioX),mm_inventory_background.getSize().y+(40*resRatioX)));
+    //mm_inventory_background.setSize(sf::Vector2f(mm_inventory_background.getSize().x+(40*CoreManager::getInstance().getCore()->resRatio),mm_inventory_background.getSize().y+(40*CoreManager::getInstance().getCore()->resRatio)));
 
     // TODO: hardcoded yaripons. change when tatepons are implemented.
     auto yaripon_count = CoreManager::getInstance().getSaveReader()->ponReg.pons.size();

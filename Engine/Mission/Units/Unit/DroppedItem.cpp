@@ -33,17 +33,14 @@ void DroppedItem::Draw()
 
     if (!pickedup)
     {
-        float resRatioX = w->getSize().x / float(3840);
-        float resRatioY = w->getSize().y / float(2160);
-
         if (glowTimer.getElapsedTime().asMilliseconds() > 250)
         {
             GlowCircle tmp;
             tmp.circle.setFillColor(sf::Color(255, 255, 255, tmp.alpha));
-            tmp.circle.setRadius(tmp.radius * resRatioX);
+            tmp.circle.setRadius(tmp.radius * CoreManager::getInstance().getCore()->resRatio);
             tmp.x = (global_x + local_x + off_x);
             tmp.y = (global_y + local_y + off_y);
-            tmp.circle.setPosition(sf::Vector2f(tmp.x * resRatioX, tmp.y * resRatioY));
+            tmp.circle.setPosition(sf::Vector2f(tmp.x * CoreManager::getInstance().getCore()->resRatio, tmp.y * CoreManager::getInstance().getCore()->resRatio));
             glow.push_back(tmp);
 
             glowTimer.restart();
@@ -54,7 +51,7 @@ void DroppedItem::Draw()
         for (int i = 0; i < glow.size(); i++)
         {
             glow[i].alpha -= 64 / fps;
-            glow[i].radius += (200 * resRatioY) / fps;
+            glow[i].radius += (200 * CoreManager::getInstance().getCore()->resRatio) / fps;
 
             if (glow[i].alpha <= 0)
                 glow[i].alpha = 0;
@@ -62,7 +59,7 @@ void DroppedItem::Draw()
             glow[i].circle.setFillColor(sf::Color(255, 255, 255, glow[i].alpha));
             glow[i].circle.setRadius(glow[i].radius);
             glow[i].circle.setOrigin(sf::Vector2f(glow[i].circle.getLocalBounds().size.x / 2, glow[i].circle.getLocalBounds().size.y / 2));
-            glow[i].circle.setPosition(sf::Vector2f((global_x + local_x + off_x) * resRatioX, (global_y + local_y + off_y) * resRatioY));
+            glow[i].circle.setPosition(sf::Vector2f((global_x + local_x + off_x) * CoreManager::getInstance().getCore()->resRatio, (global_y + local_y + off_y) * CoreManager::getInstance().getCore()->resRatio));
 
             w->draw(glow[i].circle);
 

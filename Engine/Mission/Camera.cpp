@@ -35,8 +35,8 @@ void Camera::Work(sf::View& view, float dest_zoom_over)
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
     float fps = CoreManager::getInstance().getCore()->getFPS();
 
-    float resRatioX = window->getSize().x / float(3840);
-    float resRatioY = window->getSize().y / float(2160);
+    
+    
 
     camera_y = window->getSize().y / 2;
 
@@ -109,7 +109,7 @@ void Camera::Work(sf::View& view, float dest_zoom_over)
     /** Move camera **/
 
     //camera_x += camera_xspeed / fps;
-    camera_x_dest = followobject_x + (1800 * resRatioX);
+    camera_x_dest = followobject_x + (1800 * CoreManager::getInstance().getCore()->resRatio);
     camera_x += ((camera_x_dest - camera_x)) / fps;
     //camera_x += ((camera_x_dest - camera_x) * 5) / fps;
 
@@ -161,7 +161,7 @@ void Camera::Work(sf::View& view, float dest_zoom_over)
     zoomedTotal *= zoom;
 
     if(zoom != dest_zoom)
-    zoomViewAt(sf::Vector2i(1920*resRatioX, 2160*resRatioY), zoom, view);
+    zoomViewAt(sf::Vector2i(1920*CoreManager::getInstance().getCore()->resRatio, 2160*CoreManager::getInstance().getCore()->resRatio), zoom, view);
 
     /** Apply camera position **/
 
