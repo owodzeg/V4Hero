@@ -324,17 +324,20 @@ void PataText::defaultStyleSetColor(sf::Color newColor)
     default_style.c_green = newColor.g;
     default_style.c_blue = newColor.b;
     default_style.c_alpha = newColor.a;
+    m_marker = default_style;
 }
 
 void PataText::defaultStyleSetCharSize(double newCharSize)
 {
     default_style.char_size = newCharSize;
+    m_marker = default_style;
 }
 
 void PataText::defaultStyleSetFont(const std::string& fontStr)
 {
     default_style.fontStr = fontStr;
     default_style.font = CoreManager::getInstance().getStrRepo()->fontStore[fontStr];
+    m_marker = default_style;
 }
 
 void PataText::defaultStyleSetOutlineColor(sf::Color newColor)
@@ -343,11 +346,13 @@ void PataText::defaultStyleSetOutlineColor(sf::Color newColor)
     default_style.ot_c_green = newColor.g;
     default_style.ot_c_blue = newColor.b;
     default_style.ot_c_alpha = newColor.a;
+    m_marker = default_style;
 }
 
 void PataText::defaultStyleSetOutlineThickness(double newThickness)
 {
     default_style.thickness = newThickness;
+    m_marker = default_style;
 }
 
 void PataText::append(std::string input_text)
