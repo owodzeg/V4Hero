@@ -57,31 +57,31 @@ AltarMenu::AltarMenu()
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
     altar_title.defaultStyleSetFont(font);
-    altar_title.defaultStyleSetCharSize(40);
+    altar_title.defaultStyleSetCharSize(120);
     altar_title.defaultStyleSetColor(sf::Color(111, 71, 51, 255));
     altar_title.append(Func::GetStrFromKey("altar_title"));
 
     altar_kaching.defaultStyleSetFont(font);
-    altar_kaching.defaultStyleSetCharSize(30);
+    altar_kaching.defaultStyleSetCharSize(90);
     altar_kaching.defaultStyleSetColor(sf::Color(111,71,51,255));
     altar_kaching.append(Func::GetStrFromKey("altar_title"));
 
     altar_item_title.defaultStyleSetFont(font);
-    altar_item_title.defaultStyleSetCharSize(24);
+    altar_item_title.defaultStyleSetCharSize(72);
     altar_item_title.defaultStyleSetColor(sf::Color(111,71,51,255));
     altar_item_title.append("");
 
     altar_item_category.defaultStyleSetFont(font);
-    altar_item_category.defaultStyleSetCharSize(20);
+    altar_item_category.defaultStyleSetCharSize(60);
     altar_item_category.defaultStyleSetColor(sf::Color(111,71,51,255));
     altar_item_category.append("");
 
     altar_item_desc.defaultStyleSetFont(font);
-    altar_item_desc.defaultStyleSetCharSize(25);
+    altar_item_desc.defaultStyleSetCharSize(75);
     altar_item_desc.defaultStyleSetColor(sf::Color(111,71,51,255));
     altar_item_desc.append("");
 
-    ctrlTips.create(54*3, font, 20, sf::String("Left/Right/Up/Down: Navigate      O: Exit to Patapolis"), quality);
+    ctrlTips.create(54*3, font, 60, sf::String("Left/Right/Up/Down: Navigate      O: Exit to Patapolis"), quality);
 
     SPDLOG_INFO("Initializing Altar finished.");
 }
@@ -193,13 +193,13 @@ void AltarMenu::reloadInventory()
             std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
             tmp.num.defaultStyleSetFont(font);
-            tmp.num.defaultStyleSetCharSize(30);
+            tmp.num.defaultStyleSetCharSize(90);
             tmp.num.defaultStyleSetColor(sf::Color::White);
             tmp.num.reset();
             tmp.num.append(Func::num_padding(tmp.amount, 3));
 
             tmp.num_shadow.defaultStyleSetFont(font);
-            tmp.num_shadow.defaultStyleSetCharSize(30);
+            tmp.num_shadow.defaultStyleSetCharSize(90);
             tmp.num_shadow.defaultStyleSetColor(sf::Color(136, 136, 136, 255));
             tmp.num_shadow.reset();
             tmp.num_shadow.append(Func::num_padding(tmp.amount, 3));

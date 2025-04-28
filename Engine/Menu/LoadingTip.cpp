@@ -56,24 +56,24 @@ LoadingTip::LoadingTip(int mode)
         sf::String str_tipText = Func::ConvertToUtf8String(strRepo->GetString(wdesc_key));
 
 
-        //t_tipTitle.defaultStyleSetFont(font);
-        //t_tipTitle.defaultStyleSetCharSize(48);
-        //t_tipTitle.setColor(sf::Color::White);
+        t_tipTitle.defaultStyleSetFont(font);
+        t_tipTitle.defaultStyleSetCharSize(144);
+        t_tipTitle.defaultStyleSetColor(sf::Color::White);
         t_tipTitle.append(Func::GetStrFromKey(title_key));
 
-        //t_tipText.defaultStyleSetFont(font);
-        //t_tipText.defaultStyleSetCharSize(32);
-        //t_tipText.setColor(sf::Color::White);
+        t_tipText.defaultStyleSetFont(font);
+        t_tipText.defaultStyleSetCharSize(96);
+        t_tipText.defaultStyleSetColor(sf::Color::White);
         t_tipText.append(Func::GetStrFromKey(desc_key));
 
-        //t_pressAnyKey.defaultStyleSetFont(font);
-        //t_pressAnyKey.defaultStyleSetCharSize(48);
-        //t_pressAnyKey.setColor(sf::Color::White);
+        t_pressAnyKey.defaultStyleSetFont(font);
+        t_pressAnyKey.defaultStyleSetCharSize(144);
+        t_pressAnyKey.defaultStyleSetColor(sf::Color::White);
         t_pressAnyKey.append(Func::GetStrFromKey("tips_anykey"));
 
-        //t_nowLoading.defaultStyleSetFont(font);
-        //t_nowLoading.defaultStyleSetCharSize(48);
-        //t_nowLoading.setColor(sf::Color::White);
+        t_nowLoading.defaultStyleSetFont(font);
+        t_nowLoading.defaultStyleSetCharSize(144);
+        t_nowLoading.defaultStyleSetColor(sf::Color::White);
         t_nowLoading.append(Func::GetStrFromKey("tips_loading"));
 
     } else if (tipMode == 1)
@@ -94,10 +94,9 @@ LoadingTip::LoadingTip(int mode)
         box_1.setFillColor(sf::Color(0, 0, 0, 192));
         box_2.setFillColor(sf::Color(0, 0, 0, 192));
 
-        //t_nowLoading.defaultStyleSetFont(font);
-        //t_nowLoading.defaultStyleSetCharSize(48);
-        //t_nowLoading.setColor(sf::Color::White);
-        //t_nowLoading.append(Func::GetStrFromKey("tips_loading");
+        t_nowLoading.defaultStyleSetFont(font);
+        t_nowLoading.defaultStyleSetCharSize(144);
+        t_nowLoading.defaultStyleSetColor(sf::Color::White);
         t_nowLoading.append(Func::GetStrFromKey("tips_loading"));
     }
 }

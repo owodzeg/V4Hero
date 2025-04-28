@@ -642,7 +642,7 @@ void ObeliskMenu::Update()
                     mission_desc.reset();
                     mission_title.append(Func::GetStrFromKey(missions[sel_mission].title));
                     mission_title.append(level);
-                    std::string desc = Func::wrap_text(missions[sel_mission].desc, 633 * 3, font, 54);
+                    std::string desc = Func::wrap_text(Func::GetStrFromKey(missions[sel_mission].desc), 633 * 3, font, 54);
                     mission_desc.append(desc);
                 }
             } else if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
@@ -661,9 +661,11 @@ void ObeliskMenu::Update()
                         level = std::to_string(CoreManager::getInstance().getSaveReader()->mission_levels[missions[sel_mission].mis_ID]);
                     }
 
+                    mission_title.reset();
+                    mission_desc.reset();
                     mission_title.append(Func::GetStrFromKey(missions[sel_mission].title));
                     mission_title.append(level);
-                    std::string desc = Func::wrap_text(missions[sel_mission].desc, 633 * 3, font, 54);
+                    std::string desc = Func::wrap_text(Func::GetStrFromKey(missions[sel_mission].desc), 633 * 3, font, 54);
                     mission_desc.append(desc);
                 }
             }

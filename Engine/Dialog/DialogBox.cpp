@@ -34,7 +34,7 @@ void PataDialogBox::Create(std::string font, sf::String text, std::vector<sf::St
         }
     }
     t_dialogText.defaultStyleSetFont(font);
-    t_dialogText.defaultStyleSetCharSize(30);
+    t_dialogText.defaultStyleSetCharSize(90);
     
     if(type != 3)
         t_dialogText.append(Func::GetStrFromKey(text));

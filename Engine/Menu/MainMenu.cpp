@@ -454,8 +454,10 @@ void MainMenu::Update()
                 }
             }
 
-            t_pressanykey.setGlobalOrigin(t_pressanykey.getGlobalBounds().size.x / 2, t_pressanykey.getGlobalBounds().size.y / 2);
+            t_pressanykey.reset();
             t_pressanykey.defaultStyleSetColor(sf::Color(255, 255, 255, t_alpha));
+            t_pressanykey.append(Func::GetStrFromKey("menu_pressanykey"));
+            t_pressanykey.setGlobalOrigin(t_pressanykey.getGlobalBounds().size.x / 2, t_pressanykey.getGlobalBounds().size.y / 2);
             t_pressanykey.draw();
 
             rs_cover2.setFillColor(sf::Color(0, 0, 0, cv_alpha));

@@ -4,6 +4,8 @@
 
 Credits::Credits()
 {
+    s_credits = nullptr;
+    s_outro = nullptr;
 }
 
 Credits::~Credits()
