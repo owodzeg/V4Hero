@@ -103,45 +103,85 @@ Barracks::Barracks()
     class_name.append(Func::GetStrFromKey("barracks_yaripon"));
 
     /// Stat text
-    unit_stat_level_t.append("{size 27}{color 0 0 0}");
+    unit_stat_level_t.defaultStyleSetFont(font);
+    unit_stat_level_t.defaultStyleSetCharSize(81);
+    unit_stat_level_t.defaultStyleSetColor(sf::Color::Black);
     unit_stat_level_t.append(Func::GetStrFromKey("barracks_stat_level"));
-    unit_stat_level_v.append("{size 27}{color 0 0 0}");
+    unit_stat_level_v.defaultStyleSetFont(font);
+    unit_stat_level_v.defaultStyleSetCharSize(81);
+    unit_stat_level_v.defaultStyleSetColor(sf::Color::Black);
 
-    unit_stat_exp_t.append("{size 27}{color 0 0 0}");
+    unit_stat_exp_t.defaultStyleSetFont(font);
+    unit_stat_exp_t.defaultStyleSetCharSize(81);
+    unit_stat_exp_t.defaultStyleSetColor(sf::Color::Black);
     unit_stat_exp_t.append(Func::GetStrFromKey("barracks_stat_exp"));
-    unit_stat_exp_v.append("{size 27}{color 0 0 0}");
+    unit_stat_exp_v.defaultStyleSetFont(font);
+    unit_stat_exp_v.defaultStyleSetCharSize(81);
+    unit_stat_exp_v.defaultStyleSetColor(sf::Color::Black);
 
-    unit_stat_hp_t.append("{size 27}{color 0 0 0}");
+    unit_stat_hp_t.defaultStyleSetFont(font);
+    unit_stat_hp_t.defaultStyleSetCharSize(81);
+    unit_stat_hp_t.defaultStyleSetColor(sf::Color::Black);
     unit_stat_hp_t.append(Func::GetStrFromKey("barracks_stat_hp"));
-    unit_stat_hp_v.append("{size 27}{color 0 0 0}");
+    unit_stat_hp_v.defaultStyleSetFont(font);
+    unit_stat_hp_v.defaultStyleSetCharSize(81);
+    unit_stat_hp_v.defaultStyleSetColor(sf::Color::Black);
 
-    unit_stat_dmg_t.append("{size 27}{color 0 0 0}");
+    unit_stat_dmg_t.defaultStyleSetFont(font);
+    unit_stat_dmg_t.defaultStyleSetCharSize(81);
+    unit_stat_dmg_t.defaultStyleSetColor(sf::Color::Black);
     unit_stat_dmg_t.append(Func::GetStrFromKey("barracks_stat_damage"));
-    unit_stat_dmg_v.append("{size 27}{color 0 0 0}");
+    unit_stat_dmg_v.defaultStyleSetFont(font);
+    unit_stat_dmg_v.defaultStyleSetCharSize(81);
+    unit_stat_dmg_v.defaultStyleSetColor(sf::Color::Black);
 
-    unit_stat_atkspd_t.append("{size 27}{color 0 0 0}");
+    unit_stat_atkspd_t.defaultStyleSetFont(font);
+    unit_stat_atkspd_t.defaultStyleSetCharSize(81);
+    unit_stat_atkspd_t.defaultStyleSetColor(sf::Color::Black);
     unit_stat_atkspd_t.append(Func::GetStrFromKey("barracks_stat_attackspeed"));
-    unit_stat_atkspd_v.append("{size 27}{color 0 0 0}");
+    unit_stat_atkspd_v.defaultStyleSetFont(font);
+    unit_stat_atkspd_v.defaultStyleSetCharSize(81);
+    unit_stat_atkspd_v.defaultStyleSetColor(sf::Color::Black);
 
-    unit_stat_critc_t.append("{size 27}{color 0 0 0}");
+    unit_stat_critc_t.defaultStyleSetFont(font);
+    unit_stat_critc_t.defaultStyleSetCharSize(81);
+    unit_stat_critc_t.defaultStyleSetColor(sf::Color::Black);
     unit_stat_critc_t.append(Func::GetStrFromKey("barracks_stat_critchance"));
-    unit_stat_critc_v.append("{size 27}{color 0 0 0}");
+    unit_stat_critc_v.defaultStyleSetFont(font);
+    unit_stat_critc_v.defaultStyleSetCharSize(81);
+    unit_stat_critc_v.defaultStyleSetColor(sf::Color::Black);
 
-    unit_stat_kbc_t.append("{size 27}{color 0 0 0}");
+    unit_stat_kbc_t.defaultStyleSetFont(font);
+    unit_stat_kbc_t.defaultStyleSetCharSize(81);
+    unit_stat_kbc_t.defaultStyleSetColor(sf::Color::Black);
     unit_stat_kbc_t.append(Func::GetStrFromKey("barracks_stat_knockbackchance"));
-    unit_stat_kbc_v.append("{size 27}{color 0 0 0}");
+    unit_stat_kbc_v.defaultStyleSetFont(font);
+    unit_stat_kbc_v.defaultStyleSetCharSize(81);
+    unit_stat_kbc_v.defaultStyleSetColor(sf::Color::Black);
 
-    unit_stat_stgc_t.append("{size 27}{color 0 0 0}");
+    unit_stat_stgc_t.defaultStyleSetFont(font);
+    unit_stat_stgc_t.defaultStyleSetCharSize(81);
+    unit_stat_stgc_t.defaultStyleSetColor(sf::Color::Black);
     unit_stat_stgc_t.append(Func::GetStrFromKey("barracks_stat_staggerchance"));
-    unit_stat_stgc_v.append("{size 27}{color 0 0 0}");
+    unit_stat_stgc_v.defaultStyleSetFont(font);
+    unit_stat_stgc_v.defaultStyleSetCharSize(81);
+    unit_stat_stgc_v.defaultStyleSetColor(sf::Color::Black);
 
-    unit_stat_firec_t.append("{size 27}{color 0 0 0}");
+    unit_stat_firec_t.defaultStyleSetFont(font);
+    unit_stat_firec_t.defaultStyleSetCharSize(81);
+    unit_stat_firec_t.defaultStyleSetColor(sf::Color::Black);
     unit_stat_firec_t.append(Func::GetStrFromKey("barracks_stat_burnchance"));
-    unit_stat_firec_v.append("{size 27}{color 0 0 0}");
+    unit_stat_firec_v.defaultStyleSetFont(font);
+    unit_stat_firec_v.defaultStyleSetCharSize(81);
+    unit_stat_firec_v.defaultStyleSetColor(sf::Color::Black);
 
-    unit_stat_icec_t.append("{size 27}{color 0 0 0}");
+    unit_stat_icec_t.defaultStyleSetFont(font);
+    unit_stat_icec_t.defaultStyleSetCharSize(81);
+    unit_stat_icec_t.defaultStyleSetColor(sf::Color::Black);
     unit_stat_icec_t.append(Func::GetStrFromKey("barracks_stat_freezechance"));
-    unit_stat_icec_v.append("{size 27}{color 0 0 0}");
+    unit_stat_icec_v.defaultStyleSetFont(font);
+    unit_stat_icec_v.defaultStyleSetCharSize(81);
+    unit_stat_icec_v.defaultStyleSetColor(sf::Color::Black);
 
     int equip_height = 50*3;
 
