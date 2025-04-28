@@ -22,7 +22,8 @@ public:
     static sf::String ConvertToUtf8String(const std::string& s);
     static sf::String GetStrFromKey(const std::string& key);
     static std::string trim(const std::string& str, const std::string& whitespace);
-    static std::string wrap_text(std::string input, int box_width, std::string font, int character_size);
+    static double measure_text_width(PataText& measurer, const std::string& text, const std::string& font, int character_size);
+    static std::string wrap_text(const std::string& input, int box_width, const std::string& font, int character_size);
     //static sf::String wrap_text(std::string input, int box_width, sf::Font font, int character_size);
     static void create_directory(const std::string& path);
     static std::string getTempDirectory();

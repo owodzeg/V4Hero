@@ -712,7 +712,7 @@ void Barracks::updatePreviewText()
             item_desc.reset();
 
             item_title.append(Func::GetStrFromKey(inventory_boxes[invbox_id].data->item_name));
-            item_desc.append(Func::ConvertToUtf8String(Func::wrap_text(inventory_boxes[invbox_id].data->item_description, 340*3, font, 22)));
+            item_desc.append(Func::ConvertToUtf8String(Func::wrap_text(inventory_boxes[invbox_id].data->item_description, 340*3, font, 66)));
             //preview stats -L
             unit_stat_hp_v.reset();
             unit_stat_hp_v.append(getPreviewText(inventory_boxes[invbox_id].data->equip->hp, currentPon->pon_hp, currentPon->pon_base_hp, 0));

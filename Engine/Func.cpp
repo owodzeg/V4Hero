@@ -61,141 +61,121 @@ std::string Func::trim(const std::string& str, const std::string& whitespace = "
     return str.substr(strBegin, strRange);
 }
 
-std::string Func::wrap_text(std::string input, int box_width, std::string font, int character_size)
+// Helper function to measure the width of a string using PataText
+double Func::measure_text_width(PataText& measurer, const std::string& text, const std::string& font, int character_size)
 {
-    //TO-DO: replacement because wrap_text has issues atm
-    return input;
-
-    StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
-    PataText tmp_ptext;
-
-    //cout << "wrap_text(" << input << ", " << box_width << ")" << endl;
-    input = strRepo->GetString(input);
-
-    if (input.size() <= 0)
-        return "";
-
-    std::string temp = "";
-    std::vector<std::string> words;
-
-    for (unsigned long i = 0; i < input.size(); i++)
+    if (text.empty())
     {
-        if ((input[i] == ' ') || (input[i] == '\n') || (i == input.size() - 1))
-        {
-            if (i == input.size() - 1)
-                temp += input[i];
+        return 0.0f;
+    }
+    measurer.reset(); // Clear previous state
+    measurer.defaultStyleSetFont(font);
+    measurer.defaultStyleSetCharSize(character_size);
+    measurer.append(text);
+    return measurer.getGlobalBounds().size.x;
+}
 
-            if (input[i] == '\n')
-                temp += input[i];
-
-            //cout << "Registered word: " << temp << endl;
-            words.push_back(temp);
-            temp = "";
-        } else
-        {
-            temp += input[i];
-        }
+std::string Func::wrap_text(const std::string& input, int box_width, const std::string& font, int character_size)
+{
+    if (input.empty() || box_width <= 0)
+    {
+        return ""; // Nothing to wrap or no space
     }
 
-    std::string full = "";
+    std::vector<std::string> words = Split(input, ' ');
 
-    std::string prevtemp = "";
-    int wordcount = 0;
-    temp = "";
+    std::vector<std::string> output_lines;
+    std::string current_line;
 
-    for (unsigned long i = 0; i < words.size(); i++)
+    PataText measurer;
+    float space_width = measure_text_width(measurer, " ", font, character_size);
+    float hyphen_width = measure_text_width(measurer, "-", font, character_size);
+    float effective_box_width_for_hyphen = std::max(1.0f, box_width - hyphen_width);
+
+    for (const auto& original_word : words)
     {
-        prevtemp = temp;
+        std::string remaining_word = original_word;
 
-        if (words[i].find("\n") != std::string::npos)
+        while (measure_text_width(measurer, remaining_word, font, character_size) > box_width)
         {
-            //cout << "String found to contain a new line character" << endl;
-            std::string prefull = prevtemp + " " + words[i];
-
-            //TODO: check if it wraps text correctly
-            //tmp_ptext.defaultStyleSetFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
-            //tmp_ptext.defaultStyleSetCharSize(character_size);
-            tmp_ptext.append(prefull);
-            tmp_ptext.draw();
-
-            if (tmp_ptext.getGlobalBounds().size.x >= box_width)
+            if (!current_line.empty())
             {
-                full += prevtemp + '\n';
-                i--;
-            } else
-            {
-                full += prefull;
+                output_lines.push_back(current_line);
+                current_line.clear();
             }
 
-            SPDLOG_TRACE("Added \"{}\" to the output", prevtemp + words[i]);
-
-            i++;
-            temp = "";
-            wordcount = 0;
-        }
-
-        if (wordcount > 0)
-            temp += " ";
-
-        temp += words[i];
-        wordcount++;
-
-        //tmp_ptext.defaultStyleSetFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
-        //tmp_ptext.defaultStyleSetCharSize(character_size);
-        tmp_ptext.append(temp);
-        tmp_ptext.draw();
-
-        //cout << "Testing string \"" << temp << "\", " << wordcount << " words, size: " << t_temp.getGlobalBounds().size.x << endl;
-
-        if (tmp_ptext.getGlobalBounds().size.x >= box_width)
-        {
-            if (wordcount > 1)
+            int break_pos = 0;
+            for (int j = 1; j <= remaining_word.length(); ++j)
             {
-                //cout << "String exceeded the max box width (" << box_width << " vs " << t_temp.getGlobalBounds().size.x << ")" << endl;
-                full += prevtemp;
-                full += '\n';
+                std::string sub = remaining_word.substr(0, j);
+                float sub_width = measure_text_width(measurer, sub, font, character_size);
 
-                //cout << "Added \"" << prevtemp << "\" to the output" << endl;
-
-                i -= 1;
-                temp = "";
-                wordcount = 0;
-            } else
-            {
-                std::string ltemp = "";
-
-                ///if its just a long ass word
-                ///need to optimize this because it doesnt work correctly for chinese
-                for (unsigned long e = 0; e < temp.size(); e++)
+                if (sub_width <= effective_box_width_for_hyphen)
                 {
-                    ltemp += temp[e];
-
-                    //tmp_ptext.defaultStyleSetFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
-                    //tmp_ptext.defaultStyleSetCharSize(character_size);
-                    tmp_ptext.append(ltemp);
-                    tmp_ptext.draw();
-
-                    if (tmp_ptext.getGlobalBounds().size.x >= box_width - 30)
-                    {
-                        full += ltemp;
-                        full += "-";
-                        full += '\n';
-
-                        ltemp = "";
-                    }
+                    break_pos = j;
+                } else
+                {
+                    break;
                 }
+            }
 
-                ///adding remains
-                temp = ltemp;
-                wordcount = 1;
+            if (break_pos == 0 && !remaining_word.empty())
+            {
+                break_pos = 1;
+            }
+
+            if (break_pos == 0)
+            {
+                break;
+            }
+
+            output_lines.push_back(remaining_word.substr(0, break_pos) + "-");
+            remaining_word = remaining_word.substr(break_pos);
+
+            if (remaining_word.empty())
+            {
+                break;
+            }
+        }
+
+        if (!remaining_word.empty())
+        {
+            float remaining_word_width = measure_text_width(measurer, remaining_word, font, character_size);
+            float current_line_width = measure_text_width(measurer, current_line, font, character_size);
+
+            float width_with_space = current_line.empty() ? 0.0f : space_width;
+            float potential_width = current_line_width + width_with_space + remaining_word_width;
+
+            if (current_line.empty())
+            {
+                current_line = remaining_word;
+            } else if (potential_width <= box_width)
+            {
+                current_line += " " + remaining_word;
+            } else
+            {
+                output_lines.push_back(current_line);
+                current_line = remaining_word;
             }
         }
     }
 
-    //cout << "End of word list, adding remains to the full string" << endl;
-    full += temp;
+    if (!current_line.empty())
+    {
+        output_lines.push_back(current_line);
+    }
 
-    return full;
+    std::string final_output;
+    if (!output_lines.empty())
+    {
+        final_output = output_lines[0];
+        for (size_t i = 1; i < output_lines.size(); ++i)
+        {
+            final_output += "{n}" + output_lines[i];
+        }
+    }
+
+    return final_output;
 }
 
 template<typename T>

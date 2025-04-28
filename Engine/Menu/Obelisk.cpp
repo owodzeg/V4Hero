@@ -53,7 +53,7 @@ ObeliskMenu::ObeliskMenu()
     location_title.defaultStyleSetCharSize(27 * 3);
     location_title.defaultStyleSetColor(sf::Color::Black);
     location_title.append(Func::GetStrFromKey("worldmap_location_1_title"));
-    std::string desc = Func::wrap_text("worldmap_location_1_description", 800*3, font, 18);
+    std::string desc = Func::wrap_text(Func::GetStrFromKey("worldmap_location_1_description"), 800*3, font, 54);
 
     location_desc.defaultStyleSetFont(font);
     location_desc.defaultStyleSetCharSize(17 * 3);
@@ -469,7 +469,7 @@ void ObeliskMenu::Update()
                         mission_title.reset();
                         mission_title.append(Func::GetStrFromKey(missions[sel_mission].title));
                         mission_title.append(level);
-                        std::string desc = Func::wrap_text(missions[sel_mission].desc, 633*3, font, 18);
+                        std::string desc = Func::wrap_text(Func::GetStrFromKey(missions[sel_mission].desc), 633 * 3, font, 54);
                         mission_desc.reset();
                         mission_desc.append(desc);
                     }
@@ -541,7 +541,7 @@ void ObeliskMenu::Update()
                         std::string wL1 = std::string(L1.begin(), L1.end());
                         std::string wL2 = std::string(L2.begin(), L2.end());
 
-                        std::string desc = Func::wrap_text(wL2, 2400, font, 18);
+                        std::string desc = Func::wrap_text(Func::GetStrFromKey(wL2), 2400, font, 54);
 
                         location_title.reset();
                         location_desc.reset();
@@ -605,7 +605,7 @@ void ObeliskMenu::Update()
                         std::string wL1 = std::string(L1.begin(), L1.end());
                         std::string wL2 = std::string(L2.begin(), L2.end());
 
-                        std::string desc = Func::wrap_text(wL2, 800*3, font, 18);
+                        std::string desc = Func::wrap_text(Func::GetStrFromKey(wL2), 800 * 3, font, 54);
 
                         location_title.reset();
                         location_desc.reset();
@@ -642,7 +642,7 @@ void ObeliskMenu::Update()
                     mission_desc.reset();
                     mission_title.append(Func::GetStrFromKey(missions[sel_mission].title));
                     mission_title.append(level);
-                    std::string desc = Func::wrap_text(missions[sel_mission].desc, 633*3, font, 18);
+                    std::string desc = Func::wrap_text(missions[sel_mission].desc, 633 * 3, font, 54);
                     mission_desc.append(desc);
                 }
             } else if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
@@ -663,7 +663,7 @@ void ObeliskMenu::Update()
 
                     mission_title.append(Func::GetStrFromKey(missions[sel_mission].title));
                     mission_title.append(level);
-                    std::string desc = Func::wrap_text(missions[sel_mission].desc, 633*3, font, 18);
+                    std::string desc = Func::wrap_text(missions[sel_mission].desc, 633 * 3, font, 54);
                     mission_desc.append(desc);
                 }
             }
