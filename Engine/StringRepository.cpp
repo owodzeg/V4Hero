@@ -191,9 +191,8 @@ void StringRepository::LoadFontFromString(const std::string& fontName, const std
 // Load font from memory (std::string data)
 void StringRepository::LoadFontFromFile(const std::string& fontPath, const std::string& fontName)
 {
-    if (fontStore.find(fontName) != fontStore.end()) {
-        fontStore.erase(fontStore.find(fontName));
-    }
+    if (fontStore.find(fontName) != fontStore.end())
+        return;
 
     if (fontStore.find(fontName) == fontStore.end()) {
         std::unique_ptr<sf::Font> font = std::make_unique<sf::Font>();
