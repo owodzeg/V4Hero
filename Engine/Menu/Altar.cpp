@@ -100,7 +100,7 @@ void AltarMenu::updateAltarDescriptions()
         altar_item_category.reset();
         altar_item_category.append(Func::GetStrFromKey("altar_category_" + inventory_boxes[selItem].data->item_category));
         altar_item_desc.reset();
-        altar_item_desc.append(Func::ConvertToUtf8String(Func::wrap_text(inventory_boxes[selItem].data->item_description, 420*3, font, 78)));
+        altar_item_desc.append(Func::ConvertToUtf8String(Func::wrap_text(Func::GetStrFromKey(inventory_boxes[selItem].data->item_description), 420*3, font, 78)));
     } else
     {
         altar_item_title.reset();

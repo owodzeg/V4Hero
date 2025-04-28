@@ -141,9 +141,7 @@ PataText::PataText()
 
 PataText::~PataText()
 {
-    SPDLOG_DEBUG("Destroying PataText instance");
     m_lines.clear();
-    SPDLOG_DEBUG("Destroying PataText instance.. completed");
 }
 
 void PataText::applyFadeIn()
