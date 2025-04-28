@@ -134,6 +134,8 @@ PataText::PataText()
     default_style.ot_c_blue = 0;
     default_style.ot_c_alpha = 255;
     default_style.thickness = 0;
+    default_style.fontStr = "fallback";
+    default_style.font = CoreManager::getInstance().getStrRepo()->fontStore[default_style.fontStr];
 
     styleResetAllStyles(m_marker);
     m_lines.push_back(std::vector<PTChar>());
