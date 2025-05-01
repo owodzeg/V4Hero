@@ -19,10 +19,25 @@ void ErrorChamber::Initialize()
 
     std::vector<sf::String> a = {"error_tryagain", "error_tryprevious", "error_mainmenu", "error_exit"};
 
-    PataDialogBox db;
-    db.Create(font, "error_message", a, 2);
-    db.id = 0;
-    dialogboxes.push_back(db);
+    dialogboxes.emplace_back(
+        Func::GetStrFromKey("error_message"),
+        std::vector<PataDialogBox::Option>{
+            {Func::GetStrFromKey("error_tryagain"), [this]() {
+                SPDLOG_ERROR("Trying again...");
+                }},
+            {Func::GetStrFromKey("error_tryprevious"), [this]() {
+                SPDLOG_ERROR("Trying previous state...");
+                }},
+            {Func::GetStrFromKey("error_mainmenu"), [this]() {
+                SPDLOG_ERROR("Going to main menu...");
+                }},
+            {Func::GetStrFromKey("error_exit"), [this]() {
+                SPDLOG_ERROR("Exiting game...");
+                CoreManager::getInstance().getCore()->close_window = true;
+            }}
+        },
+        2
+    );
 
     SoundManager::getInstance().loadBufferFromFile("resources/sfx/drums/anvil.ogg");
     SoundManager::getInstance().playSound("resources/sfx/drums/anvil.ogg", SoundManager::SoundTag::INTERFACE);

@@ -6,20 +6,27 @@
 #include "../Input/InputController.h"
 #include "RoundedRect.h"
 #include <SFML/Graphics.hpp>
+#include <functional>
 
 class PataDialogBox
 {
 public:
-    int id = 0; ///for finding what dialog box is what
+    struct Option
+    {
+        std::string text;
+        std::function<void()> callback;
+    };
 
-    bool rendered = false;
+    int id = 0; ///for finding what dialog box is what
 
     RoundedRect rr_main;
     RoundedRect rr_shadow;
-    sf::Font d_font;
+
     PataText t_dialogType, t_dialogText;
-    std::vector<PataText> t_options;
-    std::vector<sf::String> options_saved;
+    std::vector<std::function<void()>> callbacks;
+
+    std::vector<Option> options;
+    PataText t_option;
 
     sf::RectangleShape highlight;
     unsigned int option = 0;
@@ -33,15 +40,24 @@ public:
 
     bool closed = false;
 
+    PataDialogBox* m_parent = nullptr;
+    bool has_child = false;
+
     PataDialogBox();
-    //void Create(sf::Font font, std::string text, std::vector<std::string> options, int qualitySetting);
-    void Create(std::string font, sf::String text, std::vector<sf::String> options, int type = 1);
-    void CreateCustom(std::string font, sf::String text, std::vector<sf::String> options, int type = 1);
+    PataDialogBox(std::string main_text, std::vector<Option> opt, int type = 1);
+    PataDialogBox(std::string main_text, std::vector<Option> opt, int type, std::unique_ptr<PataDialogBox>& parent);
+    void Create(std::string main_text, std::vector<Option> opt, int type = 1);
+    void SetType(int type);
+    void SetMainText(std::string text);
+    // this will add a new option and add a callback to a function
+    void AddOption(std::string option, std::function<void()> callback);
     void Readjust();
     int CheckSelectedOption();
     void MoveUp();
     void MoveDown();
+    void Execute();
     void Close();
+    void HandleInput();
     void Draw();
 };
 

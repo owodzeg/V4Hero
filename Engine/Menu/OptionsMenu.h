@@ -63,8 +63,6 @@ public:
 
     PSprite dg_restart, dg_select;
 
-    PataDialogBox restart_prompt;
-
     ///Input manager (change keybinds)
     PSprite input_manager;                                  ///sprite
     PataText t_presets[9];                                     ///preset numbers

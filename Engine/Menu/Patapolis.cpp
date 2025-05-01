@@ -1506,13 +1506,14 @@ void PatapolisMenu::Update()
                         {
                             if (messageclouds[i].msgcloud_ID == 2)
                             {
-                                ///Create ending dialogbox here
-                                std::vector<sf::String> a = {"patapolis_demo_pick1", "patapolis_demo_pick2"};
-
-                                PataDialogBox db;
-                                db.Create(font, "patapolis_demofinish", a);
-                                db.id = 4;
-                                dialogboxes.push_back(db);
+                                CoreManager::getInstance().getDialogHandler()->dialogboxes.emplace_back(std::make_unique<PataDialogBox>(Func::GetStrFromKey("patapolis_demofinish"), std::vector<PataDialogBox::Option>{
+                                    {Func::GetStrFromKey("patapolis_demo_pick1"), [this]() {
+                                        SPDLOG_INFO("Going into credits!");
+                                        screenFade.Create(ScreenFade::FADEOUT, 1024);
+                                        goto_id = 6;
+                                    }},
+                                    {Func::GetStrFromKey("patapolis_demo_pick2"), []() {}}
+                                }));
 
                                 messageclouds[i].Hide();
                             }
@@ -1542,23 +1543,6 @@ void PatapolisMenu::Update()
                 SPDLOG_DEBUG("Erasing MessageCloud id {}", m_rm[i]);
                 messageclouds.erase(messageclouds.begin() + m_rm[i] - i);
             }
-        }
-
-        std::vector<int> db_e; ///dialog box erase
-
-        for (int i = 0; i < dialogboxes.size(); i++)
-        {
-            dialogboxes[i].x = 640*3;
-            dialogboxes[i].y = 360*3;
-            dialogboxes[i].Draw();
-
-            if (dialogboxes[i].closed)
-                db_e.push_back(i);
-        }
-
-        for (int i = 0; i < db_e.size(); i++)
-        {
-            dialogboxes.erase(dialogboxes.begin() + db_e[i] - i);
         }
 
         window->setView(lastView);
@@ -1735,12 +1719,9 @@ void PatapolisMenu::Update()
                             /// festival
                             // open barracks screen
                             //StateManager::getInstance().setState(StateManager::MATER_OUTER);
-                            std::vector<sf::String> a = {"nav_understood"};
-
-                            PataDialogBox db;
-                            db.Create(font, "patapolis_materdialog", a);
-                            db.id = 3;
-                            dialogboxes.push_back(db);
+                            CoreManager::getInstance().getDialogHandler()->dialogboxes.emplace_back(std::make_unique<PataDialogBox>(Func::GetStrFromKey("patapolis_materdialog"), std::vector<PataDialogBox::Option>{
+                                {Func::GetStrFromKey("nav_understood"), []() {}}
+                            }));
                             //mater_menu.save_loaded = save_loaded;
                             //mater_menu.is_active = true;
                             //mater_menu.showMater();
@@ -1754,88 +1735,32 @@ void PatapolisMenu::Update()
 
                 if (inputCtrl->isKeyPressed(Input::Keys::START))
                 {
-                    std::vector<sf::String> a = {"nav_yes", "nav_no"};
+                    CoreManager::getInstance().getDialogHandler()->dialogboxes.emplace_back(std::make_unique<PataDialogBox>(Func::GetStrFromKey("patapolis_returntomain"), std::vector<PataDialogBox::Option>{
+                        {Func::GetStrFromKey("nav_yes"), [this]() {
+                            CoreManager::getInstance().getDialogHandler()->dialogboxes.emplace_back(std::make_unique<PataDialogBox>(Func::GetStrFromKey("patapolis_returntomainsave"), std::vector<PataDialogBox::Option>{
+                                {Func::GetStrFromKey("nav_yes"), [this]() {
+                                    SPDLOG_INFO("Left from Patapolis to Title screen.");
+                                    screenFade.Create(ScreenFade::FADEOUT, 1024);
+                                    goto_id = 7;
+                                }},
+                                {Func::GetStrFromKey("nav_no"), []() {}}
+                            }));
+                        }},
+                        {Func::GetStrFromKey("nav_no"), []() {}}
+                    }));
 
-                    PataDialogBox db;
-                    db.Create(font, "patapolis_returntomain", a);
-                    db.id = 0;
-                    dialogboxes.push_back(db);
                 } else if (inputCtrl->isKeyPressed(Input::Keys::SELECT))
                 {
-                    std::vector<sf::String> a = {"nav_yes", "nav_no"};
-
-                    PataDialogBox db;
-                    db.Create(font, "patapolis_save", a);
-                    db.id = 2;
-                    dialogboxes.push_back(db);
-                }
-            }
-        } else
-        {
-            if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
-            {
-                switch (dialogboxes[dialogboxes.size() - 1].CheckSelectedOption())
-                {
-                    case 0: {
-                        if (dialogboxes[dialogboxes.size() - 1].id == 0)
-                        {
-                            SPDLOG_DEBUG("Open second dialogbox");
-                            dialogboxes[dialogboxes.size() - 1].Close();
-
-                            std::vector<sf::String> a = {"nav_yes", "nav_no"};
-
-                            PataDialogBox db;
-                            db.Create(font, "patapolis_returntomainsave", a);
-                            db.id = 1;
-                            dialogboxes.push_back(db);
-
-                            break;
-                        } else if (dialogboxes[dialogboxes.size() - 1].id == 1)
-                        {
-                            SPDLOG_INFO("Left from Patapolis to Title screen.");
-                            screenFade.Create(ScreenFade::FADEOUT, 1024);
-                            goto_id = 7;
-                        } else if (dialogboxes[dialogboxes.size() - 1].id == 2)
-                        {
+                    CoreManager::getInstance().getDialogHandler()->dialogboxes.emplace_back(std::make_unique<PataDialogBox>(Func::GetStrFromKey("patapolis_save"), std::vector<PataDialogBox::Option>{
+                        {Func::GetStrFromKey("nav_yes"), [this]() {
                             SPDLOG_DEBUG("Saving game should happen here. Game not saving yet.");
                             CoreManager::getInstance().getSaveReader()->Save();
                             SPDLOG_INFO("Saved the game.");
 
-                            dialogboxes[dialogboxes.size() - 1].Close();
-
-                            std::vector<sf::String> a = {"nav_understood"};
-
-                            PataDialogBox db;
-                            db.Create(font, "patapolis_saved", a);
-                            db.id = 3;
-                            dialogboxes.push_back(db);
-
-                            break;
-                        } else if (dialogboxes[dialogboxes.size() - 1].id == 3)
-                        {
-                            SPDLOG_DEBUG("Done.");
-
-                            dialogboxes[dialogboxes.size() - 1].Close();
-                            break;
-                        } else if (dialogboxes[dialogboxes.size() - 1].id == 4)
-                        {
-                            SPDLOG_INFO("Going into credits!");
-                            screenFade.Create(ScreenFade::FADEOUT, 1024);
-                            goto_id = 6;
-
-                            dialogboxes[dialogboxes.size() - 1].Close();
-                            break;
-                        }
-
-                        break;
-                    }
-
-                    case 1: {
-                        SPDLOG_DEBUG("Back to Patapolis");
-                        dialogboxes[dialogboxes.size() - 1].Close();
-
-                        break;
-                    }
+                            CoreManager::getInstance().getDialogHandler()->dialogboxes.emplace_back(std::make_unique<PataDialogBox>(Func::GetStrFromKey("patapolis_saved"), std::vector<PataDialogBox::Option>{{Func::GetStrFromKey("nav_understood"), []() {}}}));
+                        }},
+                        {Func::GetStrFromKey("nav_no"), []() {}}
+                    }));
                 }
             }
         }

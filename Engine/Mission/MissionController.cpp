@@ -1017,21 +1017,89 @@ void MissionController::DrawMissionUI()
         {
             if (inputCtrl->isKeyPressed(Input::Keys::SELECT))
             {
-                std::vector<sf::String> a = {"Toggle hitboxes", "Toggle debug info", "Heal units", "Kill all player units", "Kill Hatapon", "Mission failure", "Mission complete", "Toggle rhythm debug UI", "Toggle song debug", "Toggle behavior debug"};
+                CoreManager::getInstance().getDialogHandler()->dialogboxes.emplace_back(std::make_unique<PataDialogBox>("Debug menu", std::vector<PataDialogBox::Option>{
+                    {"Toggle hitboxes", [this](){
+                        for(auto& pon : yaripons)
+                        {
+                            pon->toggleDebug = !pon->toggleDebug;
+                        }
+                        debug = !debug;
+                    
+                    }},
+                    {"Toggle debug info", [this](){
+                        for(auto& entity : entities)
+                        {
+                            entity->toggleDebug = !entity->toggleDebug;
+                        }
+                    }},
+                    {"Heal all player units", [this](){
+                        SPDLOG_DEBUG("Heal all units");
+                        for(auto& pon : yaripons)
+                        {
+                            pon->curHP = pon->maxHP;
+                        }
+                    }},
+                    {"Kill all player units", [this](){
+                        SPDLOG_DEBUG("Kill all player units");
 
-                PataDialogBox db;
-                db.Create(font, "Debug menu", a, 3);
-                db.id = 999;
-                dialogboxes.push_back(db);
+                        for(auto& pon : yaripons)
+                        {
+                            pon->curHP = 0;
+                        }
+                    }},
+                    {"Kill Hatapon", [this](){
+                        SPDLOG_DEBUG("Kill Hatapon");
+
+                        for(auto& pon : hatapons)
+                        {
+                            pon->curHP = 0;
+                        }
+                    }},
+                    {"Mission failure", [this, rhythm](){
+                        missionEnd = true;
+                        failure = true;
+                        rhythm->Stop();
+                        missionEndTimer.restart();
+                    }},
+                    {"Mission complete", [this, rhythm](){
+                        missionEnd = true;
+                        rhythm->Stop();
+                        missionEndTimer.restart();
+                    }},
+                    {"Toggle rhythm debug UI", [this](){
+                        SPDLOG_DEBUG("Toggle rhythm debug UI");
+                        CoreManager::getInstance().getRhythmGUI()->toggleDebugUI();
+                    }},
+                    {"Toggle song debug", [this](){
+                        SPDLOG_DEBUG("Toggle song debug");
+                        CoreManager::getInstance().getRhythm()->toggleDebug();
+                    }},
+                    {"Toggle behavior debug", [this](){
+                        SPDLOG_DEBUG("Toggle behavior debug");
+
+                        for (auto& entity : entities)
+                        {
+                            entity->toggleBehaviorDebug = !entity->toggleBehaviorDebug;
+                        }
+                    }},
+                    {"Close debug menu", [this]() {}}
+                }));
             }
 
             if (inputCtrl->isKeyPressed(Input::Keys::START))
             {
-                std::vector<sf::String> a = {"nav_yes", "nav_no"};
-
-                PataDialogBox db;
-                db.Create(font, "mission_backtopatapolis", a);
-                dialogboxes.push_back(db);
+                CoreManager::getInstance().getDialogHandler()->dialogboxes.emplace_back(std::make_unique<PataDialogBox>(Func::GetStrFromKey("mission_backtopatapolis"), std::vector<PataDialogBox::Option>{
+                    {Func::GetStrFromKey("nav_yes"), [this, rhythm](){
+                        SPDLOG_DEBUG("Return to Patapolis");
+                        missionEnd = true;
+                        failure = true;
+                        rhythm->Stop();
+                        missionEndTimer.restart();
+                    }},
+                    {Func::GetStrFromKey("nav_no"), [](){
+                    
+                    }}
+                }));
             }
         }
     }
@@ -1042,178 +1110,6 @@ void MissionController::DrawMissionUI()
     if (dialogboxes.size() > 0)
     {
         inputCtrl->lockRhythm = true;
-
-        if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
-        {
-            switch (dialogboxes[dialogboxes.size() - 1].CheckSelectedOption())
-            {
-                case 0: {
-                    if (dialogboxes[dialogboxes.size() - 1].id == 0)
-                    {
-                        SPDLOG_DEBUG("Return to Patapolis");
-                        dialogboxes[dialogboxes.size() - 1].Close();
-
-                        missionEnd = true;
-                        failure = true;
-                        rhythm->Stop();
-                        missionEndTimer.restart();
-                    } else if (dialogboxes[dialogboxes.size() - 1].id == 999)
-                    {
-                        SPDLOG_DEBUG("Toggle hitboxes");
-
-                        for(auto& pon : yaripons)
-                        {
-                            pon->toggleDebug = !pon->toggleDebug;
-                        }
-                        debug = !debug;
-
-                        dialogboxes[dialogboxes.size() - 1].Close();
-                    }
-
-                    break;
-                }
-
-                case 1: {
-                    if (dialogboxes[dialogboxes.size() - 1].id == 0)
-                    {
-                        SPDLOG_DEBUG("Back to mission");
-                        dialogboxes[dialogboxes.size() - 1].Close();
-                    } else if (dialogboxes[dialogboxes.size() - 1].id == 999)
-                    {
-                        SPDLOG_DEBUG("Toggle debug info");
-
-                        for(auto& entity : entities)
-                        {
-                            entity->toggleDebug = !entity->toggleDebug;
-                        }
-
-                        dialogboxes[dialogboxes.size() - 1].Close();
-                    }
-
-                    break;
-                }
-
-                case 2: {
-                    if (dialogboxes[dialogboxes.size() - 1].id == 999)
-                    {
-                        SPDLOG_DEBUG("Heal all units");
-                        for(auto& pon : yaripons)
-                        {
-                            pon->curHP = pon->maxHP;
-                        }
-
-                        dialogboxes[dialogboxes.size() - 1].Close();
-                    }
-
-                    break;
-                }
-
-                case 3: {
-                    if (dialogboxes[dialogboxes.size() - 1].id == 999)
-                    {
-                        SPDLOG_DEBUG("Kill all player units");
-
-                        for(auto& pon : yaripons)
-                        {
-                            pon->curHP = 0;
-                        }
-
-                        dialogboxes[dialogboxes.size() - 1].Close();
-                    }
-
-                    break;
-                }
-
-                case 4: {
-                    if (dialogboxes[dialogboxes.size() - 1].id == 999)
-                    {
-                        SPDLOG_DEBUG("Kill Hatapon");
-
-                        for(auto& pon : hatapons)
-                        {
-                            pon->curHP = 0;
-                        }
-
-                        dialogboxes[dialogboxes.size() - 1].Close();
-                    }
-
-                    break;
-                }
-
-                case 5: {
-                    if (dialogboxes[dialogboxes.size() - 1].id == 999)
-                    {
-                        SPDLOG_DEBUG("Deprecated: verbose logging");
-
-                        missionEnd = true;
-                        failure = true;
-                        rhythm->Stop();
-                        missionEndTimer.restart();
-
-                        dialogboxes[dialogboxes.size() - 1].Close();
-                    }
-
-                    break;
-                }
-
-                case 6: {
-                    if (dialogboxes[dialogboxes.size() - 1].id == 999)
-                    {
-                        SPDLOG_DEBUG("Mission complete");
-
-                        missionEnd = true;
-                        rhythm->Stop();
-                        missionEndTimer.restart();
-
-                        dialogboxes[dialogboxes.size() - 1].Close();
-                    }
-
-                    break;
-                }
-
-                case 7: {
-                    if (dialogboxes[dialogboxes.size() - 1].id == 999)
-                    {
-                        SPDLOG_DEBUG("Toggle rhythm debug");
-
-                        CoreManager::getInstance().getRhythmGUI()->toggleDebugUI();
-
-                        dialogboxes[dialogboxes.size() - 1].Close();
-                    }
-
-                    break;
-                }
-
-                case 8: {
-                    if (dialogboxes[dialogboxes.size() - 1].id == 999)
-                    {
-                        SPDLOG_DEBUG("Toggle song debug");
-
-                        CoreManager::getInstance().getRhythm()->toggleDebug();
-
-                        dialogboxes[dialogboxes.size() - 1].Close();
-                    }
-
-                    break;
-                }
-
-                case 9: {
-                    if (dialogboxes[dialogboxes.size() - 1].id == 999)
-                    {
-                        SPDLOG_DEBUG("Toggle behavior debug");
-
-                        for (auto& entity : entities)
-                        {
-                            entity->toggleBehaviorDebug = !entity->toggleBehaviorDebug;
-                        }
-
-                        dialogboxes[dialogboxes.size() - 1].Close();
-                    }
-
-                    break;
-                }
-            }
-        }
     }
 
     std::vector<int> db_e; ///dialog box erase

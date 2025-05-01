@@ -281,7 +281,13 @@ void V4Core::init()
         while (frame_times.size() > framerate_limit)
             frame_times.erase(frame_times.begin());
 
+        auto dialogHandler = CoreManager::getInstance().getDialogHandler();
+
         window->clear();
+        resRatio = window->getSize().x / CANVAS_ULTRA_X;
+
+        // Handle dialog input first, so the states won't steal the input
+        dialogHandler->HandleInput();
 
         // Draw whatever state is currently in use
         StateManager::getInstance().updateCurrentState();
@@ -290,10 +296,11 @@ void V4Core::init()
         auto lastView = window->getView();
         window->setView(window->getDefaultView());
 
+        // Draw dialogs on top of everything
+        dialogHandler->Draw();
+
         auto strRepo = CoreManager::getInstance().getStrRepo();
         std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
-
-        resRatio = window->getSize().x / CANVAS_ULTRA_X;
 
         // Draw version number
         t_version.setGlobalPosition(3828, 0);

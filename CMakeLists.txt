@@ -68,6 +68,7 @@ set(ENGINE_FILES
         Engine/Dialog/RoundedRect.cpp
         Engine/Dialog/MessageCloud.cpp
         Engine/Dialog/DialogBox.cpp
+        Engine/Dialog/DialogHandler.cpp
         Engine/Binary.cpp
         Engine/Menu/MainMenu.cpp
         Engine/Menu/Barracks.cpp

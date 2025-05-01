@@ -1118,28 +1118,11 @@ void Barracks::Update()
 
     window->draw(mm_selected_item_line);
 
-    std::vector<int> db_e; ///dialog box erase
-
-    for (int i = 0; i < dialog_boxes.size(); i++)
-    {
-        dialog_boxes[i].x = 1920;
-        dialog_boxes[i].y = 1080;
-        dialog_boxes[i].Draw();
-
-        if (dialog_boxes[i].closed)
-            db_e.push_back(i);
-    }
-
-    for (int i = 0; i < db_e.size(); i++)
-    {
-        dialog_boxes.erase(dialog_boxes.begin() + db_e[i] - i);
-    }
-
     screenFade.draw();
 
     window->setView(lastView);
 
-    if ((dialog_boxes.size() <= 0) && (screenFade.checkFinished()))
+    if ((CoreManager::getInstance().getDialogHandler()->dialogboxes.size() <= 0) && (screenFade.checkFinished()))
     {
         if (!menu_mode)
         {
@@ -1418,44 +1401,15 @@ void Barracks::Update()
         {
             if (obelisk)
             {
-                std::vector<sf::String> a = {"nav_yes", "nav_no"};
-
-                PataDialogBox db;
-                db.Create(font, "barracks_depart", a);
-                db.id = 0;
-                dialog_boxes.push_back(db);
-            }
-        }
-    } else
-    {
-        if (inputCtrl->isKeyPressed(Input::Keys::CROSS))
-        {
-            if(dialog_boxes.size() > 0)
-            {
-                switch (dialog_boxes[dialog_boxes.size() - 1].CheckSelectedOption())
-                {
-                    case 0: {
-                        if (dialog_boxes[dialog_boxes.size() - 1].id == 0)
-                        {
-                            SPDLOG_DEBUG("Go on mission!");
-                            dialog_boxes[dialog_boxes.size() - 1].Close();
-
-                            goto_id = 2;
-                            inputCtrl->lockInput = true;
-                            screenFade.Create(ScreenFade::FADEOUT, 1024);
-                            break;
-                        }
-
-                        break;
-                    }
-
-                    case 1: {
-                        SPDLOG_DEBUG("Back to Barracks");
-                        dialog_boxes[dialog_boxes.size() - 1].Close();
-
-                        break;
-                    }
-                }
+                CoreManager::getInstance().getDialogHandler()->dialogboxes.emplace_back(std::make_unique<PataDialogBox>("barracks_depart", std::vector<PataDialogBox::Option>{
+                    {Func::GetStrFromKey("nav_yes"), [this, inputCtrl](){
+                        SPDLOG_DEBUG("Go on mission!");
+                        goto_id = 2;
+                        inputCtrl->lockInput = true;
+                        screenFade.Create(ScreenFade::FADEOUT, 1024);
+                    }},
+                    {Func::GetStrFromKey("nav_no"), [](){}}
+                }));
             }
         }
     }

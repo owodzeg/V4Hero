@@ -179,7 +179,7 @@ class PatapolisMenu : public Menu
         int currentMenuPosition;
         std::vector<float> possibleMenuPositions;
 
-        std::vector<PataDialogBox> dialogboxes;
+        std::list<std::unique_ptr<PataDialogBox>> dialogboxes;
         std::vector<MessageCloud> messageclouds;
 
         //int goto_id = -1; ///Go-to ID where should Patapolis go after ScreenFade finishes

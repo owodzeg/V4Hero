@@ -59,8 +59,8 @@ OptionsMenu::OptionsMenu()
     t_restart.defaultStyleSetColor(sf::Color::Black);
     t_restart.append(Func::GetStrFromKey("options_restart_notice"));
 
-    std::vector<sf::String> restart_opt = {"options_restart_button1", "options_restart_button2"};
-    restart_prompt.Create(font, "options_restart_notice", restart_opt);
+    //std::vector<sf::String> restart_opt = {"options_restart_button1", "options_restart_button2"};
+    //restart_prompt.Create(font, "options_restart_notice", restart_opt);
 
     // TODO: this gets rewritten anyway
     /*

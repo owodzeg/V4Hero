@@ -138,8 +138,6 @@ private:
     PataText t_item_title;
     std::vector<PataText> t_item_description;
 
-    std::vector<PataDialogBox> dialog_boxes;
-
     int goto_id = -1;
 
 public:

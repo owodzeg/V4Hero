@@ -238,12 +238,17 @@ void MainMenu::SelectMenuOption()
             {
                 SPDLOG_INFO("There is an existing save data. Ask if overwrite");
 
-                std::vector<sf::String> a = {"nav_yes", "nav_no"};
-
-                PataDialogBox db;
-                db.Create(font, "menu_saveexists", a);
-                db.id = 0;
-                dialogboxes.push_back(db);
+                CoreManager::getInstance().getDialogHandler()->dialogboxes.emplace_back(
+                    std::make_unique<PataDialogBox>(Func::GetStrFromKey("menu_saveexists"),
+                    std::vector<PataDialogBox::Option>{
+                        {Func::GetStrFromKey("nav_yes"), [this]() {
+                            SPDLOG_INFO("Starting new game!");
+                            screenFade.Create(1, 512);
+                            goto_id = 0;
+                        }},
+                        {Func::GetStrFromKey("nav_no"), []() {}}
+                    }
+                ));
             }
 
             break;
@@ -263,13 +268,8 @@ void MainMenu::SelectMenuOption()
                 if (saveReader->save_ver != "2.0")
                 {
                     SPDLOG_WARN("Outdated save data!");
+                    CoreManager::getInstance().getDialogHandler()->dialogboxes.emplace_back(std::make_unique<PataDialogBox>(Func::GetStrFromKey("menu_nosupportdata"), std::vector<PataDialogBox::Option>{{Func::GetStrFromKey("nav_understood"), []() {}}}));
 
-                    std::vector<sf::String> a = {"nav_understood"};
-
-                    PataDialogBox db;
-                    db.Create(font, "menu_nosupportdata", a);
-                    db.id = 2;
-                    dialogboxes.push_back(db);
                 } else
                 {
                     screenFade.Create(1, 512);
@@ -278,27 +278,13 @@ void MainMenu::SelectMenuOption()
             } else
             {
                 SPDLOG_WARN("There is no savedata.");
-
-                std::vector<sf::String> a = {"nav_understood"};
-
-                PataDialogBox db;
-                db.Create(font, "menu_nodata", a);
-                db.id = 1;
-                dialogboxes.push_back(db);
+                CoreManager::getInstance().getDialogHandler()->dialogboxes.emplace_back(std::make_unique<PataDialogBox>(Func::GetStrFromKey("menu_nodata"), std::vector<PataDialogBox::Option>{{Func::GetStrFromKey("nav_understood"), []() {}}}));
             }
 
             break;
         }
         case 2: {
-            // load the options menu
-            //screenFade.Create(1, 512);
-            //goto_id = 2;
-            std::vector<sf::String> a = {"nav_understood"};
-
-            PataDialogBox db;
-            db.Create(font, "nav_rework", a);
-            db.id = 1;
-            dialogboxes.push_back(db);
+            CoreManager::getInstance().getDialogHandler()->dialogboxes.emplace_back(std::make_unique<PataDialogBox>(Func::GetStrFromKey("nav_rework"), std::vector<PataDialogBox::Option>{{Func::GetStrFromKey("nav_understood"), []() {}}}));
             break;
         }
         case 3: {
@@ -734,12 +720,6 @@ void MainMenu::Update()
                     case 0: {
                         if (dialogboxes[dialogboxes.size() - 1].id == 0)
                         {
-                            SPDLOG_INFO("Starting new game!");
-                            dialogboxes[dialogboxes.size() - 1].Close();
-
-                            screenFade.Create(1, 512);
-                            goto_id = 0;
-
                             break;
                         } else if (dialogboxes[dialogboxes.size() - 1].id == 1)
                         {

@@ -20,6 +20,7 @@
 #include "Input/TextInputController.h"
 #include "Input/MouseController.h"
 #include "Mechanics/Globals.h"
+#include "Dialog/DialogHandler.h"
 
 // Class for holding the pointers to commonly used important game contents
 class CoreManager
@@ -41,6 +42,7 @@ public:
     RhythmController* getRhythmController();
     SongController* getSongController();
     Globals* getGlobals();
+    DialogHandler* getDialogHandler();
     void reinitMissionController();
     void deleteMissionController();
     void reinitSongController();
@@ -92,6 +94,9 @@ private:
 
     // Pointer to SongController
     SongController* songController;
+
+    // Pointer to DialogBox Handler
+    DialogHandler* dialogHandler;
 
     // Pointer to current window
     sf::RenderWindow* window;

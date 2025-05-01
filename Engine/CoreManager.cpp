@@ -13,6 +13,8 @@ CoreManager::~CoreManager()
 
     SPDLOG_DEBUG("Delete Window.");
     delete window;
+    SPDLOG_DEBUG("Delete DialogHandler");
+    delete dialogHandler;
     SPDLOG_DEBUG("Delete songController.");
     delete songController;
     SPDLOG_DEBUG("Delete rhythmController.");
@@ -85,6 +87,9 @@ void CoreManager::init()
     // Create new globals table
     globals = new Globals;
 
+    // Create new dialog handler
+    dialogHandler = new DialogHandler;
+
     // After we created prerequisities for V4Core, we can safely create it.
     core = new V4Core;
 }
@@ -135,6 +140,12 @@ MouseController* CoreManager::getMouseController()
 Globals* CoreManager::getGlobals()
 {
     return globals;
+}
+
+// Returns a pointer to DialogHandler.
+DialogHandler* CoreManager::getDialogHandler()
+{
+    return dialogHandler;
 }
 
 // Returns a pointer to Tips utility.
