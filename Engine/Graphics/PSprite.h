@@ -14,7 +14,6 @@ public:
     std::unique_ptr<sf::Sprite> s;
     std::string texturePath;
     int qualitySetting = -1, oldQualitySetting = -999;
-    int resSetting = 3, oldResSetting = -999;
     float ratioX = 1, ratioY = 1;
     float scaleX = 1, scaleY = 1;
     float orX = 0, orY = 0;
@@ -31,8 +30,6 @@ public:
         : texturePath(other.texturePath), 
           qualitySetting(other.qualitySetting),
           oldQualitySetting(other.oldQualitySetting),
-          resSetting(other.resSetting),
-          oldResSetting(other.oldResSetting),
           ratioX(other.ratioX),
           ratioY(other.ratioY),
           scaleX(other.scaleX),
@@ -72,8 +69,6 @@ public:
         swap(texturePath, other.texturePath);
         swap(qualitySetting, other.qualitySetting);
         swap(oldQualitySetting, other.oldQualitySetting);
-        swap(resSetting, other.resSetting);
-        swap(oldResSetting, other.oldResSetting);
         swap(ratioX, other.ratioX);
         swap(ratioY, other.ratioY);
         swap(scaleX, other.scaleX);

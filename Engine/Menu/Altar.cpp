@@ -47,11 +47,6 @@ AltarMenu::AltarMenu()
         }
     }
 
-    res_ratio_x = config->GetInt("resX") / float(1280);
-    res_ratio_y = config->GetInt("resY") / float(720);
-
-
-
     altar_main.loadFromFile("resources/graphics/ui/altar/altar_main.png", quality);
 
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
@@ -135,10 +130,10 @@ void AltarMenu::reloadInventory()
             tmp.data = cur_item;
             tmp.amount = saveReader->invData.items[i].item_count;
 
-            tmp.r_outer.setSize(sf::Vector2f(104.0 * res_ratio_x, 77.0 * res_ratio_y));
+            tmp.r_outer.setSize(sf::Vector2f(104.0 * CoreManager::getInstance().getCore()->resRatio, 77.0 * CoreManager::getInstance().getCore()->resRatio));
             tmp.r_outer.setFillColor(sf::Color(102, 102, 102, 255));
 
-            tmp.r_inner.setSize(sf::Vector2f(72.0 * res_ratio_x, 72.0 * res_ratio_y));
+            tmp.r_inner.setSize(sf::Vector2f(72.0 * CoreManager::getInstance().getCore()->resRatio, 72.0 * CoreManager::getInstance().getCore()->resRatio));
             tmp.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
             switch (saveReader->itemReg.getCategoryIDByString(cur_item->item_category))
@@ -246,7 +241,7 @@ void AltarMenu::reloadInventory()
 
             if (highlight)
             {
-                inventory_boxes[a].r_highlight.setSize(sf::Vector2f(104.0 * res_ratio_x, 77.0 * res_ratio_y));
+                inventory_boxes[a].r_highlight.setSize(sf::Vector2f(104.0 * CoreManager::getInstance().getCore()->resRatio, 77.0 * CoreManager::getInstance().getCore()->resRatio));
                 inventory_boxes[a].r_highlight.setFillColor(sf::Color::White);
 
                 inventory_boxes[a].highlight = true;
@@ -292,8 +287,8 @@ void AltarMenu::Update()
                 float xpos = 72 + (grid_x * 118);
                 float ypos = 64 + (grid_y * 88);
 
-                inventory_boxes[curItem].r_outer.setPosition(sf::Vector2f((40 + xpos) * res_ratio_x, (39 + ypos) * res_ratio_y));
-                inventory_boxes[curItem].r_inner.setPosition(sf::Vector2f((40 + xpos + 2.5) * res_ratio_x, (39 + ypos + 2.5) * res_ratio_y));
+                inventory_boxes[curItem].r_outer.setPosition(sf::Vector2f((40 + xpos) * CoreManager::getInstance().getCore()->resRatio, (39 + ypos) * CoreManager::getInstance().getCore()->resRatio));
+                inventory_boxes[curItem].r_inner.setPosition(sf::Vector2f((40 + xpos + 2.5) * CoreManager::getInstance().getCore()->resRatio, (39 + ypos + 2.5) * CoreManager::getInstance().getCore()->resRatio));
                 window->draw(inventory_boxes[curItem].r_outer);
                 window->draw(inventory_boxes[curItem].r_inner);
 
@@ -314,7 +309,8 @@ void AltarMenu::Update()
 
                 if (inventory_boxes[curItem].highlight)
                 {
-                    inventory_boxes[curItem].r_highlight.setPosition({(40 + xpos) * res_ratio_x, (39 + ypos) * res_ratio_y});
+                    inventory_boxes[curItem].r_highlight.setPosition(sf::Vector2f((40 + xpos) * CoreManager::getInstance().getCore()->resRatio, (39 + ypos) * CoreManager::getInstance().getCore()->resRatio
+                ));
                     inventory_boxes[curItem].r_highlight.setFillColor(sf::Color(255, 255, 255, 64 + (sin(highlight_x) * 64)));
                     window->draw(inventory_boxes[curItem].r_highlight);
                 }
@@ -328,33 +324,34 @@ void AltarMenu::Update()
                 float xpos = 72 + (grid_x * 118);
                 float ypos = 64 + (grid_y * 88);
 
-                tmp_inv.r_outer.setSize(sf::Vector2f(104.0 * res_ratio_x, 77.0 * res_ratio_y));
+                tmp_inv.r_outer.setSize(sf::Vector2f(104.0 * CoreManager::getInstance().getCore()->resRatio, 77.0 * CoreManager::getInstance().getCore()->resRatio));
                 tmp_inv.r_outer.setFillColor(sf::Color(102, 102, 102, 255));
 
-                tmp_inv.r_inner.setSize(sf::Vector2f(72.0 * res_ratio_x, 72.0 * res_ratio_y));
+                tmp_inv.r_inner.setSize(sf::Vector2f(72.0 * CoreManager::getInstance().getCore()->resRatio, 72.0 * CoreManager::getInstance().getCore()->resRatio));
                 tmp_inv.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
-                tmp_inv.r_outer.setPosition(sf::Vector2f((40 + xpos) * res_ratio_x, (39 + ypos) * res_ratio_y));
-                tmp_inv.r_inner.setPosition(sf::Vector2f((40 + xpos + 2.5) * res_ratio_x, (39 + ypos + 2.5) * res_ratio_y));
+                tmp_inv.r_outer.setPosition(sf::Vector2f((40 + xpos) * CoreManager::getInstance().getCore()->resRatio, (39 + ypos) * CoreManager::getInstance().getCore()->resRatio));
+                tmp_inv.r_inner.setPosition(sf::Vector2f((40 + xpos + 2.5) * CoreManager::getInstance().getCore()->resRatio, (39 + ypos + 2.5) * CoreManager::getInstance().getCore()->resRatio));
                 window->draw(tmp_inv.r_outer);
                 window->draw(tmp_inv.r_inner);
             }
         }
 
-        r_sel.setSize(sf::Vector2f(103.0 * res_ratio_x, 77.0 * res_ratio_y));
+        r_sel.setSize(sf::Vector2f(103.0 * CoreManager::getInstance().getCore()->resRatio, 77.0 * CoreManager::getInstance().getCore()->resRatio));
         r_sel.setFillColor(sf::Color::Transparent);
         r_sel.setOutlineThickness(3);
         r_sel.setOutlineColor(sf::Color(255, 0, 32, 255));
-        r_sel.setPosition({(41 + 72 + (grid_sel_x * 118)) * res_ratio_x, (39 + 64 + (grid_sel_y * 88)) * res_ratio_y});
+        r_sel.setPosition(sf::Vector2f((41 + 72 + (grid_sel_x * 118)) * CoreManager::getInstance().getCore()->resRatio, (39 + 64 + (grid_sel_y * 88)) * CoreManager::getInstance().getCore()->resRatio
+    ));
 
         window->draw(r_sel);
 
-        rr_title.Create(366 * 3, 100 * 3, 20 * 3, window->getSize().x / float(3840));
+        rr_title.Create(366 * 3, 100 * 3, 20 * 3);
         rr_title.x = 933 * 3;
         rr_title.y = 141 * 3;
         rr_title.setOrigin(sf::Vector2f((rr_title.width + 40) / 2, (rr_title.height + 40) / 2));
 
-        rr_title_sh.Create(rr_title.width + 2, rr_title.height + 2, 20 * 3, window->getSize().x / float(3840), sf::Color(0, 0, 0, 96));
+        rr_title_sh.Create(rr_title.width + 2, rr_title.height + 2, 20 * 3, sf::Color(0, 0, 0, 96));
         rr_title_sh.x = rr_title.x - 1;
         rr_title_sh.y = rr_title.y - 1;
         rr_title_sh.setOrigin(sf::Vector2f((rr_title.width + 40) / 2, (rr_title.height + 40) / 2));
@@ -362,12 +359,12 @@ void AltarMenu::Update()
         rr_title_sh.Draw();
         rr_title.Draw();
 
-        rr_desc.Create(440 * 3, 385 * 3, 20 * 3, window->getSize().x / float(3840));
+        rr_desc.Create(440 * 3, 385 * 3, 20 * 3);
         rr_desc.x = rr_title.x;
         rr_desc.y = 436 * 3;
         rr_desc.setOrigin(sf::Vector2f((rr_desc.width + 40) / 2, (rr_desc.height + 40) / 2));
 
-        rr_desc_sh.Create(rr_desc.width + 2, rr_desc.height + 2, 20 * 3, window->getSize().x / float(3840), sf::Color(0, 0, 0, 96));
+        rr_desc_sh.Create(rr_desc.width + 2, rr_desc.height + 2, 20 * 3, sf::Color(0, 0, 0, 96));
         rr_desc_sh.x = rr_desc.x - 1;
         rr_desc_sh.y = rr_desc.y - 1;
         rr_desc_sh.setOrigin(sf::Vector2f((rr_desc.width + 40) / 2, (rr_desc.height + 40) / 2));

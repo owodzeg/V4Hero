@@ -439,7 +439,7 @@ void MissionController::DoMissionEnd()
                 rightmostPataX = pos;
         }
 
-        cam.followobject_x = ((leftmostPataX + rightmostPataX - 300) / 2) * (window->getSize().x / float(3840));
+        cam.followobject_x = ((leftmostPataX + rightmostPataX - 300) / 2) * (CoreManager::getInstance().getCore()->resRatio);
 
     }
 

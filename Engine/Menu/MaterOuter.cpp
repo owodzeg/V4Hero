@@ -50,9 +50,6 @@ MaterOuterMenu::MaterOuterMenu()
         
     }
 
-    res_ratio_x = config->GetInt("resX") / float(1280);
-    res_ratio_y = config->GetInt("resY") / float(720);
-
     mater_main.loadFromFile("resources/graphics/ui/mater/mater_outer_bg.png", quality);
     mater_selector.loadFromFile("resources/graphics/ui/mater/materui_squad_select.png", quality);
 

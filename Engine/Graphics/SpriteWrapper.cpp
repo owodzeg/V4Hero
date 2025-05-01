@@ -115,12 +115,12 @@ sf::FloatRect SpriteWrapper::getTransformedBounds()
     std::vector<float> x = {640, 1280, 1920, 3840};
     std::vector<float> y = {360, 720, 1080, 2160};
 
-    sf::Vector2f resRatio(windowSize.x / float(3840), windowSize.y / float(2160));
+    auto resRatio = CoreManager::getInstance().getCore()->resRatio;
 
     int quality = ResourceManager::getInstance().getCurrentQuality();
 
     sf::Vector2f ratio(windowSize.x / x[quality], windowSize.y / y[quality]);
-    sf::Vector2f r((fabs(scale.x) * ratio.x / resRatio.x), (fabs(scale.y) * ratio.y / resRatio.y));
+    sf::Vector2f r((fabs(scale.x) * ratio.x / resRatio), (fabs(scale.y) * ratio.y / resRatio));
 
     return sf::FloatRect(sf::Vector2f(l_bounds.position.x * r.x, l_bounds.position.y * r.y), sf::Vector2f(l_bounds.size.x * r.x, l_bounds.size.y * r.y));
 }

@@ -608,16 +608,14 @@ void PatapolisMenu::addCloud(std::string type, float x, float y, float xsize, fl
         clouds_A.push_back(cloud);
     } else if (type == "B")
     {
-        float resRatio = float(CoreManager::getInstance().getConfig()->GetInt("resX")) / float(3840);
-
         CloudB cloud;
         cloud.cloud.setFillColor(sf::Color::White);
-        cloud.cloud.setRadius(640*3 * resRatio);
+        cloud.cloud.setRadius(640 * 3 * CoreManager::getInstance().getCore()->resRatio);
 
         float scale_x = xsize / 640.f*3;
         float scale_y = ysize / 640.f*3;
 
-        cloud.cloud.setScale({scale_x * resRatio, scale_y * resRatio});
+        cloud.cloud.setScale(sf::Vector2f(scale_x * CoreManager::getInstance().getCore()->resRatio, scale_y * CoreManager::getInstance().getCore()->resRatio));
 
         cloud.base_x = x;
         cloud.base_y = y;
@@ -862,7 +860,7 @@ void PatapolisMenu::Update()
 
         camera.zoom_y = 0;
         if(camera.camera_x == 0)
-            camera.camera_x = camera.followobject_x + (1800 * window->getSize().x / float(3840));
+            camera.camera_x = camera.followobject_x + (1800 * CoreManager::getInstance().getCore()->resRatio);
         camera.Work(patapolisView, 1);
 
         auto lastView2 = window->getView();
@@ -911,7 +909,7 @@ void PatapolisMenu::Update()
 
         for (int i = 0; i < clouds_B.size(); i++)
         {
-            float resRatio = window->getSize().x / float(3840);
+            float resRatio = CoreManager::getInstance().getCore()->resRatio;
 
             clouds_B[i].x = clouds_B[i].base_x - (camPos / 1.3);
             clouds_B[i].cloud.setPosition({clouds_B[i].x * resRatio, clouds_B[i].y * resRatio});

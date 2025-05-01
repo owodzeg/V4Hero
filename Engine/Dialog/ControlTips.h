@@ -10,7 +10,6 @@ class ControlTips
 public:
     float x = 0, y = 0;
     float ySize = 0;
-    float rr = 0; ///resRatio
 
     sf::RectangleShape box;
     PataText text;

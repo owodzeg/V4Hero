@@ -30,7 +30,6 @@ private:
     float ratio_x;
     float ratio_y;
 
-    float res_ratio_x, res_ratio_y;
     int q = 0;
 
     float patapon_y;

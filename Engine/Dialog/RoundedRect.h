@@ -16,7 +16,7 @@ public:
     float edge_size = 0;
 
     RoundedRect();
-    void Create(float nwidth, float nheight, float nedge_size, float resRatio, sf::Color rectColor = sf::Color(255, 237, 210, 255));
+    void Create(float nwidth, float nheight, float nedge_size, sf::Color rectColor = sf::Color(255, 237, 210, 255));
     void setOrigin(sf::Vector2f origin);
     void Draw();
 };

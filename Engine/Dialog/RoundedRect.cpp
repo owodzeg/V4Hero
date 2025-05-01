@@ -5,8 +5,10 @@ RoundedRect::RoundedRect()
 {
 }
 
-void RoundedRect::Create(float nwidth, float nheight, float nedge_size, float resRatio, sf::Color rectColor)
+void RoundedRect::Create(float nwidth, float nheight, float nedge_size, sf::Color rectColor)
 {
+    auto resRatio = CoreManager::getInstance().getCore()->resRatio;
+
     for (int i = 0; i < 4; i++)
     {
         edges[i].setRadius(nedge_size * resRatio);
@@ -37,7 +39,7 @@ void RoundedRect::Draw()
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
 
-    float resRatio = window->getSize().x / float(3840);
+    float resRatio = CoreManager::getInstance().getCore()->resRatio;
 
     edges[0].setPosition({(x - orx) * resRatio, (y - ory) * resRatio});
     edges[1].setPosition({(x - orx + width) * resRatio, (y - ory) * resRatio});

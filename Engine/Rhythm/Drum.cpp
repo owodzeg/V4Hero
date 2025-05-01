@@ -135,10 +135,6 @@ void Drum::Draw()
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
     float fps = CoreManager::getInstance().getCore()->getFPS();
 
-    float ratio_X = window->getSize().x / float(3840);
-    float ratio_Y = window->getSize().y / float(2160);
-    float ratio_universal = (window->getSize().x * window->getSize().y) / (float(1280) * float(720));
-
     if (isDon)
     {
         if (isBest)
@@ -252,12 +248,12 @@ void Drum::Draw()
         c_shockwave.setRadius(shockwaveSize);
         c_shockwave.setFillColor(sf::Color(255, 255, 255, shockwaveAlpha));
         c_shockwave.setOrigin(sf::Vector2f(c_shockwave.getLocalBounds().size.x / 2, c_shockwave.getLocalBounds().size.y / 2));
-        c_shockwave.setPosition(sf::Vector2f(x + drumPatterns[pattern].x*3 * ratio_X, y + drumPatterns[pattern].y*3 * ratio_Y));
+        c_shockwave.setPosition(sf::Vector2f(x + drumPatterns[pattern].x * 3 * CoreManager::getInstance().getCore()->resRatio, y + drumPatterns[pattern].y * 3 * CoreManager::getInstance().getCore()->resRatio));
 
         c_shockwave2.setRadius(shockwave2Size);
         c_shockwave2.setFillColor(sf::Color(255, 255, 255, shockwave2Alpha));
         c_shockwave2.setOrigin(sf::Vector2f(c_shockwave2.getLocalBounds().size.x / 2, c_shockwave2.getLocalBounds().size.y / 2));
-        c_shockwave2.setPosition(sf::Vector2f(x + drumPatterns[pattern].x*3 * ratio_X, y + drumPatterns[pattern].y*3 * ratio_Y));
+        c_shockwave2.setPosition(sf::Vector2f(x + drumPatterns[pattern].x * 3 * CoreManager::getInstance().getCore()->resRatio, y + drumPatterns[pattern].y * 3 * CoreManager::getInstance().getCore()->resRatio));
     }
 
     s_drum.draw();
@@ -270,8 +266,8 @@ void Drum::Draw()
         ///Initialize first position
         if (particles[i].didStart == false)
         {
-            particles[i].x = x + drumPatterns[pattern].x*3 * ratio_X;
-            particles[i].y = y + drumPatterns[pattern].y*3 * ratio_Y;
+            particles[i].x = x + drumPatterns[pattern].x * 3 * CoreManager::getInstance().getCore()->resRatio;
+            particles[i].y = y + drumPatterns[pattern].y * 3 * CoreManager::getInstance().getCore()->resRatio;
             particles[i].didStart = true;
         }
 

@@ -155,8 +155,6 @@ void PataDialogBox::Draw()
         if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
             MoveDown();
 
-        float resRatio = window->getSize().x / float(3840);
-
         if (!rendered)
         {
             t_dialogType.draw();
@@ -172,13 +170,13 @@ void PataDialogBox::Draw()
 
         Readjust();
 
-        rr_shadow.Create(width + 2, height + 2, 60, window->getSize().x / float(3840), sf::Color(0, 0, 0, 96));
+        rr_shadow.Create(width + 2, height + 2, 60, sf::Color(0, 0, 0, 96));
         rr_shadow.x = x - 1;
         rr_shadow.y = y - 1;
         rr_shadow.setOrigin(sf::Vector2f((width + 120) / 2, (height + 120) / 2));
         rr_shadow.Draw();
 
-        rr_main.Create(width, height, 60, window->getSize().x / float(3840));
+        rr_main.Create(width, height, 60);
         rr_main.x = x;
         rr_main.y = y;
         rr_main.setOrigin(sf::Vector2f((width + 120) / 2, (height + 120) / 2));
@@ -193,10 +191,10 @@ void PataDialogBox::Draw()
 
         //cout << "stuff: " << rr_main.orx << " " << rr_main.ory << endl;
 
-        highlight.setSize(sf::Vector2f((width + 120) * resRatio, 90 * resRatio));
+        highlight.setSize(sf::Vector2f((width + 120) * CoreManager::getInstance().getCore()->resRatio, 90 * CoreManager::getInstance().getCore()->resRatio));
         highlight.setFillColor(sf::Color(0, 200, 0, 255));
         highlight.setOrigin({highlight.getLocalBounds().size.x / 2, 0});
-        highlight.setPosition(sf::Vector2f((x) *resRatio, (y - rr_main.ory + 122 + t_dialogType.getGlobalBounds().size.y + t_dialogText.getGlobalBounds().size.y + (option * 90)) * resRatio));
+        highlight.setPosition(sf::Vector2f((x) *CoreManager::getInstance().getCore()->resRatio, (y - rr_main.ory + 122 + t_dialogType.getGlobalBounds().size.y + t_dialogText.getGlobalBounds().size.y + (option * 90)) * CoreManager::getInstance().getCore()->resRatio));
         window->draw(highlight);
 
         arrow_x -= 9 / fps;

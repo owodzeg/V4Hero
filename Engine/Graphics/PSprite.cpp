@@ -57,7 +57,6 @@ void PSprite::loadFromFile(std::string file, int q, bool downscale)
     }
 
     qualitySetting = q;
-    resSetting = 3;
 
     SPDLOG_DEBUG("Loading PSprite: {}", file);
     texturePath = file;
@@ -230,16 +229,6 @@ void PSprite::drawShader(sf::RenderWindow* window, sf::Shader& shader)
         ratioY = ratio.y;
     }
 
-    if (oldResSetting != resSetting)
-    {
-        sf::Vector2u windowSize = window->getSize();
-
-        std::vector<float> x = {640, 1280, 1920, 3840};
-        std::vector<float> y = {360, 720, 1080, 2160};
-
-        sf::Vector2f ratio(windowSize.x / x[resSetting], windowSize.y / y[resSetting]);
-    }
-
     s->setTexture(TextureManager::getInstance().getTexture(texturePath));
     s->setScale(sf::Vector2f(ratioX * scaleX, ratioY * scaleY));
     s->setOrigin(sf::Vector2f(orX, orY));
@@ -249,7 +238,6 @@ void PSprite::drawShader(sf::RenderWindow* window, sf::Shader& shader)
     window->draw(*s,&shader);
 
     oldQualitySetting = qualitySetting;
-    oldResSetting = resSetting;
 }
 
 void PSprite::draw()
@@ -271,16 +259,6 @@ void PSprite::draw()
         ratioY = ratio.y;
     }
 
-    if (oldResSetting != resSetting)
-    {
-        sf::Vector2u windowSize = window->getSize();
-
-        std::vector<float> x = {640, 1280, 1920, 3840};
-        std::vector<float> y = {360, 720, 1080, 2160};
-
-        sf::Vector2f ratio(windowSize.x / x[resSetting], windowSize.y / y[resSetting]);
-    }
-
     s->setTexture(TextureManager::getInstance().getTexture(texturePath));
     s->setScale(sf::Vector2f(ratioX * scaleX, ratioY * scaleY));
     s->setOrigin(sf::Vector2f(orX, orY));
@@ -289,7 +267,6 @@ void PSprite::draw()
     window->draw(*s);
 
     oldQualitySetting = qualitySetting;
-    oldResSetting = resSetting;
 }
 
 void PSprite::update(sf::RenderWindow& window)

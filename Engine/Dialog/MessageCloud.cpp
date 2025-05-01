@@ -272,12 +272,9 @@ void MessageCloud::Draw()
         cloud.setScale(-1.f / scale_x, -1.f / scale_y);
         cloud.draw();
 
-        float rX = window->getSize().x / float(3840);
-        float rY = window->getSize().y / float(2160);
-
-        triangle.setPoint(0, sf::Vector2f(startpos.x * rX - (xsize / 75) + x_start_offset, startpos.y * rY));
-        triangle.setPoint(1, sf::Vector2f((x - (xsize / 25)) * rX, y * rY));
-        triangle.setPoint(2, sf::Vector2f((x + (xsize / 25)) * rX, y * rY));
+        triangle.setPoint(0, sf::Vector2f(startpos.x * CoreManager::getInstance().getCore()->resRatio - (xsize / 75) + x_start_offset, startpos.y * CoreManager::getInstance().getCore()->resRatio));
+        triangle.setPoint(1, sf::Vector2f((x - (xsize / 25)) * CoreManager::getInstance().getCore()->resRatio, y * CoreManager::getInstance().getCore()->resRatio));
+        triangle.setPoint(2, sf::Vector2f((x + (xsize / 25)) * CoreManager::getInstance().getCore()->resRatio, y * CoreManager::getInstance().getCore()->resRatio));
 
         triangle.setFillColor(cur_color);
         window->draw(triangle);
