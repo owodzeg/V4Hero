@@ -130,10 +130,10 @@ void AltarMenu::reloadInventory()
             tmp.data = cur_item;
             tmp.amount = saveReader->invData.items[i].item_count;
 
-            tmp.r_outer.setSize(sf::Vector2f(104.0 * CoreManager::getInstance().getCore()->resRatio, 77.0 * CoreManager::getInstance().getCore()->resRatio));
+            tmp.r_outer.setSize(sf::Vector2f(312.0 * CoreManager::getInstance().getCore()->resRatio, 231.0 * CoreManager::getInstance().getCore()->resRatio));
             tmp.r_outer.setFillColor(sf::Color(102, 102, 102, 255));
 
-            tmp.r_inner.setSize(sf::Vector2f(72.0 * CoreManager::getInstance().getCore()->resRatio, 72.0 * CoreManager::getInstance().getCore()->resRatio));
+            tmp.r_inner.setSize(sf::Vector2f(216.0 * CoreManager::getInstance().getCore()->resRatio, 216.0 * CoreManager::getInstance().getCore()->resRatio));
             tmp.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
             switch (saveReader->itemReg.getCategoryIDByString(cur_item->item_category))
@@ -241,7 +241,7 @@ void AltarMenu::reloadInventory()
 
             if (highlight)
             {
-                inventory_boxes[a].r_highlight.setSize(sf::Vector2f(104.0 * CoreManager::getInstance().getCore()->resRatio, 77.0 * CoreManager::getInstance().getCore()->resRatio));
+                inventory_boxes[a].r_highlight.setSize(sf::Vector2f(312.0 * CoreManager::getInstance().getCore()->resRatio, 231.0 * CoreManager::getInstance().getCore()->resRatio));
                 inventory_boxes[a].r_highlight.setFillColor(sf::Color::White);
 
                 inventory_boxes[a].highlight = true;
@@ -277,18 +277,18 @@ void AltarMenu::Update()
 
         for (int i = 0; i < 24; i++)
         {
+            int curItem = grid_offset_y * 4 + i;
+
+            int grid_x = i % 4;
+            int grid_y = floor(i / 4);
+
+            float xpos = 216 + (grid_x * 354);
+            float ypos = 192 + (grid_y * 264);
+
             if (grid_offset_y * 4 + i < inventory_boxes.size())
             {
-                int curItem = grid_offset_y * 4 + i;
-
-                int grid_x = i % 4;
-                int grid_y = floor(i / 4);
-
-                float xpos = 72 + (grid_x * 118);
-                float ypos = 64 + (grid_y * 88);
-
-                inventory_boxes[curItem].r_outer.setPosition(sf::Vector2f((40 + xpos) * CoreManager::getInstance().getCore()->resRatio, (39 + ypos) * CoreManager::getInstance().getCore()->resRatio));
-                inventory_boxes[curItem].r_inner.setPosition(sf::Vector2f((40 + xpos + 2.5) * CoreManager::getInstance().getCore()->resRatio, (39 + ypos + 2.5) * CoreManager::getInstance().getCore()->resRatio));
+                inventory_boxes[curItem].r_outer.setPosition(sf::Vector2f((120 + xpos) * CoreManager::getInstance().getCore()->resRatio, (117 + ypos) * CoreManager::getInstance().getCore()->resRatio));
+                inventory_boxes[curItem].r_inner.setPosition(sf::Vector2f((120 + xpos + 2.5) * CoreManager::getInstance().getCore()->resRatio, (117 + ypos + 2.5) * CoreManager::getInstance().getCore()->resRatio));
                 window->draw(inventory_boxes[curItem].r_outer);
                 window->draw(inventory_boxes[curItem].r_inner);
 
@@ -298,18 +298,18 @@ void AltarMenu::Update()
                 if ((inventory_boxes[curItem].data->item_category == "key_items") || (inventory_boxes[curItem].data->item_category == "materials")) ///Bound to break
                     inventory_boxes[curItem].icon.setScale(0.64, 0.64);
 
-                inventory_boxes[curItem].icon.setPosition((40 + xpos + 36 + 2.5)*3, (39 + ypos + 36 + 2.5)*3);
+                inventory_boxes[curItem].icon.setPosition((78*3 + xpos), (78*3 + ypos));
                 inventory_boxes[curItem].icon.draw();
 
-                inventory_boxes[curItem].num.setGlobalPosition((40 + xpos + 51 - 1)*3, (39 + ypos + 45 - 2)*3);
-                inventory_boxes[curItem].num_shadow.setGlobalPosition((40 + xpos + 51) * 3, (39 + ypos + 45) * 3);
+                inventory_boxes[curItem].num.setGlobalPosition((90*3 + xpos), (82 * 3 + ypos));
+                inventory_boxes[curItem].num_shadow.setGlobalPosition((91*3 + xpos), (84*3 + ypos));
 
                 inventory_boxes[curItem].num_shadow.draw();
                 inventory_boxes[curItem].num.draw();
 
                 if (inventory_boxes[curItem].highlight)
                 {
-                    inventory_boxes[curItem].r_highlight.setPosition(sf::Vector2f((40 + xpos) * CoreManager::getInstance().getCore()->resRatio, (39 + ypos) * CoreManager::getInstance().getCore()->resRatio
+                    inventory_boxes[curItem].r_highlight.setPosition(sf::Vector2f((120 + xpos) * CoreManager::getInstance().getCore()->resRatio, (117 + ypos) * CoreManager::getInstance().getCore()->resRatio
                 ));
                     inventory_boxes[curItem].r_highlight.setFillColor(sf::Color(255, 255, 255, 64 + (sin(highlight_x) * 64)));
                     window->draw(inventory_boxes[curItem].r_highlight);
@@ -318,30 +318,24 @@ void AltarMenu::Update()
             {
                 InvBox tmp_inv;
 
-                int grid_x = i % 4;
-                int grid_y = floor(i / 4);
-
-                float xpos = 72 + (grid_x * 118);
-                float ypos = 64 + (grid_y * 88);
-
-                tmp_inv.r_outer.setSize(sf::Vector2f(104.0 * CoreManager::getInstance().getCore()->resRatio, 77.0 * CoreManager::getInstance().getCore()->resRatio));
+                tmp_inv.r_outer.setSize(sf::Vector2f(312.0 * CoreManager::getInstance().getCore()->resRatio, 231.0 * CoreManager::getInstance().getCore()->resRatio));
                 tmp_inv.r_outer.setFillColor(sf::Color(102, 102, 102, 255));
 
-                tmp_inv.r_inner.setSize(sf::Vector2f(72.0 * CoreManager::getInstance().getCore()->resRatio, 72.0 * CoreManager::getInstance().getCore()->resRatio));
+                tmp_inv.r_inner.setSize(sf::Vector2f(216.0 * CoreManager::getInstance().getCore()->resRatio, 216.0 * CoreManager::getInstance().getCore()->resRatio));
                 tmp_inv.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
-                tmp_inv.r_outer.setPosition(sf::Vector2f((40 + xpos) * CoreManager::getInstance().getCore()->resRatio, (39 + ypos) * CoreManager::getInstance().getCore()->resRatio));
-                tmp_inv.r_inner.setPosition(sf::Vector2f((40 + xpos + 2.5) * CoreManager::getInstance().getCore()->resRatio, (39 + ypos + 2.5) * CoreManager::getInstance().getCore()->resRatio));
+                tmp_inv.r_outer.setPosition(sf::Vector2f((120 + xpos) * CoreManager::getInstance().getCore()->resRatio, (117 + ypos) * CoreManager::getInstance().getCore()->resRatio));
+                tmp_inv.r_inner.setPosition(sf::Vector2f((120 + xpos + 2.5) * CoreManager::getInstance().getCore()->resRatio, (117 + ypos + 2.5) * CoreManager::getInstance().getCore()->resRatio));
                 window->draw(tmp_inv.r_outer);
                 window->draw(tmp_inv.r_inner);
             }
         }
 
-        r_sel.setSize(sf::Vector2f(103.0 * CoreManager::getInstance().getCore()->resRatio, 77.0 * CoreManager::getInstance().getCore()->resRatio));
+        r_sel.setSize(sf::Vector2f(309.0 * CoreManager::getInstance().getCore()->resRatio, 231.0 * CoreManager::getInstance().getCore()->resRatio));
         r_sel.setFillColor(sf::Color::Transparent);
         r_sel.setOutlineThickness(3);
         r_sel.setOutlineColor(sf::Color(255, 0, 32, 255));
-        r_sel.setPosition(sf::Vector2f((41 + 72 + (grid_sel_x * 118)) * CoreManager::getInstance().getCore()->resRatio, (39 + 64 + (grid_sel_y * 88)) * CoreManager::getInstance().getCore()->resRatio
+        r_sel.setPosition(sf::Vector2f((339 + (grid_sel_x * 354)) * CoreManager::getInstance().getCore()->resRatio, (309 + (grid_sel_y * 264)) * CoreManager::getInstance().getCore()->resRatio
     ));
 
         window->draw(r_sel);
