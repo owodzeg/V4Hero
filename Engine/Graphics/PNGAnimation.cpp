@@ -148,12 +148,12 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
     std::string anim_data = std::format("{} {} {} {} {}", img_x, img_y, frames, maxCols, maxRows);
     std::string anim_data_path = std::format("resources/graphics/.tex_cache/{}@{}@{}.anim", CoreManager::getInstance().getConfig()->GetInt("textureQuality"), model_name, anim.shortName);
 
-    SPDLOG_DEBUG("Writing animation data into {}", anim_data_path);
+    SPDLOG_TRACE("Writing animation data into {}", anim_data_path);
 
     std::ofstream anim_data_file(anim_data_path, std::ios::trunc);
     anim_data_file << anim_data;
 
-    SPDLOG_DEBUG("Wrote: {}", anim_data);
+    SPDLOG_TRACE("Wrote: {}", anim_data);
 
     anim_data_file.close();
 
@@ -281,23 +281,23 @@ void PNGAnimation::Load(const std::string& path)
         zf.open(ZipArchive::ReadOnly);
         std::vector<ZipEntry> entries = zf.getEntries();
 
-        SPDLOG_DEBUG("Zip entries: {}", entries.size());
+        SPDLOG_TRACE("Zip entries: {}", entries.size());
 
         // first detect all the names
         for(auto entry : entries)
         {
             std::string name = entry.getName();
 
-            SPDLOG_DEBUG("ZipEntry: {}", name);
+            SPDLOG_TRACE("ZipEntry: {}", name);
 
             if(name.ends_with('\\/') && !name.ends_with(".json"))
             {
-                SPDLOG_DEBUG("Animation detected: {}", name);
+                SPDLOG_TRACE("Animation detected: {}", name);
                 animation_names.push_back(name);
             }
             else
             {
-                SPDLOG_DEBUG("Frame detected: {}", name);
+                SPDLOG_TRACE("Frame detected: {}", name);
                 frame_names.push_back(name);
             }
         }
@@ -310,12 +310,12 @@ void PNGAnimation::Load(const std::string& path)
             // make sure we are reading only directories, we don't want to catch config files as animations :)
             if (fs::is_directory(entry))
             {
-                SPDLOG_DEBUG("Animation found: {}", entry.path().string());
+                SPDLOG_TRACE("Animation found: {}", entry.path().string());
                 animation_names.push_back(entry.path().string());
 
                 for (const auto& frame : fs::directory_iterator(entry.path()))
                 {
-                    SPDLOG_DEBUG("[FD] Animation frame found: {}", frame.path().string());
+                    SPDLOG_TRACE("[FD] Animation frame found: {}", frame.path().string());
                     frame_names.push_back(frame.path().string());
                 }
             }
@@ -358,7 +358,7 @@ void PNGAnimation::Load(const std::string& path)
         {
             if (frame_name.find(anim_name) != std::string::npos)
             {
-                SPDLOG_DEBUG("[FP] Animation frame found: {}", frame_name);
+                SPDLOG_TRACE("[FP] Animation frame found: {}", frame_name);
                 tmp.frame_paths.push_back(frame_name);
             }
         }
@@ -478,7 +478,7 @@ void PNGAnimation::Load(const std::string& path)
         std::string from = s[0].get<std::string>();
         std::string to = s[1].get<std::string>();
 
-        SPDLOG_DEBUG("switchTo {} {}", from, to);
+        SPDLOG_TRACE("switchTo {} {}", from, to);
         std::pair<int, int> st;
         st.first = getIDfromShortName(from);
         st.second = getIDfromShortName(to);
@@ -494,10 +494,10 @@ void PNGAnimation::Load(const std::string& path)
             int o_x = animation["center"][key][0].get<int>();
             int o_y = animation["center"][key][1].get<int>();
 
-            SPDLOG_DEBUG("set origin for {} {}", o_x, o_y);
+            SPDLOG_TRACE("set origin for {} {}", o_x, o_y);
             int id = getIDfromShortName(key);
 
-            SPDLOG_DEBUG("setting custom origin for {}: {} {}", key, o_x, o_y);
+            SPDLOG_TRACE("setting custom origin for {}: {} {}", key, o_x, o_y);
             animations[id].origin_x = o_x;
             animations[id].origin_y = o_y;
 
@@ -511,10 +511,10 @@ void PNGAnimation::Load(const std::string& path)
         for(auto s : animation["hitbox"].items())
         {
             std::string key = s.key();
-            SPDLOG_DEBUG("Hitbox key: {}", key);
+            SPDLOG_TRACE("Hitbox key: {}", key);
 
             if (animation["hitbox"][key].is_array() && !animation["hitbox"][key].empty() && animation["hitbox"][key].at(0).is_number()) {
-                SPDLOG_DEBUG("Single hitbox detected");
+                SPDLOG_TRACE("Single hitbox detected");
 
                 int hb_x = animation["hitbox"][key][0].get<int>();
                 int hb_y = animation["hitbox"][key][1].get<int>();
@@ -530,7 +530,7 @@ void PNGAnimation::Load(const std::string& path)
 
                 if(key == "default")
                 {
-                    SPDLOG_DEBUG("Setting default hitbox: {} {} {} {}", h.position.x, h.position.y, h.size.x, h.size.y);
+                    SPDLOG_TRACE("Setting default hitbox: {} {} {} {}", h.position.x, h.position.y, h.size.x, h.size.y);
 
                     for(auto& a : animations)
                     {
@@ -539,17 +539,17 @@ void PNGAnimation::Load(const std::string& path)
                 }
                 else
                 {
-                    SPDLOG_DEBUG("Setting animation-specific hitbox: {} {} {} {}", h.position.x, h.position.y, h.size.x, h.size.y);
+                    SPDLOG_TRACE("Setting animation-specific hitbox: {} {} {} {}", h.position.x, h.position.y, h.size.x, h.size.y);
 
                     int id = getIDfromShortName(key);
                     animations[id].hitboxes.push_back(h);
                 }
             }
             else if (animation["hitbox"][key].is_array() && !animation["hitbox"][key].empty() && animation["hitbox"][key].at(0).is_array()) {
-                SPDLOG_DEBUG("Multi hitbox detected");
+                SPDLOG_TRACE("Multi hitbox detected");
                 for(auto json_hb : animation["hitbox"][key])
                 {
-                    SPDLOG_DEBUG("JSON: {}", json_hb.dump());
+                    SPDLOG_TRACE("JSON: {}", json_hb.dump());
                     if(json_hb.size() == 4)
                     {
                         int hb_x = json_hb[0].get<int>();
@@ -566,7 +566,7 @@ void PNGAnimation::Load(const std::string& path)
 
                         if(key == "default")
                         {
-                            SPDLOG_DEBUG("Setting default hitbox: {} {} {} {}", h.position.x, h.position.y, h.size.x, h.size.y);
+                            SPDLOG_TRACE("Setting default hitbox: {} {} {} {}", h.position.x, h.position.y, h.size.x, h.size.y);
 
                             for(auto& a : animations)
                             {
@@ -575,7 +575,7 @@ void PNGAnimation::Load(const std::string& path)
                         }
                         else
                         {
-                            SPDLOG_DEBUG("Setting animation-specific hitbox: {} {} {} {}", h.position.x, h.position.y, h.size.x, h.size.y);
+                            SPDLOG_TRACE("Setting animation-specific hitbox: {} {} {} {}", h.position.x, h.position.y, h.size.x, h.size.y);
 
                             int id = getIDfromShortName(key);
                             animations[id].hitboxes.push_back(h);
@@ -610,7 +610,7 @@ void PNGAnimation::Load(const std::string& path)
     {
         std::string anim = s;
 
-        SPDLOG_DEBUG("noRepeat {}", anim);
+        SPDLOG_TRACE("noRepeat {}", anim);
         animationPause.push_back(getIDfromShortName(anim));
     }
 
@@ -627,7 +627,7 @@ void PNGAnimation::Load(const std::string& path)
             entry.second = spr;
             extra.push_back(entry);
 
-            SPDLOG_DEBUG("Loading extra: {}", name);
+            SPDLOG_TRACE("Loading extra: {}", name);
 
             json j_extra;
             std::string json_name = "extra_" + name + ".json";
@@ -641,7 +641,7 @@ void PNGAnimation::Load(const std::string& path)
                 {
                     j_extra = json::parse(entry.readAsText());
 
-                    SPDLOG_DEBUG("Reading animation.json.");
+                    SPDLOG_TRACE("Reading animation.json.");
                 }
             }
             else
@@ -660,7 +660,7 @@ void PNGAnimation::Load(const std::string& path)
             for(auto ff : j_extra["animationData"])
             {
                 ExtraFrame ef;
-                SPDLOG_DEBUG("Parsing extra frame: {}", ff.dump());
+                SPDLOG_TRACE("Parsing extra frame: {}", ff.dump());
 
                 ef.x = ff["pos_x"].get<float>() * 3;
                 ef.y = ff["pos_y"].get<float>() * 3;
@@ -750,13 +750,13 @@ void PNGAnimation::Draw()
     int currentRow = currentSpritesheetFrame / curAnim.maxCols;
     int currentCol = currentSpritesheetFrame % curAnim.maxCols;
 
-    //SPDLOG_DEBUG("currentAnimation {} {}, currentFrame {}, currentFrameInt {}, maxFrames {}, animationSpeed {}, maxFramesPerSheet {}, currentSpritesheet {}, currentSpritesheetFrame {}, row {}, col {}", currentAnimation, curAnim.shortName, currentFrame, currentFrameInt, curAnim.frames, animationSpeed, maxFramesPerSheet, currentSpritesheet, currentSpritesheetFrame, currentRow, currentCol);
+    SPDLOG_TRACE("currentAnimation {} {}, currentFrame {}, currentFrameInt {}, maxFrames {}, animationSpeed {}, maxFramesPerSheet {}, currentSpritesheet {}, currentSpritesheetFrame {}, row {}, col {}", currentAnimation, curAnim.shortName, currentFrame, currentFrameInt, curAnim.frames, animationSpeed, maxFramesPerSheet, currentSpritesheet, currentSpritesheetFrame, currentRow, currentCol);
 
     int x_start = currentCol * curAnim.img_x;
     int y_start = currentRow * curAnim.img_y;
 
     sf::IntRect textureRect = sf::IntRect(sf::Vector2i(x_start, y_start), sf::Vector2i(static_cast<int>(curAnim.img_x), static_cast<int>(curAnim.img_y)));
-    //SPDLOG_DEBUG("setting texture rect to {} {} {} {}", textureRect.position.x, textureRect.position.y, texturerect.size.x, texturerect.size.y);
+    SPDLOG_TRACE("setting texture rect to {} {} {} {}", textureRect.position.x, textureRect.position.y, textureRect.size.x, textureRect.size.y);
 
     auto& texture = ResourceManager::getInstance().getSprite(curAnim.spritesheet_paths[currentSpritesheet]);
     texture.setTextureRect(textureRect);
@@ -831,7 +831,7 @@ void PNGAnimation::drawCopy(sf::Vector2f pos, sf::Vector2f sc)
     int currentRow = currentSpritesheetFrame / curAnim.maxCols;
     int currentCol = currentSpritesheetFrame % curAnim.maxCols;
 
-    //SPDLOG_DEBUG("currentAnimation {} {}, currentFrame {}, currentFrameInt {}, maxFrames {}, animationSpeed {}, maxFramesPerSheet {}, currentSpritesheet {}, currentSpritesheetFrame {}, row {}, col {}", currentAnimation, curAnim.shortName, currentFrame, currentFrameInt, curAnim.frames, animationSpeed, maxFramesPerSheet, currentSpritesheet, currentSpritesheetFrame, currentRow, currentCol);
+    SPDLOG_TRACE("currentAnimation {} {}, currentFrame {}, currentFrameInt {}, maxFrames {}, animationSpeed {}, maxFramesPerSheet {}, currentSpritesheet {}, currentSpritesheetFrame {}, row {}, col {}", currentAnimation, curAnim.shortName, currentFrame, currentFrameInt, curAnim.frames, animationSpeed, maxFramesPerSheet, currentSpritesheet, currentSpritesheetFrame, currentRow, currentCol);
 
     int x_start = currentCol * curAnim.img_x;
     int y_start = currentRow * curAnim.img_y;
