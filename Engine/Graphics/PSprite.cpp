@@ -236,7 +236,7 @@ void PSprite::drawShader(sf::RenderWindow* window, sf::Shader& shader)
     s->setScale(sf::Vector2f(ratioX * scaleX, ratioY * scaleY));
     s->setOrigin(sf::Vector2f(orX, orY));
     s->setPosition(sf::Vector2f(lx * CoreManager::getInstance().getCore()->resRatio, ly * CoreManager::getInstance().getCore()->resRatio));
-    s->setRotation(sf::degrees(angle));
+    s->setRotation(sf::radians(angle));
 
     window->draw(*s,&shader);
 
@@ -266,7 +266,7 @@ void PSprite::draw()
     s->setScale(sf::Vector2f(ratioX * scaleX, ratioY * scaleY));
     s->setOrigin(sf::Vector2f(orX, orY));
     s->setPosition(sf::Vector2f(lx * CoreManager::getInstance().getCore()->resRatio, ly * CoreManager::getInstance().getCore()->resRatio));
-    s->setRotation(sf::degrees(angle));
+    s->setRotation(sf::radians(angle));
     window->draw(*s);
 
     oldQualitySetting = qualitySetting;
@@ -279,7 +279,7 @@ void PSprite::update(sf::RenderWindow& window)
     s->setScale(sf::Vector2f(ratioX * scaleX, ratioY * scaleY));
     s->setOrigin(sf::Vector2f(orX, orY));
     s->setPosition(sf::Vector2f(lx * CoreManager::getInstance().getCore()->resRatio, ly * CoreManager::getInstance().getCore()->resRatio));
-    s->setRotation(sf::degrees(angle));
+    s->setRotation(sf::radians(angle));
 }
 
 void saveToFile(std::string file)
