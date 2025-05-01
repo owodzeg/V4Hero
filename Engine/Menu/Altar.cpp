@@ -298,11 +298,11 @@ void AltarMenu::Update()
                 if ((inventory_boxes[curItem].data->item_category == "key_items") || (inventory_boxes[curItem].data->item_category == "materials")) ///Bound to break
                     inventory_boxes[curItem].icon.setScale(0.64, 0.64);
 
-                inventory_boxes[curItem].icon.setPosition((78*3 + xpos), (78*3 + ypos));
+                inventory_boxes[curItem].icon.setPosition((234 + xpos), (234 + ypos));
                 inventory_boxes[curItem].icon.draw();
 
-                inventory_boxes[curItem].num.setGlobalPosition((90*3 + xpos), (82 * 3 + ypos));
-                inventory_boxes[curItem].num_shadow.setGlobalPosition((91*3 + xpos), (84*3 + ypos));
+                inventory_boxes[curItem].num.setGlobalPosition((270 + xpos), (246 + ypos));
+                inventory_boxes[curItem].num_shadow.setGlobalPosition((273 + xpos), (252 + ypos));
 
                 inventory_boxes[curItem].num_shadow.draw();
                 inventory_boxes[curItem].num.draw();
@@ -340,7 +340,7 @@ void AltarMenu::Update()
 
         window->draw(r_sel);
 
-        rr_title.Create(366 * 3, 100 * 3, 20 * 3);
+        rr_title.Create(1098, 300, 60);
         rr_title.x = 933 * 3;
         rr_title.y = 141 * 3;
         rr_title.setOrigin(sf::Vector2f((rr_title.width + 40) / 2, (rr_title.height + 40) / 2));
@@ -353,7 +353,7 @@ void AltarMenu::Update()
         rr_title_sh.Draw();
         rr_title.Draw();
 
-        rr_desc.Create(440 * 3, 385 * 3, 20 * 3);
+        rr_desc.Create(1320, 1155, 60);
         rr_desc.x = rr_title.x;
         rr_desc.y = 436 * 3;
         rr_desc.setOrigin(sf::Vector2f((rr_desc.width + 40) / 2, (rr_desc.height + 40) / 2));
@@ -369,12 +369,12 @@ void AltarMenu::Update()
         altar_title.setGlobalOrigin(altar_title.getGlobalBounds().size.x / 2, altar_title.getGlobalBounds().size.y / 2);
         altar_kaching.setGlobalOrigin(altar_kaching.getGlobalBounds().size.x / 2, altar_kaching.getGlobalBounds().size.y / 2);
 
-        altar_title.setGlobalPosition(933 * 3, 100 * 3);
-        altar_kaching.setGlobalPosition(933 * 3, 170 * 3);
+        altar_title.setGlobalPosition(2799, 300);
+        altar_kaching.setGlobalPosition(2799, 510);
 
-        altar_item_title.setGlobalPosition(933 * 3, 250 * 3);
-        altar_item_category.setGlobalPosition(933 * 3, 280 * 3);
-        altar_item_desc.setGlobalPosition(725 * 3, 330 * 3);
+        altar_item_title.setGlobalPosition(2799, 750);
+        altar_item_category.setGlobalPosition(2799, 840);
+        altar_item_desc.setGlobalPosition(2175, 990);
 
         altar_title.draw();
         altar_kaching.draw();
