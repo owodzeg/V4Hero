@@ -39,7 +39,7 @@ public:
     void unloadTexture(const std::string& key);
     void unloadImage(const std::string& key);
     void applyForceLoad(bool force);
-    void reloadTextures(int quality);
+    void reloadTextures();
     int getRatio();
 
 private:

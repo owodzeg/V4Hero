@@ -18,13 +18,12 @@ void MessageCloud::setSize(float new_x, float new_y)
     ysize = new_y;
 }
 
-void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bool can_speedup, int q)
+void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bool can_speedup)
 {
     SPDLOG_DEBUG("MessageCloud::Create()");
 
     timeout = speed;
     regular_timeout = timeout;
-    quality = q;
 
     //speedable = can_speedup;
     speedable = true; //unskippable dialogues are dumb, let the player speed up anything
@@ -35,9 +34,9 @@ void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bo
 
     cur_color = color;
 
-    cross.loadFromFile("resources/graphics/ui/dialog/cross.png", q);
-    cross_highlight.loadFromFile("resources/graphics/ui/dialog/crosshighlight.png", q);
-    cross_arrow.loadFromFile("resources/graphics/ui/dialog/crossarrow.png", q);
+    cross.loadFromFile("resources/graphics/ui/dialog/cross.png");
+    cross_highlight.loadFromFile("resources/graphics/ui/dialog/crosshighlight.png");
+    cross_arrow.loadFromFile("resources/graphics/ui/dialog/crossarrow.png");
 
     triangle.setPointCount(3);
     triangle.setFillColor(cur_color);

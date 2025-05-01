@@ -13,7 +13,7 @@ void IntroductionMenu::Initialize()
 {
     SPDLOG_DEBUG("Initialize Introduction menu");
 
-    msgcloud.Create(45, sf::Vector2f(1920, 1440), sf::Color::White, true, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
+    msgcloud.Create(45, sf::Vector2f(1920, 1440), sf::Color::White, true);
     msgcloud.AddDialog("newgame_intro_1", true);
     msgcloud.AddDialog("newgame_intro_2", true);
     msgcloud.AddDialog("newgame_intro_3", true);

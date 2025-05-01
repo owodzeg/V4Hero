@@ -34,7 +34,7 @@ int ResourceManager::getCurrentQuality()
 void ResourceManager::loadSprite(std::string path, bool downscale)
 {
     std::lock_guard<std::recursive_mutex> guard(access_mutex);
-    loadedSprites[path].loadFromFile(path, CoreManager::getInstance().getConfig()->GetInt("textureQuality"), downscale);
+    loadedSprites[path].loadFromFile(path, downscale);
     loadedSources[path] = StateManager::getInstance().getState();
 
     loadedPaths[StateManager::getInstance().getState()].push_back(path);
@@ -48,7 +48,7 @@ void ResourceManager::loadImageAsSprite(std::string path, sf::Image image)
 {
     std::lock_guard<std::recursive_mutex> guard(access_mutex);
     TextureManager::getInstance().loadImageFromMemory(path, image, true);
-    loadedSprites[path].loadFromFile(path, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
+    loadedSprites[path].loadFromFile(path);
     loadedSources[path] = StateManager::getInstance().getState();
 
     loadedPaths[StateManager::getInstance().getState()].push_back(path);
@@ -112,12 +112,12 @@ void ResourceManager::unloadState(int state)
 // this action reloads all currently loaded PSprites with actual quality setting.
 void ResourceManager::reloadPSprites()
 {
-    TextureManager::getInstance().reloadTextures(quality);
+    TextureManager::getInstance().reloadTextures();
 
     for (const auto& sprite : loadedSprites)
     {
         std::string path = sprite.first;
         //loadSprite(path);
-        loadedSprites[path].loadFromFile(path, quality);
+        loadedSprites[path].loadFromFile(path);
     }
 }

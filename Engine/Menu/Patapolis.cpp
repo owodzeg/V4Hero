@@ -342,7 +342,7 @@ PatapolisMenu::PatapolisMenu()
         ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/paraget_sparkle_2.png");
         ResourceManager::getInstance().loadSprite("resources/graphics/bg/patapolis/paraget_sparkle_3.png");
 
-        ctrlTips.create(54*3, font, 20, sf::String("L/R: Move      X: Interact      Select: Save      Start: Title screen"), quality);
+        ctrlTips.create(54*3, font, 20, sf::String("L/R: Move      X: Interact      Select: Save      Start: Title screen"));
 
         //TO-DO: these things are not yet supported by new system. add compatibility
         /*
@@ -679,7 +679,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
             messageclouds.clear();
 
             MessageCloud tmp;
-            tmp.Create(20, sf::Vector2f(a_sen.getGlobalPosition().x - 15, a_sen.getGlobalPosition().y - 75), sf::Color(170, 182, 250, 255), false, config->GetInt("textureQuality"));
+            tmp.Create(20, sf::Vector2f(a_sen.getGlobalPosition().x - 15, a_sen.getGlobalPosition().y - 75), sf::Color(170, 182, 250, 255), false);
             tmp.x_start_offset = 15;
             tmp.msgcloud_ID = 0;
 
@@ -762,7 +762,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
             messageclouds.clear();
 
             MessageCloud tmp;
-            tmp.Create(20, sf::Vector2f(a_wakapon.getGlobalPosition().x - 15, a_wakapon.getGlobalPosition().y - 75), sf::Color(255, 255, 255, 255), false, config->GetInt("textureQuality"));
+            tmp.Create(20, sf::Vector2f(a_wakapon.getGlobalPosition().x - 15, a_wakapon.getGlobalPosition().y - 75), sf::Color(255, 255, 255, 255), false);
             tmp.x_start_offset = 20;
 
             std::vector<int> missions = saveReader->missions_unlocked;
@@ -829,7 +829,7 @@ void PatapolisMenu::SetTitle(int menuPosition)
 
     a += "Select: Save      Start: Title screen";
 
-    ctrlTips.create(54, font, 20, a, quality);
+    ctrlTips.create(54, font, 20, a);
 }
 float EaseIn(float time, float startValue, float change, float duration)
 {
@@ -1510,7 +1510,7 @@ void PatapolisMenu::Update()
                                 std::vector<sf::String> a = {"patapolis_demo_pick1", "patapolis_demo_pick2"};
 
                                 PataDialogBox db;
-                                db.Create(font, "patapolis_demofinish", a, config->GetInt("textureQuality"));
+                                db.Create(font, "patapolis_demofinish", a);
                                 db.id = 4;
                                 dialogboxes.push_back(db);
 
@@ -1738,7 +1738,7 @@ void PatapolisMenu::Update()
                             std::vector<sf::String> a = {"nav_understood"};
 
                             PataDialogBox db;
-                            db.Create(font, "patapolis_materdialog", a, config->GetInt("textureQuality"));
+                            db.Create(font, "patapolis_materdialog", a);
                             db.id = 3;
                             dialogboxes.push_back(db);
                             //mater_menu.save_loaded = save_loaded;
@@ -1757,7 +1757,7 @@ void PatapolisMenu::Update()
                     std::vector<sf::String> a = {"nav_yes", "nav_no"};
 
                     PataDialogBox db;
-                    db.Create(font, "patapolis_returntomain", a, config->GetInt("textureQuality"));
+                    db.Create(font, "patapolis_returntomain", a);
                     db.id = 0;
                     dialogboxes.push_back(db);
                 } else if (inputCtrl->isKeyPressed(Input::Keys::SELECT))
@@ -1765,7 +1765,7 @@ void PatapolisMenu::Update()
                     std::vector<sf::String> a = {"nav_yes", "nav_no"};
 
                     PataDialogBox db;
-                    db.Create(font, "patapolis_save", a, config->GetInt("textureQuality"));
+                    db.Create(font, "patapolis_save", a);
                     db.id = 2;
                     dialogboxes.push_back(db);
                 }
@@ -1785,7 +1785,7 @@ void PatapolisMenu::Update()
                             std::vector<sf::String> a = {"nav_yes", "nav_no"};
 
                             PataDialogBox db;
-                            db.Create(font, "patapolis_returntomainsave", a, config->GetInt("textureQuality"));
+                            db.Create(font, "patapolis_returntomainsave", a);
                             db.id = 1;
                             dialogboxes.push_back(db);
 
@@ -1806,7 +1806,7 @@ void PatapolisMenu::Update()
                             std::vector<sf::String> a = {"nav_understood"};
 
                             PataDialogBox db;
-                            db.Create(font, "patapolis_saved", a, config->GetInt("textureQuality"));
+                            db.Create(font, "patapolis_saved", a);
                             db.id = 3;
                             dialogboxes.push_back(db);
 

@@ -60,9 +60,6 @@ void Credits::addRegularText(sf::String text, int font)
 
 void Credits::Initialise(Config* thisConfig, V4Core* parent)
 {
-    config = thisConfig;
-    quality = thisConfig->GetInt("textureQuality");
-
     r_black.setSize(sf::Vector2f(thisConfig->GetInt("resX"), thisConfig->GetInt("resY")));
     r_black.setFillColor(sf::Color::Black);
 
@@ -90,9 +87,9 @@ void Credits::Initialise(Config* thisConfig, V4Core* parent)
     anykey.setColor(sf::Color::White);
     */
 
-    teaser_1.loadFromFile("resources/graphics/ui/credits/teaser_1.png", thisConfig->GetInt("textureQuality"));
-    teaser_2.loadFromFile("resources/graphics/ui/credits/teaser_2.png", thisConfig->GetInt("textureQuality"));
-    teaser_3.loadFromFile("resources/graphics/ui/credits/teaser_3.png", thisConfig->GetInt("textureQuality"));
+    teaser_1.loadFromFile("resources/graphics/ui/credits/teaser_1.png");
+    teaser_2.loadFromFile("resources/graphics/ui/credits/teaser_2.png");
+    teaser_3.loadFromFile("resources/graphics/ui/credits/teaser_3.png");
 
     addHeaderText("credits_creator");
     addRegularText("Owocek");

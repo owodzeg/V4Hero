@@ -737,8 +737,6 @@ void PataText::draw()
 {
     auto window = CoreManager::getInstance().getWindow();
 
-    double windowScale = window->getSize().x / 3840.f;
-
     // Step 5: Apply position based on letter width and line height.
     if (refreshPositioning)
     {
@@ -752,10 +750,10 @@ void PataText::draw()
                 if (character.text)
                 {
                     character.text->setFont(*character.style.font);
-                    character.text->setCharacterSize(character.style.char_size * windowScale);
+                    character.text->setCharacterSize(character.style.char_size * CoreManager::getInstance().getCore()->resRatio);
                     character.text->setFillColor(sf::Color(character.style.c_red, character.style.c_green, character.style.c_blue, character.style.c_alpha));
                     character.text->setOutlineColor(sf::Color(character.style.ot_c_red, character.style.ot_c_green, character.style.ot_c_blue, character.style.ot_c_alpha));
-                    character.text->setOutlineThickness(character.style.thickness * windowScale);
+                    character.text->setOutlineThickness(character.style.thickness * CoreManager::getInstance().getCore()->resRatio);
                     character.text->setStyle(character.style.bold * sf::Text::Bold + character.style.italic * sf::Text::Italic + character.style.underline * sf::Text::Underlined + character.style.strike * sf::Text::StrikeThrough);
                     character.text->setString(character.character);
                 }
@@ -800,8 +798,8 @@ void PataText::draw()
 
             character.text->setRotation(sf::degrees(character.style.rotation + character.style.r_offset));
 
-            double final_x = windowScale * (global_x + character.position.x - origin_x + character.style.x_offset);
-            double final_y = windowScale * (global_y + character.position.y - origin_y + character.style.y_offset);
+            double final_x = CoreManager::getInstance().getCore()->resRatio * (global_x + character.position.x - origin_x + character.style.x_offset);
+            double final_y = CoreManager::getInstance().getCore()->resRatio * (global_y + character.position.y - origin_y + character.style.y_offset);
 
             character.text->setPosition(sf::Vector2f(final_x, final_y));
 

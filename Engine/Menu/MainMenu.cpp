@@ -177,7 +177,7 @@ MainMenu::MainMenu()
         firstrun = true;
     }
 
-    msgcloud.Create(45, sf::Vector2f(1920, 1440), sf::Color::White, true, config->GetInt("textureQuality"));
+    msgcloud.Create(45, sf::Vector2f(1920, 1440), sf::Color::White, true);
     msgcloud.AddDialog("firstrun_dialog_1", true);
     msgcloud.AddDialog("firstrun_dialog_2", true);
     msgcloud.AddDialog("firstrun_dialog_3", true);
@@ -241,7 +241,7 @@ void MainMenu::SelectMenuOption()
                 std::vector<sf::String> a = {"nav_yes", "nav_no"};
 
                 PataDialogBox db;
-                db.Create(font, "menu_saveexists", a, config->GetInt("textureQuality"));
+                db.Create(font, "menu_saveexists", a);
                 db.id = 0;
                 dialogboxes.push_back(db);
             }
@@ -267,7 +267,7 @@ void MainMenu::SelectMenuOption()
                     std::vector<sf::String> a = {"nav_understood"};
 
                     PataDialogBox db;
-                    db.Create(font, "menu_nosupportdata", a, config->GetInt("textureQuality"));
+                    db.Create(font, "menu_nosupportdata", a);
                     db.id = 2;
                     dialogboxes.push_back(db);
                 } else
@@ -282,7 +282,7 @@ void MainMenu::SelectMenuOption()
                 std::vector<sf::String> a = {"nav_understood"};
 
                 PataDialogBox db;
-                db.Create(font, "menu_nodata", a, config->GetInt("textureQuality"));
+                db.Create(font, "menu_nodata", a);
                 db.id = 1;
                 dialogboxes.push_back(db);
             }
@@ -296,7 +296,7 @@ void MainMenu::SelectMenuOption()
             std::vector<sf::String> a = {"nav_understood"};
 
             PataDialogBox db;
-            db.Create(font, "nav_rework", a, config->GetInt("textureQuality"));
+            db.Create(font, "nav_rework", a);
             db.id = 1;
             dialogboxes.push_back(db);
             break;

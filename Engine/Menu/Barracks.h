@@ -30,13 +30,10 @@ private:
     float ratio_x;
     float ratio_y;
 
-    int q = 0;
-
     float patapon_y;
     float floor_y;
 
     int quality_setting = 0;
-
 
     PataText t_title;
     int current_item_position = 0;

@@ -15,7 +15,7 @@ public:
     PataText text;
 
     ControlTips();
-    void create(float ysz, std::string font, int characterSize, std::string displayText, int qualitySetting, sf::Color color = sf::Color(222, 222, 222, 255));
+    void create(float ysz, std::string font, int characterSize, std::string displayText, sf::Color color = sf::Color(222, 222, 222, 255));
     void draw();
 };
 

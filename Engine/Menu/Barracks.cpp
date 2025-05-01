@@ -6,6 +6,7 @@
 #include <spdlog/spdlog.h>
 #include "../CoreManager.h"
 #include "../StateManager.h"
+#include "../Constants.h"
 
 template<typename T>
 std::string to_string_with_precision(const T a_value, const int n = 2)
@@ -24,35 +25,34 @@ Barracks::Barracks()
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
     int quality = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
-    q = quality;
 
     switch (quality)
     {
         case 0: ///low
         {
-            ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / float(640);
-            ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / float(360);
+            ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / CANVAS_LOW_X;
+            ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / CANVAS_LOW_Y;
             break;
         }
 
         case 1: ///med
         {
-            ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1280);
-            ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / float(720);
+            ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / CANVAS_MED_X;
+            ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / CANVAS_MED_Y;
             break;
         }
 
         case 2: ///high
         {
-            ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / float(1920);
-            ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / float(1080);
+            ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / CANVAS_HIGH_X;
+            ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / CANVAS_HIGH_Y;
             break;
         }
 
         case 3: ///ultra
         {
-            ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / float(3840);
-            ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / float(2160);
+            ratio_x = CoreManager::getInstance().getConfig()->GetInt("resX") / CANVAS_ULTRA_X;
+            ratio_y = CoreManager::getInstance().getConfig()->GetInt("resY") / CANVAS_ULTRA_Y;
             break;
         }
     }
@@ -72,18 +72,18 @@ Barracks::Barracks()
     t_item_title.defaultStyleSetColor(sf::Color::Black);
 
     ///             ####   BARRACKS MENU BACKGROUND
-    s_background.loadFromFile("resources/graphics/bg/barracks/barracks.png", quality);
+    s_background.loadFromFile("resources/graphics/bg/barracks/barracks.png");
 
     ///         highlighted unit
-    s_pon_highlight.loadFromFile("resources/graphics/ui/highlighted_pon.png", quality);
+    s_pon_highlight.loadFromFile("resources/graphics/ui/highlighted_pon.png");
 
     ///             ####   UNIT CLASS ICON
-    class_icon.loadFromFile("resources/graphics/ui/yari_icon.png", quality);
+    class_icon.loadFromFile("resources/graphics/ui/yari_icon.png");
     class_icon.setOrigin(class_icon.getLocalBounds().size.x / 2, class_icon.getLocalBounds().size.y / 2);
     class_icon.setPosition(102*3, 98*3);
 
     ///             ####   UNIT ITEM ICON
-    s_unit_icon.loadFromFile("resources/graphics/ui/unit_icon.png", quality);
+    s_unit_icon.loadFromFile("resources/graphics/ui/unit_icon.png");
     s_unit_icon.setPosition(946*3, 82*3);
 
     Pon* cur_pon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(current_selected_pon);
@@ -182,19 +182,19 @@ Barracks::Barracks()
     int equip_height = 50*3;
 
     ///             ####   WEAPON ITEM ICON
-    s_weapon_icon.loadFromFile("resources/graphics/ui/sword_weapon_icon.png", quality);
+    s_weapon_icon.loadFromFile("resources/graphics/ui/sword_weapon_icon.png");
     s_weapon_icon.setPosition(946*3, s_unit_icon.getPosition().y + equip_height);
 
     ///             ####   WEAPON 2 (OTHER HAND) ITEM ICON
-    s_weapon2_icon.loadFromFile("resources/graphics/ui/sword_weapon_icon.png", quality);
+    s_weapon2_icon.loadFromFile("resources/graphics/ui/sword_weapon_icon.png");
     s_weapon2_icon.setPosition(946*3, s_weapon_icon.getPosition().y + equip_height);
 
     ///             ####   ARMOUR ITEM ICON
-    s_armour_icon.loadFromFile("resources/graphics/ui/helm_icon.png", quality);
+    s_armour_icon.loadFromFile("resources/graphics/ui/helm_icon.png");
     s_armour_icon.setPosition(946*3, s_weapon2_icon.getPosition().y + equip_height);
 
     ///             ####   MASK ITEM ICON
-    s_mask_icon.loadFromFile("resources/graphics/ui/mask_icon.png", quality);
+    s_mask_icon.loadFromFile("resources/graphics/ui/mask_icon.png");
     s_mask_icon.setPosition(946*3, s_armour_icon.getPosition().y + equip_height);
 
     /// unit + item name text
@@ -210,7 +210,7 @@ Barracks::Barracks()
         t_eq_names[i].setGlobalOrigin(0, t_eq_names[i].getGlobalBounds().size.y / 2);
     }
 
-    inv_box.loadFromFile("resources/graphics/ui/mini_inventory.png", quality);
+    inv_box.loadFromFile("resources/graphics/ui/mini_inventory.png");
 
     item_title.append("{size 72}{color 0 0 0}");
     item_desc.append("{size 72}{color 0 0 0}");
@@ -223,7 +223,7 @@ Barracks::Barracks()
     enabled_positons.push_back(false);
 
     quality_setting = quality;
-    highlighted_pon.loadFromFile("resources/graphics/ui/highlighted_pon.png", quality_setting);
+    highlighted_pon.loadFromFile("resources/graphics/ui/highlighted_pon.png");
 
     //TO-DO: replace old pointers with new CoreManager pointers
     //applyEquipment();
@@ -385,7 +385,7 @@ void Barracks::loadInventory()
                 cur_box.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
                 ///look up item's icon
-                cur_box.icon.loadFromFile("resources/graphics/ui/altar/materials/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q);
+                cur_box.icon.loadFromFile("resources/graphics/ui/altar/materials/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png");
                 cur_box.icon.setOrigin(cur_box.icon.getLocalBounds().size.x / 2, cur_box.icon.getLocalBounds().size.y / 2);
 
                 break;
@@ -396,7 +396,7 @@ void Barracks::loadInventory()
                 cur_box.r_inner.setFillColor(sf::Color(146, 173, 217, 255));
 
                 ///look up item's icon
-                cur_box.icon.loadFromFile("resources/graphics/ui/altar/materials/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q);
+                cur_box.icon.loadFromFile("resources/graphics/ui/altar/materials/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png");
                 cur_box.icon.setOrigin(cur_box.icon.getLocalBounds().size.x / 2, cur_box.icon.getLocalBounds().size.y / 2);
 
                 break;
@@ -407,7 +407,7 @@ void Barracks::loadInventory()
                 cur_box.r_inner.setFillColor(sf::Color(199, 221, 167, 255));
 
                 ///look up item's icon
-                cur_box.icon.loadFromFile("resources/graphics/ui/altar/equip/spear_1.png", q);
+                cur_box.icon.loadFromFile("resources/graphics/ui/altar/equip/spear_1.png");
                 cur_box.icon.setOrigin(cur_box.icon.getLocalBounds().size.x / 2, cur_box.icon.getLocalBounds().size.y / 2);
 
                 break;
@@ -418,7 +418,7 @@ void Barracks::loadInventory()
                 cur_box.r_inner.setFillColor(sf::Color(199, 221, 167, 255));
 
                 ///look up item's icon
-                cur_box.icon.loadFromFile("resources/graphics/ui/altar/equip/helm_1.png", q);
+                cur_box.icon.loadFromFile("resources/graphics/ui/altar/equip/helm_1.png");
                 cur_box.icon.setOrigin(cur_box.icon.getLocalBounds().size.x / 2, cur_box.icon.getLocalBounds().size.y / 2);
 
                 break;
@@ -1421,7 +1421,7 @@ void Barracks::Update()
                 std::vector<sf::String> a = {"nav_yes", "nav_no"};
 
                 PataDialogBox db;
-                db.Create(font, "barracks_depart", a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
+                db.Create(font, "barracks_depart", a);
                 db.id = 0;
                 dialog_boxes.push_back(db);
             }
@@ -1501,12 +1501,12 @@ void Barracks::updateInputControls()
     if (!menu_mode)
     {
         if (!obelisk)
-            ctrlTips.create(82, font, 20, sf::String("Left/Right: Select unit      Up/Down: Select equipment      X: Change equipment      O: Return to Patapolis"), quality_setting);
+            ctrlTips.create(82, font, 20, sf::String("Left/Right: Select unit      Up/Down: Select equipment      X: Change equipment      O: Return to Patapolis"));
         else
-            ctrlTips.create(82, font, 20, sf::String("Left/Right: Select unit      Up/Down: Select equipment      X: Change equipment      O: Return to World map      Start: Start mission"), quality_setting);
+            ctrlTips.create(82, font, 20, sf::String("Left/Right: Select unit      Up/Down: Select equipment      X: Change equipment      O: Return to World map      Start: Start mission"));
     } else
     {
-        ctrlTips.create(82, font, 20, sf::String("Left/Right/Up/Down: Navigate item      X: Equip item      O: Cancel"), quality_setting);
+        ctrlTips.create(82, font, 20, sf::String("Left/Right/Up/Down: Navigate item      X: Equip item      O: Cancel"));
     }
 }
 

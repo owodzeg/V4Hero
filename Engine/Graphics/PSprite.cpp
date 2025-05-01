@@ -3,13 +3,16 @@
 #include "PSprite.h"
 #include "../TextureManager.h"
 #include "../CoreManager.h"
+#include "../Constants.h"
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <spdlog/spdlog.h>
 
-void PSprite::loadFromFile(std::string file, int q, bool downscale)
+void PSprite::loadFromFile(std::string file, bool downscale)
 {
+    auto q = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
+
     if (qualitySetting != q && qualitySetting != -1)
     {
         SPDLOG_DEBUG("Quality has changed.");
@@ -220,8 +223,8 @@ void PSprite::drawShader(sf::RenderWindow* window, sf::Shader& shader)
     {
         sf::Vector2u windowSize = window->getSize();
 
-        std::vector<float> x = {640, 1280, 1920, 3840};
-        std::vector<float> y = {360, 720, 1080, 2160};
+        std::vector<float> x = {CANVAS_LOW_X, CANVAS_MED_X, CANVAS_HIGH_X, CANVAS_ULTRA_X};
+        std::vector<float> y = {CANVAS_LOW_Y, CANVAS_MED_Y, CANVAS_HIGH_Y, CANVAS_ULTRA_Y};
 
         sf::Vector2f ratio(windowSize.x / x[qualitySetting], windowSize.y / y[qualitySetting]);
 
@@ -250,8 +253,8 @@ void PSprite::draw()
     {
         sf::Vector2u windowSize = window->getSize();
 
-        std::vector<float> x = {640, 1280, 1920, 3840};
-        std::vector<float> y = {360, 720, 1080, 2160};
+        std::vector<float> x = {CANVAS_LOW_X, CANVAS_MED_X, CANVAS_HIGH_X, CANVAS_ULTRA_X};
+        std::vector<float> y = {CANVAS_LOW_Y, CANVAS_MED_Y, CANVAS_HIGH_Y, CANVAS_ULTRA_Y};
 
         sf::Vector2f ratio(windowSize.x / x[qualitySetting], windowSize.y / y[qualitySetting]);
 

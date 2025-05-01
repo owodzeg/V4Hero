@@ -49,7 +49,7 @@ OptionsMenu::OptionsMenu()
     SPDLOG_DEBUG("Initial values loaded, loading assets");
 
     int q = config->GetInt("textureQuality");
-    SPDLOG_TRACE("Quality: {}", q);
+    SPDLOG_TRACE("Quality: {}");
 
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/options/options.png");
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/options/sword.png");
@@ -60,7 +60,7 @@ OptionsMenu::OptionsMenu()
     t_restart.append(Func::GetStrFromKey("options_restart_notice"));
 
     std::vector<sf::String> restart_opt = {"options_restart_button1", "options_restart_button2"};
-    restart_prompt.Create(font, "options_restart_notice", restart_opt, q);
+    restart_prompt.Create(font, "options_restart_notice", restart_opt);
 
     // TODO: this gets rewritten anyway
     /*

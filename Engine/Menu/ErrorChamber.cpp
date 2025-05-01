@@ -20,7 +20,7 @@ void ErrorChamber::Initialize()
     std::vector<sf::String> a = {"error_tryagain", "error_tryprevious", "error_mainmenu", "error_exit"};
 
     PataDialogBox db;
-    db.Create(font, "error_message", a, config->GetInt("textureQuality"), 2);
+    db.Create(font, "error_message", a, 2);
     db.id = 0;
     dialogboxes.push_back(db);
 

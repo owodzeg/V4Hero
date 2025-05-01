@@ -11,7 +11,7 @@ ControlTips::ControlTips()
 {
 }
 
-void ControlTips::create(float ysz, std::string font, int characterSize, std::string displayText, int qualitySetting, sf::Color color)
+void ControlTips::create(float ysz, std::string font, int characterSize, std::string displayText, sf::Color color)
 {
     ySize = ysz;
 

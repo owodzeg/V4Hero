@@ -90,7 +90,7 @@ ObeliskMenu::ObeliskMenu()
         preloaded_worldmap_icons.push_back(loc);
     }
 
-    ctrlTips.create(66*3, font, 20, sf::String("Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
+    ctrlTips.create(66*3, font, 20, sf::String("Left/Right: Select field      X: View missions      O: Exit to Patapolis"));
 
     SPDLOG_INFO("Initializing Obelisk finished.");
 }
@@ -408,7 +408,7 @@ void ObeliskMenu::Update()
             {
                 if (displayMissions)
                 {
-                    ctrlTips.create(66*3, font, 20, sf::String("Left/Right: Select field      X: View missions      O: Exit to Patapolis"), quality);
+                    ctrlTips.create(66*3, font, 20, sf::String("Left/Right: Select field      X: View missions      O: Exit to Patapolis"));
 
                     displayMissions = false;
                     SPDLOG_DEBUG("Exited mission selection.");
@@ -455,7 +455,7 @@ void ObeliskMenu::Update()
 
                     if (missions.size() > 0)
                     {
-                        ctrlTips.create(66*3, font, 20, sf::String("Up/Down: Select mission      X: Enter mission      O: Return to field select"), quality);
+                        ctrlTips.create(66*3, font, 20, sf::String("Up/Down: Select mission      X: Enter mission      O: Return to field select"));
 
                         displayMissions = true;
 

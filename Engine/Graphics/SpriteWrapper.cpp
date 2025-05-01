@@ -2,6 +2,7 @@
 
 #include "../ResourceManager.h"
 #include "../CoreManager.h"
+#include "../Constants.h"
 
 /* IMPORTANT!!!!!!!
 * LOCAL BOUNDS mean before transformations.
@@ -77,20 +78,6 @@ void SpriteWrapper::setScale(float x)
 
 sf::FloatRect SpriteWrapper::getLocalBounds()
 {
-    /* sf::RenderWindow* window = CoreManager::getInstance().getWindow();
-    sf::Vector2u windowSize = window->getSize();
-
-    std::vector<float> x = {640, 1280, 1920, 3840};
-    std::vector<float> y = {360, 720, 1080, 2160};
-
-    int quality = ResourceManager::getInstance().getCurrentQuality();
-
-    sf::Vector2f ratio(windowSize.x / x[quality], windowSize.y / y[quality]);
-    sf::Vector2f r((fabs(scale.x) * ratio.x), (fabs(scale.y) * ratio.y));
-
-    return sf::FloatRect(l_bounds.position.y * r.x, l_bounds.position.x * r.y, l_bounds.width * r.x, l_bounds.height * r.y); */
-
-    // lol 
     return l_bounds;
 }
 
@@ -112,8 +99,8 @@ sf::FloatRect SpriteWrapper::getTransformedBounds()
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
     sf::Vector2u windowSize = window->getSize();
 
-    std::vector<float> x = {640, 1280, 1920, 3840};
-    std::vector<float> y = {360, 720, 1080, 2160};
+    std::vector<float> x = {CANVAS_LOW_X, CANVAS_MED_X, CANVAS_HIGH_X, CANVAS_ULTRA_X};
+    std::vector<float> y = {CANVAS_LOW_Y, CANVAS_MED_Y, CANVAS_HIGH_Y, CANVAS_ULTRA_Y};
 
     auto resRatio = CoreManager::getInstance().getCore()->resRatio;
 

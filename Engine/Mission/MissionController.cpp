@@ -33,8 +33,8 @@ MissionController::MissionController()
     t_win.setGlobalOrigin(t_win.getGlobalBounds().size.x / 2, t_win.getGlobalBounds().size.y / 2);
     t_lose.setGlobalOrigin(t_lose.getGlobalBounds().size.x / 2, t_lose.getGlobalBounds().size.y / 2);
 
-    bar_win.loadFromFile("resources/graphics/mission/bar_win.png", q);
-    bar_lose.loadFromFile("resources/graphics/mission/bar_lose.png", q);
+    bar_win.loadFromFile("resources/graphics/mission/bar_win.png");
+    bar_lose.loadFromFile("resources/graphics/mission/bar_lose.png");
 
     bar_win.setOrigin(bar_win.getLocalBounds().size.x / 2, bar_win.getLocalBounds().size.y / 2);
     bar_lose.setOrigin(bar_lose.getLocalBounds().size.x / 2, bar_lose.getLocalBounds().size.y / 2);
@@ -1020,7 +1020,7 @@ void MissionController::DrawMissionUI()
                 std::vector<sf::String> a = {"Toggle hitboxes", "Toggle debug info", "Heal units", "Kill all player units", "Kill Hatapon", "Mission failure", "Mission complete", "Toggle rhythm debug UI", "Toggle song debug", "Toggle behavior debug"};
 
                 PataDialogBox db;
-                db.Create(font, "Debug menu", a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"), 3);
+                db.Create(font, "Debug menu", a, 3);
                 db.id = 999;
                 dialogboxes.push_back(db);
             }
@@ -1030,7 +1030,7 @@ void MissionController::DrawMissionUI()
                 std::vector<sf::String> a = {"nav_yes", "nav_no"};
 
                 PataDialogBox db;
-                db.Create(font, "mission_backtopatapolis", a, CoreManager::getInstance().getConfig()->GetInt("textureQuality"));
+                db.Create(font, "mission_backtopatapolis", a);
                 dialogboxes.push_back(db);
             }
         }

@@ -7,6 +7,7 @@
 #include <spdlog/spdlog.h>
 #include <span>
 #include "../StateManager.h"
+#include "../Constants.h"
 
 MaterOuterMenu::MaterOuterMenu()
 {
@@ -21,37 +22,37 @@ MaterOuterMenu::MaterOuterMenu()
     {
         case 0: ///low
         {
-            ratio_x = config->GetInt("resX") / float(640);
-            ratio_y = config->GetInt("resY") / float(360);
+            ratio_x = config->GetInt("resX") / CANVAS_LOW_X;
+            ratio_y = config->GetInt("resY") / CANVAS_LOW_Y;
             break;
         }
 
         case 1: ///med
         {
-            ratio_x = config->GetInt("resX") / float(1280);
-            ratio_y = config->GetInt("resY") / float(720);
+            ratio_x = config->GetInt("resX") / CANVAS_MED_X;
+            ratio_y = config->GetInt("resY") / CANVAS_MED_Y;
             break;
         }
 
         case 2: ///high
         {
-            ratio_x = config->GetInt("resX") / float(1920);
-            ratio_y = config->GetInt("resY") / float(1080);
+            ratio_x = config->GetInt("resX") / CANVAS_HIGH_X;
+            ratio_y = config->GetInt("resY") / CANVAS_HIGH_Y;
             break;
         }
 
         case 3: ///ultra
         default:
         {
-            ratio_x = config->GetInt("resX") / float(3840);
-            ratio_y = config->GetInt("resY") / float(2160);
+            ratio_x = config->GetInt("resX") / CANVAS_ULTRA_X;
+            ratio_y = config->GetInt("resY") / CANVAS_ULTRA_Y;
             break;
         }
         
     }
 
-    mater_main.loadFromFile("resources/graphics/ui/mater/mater_outer_bg.png", quality);
-    mater_selector.loadFromFile("resources/graphics/ui/mater/materui_squad_select.png", quality);
+    mater_main.loadFromFile("resources/graphics/ui/mater/mater_outer_bg.png");
+    mater_selector.loadFromFile("resources/graphics/ui/mater/materui_squad_select.png");
 
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/mater/matersquad_bg_asleep.png");
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/mater/matersquad_member_asleep.png");
@@ -61,8 +62,8 @@ MaterOuterMenu::MaterOuterMenu()
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/mater/matersquad_member_awake.png");
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/mater/matersquad_slot_awake.png");
 
-    up_arrow_prompt.loadFromFile("resources/graphics/ui/mater/up_prompt.png", quality);
-    down_arrow_prompt.loadFromFile("resources/graphics/ui/mater/down_prompt.png", quality);
+    up_arrow_prompt.loadFromFile("resources/graphics/ui/mater/up_prompt.png");
+    down_arrow_prompt.loadFromFile("resources/graphics/ui/mater/down_prompt.png");
 
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/mater/yaripon_icon.png");
 
@@ -82,7 +83,7 @@ MaterOuterMenu::MaterOuterMenu()
     mater_title.defaultStyleSetColor(sf::Color(255, 234, 191, 255));
     mater_title.append(Func::GetStrFromKey("yaripon_squad"));
 
-    ctrlTips.create(54, font, 20, "mater_outer_ctrl_tips", quality);
+    ctrlTips.create(54, font, 20, "mater_outer_ctrl_tips");
 
     SPDLOG_INFO("Initializing Altar finished.");
 }

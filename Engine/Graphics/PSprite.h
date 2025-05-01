@@ -83,9 +83,9 @@ public:
         swap(exported, other.exported);
     }
 
-    void loadFromFile(std::string file, int q, bool downscale = true);
+    void loadFromFile(std::string file, bool downscale = true);
     template<typename T>
-    void loadFromFile(std::string file, int q, T) = delete;
+    void loadFromFile(std::string file, T) = delete;
     void setRepeated(bool r);
     void setTextureRect(sf::IntRect rect);
     sf::IntRect getTextureRect();

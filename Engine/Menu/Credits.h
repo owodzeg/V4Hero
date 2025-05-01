@@ -11,9 +11,6 @@
 class Credits
 {
 public:
-    Config* config;
-    int quality = 0;
-
     sf::SoundBuffer sb_outro, sb_credits;
     sf::Sound *s_outro, *s_credits;
 

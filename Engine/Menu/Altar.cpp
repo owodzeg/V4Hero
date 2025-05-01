@@ -4,6 +4,7 @@
 #include <spdlog/spdlog.h>
 #include "../CoreManager.h"
 #include "../StateManager.h"
+#include "../Constants.h"
 
 
 AltarMenu::AltarMenu()
@@ -20,34 +21,34 @@ AltarMenu::AltarMenu()
     {
         case 0: ///low
         {
-            ratio_x = config->GetInt("resX") / float(640);
-            ratio_y = config->GetInt("resY") / float(360);
+            ratio_x = config->GetInt("resX") / CANVAS_LOW_X;
+            ratio_y = config->GetInt("resY") / CANVAS_LOW_Y;
             break;
         }
 
         case 1: ///med
         {
-            ratio_x = config->GetInt("resX") / float(1280);
-            ratio_y = config->GetInt("resY") / float(720);
+            ratio_x = config->GetInt("resX") / CANVAS_MED_X;
+            ratio_y = config->GetInt("resY") / CANVAS_MED_Y;
             break;
         }
 
         case 2: ///high
         {
-            ratio_x = config->GetInt("resX") / float(1920);
-            ratio_y = config->GetInt("resY") / float(1080);
+            ratio_x = config->GetInt("resX") / CANVAS_HIGH_X;
+            ratio_y = config->GetInt("resY") / CANVAS_HIGH_Y;
             break;
         }
 
         case 3: ///ultra
         {
-            ratio_x = config->GetInt("resX") / float(3840);
-            ratio_y = config->GetInt("resY") / float(2160);
+            ratio_x = config->GetInt("resX") / CANVAS_ULTRA_X;
+            ratio_y = config->GetInt("resY") / CANVAS_ULTRA_Y;
             break;
         }
     }
 
-    altar_main.loadFromFile("resources/graphics/ui/altar/altar_main.png", quality);
+    altar_main.loadFromFile("resources/graphics/ui/altar/altar_main.png");
 
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
@@ -76,7 +77,7 @@ AltarMenu::AltarMenu()
     altar_item_desc.defaultStyleSetColor(sf::Color(111,71,51,255));
     altar_item_desc.append("");
 
-    ctrlTips.create(54*3, font, 60, sf::String("Left/Right/Up/Down: Navigate      O: Exit to Patapolis"), quality);
+    ctrlTips.create(54*3, font, 60, sf::String("Left/Right/Up/Down: Navigate      O: Exit to Patapolis"));
 
     SPDLOG_INFO("Initializing Altar finished.");
 }
@@ -143,8 +144,8 @@ void AltarMenu::reloadInventory()
                     tmp.r_inner.setFillColor(sf::Color(146, 173, 217, 255));
 
                     ///look up material's icon
-                    //tmp.icon.loadFromFile("resources/graphics/ui/altar/materials/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q);
-                    tmp.icon.loadFromFile("resources/graphics/item/textures/" + cur_item->spritesheet + "/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q);
+                    //tmp.icon.loadFromFile("resources/graphics/ui/altar/materials/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png");
+                    tmp.icon.loadFromFile("resources/graphics/item/textures/" + cur_item->spritesheet + "/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png");
                     tmp.icon.setOrigin(tmp.icon.getLocalBounds().size.x / 2, tmp.icon.getLocalBounds().size.y / 2);
 
                     break;
@@ -155,7 +156,7 @@ void AltarMenu::reloadInventory()
                     tmp.r_inner.setFillColor(sf::Color(199, 221, 167, 255));
 
                     ///look up material's icon
-                    tmp.icon.loadFromFile("resources/graphics/ui/altar/equip/spear_1.png", q);
+                    tmp.icon.loadFromFile("resources/graphics/ui/altar/equip/spear_1.png");
                     tmp.icon.setOrigin(tmp.icon.getLocalBounds().size.x / 2, tmp.icon.getLocalBounds().size.y / 2);
 
                     break;
@@ -166,7 +167,7 @@ void AltarMenu::reloadInventory()
                     tmp.r_inner.setFillColor(sf::Color(199, 221, 167, 255));
 
                     ///look up material's icon
-                    tmp.icon.loadFromFile("resources/graphics/ui/altar/equip/helm_1.png", q);
+                    tmp.icon.loadFromFile("resources/graphics/ui/altar/equip/helm_1.png");
                     tmp.icon.setOrigin(tmp.icon.getLocalBounds().size.x / 2, tmp.icon.getLocalBounds().size.y / 2);
 
                     break;
@@ -177,7 +178,7 @@ void AltarMenu::reloadInventory()
                     tmp.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
                     ///look up material's icon
-                    tmp.icon.loadFromFile("resources/graphics/item/textures/" + cur_item->spritesheet + "/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png", q);
+                    tmp.icon.loadFromFile("resources/graphics/item/textures/" + cur_item->spritesheet + "/" + Func::num_padding(cur_item->spritesheet_id, 4) + ".png");
                     tmp.icon.setOrigin(tmp.icon.getLocalBounds().size.x / 2, tmp.icon.getLocalBounds().size.y / 2);
 
                     break;

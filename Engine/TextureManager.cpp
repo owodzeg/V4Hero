@@ -30,7 +30,7 @@ void TextureManager::loadTexture(const std::string& path, int quality)
 
     if (quality < 3)
     {
-        SPDLOG_TRACE("Quality is {}, texture needs to be downscaled", quality);
+        SPDLOG_TRACE("Quality is {}, texture needs to be downscaled");
         loadImageFromFile(path);
 
         int ratio = 1;
@@ -84,7 +84,7 @@ sf::Texture& TextureManager::getTexture(const std::string& path, int quality, bo
         {
             if (quality < 3)
             {
-                SPDLOG_TRACE("Quality is {}, texture needs to be downscaled", quality);
+                SPDLOG_TRACE("Quality is {}, texture needs to be downscaled");
                 loadImageFromFile(path);
 
                 int ratio = 1;
@@ -215,7 +215,7 @@ void TextureManager::loadImageFromFileWithScale(const std::string& path, int qua
 
         if (quality < 3)
         {
-            SPDLOG_TRACE("Quality is {}, texture needs to be downscaled", quality);
+            SPDLOG_TRACE("Quality is {}, texture needs to be downscaled");
 
             int ratio = 1;
 
@@ -318,8 +318,10 @@ void TextureManager::applyForceLoad(bool force)
     forceLoad = force;
 }
 
-void TextureManager::reloadTextures(int quality)
+void TextureManager::reloadTextures()
 {
+    int quality = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
+
     for (const auto& texture : loadedTextures)
     {
         std::string path = texture.first;

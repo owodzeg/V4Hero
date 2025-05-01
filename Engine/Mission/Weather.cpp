@@ -22,7 +22,7 @@ void Weather::loadWeather(int type)
             //cout << "[Weather] Loading snowflakes" << endl;
             for (int i = 0; i < 3; i++)
             {
-                ps_snowflakes[i].loadFromFile("resources/graphics/weather/snowflake_" + std::to_string(i + 1) + ".png", thisConfig->GetInt("textureQuality"));
+                ps_snowflakes[i].loadFromFile("resources/graphics/weather/snowflake_" + std::to_string(i + 1) + ".png");
                 ps_snowflakes[i].setOrigin(ps_snowflakes[i].getLocalBounds().size.x / 2, ps_snowflakes[i].getLocalBounds().size.y / 2);
             }
 
