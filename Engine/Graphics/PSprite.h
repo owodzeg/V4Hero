@@ -105,8 +105,7 @@ public:
     void setSmooth(bool smooth);
     void drawShader(sf::RenderWindow* window, sf::Shader& shader);
     void draw();
-    void update(sf::RenderWindow& window);
-    void saveToFile(std::string file);
+    void update();
 
     sf::Sprite* get() const
     {

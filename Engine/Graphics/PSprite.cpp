@@ -272,7 +272,7 @@ void PSprite::draw()
     oldQualitySetting = qualitySetting;
 }
 
-void PSprite::update(sf::RenderWindow& window)
+void PSprite::update()
 {
     ///Update updates the sprite without drawing it on screen. Useful for RenderTexture
     s->setTexture(TextureManager::getInstance().getTexture(texturePath));

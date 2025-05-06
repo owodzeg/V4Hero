@@ -52,7 +52,7 @@ void Entity::LoadEntity(const std::string& path)
         std::ifstream ent(model_name+"/entity.json");
         if(ent.good())
         {
-            entity << ent;
+            ent >> entity;
         }
         else
         {
@@ -125,7 +125,7 @@ void Entity::LoadEntity(const std::string& path)
         SPDLOG_INFO("Loot table: {}", entity["loot"].dump());
 
         std::vector<Entity::Loot> new_loot;
-        Func::parseEntityLoot(CoreManager::getInstance().getCore()->gen, roll, entity["loot"], new_loot);
+        Func::parseEntityLoot(Func::global_rng(), roll, entity["loot"], new_loot);
 
         loot_table = new_loot;
 
@@ -336,7 +336,7 @@ void Entity::handleDecisions() // what should the entity do?
                     {
                         hspeed = 0;
                         actionTimer.restart();
-                        action = rand() % 5;
+                        action = Func::rand_range(0, 4);
                         setAnimation("idle_armed_focused");
                     }
                 }
@@ -380,7 +380,7 @@ void Entity::handleDecisions() // what should the entity do?
                 {
                     hspeed = 0;
                     actionTimer.restart();
-                    action = rand() % 5;
+                    action = Func::rand_range(0, 4);
                     setAnimation("idle_armed_focused");
                 }
 
@@ -409,10 +409,10 @@ void Entity::handleAttack() // entity's attack
         {
             float prj_xPos = global_x+local_x+hPos;
             float prj_yPos = global_y+local_y+vPos-90;
-            float prj_hSpeed = -1800 - (rand()%50);
-            float prj_vSpeed = -1800 - (rand()%70);
+            float prj_hSpeed = -1800 - Func::rand_range(0, 50);
+            float prj_vSpeed = -1800 - Func::rand_range(0, 70);
             auto prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn, true);
-            prj->damage = minDmg + (rand() % std::min(int(minDmg-maxDmg),1));
+            prj->damage = minDmg + (Func::rand_range(0, std::min(int(maxDmg - minDmg), 1)));
 
             threw = true;
             attackTimer.restart();
@@ -476,11 +476,11 @@ void Entity::Draw()
 
     auto mc = CoreManager::getInstance().getMissionController();
 
-    distanceToPlayer = 9999999;
+    distanceToPlayer = 9999999.f;
 
     for(auto& pon : mc->yaripons)
     {
-        distanceToPlayer = fmax(0, fmin(distanceToPlayer, abs( (pon->global_x+pon->local_x+pon->gap_x) - (global_x + local_x + hPos))));
+        distanceToPlayer = static_cast<float>(fmax(0, fmin(distanceToPlayer, abs( (pon->global_x+pon->local_x+pon->gap_x) - (global_x + local_x + hPos)))));
     }
 
     handleApproach();
@@ -493,7 +493,6 @@ void Entity::Draw()
 
     if (toggleDebug)
     {
-        auto strRepo = CoreManager::getInstance().getStrRepo();
         debugText.reset();
         debugText.append(std::format("{{size 36}}{{outline 2 255 255 255}}o{{n}}{}{{n}}curHP{{n}}{}{{n}}maxHP{{n}}{}", orderID, curHP, maxHP));
         debugText.setGlobalOrigin(debugText.getGlobalBounds().size.x / 2, debugText.getGlobalBounds().size.y);
@@ -503,7 +502,6 @@ void Entity::Draw()
 
     if (toggleBehaviorDebug)
     {
-        auto strRepo = CoreManager::getInstance().getStrRepo();
         debugText.reset();
         debugText.append(std::format("{{size 36}}{{outline 2 255 255 255}}anim{{n}}{}{{n}}frame{{n}}{}{{n}}hspeed{{n}}{}{{n}}vspeed{{n}}{}{{n}}hPos{{n}}{}{{n}}vPos{{n}}{}{{n}}action{{n}}{}{{n}}threw{{n}}{}{{n}}dtp{{n}}{}", getAnimation(), getAnimationFrame(), hspeed, vspeed, hPos, vPos, action, threw, distanceToPlayer));
         debugText.setGlobalOrigin(debugText.getGlobalBounds().size.x / 2, debugText.getGlobalBounds().size.y);

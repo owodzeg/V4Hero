@@ -59,12 +59,12 @@ void Camera::Work(sf::View& view, float dest_zoom_over)
         
         if (inputCtrl->isKeyHeld(Input::Keys::LEFT))
         {
-            dest_zoom = 1.002;
+            dest_zoom = 1.002f;
         }
 
         if (inputCtrl->isKeyHeld(Input::Keys::RIGHT))
         {
-            dest_zoom = 0.998;
+            dest_zoom = 0.998f;
         }
     }
 
@@ -132,13 +132,13 @@ void Camera::Work(sf::View& view, float dest_zoom_over)
 
         if (fps >= 60)
         {
-            zoomLower = 0.9999 + (0.01 / (fps));
-            zoomUpper = 1.0001 - (0.01 / (fps));
+            zoomLower = 0.9999f + (0.01f / (fps));
+            zoomUpper = 1.0001f - (0.01f / (fps));
         }
         else
         {
-            zoomLower = 0.9999;
-            zoomUpper = 1.0001;
+            zoomLower = 0.9999f;
+            zoomUpper = 1.0001f;
         }
 
         if ((zoom > zoomLower) && (zoom < zoomUpper))

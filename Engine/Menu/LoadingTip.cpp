@@ -10,7 +10,6 @@ LoadingTip::LoadingTip(int mode)
     timer.restart();
     targetTime = timer.getElapsedTime() + sf::seconds(1.0f);
 
-    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
     StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
@@ -27,8 +26,8 @@ LoadingTip::LoadingTip(int mode)
         loading_eye1.load("resources/graphics/ui/tips/loading_eye.png");
         loading_eye2.load("resources/graphics/ui/tips/loading_eye.png");
 
-        loading_eye1.setOrigin(loading_eye1.getGlobalBounds().size.x * 0.85, loading_eye1.getGlobalBounds().size.y * 0.85);
-        loading_eye2.setOrigin(loading_eye2.getGlobalBounds().size.x * 0.85, loading_eye2.getGlobalBounds().size.y * 0.85);
+        loading_eye1.setOrigin(loading_eye1.getGlobalBounds().size.x * 0.85f, loading_eye1.getGlobalBounds().size.y * 0.85f);
+        loading_eye2.setOrigin(loading_eye2.getGlobalBounds().size.x * 0.85f, loading_eye2.getGlobalBounds().size.y * 0.85f);
 
         box_1.setPosition(sf::Vector2f(0, 60 * CoreManager::getInstance().getCore()->resRatio));
         box_2.setPosition(sf::Vector2f(0, 360 * CoreManager::getInstance().getCore()->resRatio));
@@ -36,9 +35,9 @@ LoadingTip::LoadingTip(int mode)
         box_1.setFillColor(sf::Color(0, 0, 0, 192));
         box_2.setFillColor(sf::Color(0, 0, 0, 192));
 
-        int tipBackground = rand() % tipsUtil->backgroundFileNames.size();
-        int tipIcon = rand() % tipsUtil->iconFileNames.size();
-        int tipText = (rand() % tipsUtil->tipAmount) + 1;
+        int tipBackground = Func::rand_range(0, static_cast<int>(tipsUtil->backgroundFileNames.size()) - 1);
+        int tipIcon = Func::rand_range(0, static_cast<int>(tipsUtil->iconFileNames.size()) - 1);
+        int tipText = Func::rand_range(0, tipsUtil->tipAmount - 1) + 1;
 
         std::string title_key = "tip" + std::to_string(tipText) + "_title";
         std::string desc_key = "tip" + std::to_string(tipText) + "_desc";
@@ -85,8 +84,8 @@ LoadingTip::LoadingTip(int mode)
         loading_eye1.load("resources/graphics/ui/tips/loading_eye.png");
         loading_eye2.load("resources/graphics/ui/tips/loading_eye.png");
 
-        loading_eye1.setOrigin(loading_eye1.getGlobalBounds().size.x * 0.85, loading_eye1.getGlobalBounds().size.y * 0.85);
-        loading_eye2.setOrigin(loading_eye1.getGlobalBounds().size.x * 0.85, loading_eye1.getGlobalBounds().size.y * 0.85);
+        loading_eye1.setOrigin(loading_eye1.getGlobalBounds().size.x * 0.85f, loading_eye1.getGlobalBounds().size.y * 0.85f);
+        loading_eye2.setOrigin(loading_eye1.getGlobalBounds().size.x * 0.85f, loading_eye1.getGlobalBounds().size.y * 0.85f);
 
         box_1.setPosition(sf::Vector2f(0, 60 * CoreManager::getInstance().getCore()->resRatio));
         box_2.setPosition(sf::Vector2f(0, 360 * CoreManager::getInstance().getCore()->resRatio));
@@ -152,7 +151,7 @@ void LoadingTip::Draw()
                 alpha = startAlpha + (endAlpha - startAlpha) * (progress * progress);
             }
 
-            alpha = std::max(0, std::min(255, static_cast<int>(alpha)));
+            alpha = static_cast<float>(std::max(0, std::min(255, static_cast<int>(alpha))));
 
 
             //t_pressAnyKey.setColor(sf::Color(255, 255, 255, alpha));

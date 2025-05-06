@@ -12,7 +12,6 @@ using namespace std::chrono;
 
 MissionController::MissionController()
 {
-    int q = CoreManager::getInstance().getConfig()->GetInt("textureQuality");
     auto strRepo = CoreManager::getInstance().getStrRepo();
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
@@ -51,7 +50,7 @@ void MissionController::LoadMission(const std::string& path)
     std::ifstream mfile(path);
     if(mfile.good())
     {
-        mission << mfile;
+        mfile >> mission;
     }
     else
     {
@@ -74,11 +73,11 @@ void MissionController::LoadMission(const std::string& path)
 
     std::vector<std::future<void>> futures;
 
-    int yaripon_count = CoreManager::getInstance().getSaveReader()->ponReg.pons.size();
+    unsigned int yaripon_count = static_cast<unsigned int>(CoreManager::getInstance().getSaveReader()->ponReg.pons.size());
 
     if (pons == 0)
     {
-        for (int i = 1; i <= yaripon_count; i++)
+        for (unsigned int i = 1; i <= yaripon_count; i++)
         {
             futures.emplace_back(std::async(std::launch::async, [i, yaripon_count, this]() {
                 auto yaripon = std::make_unique<Yaripon>(i, yaripon_count);
@@ -86,9 +85,9 @@ void MissionController::LoadMission(const std::string& path)
 
                 Pon* currentPon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(i - 1);
 
-                int hp = currentPon->pon_base_hp;
-                int minDmg = currentPon->pon_base_min_dmg;
-                int maxDmg = currentPon->pon_base_max_dmg;
+                float hp = static_cast<float>(currentPon->pon_base_hp);
+                float minDmg = static_cast<float>(currentPon->pon_base_min_dmg);
+                float maxDmg = static_cast<float>(currentPon->pon_base_max_dmg);
 
                 for (auto s : currentPon->slots)
                 {
@@ -235,7 +234,7 @@ void MissionController::LoadMission(const std::string& path)
                     if(entity.contains("loot") && !entity["loot"].is_null())
                     {
                         std::vector<Entity::Loot> new_loot;
-                        Func::parseEntityLoot(CoreManager::getInstance().getCore()->gen, roll, entity["loot"], new_loot);
+                        Func::parseEntityLoot(Func::global_rng(), roll, entity["loot"], new_loot);
 
                         e->loot_table = new_loot;
                     }
@@ -278,12 +277,12 @@ void MissionController::LoadMission(const std::string& path)
     CoreManager::getInstance().getSongController()->LoadTheme(bgm);
     CoreManager::getInstance().getRhythm()->LoadTheme(bgm);
 
-    feverworms.back().get()->main.animation.animationSpeed = 60.6 * (CoreManager::getInstance().getSongController()->getBPM() / 120.f);
+    feverworms.back().get()->main.animation.animationSpeed = 60.6f * (CoreManager::getInstance().getSongController()->getBPM() / 120.f);
 
     lastRhythmCheck = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 
     //ExecuteZoom(0.999, 1000);
-    mission_view.setSize(sf::Vector2f(CoreManager::getInstance().getWindow()->getSize().x, CoreManager::getInstance().getWindow()->getSize().y));
+    mission_view.setSize(sf::Vector2f(static_cast<float>(CoreManager::getInstance().getWindow()->getSize().x), static_cast<float>(CoreManager::getInstance().getWindow()->getSize().y)));
 
     initialized = true;
 }
@@ -418,8 +417,8 @@ void MissionController::DoMissionEnd()
 
     if (missionEndTimer.getElapsedTime().asMilliseconds() < 7700)
     {
-        float leftmostPataX = 99999999;
-        float rightmostPataX = -99999999;
+        float leftmostPataX = 99999999.f;
+        float rightmostPataX = -99999999.f;
 
         for(auto& p : hatapons)
         {
@@ -492,8 +491,8 @@ void MissionController::DoMissionEnd()
     auto v = window->getView();
     window->setView(window->getDefaultView());
 
-    fade_box.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
-    fade_box.setFillColor(sf::Color(0, 0, 0, fade_alpha));
+    fade_box.setSize(sf::Vector2f(static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y)));
+    fade_box.setFillColor(sf::Color(0, 0, 0, static_cast<uint8_t>(fade_alpha)));
     window->draw(fade_box);
 
     /** Mission end event (Mission complete/Mission failed screen + transition to Patapolis **/
@@ -506,7 +505,7 @@ void MissionController::DoMissionEnd()
             {
                 if (missionEndTimer.getElapsedTime().asMilliseconds() >= 13050)
                 {
-                    textCurScale = 1.4;
+                    textCurScale = 1.4f;
                     textBounce = true;
                 }
             }
@@ -559,8 +558,8 @@ void MissionController::DoMissionEnd()
                     fadeout_alpha = 255;
                 }
 
-                fadeout_box.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
-                fadeout_box.setFillColor(sf::Color(0, 0, 0, fadeout_alpha));
+                fadeout_box.setSize(sf::Vector2f(static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y)));
+                fadeout_box.setFillColor(sf::Color(0, 0, 0, static_cast<uint8_t>(fadeout_alpha)));
                 window->draw(fadeout_box);
             }
 
@@ -633,8 +632,8 @@ void MissionController::DoMissionEnd()
                     fadeout_alpha = 255;
                 }
 
-                fadeout_box.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
-                fadeout_box.setFillColor(sf::Color(0, 0, 0, fadeout_alpha));
+                fadeout_box.setSize(sf::Vector2f(static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y)));
+                fadeout_box.setFillColor(sf::Color(0, 0, 0, static_cast<uint8_t>(fadeout_alpha)));
                 window->draw(fadeout_box);
             }
 
@@ -731,7 +730,7 @@ void MissionController::ProcessRhythmMessages()
 
         if(action == Rhythm::RhythmAction::PERFECT_COMMAND)
         {
-            pataCurMaxSpeed = pataMaxSpeed * 1.2;
+            pataCurMaxSpeed = pataMaxSpeed * 1.2f;
         }
 
         if(action == Rhythm::RhythmAction::COMBO_BREAK)
@@ -907,7 +906,7 @@ void MissionController::DrawMissionUI()
     thumb.setPosition(sf::Vector2f(200*CoreManager::getInstance().getCore()->resRatio, thumbY*CoreManager::getInstance().getCore()->resRatio));
     CoreManager::getInstance().getWindow()->draw(thumb);
 
-    hatapons.back().get()->main.animation.drawCopy(sf::Vector2f(221, thumbY-148), sf::Vector2f(0.6, 0.6));
+    hatapons.back().get()->main.animation.drawCopy(sf::Vector2f(221, thumbY-148), sf::Vector2f(0.6f, 0.6f));
 
     hpbar_out.setPosition(200, thumbY-120);
     hpbar_out.draw();
@@ -931,7 +930,7 @@ void MissionController::DrawMissionUI()
         thumb.setPosition(sf::Vector2f(400*CoreManager::getInstance().getCore()->resRatio, thumbY*CoreManager::getInstance().getCore()->resRatio));
         CoreManager::getInstance().getWindow()->draw(thumb);
 
-        yaripons.back().get()->main.animation.drawCopy(sf::Vector2f(400, thumbY), sf::Vector2f(0.6, 0.6));
+        yaripons.back().get()->main.animation.drawCopy(sf::Vector2f(400, thumbY), sf::Vector2f(0.6f, 0.6f));
 
         hpbar_out.setPosition(400, thumbY-120);
         hpbar_out.draw();
@@ -982,8 +981,8 @@ void MissionController::DrawMissionUI()
 
     for(auto iid : dropped_ids)
     {
-        int row = floor(diid/12);
-        int col = diid%12;
+        float row = static_cast<float>(floor(diid/12));
+        float col = static_cast<float>(diid%12);
 
         sf::CircleShape i_thumb;
         i_thumb.setRadius(80 * CoreManager::getInstance().getCore()->resRatio);
@@ -996,7 +995,7 @@ void MissionController::DrawMissionUI()
 
         PSprite& item = ResourceManager::getInstance().getSprite(std::format("resources/graphics/item/textures/{}/{:04}.png", itemPtr->spritesheet, itemPtr->spritesheet_id));
         item.setOrigin(item.getLocalBounds().size.x/2, item.getLocalBounds().size.y/2);
-        item.setScale(0.65,0.65);
+        item.setScale(0.65f,0.65f);
         item.setPosition(3840-200-(180*col), 250+(180*row));
         item.setRotation(0);
         item.setColor(sf::Color::White);
@@ -1201,7 +1200,7 @@ void MissionController::ProcessProjectiles()
                             if(projectile->tipY > pos.y+hb.position.y && projectile->tipY < pos.y+hb.size.y)
                             {
                                 projectile->finished = true;
-                                pon->curHP -= 3 + rand() % 5;
+                                pon->curHP -= 3 + Func::rand_range(0, 4);
                             }
                         }
                     }
@@ -1256,7 +1255,7 @@ void MissionController::Update()
     float fps = CoreManager::getInstance().getCore()->getFPS();
 
     // TODO: why the fuck is this needed? without this, zoom doesn't work correctly.
-    zoom_offset = (0.000709722222222 * CoreManager::getInstance().getWindow()->getSize().y);
+    zoom_offset = (0.000709722222222f * CoreManager::getInstance().getWindow()->getSize().y);
 
     rhythm->doRhythm();
 
@@ -1296,11 +1295,11 @@ void MissionController::Update()
         if(yari_distance < 3000 && !entities.empty())
         {
             yari_inSight = true;
-            ExecuteZoom(1.0007, 1.2);
+            ExecuteZoom(1.0007f, 1.2f);
         }
         else
         {
-            ExecuteZoom(0.9993, 0.8);
+            ExecuteZoom(0.9993f, 0.8f);
         }
     }
 
@@ -1326,8 +1325,8 @@ void MissionController::Update()
     // i think in patapon the camera actually follows the rightmost spot
     // can be experimented here
 
-    float leftmostPataX = 99999999;
-    float rightmostPataX = -99999999;
+    float leftmostPataX = 99999999.f;
+    float rightmostPataX = -99999999.f;
 
     for(auto& p : hatapons)
     {

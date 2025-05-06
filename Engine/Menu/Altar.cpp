@@ -131,10 +131,10 @@ void AltarMenu::reloadInventory()
             tmp.data = cur_item;
             tmp.amount = saveReader->invData.items[i].item_count;
 
-            tmp.r_outer.setSize(sf::Vector2f(312.0 * CoreManager::getInstance().getCore()->resRatio, 231.0 * CoreManager::getInstance().getCore()->resRatio));
+            tmp.r_outer.setSize(sf::Vector2f(312.0f * CoreManager::getInstance().getCore()->resRatio, 231.0f * CoreManager::getInstance().getCore()->resRatio));
             tmp.r_outer.setFillColor(sf::Color(102, 102, 102, 255));
 
-            tmp.r_inner.setSize(sf::Vector2f(216.0 * CoreManager::getInstance().getCore()->resRatio, 216.0 * CoreManager::getInstance().getCore()->resRatio));
+            tmp.r_inner.setSize(sf::Vector2f(216.0f * CoreManager::getInstance().getCore()->resRatio, 216.0f * CoreManager::getInstance().getCore()->resRatio));
             tmp.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
             switch (saveReader->itemReg.getCategoryIDByString(cur_item->item_category))
@@ -242,7 +242,7 @@ void AltarMenu::reloadInventory()
 
             if (highlight)
             {
-                inventory_boxes[a].r_highlight.setSize(sf::Vector2f(312.0 * CoreManager::getInstance().getCore()->resRatio, 231.0 * CoreManager::getInstance().getCore()->resRatio));
+                inventory_boxes[a].r_highlight.setSize(sf::Vector2f(312.0f * CoreManager::getInstance().getCore()->resRatio, 231.0f * CoreManager::getInstance().getCore()->resRatio));
                 inventory_boxes[a].r_highlight.setFillColor(sf::Color::White);
 
                 inventory_boxes[a].highlight = true;
@@ -259,199 +259,196 @@ void AltarMenu::Update()
     sf::View lastView = window->getView();
     window->setView(window->getDefaultView());
 
-    if (true)
+    InputController* inputCtrl = CoreManager::getInstance().getInputController();
+    float fps = CoreManager::getInstance().getCore()->getFPS();
+
+    highlight_x += 7.0f / fps;
+
+    // TO-DO: control tips for new system
+    /* ctrlTips.x = 0;
+    ctrlTips.y = (720 - ctrlTips.ySize);
+    ctrlTips.draw(window); */
+
+    altar_main.setOrigin(altar_main.getLocalBounds().size.x / 2, altar_main.getLocalBounds().size.y / 2);
+    altar_main.setPosition(1020, 1080);
+
+    altar_main.draw();
+
+    for (int i = 0; i < 24; i++)
     {
-        InputController* inputCtrl = CoreManager::getInstance().getInputController();
-        float fps = CoreManager::getInstance().getCore()->getFPS();
+        int curItem = grid_offset_y * 4 + i;
 
-        highlight_x += 7.0 / fps;
+        int grid_x = i % 4;
+        int grid_y = floor(i / 4);
 
-        // TO-DO: control tips for new system
-        /* ctrlTips.x = 0;
-        ctrlTips.y = (720 - ctrlTips.ySize);
-        ctrlTips.draw(window); */
+        float xpos = 216 + (grid_x * 354);
+        float ypos = 192 + (grid_y * 264);
 
-        altar_main.setOrigin(altar_main.getLocalBounds().size.x / 2, altar_main.getLocalBounds().size.y / 2);
-        altar_main.setPosition(1020, 1080);
-
-        altar_main.draw();
-
-        for (int i = 0; i < 24; i++)
+        if (grid_offset_y * 4 + i < inventory_boxes.size())
         {
-            int curItem = grid_offset_y * 4 + i;
+            inventory_boxes[curItem].r_outer.setPosition(sf::Vector2f((120 + xpos) * CoreManager::getInstance().getCore()->resRatio, (117 + ypos) * CoreManager::getInstance().getCore()->resRatio));
+            inventory_boxes[curItem].r_inner.setPosition(sf::Vector2f((120 + xpos + 2.5) * CoreManager::getInstance().getCore()->resRatio, (117 + ypos + 2.5) * CoreManager::getInstance().getCore()->resRatio));
+            window->draw(inventory_boxes[curItem].r_outer);
+            window->draw(inventory_boxes[curItem].r_inner);
 
-            int grid_x = i % 4;
-            int grid_y = floor(i / 4);
+            //inventory_boxes[i].num.setOrigin(inventory_boxes[i].num.getLocalBounds().size.x,inventory_boxes[i].num.getLocalBounds().size.y);
+            //inventory_boxes[i].num_shadow.setOrigin(inventory_boxes[i].num_shadow.getLocalBounds().size.x,inventory_boxes[i].num_shadow.getLocalBounds().size.y);
 
-            float xpos = 216 + (grid_x * 354);
-            float ypos = 192 + (grid_y * 264);
+            if ((inventory_boxes[curItem].data->item_category == "key_items") || (inventory_boxes[curItem].data->item_category == "materials")) ///Bound to break
+                inventory_boxes[curItem].icon.setScale(0.64f, 0.64f);
 
-            if (grid_offset_y * 4 + i < inventory_boxes.size())
+            inventory_boxes[curItem].icon.setPosition((234 + xpos), (234 + ypos));
+            inventory_boxes[curItem].icon.draw();
+
+            inventory_boxes[curItem].num.setGlobalPosition((270 + xpos), (246 + ypos));
+            inventory_boxes[curItem].num_shadow.setGlobalPosition((273 + xpos), (252 + ypos));
+
+            inventory_boxes[curItem].num_shadow.draw();
+            inventory_boxes[curItem].num.draw();
+
+            if (inventory_boxes[curItem].highlight)
             {
-                inventory_boxes[curItem].r_outer.setPosition(sf::Vector2f((120 + xpos) * CoreManager::getInstance().getCore()->resRatio, (117 + ypos) * CoreManager::getInstance().getCore()->resRatio));
-                inventory_boxes[curItem].r_inner.setPosition(sf::Vector2f((120 + xpos + 2.5) * CoreManager::getInstance().getCore()->resRatio, (117 + ypos + 2.5) * CoreManager::getInstance().getCore()->resRatio));
-                window->draw(inventory_boxes[curItem].r_outer);
-                window->draw(inventory_boxes[curItem].r_inner);
+                inventory_boxes[curItem].r_highlight.setPosition(sf::Vector2f((120 + xpos) * CoreManager::getInstance().getCore()->resRatio, (117 + ypos) * CoreManager::getInstance().getCore()->resRatio
+            ));
+                inventory_boxes[curItem].r_highlight.setFillColor(sf::Color(255, 255, 255, 64 + (sin(highlight_x) * 64)));
+                window->draw(inventory_boxes[curItem].r_highlight);
+            }
+        } else
+        {
+            InvBox tmp_inv;
 
-                //inventory_boxes[i].num.setOrigin(inventory_boxes[i].num.getLocalBounds().size.x,inventory_boxes[i].num.getLocalBounds().size.y);
-                //inventory_boxes[i].num_shadow.setOrigin(inventory_boxes[i].num_shadow.getLocalBounds().size.x,inventory_boxes[i].num_shadow.getLocalBounds().size.y);
+            tmp_inv.r_outer.setSize(sf::Vector2f(312.0f * CoreManager::getInstance().getCore()->resRatio, 231.0f * CoreManager::getInstance().getCore()->resRatio));
+            tmp_inv.r_outer.setFillColor(sf::Color(102, 102, 102, 255));
 
-                if ((inventory_boxes[curItem].data->item_category == "key_items") || (inventory_boxes[curItem].data->item_category == "materials")) ///Bound to break
-                    inventory_boxes[curItem].icon.setScale(0.64, 0.64);
+            tmp_inv.r_inner.setSize(sf::Vector2f(216.0f * CoreManager::getInstance().getCore()->resRatio, 216.0f * CoreManager::getInstance().getCore()->resRatio));
+            tmp_inv.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
-                inventory_boxes[curItem].icon.setPosition((234 + xpos), (234 + ypos));
-                inventory_boxes[curItem].icon.draw();
+            tmp_inv.r_outer.setPosition(sf::Vector2f((120 + xpos) * CoreManager::getInstance().getCore()->resRatio, (117 + ypos) * CoreManager::getInstance().getCore()->resRatio));
+            tmp_inv.r_inner.setPosition(sf::Vector2f((120 + xpos + 2.5) * CoreManager::getInstance().getCore()->resRatio, (117 + ypos + 2.5) * CoreManager::getInstance().getCore()->resRatio));
+            window->draw(tmp_inv.r_outer);
+            window->draw(tmp_inv.r_inner);
+        }
+    }
 
-                inventory_boxes[curItem].num.setGlobalPosition((270 + xpos), (246 + ypos));
-                inventory_boxes[curItem].num_shadow.setGlobalPosition((273 + xpos), (252 + ypos));
+    r_sel.setSize(sf::Vector2f(309.0f * CoreManager::getInstance().getCore()->resRatio, 231.0f * CoreManager::getInstance().getCore()->resRatio));
+    r_sel.setFillColor(sf::Color::Transparent);
+    r_sel.setOutlineThickness(3);
+    r_sel.setOutlineColor(sf::Color(255, 0, 32, 255));
+    r_sel.setPosition(sf::Vector2f((339 + (grid_sel_x * 354)) * CoreManager::getInstance().getCore()->resRatio, (309 + (grid_sel_y * 264)) * CoreManager::getInstance().getCore()->resRatio
+));
 
-                inventory_boxes[curItem].num_shadow.draw();
-                inventory_boxes[curItem].num.draw();
+    window->draw(r_sel);
 
-                if (inventory_boxes[curItem].highlight)
-                {
-                    inventory_boxes[curItem].r_highlight.setPosition(sf::Vector2f((120 + xpos) * CoreManager::getInstance().getCore()->resRatio, (117 + ypos) * CoreManager::getInstance().getCore()->resRatio
-                ));
-                    inventory_boxes[curItem].r_highlight.setFillColor(sf::Color(255, 255, 255, 64 + (sin(highlight_x) * 64)));
-                    window->draw(inventory_boxes[curItem].r_highlight);
-                }
+    rr_title.Create(1098, 300, 60);
+    rr_title.x = 933 * 3;
+    rr_title.y = 141 * 3;
+    rr_title.setOrigin(sf::Vector2f((rr_title.width + 40) / 2, (rr_title.height + 40) / 2));
+
+    rr_title_sh.Create(rr_title.width + 2, rr_title.height + 2, 20 * 3, sf::Color(0, 0, 0, 96));
+    rr_title_sh.x = rr_title.x - 1;
+    rr_title_sh.y = rr_title.y - 1;
+    rr_title_sh.setOrigin(sf::Vector2f((rr_title.width + 40) / 2, (rr_title.height + 40) / 2));
+
+    rr_title_sh.Draw();
+    rr_title.Draw();
+
+    rr_desc.Create(1320, 1155, 60);
+    rr_desc.x = rr_title.x;
+    rr_desc.y = 436 * 3;
+    rr_desc.setOrigin(sf::Vector2f((rr_desc.width + 40) / 2, (rr_desc.height + 40) / 2));
+
+    rr_desc_sh.Create(rr_desc.width + 2, rr_desc.height + 2, 20 * 3, sf::Color(0, 0, 0, 96));
+    rr_desc_sh.x = rr_desc.x - 1;
+    rr_desc_sh.y = rr_desc.y - 1;
+    rr_desc_sh.setOrigin(sf::Vector2f((rr_desc.width + 40) / 2, (rr_desc.height + 40) / 2));
+
+    rr_desc_sh.Draw();
+    rr_desc.Draw();
+
+    altar_title.setGlobalOrigin(altar_title.getGlobalBounds().size.x / 2, altar_title.getGlobalBounds().size.y / 2);
+    altar_kaching.setGlobalOrigin(altar_kaching.getGlobalBounds().size.x / 2, altar_kaching.getGlobalBounds().size.y / 2);
+
+    altar_title.setGlobalPosition(2799, 300);
+    altar_kaching.setGlobalPosition(2799, 510);
+
+    altar_item_title.setGlobalPosition(2799, 750);
+    altar_item_category.setGlobalPosition(2799, 840);
+    altar_item_desc.setGlobalPosition(2175, 990);
+
+    altar_title.draw();
+    altar_kaching.draw();
+
+    altar_item_title.setGlobalOrigin(altar_item_title.getGlobalBounds().size.x / 2, altar_item_title.getGlobalBounds().size.y / 2);
+    altar_item_category.setGlobalOrigin(altar_item_category.getGlobalBounds().size.x / 2, altar_item_category.getGlobalBounds().size.y / 2);
+    altar_item_desc.setGlobalOrigin(0, 0);
+
+    altar_item_title.draw();
+    altar_item_category.draw();
+    altar_item_desc.draw();
+
+    if (inputCtrl->isKeyPressed(Input::Keys::LEFT))
+    {
+        grid_sel_x--;
+
+        if (grid_sel_x < 0)
+            grid_sel_x = 3;
+
+        updateAltarDescriptions();
+    }
+    if (inputCtrl->isKeyPressed(Input::Keys::RIGHT))
+    {
+        grid_sel_x++;
+
+        if (grid_sel_x > 3)
+            grid_sel_x = 0;
+
+        updateAltarDescriptions();
+    }
+    if (inputCtrl->isKeyPressed(Input::Keys::UP))
+    {
+        grid_sel_y--;
+
+        if (grid_sel_y < 0)
+        {
+            if (grid_offset_y > 0)
+            {
+                grid_offset_y--;
+                grid_sel_y = 0;
             } else
             {
-                InvBox tmp_inv;
+                grid_offset_y = ceil(inventory_boxes.size() / 4.0) - 6;
 
-                tmp_inv.r_outer.setSize(sf::Vector2f(312.0 * CoreManager::getInstance().getCore()->resRatio, 231.0 * CoreManager::getInstance().getCore()->resRatio));
-                tmp_inv.r_outer.setFillColor(sf::Color(102, 102, 102, 255));
-
-                tmp_inv.r_inner.setSize(sf::Vector2f(216.0 * CoreManager::getInstance().getCore()->resRatio, 216.0 * CoreManager::getInstance().getCore()->resRatio));
-                tmp_inv.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
-
-                tmp_inv.r_outer.setPosition(sf::Vector2f((120 + xpos) * CoreManager::getInstance().getCore()->resRatio, (117 + ypos) * CoreManager::getInstance().getCore()->resRatio));
-                tmp_inv.r_inner.setPosition(sf::Vector2f((120 + xpos + 2.5) * CoreManager::getInstance().getCore()->resRatio, (117 + ypos + 2.5) * CoreManager::getInstance().getCore()->resRatio));
-                window->draw(tmp_inv.r_outer);
-                window->draw(tmp_inv.r_inner);
-            }
-        }
-
-        r_sel.setSize(sf::Vector2f(309.0 * CoreManager::getInstance().getCore()->resRatio, 231.0 * CoreManager::getInstance().getCore()->resRatio));
-        r_sel.setFillColor(sf::Color::Transparent);
-        r_sel.setOutlineThickness(3);
-        r_sel.setOutlineColor(sf::Color(255, 0, 32, 255));
-        r_sel.setPosition(sf::Vector2f((339 + (grid_sel_x * 354)) * CoreManager::getInstance().getCore()->resRatio, (309 + (grid_sel_y * 264)) * CoreManager::getInstance().getCore()->resRatio
-    ));
-
-        window->draw(r_sel);
-
-        rr_title.Create(1098, 300, 60);
-        rr_title.x = 933 * 3;
-        rr_title.y = 141 * 3;
-        rr_title.setOrigin(sf::Vector2f((rr_title.width + 40) / 2, (rr_title.height + 40) / 2));
-
-        rr_title_sh.Create(rr_title.width + 2, rr_title.height + 2, 20 * 3, sf::Color(0, 0, 0, 96));
-        rr_title_sh.x = rr_title.x - 1;
-        rr_title_sh.y = rr_title.y - 1;
-        rr_title_sh.setOrigin(sf::Vector2f((rr_title.width + 40) / 2, (rr_title.height + 40) / 2));
-
-        rr_title_sh.Draw();
-        rr_title.Draw();
-
-        rr_desc.Create(1320, 1155, 60);
-        rr_desc.x = rr_title.x;
-        rr_desc.y = 436 * 3;
-        rr_desc.setOrigin(sf::Vector2f((rr_desc.width + 40) / 2, (rr_desc.height + 40) / 2));
-
-        rr_desc_sh.Create(rr_desc.width + 2, rr_desc.height + 2, 20 * 3, sf::Color(0, 0, 0, 96));
-        rr_desc_sh.x = rr_desc.x - 1;
-        rr_desc_sh.y = rr_desc.y - 1;
-        rr_desc_sh.setOrigin(sf::Vector2f((rr_desc.width + 40) / 2, (rr_desc.height + 40) / 2));
-
-        rr_desc_sh.Draw();
-        rr_desc.Draw();
-
-        altar_title.setGlobalOrigin(altar_title.getGlobalBounds().size.x / 2, altar_title.getGlobalBounds().size.y / 2);
-        altar_kaching.setGlobalOrigin(altar_kaching.getGlobalBounds().size.x / 2, altar_kaching.getGlobalBounds().size.y / 2);
-
-        altar_title.setGlobalPosition(2799, 300);
-        altar_kaching.setGlobalPosition(2799, 510);
-
-        altar_item_title.setGlobalPosition(2799, 750);
-        altar_item_category.setGlobalPosition(2799, 840);
-        altar_item_desc.setGlobalPosition(2175, 990);
-
-        altar_title.draw();
-        altar_kaching.draw();
-
-        altar_item_title.setGlobalOrigin(altar_item_title.getGlobalBounds().size.x / 2, altar_item_title.getGlobalBounds().size.y / 2);
-        altar_item_category.setGlobalOrigin(altar_item_category.getGlobalBounds().size.x / 2, altar_item_category.getGlobalBounds().size.y / 2);
-        altar_item_desc.setGlobalOrigin(0, 0);
-
-        altar_item_title.draw();
-        altar_item_category.draw();
-        altar_item_desc.draw();
-
-        if (inputCtrl->isKeyPressed(Input::Keys::LEFT))
-        {
-            grid_sel_x--;
-
-            if (grid_sel_x < 0)
-                grid_sel_x = 3;
-
-            updateAltarDescriptions();
-        }
-        if (inputCtrl->isKeyPressed(Input::Keys::RIGHT))
-        {
-            grid_sel_x++;
-
-            if (grid_sel_x > 3)
-                grid_sel_x = 0;
-
-            updateAltarDescriptions();
-        }
-        if (inputCtrl->isKeyPressed(Input::Keys::UP))
-        {
-            grid_sel_y--;
-
-            if (grid_sel_y < 0)
-            {
-                if (grid_offset_y > 0)
-                {
-                    grid_offset_y--;
-                    grid_sel_y = 0;
-                } else
-                {
-                    grid_offset_y = ceil(inventory_boxes.size() / 4.0) - 6;
-
-                    if (grid_offset_y < 0)
-                        grid_offset_y = 0;
-
-                    grid_sel_y = 5;
-                }
-            }
-
-            updateAltarDescriptions();
-        }
-        if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
-        {
-            grid_sel_y++;
-
-            if (grid_sel_y > 5)
-            {
-                if (inventory_boxes.size() > (6 + grid_offset_y) * 4)
-                {
-                    grid_offset_y++;
-                    grid_sel_y = 5;
-                } else
-                {
-                    grid_sel_y = 0;
+                if (grid_offset_y < 0)
                     grid_offset_y = 0;
-                }
-            }
 
-            updateAltarDescriptions();
+                grid_sel_y = 5;
+            }
         }
-        if (inputCtrl->isKeyPressed(Input::Keys::CIRCLE))
+
+        updateAltarDescriptions();
+    }
+    if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
+    {
+        grid_sel_y++;
+
+        if (grid_sel_y > 5)
         {
-            StateManager::getInstance().setState(StateManager::PATAPOLIS);
+            if (inventory_boxes.size() > (6 + grid_offset_y) * 4)
+            {
+                grid_offset_y++;
+                grid_sel_y = 5;
+            } else
+            {
+                grid_sel_y = 0;
+                grid_offset_y = 0;
+            }
         }
+
+        updateAltarDescriptions();
+    }
+    if (inputCtrl->isKeyPressed(Input::Keys::CIRCLE))
+    {
+        StateManager::getInstance().setState(StateManager::PATAPOLIS);
     }
 
     window->setView(lastView);

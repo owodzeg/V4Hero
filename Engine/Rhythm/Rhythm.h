@@ -53,8 +53,8 @@ public:
     std::vector<std::string> av_songs; // song names for patapon singing
 
     // accuracy required to advance into prefever intense and into fever 
-    std::vector<float> acc_req = {0, 1, 1, 0.9325, 0.875, 0.8125, 0.75, 0.75, 0.75, 0.6875, 0, 0, 0, 0, 0, 0};
-    std::vector<float> acc_req_insta = {0, 2, 2, 0.975, 0.9325, 0.875, 0.8125, 0.8125, 0.8125, 0.8125, 0, 0, 0, 0, 0, 0};
+    std::vector<float> acc_req = {0.f, 1.f, 1.f, 0.9325f, 0.875f, 0.8125f, 0.75f, 0.75f, 0.75f, 0.6875f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f};
+    std::vector<float> acc_req_insta = {0.f, 2.f, 2.f, 0.975f, 0.9325f, 0.875f, 0.8125f, 0.8125f, 0.8125f, 0.8125f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f};
     std::vector<float> satisfaction_value;
 
     int debug_song_type = 0;

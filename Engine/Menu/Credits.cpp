@@ -58,19 +58,22 @@ void Credits::addRegularText(sf::String text, int font)
     credits_text.push_back(p);
 }
 
-void Credits::Initialise(Config* thisConfig, V4Core* parent)
+void Credits::Initialise()
 {
-    r_black.setSize(sf::Vector2f(thisConfig->GetInt("resX"), thisConfig->GetInt("resY")));
+    r_black.setSize(sf::Vector2f(CoreManager::getInstance().getConfig()->GetInt("resX"), CoreManager::getInstance().getConfig()->GetInt("resY")));
     r_black.setFillColor(sf::Color::Black);
 
-    sb_outro.loadFromFile("resources/sfx/fun/outro.ogg");
-    sb_credits.loadFromFile("resources/sfx/fun/patafour4.ogg");
+    if (sb_outro.loadFromFile("resources/sfx/fun/outro.ogg"))
+    {
+        s_outro = new sf::Sound(sb_outro);
+        s_outro->setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("bgmVolume")) / 100.f));
+    }
 
-    s_outro = new sf::Sound(sb_outro);
-    s_credits = new sf::Sound(sb_credits);
-
-    s_outro->setVolume(float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("bgmVolume")) / 100.f));
-    s_credits->setVolume(float(thisConfig->GetInt("masterVolume")) * (float(thisConfig->GetInt("bgmVolume")) / 100.f));
+    if (sb_credits.loadFromFile("resources/sfx/fun/patafour4.ogg"))
+    {
+        s_credits = new sf::Sound(sb_credits);
+        s_credits->setVolume(float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("bgmVolume")) / 100.f));
+    }
 
     auto strRepo = CoreManager::getInstance().getStrRepo();
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
@@ -366,14 +369,14 @@ void Credits::draw(sf::RenderWindow& window, float fps, InputController& inputCt
 
         for (int i = 0; i < credits_text.size(); i++)
         {
-            //credits_text[i].ly -= 50.0 / fps;
+            //credits_text[i].ly -= 50.0f / fps;
             //credits_text[i].setOrigin(credits_text[i].getLocalBounds().size.x / 2, credits_text[i].getLocalBounds().size.y / 2);
             credits_text[i].draw();
         }
 
         //if (credits_text[credits_text.size() - 1].ly < -120)
         {
-            flash_x += 1.0 / fps;
+            flash_x += 1.0f / fps;
 
             //anykey.append(Func::GetStrFromKey("tips_anykey");
             //anykey.setOrigin(anykey.getLocalBounds().size.x / 2, anykey.getLocalBounds().size.y / 2);

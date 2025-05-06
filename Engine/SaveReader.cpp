@@ -71,9 +71,9 @@ void SaveReader::LoadSave()
             ponReg.pons.push_back(new_pon);
         }
 
-        unsigned int comparison = std::min(save_file_data.army.squads.size(), static_cast<size_t>(4));
+        unsigned int comparison = static_cast<unsigned int>(std::min(save_file_data.army.squads.size(), static_cast<size_t>(4)));
 
-        for (int i = 0; i < comparison; i++)
+        for (unsigned int i = 0; i < comparison; i++)
         {
             for (const SquadSlot& squad_slot : save_file_data.army.squads[i])
             {

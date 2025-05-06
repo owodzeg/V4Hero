@@ -11,7 +11,12 @@ Object::Object(std::string mem, int xpos, int ypos, int l, int p)
 {
     //cout << "Obtained a memory file of size " << mem.size() << " bytes" << endl;
 
-    tex_obj.loadFromMemory(mem.data(), mem.size());
+    if(!tex_obj.loadFromMemory(mem.data(), mem.size()))
+    {
+        SPDLOG_ERROR("Failed to load texture from memory");
+        throw std::runtime_error("Failed to load texture from memory");
+    }
+
     tex_obj.setSmooth(true);
 
     s_obj.setTexture(tex_obj);
@@ -67,7 +72,11 @@ void Object::Load(sf::Texture& texture, int xpos, int ypos)
 
 void Object::LoadFromMemory(std::string mem, int xpos, int ypos)
 {
-    tex_obj.loadFromMemory(mem.data(), mem.size());
+    if (!tex_obj.loadFromMemory(mem.data(), mem.size()))
+    {
+        SPDLOG_ERROR("Failed to load texture from memory");
+        throw std::runtime_error("Failed to load texture from memory");
+    }
     tex_obj.setSmooth(true);
 
     s_obj.setTexture(tex_obj);

@@ -16,9 +16,7 @@ public:
     static std::mutex func_mutex;
     static PataText tmp_ptext;
 
-    Func();
     static std::vector<std::string> Split(const std::string& s, char delim);
-    static std::vector<std::string> Split(const std::string& s, wchar_t delim);
     static sf::String ConvertToUtf8String(const std::string& s);
     static sf::String GetStrFromKey(const std::string& key);
     static std::string trim(const std::string& str, const std::string& whitespace);
@@ -41,6 +39,42 @@ public:
 
     static unsigned int calculateImageChecksum(const sf::Image& image);
     static unsigned int calculateTotalChecksum(const std::vector<std::string>& filePaths, libzippp::ZipArchive& zf);
+    
+    template<typename T = int>
+    static T rand();
+
+    template<typename T>
+    static T rand_range(T min, T max);
+
+    static std::mt19937& global_rng();
 };
+
+template<typename T>
+T Func::rand()
+{
+    if constexpr (std::is_integral_v<T>)
+    {
+        std::uniform_int_distribution<T> dist(0, std::numeric_limits<T>::max());
+        return dist(global_rng());
+    } else if constexpr (std::is_floating_point_v<T>)
+    {
+        std::uniform_real_distribution<T> dist(0, 1);
+        return dist(global_rng());
+    }
+}
+
+template<typename T>
+T Func::rand_range(T min, T max)
+{
+    if constexpr (std::is_integral_v<T>)
+    {
+        std::uniform_int_distribution<T> dist(min, max);
+        return dist(global_rng());
+    } else if constexpr (std::is_floating_point_v<T>)
+    {
+        std::uniform_real_distribution<T> dist(min, max);
+        return dist(global_rng());
+    }
+}
 
 #endif // FUNC_H

@@ -13,7 +13,6 @@ void ErrorChamber::Initialize()
     SPDLOG_ERROR("Welcome to the Error Chamber! Something bad must have happened...");
 
     StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
-    Config* config = CoreManager::getInstance().getConfig();
 
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 

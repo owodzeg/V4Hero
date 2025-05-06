@@ -11,7 +11,7 @@ public:
     nlohmann::json squad_data;
 
     // Returns the number of squads in the registry
-    int GetNumSquads() const;
+    unsigned int GetNumSquads() const;
 
     // Returns the squad at the given index
     Squad& GetSquad(int index);

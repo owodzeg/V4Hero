@@ -58,7 +58,11 @@ sf::Image& PNGAnimation::getAnimationImage(const std::string& anim_path, const s
         ZipEntry thumb_entry = zip_handle.getEntry(image_path);
 
         sf::Image img;
-        img.loadFromMemory(data, thumb_entry.getSize());
+        if(!img.loadFromMemory(data, thumb_entry.getSize()))
+        {
+            SPDLOG_ERROR("Failed to load image from memory: {}", image_path);
+            throw std::exception();
+        }
 
         TextureManager::getInstance().loadImageFromMemory(image_path, img, false);
 
@@ -108,7 +112,8 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
     std::sort(anim.frame_paths.begin(), anim.frame_paths.end());
 
     // we need to take the largest image out of the whole animation, in case the animation has different frame dimensions...
-    int img_x = 0, img_y = 0;
+    unsigned int img_x = 0;
+    unsigned int img_y = 0;
 
     for (const auto& thumb_path : anim.frame_paths)
     {
@@ -125,7 +130,7 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
     if(!anim.zip)
         TextureManager::getInstance().unloadTexture(anim.frame_paths[0]);
 
-    int frames = anim.frame_paths.size();
+    int frames = static_cast<int>(anim.frame_paths.size());
 
     int x_size = img_x * frames;
     int rows = ceil(float(x_size) / float(maxSize));
@@ -189,7 +194,11 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
 
         int curCol = frameBuffer % maxCols;
         int curRow = floor(float(frameBuffer) / float(maxCols));
-        spritesheet_buffer.copy(f_img, sf::Vector2u(curCol * img_x, curRow * img_y));
+        if (!spritesheet_buffer.copy(f_img, sf::Vector2u(curCol * img_x, curRow * img_y)))
+        {
+            SPDLOG_ERROR("Failed to copy image to spritesheet buffer");
+            throw std::exception();
+        }
 
         --framesLeft;
         --framesTotal;
@@ -217,10 +226,17 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
     for (const auto& s : readySheets)
     {
         std::string spr_name = std::format("resources/graphics/.tex_cache/{}@{}@{}_spr_{}.png", CoreManager::getInstance().getConfig()->GetInt("textureQuality"), model_name, anim.shortName, sheetID);
-        s.saveToFile(spr_name);
-        SPDLOG_DEBUG("Saved spritesheet to {}", spr_name);
-        anim.spritesheet_paths.push_back(spr_name);
-        sheetID += 1;
+        if (s.saveToFile(spr_name))
+        {
+            SPDLOG_DEBUG("Saved spritesheet to {}", spr_name);
+            anim.spritesheet_paths.push_back(spr_name);
+            sheetID += 1;
+        } 
+        else
+        {
+            SPDLOG_ERROR("Failed to save spritesheet to {}", spr_name);
+            throw std::exception();
+        }
     }
 
     std::sort(anim.spritesheet_paths.begin(), anim.spritesheet_paths.end());
@@ -447,7 +463,7 @@ void PNGAnimation::Load(const std::string& path)
         std::ifstream anim(model_name+"/animation.json");
         if(anim.good())
         {
-            animation << anim;
+            anim >> animation;
         }
         else
         {
@@ -590,10 +606,10 @@ void PNGAnimation::Load(const std::string& path)
         // default hitbox
         for(auto& a : animations)
         {
-            int ox = a.origin_x;
-            int oy = a.origin_y;
-            int bw = a.img_x;
-            int bh = a.img_y;
+            unsigned int ox = a.origin_x;
+            unsigned int oy = a.origin_y;
+            unsigned int bw = a.img_x;
+            unsigned int bh = a.img_y;
 
             sf::FloatRect h;
 
@@ -634,12 +650,12 @@ void PNGAnimation::Load(const std::string& path)
 
             if(zip)
             {
-                ZipArchive zf(f.string());
-                zf.open(ZipArchive::ReadOnly);
-                ZipEntry entry = zf.getEntry(json_name);
-                if(!entry.isNull())
+                ZipArchive zzf(f.string());
+                zzf.open(ZipArchive::ReadOnly);
+                ZipEntry aentry = zzf.getEntry(json_name);
+                if(!aentry.isNull())
                 {
-                    j_extra = json::parse(entry.readAsText());
+                    j_extra = json::parse(aentry.readAsText());
 
                     SPDLOG_TRACE("Reading animation.json.");
                 }
@@ -649,7 +665,7 @@ void PNGAnimation::Load(const std::string& path)
                 std::ifstream ex(model_name+"/"+json_name);
                 if(ex.good())
                 {
-                    j_extra << ex;
+                    ex >> j_extra;
                 }
                 else
                 {
@@ -704,9 +720,6 @@ std::string PNGAnimation::getShortNameFromID(int ID)
 
 void PNGAnimation::Draw()
 {
-    InputController* inputController = CoreManager::getInstance().getInputController();
-    sf::RenderWindow* window = CoreManager::getInstance().getWindow();
-
     Animation& curAnim = animations[currentAnimation];
 
     if(isPlaying)
@@ -714,7 +727,7 @@ void PNGAnimation::Draw()
 
     isLooping = true;
 
-    for(int a:animationPause)
+    for(unsigned int a : animationPause)
     {
         if(a == currentAnimation)
             isLooping = false;

@@ -42,14 +42,10 @@ OptionsMenu::OptionsMenu()
     is_active = false;
     madeChanges = false;
 
-    Config* config = CoreManager::getInstance().getConfig();
     StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
     SPDLOG_DEBUG("Initial values loaded, loading assets");
-
-    int q = config->GetInt("textureQuality");
-    SPDLOG_TRACE("Quality: {}");
 
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/options/options.png");
     ResourceManager::getInstance().loadSprite("resources/graphics/ui/options/sword.png");
@@ -470,25 +466,6 @@ void OptionsMenu::SetConfigValue(std::string key, std::string value, bool select
     ///Change the state
     if (selectmenu)
         SelectMenuOption();
-}
-
-void OptionsMenu::EventFired(sf::Event event)
-{
-    /* if (event.type == sf::Event::KeyPressed)
-    {
-
-    } else if (event.type == sf::Event::MouseButtonReleased)
-    {
-        if (event.mouseButton.button == sf::Mouse::Left)
-        {
-            if ((state != 31) && (state != 32) && (state != 33))
-                SelectMenuOption();
-        }
-    } else if (event.type == sf::Event::MouseMoved)
-    {
-        mouseX = event.mouseMove.x;
-        mouseY = event.mouseMove.y;
-    }*/
 }
 
 void OptionsMenu::Update()

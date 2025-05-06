@@ -50,8 +50,8 @@ class PatapolisMenu : public Menu
         float floor_height = 0;
 
         struct L {
-            float x;
-            float y;
+            float x = 0;
+            float y = 0;
             std::string type;
         };
 
@@ -113,7 +113,7 @@ class PatapolisMenu : public Menu
         };
 
         struct SmokeParticle {
-            float curScale = 0.1;
+            float curScale = 0.1f;
             float baseX = 0, baseY = 0;
             float x = 0, y = 0;
             float alpha = 255;
@@ -152,7 +152,7 @@ class PatapolisMenu : public Menu
         float dest_zoom = 1.0f;
         float smokepath1 = 0;
 
-        std::vector<int> locations;
+        std::vector<float> locations;
         int location = 3;
         bool left = false;
 
@@ -221,7 +221,6 @@ class PatapolisMenu : public Menu
         void addSmokeParticle(float x, float y);
         void addCloud(std::string type, float x, float y, float xsize, float ysize);
         void Update();
-        void EventFired(sf::Event event);
         void SetTitle(int menuPosition);
         void OnExit();
         void UpdateButtons();

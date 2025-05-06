@@ -14,7 +14,7 @@ void ScreenFade::Create(int mode, float speed)
 
     Config* config = CoreManager::getInstance().getConfig();
 
-    r_rect.setSize(sf::Vector2f(config->GetInt("resX"), config->GetInt("resY")));
+    r_rect.setSize(sf::Vector2f(static_cast<float>(config->GetInt("resX")), static_cast<float>(config->GetInt("resY"))));
     //r_rect.setFillColor(sf::Color::Black);
 
     switch (cur_mode)
@@ -22,14 +22,14 @@ void ScreenFade::Create(int mode, float speed)
         case 0: {
             alpha = 255;
             dest_alpha = 0;
-            r_rect.setFillColor(sf::Color(0, 0, 0, alpha));
+            r_rect.setFillColor(sf::Color(0, 0, 0, static_cast<uint8_t>(alpha)));
             break;
         }
 
         case 1: {
             alpha = 0;
             dest_alpha = 255;
-            r_rect.setFillColor(sf::Color(0, 0, 0, alpha));
+            r_rect.setFillColor(sf::Color(0, 0, 0, static_cast<uint8_t>(alpha)));
             break;
         }
     }
@@ -68,7 +68,7 @@ void ScreenFade::draw(sf::RenderWindow& window, float fps)
     if (alpha >= 255)
         alpha = 255;
 
-    r_rect.setFillColor(sf::Color(0, 0, 0, alpha));
+    r_rect.setFillColor(sf::Color(0, 0, 0, static_cast<uint8_t>(alpha)));
     window.draw(r_rect);
 }
 
@@ -91,6 +91,6 @@ void ScreenFade::draw()
     if (alpha >= 255)
         alpha = 255;
 
-    r_rect.setFillColor(sf::Color(0, 0, 0, alpha));
+    r_rect.setFillColor(sf::Color(0, 0, 0, static_cast<uint8_t>(alpha)));
     window->draw(r_rect);
 }

@@ -27,11 +27,10 @@ private:
 
     sf::Texture t_background;
     PSprite s_background;
-    float ratio_x;
-    float ratio_y;
-
     float patapon_y;
     float floor_y;
+
+    float ratio_x = 1, ratio_y = 1;
 
     int quality_setting = 0;
 
@@ -102,11 +101,11 @@ private:
 
     struct InvBox {
         ///data
-        Item* data;
+        Item* data = nullptr;
         int amount = 0;
         int occ_amount = 0;
         bool highlight = false;
-        int inv_id;
+        int inv_id = -1;
 
         ///display
         sf::RectangleShape r_outer;
@@ -121,8 +120,6 @@ private:
 
     RoundedRect rr_itempreview, rr_itempreview_sh;
     PataText item_title, item_desc;
-
-    int current_item_id;
 
     int active_category = 0;
     int active_subcategory = 0;
@@ -154,9 +151,6 @@ public:
     
     void Update();
     void updateInputControls();
-    void eventFired(sf::Event event);
-    void setTitle(int menu_position);
-
     void onExit();
     int countOccupied(std::vector<int>);
     void loadInventory();

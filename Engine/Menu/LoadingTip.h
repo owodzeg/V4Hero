@@ -25,8 +25,8 @@ public:
 
     float angle_1=0, angle_2=0;
 
-    int startAlpha;
-    int endAlpha;
+    float startAlpha;
+    float endAlpha;
     bool fadein = false;
     sf::Time targetTime;
     sf::Clock timer;

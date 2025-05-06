@@ -4,6 +4,7 @@
 #include "HitboxFrame.h"
 #include <math.h>
 #include "../../CoreManager.h"
+#include "../../Constants.h"
 
 Projectile::Projectile(std::string path, float x, float y, float thspeed, float tvspeed, bool evil)
 {
@@ -73,14 +74,14 @@ void Projectile::Update()
 void Projectile::Draw()
 {
     sprite.setPosition(xPos + hPos, yPos + vPos + cam_offset);
-    sprite.setRotation(3.14159265358 / 2 + angle);
+    sprite.setRotation(PI / 2 + angle);
     sprite.draw();
 
     sf::Vector2f origin = sprite.getPosition();
 
     // Get the rotation angle in radians (SFML gives angle in degrees)
     float rotationInDegrees = sprite.getRotation();
-    float rotationInRadians = rotationInDegrees * (M_PI / 180.0f);
+    float rotationInRadians = rotationInDegrees * (PI / 180.0f);
 
     // Half of the spear length
     float halfLength = sprite.getLocalBounds().size.x / 2.0f;

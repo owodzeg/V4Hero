@@ -15,7 +15,7 @@ using namespace nlohmann;
 Background::Background()
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
-    bgView.setSize(sf::Vector2f(window->getSize().x, window->getSize().y));
+    bgView.setSize(sf::Vector2f(static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y)));
     bgView.setCenter(sf::Vector2f(window->getSize().x/2, window->getSize().y/2));
 }
 
@@ -107,7 +107,7 @@ void Background::Draw(Camera& camera)
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
 
     // TODO: patch this out (search for zoom_offset in mission controller for details)
-    double zoom_offset = (0.000709722222222 * CoreManager::getInstance().getWindow()->getSize().y);
+    float zoom_offset = (0.000709722222222f * CoreManager::getInstance().getWindow()->getSize().y);
 
     for (int i = 0; i < vx_pos.size(); i++)
     {

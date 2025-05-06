@@ -13,9 +13,9 @@ SquadRegistry::SquadRegistry()
 {
 }
 
-int SquadRegistry::GetNumSquads() const
+unsigned int SquadRegistry::GetNumSquads() const
 {
-    return m_squads.size();
+    return static_cast<unsigned int>(m_squads.size());
 }
 
 Squad& SquadRegistry::GetSquad(int index)

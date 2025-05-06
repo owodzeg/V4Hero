@@ -13,7 +13,7 @@ void IntroductionMenu::Initialize()
 {
     SPDLOG_DEBUG("Initialize Introduction menu");
 
-    msgcloud.Create(45, sf::Vector2f(1920, 1440), sf::Color::White, true);
+    msgcloud.Create(45, sf::Vector2f(1920, 1440), sf::Color::White);
     msgcloud.AddDialog("newgame_intro_1", true);
     msgcloud.AddDialog("newgame_intro_2", true);
     msgcloud.AddDialog("newgame_intro_3", true);
@@ -31,10 +31,6 @@ void IntroductionMenu::Initialize()
 
     SPDLOG_DEBUG("Introduction menu initialized.");
     initialized = true;
-}
-
-void IntroductionMenu::EventFired(sf::Event event)
-{
 }
 
 void IntroductionMenu::Update()

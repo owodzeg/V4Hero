@@ -56,7 +56,12 @@ void PSpritesheet::load(std::string file, int q, int r)
 
     SPDLOG_DEBUG("Loading the binary buffer from {} size: {}", c, t_c.size());
 
-    t.loadFromFile(c);
+    if (!t.loadFromFile(c))
+    {
+        SPDLOG_ERROR("Failed to load texture from file: {}", c);
+        throw std::runtime_error("Failed to load texture from file");
+    }
+
     t.setSmooth(true);
 
     std::ifstream spr(d);

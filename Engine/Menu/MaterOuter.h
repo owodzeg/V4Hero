@@ -21,7 +21,6 @@ public:
     float ratio_x, ratio_y;
     int q = 1;
 
-
     ControlTips ctrlTips;
 
     PSprite mater_main;
@@ -35,8 +34,8 @@ public:
     struct SquadBox {
         ///data
         int amount = 0;
-        int maxSize;
-        int y;
+        int maxSize = 0;
+        float y = 0.f;
 
         sf::String title;
         std::string squad_icon;
@@ -51,12 +50,8 @@ public:
 
     bool save_loaded = false;
 
-    PatapolisMenu* parentMenu;
-
-    void initialise(Config* thisConfig, V4Core* parent, PatapolisMenu* curParentMenu);
     void Update();
-    void eventFired(const std::optional<sf::Event>& event);
-    void DrawAsleepSquad(MaterOuterMenu::SquadBox& squad, int squad_alpha, sf::RenderWindow* window);
+    void DrawAsleepSquad(MaterOuterMenu::SquadBox& squad, int squad_alpha);
     std::vector<MaterOuterMenu::SquadBox*> GetSquadsCentered();
     void showCategory();
     void onExit();

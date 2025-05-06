@@ -353,6 +353,8 @@ nlohmann::json Func::parseLootArray(std::mt19937& gen, std::uniform_real_distrib
 			SPDLOG_WARN("Undefined behavior detected while parsing loot: {} | (Element of array is neither an array nor an object)", loot.dump());
         }
     }
+
+    return json(); // Return an empty json object if no loot is found
 }
 
 
@@ -381,7 +383,7 @@ void Func::parseEntityLoot(std::mt19937& gen, std::uniform_real_distribution<dou
             }
         } catch (const std::exception& e)
         {
-            SPDLOG_DEBUG("Exception");
+            SPDLOG_ERROR("Exception: {}", e.what());
             if (roll(gen) <= float(loot["chance"]) / 100) // Assume it's the below else if
             {
                 Entity::Loot tmp;
@@ -500,4 +502,10 @@ unsigned int Func::calculateTotalChecksum(const std::vector<std::string>& filePa
     }
 
     return totalChecksum;
+}
+
+std::mt19937& Func::global_rng()
+{
+    static std::mt19937 rng{std::random_device{}()};
+    return rng;
 }

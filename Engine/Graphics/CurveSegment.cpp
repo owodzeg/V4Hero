@@ -35,7 +35,7 @@ std::vector<sf::Vector2f> CurveSegment::CalculateCurvePoints(sf::Vector2f point1
     //Set up the number of steps and step size
     int numPoints = 50;
     int numSteps = numPoints - 1;
-    float h = 1.0 / numSteps;
+    float h = 1.0f / numSteps;
 
     float pointX = dx;
     float pointY = dy;
@@ -50,7 +50,7 @@ std::vector<sf::Vector2f> CurveSegment::CalculateCurvePoints(sf::Vector2f point1
     float thirdFDX = 6 * ax * (h * h * h);
     float thirdFDY = 6 * ay * (h * h * h);
 
-    result->push_back(sf::Vector2f(int(pointX), int(pointY)));
+    result->push_back(sf::Vector2f(pointX, pointY));
 
     for (std::size_t i = 0; i < numSteps; i++)
     {
@@ -64,7 +64,7 @@ std::vector<sf::Vector2f> CurveSegment::CalculateCurvePoints(sf::Vector2f point1
         secondFDX += thirdFDX;
         secondFDY += thirdFDY;
 
-        result->push_back(sf::Vector2f(int(pointX), int(pointY)));
+        result->push_back(sf::Vector2f(pointX, pointY));
     }
     return *result;
     

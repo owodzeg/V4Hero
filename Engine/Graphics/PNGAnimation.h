@@ -64,7 +64,7 @@ class PNGAnimation
         unsigned int maxSize = 512;
 
         std::vector<std::pair<int,int>> animationStalls;
-        std::vector<std::pair<int,int>> animationSwitchTo;
+        std::vector<std::pair<unsigned int, unsigned int>> animationSwitchTo;
         std::vector<int> animationPause;
 
         int q = -1;

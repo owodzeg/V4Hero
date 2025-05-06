@@ -96,7 +96,6 @@ public:
     void SelectMenuOption();
     void GoBackMenuOption(int a = 2);
     void SetConfigValue(std::string key, std::string value, bool selectmenu = true);
-    void EventFired(sf::Event event);
     void OnExit();
     void Back();
     void UpdateButtons();

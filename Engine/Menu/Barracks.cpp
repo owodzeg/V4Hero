@@ -86,8 +86,6 @@ Barracks::Barracks()
     s_unit_icon.loadFromFile("resources/graphics/ui/unit_icon.png");
     s_unit_icon.setPosition(946*3, 82*3);
 
-    Pon* cur_pon = CoreManager::getInstance().getSaveReader()->ponReg.GetPonByID(current_selected_pon);
-
     unit_status.defaultStyleSetFont(font);
     unit_status.defaultStyleSetCharSize(66);
     unit_status.defaultStyleSetColor(sf::Color(239, 88, 98));
@@ -261,7 +259,7 @@ Barracks::Barracks()
     //mm_inventory_background.setSize(sf::Vector2f(mm_inventory_background.getSize().x+(40*CoreManager::getInstance().getCore()->resRatio),mm_inventory_background.getSize().y+(40*CoreManager::getInstance().getCore()->resRatio)));
 
     // TODO: hardcoded yaripons. change when tatepons are implemented.
-    auto yaripon_count = CoreManager::getInstance().getSaveReader()->ponReg.pons.size();
+    auto yaripon_count = static_cast<int>(CoreManager::getInstance().getSaveReader()->ponReg.pons.size());
 
     for(int i=1; i<=yaripon_count; i++)
     {
@@ -280,7 +278,7 @@ Barracks::Barracks()
         barracks_units.back().get()->loadExtra(wpn, "weapon");
         barracks_units.back().get()->loadExtra(hlm, "helm");
 
-        int pon_width = 75*3 / yaripon_count * 6;
+        float pon_width = 225.f / yaripon_count * 6.f;
         barracks_units.back().get()->setGlobalPosition(sf::Vector2f((1260 + (pon_width * (i-1))), 1815));
     }
 
@@ -288,11 +286,6 @@ Barracks::Barracks()
 
     //TO-DO: is this needed?
     is_active = false;
-}
-
-void Barracks::eventFired(sf::Event event)
-{
-
 }
 
 int Barracks::countOccupied(std::vector<int> order_id)
@@ -506,7 +499,7 @@ void Barracks::setInventoryPosition()
 
             grid_sel_x = invbox_id % 4;
 
-            grid_sel_y = ceil(((invbox_id + 1) - (grid_offset_y * 4)) / 4.0) - 1;
+            grid_sel_y = static_cast<int>(ceil(((invbox_id + 1) - (grid_offset_y * 4)) / 4.0) - 1);
 
             SPDLOG_TRACE("invbox_id: {} gridSelX: {} gridSelY: {} gridOffsetY: {}", invbox_id, grid_sel_x, grid_sel_y, grid_offset_y);
         } else
@@ -995,12 +988,12 @@ void Barracks::Update()
         t_eq_names[3].draw();
     }
 
-    item_line_flash += 8.0 / fps;
+    item_line_flash += 8.0f / fps;
 
     int bar_size = 266*3;
-    int bar_offset = 78*3;
+
     mm_selected_item_line.setSize(sf::Vector2f(bar_size*3 * CoreManager::getInstance().getCore()->resRatio, 9 * CoreManager::getInstance().getCore()->resRatio));
-    mm_selected_item_line.setFillColor(sf::Color(239, 88, 98, 128 + (sin(item_line_flash) * 128)));
+    mm_selected_item_line.setFillColor(sf::Color(239, 88, 98, static_cast<uint8_t>(128 + (sin(item_line_flash) * 128))));
     mm_selected_item_line.setPosition(sf::Vector2f((s_unit_icon.getPosition().x) * CoreManager::getInstance().getCore()->resRatio, ((s_unit_icon.getPosition().y + current_item_position * 50 * 3) + 47 * 3) * CoreManager::getInstance().getCore()->resRatio));
 
     ctrlTips.x = 0;
@@ -1034,10 +1027,10 @@ void Barracks::Update()
                     //inventory_boxes[i].num.setOrigin(inventory_boxes[i].num.getLocalBounds().size.x,inventory_boxes[i].num.getLocalBounds().size.y);
                     //inventory_boxes[i].num_shadow.setOrigin(inventory_boxes[i].num_shadow.getLocalBounds().size.x,inventory_boxes[i].num_shadow.getLocalBounds().size.y);
 
-                    inventory_boxes[cur_item].icon.setScale(0.64, 0.64);
+                    inventory_boxes[cur_item].icon.setScale(0.64f, 0.64f);
 
                     if ((inventory_boxes[cur_item].data->item_category == "key_items") || (inventory_boxes[cur_item].data->item_category == "consumables")) ///Bound to break
-                        inventory_boxes[cur_item].icon.setScale(0.41, 0.41);
+                        inventory_boxes[cur_item].icon.setScale(0.41f, 0.41f);
 
                     inventory_boxes[cur_item].icon.setPosition(40*3 + xpos + 23*3 + 1.5*3, 366*3 + ypos + 23*3 + 1.5*3);
                     inventory_boxes[cur_item].icon.draw();
@@ -1067,10 +1060,10 @@ void Barracks::Update()
                 float xpos = 46 * 3 + (grid_x * 77 * 3);
                 float ypos = 37 * 3 + (grid_y * 54 * 3);
 
-                tmp_inv.r_outer.setSize(sf::Vector2f(70.0 * 3 * CoreManager::getInstance().getCore()->resRatio, 51.0 * 3 * CoreManager::getInstance().getCore()->resRatio));
+                tmp_inv.r_outer.setSize(sf::Vector2f(70.0f * 3 * CoreManager::getInstance().getCore()->resRatio, 51.0f * 3 * CoreManager::getInstance().getCore()->resRatio));
                 tmp_inv.r_outer.setFillColor(sf::Color(102, 102, 102, 255));
 
-                tmp_inv.r_inner.setSize(sf::Vector2f(46.0 * 3 * CoreManager::getInstance().getCore()->resRatio, 46.0 * 3 * CoreManager::getInstance().getCore()->resRatio));
+                tmp_inv.r_inner.setSize(sf::Vector2f(46.0f * 3 * CoreManager::getInstance().getCore()->resRatio, 46.0f * 3 * CoreManager::getInstance().getCore()->resRatio));
                 tmp_inv.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
                 tmp_inv.r_outer.setPosition(sf::Vector2f((40 * 3 + xpos) * CoreManager::getInstance().getCore()->resRatio, (366 * 3 + ypos) * CoreManager::getInstance().getCore()->resRatio
@@ -1401,7 +1394,7 @@ void Barracks::Update()
         {
             if (obelisk)
             {
-                CoreManager::getInstance().getDialogHandler()->dialogboxes.emplace_back(std::make_unique<PataDialogBox>("barracks_depart", std::vector<PataDialogBox::Option>{
+                CoreManager::getInstance().getDialogHandler()->dialogboxes.emplace_back(std::make_unique<PataDialogBox>(Func::GetStrFromKey("barracks_depart"), std::vector<PataDialogBox::Option>{
                     {Func::GetStrFromKey("nav_yes"), [this, inputCtrl](){
                         SPDLOG_DEBUG("Go on mission!");
                         goto_id = 2;

@@ -97,20 +97,6 @@ float V4Core::getFPS()
 // Core function that runs the entirety of Patafour
 void V4Core::init()
 {
-    // Create a random seed for all of the randomization 
-    srand(time(NULL));
-    std::random_device rd; // https://stackoverflow.com/questions/13445688
-    seed = rd() ^ ((std::mt19937::result_type)
-                           std::chrono::duration_cast<std::chrono::seconds>(
-                                   std::chrono::system_clock::now().time_since_epoch())
-                                   .count() +
-                   (std::mt19937::result_type)
-                           std::chrono::duration_cast<std::chrono::microseconds>(
-                                   std::chrono::high_resolution_clock::now().time_since_epoch())
-                                   .count());
-    std::mt19937 tmp(seed);
-    gen = tmp;
-
     // Set antialiasing level (hardcoded, apply from config)
     sf::ContextSettings settings;
     settings.antiAliasingLevel = 16;
@@ -266,7 +252,7 @@ void V4Core::init()
         frame_times.push_back(fps);
         fpsclock.restart();
 
-        auto n = frame_times.size();
+        auto n = static_cast<float>(frame_times.size());
         float average = 0.0f;
         if (n != 0)
         {

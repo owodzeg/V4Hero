@@ -45,20 +45,20 @@ class PataText
 	public:
         struct PTStyle {
             // font kerning
-            double kerning = 0;            // regular
-            double additional_kerning = 0; // if we want to extend the gaps
+            float kerning = 0;            // regular
+            float additional_kerning = 0; // if we want to extend the gaps
 
             // rotation
-            double rotation = 0;
+            float rotation = 0;
 
             // manual offset
-            double x_offset = 0, y_offset = 0, r_offset = 0;
+            float x_offset = 0, y_offset = 0, r_offset = 0;
 
             // color
-            double c_red = 0, c_green = 0, c_blue = 0, c_alpha = 255;
+            uint8_t c_red = 0, c_green = 0, c_blue = 0, c_alpha = 255;
 
             // size
-            double char_size = 72;
+            float char_size = 72;
 
             // font
             std::shared_ptr<sf::Font> font;
@@ -72,17 +72,17 @@ class PataText
             bool bold = false, italic = false, underline = false, strike = false;
 
             // movement style
-            double shake = 0, hwave = 0, hwave_speed = 0, vwave = 0, vwave_speed = 0;
+            float shake = 0, hwave = 0, hwave_speed = 0, vwave = 0, vwave_speed = 0;
 
             // outline
-            double thickness = 0;
-            double ot_c_red = 0, ot_c_green = 0, ot_c_blue = 0, ot_c_alpha = 255;
+            float thickness = 0;
+            float ot_c_red = 0, ot_c_green = 0, ot_c_blue = 0, ot_c_alpha = 255;
 
             // display settings
-            double nextCharTimeout = 0; // milliseconds to wait before showing next character
+            float nextCharTimeout = 0; // milliseconds to wait before showing next character
                                         // 0 is default, which will make the text appear instantly
 
-            double curCharTimeout = 0; // milliseconds to wait before showing current character
+            float curCharTimeout = 0; // milliseconds to wait before showing current character
                                        // 0 is default, which will make the text appear instantly
 
             // misc
@@ -207,15 +207,15 @@ class PataText
         void applyDialog(); //sets display to 0, inits reading marker
         
         // affects style
-        void styleSetAdditionalKerning(PTStyle& style, double newKerning);
-        void styleSetXOffset(PTStyle& style, double newXOffset);
-        void styleSetYOffset(PTStyle& style, double newYOffset);
+        void styleSetAdditionalKerning(PTStyle& style, float newKerning);
+        void styleSetXOffset(PTStyle& style, float newXOffset);
+        void styleSetYOffset(PTStyle& style, float newYOffset);
         void styleSetFullColor(PTStyle& style, sf::Color newColor);
-        void styleSetRedColor(PTStyle& style, double newRed);
-        void styleSetGreenColor(PTStyle& style, double newGreen);
-        void styleSetBlueColor(PTStyle& style, double newBlue);
-        void styleSetAlpha(PTStyle& style, double newAlpha);
-        void styleSetCharSize(PTStyle& style, double newCharSize);
+        void styleSetRedColor(PTStyle& style, float newRed);
+        void styleSetGreenColor(PTStyle& style, float newGreen);
+        void styleSetBlueColor(PTStyle& style, float newBlue);
+        void styleSetAlpha(PTStyle& style, float newAlpha);
+        void styleSetCharSize(PTStyle& style, float newCharSize);
         void styleSetFont(PTStyle& style, const std::string& fontStr);
         void styleSetBold(PTStyle& style, bool isBold);
         void styleSetItalic(PTStyle& style, bool isItalic);
@@ -225,24 +225,24 @@ class PataText
         void styleToggleItalic(PTStyle& style);
         void styleToggleUnderline(PTStyle& style);
         void styleToggleStrike(PTStyle& style);
-        void styleSetShake(PTStyle& style, double newShake);
-        void styleSetHorizontalWave(PTStyle& style, double newHWave, double newHWaveSpeed);
-        void styleSetVerticalWave(PTStyle& style, double newVWave, double newVWaveSpeed);
+        void styleSetShake(PTStyle& style, float newShake);
+        void styleSetHorizontalWave(PTStyle& style, float newHWave, float newHWaveSpeed);
+        void styleSetVerticalWave(PTStyle& style, float newVWave, float newVWaveSpeed);
         void styleSetOutlineFullColor(PTStyle& style, sf::Color newColor);
-        void styleSetOutlineRedColor(PTStyle& style, double newRed);
-        void styleSetOutlineGreenColor(PTStyle& style, double newGreen);
-        void styleSetOutlineBlueColor(PTStyle& style, double newBlue);
-        void styleSetOutlineAlpha(PTStyle& style, double newAlpha);
-        void styleSetOutlineThickness(PTStyle& style, double newThickness);
-        void styleSetSpeed(PTStyle& style, double newMsSpeed);
-        void styleSetTimeout(PTStyle& style, double newMsTimeout); // SINGLE USE! Only for the current character.
+        void styleSetOutlineRedColor(PTStyle& style, float newRed);
+        void styleSetOutlineGreenColor(PTStyle& style, float newGreen);
+        void styleSetOutlineBlueColor(PTStyle& style, float newBlue);
+        void styleSetOutlineAlpha(PTStyle& style, float newAlpha);
+        void styleSetOutlineThickness(PTStyle& style, float newThickness);
+        void styleSetSpeed(PTStyle& style, float newMsSpeed);
+        void styleSetTimeout(PTStyle& style, float newMsTimeout); // SINGLE USE! Only for the current character.
         void styleResetAllStyles(PTStyle& style);
 
         void defaultStyleSetColor(sf::Color newColor);
-        void defaultStyleSetCharSize(double newCharSize);
+        void defaultStyleSetCharSize(float newCharSize);
         void defaultStyleSetFont(const std::string& fontStr);
         void defaultStyleSetOutlineColor(sf::Color newColor);
-        void defaultStyleSetOutlineThickness(double newThickness);
+        void defaultStyleSetOutlineThickness(float newThickness);
 
         // PataText functions
         void append(sf::String& input_text);
@@ -250,10 +250,10 @@ class PataText
         void append(const char* input_text);
         void reset();
 
-        void setGlobalPosition(double new_x, double new_y);
+        void setGlobalPosition(float new_x, float new_y);
         sf::Vector2f getGlobalPosition();
 
-        void setGlobalOrigin(double new_x, double new_y);
+        void setGlobalOrigin(float new_x, float new_y);
         sf::Vector2f getGlobalOrigin();
 
         sf::FloatRect getGlobalBounds();
@@ -271,14 +271,14 @@ class PataText
 
         sf::Clock effect;
         sf::Clock dialogue_clock;
-        double random = 0;
+        float random = 0;
 
         PTStyle m_marker; // current text style
         sf::Vector2f m_position; // current character position
-        double m_interline = 4; // pixels between lines
-        double global_x = 0, global_y = 0; // global position
-        double origin_x = 0, origin_y = 0; // origin position
-        double max_width = 0, max_height = 0; // bounds
+        float m_interline = 4; // pixels between lines
+        float global_x = 0, global_y = 0; // global position
+        float origin_x = 0, origin_y = 0; // origin position
+        float max_width = 0, max_height = 0; // bounds
         int m_counter = 0, m_counter_line = 0; // counters
         bool refreshPositioning = true; // do it only when we're moving somewhere/changing something
         std::vector<std::vector<PTChar>> m_lines; // text data. std::vector consists of lines (separated by {n}), lines consist of PTChar objects. 

@@ -18,14 +18,13 @@ void MessageCloud::setSize(float new_x, float new_y)
     ysize = new_y;
 }
 
-void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color, bool can_speedup)
+void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color)
 {
     SPDLOG_DEBUG("MessageCloud::Create()");
 
     timeout = speed;
     regular_timeout = timeout;
 
-    //speedable = can_speedup;
     speedable = true; //unskippable dialogues are dumb, let the player speed up anything
 
     cloud.load("resources/graphics/ui/dialog/message.png");
@@ -109,7 +108,7 @@ void MessageCloud::Show()
         visual_ptext.draw();
 
         dest_xsize = visual_ptext.getGlobalBounds().size.x + 120 + (visual_ptext.getGlobalBounds().size.x / 30);
-        dest_ysize = visual_ptext.getGlobalBounds().size.y + 150 + (visual_ptext.getGlobalBounds().size.y / 4.5);
+        dest_ysize = visual_ptext.getGlobalBounds().size.y + 150 + (visual_ptext.getGlobalBounds().size.y / 4.5f);
 
         text_timeout.restart();
 
@@ -154,7 +153,7 @@ void MessageCloud::NextDialog()
         visual_ptext.draw();
 
         dest_xsize = visual_ptext.getGlobalBounds().size.x + 120 + (visual_ptext.getGlobalBounds().size.x / 30);
-        dest_ysize = visual_ptext.getGlobalBounds().size.y + 150 + (visual_ptext.getGlobalBounds().size.y / 4.5);
+        dest_ysize = visual_ptext.getGlobalBounds().size.y + 150 + (visual_ptext.getGlobalBounds().size.y / 4.5f);
 
         text_timeout.restart();
     } else
@@ -315,7 +314,7 @@ void MessageCloud::Draw()
                 cross_highlight.setPosition(cross_x, cross_y);
                 cross_arrow.setPosition(cross_x - 6, cross_y + 60 + arrow_y);
 
-                cross_highlight.setColor(sf::Color(255, 255, 255, 240 + (arrow_y * 8)));
+                cross_highlight.setColor(sf::Color(255, 255, 255, static_cast<uint8_t>(240 + (arrow_y * 8))));
 
                 cross.draw();
                 cross_highlight.draw();

@@ -19,7 +19,7 @@ public:
     float x = 0, y = 0;
     float x_scale = 1, y_scale = 1;
 
-    float x_flashscale = 0.01, y_flashscale = 0.01;
+    float x_flashscale = 0.01f, y_flashscale = 0.01f;
     float flashalpha = 125;
 
     float shockwaveSize = 100;

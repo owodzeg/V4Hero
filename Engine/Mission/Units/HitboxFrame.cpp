@@ -1,5 +1,6 @@
 #include "HitboxFrame.h"
 #include "../../Math/PVector.h"
+#include "../../Constants.h"
 #include <cmath>
 
 HitboxFrame::HitboxFrame()
@@ -39,7 +40,7 @@ float HitboxFrame::maxProjection(float axisAngle, float object_x, float object_y
     float projectionLength = 0;
 
     std::vector<sf::Vector2f> currentVertices = getCurrentVertices();
-    float angled = 3.14159265358 / 2;
+    float angled = PI / 2;
     if (axisAngle == angled)
     {
         //cout<<" "<<endl;

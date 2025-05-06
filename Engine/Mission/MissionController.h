@@ -36,7 +36,7 @@ public:
     std::vector<std::unique_ptr<DroppedItem>> droppeditems;
     std::vector<std::unique_ptr<Entity>> entities;
 
-    uint64_t lastRhythmCheck;
+    uint64_t lastRhythmCheck = 0;
     sf::Clock advanceClock;
     bool advance = false;
 
@@ -67,7 +67,7 @@ public:
     sf::Clock missionEndTimer;
     bool playJingle = false;
 
-    bool playCheer[3];
+    bool playCheer[3] = {false, false, false};
 
     PSprite bar_win;
     PSprite bar_lose;
@@ -86,7 +86,7 @@ public:
     bool failure = false;
     bool returnToPatapolis = false;
 
-    double zoom_offset;
+    float zoom_offset = 1;
 
     Behavior behavior;
 

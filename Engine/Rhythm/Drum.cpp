@@ -3,8 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 #include "../CoreManager.h"
-
-
+#include "../Constants.h"
 
 Drum::Drum()
 {
@@ -69,8 +68,8 @@ void Drum::Load(std::string drum, int perfection, std::string& drum_texture)
     {
         if (!isDon)
         {
-            x_scale = 1.2;
-            y_scale = 1.2;
+            x_scale = 1.2f;
+            y_scale = 1.2f;
         }
 
         isBest = true;
@@ -84,10 +83,8 @@ void Drum::Load(std::string drum, int perfection, std::string& drum_texture)
     for (int i = 0; i < particle_amount; i++)
     {
         sf::CircleShape temp;
-        int radius = (rand() % max_radius) + 1;
-        int angle = rand() % 360;
-
-        float size_affection = floor(float(255) / max_radius);
+        int radius = Func::rand_range(0, max_radius) + 1;
+        int angle = Func::rand_range(0, 360);
 
         float cur_affection = 300;
 
@@ -120,7 +117,7 @@ void Drum::Load(std::string drum, int perfection, std::string& drum_texture)
         temp.setRadius(radius);
         temp.setPosition(sf::Vector2f(-1000, -1000));
 
-        int distance = (rand() % 200) + 50;
+        int distance = Func::rand_range(0, 200) + 50;
 
         particles.push_back(Particle(temp, false, 0, 0, angle, radius, distance, 0, 1800));
     }
@@ -205,7 +202,7 @@ void Drum::Draw()
 
     s_drum.setScale(x_scale, y_scale);
     s_drum.setColor(sf::Color(255, 255, 255, alpha));
-    s_drum.setRotation((rotation + drumPatterns[pattern].angle) * 3.1415928 / 180.f);
+    s_drum.setRotation((rotation + drumPatterns[pattern].angle) * PI / 180.f);
     s_drum.setPosition(x + drumPatterns[pattern].x*3, y + drumPatterns[pattern].y*3);
 
     if (drumClock.getElapsedTime().asMilliseconds() < 200)

@@ -29,6 +29,9 @@ Item* InventoryData::getItemByItemID(std::vector<int> inv_id)
             return items[i].item;
         }
     }
+
+    SPDLOG_ERROR("Error: Item not found in inventory");
+    return nullptr;
 }
 
 int InventoryData::getItemCountByID(std::vector<int> item_id)
@@ -40,6 +43,9 @@ int InventoryData::getItemCountByID(std::vector<int> item_id)
             return items[i].item_count;
         }
     }
+
+    SPDLOG_ERROR("Error: Item not found in inventory");
+    return 0;
 }
 
 int InventoryData::getInvIDByItemID(std::vector<int> item_id) // Please for the love of- make this better

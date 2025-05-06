@@ -35,7 +35,7 @@ public:
     ~Credits();
     void addHeaderText(sf::String text);
     void addRegularText(sf::String text, int font = 0);
-    void Initialise(Config* thisConfig, V4Core* parent);
+    void Initialise();
     void restart();
     void draw(sf::RenderWindow& window, float fps, InputController& inputCtrl);
 };

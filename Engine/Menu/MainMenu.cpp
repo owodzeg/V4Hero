@@ -24,43 +24,47 @@ MainMenu::MainMenu()
     SPDLOG_DEBUG("Initializing main menu...");
 
     int q = config->GetInt("textureQuality");
-    int r = 1;
 
     quality = q;
 
     
     
 
-    rs_cover.setSize(sf::Vector2f(config->GetInt("resX"), config->GetInt("resY")));
+    rs_cover.setSize(sf::Vector2f(static_cast<float>(config->GetInt("resX")), static_cast<float>(config->GetInt("resY"))));
     rs_cover.setFillColor(sf::Color(0, 0, 0, 255));
-    rs_cover2.setSize(sf::Vector2f(config->GetInt("resX"), config->GetInt("resY")));
+    rs_cover2.setSize(sf::Vector2f(static_cast<float>(config->GetInt("resX")), static_cast<float>(config->GetInt("resY"))));
     rs_cover2.setFillColor(sf::Color(0, 0, 0, 0));
 
     logow_bg.load("resources/graphics/ui/menu/logowbg.png");
     logow_text.load("resources/graphics/ui/menu/logowtxt.png");
     logow_shadow.load("resources/graphics/ui/menu/logowsh.png");
 
-    logow_bg.setColor(sf::Color(120, 0, 0, ui_alpha));
-    logow_shadow.setColor(sf::Color(64, 64, 64, ui_alpha));
-    logow_text.setColor(sf::Color(255, 255, 255, ui_alpha));
+    logow_bg.setColor(sf::Color(120, 0, 0, static_cast<uint8_t>(ui_alpha)));
+    logow_shadow.setColor(sf::Color(64, 64, 64, static_cast<uint8_t>(ui_alpha)));
+    logow_text.setColor(sf::Color(255, 255, 255, static_cast<uint8_t>(ui_alpha)));
 
     std::string font = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
 
     t_pressanykey.defaultStyleSetFont(font);
     t_pressanykey.defaultStyleSetCharSize(78);
-    t_pressanykey.defaultStyleSetColor(sf::Color(255, 255, 255, t_alpha));
+    t_pressanykey.defaultStyleSetColor(sf::Color(255, 255, 255, static_cast<uint8_t>(t_alpha)));
     t_pressanykey.append(Func::GetStrFromKey("menu_pressanykey"));
 
-
-    sb_smash.loadFromFile("resources/sfx/menu/smash.ogg");
-    s_smash = new sf::Sound(sb_smash);
-    s_smash->setBuffer(sb_smash);
-    s_smash->setVolume(float(config->GetInt("masterVolume")) * (float(config->GetInt("sfxVolume")) / 100.f));
+    if (sb_smash.loadFromFile("resources/sfx/menu/smash.ogg"))
+    {
+        s_smash = new sf::Sound(sb_smash);
+        s_smash->setBuffer(sb_smash);
+        s_smash->setVolume(float(config->GetInt("masterVolume")) * (float(config->GetInt("sfxVolume")) / 100.f));
+    }
+    else
+    {
+        SPDLOG_ERROR("Failed to load smash sound.");
+    }
 
     for (int g = 0; g < 4; g++)
     {
         grass[g].load("resources/graphics/ui/menu/grass_" + std::to_string(g+1) + ".png");
-        grass[g].setScale(1.05, 1.05);
+        grass[g].setScale(1.05f, 1.05f);
         grass[g].setOrigin(grass[g].getGlobalBounds().size.x / float(100), grass[g].getGlobalBounds().size.y);
     }
 
@@ -114,21 +118,21 @@ MainMenu::MainMenu()
         sf::Color tmp_color;
 
         tmp_vector.x = 0;
-        tmp_vector.y = atof(tmp[0].c_str()) * CoreManager::getInstance().getCore()->resRatio;
+        tmp_vector.y = stof(tmp[0]) * CoreManager::getInstance().getCore()->resRatio;
 
         if (tmp[0] == "-1")
         {
             tmp_vector.y = 2160 * CoreManager::getInstance().getCore()->resRatio;
         }
 
-        tmp_color.r = atoi(tmp[1].c_str());
-        tmp_color.g = atoi(tmp[2].c_str());
-        tmp_color.b = atoi(tmp[3].c_str());
+        tmp_color.r = static_cast<uint8_t>(stoi(tmp[1]));
+        tmp_color.g = static_cast<uint8_t>(stoi(tmp[2]));
+        tmp_color.b = static_cast<uint8_t>(stoi(tmp[3]));
 
         sf::Vector2f tmp_vector2;
 
         tmp_vector2.x = 3840 * CoreManager::getInstance().getCore()->resRatio;
-        tmp_vector2.y = atof(tmp[0].c_str()) * CoreManager::getInstance().getCore()->resRatio;
+        tmp_vector2.y = stof(tmp[0]) * CoreManager::getInstance().getCore()->resRatio;
 
         if (tmp[0] == "-1")
         {
@@ -160,11 +164,16 @@ MainMenu::MainMenu()
 
     float volume = (float(config->GetInt("masterVolume")) * (float(config->GetInt("bgmVolume")) / 100.f));
 
-    sb_title_loop.loadFromFile("resources/sfx/menu/menuloop.ogg");
-    title_loop = new sf::Sound(sb_title_loop);
-    title_loop->setBuffer(sb_title_loop);
-    title_loop->setLooping(true);
-    title_loop->setVolume(volume);
+    if (sb_title_loop.loadFromFile("resources/sfx/menu/menuloop.ogg"))
+    {
+        title_loop = new sf::Sound(sb_title_loop);
+        title_loop->setBuffer(sb_title_loop);
+        title_loop->setLooping(true);
+        title_loop->setVolume(volume);
+    } else
+    {
+        SPDLOG_ERROR("Failed to load title music.");
+    }
 
     std::ifstream fr("resources/firstrun");
     if (fr.good())
@@ -177,7 +186,7 @@ MainMenu::MainMenu()
         firstrun = true;
     }
 
-    msgcloud.Create(45, sf::Vector2f(1920, 1440), sf::Color::White, true);
+    msgcloud.Create(45, sf::Vector2f(1920, 1440), sf::Color::White);
     msgcloud.AddDialog("firstrun_dialog_1", true);
     msgcloud.AddDialog("firstrun_dialog_2", true);
     msgcloud.AddDialog("firstrun_dialog_3", true);
@@ -214,7 +223,6 @@ MainMenu::MainMenu()
 void MainMenu::SelectMenuOption()
 {
     StringRepository* strRepo = CoreManager::getInstance().getStrRepo();
-    Config* config = CoreManager::getInstance().getConfig();
     SaveReader* saveReader = CoreManager::getInstance().getSaveReader();
     V4Core* core = CoreManager::getInstance().getCore();
 
@@ -344,7 +352,7 @@ void MainMenu::Update()
             {
                 if (ui_alpha < 255)
                 {
-                    ui_alpha += 255.0 / fps;
+                    ui_alpha += 255.0f / fps;
                 }
 
                 if (ui_alpha >= 255)
@@ -354,7 +362,7 @@ void MainMenu::Update()
 
                 if (t_alpha < 128)
                 {
-                    t_alpha += 128.0 / fps;
+                    t_alpha += 128.0f / fps;
                 }
 
                 if (t_alpha >= 128)
@@ -362,9 +370,9 @@ void MainMenu::Update()
                     t_alpha = 128;
                 }
 
-                logow_bg.setColor(sf::Color(120, 0, 0, ui_alpha));
-                logow_text.setColor(sf::Color(255, 255, 255, ui_alpha));
-                logow_shadow.setColor(sf::Color(64, 0, 0, ui_alpha));
+                logow_bg.setColor(sf::Color(120, 0, 0, static_cast<uint8_t>(ui_alpha)));
+                logow_text.setColor(sf::Color(255, 255, 255, static_cast<uint8_t>(ui_alpha)));
+                logow_shadow.setColor(sf::Color(64, 0, 0, static_cast<uint8_t>(ui_alpha)));
 
                 if (inputCtrl->isAnyKeyPressed())
                 {
@@ -373,8 +381,8 @@ void MainMenu::Update()
                     logow_shadow.setColor(sf::Color(200, 0, 0, 255));
                     logow_text.setColor(sf::Color(255, 255, 255, 255));
                     ui_alpha = 255;
-                    logow_scale = 1.2;
-                    logow_shscale = 1.2;
+                    logow_scale = 1.2f;
+                    logow_shscale = 1.2f;
                     dest_y = 1080;
                     keypressed = true;
                     t_pressanykey.setGlobalPosition(1920, 13200);
@@ -400,9 +408,9 @@ void MainMenu::Update()
             logow_shadow.setPosition(logow_bg.getPosition().x, logow_bg.getPosition().y);
 
             if (logow_scale > 1)
-                logow_scale -= 0.5 / fps;
+                logow_scale -= 0.5f / fps;
             if (logow_shscale > 1)
-                logow_shscale -= 0.5 / fps;
+                logow_shscale -= 0.5f / fps;
 
             if (logow_scale <= 1)
                 logow_scale = 1;
@@ -421,14 +429,14 @@ void MainMenu::Update()
 
             if (keypressed)
             {
-                t_alpha -= 255.0 / fps;
+                t_alpha -= 255.0f / fps;
 
                 if (t_alpha <= 0)
                     t_alpha = 0;
 
                 if (menuClock.getElapsedTime().asSeconds() > 3)
                 {
-                    cv_alpha += 255.0 / fps;
+                    cv_alpha += 255.0f / fps;
 
                     if (cv_alpha >= 255)
                         cv_alpha = 255;
@@ -441,12 +449,12 @@ void MainMenu::Update()
             }
 
             t_pressanykey.reset();
-            t_pressanykey.defaultStyleSetColor(sf::Color(255, 255, 255, t_alpha));
+            t_pressanykey.defaultStyleSetColor(sf::Color(255, 255, 255, static_cast<uint8_t>(t_alpha)));
             t_pressanykey.append(Func::GetStrFromKey("menu_pressanykey"));
             t_pressanykey.setGlobalOrigin(t_pressanykey.getGlobalBounds().size.x / 2, t_pressanykey.getGlobalBounds().size.y / 2);
             t_pressanykey.draw();
 
-            rs_cover2.setFillColor(sf::Color(0, 0, 0, cv_alpha));
+            rs_cover2.setFillColor(sf::Color(0, 0, 0, static_cast<uint8_t>(cv_alpha)));
             window->draw(rs_cover2);
         }
     } else
@@ -525,7 +533,7 @@ void MainMenu::Update()
         logo_shadow.setPosition(1920, 420);
         logo.setPosition(1920, 420);
 
-        logo_shadow.setColor(sf::Color(255, 255, 255, alpha));
+        logo_shadow.setColor(sf::Color(255, 255, 255, static_cast<uint8_t>(alpha)));
         logo_shadow.setScale(scale);
 
         logo_shadow.draw();
@@ -539,7 +547,7 @@ void MainMenu::Update()
 
         for (int i = 0; i < 4; i++)
         {
-            totem[i].setPosition((float(360) + float(918) * (i)) + g_x[3] / 1.4, 2160);
+            totem[i].setPosition((float(360) + float(918) * (i)) + g_x[3] / 1.4f, 2160);
 
             if (mouseCtrl->getMousePos().x / (window->getSize().x / 3840.f) > totem[i].getPosition().x)
             {
@@ -652,7 +660,7 @@ void MainMenu::Update()
 
         old_sel = totem_sel;
 
-        cv_alpha -= 255.0 / fps;
+        cv_alpha -= 255.0f / fps;
 
                 
 
@@ -660,7 +668,7 @@ void MainMenu::Update()
         if (cv_alpha <= 0)
             cv_alpha = 0;
 
-        rs_cover2.setFillColor(sf::Color(0, 0, 0, cv_alpha));
+        rs_cover2.setFillColor(sf::Color(0, 0, 0, static_cast<uint8_t>(cv_alpha)));
         window->draw(rs_cover2);
 
         window->setView(window->getDefaultView());
@@ -730,6 +738,7 @@ void MainMenu::Update()
                             dialogboxes[dialogboxes.size() - 1].Close();
                             break;
                         }
+                        break;
                     }
 
                     case 1: {

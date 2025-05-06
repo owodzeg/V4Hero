@@ -41,7 +41,7 @@ public:
     float dest_xsize = 0, dest_ysize = 0;
     float arrow_y = 0;
 
-    int fontSize = 75;
+    float fontSize = 75;
 
     std::string cur_lang = "us";
 
@@ -64,7 +64,7 @@ public:
 
     MessageCloud();
     void setSize(float new_x, float new_y);
-    void Create(int speed, sf::Vector2f start_pos, sf::Color color, bool can_speedup);
+    void Create(int speed, sf::Vector2f start_pos, sf::Color color);
     void AdditionalData(sf::String add_data);
     void setFontSize(int newFontSize);
     void AddDialog(sf::String text, bool nextdialog);

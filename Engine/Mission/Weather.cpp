@@ -51,7 +51,7 @@ void Weather::draw(sf::RenderWindow& window, float fps)
             {
                 Snowflake tmp;
 
-                int ra = rand() % 100;
+                int ra = Func::rand_range(0, 100);
                 int flake = 2;
                 if (ra < 60)
                     flake = 1;
@@ -59,12 +59,12 @@ void Weather::draw(sf::RenderWindow& window, float fps)
                     flake = 0;
 
                 tmp.flake = ps_snowflakes[flake];
-                tmp.x = rand() % 1400 - 180 - 6 * weatherIntensivity;
+                tmp.x = Func::rand_range(0, 1400) - 180 - 6 * weatherIntensivity;
                 tmp.y = -100;
-                tmp.r = (rand() % 1000) / float(1000);
+                tmp.r = Func::rand_range(0, 1000) / float(1000);
                 tmp.xspeed = 6 * weatherIntensivity;
                 tmp.yspeed = 30 * weatherIntensivity;
-                tmp.rspeed = (rand() % 50) / float(50);
+                tmp.rspeed = Func::rand_range(0, 50) / float(50);
 
                 snowflakes.push_back(tmp);
 
@@ -82,13 +82,13 @@ void Weather::draw(sf::RenderWindow& window, float fps)
             {
                 Raindrop tmp;
 
-                int ra = rand() % 100;
+                int ra = Func::rand_range(0, 100);
                 int d = 1;
                 if (ra < 30)
                     d = 0;
 
                 sf::RectangleShape r_drop;
-                r_drop.setSize(sf::Vector2f(3.0 * CoreManager::getInstance().getCore()->resRatio, 64.0 * CoreManager::getInstance().getCore()->resRatio));
+                r_drop.setSize(sf::Vector2f(3.0f * CoreManager::getInstance().getCore()->resRatio, 64.0f * CoreManager::getInstance().getCore()->resRatio));
 
                 if (d == 1)
                     r_drop.setFillColor(sf::Color(240, 240, 240, 255));
@@ -96,9 +96,9 @@ void Weather::draw(sf::RenderWindow& window, float fps)
                     r_drop.setFillColor(sf::Color(210, 210, 210, 255));
 
                 tmp.droplet = r_drop;
-                tmp.x = rand() % 1400 - 180 - 6 * weatherIntensivity;
+                tmp.x = Func::rand_range(0, 1400) - 180 - 6 * weatherIntensivity;
                 tmp.y = -100;
-                tmp.r = (rand() % 1000) / float(1000);
+                tmp.r = Func::rand_range(0, 1000) / float(1000);
                 tmp.xspeed = 0 * weatherIntensivity;
                 tmp.yspeed = 60 * weatherIntensivity;
 

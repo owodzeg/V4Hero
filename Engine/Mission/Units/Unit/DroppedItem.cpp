@@ -15,7 +15,7 @@ DroppedItem::DroppedItem(std::vector<int> item_id)
 
     main.load(std::format("resources/graphics/item/textures/{}/{:04}.png", category, itemID));
 
-    hspeed = -500 + rand() % 300;
+    hspeed = -500 + Func::rand_range(0, 300);
     vspeed = -1000;
 }
 
@@ -90,8 +90,8 @@ void DroppedItem::Draw()
     {
         if (anim_state == 0)
         {
-            destXscale = 0.6;
-            destYscale = 1.5;
+            destXscale = 0.6f;
+            destYscale = 1.5f;
             local_yPosDest = -250;
 
             if (curXscale > destXscale)
@@ -103,8 +103,8 @@ void DroppedItem::Draw()
 
             if (pickupClock.getElapsedTime().asMilliseconds() >= 210)
             {
-                curXscale = 0.6;
-                curYscale = 1.5;
+                curXscale = 0.6f;
+                curYscale = 1.5f;
                 local_yPosDest = -750;
 
                 anim_state = 1;
@@ -129,7 +129,7 @@ void DroppedItem::Draw()
                 curXscale = 1;
                 curYscale = 1;
                 local_yPosDest = -150;
-                hspeed2 = 0.1;
+                hspeed2 = 0.1f;
 
                 anim_state = 2;
             }
@@ -146,7 +146,7 @@ void DroppedItem::Draw()
                     vspeed2 = -20;
 
                 if (hspeed2 >= 24)
-                    alpha -= 500.0 / fps;
+                    alpha -= 500.0f / fps;
 
                 if (alpha <= 0)
                     alpha = 0;

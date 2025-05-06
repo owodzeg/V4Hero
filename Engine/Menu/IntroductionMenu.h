@@ -14,7 +14,6 @@ public:
 
     void Initialize();
     void Update();
-    void EventFired(sf::Event event);
     IntroductionMenu();
     ~IntroductionMenu();
 };

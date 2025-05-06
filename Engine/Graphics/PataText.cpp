@@ -156,17 +156,17 @@ void PataText::applyDialog()
 
 
 // affects style
-void PataText::styleSetAdditionalKerning(PTStyle& style, double newKerning)
+void PataText::styleSetAdditionalKerning(PTStyle& style, float newKerning)
 {
     style.additional_kerning = newKerning;
 }
 
-void PataText::styleSetXOffset(PTStyle& style, double newXOffset)
+void PataText::styleSetXOffset(PTStyle& style, float newXOffset)
 {
     style.x_offset = newXOffset;
 }
 
-void PataText::styleSetYOffset(PTStyle& style, double newYOffset)
+void PataText::styleSetYOffset(PTStyle& style, float newYOffset)
 {
     style.y_offset = newYOffset;
 }
@@ -178,27 +178,27 @@ void PataText::styleSetFullColor(PTStyle& style, sf::Color newColor)
     style.c_blue = newColor.b;
 }
 
-void PataText::styleSetRedColor(PTStyle& style, double newRed)
+void PataText::styleSetRedColor(PTStyle& style, float newRed)
 {
     style.c_red = newRed;
 }
 
-void PataText::styleSetGreenColor(PTStyle& style, double newGreen)
+void PataText::styleSetGreenColor(PTStyle& style, float newGreen)
 {
     style.c_green = newGreen;
 }
 
-void PataText::styleSetBlueColor(PTStyle& style, double newBlue)
+void PataText::styleSetBlueColor(PTStyle& style, float newBlue)
 {
     style.c_blue = newBlue;
 }
 
-void PataText::styleSetAlpha(PTStyle& style, double newAlpha)
+void PataText::styleSetAlpha(PTStyle& style, float newAlpha)
 {
     style.c_alpha = newAlpha;
 }
 
-void PataText::styleSetCharSize(PTStyle& style, double newCharSize)
+void PataText::styleSetCharSize(PTStyle& style, float newCharSize)
 {
     style.char_size = newCharSize;
 }
@@ -249,18 +249,18 @@ void PataText::styleToggleStrike(PTStyle& style)
     style.strike = !style.strike;
 }
 
-void PataText::styleSetShake(PTStyle& style, double newShake)
+void PataText::styleSetShake(PTStyle& style, float newShake)
 {
     style.shake = newShake;
 }
 
-void PataText::styleSetHorizontalWave(PTStyle& style, double newHWave, double newHWaveSpeed)
+void PataText::styleSetHorizontalWave(PTStyle& style, float newHWave, float newHWaveSpeed)
 {
     style.hwave = newHWave;
     style.hwave_speed = newHWaveSpeed;
 }
 
-void PataText::styleSetVerticalWave(PTStyle& style, double newVWave, double newVWaveSpeed)
+void PataText::styleSetVerticalWave(PTStyle& style, float newVWave, float newVWaveSpeed)
 {
     style.vwave = newVWave;
     style.vwave_speed = newVWaveSpeed;
@@ -273,37 +273,37 @@ void PataText::styleSetOutlineFullColor(PTStyle& style, sf::Color newColor)
     style.ot_c_blue = newColor.b;
 }
 
-void PataText::styleSetOutlineRedColor(PTStyle& style, double newRed)
+void PataText::styleSetOutlineRedColor(PTStyle& style, float newRed)
 {
     style.ot_c_red = newRed;
 }
 
-void PataText::styleSetOutlineGreenColor(PTStyle& style, double newGreen)
+void PataText::styleSetOutlineGreenColor(PTStyle& style, float newGreen)
 {
     style.ot_c_green = newGreen;
 }
 
-void PataText::styleSetOutlineBlueColor(PTStyle& style, double newBlue)
+void PataText::styleSetOutlineBlueColor(PTStyle& style, float newBlue)
 {
     style.ot_c_blue = newBlue;
 }
 
-void PataText::styleSetOutlineAlpha(PTStyle& style, double newAlpha)
+void PataText::styleSetOutlineAlpha(PTStyle& style, float newAlpha)
 {
     style.ot_c_alpha = newAlpha;
 }
 
-void PataText::styleSetOutlineThickness(PTStyle& style, double newThickness)
+void PataText::styleSetOutlineThickness(PTStyle& style, float newThickness)
 {
     style.thickness = newThickness;
 }
 
-void PataText::styleSetSpeed(PTStyle& style, double newMsSpeed)
+void PataText::styleSetSpeed(PTStyle& style, float newMsSpeed)
 {
     style.nextCharTimeout = newMsSpeed;
 }
 
-void PataText::styleSetTimeout(PTStyle& style, double newMsTimeout)
+void PataText::styleSetTimeout(PTStyle& style, float newMsTimeout)
 {
     style.curCharTimeout = newMsTimeout;
 }
@@ -327,7 +327,7 @@ void PataText::defaultStyleSetColor(sf::Color newColor)
     m_marker = default_style;
 }
 
-void PataText::defaultStyleSetCharSize(double newCharSize)
+void PataText::defaultStyleSetCharSize(float newCharSize)
 {
     default_style.char_size = newCharSize;
     m_marker = default_style;
@@ -349,7 +349,7 @@ void PataText::defaultStyleSetOutlineColor(sf::Color newColor)
     m_marker = default_style;
 }
 
-void PataText::defaultStyleSetOutlineThickness(double newThickness)
+void PataText::defaultStyleSetOutlineThickness(float newThickness)
 {
     default_style.thickness = newThickness;
     m_marker = default_style;
@@ -475,9 +475,9 @@ void PataText::ProcessStyleToken(const sf::String& token)
         std::vector<std::string> args = split_fast(keywordStr, ' ');
         if (args.size() == 4)
         {
-            int r = atoi(args[1].c_str());
-            int g = atoi(args[2].c_str());
-            int b = atoi(args[3].c_str());
+            uint8_t r = static_cast<uint8_t>(stoi(args[1]));
+            uint8_t g = static_cast<uint8_t>(stoi(args[2]));
+            uint8_t b = static_cast<uint8_t>(stoi(args[3]));
             styleSetFullColor(m_marker, sf::Color(r, g, b));
             SPDLOG_TRACE("Set color to {}, {}, {}", r, g, b);
         } 
@@ -493,10 +493,10 @@ void PataText::ProcessStyleToken(const sf::String& token)
         std::vector<std::string> args = split_fast(keywordStr, ' ');
         if (args.size() == 5)
         {
-            int th = atoi(args[1].c_str());
-            int r = atoi(args[2].c_str());
-            int g = atoi(args[3].c_str());
-            int b = atoi(args[4].c_str());
+            int th = stoi(args[1]);
+            uint8_t r = static_cast<uint8_t>(stoi(args[2]));
+            uint8_t g = static_cast<uint8_t>(stoi(args[3]));
+            uint8_t b = static_cast<uint8_t>(stoi(args[4]));
             styleSetOutlineThickness(m_marker, th);
             styleSetOutlineFullColor(m_marker, sf::Color(r, g, b));
             SPDLOG_TRACE("Set outline thickness to {}, color to {}, {}, {}", th, r, g, b);
@@ -513,7 +513,7 @@ void PataText::ProcessStyleToken(const sf::String& token)
         std::vector<std::string> args = split_fast(keywordStr, ' ');
         if (args.size() == 2)
         {
-            int size = atoi(args[1].c_str());
+            int size = stof(args[1]);
             styleSetCharSize(m_marker, size);
             SPDLOG_TRACE("Set char size to {}", size);
         } 
@@ -528,8 +528,8 @@ void PataText::ProcessStyleToken(const sf::String& token)
         std::vector<std::string> args = split_fast(keywordStr, ' ');
         if (args.size() == 2)
         {
-            double cps = atoi(args[1].c_str());
-            double speed;
+            float cps = stof(args[1]);
+            float speed;
 
             if (cps == 0)
             {
@@ -553,7 +553,7 @@ void PataText::ProcessStyleToken(const sf::String& token)
         std::vector<std::string> args = split_fast(keywordStr, ' ');
         if (args.size() == 2)
         {
-            double timeout = atoi(args[1].c_str());
+            float timeout = stof(args[1]);
             styleSetTimeout(m_marker, timeout);
             SPDLOG_TRACE("Set timeout to {}", timeout);
         } else
@@ -580,7 +580,7 @@ void PataText::ProcessStyleToken(const sf::String& token)
         std::vector<std::string> args = split_fast(keywordStr, ' ');
         if (args.size() == 2)
         {
-            double shake = atoi(args[1].c_str());
+            float shake = stof(args[1]);
             styleSetShake(m_marker, shake);
             SPDLOG_TRACE("Set shake to {}", shake);
         }
@@ -589,8 +589,8 @@ void PataText::ProcessStyleToken(const sf::String& token)
         std::vector<std::string> args = split_fast(keywordStr, ' ');
         if (args.size() == 3)
         {
-            double hwave = atoi(args[1].c_str());
-            double hwave_speed = atoi(args[2].c_str());
+            float hwave = stof(args[1]);
+            float hwave_speed = stof(args[2]);
             styleSetHorizontalWave(m_marker, hwave, hwave_speed);
             SPDLOG_TRACE("Set horizontal wave to {} speed {}", hwave, hwave_speed);
         }
@@ -599,8 +599,8 @@ void PataText::ProcessStyleToken(const sf::String& token)
         std::vector<std::string> args = split_fast(keywordStr, ' ');
         if (args.size() == 3)
         {
-            double vwave = atoi(args[1].c_str());
-            double vwave_speed = atoi(args[2].c_str());
+            float vwave = stof(args[1]);
+            float vwave_speed = stof(args[2]);
             styleSetVerticalWave(m_marker, vwave, vwave_speed);
             SPDLOG_TRACE("Set vertical wave to {} speed {}", vwave, vwave_speed);
         }
@@ -662,8 +662,8 @@ void PataText::ProcessPositioning()
 
     for (auto& line : m_lines)
     {
-        double largest_height = 0;
-        double largest_charSize = 0;
+        float largest_height = 0;
+        float largest_charSize = 0;
 
         m_counter_line = 0;
 
@@ -690,9 +690,6 @@ void PataText::ProcessPositioning()
         // y positioning (after gathering largest height, try to center the characters)
         for (auto& character : line)
         {
-            const std::string& fontStr = character.style.fontStr;
-
-            auto glyphHeight = strRepo->GetHeightForFont(fontStr, character.character, character.style.char_size, character.style.bold);
             character.position.y = m_position.y + (largest_charSize - character.style.char_size);
         }
 
@@ -706,7 +703,7 @@ void PataText::ProcessPositioning()
     refreshPositioning = false;
 }
 
-void PataText::setGlobalPosition(double new_x, double new_y)
+void PataText::setGlobalPosition(float new_x, float new_y)
 {
     global_x = new_x;
     global_y = new_y;
@@ -717,7 +714,7 @@ sf::Vector2f PataText::getGlobalPosition()
     return sf::Vector2f(global_x, global_y);
 }
 
-void PataText::setGlobalOrigin(double new_x, double new_y)
+void PataText::setGlobalOrigin(float new_x, float new_y)
 {
     origin_x = new_x;
     origin_y = new_y;
@@ -763,19 +760,19 @@ void PataText::draw()
         dialogue_clock.restart();
     }
 
-    double timeRequired = 0;
+    float timeRequired = 0;
 
     for (auto& line : m_lines)
     {
         for (auto& character : line)
         {
             // effects! :D
-            double total_x_offset = 0;
-            double total_y_offset = 0;
+            float total_x_offset = 0;
+            float total_y_offset = 0;
 
             //character.style.y_offset = sin(effect.getElapsedTime().asSeconds() * 10 + character.style.line_offset) * 4;
 
-            random = (rand() % 10000) / 1000.f;
+            random = Func::rand_range(0, 9999) / 1000.f;
 
             if (character.style.shake > 0)
             {
@@ -798,8 +795,8 @@ void PataText::draw()
 
             character.text->setRotation(sf::degrees(character.style.rotation + character.style.r_offset));
 
-            double final_x = CoreManager::getInstance().getCore()->resRatio * (global_x + character.position.x - origin_x + character.style.x_offset);
-            double final_y = CoreManager::getInstance().getCore()->resRatio * (global_y + character.position.y - origin_y + character.style.y_offset);
+            float final_x = CoreManager::getInstance().getCore()->resRatio * (global_x + character.position.x - origin_x + character.style.x_offset);
+            float final_y = CoreManager::getInstance().getCore()->resRatio * (global_y + character.position.y - origin_y + character.style.y_offset);
 
             character.text->setPosition(sf::Vector2f(final_x, final_y));
 

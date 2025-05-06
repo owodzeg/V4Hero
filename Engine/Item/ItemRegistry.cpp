@@ -354,6 +354,8 @@ int ItemRegistry::getCategoryIDByString(std::string item_category)
         return Categories::WEAPONS;
     if (item_category == "armor")
         return Categories::ARMOR;
+
+    return -1; // Invalid category
 }
 
 Item* ItemRegistry::getItemByName(std::string name, bool lang_specific)
@@ -378,6 +380,9 @@ Item* ItemRegistry::getItemByName(std::string name, bool lang_specific)
             }
         }
     }
+
+    SPDLOG_ERROR("Item {} not found", name);
+    return nullptr;
 }
 
 std::vector<int> ItemRegistry::findItemByCatID(std::string cat, int id)

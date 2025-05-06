@@ -14,8 +14,7 @@ Yaripon::Yaripon(int which, int maxpons)
     maxp = maxpons;
 
     float max_army_spread = 660;
-
-    double gap = 0;
+    float gap = 0;
 
     if(maxp == 1)
     {
@@ -23,11 +22,11 @@ Yaripon::Yaripon(int which, int maxpons)
     }
     else
     {
-        gap = static_cast<double>(max_army_spread - 1) / (maxp - 1);
+        gap = (max_army_spread - 1) / (maxp - 1);
         gap_x = (max_army_spread / -2) + gap*order;
     }
 
-    double center = max_army_spread / 2.0;  // Center of the space (325px in a 650px space)
+    float center = max_army_spread / 2.0;  // Center of the space (325px in a 650px space)
     float unit = 120;
 
     if(maxp>6)
@@ -36,11 +35,11 @@ Yaripon::Yaripon(int which, int maxpons)
     }
 
     // General formula for positioning units
-    double pos;
+    float pos;
     if (maxp % 2 == 1) {  // For odd number of units
         pos = center + ((order-1) - (maxp - 1) / 2.0) * unit;
     } else {  // For even number of units
-        pos = center + ((order-1) - (maxp / 2.0 - 0.5)) * unit;
+        pos = center + ((order-1) - (maxp / 2.0f - 0.5)) * unit;
     }
 
     gap_x = pos;
@@ -48,8 +47,6 @@ Yaripon::Yaripon(int which, int maxpons)
 
 void Yaripon::Advance()
 {
-    float fps = CoreManager::getInstance().getCore()->getFPS();
-
     main.setAnimation("walk");
     if(enemyInSight)
         main.setAnimation("walk_focused");
@@ -61,7 +58,7 @@ void Yaripon::Attack(int power)
 {
     attackType = power;
     action = 1;
-    globalRand = rand() % 10000;
+    globalRand = Func::rand_range(0, 10000);
     performedAttack = false;
     attackWalkTimer.restart();
 
@@ -86,9 +83,9 @@ void Yaripon::PerformAttack()
         {
             auto BPM = CoreManager::getInstance().getSongController()->getBPM();
 
-            int jumpStart = 100 / (BPM/120);
-            int jumpEnd = 400 / (BPM/120);
-            int attackEnd = 1500 / (BPM/120);
+            float jumpStart = 100 / (BPM/120);
+            float jumpEnd = 400 / (BPM/120);
+            float attackEnd = 1500 / (BPM/120);
 
             if(inAttackTimer.getElapsedTime().asMilliseconds() > jumpStart && inAttackTimer.getElapsedTime().asMilliseconds() < jumpEnd && fabs(vspeed) <= 1)
             {
@@ -119,7 +116,7 @@ void Yaripon::PerformAttack()
                     float prj_hSpeed = 1800 + (globalRand%50);
                     float prj_vSpeed = -1800 - (globalRand%70);
                     auto prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn);
-                    prj->damage = minDmg + (rand() % std::min(int(minDmg-maxDmg),1));
+                    prj->damage = minDmg + (Func::rand_range(0, std::min(int(maxDmg - minDmg), 1)));
                 }
 
                 if(attackType == 2)
@@ -128,7 +125,7 @@ void Yaripon::PerformAttack()
                     float prj_hSpeed = 2400 + (globalRand%50);
                     float prj_vSpeed = 1050 - (globalRand%70);
                     auto prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn);
-                    prj->damage = minDmg + (rand() % std::min(int(minDmg-maxDmg),1));
+                    prj->damage = minDmg + (Func::rand_range(0, std::min(int(maxDmg - minDmg), 1)));
                 }
                 threw = true;
             }
@@ -154,9 +151,9 @@ void Yaripon::PerformAttack()
         {
             auto BPM = CoreManager::getInstance().getSongController()->getBPM();
 
-            int jumpStart = 100 / (BPM/120);
-            int jumpEnd = 400 / (BPM/120);
-            int attackEnd = 1500 / (BPM/120);
+            float jumpStart = 100 / (BPM/120);
+            float jumpEnd = 400 / (BPM/120);
+            float attackEnd = 1500 / (BPM/120);
 
             if(inAttackTimer.getElapsedTime().asMilliseconds() >= jumpEnd && inAttackTimer.getElapsedTime().asMilliseconds() <= attackEnd)
             {
@@ -182,7 +179,7 @@ void Yaripon::PerformAttack()
                     float prj_hSpeed = 1600 + (globalRand%50);
                     float prj_vSpeed = -1500 - (globalRand%70);
                     auto prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn);
-                    prj->damage = minDmg + (rand() % std::min(int(minDmg-maxDmg),1));
+                    prj->damage = minDmg + (Func::rand_range(0, std::min(int(maxDmg - minDmg), 1)));
                 }
 
                 if(attackType == 4)
@@ -191,7 +188,7 @@ void Yaripon::PerformAttack()
                     float prj_hSpeed = 2000 + (globalRand%50);
                     float prj_vSpeed = -300 - (globalRand%70);
                     auto prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn);
-                    prj->damage = minDmg + (rand() % std::min(int(minDmg-maxDmg),1));
+                    prj->damage = minDmg + (Func::rand_range(0, std::min(int(maxDmg - minDmg), 1)));
                 }
                 threw = true;
             }
@@ -359,7 +356,7 @@ void Yaripon::Draw()
                     if(distanceToTravel < 2000 - globalRand%10*5) // too close
                     {
                         main.setAnimation("walk_focused");
-                        pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
+                        pataCurMaxSpeed = pataMaxSpeed * 2.4f / (1 + ((globalRand%5)+5) * 0.02f);
                         pataSpeed -= pataCurMaxSpeed*decelerationFactor / fps;
                         if(pataSpeed < -pataCurMaxSpeed)
                             pataSpeed = -pataCurMaxSpeed;
@@ -367,7 +364,7 @@ void Yaripon::Draw()
                     else if (distanceToTravel > 2200 + globalRand%10*5) // too far
                     {
                         main.setAnimation("walk_focused");
-                        pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
+                        pataCurMaxSpeed = pataMaxSpeed * 2.4f / (1 + ((globalRand%5)+5) * 0.02f);
                         pataSpeed += pataCurMaxSpeed*accelerationFactor / fps;
                         if(pataSpeed > pataCurMaxSpeed)
                             pataSpeed = pataCurMaxSpeed;
@@ -377,8 +374,8 @@ void Yaripon::Draw()
                         if(attackWalkTimer.getElapsedTime().asMilliseconds() < 300 + 10*(globalRand%20))
                         {
                             main.setAnimation("walk_focused");
-                            pataCurMaxSpeed = pataMaxSpeed / 2 / (((globalRand%5)+5) * 0.2);
-                            int neg = (((globalRand%2) - 0.5) * 2);
+                            pataCurMaxSpeed = pataMaxSpeed / 2 / (((globalRand%5)+5) * 0.2f);
+                            int neg = (((globalRand%2) - 0.5f) * 2);
                             pataSpeed += neg*pataCurMaxSpeed*accelerationFactor / fps;
                             if(pataSpeed > pataCurMaxSpeed)
                                 pataSpeed = pataCurMaxSpeed;
@@ -398,7 +395,7 @@ void Yaripon::Draw()
                     if(distanceToTravel < 800 - globalRand%10*5)
                     {
                         main.setAnimation("walk_focused");
-                        pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
+                        pataCurMaxSpeed = pataMaxSpeed * 2.4f / (1 + ((globalRand%5)+5) * 0.02f);
                         pataSpeed -= pataCurMaxSpeed*decelerationFactor / fps;
                         if(pataSpeed < -pataCurMaxSpeed)
                             pataSpeed = -pataCurMaxSpeed;
@@ -406,7 +403,7 @@ void Yaripon::Draw()
                     else if (distanceToTravel > 1000 + globalRand%10*5)
                     {
                         main.setAnimation("walk_focused");
-                        pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
+                        pataCurMaxSpeed = pataMaxSpeed * 2.4f / (1 + ((globalRand%5)+5) * 0.02f);
                         pataSpeed += pataCurMaxSpeed*accelerationFactor / fps;
                         if(pataSpeed > pataCurMaxSpeed)
                             pataSpeed = pataCurMaxSpeed;
@@ -416,8 +413,8 @@ void Yaripon::Draw()
                         if(attackWalkTimer.getElapsedTime().asMilliseconds() < 300 + 10*(globalRand%20))
                         {
                             main.setAnimation("walk_focused");
-                            pataCurMaxSpeed = pataMaxSpeed / 2 / (((globalRand%5)+5) * 0.2);
-                            int neg = (((globalRand%2) - 0.5) * 2);
+                            pataCurMaxSpeed = pataMaxSpeed / 2 / (((globalRand%5)+5) * 0.2f);
+                            int neg = (((globalRand%2) - 0.5f) * 2);
                             pataSpeed += neg*pataCurMaxSpeed*accelerationFactor / fps;
                             if(pataSpeed > pataCurMaxSpeed)
                                 pataSpeed = pataCurMaxSpeed;
@@ -437,7 +434,7 @@ void Yaripon::Draw()
                     if(distanceToTravel < 1400 - globalRand%10*5) // too close
                     {
                         main.setAnimation("walk_focused");
-                        pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
+                        pataCurMaxSpeed = pataMaxSpeed * 2.4f / (1 + ((globalRand%5)+5) * 0.02f);
                         pataSpeed -= pataCurMaxSpeed*decelerationFactor / fps;
                         if(pataSpeed < -pataCurMaxSpeed)
                             pataSpeed = -pataCurMaxSpeed;
@@ -445,7 +442,7 @@ void Yaripon::Draw()
                     else if (distanceToTravel > 1600 + globalRand%10*5) // too far
                     {
                         main.setAnimation("walk_focused");
-                        pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
+                        pataCurMaxSpeed = pataMaxSpeed * 2.4f / (1 + ((globalRand%5)+5) * 0.02f);
                         pataSpeed += pataCurMaxSpeed*accelerationFactor / fps;
                         if(pataSpeed > pataCurMaxSpeed)
                             pataSpeed = pataCurMaxSpeed;
@@ -455,8 +452,8 @@ void Yaripon::Draw()
                         if(attackWalkTimer.getElapsedTime().asMilliseconds() < 300 + 10*(globalRand%20))
                         {
                             main.setAnimation("walk_focused");
-                            pataCurMaxSpeed = pataMaxSpeed / 2 / (((globalRand%5)+5) * 0.2);
-                            int neg = (((globalRand%2) - 0.5) * 2);
+                            pataCurMaxSpeed = pataMaxSpeed / 2 / (((globalRand%5)+5) * 0.2f);
+                            int neg = (((globalRand%2) - 0.5f) * 2);
                             pataSpeed += neg*pataCurMaxSpeed*accelerationFactor / fps;
                             if(pataSpeed > pataCurMaxSpeed)
                                 pataSpeed = pataCurMaxSpeed;
@@ -476,7 +473,7 @@ void Yaripon::Draw()
                     if(distanceToTravel < 800 - globalRand%10*5)
                     {
                         main.setAnimation("walk_focused");
-                        pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
+                        pataCurMaxSpeed = pataMaxSpeed * 2.4f / (1 + ((globalRand%5)+5) * 0.02f);
                         pataSpeed -= pataCurMaxSpeed*decelerationFactor / fps;
                         if(pataSpeed < -pataCurMaxSpeed)
                             pataSpeed = -pataCurMaxSpeed;
@@ -484,7 +481,7 @@ void Yaripon::Draw()
                     else if (distanceToTravel > 1000 + globalRand%10*5)
                     {
                         main.setAnimation("walk_focused");
-                        pataCurMaxSpeed = pataMaxSpeed * 2.4 / (1 + ((globalRand%5)+5) * 0.02);
+                        pataCurMaxSpeed = pataMaxSpeed * 2.4f / (1 + ((globalRand%5)+5) * 0.02f);
                         pataSpeed += pataCurMaxSpeed*accelerationFactor / fps;
                         if(pataSpeed > pataCurMaxSpeed)
                             pataSpeed = pataCurMaxSpeed;
@@ -494,8 +491,8 @@ void Yaripon::Draw()
                         if(attackWalkTimer.getElapsedTime().asMilliseconds() < 300 + 10*(globalRand%20))
                         {
                             main.setAnimation("walk_focused");
-                            pataCurMaxSpeed = pataMaxSpeed / 2 / (((globalRand%5)+5) * 0.2);
-                            int neg = (((globalRand%2) - 0.5) * 2);
+                            pataCurMaxSpeed = pataMaxSpeed / 2 / (((globalRand%5)+5) * 0.2f);
+                            int neg = (((globalRand%2) - 0.5f) * 2);
                             pataSpeed += neg*pataCurMaxSpeed*accelerationFactor / fps;
                             if(pataSpeed > pataCurMaxSpeed)
                                 pataSpeed = pataCurMaxSpeed;
@@ -529,7 +526,7 @@ void Yaripon::Draw()
 
         if(action == 0 && !walkBack)
         {
-            pataSpeed *= 0.9;
+            pataSpeed *= 0.9f;
         }
 
         if(action == 2)
@@ -599,7 +596,6 @@ void Yaripon::Draw()
 
     if(toggleDebug)
     {
-        auto strRepo = CoreManager::getInstance().getStrRepo();
         debugText.reset();
         debugText.append(std::format("{{size 36}}o\n{}\nact\n{}\natk_x\n{}\npS\n{}\naf\n{}\nias\n{}\npA\n{}\niat\n{}\ncai\n{:2.2f}",order, action, attack_x, pataSpeed, main.getAnimationFrame(), inAttackSequence, performedAttack, inAttackTimer.getElapsedTime().asMilliseconds(), canAttackIn));
         debugText.setGlobalOrigin(debugText.getGlobalBounds().size.x / 2, debugText.getGlobalBounds().size.y);
