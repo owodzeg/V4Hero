@@ -568,7 +568,7 @@ void Barracks::refreshStats()
 
     t_unit_rarepon_name.reset();
     t_unit_rarepon_name.append(Func::GetStrFromKey("rarepon_normal"));
-    t_unit_rarepon_name.append(std::to_string(currentPon->pon_level));
+    t_unit_rarepon_name.append(std::to_string(static_cast<int>(currentPon->pon_level)));
 
     for (int i = 0; i < currentPon->slots.size(); i++)
     {
@@ -607,10 +607,10 @@ void Barracks::refreshStats()
     unit_stat_firec_v.reset();
     unit_stat_icec_v.reset();
 
-    unit_stat_level_v.append(std::to_string(currentPon->pon_level)); /// CHANGE THESE WHEN IMPLEMENTING STATUS EFFECTS ETC.
-    unit_stat_exp_v.append(std::to_string(currentPon->pon_exp) + "/1200");
-    unit_stat_hp_v.append(std::to_string(currentPon->pon_hp));
-    unit_stat_dmg_v.append(std::to_string(currentPon->pon_min_dmg) + "-" + std::to_string(currentPon->pon_max_dmg));
+    unit_stat_level_v.append(std::to_string(static_cast<int>(currentPon->pon_level))); /// CHANGE THESE WHEN IMPLEMENTING STATUS EFFECTS ETC.
+    unit_stat_exp_v.append(std::to_string(static_cast<int>(currentPon->pon_exp)) + "/1200");
+    unit_stat_hp_v.append(std::to_string(static_cast<int>(currentPon->pon_hp)));
+    unit_stat_dmg_v.append(std::to_string(static_cast<int>(currentPon->pon_min_dmg)) + "-" + std::to_string(static_cast<int>(currentPon->pon_max_dmg)));
     unit_stat_atkspd_v.append(to_string_with_precision(currentPon->pon_attack_speed, 2));
     unit_stat_critc_v.append("0%");
     unit_stat_kbc_v.append("0%");
@@ -744,7 +744,7 @@ void Barracks::updatePreviewText()
             item_desc.reset();
 
             item_title.append(Func::GetStrFromKey(inventory_boxes[invbox_id].data->item_name));
-            item_desc.append(Func::ConvertToUtf8String(Func::wrap_text(inventory_boxes[invbox_id].data->item_description, 340*3, font, 66)));
+            item_desc.append(Func::ConvertToUtf8String(Func::wrap_text(Func::GetStrFromKey(inventory_boxes[invbox_id].data->item_description), 330*3, font, 66)));
             //preview stats -L
             unit_stat_hp_v.reset();
             unit_stat_hp_v.append(getPreviewText(inventory_boxes[invbox_id].data->equip->hp, currentPon->pon_hp, currentPon->pon_base_hp, 0));
@@ -1038,8 +1038,8 @@ void Barracks::Update()
                     inventory_boxes[cur_item].icon.setPosition(193.5f + xpos, 1170.5f + ypos);
                     inventory_boxes[cur_item].icon.draw();
 
-                    inventory_boxes[cur_item].num.setGlobalPosition(225 + xpos, 1149 + ypos);
-                    inventory_boxes[cur_item].num_shadow.setGlobalPosition(228 + xpos, 1155 + ypos);
+                    inventory_boxes[cur_item].num.setGlobalPosition(225 + xpos, 1179 + ypos);
+                    inventory_boxes[cur_item].num_shadow.setGlobalPosition(228 + xpos, 1185 + ypos);
 
                     inventory_boxes[cur_item].num_shadow.draw();
                     inventory_boxes[cur_item].num.draw();

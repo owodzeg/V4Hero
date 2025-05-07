@@ -137,7 +137,7 @@ void V4Core::init()
     t_disclaimer.defaultStyleSetColor(sf::Color::White);
     t_disclaimer.defaultStyleSetOutlineColor(sf::Color::Black);
     t_disclaimer.defaultStyleSetOutlineThickness(3);
-    t_disclaimer.defaultStyleSetCharSize(45);
+    t_disclaimer.defaultStyleSetCharSize(52);
     t_disclaimer.append("(beta version)");
     t_disclaimer.setGlobalOrigin(t_disclaimer.getGlobalBounds().size.x, 0);
 
