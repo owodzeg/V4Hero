@@ -92,21 +92,6 @@ void Object::LoadFromMemory(std::string mem, int xpos, int ypos)
     //cout << "Object loaded successfully" << endl;
 } 
 
-void Object::swapTexture(sf::Image& img)
-{
-    //cout << "[AnimatedObject::swapTexture A] swapping texture" << endl;
-    //cout << "[Object] Object::swapTexture(): " << texture_path << endl;
-
-
-    //s_obj.t.loadFromImage(img);
-    //cout << c.getElapsedTime().asMicroseconds() << "us ";
-    //s_obj.t.setSmooth(true);
-    //cout << c.getElapsedTime().asMicroseconds() << "us ";
-    //s_obj.applyTexture();
-    //cout << c.getElapsedTime().asMicroseconds() << "us" << endl;;
-    //cout << "[AnimatedObject::swapTexture A] swapping done" << endl;
-}
-
 void Object::swapTexture(sf::Image first, std::vector<Pixel> px)
 {
     //cout << "[AnimatedObject::swapTexture B] swapping texture" << endl;

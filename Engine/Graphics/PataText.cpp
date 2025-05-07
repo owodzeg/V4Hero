@@ -621,7 +621,7 @@ void PataText::ProcessRegularText(const sf::String& token)
             // Reset single-use timeout
             m_marker.curCharTimeout = 0;
             PTChar newChar(token[i], m_marker);
-            newChar.text = std::make_unique<sf::Text>(*newChar.style.font, token[i], newChar.style.char_size);
+            newChar.text = std::make_unique<sf::Text>(*newChar.style.font, token[i], static_cast<unsigned int>(newChar.style.char_size));
             currentLine.emplace_back(newChar);
         }
     }

@@ -365,10 +365,10 @@ void Barracks::loadInventory()
             cur_box.highlight = false;
         }
 
-        cur_box.r_outer.setSize(sf::Vector2f(70.0*3 * CoreManager::getInstance().getCore()->resRatio, 51.0*3 * CoreManager::getInstance().getCore()->resRatio));
+        cur_box.r_outer.setSize(sf::Vector2f(210 * CoreManager::getInstance().getCore()->resRatio, 153 * CoreManager::getInstance().getCore()->resRatio));
         cur_box.r_outer.setFillColor(sf::Color(102, 102, 102, 255));
 
-        cur_box.r_inner.setSize(sf::Vector2f(46.0*3 * CoreManager::getInstance().getCore()->resRatio, 46.0*3 * CoreManager::getInstance().getCore()->resRatio));
+        cur_box.r_inner.setSize(sf::Vector2f(138 * CoreManager::getInstance().getCore()->resRatio, 138 * CoreManager::getInstance().getCore()->resRatio));
         cur_box.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
         switch (cur_item->order_id[0]) // Is there a better way than nested switches here? (look: weapons -> spears or swords will be necessary)
@@ -821,10 +821,10 @@ void Barracks::Update()
         pon->Draw();
     }
 
-    highlighted_pon.setPosition((388*3 + (pon_width * (current_selected_pon))), 530*3);
+    highlighted_pon.setPosition((388*3 + (static_cast<float>(pon_width) * static_cast<float>(current_selected_pon))), 530*3);
     highlighted_pon.draw();
 
-    s_pon_highlight.setPosition(highlight_width * 2*3, 675*3);
+    s_pon_highlight.setPosition(static_cast<float>(highlight_width) * 2*3, 675*3);
     s_pon_highlight.draw();
 
 
@@ -1017,13 +1017,13 @@ void Barracks::Update()
                     int cur_item = grid_offset_y * 4 + i;
 
                     int grid_x = i % 4;
-                    int grid_y = floor(i / 4);
+                    int grid_y = static_cast<int>(floor(i / 4));
 
-                    float xpos = 46*3 + (grid_x * 77*3);
-                    float ypos = 37*3 + (grid_y * 54*3);
+                    float xpos = 46*3 + (static_cast<float>(grid_x) * 77*3);
+                    float ypos = 37*3 + (static_cast<float>(grid_y) * 54*3);
 
-                    inventory_boxes[cur_item].r_outer.setPosition(sf::Vector2f((40 * 3 + xpos) * CoreManager::getInstance().getCore()->resRatio, (366 * 3 + ypos) * CoreManager::getInstance().getCore()->resRatio));
-                    inventory_boxes[cur_item].r_inner.setPosition(sf::Vector2f((40 * 3 + xpos + 2.5 * 3) * CoreManager::getInstance().getCore()->resRatio, (366 * 3 + ypos + 2.5 * 3) * CoreManager::getInstance().getCore()->resRatio));
+                    inventory_boxes[cur_item].r_outer.setPosition(sf::Vector2f((120 + xpos) * CoreManager::getInstance().getCore()->resRatio, (1098 + ypos) * CoreManager::getInstance().getCore()->resRatio));
+                    inventory_boxes[cur_item].r_inner.setPosition(sf::Vector2f((120 + xpos + 7.5f) * CoreManager::getInstance().getCore()->resRatio, (1098 + ypos + 7.5f) * CoreManager::getInstance().getCore()->resRatio));
                     window->draw(inventory_boxes[cur_item].r_outer);
                     window->draw(inventory_boxes[cur_item].r_inner);
 
@@ -1035,19 +1035,19 @@ void Barracks::Update()
                     if ((inventory_boxes[cur_item].data->item_category == "key_items") || (inventory_boxes[cur_item].data->item_category == "consumables")) ///Bound to break
                         inventory_boxes[cur_item].icon.setScale(0.41f, 0.41f);
 
-                    inventory_boxes[cur_item].icon.setPosition(40*3 + xpos + 23*3 + 1.5*3, 366*3 + ypos + 23*3 + 1.5*3);
+                    inventory_boxes[cur_item].icon.setPosition(193.5f + xpos, 1170.5f + ypos);
                     inventory_boxes[cur_item].icon.draw();
 
-                    inventory_boxes[cur_item].num.setGlobalPosition(40 * 3 + xpos + 36 * 3 - 1 * 3, 366 * 3 + ypos + 29 * 3 - 2 * 3);
-                    inventory_boxes[cur_item].num_shadow.setGlobalPosition(40*3 + xpos + 36*3, 366*3 + ypos + 29*3);
+                    inventory_boxes[cur_item].num.setGlobalPosition(225 + xpos, 1149 + ypos);
+                    inventory_boxes[cur_item].num_shadow.setGlobalPosition(228 + xpos, 1155 + ypos);
 
                     inventory_boxes[cur_item].num_shadow.draw();
                     inventory_boxes[cur_item].num.draw();
 
                     if (inventory_boxes[cur_item].highlight)
                     {
-                        inventory_boxes[cur_item].r_highlight.setSize(sf::Vector2f(70.0*3 * CoreManager::getInstance().getCore()->resRatio, 51.0*3 * CoreManager::getInstance().getCore()->resRatio));
-                        inventory_boxes[cur_item].r_highlight.setPosition(sf::Vector2f((40 * 3 + xpos) * CoreManager::getInstance().getCore()->resRatio, (366 * 3 + ypos) * CoreManager::getInstance().getCore()->resRatio
+                        inventory_boxes[cur_item].r_highlight.setSize(sf::Vector2f(210 * CoreManager::getInstance().getCore()->resRatio, 153 * CoreManager::getInstance().getCore()->resRatio));
+                        inventory_boxes[cur_item].r_highlight.setPosition(sf::Vector2f((120 + xpos) * CoreManager::getInstance().getCore()->resRatio, (1098 + ypos) * CoreManager::getInstance().getCore()->resRatio
                     ));
                         inventory_boxes[cur_item].r_highlight.setFillColor(sf::Color(0, 0, 0, 192));
                         window->draw(inventory_boxes[cur_item].r_highlight);
@@ -1058,37 +1058,36 @@ void Barracks::Update()
                 InvBox tmp_inv;
 
                 int grid_x = i % 4;
-                int grid_y = floor(i / 4);
+                int grid_y = static_cast<int>(floor(i / 4));
 
-                float xpos = 46 * 3 + (grid_x * 77 * 3);
-                float ypos = 37 * 3 + (grid_y * 54 * 3);
+                float xpos = 46 * 3 + (static_cast<float>(grid_x) * 77 * 3);
+                float ypos = 37 * 3 + (static_cast<float>(grid_y) * 54 * 3);
 
-                tmp_inv.r_outer.setSize(sf::Vector2f(70.0f * 3 * CoreManager::getInstance().getCore()->resRatio, 51.0f * 3 * CoreManager::getInstance().getCore()->resRatio));
+                tmp_inv.r_outer.setSize(sf::Vector2f(210 * CoreManager::getInstance().getCore()->resRatio, 153 * CoreManager::getInstance().getCore()->resRatio));
                 tmp_inv.r_outer.setFillColor(sf::Color(102, 102, 102, 255));
 
-                tmp_inv.r_inner.setSize(sf::Vector2f(46.0f * 3 * CoreManager::getInstance().getCore()->resRatio, 46.0f * 3 * CoreManager::getInstance().getCore()->resRatio));
+                tmp_inv.r_inner.setSize(sf::Vector2f(138 * CoreManager::getInstance().getCore()->resRatio, 138 * CoreManager::getInstance().getCore()->resRatio));
                 tmp_inv.r_inner.setFillColor(sf::Color(183, 183, 183, 255));
 
-                tmp_inv.r_outer.setPosition(sf::Vector2f((40 * 3 + xpos) * CoreManager::getInstance().getCore()->resRatio, (366 * 3 + ypos) * CoreManager::getInstance().getCore()->resRatio
+                tmp_inv.r_outer.setPosition(sf::Vector2f((120 + xpos) * CoreManager::getInstance().getCore()->resRatio, (1098 + ypos) * CoreManager::getInstance().getCore()->resRatio
             ));
-                tmp_inv.r_inner.setPosition(sf::Vector2f((40 * 3 + xpos + 2.5 * 3) * CoreManager::getInstance().getCore()->resRatio, (366 * 3 + ypos + 2.5 * 3) * CoreManager::getInstance().getCore()->resRatio));
+                tmp_inv.r_inner.setPosition(sf::Vector2f((120 + xpos + 7.5f) * CoreManager::getInstance().getCore()->resRatio, (1098 + ypos + 7.5f) * CoreManager::getInstance().getCore()->resRatio));
                 window->draw(tmp_inv.r_outer);
                 window->draw(tmp_inv.r_inner);
 
-                tmp_inv.r_highlight.setSize(sf::Vector2f(70.0*3 * CoreManager::getInstance().getCore()->resRatio, 51.0*3 * CoreManager::getInstance().getCore()->resRatio));
-                tmp_inv.r_highlight.setPosition(sf::Vector2f((40 * 3 + xpos) * CoreManager::getInstance().getCore()->resRatio, (366 * 3 + ypos) * CoreManager::getInstance().getCore()->resRatio
+                tmp_inv.r_highlight.setSize(sf::Vector2f(210 * CoreManager::getInstance().getCore()->resRatio, 153 * CoreManager::getInstance().getCore()->resRatio));
+                tmp_inv.r_highlight.setPosition(sf::Vector2f((120 + xpos) * CoreManager::getInstance().getCore()->resRatio, (1098 + ypos) * CoreManager::getInstance().getCore()->resRatio
             ));
                 tmp_inv.r_highlight.setFillColor(sf::Color(0, 0, 0, 192));
                 window->draw(tmp_inv.r_highlight);
             }
         }
 
-        r_sel.setSize(sf::Vector2f(70.0*3 * CoreManager::getInstance().getCore()->resRatio, 51.0*3 * CoreManager::getInstance().getCore()->resRatio));
+        r_sel.setSize(sf::Vector2f(210 * CoreManager::getInstance().getCore()->resRatio, 153 * CoreManager::getInstance().getCore()->resRatio));
         r_sel.setFillColor(sf::Color::Transparent);
         r_sel.setOutlineThickness(2);
         r_sel.setOutlineColor(sf::Color(255, 0, 32, 255));
-        r_sel.setPosition(sf::Vector2f((40 * 3 + 46 * 3 + (grid_sel_x * 77 * 3)) * CoreManager::getInstance().getCore()->resRatio, (366 * 3 + 37 * 3 + (grid_sel_y * 54 * 3)) * CoreManager::getInstance().getCore()->resRatio
-    ));
+        r_sel.setPosition(sf::Vector2f((258 + (grid_sel_x * 231)) * CoreManager::getInstance().getCore()->resRatio, (1199 + (grid_sel_y * 162)) * CoreManager::getInstance().getCore()->resRatio));
 
         window->draw(r_sel);
 

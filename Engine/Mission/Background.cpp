@@ -84,7 +84,7 @@ void Background::Load(const std::string& bg_name)
                     }
 
                     tmp.texture.load(std::format("resources/graphics/bg/{}/{}", bg_name, tex_name));
-                    tmp.position = sf::Vector2f(0, y_pos);
+                    tmp.position = sf::Vector2f(0, static_cast<float>(y_pos));
                     tmp.x_speed = x_speed;
 
                     bg_objects.push_back(tmp);
@@ -131,7 +131,7 @@ void Background::Draw(Camera& work_camera)
         float camPos = (work_camera.camera_x + work_camera.zoom_x + work_camera.manual_x + work_camera.debug_x);
         float xPos = (camPos - 3840) - (camPos * bg_object.x_speed) - 99999;
 
-        bg_object.texture.setTextureRect(sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(999999, bg_object.texture.getLocalBounds().size.y)));
+        bg_object.texture.setTextureRect(sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(999999, static_cast<int>(bg_object.texture.getLocalBounds().size.y))));
         bg_object.texture.setRepeated(true);
         bg_object.texture.setOrigin(0, bg_object.texture.getLocalBounds().size.y);
         bg_object.texture.setColor(bg_object.color);

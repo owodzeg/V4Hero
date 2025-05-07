@@ -13,10 +13,10 @@ void to_json(json& json_output, const SquadSlot& squad_slot)
 
 void from_json(const json& json_input, SquadSlot& squad_slot)
 {
-    squad_slot._class = json_input.value("class", 0.f);
-    squad_slot.exp = json_input.value("exp", 0.f);
-    squad_slot.level = json_input.value("level", 0.f);
-    squad_slot.rarepon = json_input.at("rarepon");
+    squad_slot._class = static_cast<int>(json_input.value("class", 0.f));
+    squad_slot.exp = static_cast<float>(json_input.value("exp", 0.f));
+    squad_slot.level = static_cast<float>(json_input.value("level", 0.f));
+    squad_slot.rarepon = static_cast<int>(json_input.at("rarepon"));
     squad_slot.slots = json_input.value("slots", std::vector<std::vector<int>>{});
 }
 

@@ -192,7 +192,7 @@ void ObeliskMenu::Reload()
     {
         if (std::find(fields_unlocked.begin(), fields_unlocked.end(), i) != fields_unlocked.end())
         {
-            int curIdx = std::find(fields_unlocked.begin(), fields_unlocked.end(), i) - fields_unlocked.begin();
+            int curIdx = static_cast<int>(std::find(fields_unlocked.begin(), fields_unlocked.end(), i) - fields_unlocked.begin());
             location_bgs.push_back(preloaded_location_bgs[fields_unlocked[curIdx]-1]);
             worldmap_icons.push_back(preloaded_worldmap_icons[fields_unlocked[curIdx]-1]);
         } else
@@ -296,7 +296,7 @@ void ObeliskMenu::Update()
         location_bgs[renderPrev].setColor(sf::Color(255, 255, 255, 255));
         location_bgs[renderPrev].draw();
 
-        location_bgs[renderCur].setColor(sf::Color(255, 255, 255, alphaB));
+        location_bgs[renderCur].setColor(sf::Color(255, 255, 255, static_cast<uint8_t>(alphaB)));
         location_bgs[renderCur].draw();
     }
 
@@ -327,7 +327,7 @@ void ObeliskMenu::Update()
     if (mapX >= 0)
         mapX = 0;
 
-    float maxBound = (static_cast<int>(worldmap_fields.size()) * 123*3 - 1012*3) * (-1);
+    float maxBound = (static_cast<float>(worldmap_fields.size()) * 123*3 - 1012*3) * (-1);
 
     if (mapX <= maxBound)
         mapX = maxBound;
@@ -392,7 +392,7 @@ void ObeliskMenu::Update()
         for (int i = 0; i < missions.size(); i++)
         {
             missions[i].p_mis.setGlobalOrigin(0, 0);
-            missions[i].p_mis.setGlobalPosition(1280 * 3, -720 * 3 + (i * 24 * 3));
+            missions[i].p_mis.setGlobalPosition(1280 * 3, -720 * 3 + (static_cast<float>(i) * 72));
             missions[i].p_mis.draw();
         }
 

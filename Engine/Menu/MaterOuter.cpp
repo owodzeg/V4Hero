@@ -311,15 +311,11 @@ void MaterOuterMenu::Update()
     for (int i = 0; i < squads.size(); i++)
     {
         squad = squads[i];
-
-        int squad_height = 115;
             
         // TODO: check what type the squad is and adjust icon etc based on that
         // TODO: make this a spinny wheel instead of a list (ask rugnir if he hasnt done it)
         // TODO: think about adding support for different pon types (megapon, dekapon etc)
         // TODO: think about different rarepon pictures too.
-
-            
     }
     if (inputCtrl->isKeyPressed(Input::Keys::LEFT))
     {

@@ -9,7 +9,7 @@ PVector& PVector::getVectorCartesian(float x1, float y1, float x2, float y2)
 {
     static PVector myObj;
 
-    myObj.distance = sqrtf(pow(x2 - x1, 2) + pow(y2 - y1, 2) * 1.0);
+    myObj.distance = sqrtf(powf(x2 - x1, 2) + powf(y2 - y1, 2) * 1.0f);
     myObj.angle = atan2f(x2 - y1, x2 - x1);
     return myObj;
 }

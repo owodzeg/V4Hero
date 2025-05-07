@@ -38,7 +38,7 @@ AnimatedCurveShape::AnimatedCurveShape(std::string path)
 //
 //  It is very important curves are in order, and each curve's points are in order such that last point of last curve is the same as first point of first curve
 //  This version of the constructor is for manually defining an animation out of a series of curve "frames". Use the other one preferably, so its moddable
-AnimatedCurveShape::AnimatedCurveShape(std::vector<CurveShape> c_frames, sf::Color c_fillcolor)
+AnimatedCurveShape::AnimatedCurveShape(std::vector<CurveShape> c_frames)
 {
     int size = static_cast<int>(c_frames[0].curves.size());
     for (size_t i = 0; i < c_frames.size(); i++)
@@ -65,8 +65,8 @@ void AnimatedCurveShape::Draw()
     {
         cur_pos = cur_pos - (max_pos-1);
     }
-    CurveShape precurve = frames[floor(cur_pos)];
-    CurveShape postcurve =  frames[ceil(cur_pos)];
+    CurveShape precurve = frames[static_cast<int>(floor(cur_pos))];
+    CurveShape postcurve =  frames[static_cast<int>(ceil(cur_pos))];
 
     // fraction is how far to the next frame has progressed. to get interp value we multiply old one by "postfraction" and new one by "fraction"
     float fraction = cur_pos - floor(cur_pos);

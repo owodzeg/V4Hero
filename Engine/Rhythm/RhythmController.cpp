@@ -1,4 +1,4 @@
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
+
 
 #include "RhythmController.h"
 #include "Rhythm.h"
@@ -76,7 +76,7 @@ bool RhythmController::checkForInput()
             rhythm->addRhythmMessage(Rhythm::RhythmAction::DRUM_ANY, rhythmMessage);
 
             // calculate volume
-            float drumVolume = float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f);
+            //float drumVolume = float(CoreManager::getInstance().getConfig()->GetInt("masterVolume")) * (float(CoreManager::getInstance().getConfig()->GetInt("sfxVolume")) / 100.f);
 
             // set buffers and volumes
             SongController* songController = CoreManager::getInstance().getSongController();
@@ -140,7 +140,7 @@ bool RhythmController::checkForInput()
 
             for (unsigned int c = 0; c < commandInput.size(); c++)
             {
-                command += commandInput[c] * static_cast<int>(pow(5, 7-c));
+                command += commandInput[c] * static_cast<int>(powf(5, static_cast<float>(7-c)));
             }
 
             ///Calculate how many perfect beats were in the command
@@ -189,7 +189,7 @@ bool RhythmController::checkForInput()
                     // clearing command input also prevents from actually executing the command as of now
                     perfection = perfect / 8.f;
 
-                    unsigned int index = std::distance(base5_commands.begin(), std::find(base5_commands.begin(), base5_commands.end(), command));
+                    unsigned int index = static_cast<unsigned int>(std::distance(base5_commands.begin(), std::find(base5_commands.begin(), base5_commands.end(), command)));
 
                     while (rl_input_perfects.size() > rl_input_commands[index])
                         rl_input_perfects.erase(rl_input_perfects.begin());
@@ -223,7 +223,7 @@ bool RhythmController::checkForInput()
 
                     for (unsigned int c = 0; c < tmp_command.size(); c++)
                     {
-                        command += tmp_command[c] * static_cast<int>(pow(5, 7-c));
+                        command += tmp_command[c] * static_cast<int>(powf(5, static_cast<float>(7-c)));
                     }
 
                     SPDLOG_DEBUG("[Hack] Looking for command {}", command);
@@ -246,7 +246,7 @@ bool RhythmController::checkForInput()
                         // clearing command input also prevents from actually executing the command as of now
                         perfection = perfect / 8.f;
 
-                        unsigned int index = std::distance(base5_commands.begin(), std::find(base5_commands.begin(), base5_commands.end(), command));
+                        unsigned int index = static_cast<unsigned int>(std::distance(base5_commands.begin(), std::find(base5_commands.begin(), base5_commands.end(), command)));
 
                         while (rl_input_perfects.size() > rl_input_commands[index])
                             rl_input_perfects.erase(rl_input_perfects.begin());
@@ -338,7 +338,7 @@ bool RhythmController::checkForInput()
 
     for (unsigned int c = 0; c < commandInput.size(); c++)
     {
-        command += commandInput[c] * static_cast<int>(pow(5, 7-c));
+        command += commandInput[c] * static_cast<int>(powf(5, static_cast<float>(7-c)));
     }
 
     //SPDLOG_DEBUG("Pending command: {}, int: {}, perfects: {}", s_command, command, s_perfects);

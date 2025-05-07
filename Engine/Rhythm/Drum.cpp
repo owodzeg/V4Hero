@@ -271,7 +271,7 @@ void Drum::Draw()
         particles[i].x += particles[i].speed * cos(particles[i].angle) / fps;
         particles[i].y += particles[i].speed * sin(particles[i].angle) / fps;
 
-        float distance = sqrtf(2 * pow(particles[i].speed, 2)) / fps;
+        float distance = sqrtf(2 * powf(particles[i].speed, 2)) / fps;
         //cout << "i: " << i << " Distance speed: " << distance << " Cur distance: " << particles[i].curDistance << " Max: " << particles[i].maxDistance << endl;
         particles[i].curDistance += distance;
 

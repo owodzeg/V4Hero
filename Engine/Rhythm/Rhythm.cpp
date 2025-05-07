@@ -68,7 +68,7 @@ Rhythm::Rhythm()
 
         for (auto& beat : beat_data)
         {
-            result += drum_values[beat] * static_cast<int>(pow(5, power));
+            result += drum_values[beat] * static_cast<int>(powf(5, static_cast<float>(power)));
             power--;
             rl_inputs += (drum_values[beat] <= 3);
         }

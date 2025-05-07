@@ -67,7 +67,7 @@ void FeverWorm::Draw()
 
         local_x_dest = -500 + (destPrefeverOffset * 500);
 
-        float delta = 1/fps * (4 * (main.animation.animationSpeed / 60.6));
+        float delta = 1/fps * (4 * (main.animation.animationSpeed / 60.6f));
         Func::smoothTransition(local_x, local_x_dest, delta);
     }
 

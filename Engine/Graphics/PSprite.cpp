@@ -1,4 +1,4 @@
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE 
+
 
 #include "PSprite.h"
 #include "../TextureManager.h"

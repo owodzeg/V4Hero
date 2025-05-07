@@ -21,9 +21,9 @@ public:
     sf::Vector2f control_point2;
     CurveType type;
 
-    std::vector<sf::Vector2f> CalculateCurvePoints(sf::Vector2f point1, sf::Vector2f point2, sf::Vector2f control_point1, sf::Vector2f control_point2);
+    std::vector<sf::Vector2f> CalculateCurvePoints(sf::Vector2f lpoint1, sf::Vector2f lpoint2, sf::Vector2f lcontrol_point1, sf::Vector2f lcontrol_point2);
 
-    CurveSegment(CurveType c_type, sf::Vector2f point1, sf::Vector2f point2, sf::Vector2f control_point1, sf::Vector2f control_point2);
+    CurveSegment(CurveType c_type, sf::Vector2f lpoint1, sf::Vector2f lpoint2, sf::Vector2f lcontrol_point1, sf::Vector2f lcontrol_point2);
     ~CurveSegment();
 };
 

@@ -32,7 +32,7 @@ void Projectile::SetNewSpeedVector(float xSpeed, float ySpeed)
 {
     /// set the speed and angle of the projectile
 
-    speed = sqrtf(pow(xSpeed, 2) + pow(ySpeed, 2));
+    speed = sqrtf(powf(xSpeed, 2) + powf(ySpeed, 2));
     //angle = asin(ySpeed/speed);
     angle = atan2(ySpeed, xSpeed);
 }

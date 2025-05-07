@@ -95,7 +95,7 @@ void HitboxFrame::calcMaxWidth(float maxWidth, bool forceRecalc)
     for (int i = 1; i < vertices.size(); i++) 
     {
         sf::Vector2f currentVertex = vertices[i];
-        float dist = sqrtf(pow(currentVertex.x - firstVertex.x, 2) + pow(currentVertex.y - firstVertex.y, 2) * 1.0);
+        float dist = sqrtf(powf(currentVertex.x - firstVertex.x, 2) + powf(currentVertex.y - firstVertex.y, 2) * 1.0f);
         if (dist>maxlength) 
         {
             maxlength = dist;
@@ -109,7 +109,7 @@ void HitboxFrame::calcMaxWidth(float maxWidth, bool forceRecalc)
     for (int i = 1; i < vertices.size(); i++)
     {
         sf::Vector2f currentVertex = vertices[i];
-        float dist = sqrtf(pow(currentVertex.x - 0, 2) + pow(currentVertex.y - 0, 2) * 1.0);
+        float dist = sqrtf(powf(currentVertex.x - 0, 2) + powf(currentVertex.y - 0, 2) * 1.0f);
         if (dist > maxlength_origin)
         {
             maxlength_origin = dist;

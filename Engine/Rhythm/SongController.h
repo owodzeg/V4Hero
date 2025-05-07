@@ -1,8 +1,6 @@
 #ifndef SONGCONTROLLER_H
 #define SONGCONTROLLER_H
 
-#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
-
 #include <map>
 #include <vector>
 #include <SFML/Audio.hpp>

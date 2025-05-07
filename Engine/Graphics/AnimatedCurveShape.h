@@ -20,10 +20,9 @@ public:
     bool loop = false;
 
     AnimatedCurveShape(std::string path);
-    AnimatedCurveShape(std::vector<CurveShape> frames, sf::Color fillcolor);
+    AnimatedCurveShape(std::vector<CurveShape> frames);
 
     void Draw();
-    ~AnimatedCurveShape();
 };
 
 

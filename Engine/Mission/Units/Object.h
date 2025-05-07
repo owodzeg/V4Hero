@@ -66,7 +66,6 @@ public:
     void Load(std::string filename, int xpos, int ypos);
     void Load(sf::Texture& texture, int xpos, int ypos);
     void LoadFromMemory(std::string filename, int xpos, int ypos);
-    void swapTexture(sf::Image& img);
     void swapTexture(sf::Image first, std::vector<Pixel> px);
     void swapTexture(std::string img_key);
     void SetFrame(float time);

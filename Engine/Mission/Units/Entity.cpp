@@ -64,18 +64,18 @@ void Entity::LoadEntity(const std::string& path)
     {
         if(entity["defaultStats"].contains("hp"))
         {
-            maxHP = entity["defaultStats"]["hp"].get<int>();
-            curHP = entity["defaultStats"]["hp"].get<int>();
+            maxHP = entity["defaultStats"]["hp"].get<float>();
+            curHP = entity["defaultStats"]["hp"].get<float>();
         }
 
         if(entity["defaultStats"].contains("mindmg"))
         {
-            minDmg = entity["defaultStats"]["mindmg"].get<int>();
+            minDmg = entity["defaultStats"]["mindmg"].get<float>();
         }
 
         if(entity["defaultStats"].contains("maxdmg"))
         {
-            maxDmg = entity["defaultStats"]["maxdmg"].get<int>();
+            maxDmg = entity["defaultStats"]["maxdmg"].get<float>();
         }
     }
 
@@ -409,8 +409,8 @@ void Entity::handleAttack() // entity's attack
         {
             float prj_xPos = global_x+local_x+hPos;
             float prj_yPos = global_y+local_y+vPos-90;
-            float prj_hSpeed = -1800 - Func::rand_range(0, 50);
-            float prj_vSpeed = -1800 - Func::rand_range(0, 70);
+            float prj_hSpeed = -1800 - Func::rand_range(0.f, 50.f);
+            float prj_vSpeed = -1800 - Func::rand_range(0.f, 70.f);
             auto prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn, true);
             prj->damage = minDmg + (Func::rand_range(0, std::min(int(maxDmg - minDmg), 1)));
 

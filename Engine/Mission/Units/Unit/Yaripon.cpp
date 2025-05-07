@@ -37,9 +37,9 @@ Yaripon::Yaripon(int which, int maxpons)
     // General formula for positioning units
     float pos;
     if (maxp % 2 == 1) {  // For odd number of units
-        pos = center + (static_cast<float>(order - 1) - static_cast<float>(maxp - 1) / 2.0) * unit;
+        pos = center + (static_cast<float>(order - 1) - static_cast<float>(maxp - 1) / 2.0f) * unit;
     } else {  // For even number of units
-        pos = center + (static_cast<float>(order - 1) - static_cast<float>(maxp / 2.0f - 0.5)) * unit;
+        pos = center + (static_cast<float>(order - 1) - static_cast<float>(maxp / 2.0f - 0.5f)) * unit;
     }
 
     gap_x = pos;
@@ -151,7 +151,7 @@ void Yaripon::PerformAttack()
         {
             auto BPM = CoreManager::getInstance().getSongController()->getBPM();
 
-            float jumpStart = 100 / (BPM/120);
+            //float jumpStart = 100 / (BPM/120);
             float jumpEnd = 400 / (BPM/120);
             float attackEnd = 1500 / (BPM/120);
 

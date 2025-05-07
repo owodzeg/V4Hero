@@ -60,7 +60,7 @@ void Credits::addRegularText(sf::String text, int font)
 
 void Credits::Initialise()
 {
-    r_black.setSize(sf::Vector2f(CoreManager::getInstance().getConfig()->GetInt("resX"), CoreManager::getInstance().getConfig()->GetInt("resY")));
+    r_black.setSize(sf::Vector2f(static_cast<float>(CoreManager::getInstance().getConfig()->GetInt("resX")), static_cast<float>(CoreManager::getInstance().getConfig()->GetInt("resY"))));
     r_black.setFillColor(sf::Color::Black);
 
     if (sb_outro.loadFromFile("resources/sfx/fun/outro.ogg"))
