@@ -9,8 +9,6 @@
 class Background
 {
 public:
-    Camera camera;
-
     struct BGObject {
         SpriteWrapper texture;
         sf::Color color;

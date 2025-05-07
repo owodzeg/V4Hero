@@ -135,7 +135,7 @@ void Background::Draw(Camera& work_camera)
         bg_object.texture.setRepeated(true);
         bg_object.texture.setOrigin(0, bg_object.texture.getLocalBounds().size.y);
         bg_object.texture.setColor(bg_object.color);
-        bg_object.texture.setPosition(xPos / CoreManager::getInstance().getCore()->resRatio, bg_object.position.y + camera.zoom_y / zoom_offset);
+        bg_object.texture.setPosition(xPos / CoreManager::getInstance().getCore()->resRatio, bg_object.position.y + work_camera.zoom_y / zoom_offset);
         bg_object.texture.draw();
     }
 

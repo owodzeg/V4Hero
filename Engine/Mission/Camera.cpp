@@ -158,7 +158,7 @@ void Camera::Work(sf::View& view, float dest_zoom_over)
     zoomedTotal *= zoom;
 
     if(zoom != dest_zoom)
-    zoomViewAt(sf::Vector2i(1920*static_cast<int>(CoreManager::getInstance().getCore()->resRatio), 2160*static_cast<int>(CoreManager::getInstance().getCore()->resRatio)), zoom, view);
+        zoomViewAt(sf::Vector2i(static_cast<int>(1920 * CoreManager::getInstance().getCore()->resRatio), static_cast<int>(2160 * CoreManager::getInstance().getCore()->resRatio)), zoom, view);
 
     /** Apply camera position **/
 
