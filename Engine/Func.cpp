@@ -62,7 +62,7 @@ std::string Func::trim(const std::string& str, const std::string& whitespace = "
 }
 
 // Helper function to measure the width of a string using PataText
-double Func::measure_text_width(PataText& measurer, const std::string& text, const std::string& font, int character_size)
+float Func::measure_text_width(PataText& measurer, const std::string& text, const std::string& font, float character_size)
 {
     if (text.empty())
     {
@@ -75,7 +75,7 @@ double Func::measure_text_width(PataText& measurer, const std::string& text, con
     return measurer.getGlobalBounds().size.x;
 }
 
-std::string Func::wrap_text(const std::string& input, int box_width, const std::string& font, int character_size)
+std::string Func::wrap_text(const std::string& input, int box_width, const std::string& font, float character_size)
 {
     if (input.empty() || box_width <= 0)
     {
@@ -242,7 +242,6 @@ std::string Func::getTempDirectory() {
     }
     return "/tmp"; // Default for Linux
 #endif
-    return ""; // Fallback if no temp directory found
 }
 
 bool Func::replace(std::string& str, const std::string& from, const std::string& to) {
@@ -328,7 +327,7 @@ nlohmann::json Func::parseLootArray(std::mt19937& gen, std::uniform_real_distrib
     }
 
     SPDLOG_DEBUG("Roll");
-    float n = roll(gen);
+    float n = static_cast<float>(roll(gen));
     for (int i = 1; i < loot.size(); i++) // Because of the first loop, values are neatly sorted
     {
         SPDLOG_DEBUG("Loot loop #2 (i={})", i);
@@ -427,7 +426,7 @@ unsigned int Func::calculateTotalChecksum(const std::vector<std::string>& filePa
 
     if(zf.isOpen())
     {
-        for(auto filePath : filePaths)
+        for(auto& filePath : filePaths)
         {
             if (checksums.count(filePath) > 0)
             {
@@ -436,7 +435,7 @@ unsigned int Func::calculateTotalChecksum(const std::vector<std::string>& filePa
             }
 
             char* data = (char*) zf.readEntry(filePath, true);
-            unsigned int s = zf.getEntry(filePath).getSize();
+            unsigned int s = static_cast<unsigned int>(zf.getEntry(filePath).getSize());
 
             // XOR checksum for this file
             unsigned int fileChecksum = 0;
@@ -469,7 +468,8 @@ unsigned int Func::calculateTotalChecksum(const std::vector<std::string>& filePa
     }
     else
     {
-        for (auto sFilePath : filePaths) {
+        for (auto& sFilePath : filePaths)
+        {
 
             if (checksums.count(sFilePath) > 0)
             {

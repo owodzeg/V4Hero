@@ -15,8 +15,8 @@ DroppedItem::DroppedItem(std::vector<int> item_id)
 
     main.load(std::format("resources/graphics/item/textures/{}/{:04}.png", category, itemID));
 
-    hspeed = -500 + Func::rand_range(0, 300);
-    vspeed = -1000;
+    hspeed = -500.f + Func::rand_range(0.f, 300.f);
+    vspeed = -1000.f;
 }
 
 void DroppedItem::Collect()
@@ -36,7 +36,7 @@ void DroppedItem::Draw()
         if (glowTimer.getElapsedTime().asMilliseconds() > 250)
         {
             GlowCircle tmp;
-            tmp.circle.setFillColor(sf::Color(255, 255, 255, tmp.alpha));
+            tmp.circle.setFillColor(sf::Color(255, 255, 255, static_cast<uint8_t>(tmp.alpha)));
             tmp.circle.setRadius(tmp.radius * CoreManager::getInstance().getCore()->resRatio);
             tmp.x = (global_x + local_x + off_x);
             tmp.y = (global_y + local_y + off_y);
@@ -56,7 +56,7 @@ void DroppedItem::Draw()
             if (glow[i].alpha <= 0)
                 glow[i].alpha = 0;
 
-            glow[i].circle.setFillColor(sf::Color(255, 255, 255, glow[i].alpha));
+            glow[i].circle.setFillColor(sf::Color(255, 255, 255, static_cast<uint8_t>(glow[i].alpha)));
             glow[i].circle.setRadius(glow[i].radius);
             glow[i].circle.setOrigin(sf::Vector2f(glow[i].circle.getLocalBounds().size.x / 2, glow[i].circle.getLocalBounds().size.y / 2));
             glow[i].circle.setPosition(sf::Vector2f((global_x + local_x + off_x) * CoreManager::getInstance().getCore()->resRatio, (global_y + local_y + off_y) * CoreManager::getInstance().getCore()->resRatio));
@@ -154,15 +154,15 @@ void DroppedItem::Draw()
                 local_y += vspeed2 / fps * 60;
                 local_x += hspeed2 / fps * 60;
 
-                curXscale -= 0.1 / fps;
-                curYscale -= 0.1 / fps;
+                curXscale -= 0.1f / fps;
+                curYscale -= 0.1f / fps;
 
                 if (curXscale <= -1)
                     curXscale = -1;
                 if (curYscale <= -1)
                     curYscale = -1;
 
-                main.setColor(sf::Color(255, 255, 255, alpha));
+                main.setColor(sf::Color(255, 255, 255, static_cast<uint8_t>(alpha)));
 
                 if ((hspeed2 >= 1000) || (alpha <= 0))
                     ready_to_erase = true;

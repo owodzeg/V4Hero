@@ -76,7 +76,7 @@ class PataText
 
             // outline
             float thickness = 0;
-            float ot_c_red = 0, ot_c_green = 0, ot_c_blue = 0, ot_c_alpha = 255;
+            uint8_t ot_c_red = 0, ot_c_green = 0, ot_c_blue = 0, ot_c_alpha = 255;
 
             // display settings
             float nextCharTimeout = 0; // milliseconds to wait before showing next character
@@ -211,10 +211,10 @@ class PataText
         void styleSetXOffset(PTStyle& style, float newXOffset);
         void styleSetYOffset(PTStyle& style, float newYOffset);
         void styleSetFullColor(PTStyle& style, sf::Color newColor);
-        void styleSetRedColor(PTStyle& style, float newRed);
-        void styleSetGreenColor(PTStyle& style, float newGreen);
-        void styleSetBlueColor(PTStyle& style, float newBlue);
-        void styleSetAlpha(PTStyle& style, float newAlpha);
+        void styleSetRedColor(PTStyle& style, uint8_t newRed);
+        void styleSetGreenColor(PTStyle& style, uint8_t newGreen);
+        void styleSetBlueColor(PTStyle& style, uint8_t newBlue);
+        void styleSetAlpha(PTStyle& style, uint8_t newAlpha);
         void styleSetCharSize(PTStyle& style, float newCharSize);
         void styleSetFont(PTStyle& style, const std::string& fontStr);
         void styleSetBold(PTStyle& style, bool isBold);
@@ -229,10 +229,10 @@ class PataText
         void styleSetHorizontalWave(PTStyle& style, float newHWave, float newHWaveSpeed);
         void styleSetVerticalWave(PTStyle& style, float newVWave, float newVWaveSpeed);
         void styleSetOutlineFullColor(PTStyle& style, sf::Color newColor);
-        void styleSetOutlineRedColor(PTStyle& style, float newRed);
-        void styleSetOutlineGreenColor(PTStyle& style, float newGreen);
-        void styleSetOutlineBlueColor(PTStyle& style, float newBlue);
-        void styleSetOutlineAlpha(PTStyle& style, float newAlpha);
+        void styleSetOutlineRedColor(PTStyle& style, uint8_t newRed);
+        void styleSetOutlineGreenColor(PTStyle& style, uint8_t newGreen);
+        void styleSetOutlineBlueColor(PTStyle& style, uint8_t newBlue);
+        void styleSetOutlineAlpha(PTStyle& style, uint8_t newAlpha);
         void styleSetOutlineThickness(PTStyle& style, float newThickness);
         void styleSetSpeed(PTStyle& style, float newMsSpeed);
         void styleSetTimeout(PTStyle& style, float newMsTimeout); // SINGLE USE! Only for the current character.

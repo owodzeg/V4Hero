@@ -72,7 +72,7 @@ void SongController::LoadTheme(std::string theme)
            SPDLOG_ERROR("Error loading 'idle_loop', file {} not found", songPath+std::string(name)); 
     }
     SPDLOG_DEBUG("Idle loop loaded. {} files found", sb_idle_loop.size());
-    sc_idle_loop.max = sb_idle_loop.size();
+    sc_idle_loop.max = static_cast<int>(sb_idle_loop.size());
 
     // prefever calm
     SPDLOG_DEBUG("Loading prefever calm");
@@ -83,7 +83,7 @@ void SongController::LoadTheme(std::string theme)
            SPDLOG_ERROR("Error loading 'idle_loop', file {} not found", songPath+std::string(name)); 
     }
     SPDLOG_DEBUG("Prefever calm loop loaded. {} files found", sb_prefever_calm_loop.size());
-    sc_prefever_calm_loop.max = sb_prefever_calm_loop.size();
+    sc_prefever_calm_loop.max = static_cast<int>(sb_prefever_calm_loop.size());
     
     // prefever intense
     SPDLOG_DEBUG("Loading prefever intense");
@@ -94,7 +94,7 @@ void SongController::LoadTheme(std::string theme)
            SPDLOG_ERROR("Error loading 'idle_loop', file {} not found", songPath+std::string(name)); 
     }
     SPDLOG_DEBUG("Prefever intense loop loaded. {} files found", sb_prefever_intense_loop.size());
-    sc_prefever_intense_loop.max = sb_prefever_intense_loop.size();
+    sc_prefever_intense_loop.max = static_cast<int>(sb_prefever_intense_loop.size());
 
     // fever
     SPDLOG_DEBUG("Loading fever");
@@ -105,7 +105,7 @@ void SongController::LoadTheme(std::string theme)
            SPDLOG_ERROR("Error loading 'idle_loop', file {} not found", songPath+std::string(name)); 
     }
     SPDLOG_DEBUG("Fever loop loaded. {} files found", sb_fever_loop.size());
-    sc_fever_loop.max = sb_fever_loop.size();
+    sc_fever_loop.max = static_cast<int>(sb_fever_loop.size());
 
     SPDLOG_INFO("Song {} loaded, full path: {}, loading chants", theme, songPath);
 
@@ -149,7 +149,7 @@ void SongController::LoadTheme(std::string theme)
             }
 
             SPDLOG_DEBUG("Found {} prefever_calm files for song type: {}", sb_chant_prefever_calm[songName].size(), songName);
-            sc_chant_prefever_calm[songName].max = sb_chant_prefever_calm[songName].size();
+            sc_chant_prefever_calm[songName].max = static_cast<int>(sb_chant_prefever_calm[songName].size());
 
             for (auto name : songType["prefever_intense"])
             {
@@ -159,7 +159,7 @@ void SongController::LoadTheme(std::string theme)
             }
 
             SPDLOG_DEBUG("Found {} prefever_intense files for song type: {}", sb_chant_prefever_intense[songName].size(), songName);
-            sc_chant_prefever_intense[songName].max = sb_chant_prefever_intense[songName].size();
+            sc_chant_prefever_intense[songName].max = static_cast<int>(sb_chant_prefever_intense[songName].size());
 
             for (auto name : songType["fever"])
             {
@@ -169,7 +169,7 @@ void SongController::LoadTheme(std::string theme)
             }
 
             SPDLOG_DEBUG("Found {} fever files for song type: {}", sb_chant_fever[songName].size(), songName);
-            sc_chant_fever[songName].max = sb_chant_fever[songName].size();
+            sc_chant_fever[songName].max = static_cast<int>(sb_chant_fever[songName].size());
         }
 
         SPDLOG_DEBUG("All chants successfully loaded");

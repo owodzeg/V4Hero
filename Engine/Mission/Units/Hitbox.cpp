@@ -88,10 +88,10 @@ void Hitbox::SetPos(float time)
                     std::vector<sf::Vector2f>* oldverticies = frames[i].getBaseVerticiesDontUseThisUnlessYouKnowWhy();
                     std::vector<sf::Vector2f>* newvertices = frames[i + 1].getBaseVerticiesDontUseThisUnlessYouKnowWhy();
                     tmp.clearVertices();
-                    for (int i = 0; i < oldverticies->size(); i++)
+                    for (int ii = 0; ii < oldverticies->size(); ii++)
                     {
-                        float t_x = oldverticies->at(i).x + ((newvertices->at(i).x - oldverticies->at(i).x) * time_percentage);
-                        float t_y = oldverticies->at(i).y + ((newvertices->at(i).y - oldverticies->at(i).y) * time_percentage);
+                        float t_x = oldverticies->at(ii).x + ((newvertices->at(ii).x - oldverticies->at(ii).x) * time_percentage);
+                        float t_y = oldverticies->at(ii).y + ((newvertices->at(ii).y - oldverticies->at(ii).y) * time_percentage);
                         tmp.addVertex(t_x, t_y);
                     }
                     tmp.rotation = rotation;
@@ -113,9 +113,9 @@ void Hitbox::SetPos(float time)
                     tmp.g_y = g_y;
                     tmp.clearVertices();
                     std::vector<sf::Vector2f>* oldverticies = frames[frames.size() - 1].getBaseVerticiesDontUseThisUnlessYouKnowWhy();
-                    for (int i = 0; i < oldverticies->size(); i++)
+                    for (int ii = 0; ii < oldverticies->size(); ii++)
                     {
-                        tmp.addVertex(oldverticies->at(i).x, oldverticies->at(i).y);
+                        tmp.addVertex(oldverticies->at(ii).x, oldverticies->at(ii).y);
                     }
                     tmp.rotation = frames[frames.size() - 1].rotation;
 

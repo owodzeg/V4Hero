@@ -12,18 +12,18 @@ Camera::Camera()
     camera_x = 0;
 }
 
-void Camera::zoomViewAt(sf::Vector2i pixel, float zoom, sf::View& view)
+void Camera::zoomViewAt(sf::Vector2i pixel, float new_zoom, sf::View& view)
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
 
     const sf::Vector2f beforeCoord{window->mapPixelToCoords(pixel)};
-    view.zoom(zoom);
+    view.zoom(new_zoom);
     window->setView(view);
     sf::Vector2f afterCoord{window->mapPixelToCoords(pixel)};
     sf::Vector2f offsetCoords{beforeCoord - afterCoord};
 
     SPDLOG_DEBUG("zoomViewAt before: {} {}, after: {} {}", beforeCoord.x, beforeCoord.y, afterCoord.x, afterCoord.y);
-    SPDLOG_DEBUG("zoomSpeed {} zoom {} zoomUntil {} dest_zoom {} activateZoom {} zoomedTotal {} ? {}", zoomSpeed, zoom, zoomUntil, dest_zoom, activateZoom, zoomedTotal, 330.0/ zoomedTotal);
+    SPDLOG_DEBUG("zoomSpeed {} new_zoom {} zoomUntil {} dest_zoom {} activateZoom {} zoomedTotal {} ? {}", zoomSpeed, new_zoom, zoomUntil, dest_zoom, activateZoom, zoomedTotal, 330.0 / zoomedTotal);
 
     zoom_x += offsetCoords.x;
     zoom_y += offsetCoords.y;
@@ -35,10 +35,7 @@ void Camera::Work(sf::View& view, float dest_zoom_over)
     InputController* inputCtrl = CoreManager::getInstance().getInputController();
     float fps = CoreManager::getInstance().getCore()->getFPS();
 
-    
-    
-
-    camera_y = window->getSize().y / 2;
+    camera_y = static_cast<float>(window->getSize().y) / 2;
 
     dest_zoom = dest_zoom_over;
     manual_x_dest = 0;
@@ -161,7 +158,7 @@ void Camera::Work(sf::View& view, float dest_zoom_over)
     zoomedTotal *= zoom;
 
     if(zoom != dest_zoom)
-    zoomViewAt(sf::Vector2i(1920*CoreManager::getInstance().getCore()->resRatio, 2160*CoreManager::getInstance().getCore()->resRatio), zoom, view);
+    zoomViewAt(sf::Vector2i(1920*static_cast<int>(CoreManager::getInstance().getCore()->resRatio), 2160*static_cast<int>(CoreManager::getInstance().getCore()->resRatio)), zoom, view);
 
     /** Apply camera position **/
 

@@ -31,7 +31,7 @@ AnimatedCurveShape::AnimatedCurveShape(std::string path)
     framerate = frame_data["framerate"];
 
     cur_pos = 0;
-    max_pos = frames.size();
+    max_pos = static_cast<float>(frames.size());
 
 }
 
@@ -40,10 +40,10 @@ AnimatedCurveShape::AnimatedCurveShape(std::string path)
 //  This version of the constructor is for manually defining an animation out of a series of curve "frames". Use the other one preferably, so its moddable
 AnimatedCurveShape::AnimatedCurveShape(std::vector<CurveShape> c_frames, sf::Color c_fillcolor)
 {
-    int size = c_frames[0].curves.size();
+    int size = static_cast<int>(c_frames[0].curves.size());
     for (size_t i = 0; i < c_frames.size(); i++)
     {
-        int this_curve_size = c_frames[i].curves.size();
+        int this_curve_size = static_cast<int>(c_frames[i].curves.size());
         if (this_curve_size != size)
         {
             throw std::invalid_argument("c_frames must all have the same number of curve segments");
@@ -53,12 +53,10 @@ AnimatedCurveShape::AnimatedCurveShape(std::vector<CurveShape> c_frames, sf::Col
 
     cur_pos = 0;
     frames = c_frames;
-    max_pos = c_frames.size();
+    max_pos = static_cast<float>(c_frames.size());
 
     //ctor
 }
-void Draw(std::vector<CurveShape*> c_frames, sf::Color c_fillcolor);
-
 void AnimatedCurveShape::Draw()
 {
     // cur_pos is the index of the current frame, but it can be fractional to represent partway between frames. Consider interpolating
@@ -97,10 +95,10 @@ void AnimatedCurveShape::Draw()
     }
 
 
-    float red = precurve.fillcolor.r * postfraction + postcurve.fillcolor.r * fraction;
-    float green = precurve.fillcolor.g * postfraction + postcurve.fillcolor.g * fraction;
-    float blue = precurve.fillcolor.b * postfraction + postcurve.fillcolor.b * fraction;
-    float alpha = precurve.fillcolor.a * postfraction + postcurve.fillcolor.a * fraction;
+    uint8_t red = static_cast<uint8_t>(precurve.fillcolor.r * postfraction + postcurve.fillcolor.r * fraction);
+    uint8_t green = static_cast<uint8_t>(precurve.fillcolor.g * postfraction + postcurve.fillcolor.g * fraction);
+    uint8_t blue = static_cast<uint8_t>(precurve.fillcolor.b * postfraction + postcurve.fillcolor.b * fraction);
+    uint8_t alpha = static_cast<uint8_t>(precurve.fillcolor.a * postfraction + postcurve.fillcolor.a * fraction);
     sf::Color fillcolor = sf::Color(red, green, blue, alpha);
 
     CurveShape* interp_curve = new CurveShape(interp_curves, fillcolor);

@@ -278,8 +278,8 @@ void AltarMenu::Update()
     {
         int curItem = grid_offset_y * 4 + i;
 
-        int grid_x = i % 4;
-        int grid_y = floor(i / 4);
+        float grid_x = static_cast<float>(i % 4);
+        float grid_y = static_cast<float>(floor(i / 4));
 
         float xpos = 216 + (grid_x * 354);
         float ypos = 192 + (grid_y * 264);
@@ -310,7 +310,7 @@ void AltarMenu::Update()
             {
                 inventory_boxes[curItem].r_highlight.setPosition(sf::Vector2f((120 + xpos) * CoreManager::getInstance().getCore()->resRatio, (117 + ypos) * CoreManager::getInstance().getCore()->resRatio
             ));
-                inventory_boxes[curItem].r_highlight.setFillColor(sf::Color(255, 255, 255, 64 + (sin(highlight_x) * 64)));
+                inventory_boxes[curItem].r_highlight.setFillColor(sf::Color(255, 255, 255, static_cast<uint8_t>(64 + (sin(highlight_x) * 64))));
                 window->draw(inventory_boxes[curItem].r_highlight);
             }
         } else

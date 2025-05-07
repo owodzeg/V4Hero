@@ -59,10 +59,10 @@ void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color)
 
 void MessageCloud::AdditionalData(sf::String add_data)
 {
-    additional[dialogue_strings.size()-1].push_back(add_data);
+    additional[static_cast<int>(dialogue_strings.size())-1].push_back(add_data);
 }
 
-void MessageCloud::setFontSize(int newFontSize)
+void MessageCloud::setFontSize(float newFontSize)
 {
     fontSize = newFontSize;
 }
@@ -98,10 +98,10 @@ void MessageCloud::Show()
         dialogue_ptext.append(Func::GetStrFromKey(dialogue_strings[cur_dialog]));
         visual_ptext.append(Func::GetStrFromKey(dialogue_strings[cur_dialog]));
 
-        for(auto x : additional[cur_dialog])
+        for(auto add : additional[cur_dialog])
         {
-            dialogue_ptext.append(x);
-            visual_ptext.append(x);
+            dialogue_ptext.append(add);
+            visual_ptext.append(add);
         }
 
         dialogue_ptext.draw();

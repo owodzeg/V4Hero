@@ -65,7 +65,7 @@ public:
     bool for_removal = false;
     bool dead = false;
 
-    float cam_offset;
+    float cam_offset = 0;
 
     PataText debugText;
 

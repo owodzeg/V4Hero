@@ -32,7 +32,7 @@ public:
     bool isBest = false;
     bool isDon = false;
 
-    int max_radius = 12;
+    float max_radius = 12;
 
     struct Particle {
         sf::CircleShape c_particle;

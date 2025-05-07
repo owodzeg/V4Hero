@@ -56,19 +56,19 @@ Rhythm::Rhythm()
     drum_values["CHAKA"] = 3;
     drum_values[""] = 4;
 
-    for(auto command : command_data["commands"])
+    for (auto& comm : command_data["commands"])
     {
-        SPDLOG_DEBUG("Found command, name: {}, song: {}", command["name"].dump(), command["song"].dump());
-        av_songs.push_back(command["song"]);
+        SPDLOG_DEBUG("Found command, name: {}, song: {}", comm["name"].dump(), comm["song"].dump());
+        av_songs.push_back(comm["song"]);
 
-        nlohmann::json beat_data = command["beat"];
+        nlohmann::json beat_data = comm["beat"];
         int power = 7;
         int result = 0;
         int rl_inputs = 0;
 
-        for(auto beat : beat_data)
+        for (auto& beat : beat_data)
         {
-            result += drum_values[beat] * pow(5, power);
+            result += drum_values[beat] * static_cast<int>(pow(5, power));
             power--;
             rl_inputs += (drum_values[beat] <= 3);
         }
@@ -244,17 +244,20 @@ int Rhythm::GetCombo()
     return combo;
 }
 
-float Rhythm::getAccRequirement(int combo) {
-    if(combo <= 10) {
-        return acc_req[combo];
+float Rhythm::getAccRequirement(int check_combo) {
+    if (check_combo <= 10)
+    {
+        return acc_req[check_combo];
     }
 
     return 0;
 }
 
-float Rhythm::getAccRequirementFever(int combo) {
-    if(combo <= 10) {
-        return acc_req_insta[combo];
+float Rhythm::getAccRequirementFever(int check_combo)
+{
+    if (check_combo <= 10)
+    {
+        return acc_req_insta[check_combo];
     }
 
     return 0;
@@ -280,9 +283,9 @@ void Rhythm::decideSongType()
     satisfaction = 0;
 
     if (satisfaction_value.size() == 3)
-        satisfaction = (satisfaction_value[2] * 0.8 + satisfaction_value[1] * 0.15 + satisfaction_value[0] * 0.05);
+        satisfaction = (satisfaction_value[2] * 0.8f + satisfaction_value[1] * 0.15f + satisfaction_value[0] * 0.05f);
     if (satisfaction_value.size() == 2)
-        satisfaction = (satisfaction_value[1] * 0.75 + satisfaction_value[0] * 0.25);
+        satisfaction = (satisfaction_value[1] * 0.75f + satisfaction_value[0] * 0.25f);
     if (satisfaction_value.size() == 1)
         satisfaction = satisfaction_value[0];
 
@@ -653,7 +656,7 @@ void Rhythm::doRhythm()
 
     std::vector<RhythmMessage> last_messages = fetchRhythmMessages(lastMessageCheck);
     
-    for(auto message : last_messages)
+    for (auto& message : last_messages)
     {
         if(message.action == RhythmAction::DRUM_BAD)
         {

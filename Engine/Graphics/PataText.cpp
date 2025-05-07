@@ -134,8 +134,9 @@ PataText::PataText()
     default_style.ot_c_blue = 0;
     default_style.ot_c_alpha = 255;
     default_style.thickness = 0;
-    default_style.fontStr = "fallback";
-    default_style.font = CoreManager::getInstance().getStrRepo()->fontStore[default_style.fontStr];
+    auto strRepo = CoreManager::getInstance().getStrRepo();
+    default_style.fontStr = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
+    default_style.font = strRepo->fontStore[default_style.fontStr];
 
     styleResetAllStyles(m_marker);
     m_lines.push_back(std::vector<PTChar>());
@@ -178,22 +179,22 @@ void PataText::styleSetFullColor(PTStyle& style, sf::Color newColor)
     style.c_blue = newColor.b;
 }
 
-void PataText::styleSetRedColor(PTStyle& style, float newRed)
+void PataText::styleSetRedColor(PTStyle& style, uint8_t newRed)
 {
     style.c_red = newRed;
 }
 
-void PataText::styleSetGreenColor(PTStyle& style, float newGreen)
+void PataText::styleSetGreenColor(PTStyle& style, uint8_t newGreen)
 {
     style.c_green = newGreen;
 }
 
-void PataText::styleSetBlueColor(PTStyle& style, float newBlue)
+void PataText::styleSetBlueColor(PTStyle& style, uint8_t newBlue)
 {
     style.c_blue = newBlue;
 }
 
-void PataText::styleSetAlpha(PTStyle& style, float newAlpha)
+void PataText::styleSetAlpha(PTStyle& style, uint8_t newAlpha)
 {
     style.c_alpha = newAlpha;
 }
@@ -273,22 +274,22 @@ void PataText::styleSetOutlineFullColor(PTStyle& style, sf::Color newColor)
     style.ot_c_blue = newColor.b;
 }
 
-void PataText::styleSetOutlineRedColor(PTStyle& style, float newRed)
+void PataText::styleSetOutlineRedColor(PTStyle& style, uint8_t newRed)
 {
     style.ot_c_red = newRed;
 }
 
-void PataText::styleSetOutlineGreenColor(PTStyle& style, float newGreen)
+void PataText::styleSetOutlineGreenColor(PTStyle& style, uint8_t newGreen)
 {
     style.ot_c_green = newGreen;
 }
 
-void PataText::styleSetOutlineBlueColor(PTStyle& style, float newBlue)
+void PataText::styleSetOutlineBlueColor(PTStyle& style, uint8_t newBlue)
 {
     style.ot_c_blue = newBlue;
 }
 
-void PataText::styleSetOutlineAlpha(PTStyle& style, float newAlpha)
+void PataText::styleSetOutlineAlpha(PTStyle& style, uint8_t newAlpha)
 {
     style.ot_c_alpha = newAlpha;
 }
@@ -310,12 +311,7 @@ void PataText::styleSetTimeout(PTStyle& style, float newMsTimeout)
 
 void PataText::styleResetAllStyles(PTStyle& style)
 {
-    PTStyle def = default_style;
-    style = def;
-
-    auto strRepo = CoreManager::getInstance().getStrRepo();
-    style.fontStr = strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage());
-    style.font = strRepo->fontStore[style.fontStr];
+    style = default_style;
 }
 
 void PataText::defaultStyleSetColor(sf::Color newColor)
@@ -392,7 +388,7 @@ void PataText::append(sf::String& input_text)
     // " world! I like cheese."
     // "{italic}"
 
-    for (auto line : lines)
+    for (auto& line : lines)
     {
         if (lines.size() > 1)
             m_lines.push_back(std::vector<PTChar>());
@@ -403,7 +399,7 @@ void PataText::append(sf::String& input_text)
         // If style token is found, apply the style to the marker.
         // If regular text is found, split it to PTChars and apply current marker style, then append PTChars to the appropriate m_lines item.
 
-        for (auto token : tokens)
+        for (auto& token : tokens)
         {
             if (token[0] == '{')
             {
@@ -493,7 +489,7 @@ void PataText::ProcessStyleToken(const sf::String& token)
         std::vector<std::string> args = split_fast(keywordStr, ' ');
         if (args.size() == 5)
         {
-            int th = stoi(args[1]);
+            float th = stof(args[1]);
             uint8_t r = static_cast<uint8_t>(stoi(args[2]));
             uint8_t g = static_cast<uint8_t>(stoi(args[3]));
             uint8_t b = static_cast<uint8_t>(stoi(args[4]));
@@ -513,7 +509,7 @@ void PataText::ProcessStyleToken(const sf::String& token)
         std::vector<std::string> args = split_fast(keywordStr, ' ');
         if (args.size() == 2)
         {
-            int size = stof(args[1]);
+            float size = stof(args[1]);
             styleSetCharSize(m_marker, size);
             SPDLOG_TRACE("Set char size to {}", size);
         } 
@@ -747,7 +743,7 @@ void PataText::draw()
                 if (character.text)
                 {
                     character.text->setFont(*character.style.font);
-                    character.text->setCharacterSize(character.style.char_size * CoreManager::getInstance().getCore()->resRatio);
+                    character.text->setCharacterSize(static_cast<unsigned int>(character.style.char_size * CoreManager::getInstance().getCore()->resRatio));
                     character.text->setFillColor(sf::Color(character.style.c_red, character.style.c_green, character.style.c_blue, character.style.c_alpha));
                     character.text->setOutlineColor(sf::Color(character.style.ot_c_red, character.style.ot_c_green, character.style.ot_c_blue, character.style.ot_c_alpha));
                     character.text->setOutlineThickness(character.style.thickness * CoreManager::getInstance().getCore()->resRatio);

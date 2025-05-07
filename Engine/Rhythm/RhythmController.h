@@ -21,8 +21,8 @@
 class RhythmController
 {
 public:
-    int low_range;
-    int high_range;
+    float low_range = 0;
+    float high_range = 0;
     float masterTimer = 0;
     float masterTimerNoAbs = 0;
     bool belowHitRange = false;

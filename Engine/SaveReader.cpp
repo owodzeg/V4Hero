@@ -222,8 +222,8 @@ void SaveReader::Save()
     {
         hero.rarepon = ponReg.pons[0].pon_id;
         hero._class = ponReg.pons[0].pon_class;
-        hero.level = ponReg.pons[0].pon_id;
-        hero.exp = ponReg.pons[0].pon_id;
+        hero.level = ponReg.pons[0].pon_level;
+        hero.exp = ponReg.pons[0].pon_exp;
         std::vector<std::vector<int>> slots;
         for (int p = 0; p < ponReg.pons[0].slots.size(); p++)
         {

@@ -36,20 +36,20 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
 
     window->setView(window->getDefaultView());
 
-    int v_cycle_mode = abs(floor((bgm_cycle) / 4) - 1);
+    int v_cycle_mode = static_cast<int>(abs(floor((bgm_cycle) / 4) - 1));
     int v_cycle = (bgm_cycle) % 4 + 1;
 
     float beatClockTime = float(beatClock.getElapsedTime().asMilliseconds()) / float(beat_timer) * 255; 
-    int rhythmAlpha = 255 - beatClockTime;
+    float rhythmAlpha = 255 - beatClockTime;
     
     if(rhythmAlpha <= 0)
     rhythmAlpha = 0;
 
     ///Visuals
     ///Calculate the ratio for other window sizes (default is 1280x720)
-    float ratio_X = window->getSize().x / float(1280);
-    float ratio_Y = window->getSize().y / float(720);
-    float ratio_universal = (window->getSize().x * window->getSize().y) / (float(1280) * float(720));
+    float ratio_X = static_cast<float>(window->getSize().x) / float(1280);
+    float ratio_Y = static_cast<float>(window->getSize().y) / float(720);
+    float ratio_universal = (static_cast<float>(window->getSize().x) * static_cast<float>(window->getSize().y)) / (float(1280) * float(720));
 
     /// Beat frame
     if ((combo <= 1) || ((combo > 1) && (combo < 11) && (v_cycle_mode == 0)))
@@ -102,7 +102,7 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
 
         r_rhythm2.setOutlineColor(sf::Color(0, 0, 0, 0));
 
-        int flick = floor(flicker);
+        int flick = static_cast<int>(floor(flicker));
 
         switch (flick)
         {
@@ -262,7 +262,7 @@ void RhythmGUI::doVisuals(int bgm_cycle, int combo)
             marker_pos = (marker_pos / rhythm->beat_timer) * 250;
 
             d_marker.setPosition(sf::Vector2f((w_x / 2 - 1) + marker_pos, w_y - 90));
-            d_marker.setFillColor(sf::Color(0, 64, 255, marker_alpha));
+            d_marker.setFillColor(sf::Color(0, 64, 255, static_cast<uint8_t>(marker_alpha)));
             window->draw(d_marker);
             marker_alpha += 22;
         }

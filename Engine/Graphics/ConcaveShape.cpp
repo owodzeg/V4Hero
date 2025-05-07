@@ -30,7 +30,7 @@ namespace sfml
     float ConcaveShape::Area(const std::vector<sf::Vector2f>& points) const
     {
         float A = 0.f;
-        unsigned int n = points.size(), p = n - 1;
+        unsigned int n = static_cast<unsigned int>(points.size()), p = n - 1;
         for (unsigned int q = 0; q != n; ++q)
         {
             A += points[p].x * points[q].y - points[q].x * points[p].y;
@@ -104,7 +104,7 @@ namespace sfml
 
     void ConcaveShape::Triangulate(const std::vector<sf::Vector2f>& points)
     {
-        register unsigned int n = points.size();
+        unsigned int n = static_cast<unsigned int>(points.size());
         std::vector<unsigned int> p;
         if (0.f < Area(points))
         {
@@ -121,7 +121,7 @@ namespace sfml
         }
         if (p.size() > 3)
         {
-            register unsigned int next = 0, next2 = 0, start = 0, check = 0;
+            unsigned int next = 0, next2 = 0, start = 0, check = 0;
             while ((p.size() > 3) && (check < (2 * p.size())))
             {
             Label:

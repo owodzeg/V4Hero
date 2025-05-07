@@ -283,13 +283,13 @@ void ObeliskMenu::Update()
 
     int renderPrev = sel_prevlocation - 1;
 
-    if (renderPrev > location_bgs.size() - 1)
-        renderPrev = location_bgs.size() - 1;
+    if (renderPrev > static_cast<int>(location_bgs.size()) - 1)
+        renderPrev = static_cast<int>(location_bgs.size()) - 1;
 
     int renderCur = sel_location - 1;
 
-    if (renderCur > location_bgs.size() - 1)
-        renderCur = location_bgs.size() - 1;
+    if (renderCur > static_cast<int>(location_bgs.size()) - 1)
+        renderCur = static_cast<int>(location_bgs.size()) - 1;
 
     if (!location_bgs.empty())
     {
@@ -327,7 +327,7 @@ void ObeliskMenu::Update()
     if (mapX >= 0)
         mapX = 0;
 
-    int maxBound = (worldmap_fields.size() * 123*3 - 1012*3) * (-1);
+    float maxBound = (static_cast<int>(worldmap_fields.size()) * 123*3 - 1012*3) * (-1);
 
     if (mapX <= maxBound)
         mapX = maxBound;
@@ -495,7 +495,7 @@ void ObeliskMenu::Update()
 
             mapXdest -= float(123) * 6;
 
-            int maxBound = (worldmap_fields.size() * 123*3 - 1012*3) * (-1);
+            maxBound = (static_cast<float>(worldmap_fields.size()) * 123*3 - 1012*3) * (-1);
 
             if (mapXdest <= maxBound)
                 mapXdest = maxBound;
@@ -519,7 +519,7 @@ void ObeliskMenu::Update()
 
                 //if((sel_location*123 + mapX - 62) < 0)
                 //{
-                mapXdest = (sel_location * 123*3 - 615*3) * (-1);
+                mapXdest = (static_cast<float>(sel_location) * 123 * 3 - 615 * 3) * (-1);
 
                 if (mapXdest >= 0)
                     mapXdest = 0;
@@ -573,17 +573,17 @@ void ObeliskMenu::Update()
                 sel_location++;
                 sel_mission = 0;
 
-                if (sel_location >= worldmap_fields.size())
-                    sel_location = worldmap_fields.size();
+                if (sel_location >= static_cast<int>(worldmap_fields.size()))
+                    sel_location = static_cast<int>(worldmap_fields.size());
 
                 SPDLOG_DEBUG("Selecting Obelisk location {}", sel_location);
 
                 //if((sel_location*123 + mapX - 62 + 176 + 246) > 1012)
                 //{
                 //mapXdest -= float(123);
-                mapXdest = (sel_location * 123*3 - 615*3) * (-1);
+                mapXdest = (static_cast<float>(sel_location) * 123*3 - 615*3) * (-1);
 
-                int maxBound = (worldmap_fields.size() * 123*3 - 1012*3) * (-1);
+                maxBound = (static_cast<float>(worldmap_fields.size()) * 123*3 - 1012*3) * (-1);
 
                 if (mapXdest <= maxBound)
                     mapXdest = maxBound;

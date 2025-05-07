@@ -116,7 +116,7 @@ void MaterOuterMenu::showMater()
         squadbox.amount = 3;
         squadbox.maxSize = 6;
         squadbox.title = squad.getName();
-        squadbox.y = 165 + 100 * i;
+        squadbox.y = static_cast<float>(165 + 100 * i);
         squadbox.squad_icon = squad.getImage();
         squads.push_back(squadbox);
         i++;
@@ -126,7 +126,7 @@ void MaterOuterMenu::showMater()
     std::vector<MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
     for (int a = 0; a < 5; a++)
     {
-        centered_squads[a]->y = 165 + 100 * a; // re-center the squads
+        centered_squads[a]->y = static_cast<float>(165 + 100 * a); // re-center the squads
     }
 }
 
@@ -182,11 +182,11 @@ std::vector<MaterOuterMenu::SquadBox*> MaterOuterMenu::GetSquadsCentered()
     {
         int pos = cursquad + i;
         if (pos < 0) {
-            pos = pos + squads.size();
+            pos = pos + static_cast<int>(squads.size());
         }
-        if (pos > squads.size()-1)
+        if (pos > static_cast<int>(squads.size()) - 1)
         {
-            pos = pos - squads.size();
+            pos = pos - static_cast<int>(squads.size());
         }
         out.push_back(&squads[pos]);
     }
@@ -219,7 +219,6 @@ void MaterOuterMenu::Update()
 
     std::vector < MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
 
-
     std::span<SquadBox*> beforesquads = std::span(centered_squads).subspan(0, 2);
     int draw_n = 0;
     for (auto it = beforesquads.begin(); it != beforesquads.end(); ++it)
@@ -227,7 +226,7 @@ void MaterOuterMenu::Update()
         SquadBox& squad = **it;
                 
                 
-        int squad_alpha = 255 - 80 * (beforesquads.size() - draw_n - 1);
+        int squad_alpha = 255 - 80 * (static_cast<int>(beforesquads.size()) - draw_n - 1);
         if (squad_alpha < 0)
         {
             squad_alpha = 0;
@@ -248,7 +247,7 @@ void MaterOuterMenu::Update()
         SquadBox& squad = **it;
 
 
-        int squad_alpha = 255 - 80 * (aftersquads.size() - draw_n - 1);
+        int squad_alpha = 255 - 80 * (static_cast<int>(aftersquads.size()) - draw_n - 1);
         if (squad_alpha < 0)
         {
             squad_alpha = 0;
@@ -311,7 +310,7 @@ void MaterOuterMenu::Update()
 
     for (int i = 0; i < squads.size(); i++)
     {
-        SquadBox& squad = squads[i];
+        squad = squads[i];
 
         int squad_height = 115;
             
@@ -335,11 +334,11 @@ void MaterOuterMenu::Update()
         cursquad--;
         if (cursquad < 0)
         {
-            cursquad = cursquad + squads.size();
+            cursquad = cursquad + static_cast<int>(squads.size());
         }
         squadpos = 0; // reset squad pos in case squad has different max size
 
-        std::vector<MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
+        centered_squads = GetSquadsCentered();
         for (int i = 0; i < 5; i++)
         {
             centered_squads[i]->y = 165 + 100 * static_cast<float>(i); // re-center the squads
@@ -348,13 +347,13 @@ void MaterOuterMenu::Update()
     if (inputCtrl->isKeyPressed(Input::Keys::DOWN))
     {
         cursquad++;
-        if (cursquad > squads.size()-1)
+        if (cursquad > static_cast<int>(squads.size()) - 1)
         {
-            cursquad = cursquad - squads.size();
+            cursquad = cursquad - static_cast<int>(squads.size());
         }
         squadpos = 0; // reset squad pos in case squad has different max size
 
-        std::vector<MaterOuterMenu::SquadBox*> centered_squads = GetSquadsCentered();
+        centered_squads = GetSquadsCentered();
         for (int i = 0; i < 5; i++)
         {
             centered_squads[i]->y = 165 + 100 * static_cast<float>(i); // re-center the squads

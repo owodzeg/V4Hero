@@ -40,7 +40,7 @@ public:
     sf::Clock zoomClock;
 
     Camera();
-    void zoomViewAt(sf::Vector2i pixel, float zoom, sf::View& view);
+    void zoomViewAt(sf::Vector2i pixel, float new_zoom, sf::View& view);
     void Work(sf::View& view, float = 1.0f);
 };
 

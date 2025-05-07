@@ -26,9 +26,9 @@ void ControlTips::draw()
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
 
-    box.setSize(sf::Vector2f(window->getSize().x, ySize * (window->getSize().x / float(1280))));
+    box.setSize(sf::Vector2f(static_cast<float>(window->getSize().x), ySize * static_cast<float>((window->getSize().x / float(1280)))));
     box.setFillColor(sf::Color(0, 0, 0, 128));
-    box.setPosition({x, y * (window->getSize().x / float(1280))});
+    box.setPosition(sf::Vector2f(x, y * static_cast<float>(window->getSize().x / float(1280))));
 
     window->draw(box);
     

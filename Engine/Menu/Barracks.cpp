@@ -459,6 +459,7 @@ void Barracks::loadInventory()
                       } else
                       {
                           SPDLOG_ERROR("Inventory boxes sorting in barrack.cpp has reached a point it shouldn't have. The items may or may not appear in the correct order because of this.");
+                          throw std::exception();
                       }
                   });
     }
@@ -492,7 +493,7 @@ void Barracks::setInventoryPosition()
 
         if (invbox_id != -1)
         {
-            grid_offset_y = ceil((invbox_id + 1) / 4) - 4;
+            grid_offset_y = static_cast<int>(ceil((invbox_id + 1) / 4) - 4);
 
             if (grid_offset_y <= 0)
                 grid_offset_y = 0;
@@ -522,7 +523,7 @@ void Barracks::setInventoryPosition()
 
 void Barracks::applyEquipment()
 {
-    int yaripon_count = CoreManager::getInstance().getSaveReader()->ponReg.pons.size();
+    int yaripon_count = static_cast<int>(CoreManager::getInstance().getSaveReader()->ponReg.pons.size());
 
     for (int i = 1; i <= yaripon_count; i++)
     {
@@ -656,6 +657,8 @@ std::string Barracks::getPreviewText(float stat, float pon_stat, float pon_base_
     {
         return Func::fnum_padding(pon_stat, digits);
     }
+
+    return "error";
 }
 
 std::string Barracks::getPreviewText(float stat, float pon_stat, float pon_base_stat, float stat2, float pon_stat2, float pon_base_stat2, int digits)
@@ -807,7 +810,7 @@ void Barracks::Update()
     s_background.setPosition(0, 0);
     s_background.draw();
 
-    int yaripon_count = CoreManager::getInstance().getSaveReader()->ponReg.pons.size();
+    int yaripon_count = static_cast<int>(CoreManager::getInstance().getSaveReader()->ponReg.pons.size());
 
     int highlight_width = 225*3;
     int pon_width = 75 * 3 / yaripon_count * 6;
@@ -1160,7 +1163,7 @@ void Barracks::Update()
                         } else
                         {
                             ///Go back to bottom
-                            current_item_position = enabled_positons.size() - 1;
+                            current_item_position = static_cast<int>(enabled_positons.size()) - 1;
                         }
                     }
                 }
@@ -1267,7 +1270,7 @@ void Barracks::Update()
                         grid_sel_y = 0;
                     } else
                     {
-                        grid_offset_y = ceil(inventory_boxes.size() / 4.0) - 4;
+                        grid_offset_y = static_cast<int>(ceil(inventory_boxes.size() / 4.0) - 4);
 
                         if (grid_offset_y < 0)
                             grid_offset_y = 0;

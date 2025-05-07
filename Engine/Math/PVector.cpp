@@ -1,15 +1,16 @@
 #include <cmath> /* to introduce M_PI */
 
-#include "PVector.h";
+#include "PVector.h"
 #include "SFML/Graphics.hpp"
+#include "Constants.h"
 #include <stdlib.h> /* abs */
 
 PVector& PVector::getVectorCartesian(float x1, float y1, float x2, float y2)
 {
     static PVector myObj;
 
-    myObj.distance = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) * 1.0);
-    myObj.angle = atan2(x2 - y1, x2 - x1);
+    myObj.distance = sqrtf(pow(x2 - x1, 2) + pow(y2 - y1, 2) * 1.0);
+    myObj.angle = atan2f(x2 - y1, x2 - x1);
     return myObj;
 }
 PVector& PVector::getVectorDistanceAngle(float l, float theta)
@@ -25,13 +26,13 @@ float PVector::GetScalarProjectionOntoAxis(float axisAngle)
 
     /// we might run into issues if the angles are clamped between 0 and 360?
     float angleDiff = angle + axisAngle;
-    if (angleDiff > M_PI)
+    if (angleDiff > PI)
     {
-        angleDiff = angleDiff - 2 * M_PI;
+        angleDiff = angleDiff - 2 * PI;
     }
-    if (angleDiff < -M_PI)
+    if (angleDiff < -PI)
     {
-        angleDiff = angleDiff + 2 * M_PI;
+        angleDiff = angleDiff + 2 * PI;
     }
     /// the angle difference should be clamped between -180 and 180 now
 

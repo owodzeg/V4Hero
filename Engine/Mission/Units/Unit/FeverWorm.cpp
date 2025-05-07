@@ -77,7 +77,7 @@ void FeverWorm::Draw()
         {
             if(local_x > -1600)
             {
-                local_x -= 6500.f * (main.animation.animationSpeed/60.6) / fps;
+                local_x -= 6500.f * (main.animation.animationSpeed/60.6f) / fps;
             } else
             {
                 local_x = -1600;
@@ -91,7 +91,7 @@ void FeverWorm::Draw()
 
             if(local_x < 120)
             {
-                local_x += 1600.f * (main.animation.animationSpeed/60.6) / fps;
+                local_x += 1600.f * (main.animation.animationSpeed/60.6f) / fps;
             }
         }
 

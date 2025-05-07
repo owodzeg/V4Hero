@@ -24,8 +24,8 @@ Object::Object(std::string mem, int xpos, int ypos, int l, int p)
     or_x = s_obj.getGlobalBounds().size.x / 2;
     or_y = s_obj.getGlobalBounds().size.y / 2;
 
-    x = xpos;
-    y = ypos;
+    x = static_cast<float>(xpos);
+    y = static_cast<float>(ypos);
 
     layer = l;
     parent = p;
@@ -44,8 +44,8 @@ void Object::Load(std::string filename, int xpos, int ypos)
         or_x = s_obj.getGlobalBounds().size.x / 2;
         or_y = s_obj.getGlobalBounds().size.y / 2;
 
-        x = xpos;
-        y = ypos;
+        x = static_cast<float>(xpos);
+        y = static_cast<float>(ypos);
 
         exported = false;
 
@@ -61,8 +61,8 @@ void Object::Load(sf::Texture& texture, int xpos, int ypos)
     or_x = s_obj.getGlobalBounds().size.x / 2;
     or_y = s_obj.getGlobalBounds().size.y / 2;
 
-    x = xpos;
-    y = ypos;
+    x = static_cast<float>(xpos);
+    y = static_cast<float>(ypos);
 
     exported = false;
 
@@ -84,8 +84,8 @@ void Object::LoadFromMemory(std::string mem, int xpos, int ypos)
     or_x = s_obj.getGlobalBounds().size.x / 2;
     or_y = s_obj.getGlobalBounds().size.y / 2;
 
-    x = xpos;
-    y = ypos;
+    x = static_cast<float>(xpos);
+    y = static_cast<float>(ypos);
 
     exported = false;
 
@@ -220,7 +220,7 @@ void Object::SetPos(float time)
                     old_y = y;
                     old_r = r;
 
-                    int sz = frames.size() - 1;
+                    int sz = static_cast<int>(frames.size()) - 1;
 
                     x = frames[sz].pos_x;
                     y = frames[sz].pos_y;
@@ -315,7 +315,7 @@ void Object::SetPosFrame(float time, int frame)
         first_set = true;
     }
 
-    int sz = frames.size() - 1;
+    int sz = static_cast<int>(frames.size()) - 1;
 
     for (int i = frame; i <= sz; i++)
     {

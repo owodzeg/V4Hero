@@ -6,10 +6,10 @@
 
 struct SquadSlot
 {
-    int rarepon;
-    int _class;
-    int level;
-    int exp;
+    int rarepon = 0;
+    int _class = 0;
+    float level = 0;
+    float exp = 0;
     std::vector<std::vector<int>> slots;
 
     bool operator==(const SquadSlot&) const = default;
@@ -34,9 +34,9 @@ struct Army
 struct SaveFileDetails
 {
     std::string version = "2.0";
-    std::string name;
+    std::string name = "";
     std::vector<int> locations_unlocked;
-    int story_point;
+    int story_point = 0;
 
     bool operator==(const SaveFileDetails&) const = default;
 
@@ -51,8 +51,8 @@ struct SaveFileDetails
 
 struct SavedItem
 {
-    std::string name;
-    int count;
+    std::string name = "";
+    int count = 0;
 
     bool operator==(const SavedItem&) const = default;
 
@@ -65,9 +65,9 @@ struct SavedItem
 
 struct SavedMission
 {
-    int id;
-    int level;
-    bool unlocked;
+    int id = 0;
+    int level = 0;
+    bool unlocked = false;
 
     bool operator==(const SavedMission&) const = default;
 

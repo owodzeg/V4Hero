@@ -46,7 +46,7 @@ void TestChamber::Update()
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
 
-    bg.setSize(sf::Vector2f(window->getSize().x,window->getSize().y));
+    bg.setSize(sf::Vector2f(static_cast<float>(window->getSize().x),static_cast<float>(window->getSize().y)));
     window->draw(bg);
 
     yaripon.pos_global = sf::Vector2f(400, 200);

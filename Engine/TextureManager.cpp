@@ -26,7 +26,10 @@ TextureManager& TextureManager::getInstance()
 
 void TextureManager::loadTexture(const std::string& path, int quality)
 {
-    loadedTextures[path].loadFromFile(path);
+    if(!loadedTextures[path].loadFromFile(path))
+    {
+        SPDLOG_ERROR("Couldn't load texture {}", path);
+    }
 
     if (quality < 3)
     {
@@ -146,10 +149,10 @@ sf::Texture& TextureManager::scaleTexture(const std::string& path, int ratio, bo
         int originalWidth = source.getSize().x;
         int originalHeight = source.getSize().y;
 
-        int nwidth = ceil(originalWidth / float(ratio));
-        int nheight = ceil(originalHeight / float(ratio));
+        int nwidth = static_cast<int>(ceil(static_cast<float>(originalWidth) / float(ratio)));
+        int nheight = static_cast<int>(ceil(static_cast<float>(originalHeight) / float(ratio)));
 
-        // Get pixel data from source image
+        // Get pixel data from source image 
         const uint8_t* sourcePixels = source.getPixelsPtr();
 
         // Prepare a destination buffer
@@ -196,7 +199,10 @@ void TextureManager::loadImageFromFile(const std::string& path)
     if (loadedImages.find(path) == loadedImages.end() || forceLoad)
     {
         SPDLOG_INFO("Loading image from file {}", path);
-        loadedImages[path].loadFromFile(path);
+        if(!loadedImages[path].loadFromFile(path))
+        {
+            SPDLOG_ERROR("Couldn't load image {}", path);
+        }
     } else
     {
         //SPDLOG_ERROR("Couldn't load image {}: image already loaded", key);
@@ -211,7 +217,10 @@ void TextureManager::loadImageFromFileWithScale(const std::string& path, int qua
     if (loadedImages.find(path) == loadedImages.end() || forceLoad)
     {
         SPDLOG_INFO("Loading image from file {}", path);
-        loadedImages[path].loadFromFile(path);
+        if(!loadedImages[path].loadFromFile(path))
+        {
+            SPDLOG_ERROR("Couldn't load image {}", path);
+        }
 
         if (quality < 3)
         {
@@ -265,7 +274,10 @@ void TextureManager::loadImageFromMemory(const std::string& key, sf::Image& imag
     {
         if (loadedImages.find(key) == loadedImages.end())
         {
-            loadedTextures[key].loadFromImage(image); // No need to move here since sf::Image is copied internally
+            if(!loadedTextures[key].loadFromImage(image)) // No need to move here since sf::Image is copied internally
+            {
+                SPDLOG_ERROR("Couldn't load image {}", key);
+            }
         }
         else
         {
@@ -299,7 +311,9 @@ void TextureManager::loadTextureFromImage(const std::string& img_key)
     if (loadedTextures.find(img_key) == loadedTextures.end() || forceLoad)
     {
         SPDLOG_DEBUG("Loading image {} into texture", img_key);
-        loadedTextures[img_key].loadFromImage(loadedImages[img_key]);
+        if (!loadedTextures[img_key].loadFromImage(loadedImages[img_key])) {
+            SPDLOG_ERROR("Couldn't load image {} into texture", img_key);
+        }
     }
 }
 

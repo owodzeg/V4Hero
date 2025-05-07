@@ -57,7 +57,7 @@ public:
 
     void setAnimation(const std::string& shortAnimName);
     void setAnimationSpeed(float newFPS);
-    void setAnimationFrame(int newFrame);
+    void setAnimationFrame(float newFrame);
 
     std::string getAnimation();
     float getAnimationSpeed();

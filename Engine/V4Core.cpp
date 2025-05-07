@@ -284,7 +284,7 @@ void V4Core::init()
         auto dialogHandler = CoreManager::getInstance().getDialogHandler();
 
         window->clear();
-        resRatio = window->getSize().x / CANVAS_ULTRA_X;
+        resRatio = static_cast<float>(window->getSize().x) / CANVAS_ULTRA_X;
 
         // Handle dialog input first, so the states won't steal the input
         dialogHandler->HandleInput();

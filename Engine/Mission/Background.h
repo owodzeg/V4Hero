@@ -15,7 +15,7 @@ public:
         SpriteWrapper texture;
         sf::Color color;
         sf::Vector2f position;
-        float x_speed;
+        float x_speed = 0;
     };
 
     std::vector<BGObject> bg_objects;
@@ -34,7 +34,7 @@ public:
 
     Background();
     void Load(const std::string& bg_name);
-    void Draw(Camera& camera);
+    void Draw(Camera& work_camera);
     void DrawFloor();
 };
 

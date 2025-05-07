@@ -83,20 +83,20 @@ void Drum::Load(std::string drum, int perfection, std::string& drum_texture)
     for (int i = 0; i < particle_amount; i++)
     {
         sf::CircleShape temp;
-        int radius = Func::rand_range(0, max_radius) + 1;
-        int angle = Func::rand_range(0, 360);
+        float radius = Func::rand_range(0.f, max_radius) + 1;
+        float angle = Func::rand_range(0.f, 360.f);
 
         float cur_affection = 300;
 
-        float power = log(300) / log(max_radius);
+        float power = logf(300) / logf(max_radius);
 
         if (radius <= max_radius)
         {
-            cur_affection = pow(radius, power);
+            cur_affection = powf(radius, power);
         }
 
         float total_color = 510;
-        float color_value = total_color - cur_affection;
+        int color_value = static_cast<int>(total_color - cur_affection);
 
         int red = 0;
         int green = 0;
@@ -113,11 +113,11 @@ void Drum::Load(std::string drum, int perfection, std::string& drum_texture)
             green = color_value - 255;
         }
 
-        temp.setFillColor(sf::Color(red, green, 0, 170));
+        temp.setFillColor(sf::Color(static_cast<uint8_t>(red), static_cast<uint8_t>(green), 0, 170));
         temp.setRadius(radius);
         temp.setPosition(sf::Vector2f(-1000, -1000));
 
-        int distance = Func::rand_range(0, 200) + 50;
+        float distance = Func::rand_range(0.f, 200.f) + 50;
 
         particles.push_back(Particle(temp, false, 0, 0, angle, radius, distance, 0, 1800));
     }
@@ -201,7 +201,7 @@ void Drum::Draw()
     }
 
     s_drum.setScale(x_scale, y_scale);
-    s_drum.setColor(sf::Color(255, 255, 255, alpha));
+    s_drum.setColor(sf::Color(255, 255, 255, static_cast<uint8_t>(alpha)));
     s_drum.setRotation((rotation + drumPatterns[pattern].angle) * PI / 180.f);
     s_drum.setPosition(x + drumPatterns[pattern].x*3, y + drumPatterns[pattern].y*3);
 
@@ -218,7 +218,7 @@ void Drum::Draw()
     if (flashalpha <= 0)
         flashalpha = 0;
 
-    s_flash.setColor(sf::Color(255, 255, 255, flashalpha));
+    s_flash.setColor(sf::Color(255, 255, 255, static_cast<uint8_t>(flashalpha)));
     s_flash.setScale(x_flashscale, y_flashscale);
     s_flash.setPosition(x + drumPatterns[pattern].x*3, y + drumPatterns[pattern].y*3);
 
@@ -243,12 +243,12 @@ void Drum::Draw()
     if ((shockwaveAlpha > 0) && (shockwave2Alpha > 0))
     {
         c_shockwave.setRadius(shockwaveSize);
-        c_shockwave.setFillColor(sf::Color(255, 255, 255, shockwaveAlpha));
+        c_shockwave.setFillColor(sf::Color(255, 255, 255, static_cast<uint8_t>(shockwaveAlpha)));
         c_shockwave.setOrigin(sf::Vector2f(c_shockwave.getLocalBounds().size.x / 2, c_shockwave.getLocalBounds().size.y / 2));
         c_shockwave.setPosition(sf::Vector2f(x + drumPatterns[pattern].x * 3 * CoreManager::getInstance().getCore()->resRatio, y + drumPatterns[pattern].y * 3 * CoreManager::getInstance().getCore()->resRatio));
 
         c_shockwave2.setRadius(shockwave2Size);
-        c_shockwave2.setFillColor(sf::Color(255, 255, 255, shockwave2Alpha));
+        c_shockwave2.setFillColor(sf::Color(255, 255, 255, static_cast<uint8_t>(shockwave2Alpha)));
         c_shockwave2.setOrigin(sf::Vector2f(c_shockwave2.getLocalBounds().size.x / 2, c_shockwave2.getLocalBounds().size.y / 2));
         c_shockwave2.setPosition(sf::Vector2f(x + drumPatterns[pattern].x * 3 * CoreManager::getInstance().getCore()->resRatio, y + drumPatterns[pattern].y * 3 * CoreManager::getInstance().getCore()->resRatio));
     }
@@ -271,7 +271,7 @@ void Drum::Draw()
         particles[i].x += particles[i].speed * cos(particles[i].angle) / fps;
         particles[i].y += particles[i].speed * sin(particles[i].angle) / fps;
 
-        float distance = sqrt(2 * pow(particles[i].speed, 2)) / fps;
+        float distance = sqrtf(2 * pow(particles[i].speed, 2)) / fps;
         //cout << "i: " << i << " Distance speed: " << distance << " Cur distance: " << particles[i].curDistance << " Max: " << particles[i].maxDistance << endl;
         particles[i].curDistance += distance;
 
@@ -289,7 +289,7 @@ void Drum::Draw()
             if (c_alpha <= 0)
                 c_alpha = 0;
 
-            particles[i].c_particle.setFillColor(sf::Color(particles[i].c_particle.getFillColor().r, particles[i].c_particle.getFillColor().g, 0, c_alpha));
+            particles[i].c_particle.setFillColor(sf::Color(particles[i].c_particle.getFillColor().r, particles[i].c_particle.getFillColor().g, 0, static_cast<uint8_t>(c_alpha)));
         }
 
         particles[i].c_particle.setPosition(sf::Vector2f(particles[i].x, particles[i].y));

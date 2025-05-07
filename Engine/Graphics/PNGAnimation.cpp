@@ -94,11 +94,11 @@ void PNGAnimation::loadCacheFile(Animation& anim)
     std::vector<std::string> args = Func::Split(anim_data, ' ');
     if(args.size() == 5)
     {
-        anim.img_x = atoi(args[0].c_str());
-        anim.img_y = atoi(args[1].c_str());
-        anim.frames = atoi(args[2].c_str());
-        anim.maxCols = atoi(args[3].c_str());
-        anim.maxRows = atoi(args[4].c_str());
+        anim.img_x = stof(args[0]);
+        anim.img_y = stof(args[1]);
+        anim.frames = static_cast<unsigned int>(stoi(args[2]));
+        anim.maxCols = static_cast<unsigned int>(stoi(args[3]));
+        anim.maxRows = static_cast<unsigned int>(stoi(args[4]));
     }
     else
     {
@@ -133,18 +133,18 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
     int frames = static_cast<int>(anim.frame_paths.size());
 
     int x_size = img_x * frames;
-    int rows = ceil(float(x_size) / float(maxSize));
+    int rows = static_cast<int>(ceil(float(x_size) / float(maxSize)));
 
-    int maxCols = floor(float(maxSize) / float(img_x));
-    int maxRows = floor(float(maxSize) / float(img_y));
-    int sheetsNeeded = ceil(float(rows) / float(maxRows));
+    int maxCols = static_cast<int>(floor(float(maxSize) / float(img_x)));
+    int maxRows = static_cast<int>(floor(float(maxSize) / float(img_y)));
+    int sheetsNeeded = static_cast<int>(ceil(float(rows) / float(maxRows)));
 
     int maxFramesPerSheet = maxCols * maxRows;
 
     SPDLOG_DEBUG("Animation info dump: name {} img_x {} img_y {} frames {} x_size {} rows {} maxCols {} maxRows {} sheetsNeeded {} maxFramesPerSheet {}", anim.name, img_x, img_y, frames, x_size, rows, maxCols, maxRows, sheetsNeeded, maxFramesPerSheet);
     // push all the important info to the animation
-    anim.img_x = img_x;
-    anim.img_y = img_y;
+    anim.img_x = static_cast<float>(img_x);
+    anim.img_y = static_cast<float>(img_y);
     anim.frames = frames;
     anim.maxCols = maxCols;
     anim.maxRows = maxRows;
@@ -193,7 +193,7 @@ void PNGAnimation::generateSpritesheet(Animation& anim, const std::string& anim_
         sf::Image& f_img = getAnimationImage(anim_path, fr, zf);
 
         int curCol = frameBuffer % maxCols;
-        int curRow = floor(float(frameBuffer) / float(maxCols));
+        int curRow = static_cast<int>(floor(float(frameBuffer) / float(maxCols)));
         if (!spritesheet_buffer.copy(f_img, sf::Vector2u(curCol * img_x, curRow * img_y)))
         {
             SPDLOG_ERROR("Failed to copy image to spritesheet buffer");
@@ -300,13 +300,13 @@ void PNGAnimation::Load(const std::string& path)
         SPDLOG_TRACE("Zip entries: {}", entries.size());
 
         // first detect all the names
-        for(auto entry : entries)
+        for (auto& entry : entries)
         {
             std::string name = entry.getName();
 
             SPDLOG_TRACE("ZipEntry: {}", name);
 
-            if(name.ends_with('\\/') && !name.ends_with(".json"))
+            if(name.ends_with("\\/") && !name.ends_with(".json"))
             {
                 SPDLOG_TRACE("Animation detected: {}", name);
                 animation_names.push_back(name);
@@ -342,7 +342,7 @@ void PNGAnimation::Load(const std::string& path)
     }
 
     // Step 2 - create animations, then assign frames to animations
-    for(auto anim_name : animation_names)
+    for (auto& anim_name : animation_names)
     {
         Animation tmp;
 
@@ -351,7 +351,7 @@ void PNGAnimation::Load(const std::string& path)
         if(!zip)
             tmp.shortName = tmp.name.substr(tmp.name.find_last_of("\\/")+1); //folder-based name
         else
-            tmp.shortName = tmp.name.substr(0, tmp.name.find_last_of('\\/')); //zip-based name
+            tmp.shortName = tmp.name.substr(0, tmp.name.find_last_of("\\/")); //zip-based name
 
         tmp.zip = zip;
         SPDLOG_DEBUG("Animation found: {} {}, zip: {}", tmp.name, tmp.shortName, tmp.zip);
@@ -380,7 +380,7 @@ void PNGAnimation::Load(const std::string& path)
         }
 
         animations.push_back(tmp);
-        animationIDtoName[tmp.shortName] = animations.size()-1;
+        animationIDtoName[tmp.shortName] = static_cast<int>(animations.size()-1);
     }
 
     // Step 2.5 - Checksum calculation. Invalidate cache if checksum is different or doesn't exist
@@ -489,7 +489,7 @@ void PNGAnimation::Load(const std::string& path)
         }
     }
 
-    for(auto s : animation["switchTo"])
+    for (auto& s : animation["switchTo"])
     {
         std::string from = s[0].get<std::string>();
         std::string to = s[1].get<std::string>();
@@ -501,7 +501,7 @@ void PNGAnimation::Load(const std::string& path)
         animationSwitchTo.push_back(st);
     }
 
-    for(auto s : animation["center"].items())
+    for (auto& s : animation["center"].items())
     {
         std::string key = s.key();
 
@@ -514,8 +514,8 @@ void PNGAnimation::Load(const std::string& path)
             int id = getIDfromShortName(key);
 
             SPDLOG_TRACE("setting custom origin for {}: {} {}", key, o_x, o_y);
-            animations[id].origin_x = o_x;
-            animations[id].origin_y = o_y;
+            animations[id].origin_x = static_cast<float>(o_x);
+            animations[id].origin_y = static_cast<float>(o_y);
 
             animations[id].customOrigin = true;
         }
@@ -524,7 +524,7 @@ void PNGAnimation::Load(const std::string& path)
     if(animation.contains("hitbox"))
     {
         SPDLOG_DEBUG("Loading hitboxes");
-        for(auto s : animation["hitbox"].items())
+        for (auto& s : animation["hitbox"].items())
         {
             std::string key = s.key();
             SPDLOG_TRACE("Hitbox key: {}", key);
@@ -539,10 +539,10 @@ void PNGAnimation::Load(const std::string& path)
 
                 sf::FloatRect h;
 
-                h.position.x = hb_x;
-                h.position.y = hb_y;
-                h.size.x = hb_width;
-                h.size.y = hb_height;
+                h.position.x = static_cast<float>(hb_x);
+                h.position.y = static_cast<float>(hb_y);
+                h.size.x = static_cast<float>(hb_width);
+                h.size.y = static_cast<float>(hb_height);
 
                 if(key == "default")
                 {
@@ -563,7 +563,7 @@ void PNGAnimation::Load(const std::string& path)
             }
             else if (animation["hitbox"][key].is_array() && !animation["hitbox"][key].empty() && animation["hitbox"][key].at(0).is_array()) {
                 SPDLOG_TRACE("Multi hitbox detected");
-                for(auto json_hb : animation["hitbox"][key])
+                for (auto& json_hb : animation["hitbox"][key])
                 {
                     SPDLOG_TRACE("JSON: {}", json_hb.dump());
                     if(json_hb.size() == 4)
@@ -575,10 +575,10 @@ void PNGAnimation::Load(const std::string& path)
 
                         sf::FloatRect h;
 
-                        h.position.x = hb_x;
-                        h.position.y = hb_y;
-                        h.size.x = hb_width;
-                        h.size.y = hb_height;
+                        h.position.x = static_cast<float>(hb_x);
+                        h.position.y = static_cast<float>(hb_y);
+                        h.size.x = static_cast<float>(hb_width);
+                        h.size.y = static_cast<float>(hb_height);
 
                         if(key == "default")
                         {
@@ -606,10 +606,10 @@ void PNGAnimation::Load(const std::string& path)
         // default hitbox
         for(auto& a : animations)
         {
-            unsigned int ox = a.origin_x;
-            unsigned int oy = a.origin_y;
-            unsigned int bw = a.img_x;
-            unsigned int bh = a.img_y;
+            float ox = static_cast<float>(a.origin_x);
+            float oy = static_cast<float>(a.origin_y);
+            float bw = static_cast<float>(a.img_x);
+            float bh = static_cast<float>(a.img_y);
 
             sf::FloatRect h;
 
@@ -622,7 +622,7 @@ void PNGAnimation::Load(const std::string& path)
         }
     }
 
-    for(auto s : animation["noRepeat"])
+    for (auto& s : animation["noRepeat"])
     {
         std::string anim = s;
 
@@ -633,7 +633,7 @@ void PNGAnimation::Load(const std::string& path)
     // for extra, separately animated parts
     if(animation.contains("extras"))
     {
-        for(auto e : animation["extras"].items())
+        for (auto& e : animation["extras"].items())
         {
             std::string name = e.value();
 
@@ -673,7 +673,7 @@ void PNGAnimation::Load(const std::string& path)
                 }
             }
 
-            for(auto ff : j_extra["animationData"])
+            for (auto& ff : j_extra["animationData"])
             {
                 ExtraFrame ef;
                 SPDLOG_TRACE("Parsing extra frame: {}", ff.dump());
@@ -735,7 +735,7 @@ void PNGAnimation::Draw()
 
     if(currentFrame >= curAnim.frames)
     {
-        for(auto st : animationSwitchTo)
+        for (auto& st : animationSwitchTo)
         {
             if(st.first == currentAnimation)
             {
@@ -750,14 +750,14 @@ void PNGAnimation::Draw()
         }
         else
         {
-            currentFrame = curAnim.frames - 1;
+            currentFrame = static_cast<float>(curAnim.frames - 1);
         }
     }
 
     auto currentFrameInt = static_cast<unsigned int>(floor(currentFrame));
     unsigned int maxFramesPerSheet = curAnim.maxCols * curAnim.maxRows;
 
-    int currentSpritesheet = floor(currentFrameInt / maxFramesPerSheet);
+    int currentSpritesheet = static_cast<int>(floor(currentFrameInt / maxFramesPerSheet));
     int currentSpritesheetFrame = currentFrameInt % maxFramesPerSheet;
 
     int currentRow = currentSpritesheetFrame / curAnim.maxCols;
@@ -765,8 +765,8 @@ void PNGAnimation::Draw()
 
     SPDLOG_TRACE("currentAnimation {} {}, currentFrame {}, currentFrameInt {}, maxFrames {}, animationSpeed {}, maxFramesPerSheet {}, currentSpritesheet {}, currentSpritesheetFrame {}, row {}, col {}", currentAnimation, curAnim.shortName, currentFrame, currentFrameInt, curAnim.frames, animationSpeed, maxFramesPerSheet, currentSpritesheet, currentSpritesheetFrame, currentRow, currentCol);
 
-    int x_start = currentCol * curAnim.img_x;
-    int y_start = currentRow * curAnim.img_y;
+    int x_start = static_cast<int>(currentCol * curAnim.img_x);
+    int y_start = static_cast<int>(currentRow * curAnim.img_y);
 
     sf::IntRect textureRect = sf::IntRect(sf::Vector2i(x_start, y_start), sf::Vector2i(static_cast<int>(curAnim.img_x), static_cast<int>(curAnim.img_y)));
     SPDLOG_TRACE("setting texture rect to {} {} {} {}", textureRect.position.x, textureRect.position.y, textureRect.size.x, textureRect.size.y);
@@ -818,7 +818,7 @@ void PNGAnimation::Draw()
         auto& name = e.first;
         auto& spr = e.second;
 
-        auto& frame = ex_frames[name][currentAnimation][currentFrame];
+        auto& frame = ex_frames[name][currentAnimation][static_cast<unsigned int>(currentFrame)];
 
         //SPDLOG_INFO("Drawing extra {}, anim {} frame {}, {} {} {}", name, currentAnimation, currentFrame, frame.x, frame.y, frame.r);
 
@@ -838,7 +838,7 @@ void PNGAnimation::drawCopy(sf::Vector2f pos, sf::Vector2f sc)
     auto currentFrameInt = static_cast<unsigned int>(floor(currentFrame));
     unsigned int maxFramesPerSheet = curAnim.maxCols * curAnim.maxRows;
 
-    int currentSpritesheet = floor(currentFrameInt / maxFramesPerSheet);
+    int currentSpritesheet = static_cast<int>(floor(currentFrameInt / maxFramesPerSheet));
     int currentSpritesheetFrame = currentFrameInt % maxFramesPerSheet;
 
     int currentRow = currentSpritesheetFrame / curAnim.maxCols;
@@ -846,8 +846,8 @@ void PNGAnimation::drawCopy(sf::Vector2f pos, sf::Vector2f sc)
 
     SPDLOG_TRACE("currentAnimation {} {}, currentFrame {}, currentFrameInt {}, maxFrames {}, animationSpeed {}, maxFramesPerSheet {}, currentSpritesheet {}, currentSpritesheetFrame {}, row {}, col {}", currentAnimation, curAnim.shortName, currentFrame, currentFrameInt, curAnim.frames, animationSpeed, maxFramesPerSheet, currentSpritesheet, currentSpritesheetFrame, currentRow, currentCol);
 
-    int x_start = currentCol * curAnim.img_x;
-    int y_start = currentRow * curAnim.img_y;
+    int x_start = static_cast<int>(currentCol * curAnim.img_x);
+    int y_start = static_cast<int>(currentRow * curAnim.img_y);
 
     sf::IntRect textureRect = sf::IntRect(sf::Vector2i(x_start, y_start), sf::Vector2i(static_cast<int>(curAnim.img_x), static_cast<int>(curAnim.img_y)));
 
@@ -869,7 +869,7 @@ void PNGAnimation::drawCopy(sf::Vector2f pos, sf::Vector2f sc)
         auto& name = e.first;
         auto& spr = e.second;
 
-        auto& frame = ex_frames[name][currentAnimation][currentFrame];
+        auto& frame = ex_frames[name][currentAnimation][static_cast<unsigned int>(currentFrame)];
 
         //SPDLOG_INFO("Drawing extra {}, anim {} frame {}, {} {} {}", name, currentAnimation, currentFrame, frame.x, frame.y, frame.r);
 

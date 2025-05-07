@@ -66,7 +66,7 @@ public:
     void setSize(float new_x, float new_y);
     void Create(int speed, sf::Vector2f start_pos, sf::Color color);
     void AdditionalData(sf::String add_data);
-    void setFontSize(int newFontSize);
+    void setFontSize(float newFontSize);
     void AddDialog(sf::String text, bool nextdialog);
     void NextDialog();
     void SpeedUp();

@@ -16,7 +16,7 @@ Background::Background()
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
     bgView.setSize(sf::Vector2f(static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y)));
-    bgView.setCenter(sf::Vector2f(window->getSize().x/2, window->getSize().y/2));
+    bgView.setCenter(sf::Vector2f(static_cast<float>(window->getSize().x)/2, static_cast<float>(window->getSize().y)/2));
 }
 
 void Background::Load(const std::string& bg_name)
@@ -46,13 +46,13 @@ void Background::Load(const std::string& bg_name)
         else
         {
             json sunny = bg_json["sunny"];
-            for(auto object : sunny)
+            for (auto& object : sunny)
             {
                 SPDLOG_INFO("Object found: {}", std::string(object["type"]));
                 if(object["type"] == "skybox")
                 {
                     json color_points = object["color_points"];
-                    for(auto color_point : color_points)
+                    for (auto& color_point : color_points)
                     {
                         int y_pos = color_point["y_pos"];
                         sf::Color color = sf::Color(color_point["color"][0], color_point["color"][1], color_point["color"][2], 255);
@@ -102,7 +102,7 @@ void Background::Load(const std::string& bg_name)
     floor_height = float(330) * CoreManager::getInstance().getCore()->resRatio;
 }
 
-void Background::Draw(Camera& camera)
+void Background::Draw(Camera& work_camera)
 {
     sf::RenderWindow* window = CoreManager::getInstance().getWindow();
 
@@ -122,13 +122,13 @@ void Background::Draw(Camera& camera)
     window->draw(v_background);
 
     window->setView(bgView);
-    camera.Work(bgView);
+    work_camera.Work(bgView);
 
     
 
-    for (auto bg_object : bg_objects)
+    for (auto& bg_object : bg_objects)
     {
-        float camPos = (camera.camera_x + camera.zoom_x + camera.manual_x + camera.debug_x);
+        float camPos = (work_camera.camera_x + work_camera.zoom_x + work_camera.manual_x + work_camera.debug_x);
         float xPos = (camPos - 3840) - (camPos * bg_object.x_speed) - 99999;
 
         bg_object.texture.setTextureRect(sf::IntRect(sf::Vector2i(0, 0), sf::Vector2i(999999, bg_object.texture.getLocalBounds().size.y)));
@@ -149,7 +149,7 @@ void Background::DrawFloor()
     auto lastView = window->getView();
     window->setView(window->getDefaultView());
 
-    r_ground.setSize(sf::Vector2f(window->getSize().x, floor_height));
+    r_ground.setSize(sf::Vector2f(static_cast<float>(window->getSize().x), floor_height));
     r_ground.setFillColor(sf::Color::Black);
     r_ground.setPosition(sf::Vector2f(0, window->getSize().y - floor_height));
     window->draw(r_ground);

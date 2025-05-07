@@ -257,11 +257,11 @@ PatapolisMenu::PatapolisMenu()
 
         for (int i = 0; i < coords.size(); i++)
         {
-            LightRay tmp;
-            tmp.angle = 30 + (i * (float(300) / float(coords.size())));
-            tmp.max_distance = 330 + Func::rand_range(0.f, 60.f);
-            tmp.min_distance = 30 + Func::rand_range(0.f, 60.f);
-            tmp.cur_distance = Func::rand_range(0.f, 330.f) + 60;
+            LightRay lr_tmp;
+            lr_tmp.angle = 30 + (i * (float(300) / float(coords.size())));
+            lr_tmp.max_distance = 330 + Func::rand_range(0.f, 60.f);
+            lr_tmp.min_distance = 30 + Func::rand_range(0.f, 60.f);
+            lr_tmp.cur_distance = Func::rand_range(0.f, 330.f) + 60;
 
 
             sf::VertexArray vtmp(sf::PrimitiveType::TriangleStrip, 3);
@@ -269,13 +269,13 @@ PatapolisMenu::PatapolisMenu()
             vtmp[0].color = sf::Color(215, 246, 255, 255);
             vtmp[1].position = sf::Vector2f(coords[i].x2, coords[i].y2);
             vtmp[1].color = sf::Color(215, 246, 255, 255);
-            vtmp[2].position = sf::Vector2f(((coords[i].x1 + coords[i].x2) / 2) + (tmp.cur_distance * sin(tmp.angle * PI / 180)), ((coords[i].y1 + coords[i].y2) / 2) + (tmp.cur_distance * cos(tmp.angle * PI / 180)));
+            vtmp[2].position = sf::Vector2f(((coords[i].x1 + coords[i].x2) / 2) + (lr_tmp.cur_distance * sin(lr_tmp.angle * PI / 180)), ((coords[i].y1 + coords[i].y2) / 2) + (lr_tmp.cur_distance * cos(lr_tmp.angle * PI / 180)));
             vtmp[2].color = sf::Color(215, 246, 255, 255);
-            tmp.triangle = vtmp;
+            lr_tmp.triangle = vtmp;
 
-            SPDLOG_TRACE("[coord #{}] {} {} {} {} {} {} {} {} {} {}", i, vtmp[0].position.x, vtmp[0].position.y, vtmp[1].position.x, vtmp[1].position.y, vtmp[2].position.x, vtmp[2].position.y, tmp.angle, tmp.cur_distance, tmp.min_distance, tmp.max_distance);
+            SPDLOG_TRACE("[coord #{}] {} {} {} {} {} {} {} {} {} {}", i, vtmp[0].position.x, vtmp[0].position.y, vtmp[1].position.x, vtmp[1].position.y, vtmp[2].position.x, vtmp[2].position.y, lr_tmp.angle, lr_tmp.cur_distance, lr_tmp.min_distance, lr_tmp.max_distance);
 
-            lightrays.push_back(tmp);
+            lightrays.push_back(lr_tmp);
         }
 
         //preload patapolis locations
@@ -860,7 +860,7 @@ void PatapolisMenu::Update()
         camera.camera_x = camera.followobject_x + (1800 * CoreManager::getInstance().getCore()->resRatio);
     camera.Work(patapolisView, 1);
 
-    auto lastView2 = window->getView();
+    auto& lastView2 = window->getView();
     window->setView(window->getDefaultView());
 
     window->draw(v_background);
@@ -976,7 +976,7 @@ void PatapolisMenu::Update()
         if (round(fires[i].id) >= 3)
             fires[i].id = 0;
 
-        int id = round(fires[i].id);
+        int id = static_cast<int>(round(fires[i].id));
 
         fires[i].glowsize += float(90) / fps;
 
@@ -1052,7 +1052,7 @@ void PatapolisMenu::Update()
                 if (round(forge_big.id) >= 3)
                     forge_big.id = 0;
 
-                int id = round(forge_big.id);
+                int id = static_cast<int>(round(forge_big.id));
 
                 forge_big.glowsize += float(90) / fps;
 
@@ -1090,7 +1090,7 @@ void PatapolisMenu::Update()
                 if (round(forge_purple.id) >= 3)
                     forge_purple.id = 0;
 
-                id = round(forge_purple.id);
+                id = static_cast<int>(round(forge_purple.id));
 
                 forge_purple.glowsize += float(90) / fps;
 
@@ -1180,7 +1180,7 @@ void PatapolisMenu::Update()
                 paraget_main.draw();
                 paraget_crystal.draw();
 
-                for (auto sparkle : paraget_sparkles)
+                for (auto& sparkle : paraget_sparkles)
                 {
                     sparkle.x = sparkle.baseX - camPos;
 

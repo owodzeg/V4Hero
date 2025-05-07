@@ -116,7 +116,7 @@ void AnimatedObject::setAnimationSpeed(float newFPS)
     animation.animationSpeed = newFPS;
 }
 
-void AnimatedObject::setAnimationFrame(int newFrame)
+void AnimatedObject::setAnimationFrame(float newFrame)
 {
     animation.currentFrame = newFrame;
 }
@@ -199,8 +199,8 @@ void AnimatedObject::loadExtra(std::string path, std::string name)
 
                 std::vector<std::string> data = Func::Split(alignData, ',');
 
-                float o_x = atof(data[0].c_str());
-                float o_y = atof(data[1].c_str());
+                float o_x = stof(data[0]);
+                float o_y = stof(data[1]);
 
                 a.second.setOrigin(o_x / qscale, o_y / qscale);
             }

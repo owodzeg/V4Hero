@@ -42,7 +42,7 @@ void P4A::CreateDictionary()
     ///Calculate the full size of dictionary
     for (int i = 0; i < filenames.size(); i++)
     {
-        dictionary_size += 9 + filenames[i].size();
+        dictionary_size += 9 + static_cast<int>(filenames[i].size());
     }
 
     ///Offset where files start
@@ -52,8 +52,8 @@ void P4A::CreateDictionary()
     {
         ///Get file name, name's length and convert it to 1 byte signed (what for???)
         std::string file = filenames[i];
-        int filename_length = file.size();
-        int8_t length_8bit = filename_length;
+        int filename_length = static_cast<int>(file.size());
+        int8_t length_8bit = static_cast<int8_t>(filename_length);
 
         ///Save the 8-bit length
         output_dictionary.push_back(length_8bit);
@@ -171,13 +171,13 @@ void P4A::ReadDictionary(std::string filename)
                 std::string str_filename = Binary::to_string(Binary::get_block(bin_data, p4a_offset, filename_length));
                 p4a_offset += filename_length;
 
-                uint32_t file_offset = Binary::get_uint32(bin_data, p4a_offset);
+                uint32_t l_file_offset = Binary::get_uint32(bin_data, p4a_offset);
                 p4a_offset += 4;
 
-                uint32_t file_size = Binary::get_uint32(bin_data, p4a_offset);
+                uint32_t l_file_size = Binary::get_uint32(bin_data, p4a_offset);
                 p4a_offset += 4;
 
-                files[str_filename] = Binary::get_block(bin_data, file_offset, file_size);
+                files[str_filename] = Binary::get_block(bin_data, l_file_offset, l_file_size);
             }
         } else
         {

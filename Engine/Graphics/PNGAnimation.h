@@ -29,13 +29,13 @@ class PNGAnimation
         struct Animation {
             std::string name;
             std::string shortName;
-            unsigned int img_x = 0;
-            unsigned int img_y = 0;
+            float img_x = 0;
+            float img_y = 0;
             unsigned int frames = 0;
             unsigned int maxCols = 0;
             unsigned int maxRows = 0;
-            unsigned int origin_x = 0;
-            unsigned int origin_y = 0;
+            float origin_x = 0;
+            float origin_y = 0;
             std::vector<sf::FloatRect> hitboxes;
             bool cached = false;
             bool zip = false;
@@ -77,7 +77,7 @@ class PNGAnimation
         };
 
         // ex_frames[extra_name][animation][frame] = ExtraFrame
-        std::unordered_map<std::string, std::unordered_map<int, std::unordered_map<int, ExtraFrame>>> ex_frames;
+        std::unordered_map<std::string, std::unordered_map<unsigned int, std::unordered_map<unsigned int, ExtraFrame>>> ex_frames;
 
         PNGAnimation();
         virtual sf::Image& getAnimationImage(const std::string& anim_path, const std::string& image_path, libzippp::ZipArchive& zip_handle);

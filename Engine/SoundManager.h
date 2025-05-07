@@ -48,7 +48,7 @@ public:
         std::unique_ptr<sf::Sound> sound;
         std::string key = "";
         SoundTag tag;
-        double volume = 100;
+        float volume = 100;
     };
 
     std::mutex resource_mutex;

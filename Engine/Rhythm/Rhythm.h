@@ -89,9 +89,9 @@ public:
 
     struct RhythmMessage
     {
-        RhythmAction action;
-        uint64_t timestamp;
-        std::string message;
+        RhythmAction action = DRUM_ANY;
+        uint64_t timestamp = 0;
+        std::string message = "";
     };
 
     std::vector<RhythmMessage> messages;
@@ -135,8 +135,8 @@ public:
     void PlaySong(SongController::SongType songType);
     void BreakCombo(int reason);
     int GetCombo();
-    float getAccRequirement(int combo);
-    float getAccRequirementFever(int combo);
+    float getAccRequirement(int check_combo);
+    float getAccRequirementFever(int check_combo);
     void decideSongType();
     void addRhythmMessage(RhythmAction action_id, std::string message);
     std::vector<RhythmMessage> fetchRhythmMessages(uint64_t& timestamp);

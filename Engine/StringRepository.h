@@ -55,22 +55,22 @@ public:
 
     struct GlyphCache
     {
-        double advance = 0;
-        double height = 0;
-        double advance_bold = 0;
-        double height_bold = 0;
+        float advance = 0;
+        float height = 0;
+        float advance_bold = 0;
+        float height_bold = 0;
     };
 
     // new for PataText
     // kerningCache[font][charSize][{char1, char2}]
-    std::unordered_map<std::string, std::unordered_map<double, std::unordered_map<std::pair<char32_t, char32_t>, std::optional<double>, pair_hash<char32_t, char32_t>>>> kerningCache;
+    std::unordered_map<std::string, std::unordered_map<float, std::unordered_map<std::pair<char32_t, char32_t>, std::optional<float>, pair_hash<char32_t, char32_t>>>> kerningCache;
 
     // advanceCache[font][charSize][char]
-    std::unordered_map<std::string, std::unordered_map<double, std::unordered_map<char32_t, GlyphCache>>> advanceCache;
+    std::unordered_map<std::string, std::unordered_map<float, std::unordered_map<char32_t, GlyphCache>>> advanceCache;
 
-    float GetKerningForFont(const std::string& fontName, std::pair<char32_t, char32_t>& pair, const double charSize);
-    float GetAdvanceForFont(const std::string& fontName, char32_t& character, const double charSize, bool bold);
-    float GetHeightForFont(const std::string& fontName, char32_t& character, const double charSize, bool bold);
+    float GetKerningForFont(const std::string& fontName, std::pair<char32_t, char32_t>& pair, const float charSize);
+    float GetAdvanceForFont(const std::string& fontName, char32_t& character, const float charSize, bool bold);
+    float GetHeightForFont(const std::string& fontName, char32_t& character, const float charSize, bool bold);
 
 private:
     std::unordered_map<std::string, std::unordered_map<std::string, std::string>> languages;

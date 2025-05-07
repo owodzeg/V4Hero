@@ -56,18 +56,18 @@ private:
     int currentGameState = 0;
     int afterTipState = 0;
 
-    MainMenu* mainMenuPtr;
-    OptionsMenu* optionsMenuPtr;
-    MissionController* missionControllerPtr;
-    LoadingTip* loadingTipPtr;
-    PatapolisMenu* patapolisPtr;
-    AltarMenu* altarPtr;
-    MaterOuterMenu* materPtr;
-    Barracks* barracksPtr;
-    ObeliskMenu* obeliskPtr;
-    IntroductionMenu* introductionPtr;
-    TestChamber* testChamberPtr;
-    ErrorChamber* errorChamberPtr;
+    MainMenu* mainMenuPtr = nullptr;
+    OptionsMenu* optionsMenuPtr = nullptr;
+    MissionController* missionControllerPtr = nullptr;
+    LoadingTip* loadingTipPtr = nullptr;
+    PatapolisMenu* patapolisPtr = nullptr;
+    AltarMenu* altarPtr = nullptr;
+    MaterOuterMenu* materPtr = nullptr;
+    Barracks* barracksPtr = nullptr;
+    ObeliskMenu* obeliskPtr = nullptr;
+    IntroductionMenu* introductionPtr = nullptr;
+    TestChamber* testChamberPtr = nullptr;
+    ErrorChamber* errorChamberPtr = nullptr;
 
     std::vector<std::thread> loadingThreads;
 };

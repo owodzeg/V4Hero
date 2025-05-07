@@ -73,10 +73,10 @@ void PataDialogBox::SetMainText(std::string text)
 }
 
 // this will add a new option and add a callback to a function
-void PataDialogBox::AddOption(std::string option, std::function<void()> callback)
+void PataDialogBox::AddOption(std::string option_text, std::function<void()> callback)
 {
-    options.push_back({option, callback});
-    option = options.size() - 1;
+    options.push_back({option_text, callback});
+    option = static_cast<int>(options.size()) - 1;
 }
 
 void PataDialogBox::Readjust()

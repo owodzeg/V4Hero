@@ -50,7 +50,7 @@ public:
     void SetType(int type);
     void SetMainText(std::string text);
     // this will add a new option and add a callback to a function
-    void AddOption(std::string option, std::function<void()> callback);
+    void AddOption(std::string option_text, std::function<void()> callback);
     void Readjust();
     int CheckSelectedOption();
     void MoveUp();

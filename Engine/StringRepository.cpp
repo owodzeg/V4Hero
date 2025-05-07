@@ -237,7 +237,7 @@ float StringRepository::GetAdvance(std::pair<char32_t, char32_t>& pair)
     return advanceStore[pair].value_or(-999);
 }
 
-float StringRepository::GetKerningForFont(const std::string& fontName, std::pair<char32_t, char32_t>& pair, const double charSize)
+float StringRepository::GetKerningForFont(const std::string& fontName, std::pair<char32_t, char32_t>& pair, const float charSize)
 {
     if (kerningCache.contains(fontName)) {
         auto& fontCache = kerningCache[fontName];
@@ -253,12 +253,12 @@ float StringRepository::GetKerningForFont(const std::string& fontName, std::pair
 
     // cache not found
     auto& font = GetFontFromName(fontName);
-    float kerning = font.getKerning(pair.first, pair.second, charSize);
+    float kerning = font.getKerning(pair.first, pair.second, static_cast<unsigned int>(charSize));
     kerningCache[fontName][charSize][pair] = kerning;
     return kerning;
 }
 
-float StringRepository::GetAdvanceForFont(const std::string& fontName, char32_t& character, const double charSize, bool bold)
+float StringRepository::GetAdvanceForFont(const std::string& fontName, char32_t& character, const float charSize, bool bold)
 {
     if (advanceCache.contains(fontName))
     {
@@ -274,13 +274,13 @@ float StringRepository::GetAdvanceForFont(const std::string& fontName, char32_t&
     }
     // cache not found
     auto& font = GetFontFromName(fontName);
-    auto glyph = font.getGlyph(character, charSize, false);
-    auto glyphBold = font.getGlyph(character, charSize, true);
+    auto& glyph = font.getGlyph(character, static_cast<unsigned int>(charSize), false);
+    auto& glyphBold = font.getGlyph(character, static_cast<unsigned int>(charSize), true);
     advanceCache[fontName][charSize][character] = {glyph.advance, glyph.bounds.size.y, glyphBold.advance, glyphBold.bounds.size.y};
     return bold ? glyphBold.advance : glyph.advance;
 }
 
-float StringRepository::GetHeightForFont(const std::string& fontName, char32_t& character, const double charSize, bool bold)
+float StringRepository::GetHeightForFont(const std::string& fontName, char32_t& character, const float charSize, bool bold)
 {
     // Try to get the cached value directly, if available
     auto& fontCache = advanceCache[fontName];
@@ -296,8 +296,8 @@ float StringRepository::GetHeightForFont(const std::string& fontName, char32_t& 
     auto& font = GetFontFromName(fontName);
 
     // Retrieve both regular and bold glyphs once to minimize redundant calls
-    auto glyph = font.getGlyph(character, charSize, false);
-    auto glyphBold = font.getGlyph(character, charSize, true);
+    auto& glyph = font.getGlyph(character, static_cast<unsigned int>(charSize), false);
+    auto& glyphBold = font.getGlyph(character, static_cast<unsigned int>(charSize), true);
 
     // Store the values in cache, including both regular and bold heights
     sizeCache[character] = {glyph.advance, glyph.bounds.size.y, glyphBold.advance, glyphBold.bounds.size.y};

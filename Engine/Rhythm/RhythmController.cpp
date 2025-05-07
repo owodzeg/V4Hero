@@ -140,7 +140,7 @@ bool RhythmController::checkForInput()
 
             for (unsigned int c = 0; c < commandInput.size(); c++)
             {
-                command += commandInput[c] * pow(5, 7-c);
+                command += commandInput[c] * static_cast<int>(pow(5, 7-c));
             }
 
             ///Calculate how many perfect beats were in the command
@@ -223,7 +223,7 @@ bool RhythmController::checkForInput()
 
                     for (unsigned int c = 0; c < tmp_command.size(); c++)
                     {
-                        command += tmp_command[c] * pow(5, 7-c);
+                        command += tmp_command[c] * static_cast<int>(pow(5, 7-c));
                     }
 
                     SPDLOG_DEBUG("[Hack] Looking for command {}", command);
@@ -338,7 +338,7 @@ bool RhythmController::checkForInput()
 
     for (unsigned int c = 0; c < commandInput.size(); c++)
     {
-        command += commandInput[c] * pow(5, 7-c);
+        command += commandInput[c] * static_cast<int>(pow(5, 7-c));
     }
 
     //SPDLOG_DEBUG("Pending command: {}, int: {}, perfects: {}", s_command, command, s_perfects);
