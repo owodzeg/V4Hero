@@ -44,7 +44,12 @@ int main(int argc, char *argv[])
 
     // get current date for log file (there's probably a better way for that)
     auto t = std::time(nullptr);
-    auto tm = *std::localtime(&t);
+    std::tm tm;
+    #if defined(_WIN32) || defined(_WIN64)
+        localtime_s(&tm, &t);
+    #else
+        localtime_r(&t, &tm);
+    #endif
 
     std::ostringstream oss;
     oss << std::put_time(&tm, "%Y-%m-%d %H-%M-%S");
