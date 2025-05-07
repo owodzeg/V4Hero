@@ -306,7 +306,7 @@ void PNGAnimation::Load(const std::string& path)
 
             SPDLOG_TRACE("ZipEntry: {}", name);
 
-            if(name.ends_with("\\/") && !name.ends_with(".json"))
+            if(((name.ends_with("\\") && !name.ends_with(".json")) || (name.ends_with("/") && !name.ends_with(".json"))))
             {
                 SPDLOG_TRACE("Animation detected: {}", name);
                 animation_names.push_back(name);
