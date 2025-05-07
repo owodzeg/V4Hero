@@ -12,7 +12,7 @@ class V4Core
 private:
     // Static GUI always on screen
 
-    PataText t_version, t_fps;
+    PataText t_version, t_fps, t_disclaimer;
 
     // Variables for delta time calc
     float fps = 60;

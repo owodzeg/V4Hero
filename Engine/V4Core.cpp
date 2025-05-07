@@ -127,9 +127,23 @@ void V4Core::init()
         framerate_limit = 500;
 
     // Version text
+    t_version.defaultStyleSetColor(sf::Color::White);
+    t_version.defaultStyleSetOutlineColor(sf::Color::Black);
+    t_version.defaultStyleSetOutlineThickness(6);
     t_version.append("{outline 6 0 0 0}{color 255 255 255}V4Hero Client ");
     t_version.append(hero_version);
     t_version.setGlobalOrigin(t_version.getGlobalBounds().size.x, 0);
+    
+    t_disclaimer.defaultStyleSetColor(sf::Color::White);
+    t_disclaimer.defaultStyleSetOutlineColor(sf::Color::Black);
+    t_disclaimer.defaultStyleSetOutlineThickness(3);
+    t_disclaimer.defaultStyleSetCharSize(45);
+    t_disclaimer.append("(beta version)");
+    t_disclaimer.setGlobalOrigin(t_disclaimer.getGlobalBounds().size.x, 0);
+
+    t_fps.defaultStyleSetColor(sf::Color::White);
+    t_fps.defaultStyleSetOutlineColor(sf::Color::Black);
+    t_fps.defaultStyleSetOutlineThickness(6);
 
     // Apply window settings (fps limit, vsync)
     SPDLOG_INFO("Applying window settings");
@@ -256,7 +270,7 @@ void V4Core::init()
         float average = 0.0f;
         if (n != 0)
         {
-            average = accumulate(frame_times.begin(), frame_times.end(), 0.0) / (n - 1);
+            average = static_cast<float>(accumulate(frame_times.begin(), frame_times.end(), 0.0) / (n - 1));
         }
 
         if (fps <= 1)
@@ -292,6 +306,10 @@ void V4Core::init()
         t_version.setGlobalPosition(3828, 0);
         t_version.draw();
 
+        // Draw disclaimer
+        t_disclaimer.setGlobalPosition(3828, 72);
+        t_disclaimer.draw();
+
         // If FPS counter is enabled, draw it
         if (config->GetInt("showFPS"))
         {
@@ -299,12 +317,12 @@ void V4Core::init()
             {
                 fpsDisplayClock.restart();
                 t_fps.reset();
-                t_fps.append("{outline 6 0 0 0}{color 255 255 255}FPS: ");
                 t_fps.append(std::to_string(int(ceil(average))));
+                t_fps.append(" FPS");
             }
             
-            t_fps.setGlobalOrigin(t_fps.getGlobalBounds().size.x, 0);
-            t_fps.setGlobalPosition(3828, 72);
+            t_fps.setGlobalOrigin(0, 0);
+            t_fps.setGlobalPosition(12, 0);
             t_fps.draw();
         }
 
