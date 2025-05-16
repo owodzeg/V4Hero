@@ -411,8 +411,8 @@ void Entity::handleAttack() // entity's attack
             float prj_yPos = global_y+local_y+vPos-90;
             float prj_hSpeed = -1800 - Func::rand_range(0.f, 50.f);
             float prj_vSpeed = -1800 - Func::rand_range(0.f, 70.f);
-            auto prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn, true);
-            prj->damage = minDmg + (Func::rand_range(0, std::min(int(maxDmg - minDmg), 1)));
+            auto& prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn, true);
+            prj.damage = minDmg + (Func::rand_range(0, std::min(int(maxDmg - minDmg), 1)));
 
             threw = true;
             attackTimer.restart();

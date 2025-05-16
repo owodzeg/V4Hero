@@ -14,18 +14,18 @@ public:
     int max_dmg = 0; /// by default, masks add/deal no damage
     int crit = 0;
     float attack_speed = 0; /// 0% reduction
-    float speed;
-    float angle;
-    float xPos;
-    float yPos;
+    float speed = 0;
+    float angle = 0;
+    float xPos = 0;
+    float yPos = 0;
 
     ///temp implementation
-    float hspeed;
-    float vspeed;
+    float hspeed = 0;
+    float vspeed = 0;
 
     float hPos=0, vPos=0;
 
-    float tipX, tipY;
+    float tipX = 0, tipY = 0;
 
     bool finished = false;
     bool fromEnemy = false;

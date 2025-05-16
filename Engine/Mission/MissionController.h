@@ -28,13 +28,13 @@ public:
     sf::View mission_view;
     std::mutex yariponsMutex;
 
-    std::vector<std::unique_ptr<Hatapon>> hatapons;
-    std::vector<std::unique_ptr<Yaripon>> yaripons;
-    std::vector<std::unique_ptr<FeverWorm>> feverworms;
-    std::vector<std::unique_ptr<EndFlag>> endflags;
-    std::vector<std::unique_ptr<Projectile>> projectiles;
-    std::vector<std::unique_ptr<DroppedItem>> droppeditems;
-    std::vector<std::unique_ptr<Entity>> entities;
+    std::list<std::unique_ptr<Hatapon>> hatapons;
+    std::list<std::unique_ptr<Yaripon>> yaripons;
+    std::list<std::unique_ptr<FeverWorm>> feverworms;
+    std::list<std::unique_ptr<EndFlag>> endflags;
+    std::list<std::unique_ptr<Projectile>> projectiles;
+    std::list<std::unique_ptr<DroppedItem>> droppeditems;
+    std::list<std::unique_ptr<Entity>> entities;
 
     uint64_t lastRhythmCheck = 0;
     sf::Clock advanceClock;
@@ -92,7 +92,7 @@ public:
 
     MissionController();
     void LoadMission(const std::string& path);
-    Projectile* SendProjectile(float x, float y, float hspeed, float vspeed, std::string prj_tex, bool evil = false);
+    Projectile& SendProjectile(float x, float y, float hspeed, float vspeed, std::string prj_tex, bool evil = false);
     void SendItemDrop(std::vector<int> order_id, float x, float y);
     void ExecuteZoom(float speed, float time);
     void ProcessDroppedItems();

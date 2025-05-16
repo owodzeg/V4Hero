@@ -287,11 +287,11 @@ void MissionController::LoadMission(const std::string& path)
     initialized = true;
 }
 
-Projectile* MissionController::SendProjectile(float x, float y, float hspeed, float vspeed, std::string prj_tex, bool evil)
+Projectile& MissionController::SendProjectile(float x, float y, float hspeed, float vspeed, std::string prj_tex, bool evil)
 {
-    projectiles.push_back(std::make_unique<Projectile>("resources/graphics/item/textures/"+prj_tex+".png", x, y, hspeed, vspeed, evil));
+    projectiles.emplace_back(std::make_unique<Projectile>("resources/graphics/item/textures/"+prj_tex+".png", x, y, hspeed, vspeed, evil));
     SPDLOG_DEBUG("SENDING PROJECTILE AT {} {} {} {}", x, y, hspeed, vspeed);
-    return projectiles.back().get();
+    return *projectiles.back();
 }
 
 void MissionController::SendItemDrop(std::vector<int> order_id, float x, float y)

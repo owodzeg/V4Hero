@@ -115,8 +115,8 @@ void Yaripon::PerformAttack()
                     // ponpon
                     float prj_hSpeed = 1800 + static_cast<float>(globalRand%50);
                     float prj_vSpeed = -1800 - static_cast<float>(globalRand%70);
-                    auto prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn);
-                    prj->damage = minDmg + (Func::rand_range(0, std::min(int(maxDmg - minDmg), 1)));
+                    auto& prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn);
+                    prj.damage = minDmg + (Func::rand_range(0, std::min(int(maxDmg - minDmg), 1)));
                 }
 
                 if(attackType == 2)
@@ -124,8 +124,8 @@ void Yaripon::PerformAttack()
                     // chakachaka
                     float prj_hSpeed = 2400 + static_cast<float>(globalRand%50);
                     float prj_vSpeed = 1050 - static_cast<float>(globalRand%70);
-                    auto prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn);
-                    prj->damage = minDmg + (Func::rand_range(0, std::min(int(maxDmg - minDmg), 1)));
+                    auto& prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn);
+                    prj.damage = minDmg + (Func::rand_range(0, std::min(int(maxDmg - minDmg), 1)));
                 }
                 threw = true;
             }
@@ -178,8 +178,8 @@ void Yaripon::PerformAttack()
                     // ponpon
                     float prj_hSpeed = 1600 + static_cast<float>(globalRand%50);
                     float prj_vSpeed = -1500 - static_cast<float>(globalRand%70);
-                    auto prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn);
-                    prj->damage = minDmg + (Func::rand_range(0, std::min(int(maxDmg - minDmg), 1)));
+                    auto& prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn);
+                    prj.damage = minDmg + (Func::rand_range(0, std::min(int(maxDmg - minDmg), 1)));
                 }
 
                 if(attackType == 4)
@@ -187,8 +187,8 @@ void Yaripon::PerformAttack()
                     // chakachaka
                     float prj_hSpeed = 2000 + static_cast<float>(globalRand%50);
                     float prj_vSpeed = -300 - static_cast<float>(globalRand%70);
-                    auto prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn);
-                    prj->damage = minDmg + (Func::rand_range(0, std::min(int(maxDmg - minDmg), 1)));
+                    auto& prj = CoreManager::getInstance().getMissionController()->SendProjectile(prj_xPos, prj_yPos, prj_hSpeed, prj_vSpeed, wpn);
+                    prj.damage = minDmg + (Func::rand_range(0, std::min(int(maxDmg - minDmg), 1)));
                 }
                 threw = true;
             }
