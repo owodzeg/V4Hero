@@ -15,7 +15,6 @@ public:
     sf::ConvexShape triangle;
 
     PataText dialogue_ptext; ///text that's going to appear on screen
-    PataText visual_ptext; ///text that will help calculating dimensions
 
     std::vector<sf::String> dialogue_strings;
 

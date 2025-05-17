@@ -48,10 +48,6 @@ void MessageCloud::Create(int speed, sf::Vector2f start_pos, sf::Color color)
     dialogue_ptext.defaultStyleSetCharSize(fontSize);
     dialogue_ptext.append("");
 
-    visual_ptext.defaultStyleSetFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
-    visual_ptext.defaultStyleSetCharSize(fontSize);
-    visual_ptext.append("");
-
     // visual_ptext.force_nonspeech = true;
 
     SPDLOG_DEBUG("MessageCloud::Create(): finished");
@@ -96,19 +92,14 @@ void MessageCloud::Show()
         }
 
         dialogue_ptext.append(Func::GetStrFromKey(dialogue_strings[cur_dialog]));
-        visual_ptext.append(Func::GetStrFromKey(dialogue_strings[cur_dialog]));
 
         for(auto add : additional[cur_dialog])
         {
             dialogue_ptext.append(add);
-            visual_ptext.append(add);
         }
 
-        dialogue_ptext.draw();
-        visual_ptext.draw();
-
-        dest_xsize = visual_ptext.getGlobalBounds().size.x + 120 + (visual_ptext.getGlobalBounds().size.x / 30);
-        dest_ysize = visual_ptext.getGlobalBounds().size.y + 150 + (visual_ptext.getGlobalBounds().size.y / 4.5f);
+        dest_xsize = dialogue_ptext.getGlobalBounds().size.x + 120 + (dialogue_ptext.getGlobalBounds().size.x / 30);
+        dest_ysize = dialogue_ptext.getGlobalBounds().size.y + 150 + (dialogue_ptext.getGlobalBounds().size.y / 4.5f);
 
         text_timeout.restart();
 
@@ -144,16 +135,10 @@ void MessageCloud::NextDialog()
         old_ysize = dest_ysize;
 
         dialogue_ptext.reset();
-        visual_ptext.reset();
-
         dialogue_ptext.append(Func::GetStrFromKey(dialogue_strings[cur_dialog]));
-        visual_ptext.append(Func::GetStrFromKey(dialogue_strings[cur_dialog]));
 
-        dialogue_ptext.draw();
-        visual_ptext.draw();
-
-        dest_xsize = visual_ptext.getGlobalBounds().size.x + 120 + (visual_ptext.getGlobalBounds().size.x / 30);
-        dest_ysize = visual_ptext.getGlobalBounds().size.y + 150 + (visual_ptext.getGlobalBounds().size.y / 4.5f);
+        dest_xsize = dialogue_ptext.getGlobalBounds().size.x + 120 + (dialogue_ptext.getGlobalBounds().size.x / 30);
+        dest_ysize = dialogue_ptext.getGlobalBounds().size.y + 150 + (dialogue_ptext.getGlobalBounds().size.y / 4.5f);
 
         text_timeout.restart();
     } else
@@ -190,7 +175,6 @@ void MessageCloud::Draw()
 
         cur_lang = strRepo->GetCurrentLanguage();
         dialogue_ptext.defaultStyleSetFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
-        visual_ptext.defaultStyleSetFont(strRepo->GetFontNameForLanguage(strRepo->GetCurrentLanguage()));
 
         Show();
 
@@ -280,7 +264,7 @@ void MessageCloud::Draw()
         if (!done)
         {
             //dialogue_ptext.speedup = speedup;
-            dialogue_ptext.setGlobalPosition(x - visual_ptext.getGlobalBounds().size.x / 2, y - 12 - visual_ptext.getGlobalBounds().size.y / 2);
+            dialogue_ptext.setGlobalPosition(x - dialogue_ptext.getGlobalBounds().size.x / 2, y - 12 - dialogue_ptext.getGlobalBounds().size.y / 2);
             dialogue_ptext.draw();
 
             //loaded_text[cur_dialog].setPosition(x - ptext[cur_dialog].getLocalBounds().size.x / 2, y - 4 - ptext[cur_dialog].getLocalBounds().size.y / 2);
