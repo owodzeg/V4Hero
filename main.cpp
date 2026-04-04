@@ -1,95 +1,110 @@
-
-
-#include <filesystem>
-#include <sstream>
-#include <chrono>
-#include <spdlog/spdlog.h>
-#include <spdlog/cfg/env.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
-#include <spdlog/sinks/basic_file_sink.h>
-
 #include "Engine/CoreManager.h"
 #include "Engine/V4Core.h"
+#include <chrono>
+#include <filesystem>
+#include <format>
+#include <span>
+#include <spdlog/cfg/env.h>
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
+#include <vector>
 
 namespace fs = std::filesystem;
 
 #ifdef __linux__
 #include <X11/Xlib.h>
-void setupPlatform() {
+// necessary for linux if i remember correctly
+// TODO: what if: wayland
+inline void init_platform()
+{
     XInitThreads();
 }
 #else
-void setupPlatform() {}
+// nothing particular needed for other platforms
+inline void init_platform()
+{
+}
 #endif
 
-int main(int argc, char *argv[])
+// prepare spdlog stuff
+static void setup_logging()
 {
-    // fetch cmdline arguments
-    if (argc > 1)
+    spdlog::cfg::load_env_levels();
+    std::vector<spdlog::sink_ptr> sinks{std::make_shared<spdlog::sinks::stdout_color_sink_mt>()};
+
+    std::error_code ec;
+    fs::create_directories("logs", ec);
+
+    if (!ec || ec == std::errc::file_exists)
     {
-        // we store the args in a simple vector
-        std::vector<std::string> cmd_args;
-
-        // read them from argv
-        for(int i=0; i<argc; i++)
-        cmd_args.push_back(argv[i]);
-
-        // process the args further
-        // ???
+        try
+        {
+            // monstrous sink creation
+            sinks.emplace_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>((fs::path("logs") / std::format("{}-V4Hero-{}.log", std::format("{:%Y-%m-%d_%H-%M-%S}", std::chrono::current_zone()->to_local(std::chrono::system_clock::now())), PATAFOUR_VERSION)).string(), true));
+        } 
+        catch (...)
+        {
+            SPDLOG_WARN("Log creation failed!!!!!");
+        }
     }
 
-    // Init spdlog and set base log level
-    spdlog::cfg::load_env_levels();
-    spdlog::set_level(spdlog::level::trace);
+    // make sure it writes to file
+    spdlog::set_default_logger(std::make_shared<spdlog::logger>("patalogger", sinks.begin(), sinks.end()));
+}
 
-    // get current date for log file (there's probably a better way for that)
-    auto t = std::time(nullptr);
-    std::tm tm;
-    #if defined(_WIN32) || defined(_WIN64)
-        localtime_s(&tm, &t);
-    #else
-        localtime_r(&t, &tm);
-    #endif
+// we NEED to have our WD in Patafour's dir no matter where and from where we launch.
+static bool set_working_directory(const char* path)
+{
+    if (!path || !*path)
+        return false;
 
-    std::ostringstream oss;
-    oss << std::put_time(&tm, "%Y-%m-%d %H-%M-%S");
+    std::error_code ec;
+    auto exe = fs::weakly_canonical(path, ec);
 
-    // Path to where logs are stored (TO-DO: this might be different on Android)
-    std::string log_file = "logs/" + oss.str() + "-V4Hero-" + std::string(PATAFOUR_VERSION) + ".log";
+    if (ec)
+    {
+        SPDLOG_ERROR("Failed to resolve executable path: {}", ec.message());
+        return false;
+    }
 
-    // Create a multi-sink logger to output for console and the logfile
-    std::vector<spdlog::sink_ptr> sinks;
-    sinks.push_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
-    sinks.push_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>(log_file));
+    fs::current_path(exe.parent_path(), ec);
 
-    // Combine them and set as default
-    auto combined_logger = std::make_shared<spdlog::logger>("patalogger", begin(sinks), end(sinks));
+    if (ec)
+    {
+        SPDLOG_ERROR("Failed to change working directory: {}", ec.message());
+        return false;
+    }
 
-    // Setting custom log pattern, example:
-    // [30-07-2021 16:01:24] [info] [main.cpp: main:42] log message
-    combined_logger->set_pattern("[%d-%m-%Y %H:%M:%S] [%^%l%$] [%s: %!:%#] %v");
-    combined_logger->set_level(spdlog::level::trace);
+    SPDLOG_INFO("Working directory set to: {}", exe.parent_path().string());
+}
 
-    // Set the logger as default logger
-    spdlog::register_logger(combined_logger);
-    spdlog::set_default_logger(combined_logger);
+int main([[maybe_unused]] int argc, char* argv[])
+{
+    setup_logging();
+    init_platform();
 
-    // note i'm using SPDLOG_x macros, its because they allow to log cpp file, function and line (regular spdlog::x doesnt do that)
-    SPDLOG_INFO("Starting V4Hero v{}.", std::string(PATAFOUR_VERSION));
-    SPDLOG_INFO("SFML version: {}.{}.{}", SFML_VERSION_MAJOR, SFML_VERSION_MINOR, SFML_VERSION_PATCH);
-    SPDLOG_INFO("Saving logs to {}", log_file);
+    SPDLOG_INFO("V4Hero v{}.", PATAFOUR_VERSION);
+    SPDLOG_INFO("SFML: {}.{}.{}", SFML_VERSION_MAJOR, SFML_VERSION_MINOR, SFML_VERSION_PATCH);
 
-    // additional initialization for other platforms
-    setupPlatform();
+    if (!set_working_directory(argv[0]))
+        return 1; // can't run without proper workdir..
 
-    // change working directory to where the executable is
-    auto executable_path = weakly_canonical(fs::path(argv[0])).parent_path();
-    fs::current_path(executable_path);
-    SPDLOG_INFO("Executable directory: {}", executable_path.string());
-
-    // initialize CoreManager and the main V4Core class
-    CoreManager::getInstance().init();
-    CoreManager::getInstance().getCore()->init();
-
+    try
+    {
+        auto& core = CoreManager::getInstance();
+        core.init();
+        core.getCore()->init();
+    } 
+    catch (const std::exception& e)
+    {
+        SPDLOG_CRITICAL("Something nasty happened: {}", e.what());
+        return 1;
+    } 
+    catch (...)
+    {
+        SPDLOG_CRITICAL("Something absolutely horrible happened");
+        return 1;
+    }
     return 0;
 }
