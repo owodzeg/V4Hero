@@ -32,7 +32,7 @@ else()
     FetchContent_Declare(
             SFML
             GIT_REPOSITORY https://github.com/SFML/SFML.git
-            GIT_TAG 3.0.1)
+            GIT_TAG 3.0.2)
     FetchContent_MakeAvailable(SFML)
 
     FetchContent_Declare(json
@@ -49,7 +49,7 @@ endif()
 
 FetchContent_Declare(spdlog
         GIT_REPOSITORY https://github.com/gabime/spdlog
-        GIT_TAG v1.15.2)
+        GIT_TAG v1.17.0)
 FetchContent_MakeAvailable(spdlog)
 
 FetchContent_Declare(libzippp
